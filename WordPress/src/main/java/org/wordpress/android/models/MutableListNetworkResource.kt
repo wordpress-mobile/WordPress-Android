@@ -29,11 +29,8 @@ class MutableListNetworkResource<T>(private val paginationAvailable: Boolean = t
 
     // Updating Status
 
-    fun fetching(loadingMore: Boolean = false) = if (loadingMore) loadingMore() else fetchingFirstPage()
-
-    private fun fetchingFirstPage() = updateStatusIfChanged(Status.FETCHING_FIRST_PAGE)
-
-    private fun loadingMore() = updateStatusIfChanged(Status.LOADING_MORE)
+    fun fetching(loadingMore: Boolean = false) =
+            updateStatusIfChanged(if (loadingMore) Status.LOADING_MORE else Status.FETCHING_FIRST_PAGE)
 
     fun connectionError() = updateStatusIfChanged(Status.CONNECTION_ERROR)
 
@@ -57,18 +54,6 @@ class MutableListNetworkResource<T>(private val paginationAvailable: Boolean = t
 
     fun manuallyUpdateData(newData: List<T>) {
         _data.postValue(newData)
-    }
-
-    // Helpers
-
-    override fun isEmpty() = data.value == null || data.value!!.isEmpty()
-
-    override fun isFetchingFirstPage() = status.value == Status.FETCHING_FIRST_PAGE
-
-    override fun isError(): Boolean {
-        return status.value == Status.FETCH_ERROR
-                || status.value == Status.PAGINATION_ERROR
-                || status.value == Status.CONNECTION_ERROR
     }
 
     // Utils

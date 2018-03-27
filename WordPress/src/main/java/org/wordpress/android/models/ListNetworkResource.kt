@@ -22,8 +22,12 @@ interface ListNetworkResource<T> {
     val data: LiveData<List<T>>
     val status: LiveData<Status>
 
-    fun isEmpty(): Boolean
-    fun isFetchingFirstPage(): Boolean
-    fun isError(): Boolean
     fun shouldFetch(loadMore: Boolean): Boolean
+
+    fun isEmpty() = data.value == null || data.value!!.isEmpty()
+    fun isError() = isConnectionError() || isFetchError() || isPaginationError()
+    fun isFetchingFirstPage() = status.value == Status.FETCHING_FIRST_PAGE
+    fun isConnectionError() = status.value == Status.CONNECTION_ERROR
+    fun isFetchError() = status.value == Status.FETCH_ERROR
+    fun isPaginationError() = status.value == Status.PAGINATION_ERROR
 }
