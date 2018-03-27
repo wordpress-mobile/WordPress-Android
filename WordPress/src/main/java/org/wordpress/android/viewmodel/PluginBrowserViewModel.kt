@@ -55,7 +55,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val newPluginsResource = ListNetworkResource<ImmutablePluginModel>()
     private val popularPluginsResource = ListNetworkResource<ImmutablePluginModel>()
     private val sitePluginsResource = ListNetworkResource<ImmutablePluginModel>()
-    private val searchPluginsResource = ListNetworkResource<ImmutablePluginModel>()
+    private val searchResultsResource = ListNetworkResource<ImmutablePluginModel>()
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -159,7 +159,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             SEARCH -> {
-                searchPluginsResource.fetching(loadMore)
+                searchResultsResource.fetching(loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
             }
@@ -211,10 +211,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            searchPluginsResource.fetchError(event.error.message)
+            searchResultsResource.fetchError(event.error.message)
             return
         }
-        searchPluginsResource.fetchedSuccessfully(event.plugins, false)
+        searchResultsResource.fetchedSuccessfully(event.plugins, false)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -302,7 +302,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         updatePluginListWithNewPlugin(featuredPluginsResource, newPluginMap)
         updatePluginListWithNewPlugin(newPluginsResource, newPluginMap)
         updatePluginListWithNewPlugin(popularPluginsResource, newPluginMap)
-        updatePluginListWithNewPlugin(searchPluginsResource, newPluginMap)
+        updatePluginListWithNewPlugin(searchResultsResource, newPluginMap)
 
         // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
         // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
@@ -352,7 +352,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 }
             }, 250)
         } else {
-            searchPluginsResource.manuallyUpdateData(ArrayList())
+            searchResultsResource.manuallyUpdateData(ArrayList())
 
             if (shouldSearch()) {
                 fetchPlugins(SEARCH, false)
@@ -365,7 +365,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 // be triggered again, because another fetch didn't happen (due to query being empty)
                 // 4. The status will be stuck in FETCHING until another search occurs. The following reset fixes the
                 // problem.
-                searchPluginsResource.resetStatus()
+                searchResultsResource.resetStatus()
             }
         }
     }
@@ -376,9 +376,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             return false
         }
         // Only show empty view if content is empty, we are not fetching new data and no errors occurred
-        return searchPluginsResource.isEmpty()
-                && !searchPluginsResource.isFetchingFirstPage()
-                && !searchPluginsResource.isError()
+        return searchResultsResource.isEmpty()
+                && !searchResultsResource.isFetchingFirstPage()
+                && !searchResultsResource.isError()
     }
 
     fun setTitle(title: String?) {
@@ -391,7 +391,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             FEATURED -> featuredPluginsResource.data.value
             POPULAR -> popularPluginsResource.data.value
             NEW -> newPluginsResource.data.value
-            SEARCH -> searchPluginsResource.data.value
+            SEARCH -> searchResultsResource.data.value
         }
     }
 
@@ -411,7 +411,33 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             FEATURED -> featuredPluginsResource
             POPULAR -> popularPluginsResource
             NEW -> newPluginsResource
-            SEARCH -> searchPluginsResource
+            SEARCH -> searchResultsResource
         }
     }
+
+    // Getters for LiveData properties
+
+    val sitePlugins
+        get() = sitePluginsResource.data
+    val featuredPlugins
+        get() = featuredPluginsResource.data
+    val popularPlugins
+        get() = popularPluginsResource.data
+    val newPlugins
+        get() = newPluginsResource.data
+    val searchResults
+        get() = searchResultsResource.data
+
+    val sitePluginsStatus
+        get() = sitePluginsResource.status
+    val featuredPluginsStatus
+        get() = featuredPluginsResource.status
+    val popularPluginsStatus
+        get() = popularPluginsResource.status
+    val newPluginsStatus
+        get() = newPluginsResource.status
+    val searchResultsStatus
+        get() = searchResultsResource.status
+
+    fun isSitePluginsEmpty() = sitePluginsResource.isEmpty()
 }

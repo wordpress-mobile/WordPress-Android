@@ -34,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
+import org.wordpress.android.models.ListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -196,15 +197,16 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+        mViewModel.getSitePluginsStatus().observe(this, new Observer<ListNetworkResource.Status>() {
             @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
+            public void onChanged(@Nullable ListNetworkResource.Status status) {
+                showProgress(status == ListNetworkResource.Status.FETCHING_FIRST_PAGE
                              && mViewModel.isSitePluginsEmpty());
 
                 // We should ignore the errors due to network condition, unless this is the first fetch, the user can
                 // use the cached version of them and showing the error while the data is loaded might cause confusion
-                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
+                // TODO: handle network error separately
+                if (status == ListNetworkResource.Status.FETCH_ERROR
                     && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
                 }
@@ -494,6 +496,8 @@ public class PluginBrowserActivity extends AppCompatActivity
                 break;
             case NEW:
                 type = "newest";
+                break;
+            case SEARCH:
                 break;
         }
         properties.put("type", type);
