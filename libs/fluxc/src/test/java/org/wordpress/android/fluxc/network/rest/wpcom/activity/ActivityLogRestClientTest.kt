@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.ActivityAction
+import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -26,8 +26,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse.Page
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindStatusResponse
-import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityErrorType
-import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivitiesPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 
@@ -44,7 +44,7 @@ class ActivityLogRestClientTest {
     private lateinit var activitySuccessMethodCaptor: KArgumentCaptor<(ActivitiesResponse) -> Unit>
     private lateinit var rewindStatusSuccessMethodCaptor: KArgumentCaptor<(RewindStatusResponse) -> Unit>
     private lateinit var errorMethodCaptor: KArgumentCaptor<(BaseRequest.BaseNetworkError) -> Unit>
-    private lateinit var activityActionCaptor: KArgumentCaptor<Action<FetchedActivitiesPayload>>
+    private lateinit var activityActionCaptor: KArgumentCaptor<Action<FetchedActivityLogPayload>>
     private lateinit var rewindStatusActionCaptor: KArgumentCaptor<Action<FetchedRewindStatePayload>>
     private lateinit var activityRestClient: ActivityLogRestClient
     private val siteId: Long = 12
@@ -93,7 +93,7 @@ class ActivityLogRestClientTest {
 
         verify(dispatcher).dispatch(activityActionCaptor.capture())
         with(activityActionCaptor.firstValue) {
-            assertEquals(this.type, ActivityAction.FETCHED_ACTIVITIES)
+            assertEquals(this.type, ActivityLogAction.FETCHED_ACTIVITIES)
             assertEquals(this.payload.number, number)
             assertEquals(this.payload.offset, offset)
             assertEquals(this.payload.site, site)
@@ -126,7 +126,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedActivityError(ActivityErrorType.MISSING_ACTIVITY_ID)
+        assertEmittedActivityError(ActivityLogErrorType.MISSING_ACTIVITY_ID)
     }
 
     @Test
@@ -141,7 +141,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedActivityError(ActivityErrorType.MISSING_SUMMARY)
+        assertEmittedActivityError(ActivityLogErrorType.MISSING_SUMMARY)
     }
 
     @Test
@@ -157,7 +157,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedActivityError(ActivityErrorType.MISSING_CONTENT_TEXT)
+        assertEmittedActivityError(ActivityLogErrorType.MISSING_CONTENT_TEXT)
     }
 
     @Test
@@ -172,7 +172,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedActivityError(ActivityErrorType.MISSING_PUBLISHED_DATE)
+        assertEmittedActivityError(ActivityLogErrorType.MISSING_PUBLISHED_DATE)
     }
 
     @Test
@@ -185,7 +185,7 @@ class ActivityLogRestClientTest {
 
         errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
 
-        assertEmittedActivityError(ActivityErrorType.GENERIC_ERROR)
+        assertEmittedActivityError(ActivityLogErrorType.GENERIC_ERROR)
     }
 
     @Test
@@ -202,7 +202,7 @@ class ActivityLogRestClientTest {
 
         verify(dispatcher).dispatch(rewindStatusActionCaptor.capture())
         with(rewindStatusActionCaptor.firstValue) {
-            assertEquals(this.type, ActivityAction.FETCHED_REWIND_STATE)
+            assertEquals(this.type, ActivityLogAction.FETCHED_REWIND_STATE)
             assertEquals(this.payload.site, site)
             assertNull(this.payload.error)
             assertNotNull(this.payload.rewindStatusModelResponse)
@@ -305,10 +305,10 @@ class ActivityLogRestClientTest {
         assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_RESTORE_STATUS)
     }
 
-    private fun assertEmittedActivityError(errorType: ActivityErrorType) {
+    private fun assertEmittedActivityError(errorType: ActivityLogErrorType) {
         verify(dispatcher).dispatch(activityActionCaptor.capture())
         with(activityActionCaptor.firstValue) {
-            assertEquals(this.type, ActivityAction.FETCHED_ACTIVITIES)
+            assertEquals(this.type, ActivityLogAction.FETCHED_ACTIVITIES)
             assertEquals(this.payload.number, number)
             assertEquals(this.payload.offset, offset)
             assertEquals(this.payload.site, site)
@@ -320,7 +320,7 @@ class ActivityLogRestClientTest {
     private fun assertEmittedRewindStatusError(errorType: RewindStatusErrorType) {
         verify(dispatcher).dispatch(rewindStatusActionCaptor.capture())
         with(rewindStatusActionCaptor.firstValue) {
-            assertEquals(this.type, ActivityAction.FETCHED_REWIND_STATE)
+            assertEquals(this.type, ActivityLogAction.FETCHED_REWIND_STATE)
             assertEquals(this.payload.site, site)
             assertTrue(this.payload.isError)
             assertEquals(this.payload.error.type, errorType)
