@@ -287,7 +287,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     protected void showDismissDialog() {
         mIsShowingDismissDialog = true;
 
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.LoginTheme))
                 .setMessage(R.string.username_changer_dismiss_message)
                 .setPositiveButton(R.string.username_changer_dismiss_button_positive,
                                    new DialogInterface.OnClickListener() {

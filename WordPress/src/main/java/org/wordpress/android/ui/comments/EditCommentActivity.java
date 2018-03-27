@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,11 +49,14 @@ public class EditCommentActivity extends AppCompatActivity {
     static final String KEY_NOTE_ID = "KEY_NOTE_ID";
 
     private static final int ID_DIALOG_SAVING = 0;
+    private static final String ARG_CANCEL_EDITING_COMMENT_DIALOG_VISIBLE = "cancel_editing_comment_dialog_visible";
 
     private SiteModel mSite;
     private CommentModel mComment;
     private Note mNote;
     private boolean mFetchingComment;
+
+    private AlertDialog mCancelEditCommentDialog;
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -78,6 +82,12 @@ public class EditCommentActivity extends AppCompatActivity {
 
         loadComment(getIntent());
 
+        if (icicle != null) {
+            if (icicle.getBoolean(ARG_CANCEL_EDITING_COMMENT_DIALOG_VISIBLE, false)) {
+                cancelEditCommentConfirmation();
+            }
+        }
+
         ActivityId.trackLastActivity(ActivityId.COMMENT_EDITOR);
     }
 
@@ -85,6 +95,15 @@ public class EditCommentActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mCancelEditCommentDialog != null) {
+            outState.putBoolean(ARG_CANCEL_EDITING_COMMENT_DIALOG_VISIBLE, mCancelEditCommentDialog.isShowing());
+        }
     }
 
     @Override
@@ -249,7 +268,8 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void showEditErrorAlert() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(R.string.error_edit_comment);
         dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -276,28 +296,39 @@ public class EditCommentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (isCommentEdited()) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    EditCommentActivity.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
-            dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
-            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int whichButton) {
-                                                    finish();
-                                                }
-                                            });
-            dialogBuilder.setNegativeButton(
-                    getResources().getText(R.string.no),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // just close the dialog
-                        }
-                    });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
+            cancelEditCommentConfirmation();
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void cancelEditCommentConfirmation() {
+        if (mCancelEditCommentDialog != null) {
+            mCancelEditCommentDialog.show();
+            return;
+        }
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+        dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
+        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        finish();
+                    }
+                });
+        dialogBuilder.setNegativeButton(
+                getResources().getText(R.string.no),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // just close the dialog
+                    }
+                });
+        dialogBuilder.setCancelable(true);
+
+        mCancelEditCommentDialog = dialogBuilder.create();
+        mCancelEditCommentDialog.show();
     }
 
     private void onCommentPushed(OnCommentChanged event) {

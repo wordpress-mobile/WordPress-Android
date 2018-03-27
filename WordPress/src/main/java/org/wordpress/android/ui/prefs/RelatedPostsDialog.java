@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -92,7 +93,8 @@ public class RelatedPostsDialog extends DialogFragment
 
         toggleViews(mShowRelatedPosts.isChecked());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         //noinspection InflateParams
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = ((TextView) titleView.findViewById(R.id.title));

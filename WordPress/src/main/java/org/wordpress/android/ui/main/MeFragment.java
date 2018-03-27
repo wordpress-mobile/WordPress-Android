@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -323,7 +324,7 @@ public class MeFragment extends Fragment {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
                                        mAccountStore.getAccount().getUserName());
 
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog))
                 .setMessage(message)
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
