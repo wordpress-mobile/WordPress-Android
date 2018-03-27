@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:iconifiedByDefault="false"
-            app:queryHint="@string/stock_media_picker_search_hint" />
+            app:queryHint="@string/stock_media_picker_search_hint"
+            app:searchIcon="@null" />
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
