@@ -97,7 +97,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         } else {
             mViewModel.readFromBundle(savedInstanceState);
         }
-        mViewModel.start();
+        mViewModel.onStart();
 
         if (mViewModel.getSite() == null) {
             ToastUtils.showToast(this, R.string.blog_not_found);

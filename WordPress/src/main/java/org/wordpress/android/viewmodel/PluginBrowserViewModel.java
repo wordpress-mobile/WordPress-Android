@@ -31,7 +31,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-public class PluginBrowserViewModel extends ViewModel {
+public class PluginBrowserViewModel extends ViewModel implements ViewModelInterface {
     public enum PluginListType {
         SITE,
         FEATURED,
@@ -106,16 +106,18 @@ public class PluginBrowserViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
-        super.onCleared();
         mDispatcher.unregister(this);
+        super.onCleared();
     }
 
+    @Override
     public void writeToBundle(@NonNull Bundle outState) {
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(KEY_SEARCH_QUERY, mSearchQuery);
         outState.putString(KEY_TITLE, mTitle.getValue());
     }
 
+    @Override
     public void readFromBundle(@NonNull Bundle savedInstanceState) {
         if (mIsStarted) {
             // This was called due to a config change where the data survived, we don't need to
@@ -128,8 +130,9 @@ public class PluginBrowserViewModel extends ViewModel {
     }
 
     @WorkerThread
-    public void start() {
-        if (mIsStarted) {
+    @Override
+    public void onStart() {
+        if (isStarted()) {
             return;
         }
         reloadPluginDirectory(PluginDirectoryType.FEATURED);
@@ -147,6 +150,11 @@ public class PluginBrowserViewModel extends ViewModel {
         }
 
         mIsStarted = true;
+    }
+
+    @Override
+    public boolean isStarted() {
+        return mIsStarted;
     }
 
     // Site & WPOrg plugin management
