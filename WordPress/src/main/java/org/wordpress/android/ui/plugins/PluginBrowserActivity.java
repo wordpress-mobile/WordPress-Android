@@ -34,7 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
-import org.wordpress.android.models.ListNetworkResource;
+import org.wordpress.android.models.MutableListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -197,16 +197,16 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePluginsStatus().observe(this, new Observer<ListNetworkResource.Status>() {
+        mViewModel.getSitePluginsStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
             @Override
-            public void onChanged(@Nullable ListNetworkResource.Status status) {
-                showProgress(status == ListNetworkResource.Status.FETCHING_FIRST_PAGE
+            public void onChanged(@Nullable MutableListNetworkResource.Status status) {
+                showProgress(status == MutableListNetworkResource.Status.FETCHING_FIRST_PAGE
                              && mViewModel.isSitePluginsEmpty());
 
                 // We should ignore the errors due to network condition, unless this is the first fetch, the user can
                 // use the cached version of them and showing the error while the data is loaded might cause confusion
                 // TODO: handle network error separately
-                if (status == ListNetworkResource.Status.FETCH_ERROR
+                if (status == MutableListNetworkResource.Status.FETCH_ERROR
                     && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
                 }

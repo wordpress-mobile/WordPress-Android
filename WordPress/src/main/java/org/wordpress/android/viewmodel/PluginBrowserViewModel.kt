@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
-import org.wordpress.android.models.ListNetworkResource
+import org.wordpress.android.models.MutableListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.FEATURED
@@ -50,11 +50,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val handler = Handler()
     private val updatedPluginSlugSet = HashSet<String>()
 
-    private val featuredPluginsResource = ListNetworkResource<ImmutablePluginModel>()
-    private val newPluginsResource = ListNetworkResource<ImmutablePluginModel>()
-    private val popularPluginsResource = ListNetworkResource<ImmutablePluginModel>()
-    private val sitePluginsResource = ListNetworkResource<ImmutablePluginModel>()
-    private val searchResultsResource = ListNetworkResource<ImmutablePluginModel>()
+    private val featuredPluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
+    private val newPluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
+    private val popularPluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
+    private val sitePluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
+    private val searchResultsResource = MutableListNetworkResource<ImmutablePluginModel>()
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -314,7 +314,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         reloadPluginDirectory(PluginDirectoryType.SITE)
     }
 
-    private fun updatePluginListWithNewPlugin(pluginListNetworkResource: ListNetworkResource<ImmutablePluginModel>,
+    private fun updatePluginListWithNewPlugin(pluginListNetworkResource: MutableListNetworkResource<ImmutablePluginModel>,
                                               newPluginMap: Map<String, ImmutablePluginModel>) {
         val pluginList = pluginListNetworkResource.data.value
         if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
@@ -395,7 +395,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private fun getListNetworkResourceForDirectoryType(directoryType: PluginDirectoryType):
-            ListNetworkResource<ImmutablePluginModel> {
+            MutableListNetworkResource<ImmutablePluginModel> {
         return when (directoryType) {
             PluginDirectoryType.FEATURED -> featuredPluginsResource
             PluginDirectoryType.NEW -> newPluginsResource
@@ -404,7 +404,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    private fun getListNetworkResourceForListType(listType: PluginListType): ListNetworkResource<ImmutablePluginModel> {
+    private fun getListNetworkResourceForListType(listType: PluginListType): MutableListNetworkResource<ImmutablePluginModel> {
         return when (listType) {
             SITE -> sitePluginsResource
             FEATURED -> featuredPluginsResource
