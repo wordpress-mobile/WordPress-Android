@@ -10,7 +10,7 @@ data class ActivityLogModel(val activityID: String,
                             val gridicon: String?,
                             val status: String?,
                             val rewindable: Boolean?,
-                            val rewindID: Float?,
+                            val rewindID: String?,
                             val published: Date,
                             val discarded: Boolean?,
                             val actor: ActivityActor? = null) {

@@ -5,7 +5,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
-import org.wordpress.android.fluxc.action.ActivityAction
+import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -24,12 +24,12 @@ class ActivityLogStore
                     dispatcher: Dispatcher) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
-        val actionType = action.type as? ActivityAction ?: return
+        val actionType = action.type as? ActivityLogAction ?: return
 
         when (actionType) {
-            ActivityAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivitiesPayload)
-            ActivityAction.FETCHED_ACTIVITIES -> storeActivityLog(action.payload as FetchedActivitiesPayload, actionType)
-            ActivityAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
+            ActivityLogAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivityLogPayload)
+            ActivityLogAction.FETCHED_ACTIVITIES -> storeActivityLog(action.payload as FetchedActivityLogPayload, actionType)
+            ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
             else -> {
             }
         }
@@ -44,13 +44,13 @@ class ActivityLogStore
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
 
-    private fun fetchActivities(fetchActivitiesPayload: FetchActivitiesPayload) {
-        activityLogRestClient.fetchActivity(fetchActivitiesPayload.site,
-                fetchActivitiesPayload.number,
-                fetchActivitiesPayload.offset)
+    private fun fetchActivities(fetchActivityLogPayload: FetchActivityLogPayload) {
+        activityLogRestClient.fetchActivity(fetchActivityLogPayload.site,
+                fetchActivityLogPayload.number,
+                fetchActivityLogPayload.offset)
     }
 
-    private fun storeActivityLog(payload: FetchedActivitiesPayload, action: ActivityAction) {
+    private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
         if (payload.activityLogModels.isNotEmpty()) {
             val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
             emitChange(OnActivitiesFetched(rowsAffected, action))
@@ -65,24 +65,24 @@ class ActivityLogStore
 
     // Actions
     data class OnActivitiesFetched(val rowsAffected: Int,
-                                   var causeOfChange: ActivityAction) : Store.OnChanged<ActivityError>() {
-        constructor(error: ActivityError, causeOfChange: ActivityAction) :
+                                   var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
+        constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
                 this(rowsAffected = 0, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
 
     // Payloads
-    class FetchActivitiesPayload(val site: SiteModel,
-                                 val number: Int,
-                                 val offset: Int) : Payload<BaseRequest.BaseNetworkError>()
+    class FetchActivityLogPayload(val site: SiteModel,
+                                  val number: Int,
+                                  val offset: Int) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
-    class FetchedActivitiesPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
-                                   val site: SiteModel,
-                                   val number: Int,
-                                   val offset: Int) : Payload<ActivityError>() {
+    class FetchedActivityLogPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
+                                    val site: SiteModel,
+                                    val number: Int,
+                                    val offset: Int) : Payload<ActivityError>() {
         constructor(error: ActivityError,
                     site: SiteModel,
                     number: Int,
@@ -99,7 +99,7 @@ class ActivityLogStore
     }
 
     // Errors
-    enum class ActivityErrorType {
+    enum class ActivityLogErrorType {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
@@ -109,7 +109,7 @@ class ActivityLogStore
         MISSING_PUBLISHED_DATE
     }
 
-    class ActivityError(var type: ActivityErrorType, var message: String? = null) : Store.OnChangedError
+    class ActivityError(var type: ActivityLogErrorType, var message: String? = null) : Store.OnChangedError
 
     enum class RewindStatusErrorType {
         GENERIC_ERROR,
