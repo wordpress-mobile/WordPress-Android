@@ -400,16 +400,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         _title.postValue(title)
     }
 
-    fun getPluginsForListType(listType: PluginListType): List<ImmutablePluginModel>? {
-        return when (listType) {
-            SITE -> sitePlugins.data.value
-            FEATURED -> featuredPlugins.data.value
-            POPULAR -> popularPlugins.data.value
-            NEW -> newPlugins.data.value
-            SEARCH -> searchResults.data.value
-        }
-    }
-
     private fun getListNetworkResourceForDirectoryType(directoryType: PluginDirectoryType):
             MutableListNetworkResource<ImmutablePluginModel> {
         return when (directoryType) {
@@ -423,11 +413,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private fun getListNetworkResourceForListType(listType: PluginListType):
             ListNetworkResource<ImmutablePluginModel> {
         return when (listType) {
-            SITE -> _sitePlugins
-            FEATURED -> _featuredPlugins
-            POPULAR -> _popularPlugins
-            NEW -> _newPlugins
-            SEARCH -> _searchResults
+            SITE -> sitePlugins
+            FEATURED -> featuredPlugins
+            POPULAR -> popularPlugins
+            NEW -> newPlugins
+            SEARCH -> searchResults
         }
     }
 }

@@ -90,7 +90,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
                 if (mListType == PluginListType.SITE) {
-                    reloadPlugins();
+                    setPlugins(sitePlugins);
                 }
             }
         });
@@ -99,7 +99,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
                 if (mListType == PluginListType.FEATURED) {
-                    reloadPlugins();
+                    setPlugins(featuredPlugins);
                 }
             }
         });
@@ -108,7 +108,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
                 if (mListType == PluginListType.NEW) {
-                    reloadPlugins();
+                    setPlugins(newPlugins);
                 }
             }
         });
@@ -117,7 +117,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
                 if (mListType == PluginListType.POPULAR) {
-                    reloadPlugins();
+                    setPlugins(popularPlugins);
                 }
             }
         });
@@ -126,7 +126,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> searchResults) {
                 if (mListType == PluginListType.SEARCH) {
-                    reloadPlugins();
+                    setPlugins(searchResults);
                 }
             }
         });
@@ -210,10 +210,6 @@ public class PluginListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    void reloadPlugins() {
-        setPlugins(mViewModel.getPluginsForListType(mListType));
     }
 
     private void setPlugins(@Nullable List<ImmutablePluginModel> plugins) {
