@@ -38,8 +38,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-103"
-        versionCode 541
+        versionName "alpha-104"
+        versionCode 544
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -163,7 +163,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     kapt 'com.google.dagger:dagger-android-processor:2.11'
 
-    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:27daa246d961d64c3202831e6e068caa1a6d0c40") {
+    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:69e0c5bcfe1d74928baa53dddc93addd412e1415") {
         exclude group: "com.android.volley"
     }
 
