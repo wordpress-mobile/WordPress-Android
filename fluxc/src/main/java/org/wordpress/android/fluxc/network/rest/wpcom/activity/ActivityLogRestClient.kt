@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ActivityActionBuilder
+import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -11,8 +11,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComRestClient
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
-import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityErrorType
-import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivitiesPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
@@ -21,7 +21,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class ActivityLogRestClient
+class ActivityLogRestClient
 @Inject constructor(private val dispatcher: Dispatcher,
                     private val restClient: WPComRestClient,
                     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder) {
@@ -32,17 +32,17 @@ open class ActivityLogRestClient
         val request = wpComGsonRequestBuilder.buildGetRequest(
                 url, params, ActivitiesResponse::class.java,
                 { response ->
-                    val activities = response.current.orderedItems
+                    val activities = response.current?.orderedItems ?: listOf()
                     val payload = buildActivityPayload(activities, site, number, offset)
-                    dispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
+                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
                 },
                 { networkError ->
                     val error = ActivityError(genericToError(networkError,
-                            ActivityErrorType.GENERIC_ERROR,
-                            ActivityErrorType.INVALID_RESPONSE,
-                            ActivityErrorType.AUTHORIZATION_REQUIRED), networkError.message)
-                    val payload = FetchedActivitiesPayload(error, site, number, offset)
-                    dispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
+                            ActivityLogErrorType.GENERIC_ERROR,
+                            ActivityLogErrorType.INVALID_RESPONSE,
+                            ActivityLogErrorType.AUTHORIZATION_REQUIRED), networkError.message)
+                    val payload = FetchedActivityLogPayload(error, site, number, offset)
+                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
                 })
         restClient.enqueueRequest(request)
     }
@@ -51,17 +51,17 @@ open class ActivityLogRestClient
         val url = WPCOMV2.sites.site(site.siteId).rewind.url
         val request = wpComGsonRequestBuilder.buildGetRequest(
                 url, mapOf(), RewindStatusResponse::class.java,
-                {
-                    val payload = buildRewindStatusPayload(it, site)
-                    dispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
+                { response ->
+                    val payload = buildRewindStatusPayload(response, site)
+                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedRewindStateAction(payload))
                 },
-                {
-                    val error = RewindStatusError(genericToError(it,
+                { networkError ->
+                    val error = RewindStatusError(genericToError(networkError,
                             RewindStatusErrorType.GENERIC_ERROR,
                             RewindStatusErrorType.INVALID_RESPONSE,
-                            RewindStatusErrorType.AUTHORIZATION_REQUIRED), it.message)
+                            RewindStatusErrorType.AUTHORIZATION_REQUIRED), networkError.message)
                     val payload = FetchedRewindStatePayload(error, site)
-                    dispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
+                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedRewindStateAction(payload))
                 })
         restClient.enqueueRequest(request)
     }
@@ -69,25 +69,25 @@ open class ActivityLogRestClient
     private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>,
                                      site: SiteModel,
                                      number: Int,
-                                     offset: Int): FetchedActivitiesPayload {
-        var error: ActivityErrorType? = null
+                                     offset: Int): FetchedActivityLogPayload {
+        var error: ActivityLogErrorType? = null
 
         val activities = activityResponses.mapNotNull {
             when {
                 it.activity_id == null -> {
-                    error = ActivityErrorType.MISSING_ACTIVITY_ID
+                    error = ActivityLogErrorType.MISSING_ACTIVITY_ID
                     null
                 }
                 it.summary == null -> {
-                    error = ActivityErrorType.MISSING_SUMMARY
+                    error = ActivityLogErrorType.MISSING_SUMMARY
                     null
                 }
                 it.content?.text == null -> {
-                    error = ActivityErrorType.MISSING_CONTENT_TEXT
+                    error = ActivityLogErrorType.MISSING_CONTENT_TEXT
                     null
                 }
                 it.published == null -> {
-                    error = ActivityErrorType.MISSING_PUBLISHED_DATE
+                    error = ActivityLogErrorType.MISSING_PUBLISHED_DATE
                     null
                 }
                 else -> {
@@ -114,28 +114,28 @@ open class ActivityLogRestClient
             }
         }
         error?.let {
-            return FetchedActivitiesPayload(ActivityError(it), site, number, offset)
+            return FetchedActivityLogPayload(ActivityError(it), site, number, offset)
         }
-        return FetchedActivitiesPayload(activities, site, number, offset)
+        return FetchedActivityLogPayload(activities, site, number, offset)
     }
 
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
         if (response.state == null) {
-            return error(site, RewindStatusErrorType.MISSING_STATE)
+            return buildErrorPayload(site, RewindStatusErrorType.MISSING_STATE)
         }
         if (RewindStatusModel.State.fromValue(response.state) == null) {
-            return error(site, RewindStatusErrorType.INVALID_REWIND_STATE)
+            return buildErrorPayload(site, RewindStatusErrorType.INVALID_REWIND_STATE)
         }
         if (response.restoreResponse != null && response.restoreResponse.rewind_id == null) {
-            return error(site, RewindStatusErrorType.MISSING_RESTORE_ID)
+            return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_ID)
         }
         if (response.restoreResponse != null && response.restoreResponse.status == null) {
-            return error(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
+            return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
         }
         if (response.restoreResponse?.status != null
                 && RewindStatusModel.RestoreStatus.Status.fromValue(response.restoreResponse.status) == null) {
-            return error(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
+            return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
         }
         val rewindStatusBuilder = RewindStatusModel.Builder(localSiteId = site.id,
                 remoteSiteId = site.siteId,
@@ -150,7 +150,7 @@ open class ActivityLogRestClient
         return FetchedRewindStatePayload(rewindStatusBuilder.build(), site)
     }
 
-    private fun error(site: SiteModel, errorType: RewindStatusErrorType) =
+    private fun buildErrorPayload(site: SiteModel, errorType: RewindStatusErrorType) =
             FetchedRewindStatePayload(RewindStatusError(errorType), site)
 
     private fun <T> genericToError(error: BaseRequest.BaseNetworkError,
@@ -169,10 +169,10 @@ open class ActivityLogRestClient
         return errorType
     }
 
-    data class ActivitiesResponse(val totalItems: Int?,
-                                  val summary: String?,
-                                  val current: Page) {
-        data class Page(val orderedItems: List<ActivityResponse>)
+    class ActivitiesResponse(val totalItems: Int?,
+                             val summary: String?,
+                             val current: Page?) {
+        class Page(val orderedItems: List<ActivityResponse>)
         data class ActivityResponse(val summary: String?,
                                     val content: Content?,
                                     val name: String?,
@@ -181,23 +181,28 @@ open class ActivityLogRestClient
                                     val published: Date?,
                                     val generator: Generator?,
                                     val is_rewindable: Boolean?,
-                                    val rewind_id: Float?,
+                                    val rewind_id: String?,
                                     val gridicon: String?,
                                     val status: String?,
                                     val activity_id: String?,
                                     val is_discarded: Boolean?)
 
-        data class Content(val text: String?)
-        data class Actor(val type: String?,
-                         val name: String?,
-                         val external_user_id: Long?,
-                         val wpcom_user_id: Long?,
-                         val icon: Icon?,
-                         val role: String?)
+        class Content(val text: String?)
+        class Actor(val type: String?,
+                    val name: String?,
+                    val external_user_id: Long?,
+                    val wpcom_user_id: Long?,
+                    val icon: Icon?,
+                    val role: String?)
 
-        data class Icon(val type: String?, val url: String?, val width: Int?, val height: Int?)
-        data class Generator(val jetpack_version: Float?,
-                             val blog_id: Long?)
+        class Icon(val type: String?, val url: String?, val width: Int?, val height: Int?)
+        class Generator(val jetpack_version: Float?,
+                        val blog_id: Long?)
+
+        class ActivityObject(val type: String,
+                             val name: String?,
+                             val external_user_id: Long?,
+                             val wpcom_user_id: Long?)
     }
 
     data class RewindStatusResponse(val reason: String,
