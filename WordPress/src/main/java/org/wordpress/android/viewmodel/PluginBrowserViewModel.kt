@@ -154,12 +154,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     // Site & WPOrg plugin management
 
     private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
-        val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
-        when (directoryType) {
-            PluginDirectoryType.FEATURED -> _featuredPlugins.postValue(pluginList)
-            PluginDirectoryType.NEW -> _newPlugins.postValue(pluginList)
-            PluginDirectoryType.POPULAR -> _popularPlugins.postValue(pluginList)
-            PluginDirectoryType.SITE -> _sitePlugins.postValue(pluginList)
+        site?.let {
+            val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
+            when (directoryType) {
+                PluginDirectoryType.FEATURED -> _featuredPlugins.postValue(pluginList)
+                PluginDirectoryType.NEW -> _newPlugins.postValue(pluginList)
+                PluginDirectoryType.POPULAR -> _popularPlugins.postValue(pluginList)
+                PluginDirectoryType.SITE -> _sitePlugins.postValue(pluginList)
+            }
         }
     }
 
