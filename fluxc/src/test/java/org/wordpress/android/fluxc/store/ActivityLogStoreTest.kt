@@ -65,7 +65,8 @@ class ActivityLogStoreTest {
         activityLogStore.onAction(action)
 
         verify(activityLogSqlUtils).insertOrUpdateActivities(siteModel, activityModels)
-        val expectedChangeEvent = ActivityLogStore.OnActivitiesFetched(rowsAffected,
+        val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
+                activityModels,
                 ActivityLogAction.FETCHED_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }

@@ -28,7 +28,8 @@ class ActivityLogStore
 
         when (actionType) {
             ActivityLogAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivityLogPayload)
-            ActivityLogAction.FETCHED_ACTIVITIES -> storeActivityLog(action.payload as FetchedActivityLogPayload, actionType)
+            ActivityLogAction.FETCHED_ACTIVITIES ->
+                storeActivityLog(action.payload as FetchedActivityLogPayload, actionType)
             ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
             else -> {
             }
@@ -53,9 +54,9 @@ class ActivityLogStore
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
         if (payload.activityLogModels.isNotEmpty()) {
             val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
-            emitChange(OnActivitiesFetched(rowsAffected, action))
+            emitChange(OnActivityLogFetched(rowsAffected, payload.activityLogModels, action))
         } else if (payload.error != null) {
-            emitChange(OnActivitiesFetched(payload.error, action))
+            emitChange(OnActivityLogFetched(payload.error, action))
         }
     }
 
@@ -64,10 +65,11 @@ class ActivityLogStore
     }
 
     // Actions
-    data class OnActivitiesFetched(val rowsAffected: Int,
-                                   var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
+    data class OnActivityLogFetched(val rowsAffected: Int,
+                                    val activityLogModels: List<ActivityLogModel>?,
+                                    var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
-                this(rowsAffected = 0, causeOfChange = causeOfChange) {
+                this(rowsAffected = 0, activityLogModels = null, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
