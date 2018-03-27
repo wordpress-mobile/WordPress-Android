@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.StringUtils
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
@@ -241,7 +240,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.pluginSlug) && updatedPluginSlugSet.add(event.pluginSlug)) {
+        if (!event.pluginSlug.isNullOrEmpty() && updatedPluginSlugSet.add(event.pluginSlug)) {
             updateAllPluginListsIfNecessary()
         }
     }
@@ -409,11 +408,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         return searchQuery.length > 1
     }
 
-    private fun submitSearch(query: String?, delayed: Boolean) {
+    private fun submitSearch(query: String, delayed: Boolean) {
         // If the query is not long enough we don't need to delay it
         if (delayed && shouldSearch()) {
             handler.postDelayed({
-                if (StringUtils.equals(query, searchQuery)) {
+                if (query == searchQuery) {
                     submitSearch(query, false)
                 }
             }, 250)
