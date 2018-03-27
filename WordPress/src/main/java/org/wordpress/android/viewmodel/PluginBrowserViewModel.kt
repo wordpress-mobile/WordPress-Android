@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.models.ListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.StringUtils
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.FEATURED
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.NEW
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.POPULAR
@@ -70,6 +69,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
+    private val shouldSearch: Boolean
+        get() = searchQuery.length > 1 // We need at least 2 characters to be able to search plugins
+
     init {
         mDispatcher.register(this)
     }
@@ -116,12 +118,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     // Site & WPOrg plugin management
 
     private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
-        val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
-        when (directoryType) {
-            PluginDirectoryType.FEATURED -> featuredPluginsResource.manuallyUpdateData(pluginList)
-            PluginDirectoryType.NEW -> newPluginsResource.manuallyUpdateData(pluginList)
-            PluginDirectoryType.POPULAR -> popularPluginsResource.manuallyUpdateData(pluginList)
-            PluginDirectoryType.SITE -> sitePluginsResource.manuallyUpdateData(pluginList)
+        site?.let {
+            val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
+            when (directoryType) {
+                PluginDirectoryType.FEATURED -> featuredPluginsResource.manuallyUpdateData(pluginList)
+                PluginDirectoryType.NEW -> newPluginsResource.manuallyUpdateData(pluginList)
+                PluginDirectoryType.POPULAR -> popularPluginsResource.manuallyUpdateData(pluginList)
+                PluginDirectoryType.SITE -> sitePluginsResource.manuallyUpdateData(pluginList)
+            }
         }
     }
 
@@ -185,7 +189,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.pluginSlug) && updatedPluginSlugSet.add(event.pluginSlug)) {
+        if (!event.pluginSlug.isNullOrEmpty() && updatedPluginSlugSet.add(event.pluginSlug)) {
             updateAllPluginListsIfNecessary()
         }
     }
@@ -338,23 +342,18 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    private fun shouldSearch(): Boolean {
-        // We need at least 2 characters to be able to search plugins
-        return searchQuery.length > 1
-    }
-
-    private fun submitSearch(query: String?, delayed: Boolean) {
+    private fun submitSearch(query: String, delayed: Boolean) {
         // If the query is not long enough we don't need to delay it
-        if (delayed && shouldSearch()) {
+        if (delayed && shouldSearch) {
             handler.postDelayed({
-                if (StringUtils.equals(query, searchQuery)) {
+                if (query == searchQuery) {
                     submitSearch(query, false)
                 }
             }, 250)
         } else {
             searchResultsResource.manuallyUpdateData(ArrayList())
 
-            if (shouldSearch()) {
+            if (shouldSearch) {
                 fetchPlugins(SEARCH, false)
             } else {
                 // Due to the query being changed after the last fetch, the status won't ever be updated, so we need
@@ -372,7 +371,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     fun shouldShowEmptySearchResultsView(): Boolean {
         // Search query is less than 2 characters
-        if (!shouldSearch()) {
+        if (!shouldSearch) {
             return false
         }
         // Only show empty view if content is empty, we are not fetching new data and no errors occurred
