@@ -135,7 +135,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
         site?.let {
-            val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
+            val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
             when (directoryType) {
                 PluginDirectoryType.FEATURED -> _featuredPlugins.manuallyUpdateData(pluginList)
                 PluginDirectoryType.NEW -> _newPlugins.manuallyUpdateData(pluginList)
@@ -220,7 +220,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             listResource.fetchError(event.error.message)
             return
         }
-        listResource.fetchedSuccessfully(mPluginStore.getPluginDirectory(site!!, event.type), event.loadMore)
+        site?.let {
+            listResource.fetchedSuccessfully(mPluginStore.getPluginDirectory(it, event.type), event.loadMore)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -310,24 +312,26 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (updatedPluginSlugSet.isEmpty()) {
             return
         }
-        val newPluginMap = HashMap<String, ImmutablePluginModel>(updatedPluginSlugSet.size)
-        for (slug in updatedPluginSlugSet) {
-            val immutablePlugin = mPluginStore.getImmutablePluginBySlug(site!!, slug)
-            if (immutablePlugin != null) {
-                newPluginMap[slug] = immutablePlugin
+        site?.let {
+            val newPluginMap = HashMap<String, ImmutablePluginModel>(updatedPluginSlugSet.size)
+            for (slug in updatedPluginSlugSet) {
+                val immutablePlugin = mPluginStore.getImmutablePluginBySlug(it, slug)
+                if (immutablePlugin != null) {
+                    newPluginMap[slug] = immutablePlugin
+                }
             }
-        }
-        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
-        // reflected
-        updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
+            // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
+            // reflected
+            updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
+            updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
+            updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
+            updatePluginListWithNewPlugin(_searchResults, newPluginMap)
 
-        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
-        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
-        // information is much more reliable than any manual update we can make
-        reloadPluginDirectory(PluginDirectoryType.SITE)
+            // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
+            // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
+            // information is much more reliable than any manual update we can make
+            reloadPluginDirectory(PluginDirectoryType.SITE)
+        }
     }
 
     private fun updatePluginListWithNewPlugin(pluginListNetworkResource: MutableListNetworkResource<ImmutablePluginModel>,

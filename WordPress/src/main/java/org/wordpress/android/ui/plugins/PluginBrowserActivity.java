@@ -205,7 +205,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
                 // We should ignore the errors due to network condition, unless this is the first fetch, the user can
                 // use the cached version of them and showing the error while the data is loaded might cause confusion
-                // TODO: handle network error separately
                 if (status == MutableListNetworkResource.Status.FETCH_ERROR
                     && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
