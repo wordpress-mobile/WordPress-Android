@@ -23,4 +23,7 @@ interface ListNetworkResource<T> {
     val status: LiveData<Status>
 
     fun isEmpty(): Boolean
+    fun isFetchingFirstPage(): Boolean
+    fun isError(): Boolean
+    fun shouldFetch(loadMore: Boolean): Boolean
 }

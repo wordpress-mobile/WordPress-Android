@@ -21,7 +21,7 @@ class MutableListNetworkResource<T>(private val paginationAvailable: Boolean = t
 
     // Checking Status
 
-    fun shouldFetch(loadMore: Boolean) = if (loadMore) shouldLoadMore() else shouldFetchFirstPage()
+    override fun shouldFetch(loadMore: Boolean) = if (loadMore) shouldLoadMore() else shouldFetchFirstPage()
 
     private fun shouldLoadMore() = paginationAvailable && status.value == Status.CAN_LOAD_MORE
 
@@ -63,9 +63,9 @@ class MutableListNetworkResource<T>(private val paginationAvailable: Boolean = t
 
     override fun isEmpty() = data.value == null || data.value!!.isEmpty()
 
-    fun isFetchingFirstPage() = status.value == Status.FETCHING_FIRST_PAGE
+    override fun isFetchingFirstPage() = status.value == Status.FETCHING_FIRST_PAGE
 
-    fun isError(): Boolean {
+    override fun isError(): Boolean {
         return status.value == Status.FETCH_ERROR
                 || status.value == Status.PAGINATION_ERROR
                 || status.value == Status.CONNECTION_ERROR

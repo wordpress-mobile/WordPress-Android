@@ -86,7 +86,7 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getSitePlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
                 if (mListType == PluginListType.SITE) {
@@ -95,7 +95,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getFeaturedPlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
                 if (mListType == PluginListType.FEATURED) {
@@ -104,7 +104,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getNewPlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
                 if (mListType == PluginListType.NEW) {
@@ -113,7 +113,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getPopularPlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
                 if (mListType == PluginListType.POPULAR) {
@@ -122,7 +122,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getSearchResults().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getSearchResults().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> searchResults) {
                 if (mListType == PluginListType.SEARCH) {
@@ -131,7 +131,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getSitePluginsStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
+        mViewModel.getSitePlugins().getStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
             @Override
             public void onChanged(@Nullable MutableListNetworkResource.Status status) {
                 if (mListType == PluginListType.SITE) {
@@ -140,7 +140,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getFeaturedPluginsStatus()
+        mViewModel.getFeaturedPlugins().getStatus()
                   .observe(this, new Observer<MutableListNetworkResource.Status>() {
                       @Override
                       public void onChanged(@Nullable MutableListNetworkResource.Status status) {
@@ -150,7 +150,7 @@ public class PluginListFragment extends Fragment {
                       }
                   });
 
-        mViewModel.getNewPluginsStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
+        mViewModel.getNewPlugins().getStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
             @Override
             public void onChanged(@Nullable MutableListNetworkResource.Status status) {
                 if (mListType == PluginListType.NEW) {
@@ -159,7 +159,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getPopularPluginsStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
+        mViewModel.getPopularPlugins().getStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
             @Override
             public void onChanged(@Nullable MutableListNetworkResource.Status status) {
                 if (mListType == PluginListType.POPULAR) {
@@ -168,7 +168,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getSearchResultsStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
+        mViewModel.getSearchResults().getStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
             @Override
             public void onChanged(@Nullable MutableListNetworkResource.Status status) {
                 if (mListType == PluginListType.SEARCH) {

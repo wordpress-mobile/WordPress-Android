@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
+import org.wordpress.android.models.ListNetworkResource
 import org.wordpress.android.models.MutableListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -50,11 +51,26 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val handler = Handler()
     private val updatedPluginSlugSet = HashSet<String>()
 
-    private val featuredPluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
-    private val newPluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
-    private val popularPluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
-    private val sitePluginsResource = MutableListNetworkResource<ImmutablePluginModel>()
-    private val searchResultsResource = MutableListNetworkResource<ImmutablePluginModel>()
+    private val _featuredPlugins = MutableListNetworkResource<ImmutablePluginModel>()
+    val featuredPlugins: ListNetworkResource<ImmutablePluginModel>
+        get() = _featuredPlugins
+
+    private val _newPlugins = MutableListNetworkResource<ImmutablePluginModel>()
+    val newPlugins: ListNetworkResource<ImmutablePluginModel>
+        get() = _newPlugins
+
+    private val _popularPlugins = MutableListNetworkResource<ImmutablePluginModel>()
+    val popularPlugins: ListNetworkResource<ImmutablePluginModel>
+        get() = _popularPlugins
+
+    private val _sitePlugins = MutableListNetworkResource<ImmutablePluginModel>()
+    val sitePlugins: ListNetworkResource<ImmutablePluginModel>
+        get() = _sitePlugins
+
+    private val _searchResults = MutableListNetworkResource<ImmutablePluginModel>()
+    val searchResults: ListNetworkResource<ImmutablePluginModel>
+        get() = _searchResults
+
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -121,10 +137,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         site?.let {
             val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
             when (directoryType) {
-                PluginDirectoryType.FEATURED -> featuredPluginsResource.manuallyUpdateData(pluginList)
-                PluginDirectoryType.NEW -> newPluginsResource.manuallyUpdateData(pluginList)
-                PluginDirectoryType.POPULAR -> popularPluginsResource.manuallyUpdateData(pluginList)
-                PluginDirectoryType.SITE -> sitePluginsResource.manuallyUpdateData(pluginList)
+                PluginDirectoryType.FEATURED -> _featuredPlugins.manuallyUpdateData(pluginList)
+                PluginDirectoryType.NEW -> _newPlugins.manuallyUpdateData(pluginList)
+                PluginDirectoryType.POPULAR -> _popularPlugins.manuallyUpdateData(pluginList)
+                PluginDirectoryType.SITE -> _sitePlugins.manuallyUpdateData(pluginList)
             }
         }
     }
@@ -143,27 +159,27 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         when (listType) {
             SITE -> {
-                sitePluginsResource.fetching(loadMore)
+                _sitePlugins.fetching(loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             FEATURED -> {
-                featuredPluginsResource.fetching(loadMore)
+                _featuredPlugins.fetching(loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             POPULAR -> {
-                popularPluginsResource.fetching(loadMore)
+                _popularPlugins.fetching(loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             NEW -> {
-                newPluginsResource.fetching(loadMore)
+                _newPlugins.fetching(loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             SEARCH -> {
-                searchResultsResource.fetching(loadMore)
+                _searchResults.fetching(loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
             }
@@ -215,10 +231,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            searchResultsResource.fetchError(event.error.message)
+            _searchResults.fetchError(event.error.message)
             return
         }
-        searchResultsResource.fetchedSuccessfully(event.plugins, false)
+        _searchResults.fetchedSuccessfully(event.plugins, false)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -303,10 +319,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
         // reflected
-        updatePluginListWithNewPlugin(featuredPluginsResource, newPluginMap)
-        updatePluginListWithNewPlugin(newPluginsResource, newPluginMap)
-        updatePluginListWithNewPlugin(popularPluginsResource, newPluginMap)
-        updatePluginListWithNewPlugin(searchResultsResource, newPluginMap)
+        updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
+        updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
+        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
+        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
 
         // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
         // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
@@ -351,7 +367,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 }
             }, 250)
         } else {
-            searchResultsResource.manuallyUpdateData(ArrayList())
+            _searchResults.manuallyUpdateData(ArrayList())
 
             if (shouldSearch) {
                 fetchPlugins(SEARCH, false)
@@ -364,7 +380,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 // be triggered again, because another fetch didn't happen (due to query being empty)
                 // 4. The status will be stuck in FETCHING until another search occurs. The following reset fixes the
                 // problem.
-                searchResultsResource.resetStatus()
+                _searchResults.resetStatus()
             }
         }
     }
@@ -375,9 +391,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             return false
         }
         // Only show empty view if content is empty, we are not fetching new data and no errors occurred
-        return searchResultsResource.isEmpty()
-                && !searchResultsResource.isFetchingFirstPage()
-                && !searchResultsResource.isError()
+        return searchResults.isEmpty()
+                && !searchResults.isFetchingFirstPage()
+                && !searchResults.isError()
     }
 
     fun setTitle(title: String?) {
@@ -386,57 +402,32 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     fun getPluginsForListType(listType: PluginListType): List<ImmutablePluginModel>? {
         return when (listType) {
-            SITE -> sitePluginsResource.data.value
-            FEATURED -> featuredPluginsResource.data.value
-            POPULAR -> popularPluginsResource.data.value
-            NEW -> newPluginsResource.data.value
-            SEARCH -> searchResultsResource.data.value
+            SITE -> sitePlugins.data.value
+            FEATURED -> featuredPlugins.data.value
+            POPULAR -> popularPlugins.data.value
+            NEW -> newPlugins.data.value
+            SEARCH -> searchResults.data.value
         }
     }
 
     private fun getListNetworkResourceForDirectoryType(directoryType: PluginDirectoryType):
             MutableListNetworkResource<ImmutablePluginModel> {
         return when (directoryType) {
-            PluginDirectoryType.FEATURED -> featuredPluginsResource
-            PluginDirectoryType.NEW -> newPluginsResource
-            PluginDirectoryType.POPULAR -> popularPluginsResource
-            PluginDirectoryType.SITE -> sitePluginsResource
+            PluginDirectoryType.FEATURED -> _featuredPlugins
+            PluginDirectoryType.NEW -> _newPlugins
+            PluginDirectoryType.POPULAR -> _popularPlugins
+            PluginDirectoryType.SITE -> _sitePlugins
         }
     }
 
-    private fun getListNetworkResourceForListType(listType: PluginListType): MutableListNetworkResource<ImmutablePluginModel> {
+    private fun getListNetworkResourceForListType(listType: PluginListType):
+            ListNetworkResource<ImmutablePluginModel> {
         return when (listType) {
-            SITE -> sitePluginsResource
-            FEATURED -> featuredPluginsResource
-            POPULAR -> popularPluginsResource
-            NEW -> newPluginsResource
-            SEARCH -> searchResultsResource
+            SITE -> _sitePlugins
+            FEATURED -> _featuredPlugins
+            POPULAR -> _popularPlugins
+            NEW -> _newPlugins
+            SEARCH -> _searchResults
         }
     }
-
-    // Getters for LiveData properties
-
-    val sitePlugins
-        get() = sitePluginsResource.data
-    val featuredPlugins
-        get() = featuredPluginsResource.data
-    val popularPlugins
-        get() = popularPluginsResource.data
-    val newPlugins
-        get() = newPluginsResource.data
-    val searchResults
-        get() = searchResultsResource.data
-
-    val sitePluginsStatus
-        get() = sitePluginsResource.status
-    val featuredPluginsStatus
-        get() = featuredPluginsResource.status
-    val popularPluginsStatus
-        get() = popularPluginsResource.status
-    val newPluginsStatus
-        get() = newPluginsResource.status
-    val searchResultsStatus
-        get() = searchResultsResource.status
-
-    fun isSitePluginsEmpty() = sitePluginsResource.isEmpty()
 }

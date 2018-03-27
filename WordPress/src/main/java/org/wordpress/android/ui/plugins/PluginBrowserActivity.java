@@ -169,39 +169,39 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getSitePlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
             }
         });
 
-        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getFeaturedPlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.FEATURED, featuredPlugins);
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getNewPlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getPopularPlugins().getData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
 
-        mViewModel.getSitePluginsStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
+        mViewModel.getSitePlugins().getStatus().observe(this, new Observer<MutableListNetworkResource.Status>() {
             @Override
             public void onChanged(@Nullable MutableListNetworkResource.Status status) {
                 showProgress(status == MutableListNetworkResource.Status.FETCHING_FIRST_PAGE
-                             && mViewModel.isSitePluginsEmpty());
+                             && mViewModel.getSitePlugins().isEmpty());
 
                 // We should ignore the errors due to network condition, unless this is the first fetch, the user can
                 // use the cached version of them and showing the error while the data is loaded might cause confusion
