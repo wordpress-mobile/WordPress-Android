@@ -493,6 +493,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Set the maximum size a column can get on the screen in PX
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
+        mGraphView.getGraphViewStyle().setTextSize(getResources().getDimensionPixelOffset(R.dimen.stats_legent_text_size));
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
                 mainSeriesItems, selectedStatsType));

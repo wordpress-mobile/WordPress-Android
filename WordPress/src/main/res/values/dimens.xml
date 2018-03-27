@@ -188,6 +188,7 @@
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
+    <dimen name="stats_legent_text_size">9sp</dimen>
 
     <!-- stats widget-->
     <dimen name="stats_widget_icon_size">18dp</dimen>

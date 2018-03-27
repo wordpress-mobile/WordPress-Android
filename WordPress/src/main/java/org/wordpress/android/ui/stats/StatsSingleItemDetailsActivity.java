@@ -464,6 +464,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
+        mGraphView.getGraphViewStyle().setTextSize(
+                getResources().getDimensionPixelOffset(R.dimen.stats_legent_text_size));
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalViewLabels(horLabels, dataToShowOnGraph));
         mGraphView.setGestureListener(this);
