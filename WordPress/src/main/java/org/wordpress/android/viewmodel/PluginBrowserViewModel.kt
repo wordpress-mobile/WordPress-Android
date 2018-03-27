@@ -221,7 +221,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             return
         }
         site?.let {
-            listResource.fetchedSuccessfully(mPluginStore.getPluginDirectory(it, event.type), event.loadMore)
+            listResource.fetchedSuccessfully(mPluginStore.getPluginDirectory(it, event.type), event.canLoadMore)
         }
     }
 
