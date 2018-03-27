@@ -13,8 +13,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.ActivityAction
-import org.wordpress.android.fluxc.generated.ActivityActionBuilder
+import org.wordpress.android.fluxc.action.ActivityLogAction
+import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -39,8 +39,8 @@ class ActivityLogStoreTest {
         val number = 10
         val offset = 0
 
-        val payload = ActivityLogStore.FetchActivitiesPayload(siteModel, number, offset)
-        val action = ActivityActionBuilder.newFetchActivitiesAction(payload)
+        val payload = ActivityLogStore.FetchActivityLogPayload(siteModel, number, offset)
+        val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
         verify(activityLogRestClient).fetchActivity(siteModel, number, offset)
@@ -49,7 +49,7 @@ class ActivityLogStoreTest {
     @Test
     fun onFetchRewindStatusActionCallRestClient() {
         val payload = ActivityLogStore.FetchRewindStatePayload(siteModel)
-        val action = ActivityActionBuilder.newFetchRewindStateAction(payload)
+        val action = ActivityLogActionBuilder.newFetchRewindStateAction(payload)
         activityLogStore.onAction(action)
 
         verify(activityLogRestClient).fetchActivityRewind(siteModel)
@@ -58,15 +58,17 @@ class ActivityLogStoreTest {
     @Test
     fun storeFetchedActivityLogToDb() {
         val activityModels = listOf<ActivityLogModel>(mock())
-        val payload = ActivityLogStore.FetchedActivitiesPayload(activityModels, siteModel, 10, 0)
-        val action = ActivityActionBuilder.newFetchedActivitiesAction(payload)
+        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 10, 0)
+        val action = ActivityLogActionBuilder.newFetchedActivitiesAction(payload)
         val rowsAffected = 1
         whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
 
         activityLogStore.onAction(action)
 
         verify(activityLogSqlUtils).insertOrUpdateActivities(siteModel, activityModels)
-        val expectedChangeEvent = ActivityLogStore.OnActivitiesFetched(rowsAffected, ActivityAction.FETCHED_ACTIVITIES)
+        val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
+                activityModels,
+                ActivityLogAction.FETCHED_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
