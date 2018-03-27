@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ActivityActionBuilder
+import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 
@@ -16,11 +16,11 @@ class ActivityLogStoreTest {
     @Mock private lateinit var activityLogRestClient: ActivityLogRestClient
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteModel: SiteModel
-    private lateinit var mActivityLogStore: ActivityLogStore
+    private lateinit var activityLogStore: ActivityLogStore
 
     @Before
     fun setUp() {
-        mActivityLogStore = ActivityLogStore(activityLogRestClient, dispatcher)
+        activityLogStore = ActivityLogStore(activityLogRestClient, dispatcher)
     }
 
     @Test
@@ -28,9 +28,9 @@ class ActivityLogStoreTest {
         val number = 10
         val offset = 0
 
-        val payload = ActivityLogStore.FetchActivitiesPayload(siteModel, number, offset)
-        val action = ActivityActionBuilder.newFetchActivitiesAction(payload)
-        mActivityLogStore.onAction(action)
+        val payload = ActivityLogStore.FetchActivityLogPayload(siteModel, number, offset)
+        val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
+        activityLogStore.onAction(action)
 
         verify(activityLogRestClient).fetchActivity(siteModel, number, offset)
     }
@@ -41,8 +41,8 @@ class ActivityLogStoreTest {
         val offset = 0
 
         val payload = ActivityLogStore.FetchRewindStatePayload(siteModel, number, offset)
-        val action = ActivityActionBuilder.newFetchRewindStateAction(payload)
-        mActivityLogStore.onAction(action)
+        val action = ActivityLogActionBuilder.newFetchRewindStateAction(payload)
+        activityLogStore.onAction(action)
 
         verify(activityLogRestClient).fetchActivityRewind(siteModel, number, offset)
     }
