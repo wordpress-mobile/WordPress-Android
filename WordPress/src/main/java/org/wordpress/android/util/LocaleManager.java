@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Helper class for working with localized strings. Ensures updates to the users
@@ -29,6 +30,11 @@ public class LocaleManager {
      * Key used for saving the language selection to shared preferences.
      */
     private static final String LANGUAGE_KEY = "language-pref";
+
+    /**
+     * Pattern to split a language string (to parse the language and region values).
+     */
+    private static Pattern languageSplitter = Pattern.compile("_");
 
     /**
      * Activate the locale associated with the provided context.
@@ -143,23 +149,20 @@ public class LocaleManager {
 
     /**
      * Gets a locale for the given language code.
-     * @param languageCode The 2-letter language code (example "en"). If null or empty will return
+     * @param languageCode The language code (example "en" or "es-US"). If null or empty will return
      *                     the current default locale.
      */
     public static Locale languageLocale(@Nullable String languageCode) {
         if (TextUtils.isEmpty(languageCode)) {
             return Locale.getDefault();
         }
-        if (languageCode.contains("_")) {
-            // Attempt to parse language and region codes.
-            String[] opts = languageCode.split("_");
-            if (opts.length >= 2) {
-                return new Locale(opts[0], opts[1]);
-            } else {
-                return new Locale(opts[0]);
-            }
+        // Attempt to parse language and region codes.
+        String[] opts = languageSplitter.split(languageCode, 0);
+        if (opts.length > 1) {
+            return new Locale(opts[0], opts[1]);
+        } else {
+            return new Locale(opts[0]);
         }
-        return new Locale(languageCode);
     }
 
     /**
