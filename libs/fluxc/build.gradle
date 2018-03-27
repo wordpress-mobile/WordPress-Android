@@ -20,8 +20,8 @@ repositories {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         versionCode 4
