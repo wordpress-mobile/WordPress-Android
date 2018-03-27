@@ -19,7 +19,7 @@ val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse.ActivityRespons
         Date(),
         ActivityLogRestClient.ActivitiesResponse.Generator(10.3f, 123),
         false,
-        10f,
+        "10.0",
         "gridicon.jpg",
         "OK",
         "activity123",

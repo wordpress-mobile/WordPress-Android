@@ -126,7 +126,7 @@ class ActivityLogSqlUtils
                                   @Column var gridicon: String? = null,
                                   @Column var status: String? = null,
                                   @Column var rewindable: Boolean? = null,
-                                  @Column var rewindID: Float? = null,
+                                  @Column var rewindID: String? = null,
                                   @Column var published: Long,
                                   @Column var discarded: Boolean? = null,
                                   @Column var displayName: String? = null,
