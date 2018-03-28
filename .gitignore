@@ -33,6 +33,7 @@ local.properties
 
 # IntelliJ/Android Studio exceptions
 !/.idea/vcs.xml
+!/.idea/codeStyles/
 !/.idea/fileTemplates/
 !/.idea/inspectionProfiles/
 !/.idea/scopes/
