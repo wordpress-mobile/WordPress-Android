@@ -435,7 +435,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                     break;
                 default:
                     // should never get here
-                    return null;
+                    throw new RuntimeException("Unhandled preview type");
             }
 
             fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
