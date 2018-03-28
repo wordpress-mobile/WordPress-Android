@@ -14,10 +14,15 @@ import javax.inject.Inject
 class ActivityLogViewModel() : ViewModel() {
     private lateinit var dispatcher: Dispatcher
     private lateinit var activityLogStore: ActivityLogStore
+    private lateinit var dao: ActivityLogDao
 
     private val events: MutableLiveData<List<ActivityLogModel>> = MutableLiveData()
 
     var site: SiteModel? = null
+        set (value) {
+            field = value
+            this.dao = ActivityLogDao(value!!, activityLogStore, dispatcher)
+        }
 
     @Inject
     constructor(dispatcher: Dispatcher, activityLogStore: ActivityLogStore) : this() {
