@@ -1828,12 +1828,6 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
-    private void addExistingMediaToEditorAndSave(long mediaId) {
-        if (addExistingMediaToEditor(mediaId)) {
-            savePostAsync(null);
-        }
-    }
-
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
         @Override
         protected Spanned doInBackground(String... params) {
