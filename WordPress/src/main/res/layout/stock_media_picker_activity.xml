@@ -33,19 +33,35 @@
         android:scrollbars="vertical"
         tools:listitem="@layout/stock_media_picker_thumbnail" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_empty"
+    <LinearLayout
+        android:id="@+id/empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="@dimen/margin_large"
-        android:gravity="center"
-        android:textColor="@color/grey"
-        android:textColorLink="@color/link"
-        android:textSize="@dimen/text_sz_extra_large"
+        android:orientation="vertical"
         android:visibility="gone"
-        tools:text="@string/stock_media_picker_initial_empty_text"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/image_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:srcCompat="@drawable/ic_stock_media" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/margin_large"
+            android:gravity="center"
+            android:textColor="@color/grey"
+            android:textColorLink="@color/link"
+            android:textSize="@dimen/text_sz_extra_large"
+            tools:text="@string/stock_media_picker_initial_empty_text" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/container_selection_bar"
