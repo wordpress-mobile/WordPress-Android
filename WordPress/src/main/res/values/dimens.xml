@@ -203,7 +203,6 @@
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
     <!-- my site -->
-    <dimen name="my_site_blog_name_margin_top">11dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
