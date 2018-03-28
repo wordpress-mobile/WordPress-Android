@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
@@ -49,7 +50,9 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -59,7 +62,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
-    // this will be used later by the editor to insert uploaded stock photos into the current post
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -371,6 +373,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return;
         }
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_SEARCHED);
+
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
 
@@ -395,15 +399,32 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             ToastUtils.showToast(this, R.string.media_upload_error);
             AppLog.e(AppLog.T.MEDIA, "An error occurred while uploading stock media");
         } else {
-            ArrayList<Integer> idList = new ArrayList<>();
-            for (MediaModel media : event.mediaList) {
-                idList.add(media.getId());
+            trackUploadedStockMediaEvent(event.mediaList);
+
+            int count = event.mediaList.size();
+            long[] idArray = new long[count];
+            for (int i = 0; i < count; i++) {
+                idArray[i] = event.mediaList.get(i).getMediaId();
             }
+
             Intent intent = new Intent();
-            intent.putIntegerArrayListExtra(KEY_UPLOADED_MEDIA_IDS, idList);
+            intent.putExtra(KEY_UPLOADED_MEDIA_IDS, idArray);
             setResult(RESULT_OK, intent);
             finish();
         }
+    }
+
+    private void trackUploadedStockMediaEvent(@NonNull List<MediaModel> mediaList) {
+        if (mediaList.size() == 0) {
+            AppLog.e(AppLog.T.MEDIA, "Cannot track uploaded stock media event if mediaList is empty");
+            return;
+        }
+
+        boolean isMultiselect = mediaList.size() > 1;
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("is_part_of_multiselection", isMultiselect);
+        properties.put("number_of_media_selected", mediaList.size());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_UPLOADED, properties);
     }
 
     private void showSelectionBar(final boolean show) {

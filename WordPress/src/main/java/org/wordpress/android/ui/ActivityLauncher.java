@@ -63,7 +63,9 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
 
@@ -113,6 +115,10 @@ public class ActivityLauncher {
 
     public static void showStockMediaPickerForResult(Activity activity,
                                                      @NonNull SiteModel site) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("from", activity.getClass().getSimpleName());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_ACCESSED, properties);
+
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.STOCK_MEDIA_PICKER);
