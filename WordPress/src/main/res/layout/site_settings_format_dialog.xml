@@ -41,7 +41,8 @@
             android:textSize="@dimen/text_sz_medium"
             android:paddingStart="@dimen/margin_small"
             android:textAlignment="viewStart"
-            android:gravity="start"/>
+            android:gravity="start"
+            android:inputType="text"/>
 
         <TextView
             android:id="@+id/text_help"
