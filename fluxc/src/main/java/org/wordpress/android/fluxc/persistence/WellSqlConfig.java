@@ -224,6 +224,15 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("ALTER TABLE SiteModel ADD IS_WP_COM_STORE INTEGER");
                 db.execSQL("ALTER TABLE SiteModel ADD HAS_WOO_COMMERCE INTEGER");
                 oldVersion++;
+            case 27:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE ActivityLogModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,ACTIVITY_ID TEXT NOT NULL,SUMMARY TEXT NOT NULL,TEXT TEXT NOT NULL,"
+                        + "NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID TEXT,PUBLISHED "
+                        + "TEXT NOT NULL,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID INTEGER,"
+                        + "AVATAR_URL TEXT,ROLE TEXT)");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
