@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -74,7 +75,8 @@ class PostUploadNotifier {
         sNotificationData = new NotificationData();
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                                                                               Context.NOTIFICATION_SERVICE);
-        mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
+        mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
+                NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
                             .setColor(context.getResources().getColor(R.color.blue_wordpress));
     }
@@ -281,7 +283,8 @@ class PostUploadNotifier {
 
         // Notification builder
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
         String notificationTitle;
         String notificationMessage;
 
@@ -362,7 +365,8 @@ class PostUploadNotifier {
         AppLog.d(AppLog.T.MEDIA, "updateNotificationSuccessForMedia");
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
 
         long notificationId = getNotificationIdForMedia(site);
         // Tap notification intent (open the media browser)
@@ -439,7 +443,8 @@ class PostUploadNotifier {
         AppLog.d(AppLog.T.POSTS, "updateNotificationErrorForPost: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
 
         long notificationId = getNotificationIdForPost(post);
         // Tap notification intent (open the post list)
@@ -491,7 +496,8 @@ class PostUploadNotifier {
         AppLog.d(AppLog.T.MEDIA, "updateNotificationErrorForMedia: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
 
         long notificationId = getNotificationIdForMedia(site);
         // Tap notification intent (open the media browser)
