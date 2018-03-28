@@ -1,11 +1,7 @@
 package org.wordpress.android.viewmodel.activitylog
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
-import android.arch.paging.PositionalDataSource
 import android.support.annotation.WorkerThread
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -18,15 +14,10 @@ import javax.inject.Inject
 class ActivityLogViewModel() : ViewModel() {
     private lateinit var dispatcher: Dispatcher
     private lateinit var activityLogStore: ActivityLogStore
-    private lateinit var dao: ActivityLogDao
 
-    val events: LiveData<PagedList<ActivityLogModel>> = MutableLiveData()
+    private val events: MutableLiveData<List<ActivityLogModel>> = MutableLiveData()
 
     var site: SiteModel? = null
-        set (value) {
-            field = value
-            this.dao = ActivityLogDao(value!!, activityLogStore, dispatcher)
-        }
 
     @Inject
     constructor(dispatcher: Dispatcher, activityLogStore: ActivityLogStore) : this() {
