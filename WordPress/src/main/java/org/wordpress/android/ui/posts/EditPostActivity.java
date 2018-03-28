@@ -2502,14 +2502,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
                         long[] mediaIds =
                                 data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
-
-                        Map<String, Object> properties = new HashMap<>();
-                        properties.put("count", mediaIds.length);
-                        AnalyticsUtils.trackWithSiteDetails(
-                                Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY,
-                                mSite,
-                                properties);
-
                         for (long id : mediaIds) {
                             addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
                         }
