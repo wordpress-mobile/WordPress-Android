@@ -59,6 +59,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
+    // this will be used later by the editor to insert uploaded stock photos into the current post
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -70,6 +71,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private RecyclerView mRecycler;
     private ViewGroup mSelectionBar;
     private TextView mTextAdd;
+    private TextView mTextPreview;
 
     private SearchView mSearchView;
     private String mSearchQuery;
@@ -131,14 +133,16 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         mSelectionBar = findViewById(R.id.container_selection_bar);
         mTextAdd = findViewById(R.id.text_add);
+        mTextPreview = findViewById(R.id.text_preview);
+
         mTextAdd.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 uploadSelection();
             }
         });
-        findViewById(R.id.text_clear).setOnClickListener(new View.OnClickListener() {
+        mTextPreview.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                mAdapter.clearSelection();
+                previewSelection();
             }
         });
 
@@ -431,8 +435,12 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            String label = String.format(getString(R.string.add_count), numSelected);
-            mTextAdd.setText(label);
+            String labelAdd = String.format(getString(R.string.add_count), numSelected);
+            mTextAdd.setText(labelAdd);
+
+            String labelPreview = String.format(getString(R.string.preview_count), numSelected);
+            mTextPreview.setText(labelPreview);
+
             showSelectionBar(true);
             if (numSelected == 1) {
                 ActivityUtils.hideKeyboardForced(mSearchView);
@@ -440,6 +448,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         } else {
             showSelectionBar(false);
         }
+    }
+
+    private void previewSelection() {
+        List<StockMediaModel> items = mAdapter.getSelectedStockMedia();
+        if (items.size() == 0) return;
+
+        ArrayList<String> imageUrlList = new ArrayList<>();
+        for (StockMediaModel media : items) {
+            imageUrlList.add(media.getUrl());
+        }
+        MediaPreviewActivity.showPreview(this, null, imageUrlList, imageUrlList.get(0));
     }
 
     private void uploadSelection() {
@@ -605,14 +624,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             mSelectedItems.addAll(selectedItems);
             notifyDataSetChanged();
             notifySelectionCountChanged();
-        }
-
-        private void clearSelection() {
-            if (mSelectedItems.size() > 0) {
-                mSelectedItems.clear();
-                notifyDataSetChanged();
-                notifySelectionCountChanged();
-            }
         }
 
         int getSelectionCount() {

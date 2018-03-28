@@ -101,8 +101,8 @@
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
     <string name="delete_no">Don\'t Delete</string>
-    <string name="clear">Clear</string>
     <string name="add_count">Add %d</string>
+    <string name="preview_count">Preview %d</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -2005,6 +2005,7 @@
     <string name="media_grid_item_play_video_desc">play video</string>
     <string name="media_preview_audio_desc">audio</string>
     <string name="media_preview_desc">preview</string>
+    <string name="media_preview_title">%1$d of %2$d</string>
     <string name="media_settings_image_preview_desc">image preview</string>
     <string name="media_settings_play">play</string>
     <string name="people_invite_role_info_desc">role info</string>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:iconifiedByDefault="false"
-            app:queryHint="@string/stock_media_picker_search_hint"/>
+            app:queryHint="@string/stock_media_picker_search_hint" />
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
@@ -30,7 +30,7 @@
         android:layout_below="@+id/toolbar"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
-        tools:listitem="@layout/stock_media_picker_thumbnail"/>
+        tools:listitem="@layout/stock_media_picker_thumbnail" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -44,7 +44,7 @@
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
         tools:text="@string/stock_media_picker_initial_empty_text"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/container_selection_bar"
@@ -58,18 +58,18 @@
         tools:visibility="visible">
 
         <TextView
-            android:id="@+id/text_clear"
+            android:id="@+id/text_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:background="?android:selectableItemBackground"
             android:minHeight="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_large"
-            android:text="@string/clear"
+            android:text="@string/button_preview"
             android:textAllCaps="true"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/text_add"
@@ -83,7 +83,7 @@
             android:textAllCaps="true"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </FrameLayout>
 
@@ -94,6 +94,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </RelativeLayout>
