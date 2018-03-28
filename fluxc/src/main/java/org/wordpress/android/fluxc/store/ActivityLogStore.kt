@@ -42,9 +42,7 @@ class ActivityLogStore
     }
 
     private fun fetchActivitiesRewind(fetchActivitiesRewindPayload: FetchRewindStatePayload) {
-        activityLogRestClient.fetchActivityRewind(fetchActivitiesRewindPayload.site,
-                fetchActivitiesRewindPayload.number,
-                fetchActivitiesRewindPayload.offset)
+        activityLogRestClient.fetchActivityRewind(fetchActivitiesRewindPayload.site)
     }
 
     // Payloads
@@ -52,9 +50,7 @@ class ActivityLogStore
                                   val number: Int,
                                   val offset: Int) : Payload<BaseRequest.BaseNetworkError>()
 
-    class FetchRewindStatePayload(val site: SiteModel,
-                                  val number: Int,
-                                  val offset: Int) : Payload<BaseRequest.BaseNetworkError>()
+    class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchedActivityLogPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
                                     val site: SiteModel,
@@ -69,13 +65,8 @@ class ActivityLogStore
     }
 
     class FetchedRewindStatePayload(val rewindStatusModelResponse: RewindStatusModel? = null,
-                                    val site: SiteModel,
-                                    val number: Int,
-                                    val offset: Int) : Payload<RewindStatusError>() {
-        constructor(error: RewindStatusError,
-                    site: SiteModel,
-                    number: Int,
-                    offset: Int) : this(site = site, number = number, offset = offset) {
+                                    val site: SiteModel) : Payload<RewindStatusError>() {
+        constructor(error: RewindStatusError, site: SiteModel) : this(site = site) {
             this.error = error
         }
     }

@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryXMLRPCClient;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -164,17 +165,19 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public ActivityLogRestClient provideActivityRestClient(Context appContext, Dispatcher dispatcher,
-                                                           @Named("regular") RequestQueue requestQueue,
-                                                           AccessToken token, UserAgent userAgent) {
-        return new ActivityLogRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    public ActivityLogRestClient provideActivityLogRestClient(Context appContext, Dispatcher dispatcher,
+                                                              @Named("regular") RequestQueue requestQueue,
+                                                              AccessToken token, UserAgent userAgent,
+                                                              WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new ActivityLogRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent);
     }
 
     @Singleton
     @Provides
     public CommentXMLRPCClient provideCommentXMLRPCClient(Dispatcher dispatcher,
-                                                       @Named("custom-ssl") RequestQueue requestQueue,
-                                                       UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+                                                          @Named("custom-ssl") RequestQueue requestQueue,
+                                                          UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         return new CommentXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
