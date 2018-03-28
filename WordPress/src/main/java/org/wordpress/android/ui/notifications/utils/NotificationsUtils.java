@@ -53,6 +53,9 @@ import java.util.List;
 import java.util.Map;
 
 public class NotificationsUtils {
+    public static final String GENERAL_IMPORTANT_CHANNEL_ID = "wpandroid_notification_important_channel_id";
+    public static final String GENERAL_NORMAL_CHANNEL_ID = "wpandroid_notification_normal_channel_id";
+
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
     public static final String ARG_PUSH_AUTH_TITLE = "arg_push_auth_title";
     public static final String ARG_PUSH_AUTH_MESSAGE = "arg_push_auth_message";

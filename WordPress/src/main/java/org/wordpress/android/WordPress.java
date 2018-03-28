@@ -3,6 +3,8 @@ package org.wordpress.android;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
@@ -277,6 +279,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
+        createNotificationChannelsOnSdk26();
+
         disableRtlLayoutDirectionOnSdk17();
 
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
@@ -319,6 +323,28 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
                 }
             }).start();
+        }
+    }
+
+    private void createNotificationChannelsOnSdk26() {
+        // create Notification channels introduced in Android Oreo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NORMAL channel (used for likes, comments, replies, etc.)
+            NotificationChannel normalChannel = new NotificationChannel(NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID,
+                    getString(R.string.notification_channel_general_title), NotificationManager.IMPORTANCE_DEFAULT);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(normalChannel);
+
+
+            // Create the IMPORTANT channel (used for 2fa auth, for example)
+            NotificationChannel importantChannel = new NotificationChannel(NotificationsUtils.GENERAL_IMPORTANT_CHANNEL_ID,
+                    getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(importantChannel);
         }
     }
 
