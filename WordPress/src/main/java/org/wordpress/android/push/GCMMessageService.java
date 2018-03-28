@@ -600,7 +600,7 @@ public class GCMMessageService extends GcmListenerService {
 
         private NotificationCompat.Builder getNotificationBuilder(Context context, String title, String message) {
             // Build the new notification, add group to support wearable stacking
-            return new NotificationCompat.Builder(context)
+            return new NotificationCompat.Builder(context, NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_my_sites_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
@@ -650,7 +650,8 @@ public class GCMMessageService extends GcmListenerService {
 
                 String subject =
                         String.format(context.getString(R.string.new_notifications), ACTIVE_NOTIFICATIONS_MAP.size());
-                NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context)
+                NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context,
+                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_my_sites_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
@@ -930,7 +931,8 @@ public class GCMMessageService extends GcmListenerService {
             pushAuthIntent.setAction("android.intent.action.MAIN");
             pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
+                    NotificationsUtils.GENERAL_IMPORTANT_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_my_sites_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
