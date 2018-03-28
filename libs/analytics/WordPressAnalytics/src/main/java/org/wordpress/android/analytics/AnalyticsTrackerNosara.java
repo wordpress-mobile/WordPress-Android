@@ -972,7 +972,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STOCK_MEDIA_SEARCHED :
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
-                return "stock_media_uploaed";
+                return "stock_media_uploaded";
             default:
                 return null;
         }
