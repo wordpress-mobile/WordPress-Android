@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import android.content.Context
+import android.util.Log
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
@@ -14,10 +15,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.AUTHORIZATION_REQUIRED
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import java.util.Date
@@ -70,6 +75,26 @@ class ActivityLogRestClient
                             RewindStatusErrorType.AUTHORIZATION_REQUIRED), networkError.message)
                     val payload = FetchedRewindStatePayload(error, site)
                     dispatcher.dispatch(ActivityLogActionBuilder.newFetchedRewindStateAction(payload))
+                })
+        add(request)
+    }
+
+    fun rewind(site: SiteModel, rewindId: String) {
+        val url = WPCOMV2.activity_log.site(site.siteId).rewind.to.rewind(rewindId).url
+        val request = wpComGsonRequestBuilder.buildPostRequest(url, mapOf(), RewindResponse::class.java,
+                { response ->
+                    Log.d("activity_log", "Response $response")
+                    val payload = ActivityLogStore.RewindResponsePayload(response.restore_id, site)
+                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResponseAction(payload))
+                },
+                { networkError ->
+                    Log.d("activity_log", "Error $networkError")
+                    val error = ActivityLogStore.RewindError(genericToError(networkError,
+                            GENERIC_ERROR,
+                            INVALID_RESPONSE,
+                            AUTHORIZATION_REQUIRED), networkError.message)
+                    val payload = ActivityLogStore.RewindResponsePayload(error, site)
+                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResponseAction(payload))
                 })
         add(request)
     }
@@ -220,4 +245,6 @@ class ActivityLogRestClient
                                          val error_code: String?,
                                          val reason: String?)
     }
+
+    class RewindResponse(val restore_id: String)
 }
