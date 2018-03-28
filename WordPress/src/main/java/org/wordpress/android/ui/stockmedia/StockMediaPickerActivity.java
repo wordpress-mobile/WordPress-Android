@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stockmedia;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -39,7 +38,6 @@ import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -52,6 +50,7 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -422,19 +421,10 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
 
         boolean isMultiselect = mediaList.size() > 1;
-
-        for (MediaModel media : mediaList) {
-            if (media.getUrl() != null) {
-                Uri mediaUri = Uri.parse(media.getUrl());
-                Map<String, Object> properties =
-                        AnalyticsUtils.getMediaProperties(this, false, mediaUri, null);
-                properties.put("is_part_of_multiselection", isMultiselect);
-                if (isMultiselect) {
-                    properties.put("number_of_media_selected", mediaList.size());
-                }
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_UPLOADED, properties);
-            }
-        }
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("is_part_of_multiselection", isMultiselect);
+        properties.put("number_of_media_selected", mediaList.size());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_UPLOADED, properties);
     }
 
     private void showSelectionBar(final boolean show) {
