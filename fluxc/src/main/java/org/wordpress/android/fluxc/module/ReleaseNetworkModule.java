@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryXMLRPCClient;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
@@ -159,6 +160,14 @@ public class ReleaseNetworkModule {
                                                       @Named("regular") RequestQueue requestQueue,
                                                       AccessToken token, UserAgent userAgent) {
         return new CommentRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public ActivityLogRestClient provideActivityRestClient(Context appContext, Dispatcher dispatcher,
+                                                           @Named("regular") RequestQueue requestQueue,
+                                                           AccessToken token, UserAgent userAgent) {
+        return new ActivityLogRestClient(appContext, dispatcher, requestQueue, token, userAgent);
     }
 
     @Singleton
