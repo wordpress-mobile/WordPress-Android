@@ -22,4 +22,20 @@ class WPComGsonRequestBuilder
                             errorListener: (BaseRequest.BaseNetworkError) -> Unit): WPComGsonRequest<T> {
         return WPComGsonRequest.buildGetRequest(url, params, clazz, listener, errorListener)
     }
+
+    /**
+     * Creates a new JSON-formatted POST request.
+     * @param url the request URL
+     * @param body the content body, which will be converted to JSON using [Gson][com.google.gson.Gson]
+     * @param clazz the class defining the expected response
+     * @param listener the success listener
+     * @param errorListener the error listener
+     */
+    fun <T> buildPostRequest(url: String,
+                             body: Map<String, Any>,
+                             clazz: Class<T>,
+                             listener: (T) -> Unit,
+                             errorListener: (BaseRequest.BaseNetworkError) -> Unit): WPComGsonRequest<T> {
+        return WPComGsonRequest.buildPostRequest(url, body, clazz, listener, errorListener)
+    }
 }

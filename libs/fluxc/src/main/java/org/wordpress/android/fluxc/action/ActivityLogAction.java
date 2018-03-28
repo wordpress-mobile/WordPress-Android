@@ -12,10 +12,14 @@ public enum ActivityLogAction implements IAction {
     FETCH_ACTIVITIES,
     @Action(payloadType = ActivityLogStore.FetchRewindStatePayload.class)
     FETCH_REWIND_STATE,
+    @Action(payloadType = ActivityLogStore.RewindPayload.class)
+    REWIND,
 
     // Remote responses
     @Action(payloadType = ActivityLogStore.FetchedActivityLogPayload.class)
     FETCHED_ACTIVITIES,
     @Action(payloadType = ActivityLogStore.FetchedRewindStatePayload.class)
-    FETCHED_REWIND_STATE
+    FETCHED_REWIND_STATE,
+    @Action(payloadType = ActivityLogStore.RewindResponsePayload.class)
+    REWIND_RESPONSE
 }

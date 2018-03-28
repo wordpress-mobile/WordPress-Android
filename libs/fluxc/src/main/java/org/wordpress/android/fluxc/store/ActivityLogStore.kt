@@ -34,6 +34,8 @@ class ActivityLogStore
             ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
             ActivityLogAction.FETCHED_REWIND_STATE -> storeRewindState(action.payload as FetchedRewindStatePayload,
                     actionType)
+            ActivityLogAction.REWIND -> rewind(action.payload as RewindPayload)
+            ActivityLogAction.REWIND_RESPONSE -> TODO()
         }
     }
 
@@ -54,6 +56,10 @@ class ActivityLogStore
         activityLogRestClient.fetchActivity(fetchActivityLogPayload.site,
                 fetchActivityLogPayload.number,
                 fetchActivityLogPayload.offset)
+    }
+
+    private fun rewind(rewindPayload: RewindPayload) {
+        activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId)
     }
 
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
@@ -102,6 +108,8 @@ class ActivityLogStore
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
+    class RewindPayload(val site: SiteModel, val rewindId: String) : Payload<BaseRequest.BaseNetworkError>()
+
     class FetchedActivityLogPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
                                     val site: SiteModel,
                                     val number: Int,
@@ -117,6 +125,13 @@ class ActivityLogStore
     class FetchedRewindStatePayload(val rewindStatusModelResponse: RewindStatusModel? = null,
                                     val site: SiteModel) : Payload<RewindStatusError>() {
         constructor(error: RewindStatusError, site: SiteModel) : this(site = site) {
+            this.error = error
+        }
+    }
+
+    class RewindResponsePayload(val restoreId: String? = null,
+                                val site: SiteModel) : Payload<RewindError>() {
+        constructor(error: RewindError, site: SiteModel) : this(site = site) {
             this.error = error
         }
     }
@@ -146,4 +161,12 @@ class ActivityLogStore
     }
 
     class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError
+
+    enum class RewindErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE,
+        MISSING_STATE
+    }
+    class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
 }
