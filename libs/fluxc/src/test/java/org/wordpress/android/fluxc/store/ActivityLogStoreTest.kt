@@ -122,7 +122,7 @@ class ActivityLogStoreTest {
     @Test
     fun emitsRewindResult() {
         val restoreId = "restoreId"
-        val payload = ActivityLogStore.RewindResponsePayload(restoreId, siteModel)
+        val payload = ActivityLogStore.RewindResultPayload(restoreId, siteModel)
         val action = ActivityLogActionBuilder.newRewindResultAction(payload)
 
         activityLogStore.onAction(action)

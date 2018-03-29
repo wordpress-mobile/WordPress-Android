@@ -35,7 +35,7 @@ class ActivityLogStore
             ActivityLogAction.FETCHED_REWIND_STATE -> storeRewindState(action.payload as FetchedRewindStatePayload,
                     actionType)
             ActivityLogAction.REWIND -> rewind(action.payload as RewindPayload)
-            ActivityLogAction.REWIND_RESULT -> emitRewindResult(action.payload as RewindResponsePayload, actionType)
+            ActivityLogAction.REWIND_RESULT -> emitRewindResult(action.payload as RewindResultPayload, actionType)
         }
     }
 
@@ -80,7 +80,7 @@ class ActivityLogStore
         }
     }
 
-    private fun emitRewindResult(payload: RewindResponsePayload, action: ActivityLogAction) {
+    private fun emitRewindResult(payload: RewindResultPayload, action: ActivityLogAction) {
         if (payload.restoreId != null) {
             emitChange(OnRewind(restoreId = payload.restoreId, causeOfChange = action))
         } else if (payload.error != null) {
@@ -145,8 +145,8 @@ class ActivityLogStore
         }
     }
 
-    class RewindResponsePayload(val restoreId: String? = null,
-                                val site: SiteModel) : Payload<RewindError>() {
+    class RewindResultPayload(val restoreId: String? = null,
+                              val site: SiteModel) : Payload<RewindError>() {
         constructor(error: RewindError, site: SiteModel) : this(site = site) {
             this.error = error
         }
