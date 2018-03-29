@@ -273,10 +273,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             if (show) {
                 TextView txtEmpty = emptyView.findViewById(R.id.text_empty);
                 boolean isEmpty = mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE;
-                boolean showEmptyImage;
                 if (isEmpty) {
-                    // only show empty image if there's enough room for it
-                    showEmptyImage = DisplayUtils.getDisplayPixelHeight(this) >= 1080;
                     String message = getString(R.string.stock_media_picker_initial_empty_text);
                     String subMessage = getString(R.string.stock_media_picker_initial_empty_subtext);
                     String link = "<a href='https://pexels.com/'>Pexels</a>";
@@ -286,9 +283,12 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     txtEmpty.setMovementMethod(WPLinkMovementMethod.getInstance());
                     txtEmpty.setText(Html.fromHtml(html));
                 } else {
-                    showEmptyImage = false;
                     txtEmpty.setText(R.string.stock_media_picker_empty_results);
                 }
+                // only show empty image if there's enough room for it
+                boolean showEmptyImage = isEmpty
+                                         && !DisplayUtils.isLandscape(this)
+                                         && DisplayUtils.getDisplayPixelHeight(this) >= 1080;
                 emptyView.findViewById(R.id.image_empty).setVisibility(showEmptyImage ? View.VISIBLE : View.GONE);
             }
         }
