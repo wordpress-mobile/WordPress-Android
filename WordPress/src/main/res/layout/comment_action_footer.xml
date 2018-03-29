@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_buttons"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/layout_buttons"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,198 +16,190 @@
         <!-- like and moderate buttons don't use a compound drawable so the icon can be animated when tapped -->
         <LinearLayout
             android:id="@+id/btn_like"
-            android:background="@drawable/moderate_button_selector"
-            android:paddingRight="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/moderate_button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingStart="@dimen/margin_small">
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_medium">
+
             <ImageView
                 android:id="@+id/btn_like_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="0dp"
+                android:contentDescription="@null"
+                android:paddingBottom="0dp"
+                android:paddingEnd="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
-                android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_star_outline_grey_24dp"
-                android:contentDescription="@null"
                 android:paddingStart="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_medium"/>
+                android:paddingTop="0dp"
+                app:srcCompat="@drawable/ic_star_outline_grey_24dp"/>
 
-            <org.wordpress.android.widgets.WPTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_like_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reader_label_like"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_small" />
+                style="@style/CommentActionLabel"
+                android:text="@string/reader_label_like"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/btn_moderate"
-            android:background="@drawable/moderate_button_selector"
-            android:paddingRight="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/moderate_button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
-            android:paddingEnd="@dimen/margin_small">
+            android:paddingTop="@dimen/margin_medium">
+
             <ImageView
                 android:id="@+id/btn_moderate_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="0dp"
+                android:contentDescription="@null"
+                android:paddingBottom="0dp"
+                android:paddingEnd="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
-                android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_checkmark_grey_24dp"
-                android:contentDescription="@null"
                 android:paddingStart="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_medium"/>
+                android:paddingTop="0dp"
+                app:srcCompat="@drawable/ic_checkmark_grey_24dp"/>
 
-            <org.wordpress.android.widgets.WPTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_moderate_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mnu_comment_approve"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_small" />
+                style="@style/CommentActionLabel"
+                android:text="@string/mnu_comment_approve"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/btn_edit"
-            android:background="@drawable/moderate_button_selector"
-            android:paddingRight="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/moderate_button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
-            android:paddingEnd="@dimen/margin_small">
+            android:paddingTop="@dimen/margin_medium"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/btn_edit_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="0dp"
+                android:contentDescription="@null"
+                android:paddingBottom="0dp"
+                android:paddingEnd="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
-                android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_pencil_grey_24dp"
-                android:contentDescription="@null"
                 android:paddingStart="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_medium"/>
+                android:paddingTop="0dp"
+                app:srcCompat="@drawable/ic_pencil_grey_24dp"/>
 
-            <org.wordpress.android.widgets.WPTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/edit"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_small" />
+                style="@style/CommentActionLabel"
+                android:text="@string/edit"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/btn_trash"
-            android:background="@drawable/moderate_button_selector"
-            android:paddingRight="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/moderate_button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
-            android:paddingEnd="@dimen/margin_small">
+            android:paddingTop="@dimen/margin_medium"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/btn_trash_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="0dp"
+                android:contentDescription="@null"
+                android:paddingBottom="0dp"
+                android:paddingEnd="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
-                android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_trash_grey_24dp"
-                android:contentDescription="@null"
                 android:paddingStart="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_medium"/>
+                android:paddingTop="0dp"
+                app:srcCompat="@drawable/ic_trash_grey_24dp"/>
 
-            <org.wordpress.android.widgets.WPTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_trash_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mnu_comment_trash"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_small" />
+                style="@style/CommentActionLabel"
+                android:text="@string/mnu_comment_trash"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/btn_spam"
-            android:background="@drawable/moderate_button_selector"
-            android:paddingRight="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/moderate_button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
-            android:paddingEnd="@dimen/margin_small">
+            android:paddingTop="@dimen/margin_medium"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/btn_spam_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="0dp"
+                android:contentDescription="@null"
+                android:paddingBottom="0dp"
+                android:paddingEnd="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
-                android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_spam_grey_24dp"
-                android:contentDescription="@null"
                 android:paddingStart="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_medium"/>
+                android:paddingTop="0dp"
+                app:srcCompat="@drawable/ic_spam_grey_24dp"/>
 
-            <org.wordpress.android.widgets.WPTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_spam_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mnu_comment_spam"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_small" />
+                style="@style/CommentActionLabel"
+                android:text="@string/mnu_comment_spam"/>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -215,5 +207,5 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@drawable/notifications_list_divider_full_width" />
+        android:background="@drawable/notifications_list_divider_full_width"/>
 </LinearLayout>
