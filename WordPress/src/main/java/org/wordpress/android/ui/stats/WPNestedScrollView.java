@@ -27,6 +27,7 @@ import android.widget.ScrollView;
  * https://issuetracker.google.com/issues/70310373
  */
 @SuppressWarnings("CheckStyle")  // we want to keep the code as similar to the original as possible
+//CHECKSTYLE:OFF
 public class WPNestedScrollView extends NestedScrollView {
     private static final AccessibilityDelegate ACCESSIBILITY_DELEGATE = new AccessibilityDelegate();
 
