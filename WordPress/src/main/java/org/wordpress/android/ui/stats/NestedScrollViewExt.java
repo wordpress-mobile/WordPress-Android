@@ -3,6 +3,8 @@ package org.wordpress.android.ui.stats;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import org.wordpress.android.widgets.WPNestedScrollView;
+
 public class NestedScrollViewExt extends WPNestedScrollView {
     private ScrollViewListener mScrollViewListener = null;
 
