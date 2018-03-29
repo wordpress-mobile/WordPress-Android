@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
+import com.android.volley.RequestQueue
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -20,12 +22,13 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse.Page
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindStatusResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
@@ -34,9 +37,11 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var restClient: WPComRestClient
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var requestQueue: RequestQueue
+    @Mock private lateinit var accessToken: AccessToken
+    @Mock private lateinit var userAgent: UserAgent
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var activityResponseClassCaptor: KArgumentCaptor<Class<ActivitiesResponse>>
@@ -62,16 +67,21 @@ class ActivityLogRestClientTest {
         errorMethodCaptor = argumentCaptor()
         activityActionCaptor = argumentCaptor()
         rewindStatusActionCaptor = argumentCaptor()
-        activityRestClient = ActivityLogRestClient(dispatcher, restClient, wpComGsonRequestBuilder)
+        activityRestClient = ActivityLogRestClient(dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent)
     }
 
     @Test
     fun fetchActivity_passesCorrectParamToBuildRequest() {
-        val request = initFetchActivity()
+        initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
         assertEquals(urlCaptor.firstValue, "https://public-api.wordpress.com/wpcom/v2/sites/$siteId/activity/")
         with(paramsCaptor.firstValue) {
@@ -82,11 +92,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivity_dispatchesResponseOnSuccess() {
-        val request = initFetchActivity()
+        initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
         val activitiesResponse = ActivitiesResponse(1, "response", ACTIVITY_RESPONSE_PAGE)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -117,11 +127,11 @@ class ActivityLogRestClientTest {
     @Test
     fun fetchActivity_dispatchesErrorOnMissingActivityId() {
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(activity_id = null)))
-        val request = initFetchActivity()
+        initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -132,11 +142,11 @@ class ActivityLogRestClientTest {
     @Test
     fun fetchActivity_dispatchesErrorOnMissingSummary() {
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(summary = null)))
-        val request = initFetchActivity()
+        initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -148,11 +158,11 @@ class ActivityLogRestClientTest {
     fun fetchActivity_dispatchesErrorOnMissingContentText() {
         val emptyContent = ActivitiesResponse.Content(null)
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(content = emptyContent)))
-        val request = initFetchActivity()
+        initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -163,11 +173,11 @@ class ActivityLogRestClientTest {
     @Test
     fun fetchActivity_dispatchesErrorOnMissingPublishedDate() {
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(published = null)))
-        val request = initFetchActivity()
+        initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -177,11 +187,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivity_dispatchesErrorOnFailure() {
-        val request = initFetchActivity()
+        initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
         errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
 
@@ -190,11 +200,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityRewind_dispatchesResponseOnSuccess() {
-        val request = initFetchRewindStatus()
+        initFetchRewindStatus()
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         val state = RewindStatusModel.State.ACTIVE
         val rewindResponse = REWIND_RESPONSE.copy(state = state.value)
@@ -224,11 +234,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityRewind_dispatchesGenericErrorOnFailure() {
-        val request = initFetchRewindStatus()
+        initFetchRewindStatus()
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
 
@@ -237,11 +247,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityRewind_dispatchesErrorOnMissingState() {
-        val request = initFetchRewindStatus()
+        initFetchRewindStatus()
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         val rewindResponse = REWIND_RESPONSE.copy(state = null)
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -251,11 +261,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityRewind_dispatchesErrorOnWrongState() {
-        val request = initFetchRewindStatus()
+        initFetchRewindStatus()
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         val rewindResponse = REWIND_RESPONSE.copy(state = "wrong")
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -265,11 +275,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityRewind_dispatchesErrorOnMissingRestoreId() {
-        val request = initFetchRewindStatus()
+        initFetchRewindStatus()
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(rewind_id = null))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -279,11 +289,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityRewind_dispatchesErrorOnMissingRestoreStatus() {
-        val request = initFetchRewindStatus()
+        initFetchRewindStatus()
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = null))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -293,11 +303,11 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityRewind_dispatchesErrorOnWrongRestoreStatus() {
-        val request = initFetchRewindStatus()
+        initFetchRewindStatus()
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).enqueueRequest(request)
+        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = "wrong"))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
