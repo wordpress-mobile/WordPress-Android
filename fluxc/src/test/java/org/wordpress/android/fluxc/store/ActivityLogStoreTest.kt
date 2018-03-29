@@ -88,12 +88,12 @@ class ActivityLogStoreTest {
     fun storeFetchedRewindStatusToDb() {
         val rewindStatusModel = mock<RewindStatusModel>()
         val payload = ActivityLogStore.FetchedRewindStatePayload(rewindStatusModel, siteModel)
-        val action = ActivityActionBuilder.newFetchedRewindStateAction(payload)
+        val action = ActivityLogActionBuilder.newFetchedRewindStateAction(payload)
 
         activityLogStore.onAction(action)
 
         verify(activityLogSqlUtils).insertOrUpdateRewindStatus(siteModel, rewindStatusModel)
-        val expectedChangeEvent = ActivityLogStore.OnRewindStatusFetched(ActivityAction.FETCHED_REWIND_STATE)
+        val expectedChangeEvent = ActivityLogStore.OnRewindStatusFetched(ActivityLogAction.FETCHED_REWIND_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
