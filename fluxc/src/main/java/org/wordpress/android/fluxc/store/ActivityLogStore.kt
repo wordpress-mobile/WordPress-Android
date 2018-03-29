@@ -65,9 +65,9 @@ class ActivityLogStore
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
         if (payload.activityLogModels.isNotEmpty()) {
             val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
-            emitChange(OnActivityLogChanged(rowsAffected, payload.activityLogModels, action))
+            emitChange(OnActivityLogFetched(rowsAffected, payload.activityLogModels, action))
         } else if (payload.error != null) {
-            emitChange(OnActivityLogChanged(payload.error, action))
+            emitChange(OnActivityLogFetched(payload.error, action))
         }
     }
 
@@ -93,7 +93,7 @@ class ActivityLogStore
     }
 
     // Actions
-    data class OnActivityLogChanged(val rowsAffected: Int,
+    data class OnActivityLogFetched(val rowsAffected: Int,
                                     val activityLogModels: List<ActivityLogModel>?,
                                     var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
