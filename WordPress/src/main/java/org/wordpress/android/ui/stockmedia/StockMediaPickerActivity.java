@@ -268,9 +268,10 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private void showEmptyView(boolean show) {
         if (!isFinishing()) {
-            TextView txtEmpty = findViewById(R.id.text_empty);
-            txtEmpty.setVisibility(show ? View.VISIBLE : View.GONE);
+            ViewGroup emptyView = findViewById(R.id.empty_view);
+            emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show) {
+                TextView txtEmpty = emptyView.findViewById(R.id.text_empty);
                 boolean isEmpty = mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE;
                 if (isEmpty) {
                     String message = getString(R.string.stock_media_picker_initial_empty_text);
@@ -284,6 +285,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 } else {
                     txtEmpty.setText(R.string.stock_media_picker_empty_results);
                 }
+                // only show empty image if there's enough room for it
+                boolean showEmptyImage = isEmpty
+                                         && !DisplayUtils.isLandscape(this)
+                                         && DisplayUtils.getDisplayPixelHeight(this) >= 1080;
+                emptyView.findViewById(R.id.image_empty).setVisibility(showEmptyImage ? View.VISIBLE : View.GONE);
             }
         }
     }
