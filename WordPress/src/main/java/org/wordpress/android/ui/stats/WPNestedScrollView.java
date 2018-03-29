@@ -26,8 +26,6 @@ import android.widget.ScrollView;
  * https://issuetracker.google.com/issues/68366782
  * https://issuetracker.google.com/issues/70310373
  */
-@SuppressWarnings("CheckStyle")  // we want to keep the code as similar to the original as possible
-//CHECKSTYLE:OFF
 public class WPNestedScrollView extends NestedScrollView {
     private static final AccessibilityDelegate ACCESSIBILITY_DELEGATE = new AccessibilityDelegate();
 
@@ -65,30 +63,32 @@ public class WPNestedScrollView extends NestedScrollView {
             if (!nsvHost.isEnabled()) {
                 return false;
             }
+            int viewportHeight;
+            int targetScrollY;
             switch (action) {
-                case AccessibilityNodeInfoCompat.ACTION_SCROLL_FORWARD: {
+                case AccessibilityNodeInfoCompat.ACTION_SCROLL_FORWARD:
                     nsvHost.fling(0);
-                    final int viewportHeight = nsvHost.getHeight() - nsvHost.getPaddingBottom()
+                    viewportHeight = nsvHost.getHeight() - nsvHost.getPaddingBottom()
                                                - nsvHost.getPaddingTop();
-                    final int targetScrollY = Math.min(nsvHost.getScrollY() + viewportHeight,
+                    targetScrollY = Math.min(nsvHost.getScrollY() + viewportHeight,
                             nsvHost.getScrollRange());
                     if (targetScrollY != nsvHost.getScrollY()) {
                         nsvHost.smoothScrollTo(0, targetScrollY);
                         return true;
                     }
-                }
-                return false;
-                case AccessibilityNodeInfoCompat.ACTION_SCROLL_BACKWARD: {
+
+                    return false;
+                case AccessibilityNodeInfoCompat.ACTION_SCROLL_BACKWARD:
                     nsvHost.fling(0);
-                    final int viewportHeight = nsvHost.getHeight() - nsvHost.getPaddingBottom()
+                    viewportHeight = nsvHost.getHeight() - nsvHost.getPaddingBottom()
                                                - nsvHost.getPaddingTop();
-                    final int targetScrollY = Math.max(nsvHost.getScrollY() - viewportHeight, 0);
+                    targetScrollY = Math.max(nsvHost.getScrollY() - viewportHeight, 0);
                     if (targetScrollY != nsvHost.getScrollY()) {
                         nsvHost.smoothScrollTo(0, targetScrollY);
                         return true;
                     }
-                }
-                return false;
+
+                    return false;
             }
             return false;
         }
