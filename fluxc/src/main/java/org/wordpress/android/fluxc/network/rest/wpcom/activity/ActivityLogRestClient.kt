@@ -132,23 +132,24 @@ class ActivityLogRestClient
         val rewindStatusValue = response.state ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_STATE)
         val rewindStatus = RewindStatusModel.State.fromValue(rewindStatusValue)
                 ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_REWIND_STATE)
-        val rewindId = response.restoreResponse?.rewind_id
-                ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_ID)
-        val restoreStatusValue = response.restoreResponse?.status
-                ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
-        val restoreStatus = RewindStatusModel.RestoreStatus.Status.fromValue(restoreStatusValue)
-                ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
+        val restoreStatusModel = response.restoreResponse?.let {
+            val rewindId = it.rewind_id
+                    ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_ID)
+            val restoreStatusValue = it.status
+                    ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
+            val restoreStatus = RewindStatusModel.RestoreStatus.Status.fromValue(restoreStatusValue)
+                    ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
+            RewindStatusModel.RestoreStatus(id = rewindId,
+                    status = restoreStatus,
+                    progress = it.progress,
+                    message = it.message,
+                    errorCode = it.error_code,
+                    failureReason = it.reason)
+        }
 
         val rewindStatusModel = RewindStatusModel(state = rewindStatus,
                 reason = response.reason,
-                restore = response.restoreResponse?.let {
-                    RewindStatusModel.RestoreStatus(id = rewindId,
-                            status = restoreStatus,
-                            progress = it.progress,
-                            message = it.message,
-                            errorCode = it.error_code,
-                            failureReason = it.reason)
-                }
+                restore = restoreStatusModel
         )
         return FetchedRewindStatePayload(rewindStatusModel, site)
     }
