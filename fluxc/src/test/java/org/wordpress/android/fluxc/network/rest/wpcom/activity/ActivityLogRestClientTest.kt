@@ -7,10 +7,10 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
-import junit.framework.Assert.assertNull
-import junit.framework.Assert.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -112,7 +112,7 @@ class ActivityLogRestClientTest {
             with(this.payload.activityLogModels[0]) {
                 assertEquals(this.activityID, ACTIVITY_RESPONSE.activity_id)
                 assertEquals(this.gridicon, ACTIVITY_RESPONSE.gridicon)
-                assertEquals(this.isDiscarded, ACTIVITY_RESPONSE.is_discarded)
+                assertEquals(this.discarded, ACTIVITY_RESPONSE.is_discarded)
                 assertEquals(this.name, ACTIVITY_RESPONSE.name)
                 assertEquals(this.published, ACTIVITY_RESPONSE.published)
                 assertEquals(this.rewindID, ACTIVITY_RESPONSE.rewind_id)
