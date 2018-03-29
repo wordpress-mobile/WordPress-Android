@@ -1,7 +1,10 @@
 package org.wordpress.android.viewmodel.activitylog
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
 import android.support.annotation.WorkerThread
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -16,12 +19,14 @@ class ActivityLogViewModel() : ViewModel() {
     private lateinit var activityLogStore: ActivityLogStore
     private lateinit var dao: ActivityLogDao
 
-    private val events: MutableLiveData<List<ActivityLogModel>> = MutableLiveData()
+    lateinit var events: LiveData<PagedList<ActivityLogModel>>
 
     var site: SiteModel? = null
         set (value) {
             field = value
             this.dao = ActivityLogDao(value!!, activityLogStore, dispatcher)
+            this.events = LivePagedListBuilder(ActivityLogDao.Factory(value, activityLogStore, dispatcher),
+                    PagedList.Config.Builder().setPageSize(5).build()).build()
         }
 
     @Inject
