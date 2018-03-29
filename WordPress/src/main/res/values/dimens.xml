@@ -189,6 +189,7 @@
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
     <dimen name="stats_legent_text_size">9sp</dimen>
+    <dimen name="stats_label_min_text_size">6sp</dimen>
 
     <!-- stats widget-->
     <dimen name="stats_widget_icon_size">18dp</dimen>
