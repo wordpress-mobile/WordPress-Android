@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -307,7 +306,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         showEmptyView(titleResId, 0, 0);
     }
 
-    @SuppressLint("ResourceType")
     private void showEmptyView(@StringRes int titleResId, @StringRes int descriptionResId, @StringRes int buttonResId) {
         if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.VISIBLE);
@@ -318,14 +316,14 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(titleResId);
 
             TextView descriptionTextView = (TextView) mEmptyView.findViewById(R.id.text_empty_description);
-            if (descriptionResId > 0) {
+            if (descriptionResId != 0) {
                 descriptionTextView.setText(descriptionResId);
             } else {
                 descriptionTextView.setVisibility(View.GONE);
             }
 
             TextView btnAction = (TextView) mEmptyView.findViewById(R.id.button_empty_action);
-            if (buttonResId > 0) {
+            if (buttonResId != 0) {
                 btnAction.setText(buttonResId);
                 btnAction.setVisibility(View.VISIBLE);
             } else {
