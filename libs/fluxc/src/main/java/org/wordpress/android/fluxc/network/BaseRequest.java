@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.net.Uri.Builder;
 import android.support.annotation.NonNull;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -233,6 +234,7 @@ public abstract class BaseRequest<T> extends Request<T> {
 
     @Override
     public final void deliverError(VolleyError volleyError) {
+        Log.d("activity_log", "delivering error");
         AppLog.e(AppLog.T.API, "Volley error on " + getUrl(), volleyError);
         if (volleyError instanceof ParseError) {
             OnUnexpectedError error = new OnUnexpectedError(volleyError, "API response parse error");

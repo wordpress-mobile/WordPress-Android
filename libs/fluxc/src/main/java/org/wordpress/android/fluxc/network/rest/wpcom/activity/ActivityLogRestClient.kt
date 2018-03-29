@@ -1,10 +1,10 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -80,21 +80,19 @@ class ActivityLogRestClient
     }
 
     fun rewind(site: SiteModel, rewindId: String) {
-        val url = WPCOMV2.activity_log.site(site.siteId).rewind.to.rewind(rewindId).url
+        val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
         val request = wpComGsonRequestBuilder.buildPostRequest(url, mapOf(), RewindResponse::class.java,
                 { response ->
-                    Log.d("activity_log", "Response $response")
                     val payload = ActivityLogStore.RewindResponsePayload(response.restore_id, site)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResponseAction(payload))
+                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
                 },
                 { networkError ->
-                    Log.d("activity_log", "Error $networkError")
                     val error = ActivityLogStore.RewindError(genericToError(networkError,
                             GENERIC_ERROR,
                             INVALID_RESPONSE,
                             AUTHORIZATION_REQUIRED), networkError.message)
                     val payload = ActivityLogStore.RewindResponsePayload(error, site)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResponseAction(payload))
+                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
                 })
         add(request)
     }
