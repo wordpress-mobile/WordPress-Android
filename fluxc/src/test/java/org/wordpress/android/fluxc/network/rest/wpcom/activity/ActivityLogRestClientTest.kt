@@ -4,6 +4,7 @@ import com.android.volley.RequestQueue
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -27,8 +28,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse.Page
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
@@ -44,13 +47,13 @@ class ActivityLogRestClientTest {
     @Mock private lateinit var userAgent: UserAgent
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var activityResponseClassCaptor: KArgumentCaptor<Class<ActivitiesResponse>>
-    private lateinit var rewindStatusResponseClassCaptor: KArgumentCaptor<Class<RewindStatusResponse>>
     private lateinit var activitySuccessMethodCaptor: KArgumentCaptor<(ActivitiesResponse) -> Unit>
     private lateinit var rewindStatusSuccessMethodCaptor: KArgumentCaptor<(RewindStatusResponse) -> Unit>
+    private lateinit var rewindSuccessMethodCaptor: KArgumentCaptor<(RewindResponse) -> Unit>
     private lateinit var errorMethodCaptor: KArgumentCaptor<(BaseRequest.BaseNetworkError) -> Unit>
     private lateinit var activityActionCaptor: KArgumentCaptor<Action<FetchedActivityLogPayload>>
     private lateinit var rewindStatusActionCaptor: KArgumentCaptor<Action<FetchedRewindStatePayload>>
+    private lateinit var rewindActionCaptor: KArgumentCaptor<Action<ActivityLogStore.RewindResponsePayload>>
     private lateinit var activityRestClient: ActivityLogRestClient
     private val siteId: Long = 12
     private val number = 10
@@ -60,13 +63,13 @@ class ActivityLogRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        activityResponseClassCaptor = argumentCaptor()
-        rewindStatusResponseClassCaptor = argumentCaptor()
         activitySuccessMethodCaptor = argumentCaptor()
         rewindStatusSuccessMethodCaptor = argumentCaptor()
+        rewindSuccessMethodCaptor = argumentCaptor()
         errorMethodCaptor = argumentCaptor()
         activityActionCaptor = argumentCaptor()
         rewindStatusActionCaptor = argumentCaptor()
+        rewindActionCaptor = argumentCaptor()
         activityRestClient = ActivityLogRestClient(dispatcher,
                 wpComGsonRequestBuilder,
                 null,
@@ -315,6 +318,35 @@ class ActivityLogRestClientTest {
         assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_RESTORE_STATUS)
     }
 
+    @Test
+    fun postRewindOperation() {
+        initPostRewind()
+
+        activityRestClient.rewind(site, "rewindId")
+
+        verify(requestQueue).add(any<WPComGsonRequest<RewindResponse>>())
+
+        val restoreId = "restoreId"
+        rewindSuccessMethodCaptor.firstValue.invoke(RewindResponse(restoreId))
+
+        verify(dispatcher).dispatch(rewindActionCaptor.capture())
+        assertEquals(restoreId, rewindActionCaptor.firstValue.payload.restoreId)
+    }
+
+    @Test
+    fun postRewindOperationError() {
+        initPostRewind()
+
+        activityRestClient.rewind(site, "rewindId")
+
+        verify(requestQueue).add(any<WPComGsonRequest<RewindResponse>>())
+
+        errorMethodCaptor.firstValue.invoke(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
+
+        verify(dispatcher).dispatch(rewindActionCaptor.capture())
+        assertTrue(rewindActionCaptor.firstValue.payload.isError)
+    }
+
     private fun assertEmittedActivityError(errorType: ActivityLogErrorType) {
         verify(dispatcher).dispatch(activityActionCaptor.capture())
         with(activityActionCaptor.firstValue) {
@@ -342,7 +374,7 @@ class ActivityLogRestClientTest {
 
         whenever(wpComGsonRequestBuilder.buildGetRequest(urlCaptor.capture(),
                 paramsCaptor.capture(),
-                activityResponseClassCaptor.capture(),
+                eq(ActivitiesResponse::class.java),
                 activitySuccessMethodCaptor.capture(),
                 errorMethodCaptor.capture())).thenReturn(request)
         whenever(site.siteId).thenReturn(siteId)
@@ -354,8 +386,20 @@ class ActivityLogRestClientTest {
 
         whenever(wpComGsonRequestBuilder.buildGetRequest(urlCaptor.capture(),
                 paramsCaptor.capture(),
-                rewindStatusResponseClassCaptor.capture(),
+                eq(RewindStatusResponse::class.java),
                 rewindStatusSuccessMethodCaptor.capture(),
+                errorMethodCaptor.capture())).thenReturn(request)
+        whenever(site.siteId).thenReturn(siteId)
+        return request
+    }
+
+    private fun initPostRewind(): WPComGsonRequest<RewindResponse> {
+        val request = mock<WPComGsonRequest<RewindResponse>>()
+
+        whenever(wpComGsonRequestBuilder.buildPostRequest(urlCaptor.capture(),
+                eq(mapOf()),
+                eq(RewindResponse::class.java),
+                rewindSuccessMethodCaptor.capture(),
                 errorMethodCaptor.capture())).thenReturn(request)
         whenever(site.siteId).thenReturn(siteId)
         return request

@@ -56,6 +56,16 @@ class ActivityLogStoreTest {
     }
 
     @Test
+    fun onRewindActionCallRestClient() {
+        val rewindId = "rewindId"
+        val payload = ActivityLogStore.RewindPayload(siteModel, rewindId)
+        val action = ActivityLogActionBuilder.newRewindAction(payload)
+        activityLogStore.onAction(action)
+
+        verify(activityLogRestClient).rewind(siteModel, rewindId)
+    }
+
+    @Test
     fun storeFetchedActivityLogToDb() {
         val activityModels = listOf<ActivityLogModel>(mock())
         val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 10, 0)
@@ -66,7 +76,7 @@ class ActivityLogStoreTest {
         activityLogStore.onAction(action)
 
         verify(activityLogSqlUtils).insertOrUpdateActivities(siteModel, activityModels)
-        val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
+        val expectedChangeEvent = ActivityLogStore.OnActivityLogChanged(rowsAffected,
                 activityModels,
                 ActivityLogAction.FETCHED_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
@@ -107,5 +117,17 @@ class ActivityLogStoreTest {
 
         verify(activityLogSqlUtils).getRewindStatusForSite(siteModel)
         assertEquals(rewindStatusModel, rewindStatusFromDb)
+    }
+
+    @Test
+    fun emitsRewindResult() {
+        val restoreId = "restoreId"
+        val payload = ActivityLogStore.RewindResponsePayload(restoreId, siteModel)
+        val action = ActivityLogActionBuilder.newRewindResultAction(payload)
+
+        activityLogStore.onAction(action)
+
+        val expectedChangeEvent = ActivityLogStore.OnRewind(restoreId, ActivityLogAction.REWIND_RESULT)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 }

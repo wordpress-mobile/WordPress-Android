@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -88,6 +89,7 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         WPComGsonNetworkError returnedError = new WPComGsonNetworkError(error);
+        Log.d("activity_log", "Delivering error: " + error.message);
         if (error.hasVolleyError() && error.volleyError.networkResponse != null
                 && error.volleyError.networkResponse.statusCode >= 400) {
             String jsonString;
@@ -97,6 +99,7 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
             } catch (UnsupportedEncodingException e) {
                 jsonString = "";
             }
+            Log.d("activity_log", jsonString);
 
             JSONObject jsonObject;
             try {
