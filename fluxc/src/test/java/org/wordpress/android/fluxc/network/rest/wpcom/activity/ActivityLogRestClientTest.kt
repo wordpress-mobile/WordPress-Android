@@ -53,7 +53,7 @@ class ActivityLogRestClientTest {
     private lateinit var errorMethodCaptor: KArgumentCaptor<(BaseRequest.BaseNetworkError) -> Unit>
     private lateinit var activityActionCaptor: KArgumentCaptor<Action<FetchedActivityLogPayload>>
     private lateinit var rewindStatusActionCaptor: KArgumentCaptor<Action<FetchedRewindStatePayload>>
-    private lateinit var rewindActionCaptor: KArgumentCaptor<Action<ActivityLogStore.RewindResponsePayload>>
+    private lateinit var mRewindActionCaptor: KArgumentCaptor<Action<ActivityLogStore.RewindResultPayload>>
     private lateinit var activityRestClient: ActivityLogRestClient
     private val siteId: Long = 12
     private val number = 10
@@ -69,7 +69,7 @@ class ActivityLogRestClientTest {
         errorMethodCaptor = argumentCaptor()
         activityActionCaptor = argumentCaptor()
         rewindStatusActionCaptor = argumentCaptor()
-        rewindActionCaptor = argumentCaptor()
+        mRewindActionCaptor = argumentCaptor()
         activityRestClient = ActivityLogRestClient(dispatcher,
                 wpComGsonRequestBuilder,
                 null,
@@ -329,8 +329,8 @@ class ActivityLogRestClientTest {
         val restoreId = "restoreId"
         rewindSuccessMethodCaptor.firstValue.invoke(RewindResponse(restoreId))
 
-        verify(dispatcher).dispatch(rewindActionCaptor.capture())
-        assertEquals(restoreId, rewindActionCaptor.firstValue.payload.restoreId)
+        verify(dispatcher).dispatch(mRewindActionCaptor.capture())
+        assertEquals(restoreId, mRewindActionCaptor.firstValue.payload.restoreId)
     }
 
     @Test
@@ -343,8 +343,8 @@ class ActivityLogRestClientTest {
 
         errorMethodCaptor.firstValue.invoke(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
 
-        verify(dispatcher).dispatch(rewindActionCaptor.capture())
-        assertTrue(rewindActionCaptor.firstValue.payload.isError)
+        verify(dispatcher).dispatch(mRewindActionCaptor.capture())
+        assertTrue(mRewindActionCaptor.firstValue.payload.isError)
     }
 
     private fun assertEmittedActivityError(errorType: ActivityLogErrorType) {
