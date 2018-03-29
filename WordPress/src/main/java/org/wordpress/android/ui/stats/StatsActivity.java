@@ -637,7 +637,7 @@ public class StatsActivity extends AppCompatActivity
     private boolean shouldShowWidgetPromo() {
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         boolean isCountAPromoMilestone = counter == 3 || counter == 1000 || counter == 10000;
-        
+
         return isCountAPromoMilestone && !isAppRuntimeForChrome();
     }
 
