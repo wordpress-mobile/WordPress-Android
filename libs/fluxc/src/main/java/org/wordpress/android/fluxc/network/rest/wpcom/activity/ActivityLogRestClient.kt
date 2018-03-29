@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
+import android.content.Context
+import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
@@ -7,9 +9,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
+import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
@@ -23,8 +27,12 @@ import javax.inject.Singleton
 @Singleton
 class ActivityLogRestClient
 @Inject constructor(private val dispatcher: Dispatcher,
-                    private val restClient: WPComRestClient,
-                    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder) {
+                    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+                    appContext: Context?,
+                    requestQueue: RequestQueue,
+                    accessToken: AccessToken,
+                    userAgent: UserAgent) :
+        BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     fun fetchActivity(site: SiteModel, number: Int, offset: Int) {
         val url = WPCOMV2.sites.site(site.siteId).activity.url
         val pageNumber = offset / number + 1
@@ -44,7 +52,7 @@ class ActivityLogRestClient
                     val payload = FetchedActivityLogPayload(error, site, number, offset)
                     dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
                 })
-        restClient.enqueueRequest(request)
+        add(request)
     }
 
     fun fetchActivityRewind(site: SiteModel) {
@@ -63,7 +71,7 @@ class ActivityLogRestClient
                     val payload = FetchedRewindStatePayload(error, site)
                     dispatcher.dispatch(ActivityLogActionBuilder.newFetchedRewindStateAction(payload))
                 })
-        restClient.enqueueRequest(request)
+        add(request)
     }
 
     private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>,
