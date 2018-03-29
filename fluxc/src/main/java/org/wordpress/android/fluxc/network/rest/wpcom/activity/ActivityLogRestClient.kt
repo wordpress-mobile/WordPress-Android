@@ -20,9 +20,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
-import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.AUTHORIZATION_REQUIRED
-import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import java.util.Date
@@ -88,9 +86,9 @@ class ActivityLogRestClient
                 },
                 { networkError ->
                     val error = ActivityLogStore.RewindError(genericToError(networkError,
-                            GENERIC_ERROR,
-                            INVALID_RESPONSE,
-                            AUTHORIZATION_REQUIRED), networkError.message)
+                            RewindErrorType.GENERIC_ERROR,
+                            RewindErrorType.INVALID_RESPONSE,
+                            RewindErrorType.AUTHORIZATION_REQUIRED), networkError.message)
                     val payload = ActivityLogStore.RewindResultPayload(error, site)
                     dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
                 })
