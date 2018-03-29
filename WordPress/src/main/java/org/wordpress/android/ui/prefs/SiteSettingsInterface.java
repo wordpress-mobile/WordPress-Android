@@ -1051,7 +1051,7 @@ public abstract class SiteSettingsInterface {
                     mContext.getString(R.string.file_size_in_megabytes),
                     mContext.getString(R.string.file_size_in_gigabytes),
                     mContext.getString(R.string.file_size_in_terabytes) };
-            String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAvailable(), units);
+            String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
             String quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_value),
                     percentage, spaceAllowed);
             setQuotaDiskSpace(quotaAvailableSentence);
