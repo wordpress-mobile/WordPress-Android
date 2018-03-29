@@ -623,7 +623,7 @@ public class StatsActivity extends AppCompatActivity
 
         // Should we display the widget promo?
 
-        if (shouldShouldWidgetPromo()) {
+        if (shouldShowWidgetPromo()) {
             AppCompatDialogFragment newFragment = new PromoDialog.Builder(
                     R.drawable.stats_widget_promo_header,
                     R.string.stats_widget_promo_title,
@@ -634,7 +634,7 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
-    private boolean shouldShouldWidgetPromo() {
+    private boolean shouldShowWidgetPromo() {
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         boolean isCountAPromoMilestone = counter == 3 || counter == 1000 || counter == 10000;
         
