@@ -184,6 +184,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
         void onTrackableEvent(TrackableEvent event);
+        void onHtmlModeToggledInToolbar();
     }
 
     /**

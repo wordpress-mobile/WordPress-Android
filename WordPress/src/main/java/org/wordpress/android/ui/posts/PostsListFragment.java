@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -549,7 +551,8 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                     builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
                             .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page)
                                                 : getString(R.string.dialog_confirm_delete_post))
@@ -563,7 +566,8 @@ public class PostsListFragment extends Fragment
                             .setCancelable(true);
                     builder.create().show();
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                     builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
                             .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -581,7 +585,8 @@ public class PostsListFragment extends Fragment
     }
 
     private void showPublishConfirmationDialog(final PostModel post) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
                .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                                    : getString(R.string.dialog_confirm_publish_message_post))
@@ -634,7 +639,8 @@ public class PostsListFragment extends Fragment
             text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         }
 
-        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
+        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text,
+                AccessibilityUtils.getSnackbarDuration(getActivity()))
                                     .setAction(R.string.undo, undoListener);
 
         // wait for the undo snackbar to disappear before actually deleting the post

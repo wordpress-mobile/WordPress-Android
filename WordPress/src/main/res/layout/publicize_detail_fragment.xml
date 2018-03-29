@@ -98,17 +98,20 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_divider_height"
-                android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:background="@color/divider_grey" />
 
             <org.wordpress.android.ui.publicize.ConnectButton
                 android:id="@+id/button_connect"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginStart="@dimen/margin_extra_large"/>
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:paddingBottom="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_extra_large"
+                />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

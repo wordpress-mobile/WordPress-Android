@@ -32,12 +32,14 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -222,10 +224,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                     public void onClick(View v) {
                         final Context ctx = v.getContext();
                         StatsUtils.openPostInReaderOrInAppWebview(ctx,
-                                                                  mRemoteBlogID,
-                                                                  mRemoteItemID,
-                                                                  mRemoteItemType,
-                                                                  mItemURL);
+                                mRemoteBlogID,
+                                mRemoteItemID,
+                                mRemoteItemType,
+                                mItemURL);
                     }
                 });
             } else {
@@ -253,11 +255,11 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         if (mAveragesIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS,
-                                   new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
+                    new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
         }
         if (mRecentWeeksIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARG_RECENT_EXPANDED_ROWS,
-                                   new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
+                    new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
         }
         if (mYearsIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARG_YEARS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mYearsIdToExpandedMap));
@@ -431,11 +433,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             views[i] = new GraphView.GraphViewData(i, currentItemValue);
 
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
-            horLabels[i] = StatsUtils.parseDate(
+            horLabels[i] = StatsUtils.parseDateToLocalizedFormat(
                     currentItemStatsDate,
                     StatsConstants.STATS_INPUT_DATE_FORMAT,
-                    StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT
-                                               );
+                    StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             mStatsDate[i] = currentItemStatsDate;
         }
 
@@ -462,9 +463,9 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         // mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
-                DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
-                                                        );
+                DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.setHorizontalLabels(horLabels);
+        mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalViewLabels(horLabels, dataToShowOnGraph));
         mGraphView.setGestureListener(this);
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
@@ -479,14 +480,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mGraphView.highlightBar(mSelectedBarGraphIndex);
         mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
 
-        setMainViewsLabel(
-                StatsUtils.parseDate(
-                        mStatsDate[mSelectedBarGraphIndex],
-                        StatsConstants.STATS_INPUT_DATE_FORMAT,
-                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
-                                    ),
-                dataToShowOnGraph[mSelectedBarGraphIndex].getViews()
-                         );
+        setMainViewsLabel(StatsUtils.parseDateToLocalizedFormat(mStatsDate[mSelectedBarGraphIndex],
+                StatsConstants.STATS_INPUT_DATE_FORMAT,
+                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT),
+                dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
 
         showHideEmptyModulesIndicator(false);
 
@@ -509,6 +506,16 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mRecentWeeksIdToExpandedMap, mRecentWeeksList);
     }
 
+    private String[] makeAccessibleHorizontalViewLabels(String[] horizontalLabels, VisitModel[] dataToShowOnGraph) {
+        String[] accessibleLabels = new String[horizontalLabels.length];
+
+        for (int i = 0; i < horizontalLabels.length; i++) {
+            accessibleLabels[i] = getString(R.string.stats_bar_date_value_desc, horizontalLabels[i],
+                    dataToShowOnGraph[i].getViews());
+        }
+
+        return accessibleLabels;
+    }
 
     private void setMainViewsLabel(String dateFormatted, int totals) {
         mStatsViewsLabel.setText(getString(R.string.stats_views_with_date_param, dateFormatted));
@@ -553,20 +560,34 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(
-                    StatsUtils.parseDate(currentDay.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "EEE, MMM dd"));
+            holder.setEntryText(StatsUtils.parseDateToLocalizedFormat(
+                    currentDay.getDay(),
+                    StatsConstants.STATS_INPUT_DATE_FORMAT,
+                    "EEE, MMM dd"));
 
-            // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
-            holder.rowContent.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                        }
-                    });
+            if (AccessibilityUtils.isAccessibilityEnabled(holder.rowContent.getContext())) {
+                holder.rowContent.setClickable(false);
+            } else {
+                // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
+                holder.rowContent.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                            }
+                        });
+            }
             holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentDay.getCount()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            currentDay.getCount()));
+
 
             // show the trophy indicator if the value is the maximum reached
             if (currentDay.getCount() == maxReachedValue && maxReachedValue > 0) {
@@ -576,6 +597,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             } else {
                 holder.imgMore.setVisibility(View.GONE);
             }
+
+            holder.imgMore.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
             holder.networkImageView.setVisibility(View.GONE);
             return convertView;
@@ -637,13 +660,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (numberOfChilds > 1) {
                 PostViewsModel.Day lastChild =
                         (PostViewsModel.Day) getChild(groupPosition, getChildrenCount(groupPosition) - 1);
-                name = StatsUtils.parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                            GROUP_DATE_FORMAT)
-                       + " - " + StatsUtils.parseDate(lastChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                      GROUP_DATE_FORMAT);
+                name = StatsUtils.parseDateToLocalizedFormat(firstChild.getDay(),
+                        StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT)
+                       + " - " + StatsUtils.parseDateToLocalizedFormat(lastChild.getDay(),
+                        StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             } else {
-                name = StatsUtils
-                        .parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
+                name = StatsUtils.parseDateToLocalizedFormat(firstChild.getDay(),
+                        StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             }
 
             holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
@@ -652,6 +675,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            total));
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_trophy_alert_yellow_32dp));
@@ -659,6 +689,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             } else {
                 holder.imgMore.setVisibility(View.GONE);
             }
+
+            holder.imgMore.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(numberOfChilds > 0 ? View.VISIBLE : View.GONE);
@@ -713,20 +745,32 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM",
-                                                     StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
+            holder.setEntryText(StatsUtils.parseDateToLocalizedFormat(currentMonth.getMonth(), "MM",
+                    StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
 
-            // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
-            holder.rowContent.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                        }
-                    });
+            if (AccessibilityUtils.isAccessibilityEnabled(holder.rowContent.getContext())) {
+                holder.rowContent.setClickable(false);
+            } else {
+                // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
+                holder.rowContent.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                            }
+                        });
+            }
+
             holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentMonth.getCount()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            currentMonth.getCount()));
 
             // show the trophy indicator if the value is the maximum reached
             if (currentMonth.getCount() == maxReachedValue && maxReachedValue > 0) {
@@ -736,6 +780,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             } else {
                 holder.imgMore.setVisibility(View.GONE);
             }
+
+            holder.imgMore.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
             holder.networkImageView.setVisibility(View.GONE);
             return convertView;
@@ -805,6 +851,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            total));
 
             holder.networkImageView.setVisibility(View.GONE);
 
@@ -903,11 +956,16 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mSelectedBarGraphIndex = tappedBar;
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
         String currentItemStatsDate = dataToShowOnGraph[mSelectedBarGraphIndex].getPeriod();
-        currentItemStatsDate = StatsUtils.parseDate(
+        currentItemStatsDate = StatsUtils.parseDateToLocalizedFormat(
                 currentItemStatsDate,
                 StatsConstants.STATS_INPUT_DATE_FORMAT,
-                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
-                                                   );
+                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT);
         setMainViewsLabel(currentItemStatsDate, dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
+        mGraphContainer.announceForAccessibility(
+                StringUtils.getQuantityString(this,
+                        R.string.stats_views_zero_desc,
+                        R.string.stats_views_one_desc,
+                        R.string.stats_views_many_desc,
+                        dataToShowOnGraph[mSelectedBarGraphIndex].getViews()));
     }
 }

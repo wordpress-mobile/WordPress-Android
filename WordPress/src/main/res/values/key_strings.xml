@@ -91,6 +91,9 @@
     <string name="pref_key_speed_up_your_site_screen" translatable="false">wp_pref_speed_up_your_site_screen</string>
     <string name="pref_key_serve_images_from_our_servers" translatable="false">wp_pref_serve_images_from_our_servers</string>
     <string name="pref_key_lazy_load_images" translatable="false">wp_pref_lazy_load_images</string>
+    <!-- Media -->
+    <string name="pref_key_site_quota" translatable="false">wp_pref_key_site_quota</string>
+    <string name="pref_key_site_quota_space" translatable="false">wp_pref_key_site_quota_space</string>
 
     <!-- Jetpack Security -->
     <string name="pref_key_jetpack_settings" translatable="false">wp_pref_jetpack_settings</string>

@@ -94,6 +94,7 @@
                         android:layout_height="16dp"
                         android:layout_gravity="center"
                         android:layout_marginRight="@dimen/margin_small"
+                        android:contentDescription="@null"
                         tools:src="@drawable/ic_gridicons_page"
                         android:layout_marginEnd="@dimen/margin_small"/>
 
@@ -121,10 +122,11 @@
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/margin_medium"
-                android:contentDescription="@string/more"
+                android:contentDescription="@string/show_more_desc"
                 app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/margin_medium"/>
+
         </RelativeLayout>
 
         <RelativeLayout

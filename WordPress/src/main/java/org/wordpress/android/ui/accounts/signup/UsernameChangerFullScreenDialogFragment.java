@@ -187,9 +187,13 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     public boolean onConfirmClicked(FullScreenDialogController controller) {
         ActivityUtils.hideKeyboard(getActivity());
 
-        Bundle result = new Bundle();
-        result.putString(RESULT_USERNAME, mUsernamesAdapter.mItems.get(mUsernamesAdapter.getSelectedItem()));
-        controller.confirm(result);
+        if (mUsernamesAdapter != null && mUsernamesAdapter.mItems != null) {
+            Bundle result = new Bundle();
+            result.putString(RESULT_USERNAME, mUsernamesAdapter.mItems.get(mUsernamesAdapter.getSelectedItem()));
+            controller.confirm(result);
+        } else {
+            controller.dismiss();
+        }
 
         return true;
     }
@@ -283,7 +287,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     protected void showDismissDialog() {
         mIsShowingDismissDialog = true;
 
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.LoginTheme))
                 .setMessage(R.string.username_changer_dismiss_message)
                 .setPositiveButton(R.string.username_changer_dismiss_button_positive,
                                    new DialogInterface.OnClickListener() {

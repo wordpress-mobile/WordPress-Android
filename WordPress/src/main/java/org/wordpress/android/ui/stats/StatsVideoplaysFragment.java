@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +132,13 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_plays_zero_desc,
+                            R.string.stats_plays_one_desc,
+                            R.string.stats_plays_many_desc,
+                            currentRowData.getTotals()));
 
             // no icon
             holder.networkImageView.setVisibility(View.GONE);

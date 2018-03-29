@@ -217,8 +217,8 @@
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
 
-    <dimen name="menu_item_height">48dp</dimen>
-    <dimen name="menu_item_width">168dp</dimen>
+    <dimen name="menu_item_height">48sp</dimen>
+    <dimen name="menu_item_width">168sp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
@@ -293,8 +293,6 @@
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
-
-    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>

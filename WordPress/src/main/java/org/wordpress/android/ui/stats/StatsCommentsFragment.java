@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()) {
             adapter = new AuthorsAdapter(getActivity(), getAuthors());
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()) {
-            adapter = new PostsAndPagesAdapter(getActivity(), getPosts());
+            adapter = new PostsAndPagesAdapter(getActivity(), getPosts(), true);
         }
 
         if (adapter != null) {
@@ -224,6 +225,13 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_comments_zero_desc,
+                            R.string.stats_comments_one_desc,
+                            R.string.stats_comments_many_desc,
+                            currentRowData.getViews()));
 
             // avatar
             holder.networkImageView.setImageUrl(

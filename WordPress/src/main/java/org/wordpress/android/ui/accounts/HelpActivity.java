@@ -45,13 +45,14 @@ public class HelpActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0); // remove shadow
+            actionBar.setDisplayShowTitleEnabled(false);
         }
 
         // Init common elements
-        WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
+        WPTextView version = findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
 
-        WPTextView applogButton = (WPTextView) findViewById(R.id.applog_button);
+        WPTextView applogButton = findViewById(R.id.applog_button);
         applogButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,9 +79,9 @@ public class HelpActivity extends AppCompatActivity {
     private void initHelpshiftLayout() {
         setContentView(R.layout.help_activity_with_helpshift);
 
-        WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
+        WPTextView version = findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
-        WPTextView contactUsButton = (WPTextView) findViewById(R.id.contact_us_button);
+        WPTextView contactUsButton = findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +95,8 @@ public class HelpActivity extends AppCompatActivity {
                             HelpshiftHelper.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             HelpshiftHelper.ENTERED_USERNAME_KEY));
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_EMAIL, extras.getString(
+                            HelpshiftHelper.ENTERED_EMAIL_KEY));
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
                     extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
                 }
@@ -103,7 +106,7 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
 
-        WPTextView faqbutton = (WPTextView) findViewById(R.id.faq_button);
+        WPTextView faqbutton = findViewById(R.id.faq_button);
         faqbutton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

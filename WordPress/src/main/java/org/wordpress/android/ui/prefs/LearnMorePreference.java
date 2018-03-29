@@ -75,7 +75,7 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     protected View onCreateView(@NonNull ViewGroup parent) {
         super.onCreateView(parent);
         View view = View.inflate(getContext(), R.layout.learn_more_pref, null);
-        view.findViewById(R.id.learn_more_button).setOnClickListener(this);
+        view.setOnClickListener(this);
 
         if (!TextUtils.isEmpty(mCaption)) {
             TextView captionView = (TextView) view.findViewById(R.id.learn_more_caption);

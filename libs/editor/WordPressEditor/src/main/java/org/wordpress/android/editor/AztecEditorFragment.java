@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -24,12 +25,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.SuggestionSpan;
 import android.util.DisplayMetrics;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -367,6 +371,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
         }
+
+        updateFailedAndUploadingMedia();
     }
 
     @Override
@@ -382,8 +388,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putCharSequence(ATTR_TITLE, getTitle());
-        outState.putCharSequence(ATTR_CONTENT, getContent());
         outState.putParcelable(ATTR_TAPPED_MEDIA_PREDICATE, mTappedMediaPredicate);
     }
 
@@ -398,15 +402,28 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         boolean canRedo = mContent.history.redoValid();
         boolean canUndo = mContent.history.undoValid();
 
-        if (menu != null && menu.findItem(R.id.redo) != null) {
-            menu.findItem(R.id.redo).setEnabled(canRedo);
+        if (menu != null) {
+            MenuItem redoItem = menu.findItem(R.id.redo);
+            if (redoItem != null) {
+                setUndoRedoAppearance(redoItem, canRedo);
+            }
+
+            MenuItem undoItem = menu.findItem(R.id.undo);
+            if (undoItem != null) {
+                setUndoRedoAppearance(undoItem, canUndo);
+            }
         }
 
-        if (menu != null && menu.findItem(R.id.undo) != null) {
-            menu.findItem(R.id.undo).setEnabled(canUndo);
-        }
 
         super.onPrepareOptionsMenu(menu);
+    }
+
+    private void setUndoRedoAppearance(MenuItem menuItem, boolean enabled) {
+        menuItem.setEnabled(enabled);
+
+        SpannableString s = new SpannableString(menuItem.getTitle());
+        s.setSpan(new ForegroundColorSpan(enabled ? Color.BLACK : Color.GRAY), 0, s.length(), 0);
+        menuItem.setTitle(s);
     }
 
     public boolean hasHistory() {
@@ -505,11 +522,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mContent.fromHtml(removeVisualEditorProgressTag(text.toString()));
 
-        updateFailedMediaList();
-        overlayFailedMedia();
-
-        updateUploadingMediaList();
-        overlayProgressingMedia();
+        updateFailedAndUploadingMedia();
 
         mAztecReady = true;
     }
@@ -618,7 +631,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void checkForFailedUploadAndSwitchToHtmlMode() {
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
-            new AlertDialog.Builder(getActivity())
+            new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog))
                     .setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -641,6 +654,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void toggleHtmlMode() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
+        mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
         // Don't switch to HTML mode if currently uploading media
         if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {
@@ -653,6 +667,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mSource.getVisibility() == View.VISIBLE) {
             updateFailedMediaList();
         }
+    }
+
+    private void updateFailedAndUploadingMedia() {
+        updateFailedMediaList();
+        overlayFailedMedia();
+
+        updateUploadingMediaList();
+        overlayProgressingMedia();
     }
 
     public void enableMediaMode(boolean enable) {
@@ -1486,7 +1508,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
                 // Display 'cancel upload' dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                                           new DialogInterface.OnClickListener() {

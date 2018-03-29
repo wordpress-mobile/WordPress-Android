@@ -1,4 +1,6 @@
 buildscript {
+    ext.kotlin_version = '1.2.30'
+
     repositories {
         jcenter()
         google()
@@ -44,8 +46,28 @@ subprojects {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         }
     }
+
+    configurations {
+        ktlint
+    }
+
+    dependencies {
+        ktlint 'com.github.shyiko:ktlint:0.14.0'
+    }
+
+    task ktlint(type: JavaExec) {
+        main = "com.github.shyiko.ktlint.Main"
+        classpath = configurations.ktlint
+        args "src/**/*.kt"
+    }
+
+    task ktlintFormat(type: JavaExec) {
+        main = "com.github.shyiko.ktlint.Main"
+        classpath = configurations.ktlint
+        args "-F", "src/**/*.kt"
+    }
 }
 
 ext {
-    fluxCVersion = '83072117124811e2bd02f728d2498205ea245090'
+    fluxCVersion = '80c252666e397f638b1228261f276b702d95d9e7'
 }

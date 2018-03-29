@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
 import org.wordpress.android.login.Login2FaFragment;
+import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginEmailPasswordFragment;
 import org.wordpress.android.login.LoginGoogleFragment;
@@ -35,16 +36,16 @@ import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.login.SignupBottomSheetDialog;
+import org.wordpress.android.login.SignupBottomSheetDialog.SignupSheetListener;
+import org.wordpress.android.login.SignupEmailFragment;
+import org.wordpress.android.login.SignupGoogleFragment;
+import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
-import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
-import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
-import org.wordpress.android.ui.accounts.signup.SignupEmailFragment;
-import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
-import org.wordpress.android.ui.accounts.signup.SignupMagicLinkFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private LoginMode mLoginMode;
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
+    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -107,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_ACCESSED);
+            mLoginAnalyticsListener.trackLoginAccessed();
 
             switch (getLoginMode()) {
                 case FULL:
@@ -142,10 +144,27 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        SignupGoogleFragment signupGoogleFragment;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        signupGoogleFragment = (SignupGoogleFragment) fragmentManager.findFragmentByTag(SignupGoogleFragment.TAG);
+
+        if (signupGoogleFragment != null) {
+            fragmentManager.beginTransaction().remove(signupGoogleFragment).commit();
+        }
+
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_SIGNUP_SHEET_DISPLAYED, mSignupSheetDisplayed);
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mSignupSheetDisplayed && mSignupSheet != null) {
+            mSignupSheet.dismiss();
+        }
+
+        super.onDestroy();
     }
 
     private void showFragment(Fragment fragment, String tag) {
@@ -232,7 +251,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 break;
             case RequestCodes.SMART_LOCK_SAVE:
                 if (resultCode == RESULT_OK) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
+                    mLoginAnalyticsListener.trackLoginAutofillCredentialsUpdated();
                     AppLog.d(AppLog.T.NUX, "Credentials saved");
                 } else {
                     AppLog.d(AppLog.T.NUX, "Credentials save cancelled");
@@ -347,7 +366,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
         // Get device locale and remove region to pass only language.
         String locale = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
-        locale = locale.substring(0, locale.indexOf("_"));
+        int pos = locale.indexOf("_");
+        if (pos > -1) {
+            locale = locale.substring(0, pos);
+        }
         ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url, locale));
     }
 
@@ -394,7 +416,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
+        mLoginAnalyticsListener.trackLoginSocialSuccess();
         loggedInAndFinish(oldSitesIds, doLoginUpdate);
     }
 
@@ -418,7 +440,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void openEmailClient() {
         if (WPActivityUtils.isEmailClientAvailable(this)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+            mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
             WPActivityUtils.openEmailClient(this);
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
@@ -427,7 +449,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void usePasswordInstead(String email) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
+        mLoginAnalyticsListener.trackLoginMagicLinkExited();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
@@ -435,7 +457,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void forgotPassword(String url) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
+        mLoginAnalyticsListener.trackLoginForgotPasswordClicked();
         ActivityLauncher.openUrlExternal(this, url + FORGOT_PASSWORD_URL_SUFFIX);
     }
 
@@ -449,7 +471,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
         dismissSignupSheet();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+        mLoginAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                                                                                nonceAuthenticator, nonceBackup,
                                                                                nonceSms);
@@ -458,7 +480,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void needs2faSocialConnect(String email, String password, String idToken, String service) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+        mLoginAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment =
                 Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
@@ -499,11 +521,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         });
     }
 
-    private void launchHelpshift(String url, String username, boolean isWpcom, Tag origin) {
+    private void launchHelpshift(String url, String email, boolean isWpcom, Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
-        intent.putExtra(HelpshiftHelper.ENTERED_USERNAME_KEY, username);
+        intent.putExtra(HelpshiftHelper.ENTERED_EMAIL_KEY, email);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
         if (getLoginMode() == LoginMode.JETPACK_STATS) {
             Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};
@@ -666,7 +688,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onCredentialRetrieved(Credential credential) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+        mLoginAnalyticsListener.trackLoginAutofillCredentialsFilled();
 
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
 

@@ -25,6 +25,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -540,6 +541,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
+    @SuppressLint("AddJavascriptInterface")
     protected void initJsEditor() {
         if (!isAdded()) {
             return;
@@ -564,7 +566,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         if (Build.VERSION.SDK_INT < 17) {
             mWebView.setJsCallbackReceiver(new JsCallbackReceiver(this));
         } else {
-            //noinspection AddJavascriptInterface
             mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
         }
 
@@ -582,7 +583,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
             builder.setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1347,7 +1349,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 }
 
                 // Display 'cancel upload' dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(
                         R.string.stop_upload_dialog_button_yes, new DialogInterface.OnClickListener() {

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,8 +131,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // internally and overriding it with paddingLeft causes the issue report here
         // https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            ViewCompat.setPaddingRelative(mVisitorsCheckbox,
-                                          getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
+            ViewCompat
+                    .setPaddingRelative(mVisitorsCheckbox, getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                            0, 0, 0);
         }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
@@ -217,6 +219,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public void setChecked(boolean checked) {
+            if (checked) {
+                mTab.announceForAccessibility(
+                        mTab.getContext().getString(R.string.stats_tab_tap_content_description, mLabelItem.getLabel()));
+            }
             this.mIsChecked = checked;
         }
     }
@@ -256,8 +262,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mSelectedOverviewItemIndex = checkedId;
             if (mOverviewItemChangeListener != null) {
                 mOverviewItemChangeListener.onOverviewItemChanged(
-                        mOverviewItems[mSelectedOverviewItemIndex]
-                                                                 );
+                        mOverviewItems[mSelectedOverviewItemIndex]);
             }
             updateUI();
         }
@@ -426,7 +431,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mStatsDate[i] = currentItemStatsDate;
 
             if (weekendDays != null) {
-                SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+                SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
                 try {
                     Date date = from.parse(currentItemStatsDate);
                     Calendar c = Calendar.getInstance();
@@ -487,10 +492,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         // Set the maximum size a column can get on the screen in PX
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
-                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
-                                                        );
+                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.setHorizontalLabels(horLabels);
+        mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
+                mainSeriesItems, selectedStatsType));
         mGraphView.setGestureListener(this);
+        mGraphView.setImportantForAccessibility(atLeastOneResultIsAvailable
+                ? View.IMPORTANT_FOR_ACCESSIBILITY_YES : View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
         // If zero results in the current section disable clicks on the graph and show the dialog.
         mNoActivtyThisPeriodContainer.setVisibility(atLeastOneResultIsAvailable ? View.GONE : View.VISIBLE);
@@ -524,6 +532,35 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         updateUIBelowTheGraph(barSelectedOnGraph);
         mGraphView.highlightBar(barSelectedOnGraph);
+    }
+
+    private String[] makeAccessibleHorizontalLabels(String[] horizontalLabels,
+                                                    GraphView.GraphViewData[] dataToShowOnGraph,
+                                                    OverviewLabel typeOfStats) {
+        String[] accessibleLabels = new String[horizontalLabels.length];
+
+        for (int i = 0; i < horizontalLabels.length; i++) {
+            String barDate;
+
+            if (getTimeframe() == StatsTimeframe.MONTH) {
+                barDate = StatsUtils.parseDateToLocalizedFormat(
+                        horizontalLabels[i],
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT);
+            } else if (getTimeframe() == StatsTimeframe.WEEK) {
+                barDate = getString(R.string.stats_bar_week_desc, StatsUtils.parseDateToLocalizedFormat(
+                        horizontalLabels[i],
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
+            } else {
+                barDate = horizontalLabels[i];
+            }
+
+            accessibleLabels[i] = getString(R.string.stats_bar_date_value_type_desc, barDate,
+                    (int) dataToShowOnGraph[i].getY(), typeOfStats.getLabel());
+        }
+
+        return accessibleLabels;
     }
 
     private int getDefaultBarIndex(final VisitModel[] dataToShowOnGraph) {
@@ -609,8 +646,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         String prefix = getString(R.string.stats_for);
         switch (timeframe) {
             case DAY:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(
+                        date,
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
             case WEEK:
                 try {
                     SimpleDateFormat sdf;
@@ -621,7 +660,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     // followed by Wxx where xx is the month
                     // followed by Wxx where xx is the day of the month
                     // ex: 2013W07W22 = July 22, 2013
-                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
+                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd", Locale.ROOT);
                     // Calculate the end of the week
                     parsedDate = sdf.parse(date);
                     c = Calendar.getInstance();
@@ -629,23 +668,25 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.setTime(parsedDate);
                     // first day of this week
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                 StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    String startDateLabel = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
-                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    String endDateLabel = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     return String.format(prefix, startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
                     AppLog.e(AppLog.T.UTILS, e);
                     return "";
                 }
             case MONTH:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(date,
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
             case YEAR:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                                  StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(date,
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
         }
         return "";
     }
@@ -656,23 +697,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private String getDateLabelForBarInGraph(String dateToFormat) {
         switch (getTimeframe()) {
             case DAY:
-                return StatsUtils.parseDate(
+                return StatsUtils.parseDateToLocalizedFormat(
                         dateToFormat,
                         StatsConstants.STATS_INPUT_DATE_FORMAT,
-                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT
-                                           );
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case WEEK:
                 // first four digits are the year
                 // followed by Wxx where xx is the month
                 // followed by Wxx where xx is the day of the month
                 // ex: 2013W07W22 = July 22, 2013
-                return StatsUtils.parseDate(dateToFormat, "yyyy'W'MM'W'dd",
-                                            StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy'W'MM'W'dd",
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case MONTH:
-                return StatsUtils.parseDate(dateToFormat, "yyyy-MM", "MMM");
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy-MM",
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_FORMAT);
             case YEAR:
-                return StatsUtils.parseDate(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                            StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT);
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT);
             default:
                 return dateToFormat;
         }
@@ -793,7 +834,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     // followed by Wxx where xx is the month
                     // followed by Wxx where xx is the day of the month
                     // ex: 2013W07W22 = July 22, 2013
-                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
+                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd", Locale.ROOT);
                     // Calculate the end of the week
                     parsedDate = sdf.parse(date);
                     c.setTime(parsedDate);
@@ -801,25 +842,28 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
-                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case MONTH:
-                    sdf = new SimpleDateFormat("yyyy-MM");
+                    sdf = new SimpleDateFormat("yyyy-MM", Locale.ROOT);
                     // Calculate the end of the month
                     parsedDate = sdf.parse(date);
                     c.setTime(parsedDate);
                     // last day of this month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case YEAR:
-                    sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
                     // Calculate the end of the week
                     parsedDate = sdf.parse(date);
                     c.setTime(parsedDate);
                     c.set(Calendar.MONTH, Calendar.DECEMBER);
                     c.set(Calendar.DAY_OF_MONTH, 31);
-                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
             }
         } catch (ParseException e) {
@@ -828,7 +872,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         if (calculatedDate == null) {
             AppLog.w(AppLog.T.STATS,
-                     "A call to request new stats stats is made but date received cannot be parsed!! " + date);
+                    "A call to request new stats stats is made but date received cannot be parsed!! " + date);
             return;
         }
 
@@ -841,15 +885,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
         }
 
+        String selectedDate = mStatsDate[tappedBar];
+
+        if (!TextUtils.isEmpty(selectedDate)) {
+            mGraphView.announceForAccessibility(getString(R.string.stats_bar_desc,
+                    getDateForDisplayInLabels(selectedDate, getTimeframe())));
+        }
+
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
-                                            mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
+                mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
     }
 
     public enum OverviewLabel {
         VIEWS(R.string.stats_views),
         VISITORS(R.string.stats_visitors),
         LIKES(R.string.stats_likes),
-        COMMENTS(R.string.stats_comments),;
+        COMMENTS(R.string.stats_comments);
 
         private final int mLabelResId;
 

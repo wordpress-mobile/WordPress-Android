@@ -298,6 +298,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         switch (event.getStep()) {
             case IDLE:
+                getView().announceForAccessibility(getText(R.string.notification_site_creation_title_in_progress));
                 disableUntil(0);
                 configureImage(false);
                 break;
@@ -318,6 +319,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 configureImage(false);
                 break;
             case FAILURE:
+                getView().announceForAccessibility(getText(R.string.notification_site_creation_failed));
                 configureImage(true);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
@@ -330,6 +332,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mPreviewWebViewClient = loadWebview();
                 break;
             case SUCCESS:
+                getView().announceForAccessibility(getText(R.string.notification_site_creation_title_success));
                 mNewSiteLocalId = (Integer) event.getPayload();
 
                 if (mPreviewWebViewClient == null) {

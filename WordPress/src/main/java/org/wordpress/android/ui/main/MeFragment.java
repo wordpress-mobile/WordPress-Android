@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,6 +57,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
@@ -322,7 +324,7 @@ public class MeFragment extends Fragment {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
                                        mAccountStore.getAccount().getUserName());
 
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog))
                 .setMessage(message)
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -495,7 +497,7 @@ public class MeFragment extends Fragment {
 
     // injects a fabricated cache entry to the request cache
     private void injectCache(File file, String avatarUrl) throws IOException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ROOT);
         final long currentTimeMs = System.currentTimeMillis();
         final Date currentTime = new Date(currentTimeMs);
         final long fiveMinutesLaterMs = currentTimeMs + 5 * 60 * 1000;

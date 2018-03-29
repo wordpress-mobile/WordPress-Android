@@ -16,6 +16,8 @@
     <color name="sourceview_placeholder_text">@color/wp_grey</color>
     <color name="sourceview_separator">@color/wp_grey_lighten_30</color>
 
+    <color name="status_bar_tint">#ff006b98</color>
+
     <!-- AZTEC -->
     <color name="bullet">@color/wp_grey_darken_30</color>
     <color name="code">@color/text</color>

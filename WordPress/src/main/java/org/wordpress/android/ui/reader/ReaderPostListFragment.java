@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -300,7 +301,13 @@ public class ReaderPostListFragment extends Fragment
         } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
             // current tag no longer exists, revert to default
             AppLog.d(T.READER, "reader post list > current tag no longer valid");
-            setCurrentTag(ReaderUtils.getDefaultTag());
+            ReaderTag tag = ReaderUtils.getDefaultTag();
+            // it's possible the default tag won't exist if the user just changed the app's
+            // language, in which case default to the first tag in the table
+            if (!ReaderTagTable.tagExists(tag)) {
+                tag = ReaderTagTable.getFirstTag();
+            }
+            setCurrentTag(tag);
         } else {
             // otherwise, refresh posts to make sure any changes are reflected and auto-update
             // posts in the current tag if it's time
@@ -821,7 +828,8 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         };
-        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked),
+                AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(R.string.undo, undoListener)
                 .show();
     }

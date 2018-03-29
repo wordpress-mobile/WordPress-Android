@@ -19,8 +19,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         versionCode 13
@@ -46,16 +46,16 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v13:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:support-v13:27.1.0'
+    implementation 'com.android.support:support-v4:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.wordpress:utils:1.18.1'
 
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v1.3')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:v1.3')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:v1.3')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v1.3.1')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:v1.3.1')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:v1.3.1')
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"

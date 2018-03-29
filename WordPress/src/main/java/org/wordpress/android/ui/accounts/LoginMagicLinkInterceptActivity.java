@@ -4,19 +4,25 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.main.WPMainActivity;
+
+import javax.inject.Inject;
 
 /**
  * Deep link receiver for magic links. Starts {@link WPMainActivity} where flow is routed to login
  * or signup based on deep link scheme, host, and parameters.
  */
 public class LoginMagicLinkInterceptActivity extends Activity {
+    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPENED);
+        mLoginAnalyticsListener.trackLoginMagicLinkOpened();
 
         Intent intent = new Intent(this, WPMainActivity.class);
         intent.setAction(getIntent().getAction());

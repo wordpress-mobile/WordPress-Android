@@ -182,6 +182,8 @@ public class SignInDialogFragment extends DialogFragment {
                         HelpshiftHelper.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         HelpshiftHelper.ENTERED_USERNAME_KEY));
+                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_EMAIL, arguments.getString(
+                        HelpshiftHelper.ENTERED_EMAIL_KEY));
                 Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
                                                                origin, mAccountStore.getAccount().getUserName());

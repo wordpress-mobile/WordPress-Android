@@ -37,12 +37,14 @@ public class HelpshiftHelper {
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
+    public static final String ENTERED_EMAIL_KEY = "ENTERED_EMAIL_KEY";
 
     private static HelpshiftHelper mInstance = null;
 
     public enum MetadataKey {
         USER_ENTERED_URL("user-entered-url"),
-        USER_ENTERED_USERNAME("user-entered-username");
+        USER_ENTERED_USERNAME("user-entered-username"),
+        USER_ENTERED_EMAIL("user-entered-email");
 
         private final String mStringValue;
 
@@ -351,7 +353,10 @@ public class HelpshiftHelper {
     }
 
     private HashMap getHelpshiftConfig(Context context, SiteStore siteStore, String wpComUsername) {
-        String emailAddress = UserEmailUtils.getPrimaryEmail(context);
+        String emailAddress = (String) getMetaData(MetadataKey.USER_ENTERED_EMAIL);
+        if (TextUtils.isEmpty(emailAddress)) {
+            emailAddress = UserEmailUtils.getPrimaryEmail(context);
+        }
         // Use the user entered username to pre-fill name
         String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
         // If it's null or empty, use split email address to pre-fill name
@@ -361,6 +366,7 @@ public class HelpshiftHelper {
                 name = splitEmail[0];
             }
         }
+
         Core.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(context, siteStore, wpComUsername);
         addPlanTags(siteStore);

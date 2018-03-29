@@ -18,6 +18,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackCreatedAccount() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
+    }
+
+    @Override
     public void trackEmailFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
     }
@@ -28,8 +33,58 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackLoginAccessed() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_ACCESSED);
+    }
+
+    @Override
+    public void trackLoginAutofillCredentialsFilled() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+    }
+
+    @Override
+    public void trackLoginAutofillCredentialsUpdated() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
+    }
+
+    @Override
     public void trackLoginFailed(String errorContext, String errorType, String errorDescription) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, errorContext, errorType, errorDescription);
+    }
+
+    @Override
+    public void trackLoginForgotPasswordClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
+    }
+
+    @Override
+    public void trackLoginMagicLinkExited() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
+    }
+
+    @Override
+    public void trackLoginMagicLinkOpened() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPENED);
+    }
+
+    @Override
+    public void trackLoginMagicLinkOpenEmailClientClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+    }
+
+    @Override
+    public void trackLoginMagicLinkSucceeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+    }
+
+    @Override
+    public void trackLoginSocial2faNeeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+    }
+
+    @Override
+    public void trackLoginSocialSuccess() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
     }
 
     @Override
@@ -55,6 +110,46 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackPasswordFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
+    }
+
+    @Override
+    public void trackSignupEmailToLogin() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
+    }
+
+    @Override
+    public void trackSignupMagicLinkFailed() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_FAILED);
+    }
+
+    @Override
+    public void trackSignupMagicLinkSent() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SENT);
+    }
+
+    @Override
+    public void trackSignupMagicLinkSucceeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+    }
+
+    @Override
+    public void trackSignupSocial2faNeeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
+    }
+
+    @Override
+    public void trackSignupSocialAccountsNeedConnecting() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING);
+    }
+
+    @Override
+    public void trackSignupSocialButtonFailure() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_FAILURE);
+    }
+
+    @Override
+    public void trackSignupSocialToLogin() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
     }
 
     @Override

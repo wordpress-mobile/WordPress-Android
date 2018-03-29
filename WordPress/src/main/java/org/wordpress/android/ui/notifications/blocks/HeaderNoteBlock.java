@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -49,6 +50,7 @@ public class HeaderNoteBlock extends NoteBlock {
         return R.layout.note_block_header;
     }
 
+    @SuppressLint("ClickableViewAccessibility") // fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder) view.getTag();
@@ -57,9 +59,34 @@ public class HeaderNoteBlock extends NoteBlock {
         noteBlockHolder.mNameTextView.setText(spannable);
 
         noteBlockHolder.mAvatarImageView.setImageUrl(getAvatarUrl(), mImageType);
-        if (!TextUtils.isEmpty(getUserUrl())) {
+        final long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
+        final long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
+
+        if (!TextUtils.isEmpty(getUserUrl()) && siteId > 0 && userId > 0) {
+            noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String siteUrl = getUserUrl();
+                    mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
+                }
+            });
+
+
+            noteBlockHolder.mAvatarImageView.setContentDescription(
+                    view.getContext().getString(R.string.profile_picture, spannable));
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+
+            if (siteId == userId) {
+                noteBlockHolder.mAvatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            } else {
+                noteBlockHolder.mAvatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
         } else {
+            noteBlockHolder.mAvatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            noteBlockHolder.mAvatarImageView.setContentDescription(null);
+            noteBlockHolder.mAvatarImageView.setOnClickListener(null);
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
 
@@ -130,29 +157,24 @@ public class HeaderNoteBlock extends NoteBlock {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.animate()
-                 .scaleX(0.9f)
-                 .scaleY(0.9f)
-                 .alpha(0.5f)
-                 .setDuration(animationDuration)
-                 .setInterpolator(new DecelerateInterpolator());
+                        .scaleX(0.9f)
+                        .scaleY(0.9f)
+                        .alpha(0.5f)
+                        .setDuration(animationDuration)
+                        .setInterpolator(new DecelerateInterpolator());
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP
-                       || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
-                 .scaleX(1.0f)
-                 .scaleY(1.0f)
-                 .alpha(1.0f)
-                 .setDuration(animationDuration)
-                 .setInterpolator(new DecelerateInterpolator());
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .alpha(1.0f)
+                        .setDuration(animationDuration)
+                        .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
-                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
-                    String siteUrl = getUserUrl();
-                    if (siteId > 0 && userId > 0) {
-                        mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
-                    }
+                    v.performClick();
                 }
             }
 

@@ -185,6 +185,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mPostsPerPagePref;
     private WPSwitchPreference mAmpPref;
 
+    // Media settings
+    private EditTextPreference mSiteQuotaSpacePref;
+
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
     private WPSwitchPreference mSendPingbacksPref;
@@ -465,7 +468,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.layoutAsBody2(title);
         } else {
             // style preference title views
-            TextView title = (TextView) child.findViewById(android.R.id.title);
+            TextView title = child.findViewById(android.R.id.title);
             if (title != null) {
                 WPPrefUtils.layoutAsSubhead(title);
             }
@@ -565,7 +568,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void disconnectFromJetpack() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setMessage(R.string.jetpack_disconnect_confirmation_message);
         builder.setPositiveButton(R.string.jetpack_disconnect_confirm, new DialogInterface.OnClickListener() {
             @Override
@@ -882,7 +886,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mServeImagesFromOurServers =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers);
         mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
-
+        mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
@@ -1002,7 +1006,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showExportContentDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(R.string.export_your_content);
         String email = mAccountStore.getAccount().getEmail();
         builder.setMessage(getString(R.string.export_your_content_message, email));
@@ -1083,7 +1088,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showPurchasesDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(R.string.premium_upgrades_title);
         builder.setMessage(R.string.premium_upgrades_message);
         builder.setPositiveButton(R.string.show_purchases, new DialogInterface.OnClickListener() {
@@ -1122,7 +1128,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(R.string.delete_site_warning_title);
         String text = getString(R.string.delete_site_warning, "<b>" + UrlUtils.getHost(mSite.getUrl()) + "</b>")
                       + "<br><br>"
@@ -1237,6 +1244,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mPostsPerPagePref.setSummary(String.valueOf(mSiteSettings.getPostsPerPage()));
         setTimezonePref(mSiteSettings.getTimezone());
+        changeEditTextPreferenceValue(mSiteQuotaSpacePref, mSiteSettings.getQuotaDiskSpace());
     }
 
     private void setDateTimeFormatPref(FormatType formatType, WPPreference formatPref, String formatValue) {
@@ -1443,6 +1451,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showListEditorDialog(int titleRes, int headerRes) {
         mDialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
         mDialog.setOnDismissListener(this);
+        mDialog.setTitle(titleRes);
         mDialog.setContentView(getListEditorView(getString(headerRes)));
         mDialog.show();
         WPActivityUtils.addToolbarToDialog(this, mDialog, getString(titleRes));
@@ -1454,7 +1463,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         ((TextView) view.findViewById(R.id.list_editor_header_text)).setText(headerText);
 
         mAdapter = null;
-        final EmptyViewRecyclerView list = (EmptyViewRecyclerView) view.findViewById(android.R.id.list);
+        final EmptyViewRecyclerView list = view.findViewById(android.R.id.list);
         list.setLayoutManager(
                 new SmoothScrollLinearLayoutManager(
                         getActivity(),
@@ -1499,8 +1508,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder =
-                        new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                 final EditText input = new EditText(getActivity());
                 WPPrefUtils.layoutAsInput(input);
                 input.setWidth(getResources().getDimensionPixelSize(R.dimen.list_editor_input_max_width));
@@ -1624,6 +1633,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         String title = getString(R.string.site_settings_discussion_title);
         Dialog dialog = mMorePreference.getDialog();
         if (dialog != null) {
+            dialog.setTitle(title);
             setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
             return true;
@@ -1663,6 +1673,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
     }
 
     private void removeNonJetpackPreferences() {
@@ -1670,6 +1681,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
+        if (!mSite.hasDiskSpaceQuotaInformation()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
+        }
     }
 
     private void removeSpeedUpJetpackPreferences() {
@@ -1760,7 +1774,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showDeleteSiteErrorDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(R.string.error_deleting_site);
         builder.setMessage(R.string.error_deleting_site_summary);
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

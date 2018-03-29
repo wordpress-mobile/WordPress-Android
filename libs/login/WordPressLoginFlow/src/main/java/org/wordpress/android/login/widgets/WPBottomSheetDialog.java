@@ -1,11 +1,11 @@
-package org.wordpress.android.ui;
+package org.wordpress.android.login.widgets;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.view.WindowManager;
 
-import org.wordpress.android.R;
+import org.wordpress.android.login.R;
 import org.wordpress.android.util.DisplayUtils;
 
 public class WPBottomSheetDialog extends BottomSheetDialog {
