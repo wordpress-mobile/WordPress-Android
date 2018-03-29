@@ -55,7 +55,8 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CHOOSE_VIDEO,
         ANDROID_CAPTURE_PHOTO,
         ANDROID_CAPTURE_VIDEO,
-        WP_MEDIA
+        WP_MEDIA,
+        STOCK_MEDIA
     }
 
     /*
@@ -254,6 +255,15 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
+                return true;
+            }
+        });
+
+        MenuItem itemStock = popup.getMenu().add(R.string.photo_picker_stock_media);
+        itemStock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                doIconClicked(PhotoPickerIcon.STOCK_MEDIA);
                 return true;
             }
         });
