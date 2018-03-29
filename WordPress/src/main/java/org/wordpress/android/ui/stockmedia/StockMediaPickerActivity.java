@@ -275,7 +275,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 boolean isEmpty = mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE;
                 boolean showEmptyImage;
                 if (isEmpty) {
-                    showEmptyImage = !DisplayUtils.isLandscape(this);
+                    // only show empty image if there's enough room for it
+                    showEmptyImage = DisplayUtils.getDisplayPixelHeight(this) >= 1080;
                     String message = getString(R.string.stock_media_picker_initial_empty_text);
                     String subMessage = getString(R.string.stock_media_picker_initial_empty_subtext);
                     String link = "<a href='https://pexels.com/'>Pexels</a>";
