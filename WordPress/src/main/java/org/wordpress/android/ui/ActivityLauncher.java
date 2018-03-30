@@ -115,13 +115,12 @@ public class ActivityLauncher {
 
     public static void showStockMediaPickerForResult(Activity activity,
                                                      @NonNull SiteModel site,
-                                                     boolean enableMultiSelect) {
+                                                     int requestCode) {
         Map<String, String> properties = new HashMap<>();
         properties.put("from", activity.getClass().getSimpleName());
         AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_ACCESSED, properties);
 
-        int requestCode = enableMultiSelect ?
-                RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT : RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT;
+        boolean enableMultiSelect = requestCode == RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT;
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_ENABLE_MULTI_SELECT, enableMultiSelect);

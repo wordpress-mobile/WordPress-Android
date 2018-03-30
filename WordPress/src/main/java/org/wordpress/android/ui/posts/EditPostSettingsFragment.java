@@ -54,7 +54,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
@@ -411,7 +410,7 @@ public class EditPostSettingsFragment extends Fragment {
                     }
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                case RequestCodes.STOCK_MEDIA_PICKER_FEATURED_IMAGE:
                     if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
                         updateFeaturedImage(mediaId);
@@ -873,7 +872,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
             // TODO: ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
-            ActivityLauncher.showStockMediaPickerForResult(getActivity(), getSite(), false);
+            ActivityLauncher.showStockMediaPickerForResult(getActivity(), getSite(), RequestCodes.STOCK_MEDIA_PICKER_FEATURED_IMAGE);
         }
     }
 

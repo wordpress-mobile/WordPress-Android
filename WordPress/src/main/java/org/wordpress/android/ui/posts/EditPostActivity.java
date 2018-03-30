@@ -928,7 +928,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
             case STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(this, mSite, true);
+                ActivityLauncher.showStockMediaPickerForResult(
+                        this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
         }
     }
@@ -2460,7 +2461,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                case RequestCodes.STOCK_MEDIA_PICKER_FEATURED_IMAGE:
                     // user chose a featured image - pass it to the settings fragment
                     if (mEditPostSettingsFragment != null) {
                         mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);

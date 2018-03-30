@@ -571,13 +571,15 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             holder.mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
 
             boolean isSelected = isItemSelected(position);
-            holder.mSelectionCountTextView.setSelected(isSelected);
-            if (isSelected) {
-                int count = mSelectedItems.indexOf(position) + 1;
-                String label = Integer.toString(count);
-                holder.mSelectionCountTextView.setText(label);
-            } else {
-                holder.mSelectionCountTextView.setText(null);
+            if (mEnableMultiselect) {
+                holder.mSelectionCountTextView.setSelected(isSelected);
+                if (isSelected) {
+                    int count = mSelectedItems.indexOf(position) + 1;
+                    String label = Integer.toString(count);
+                    holder.mSelectionCountTextView.setText(label);
+                } else {
+                    holder.mSelectionCountTextView.setText(null);
+                }
             }
 
             float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -602,6 +604,10 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         void setItemSelected(StockViewHolder holder, int position, boolean selected) {
             if (!isValidPosition(position)) return;
 
+            if (selected && !mEnableMultiselect && !mSelectedItems.isEmpty()) {
+                mSelectedItems.clear();
+            }
+
             if (selected) {
                 mSelectedItems.add(position);
             } else {
@@ -613,14 +619,16 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
 
             // show and animate the count
-            if (selected) {
-                String label = Integer.toString(mSelectedItems.indexOf(position) + 1);
-                holder.mSelectionCountTextView.setText(label);
-            } else {
-                holder.mSelectionCountTextView.setText(null);
+            if (mEnableMultiselect) {
+                if (selected) {
+                    String label = Integer.toString(mSelectedItems.indexOf(position) + 1);
+                    holder.mSelectionCountTextView.setText(label);
+                } else {
+                    holder.mSelectionCountTextView.setText(null);
+                }
+                AniUtils.startAnimation(holder.mSelectionCountTextView, R.anim.pop);
+                holder.mSelectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
             }
-            AniUtils.startAnimation(holder.mSelectionCountTextView, R.anim.pop);
-            holder.mSelectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
 
             // scale the thumbnail
             if (selected) {
