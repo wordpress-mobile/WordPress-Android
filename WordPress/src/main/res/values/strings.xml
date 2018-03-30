@@ -288,7 +288,7 @@
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
     <string name="width">Width</string>
-    <string name="featured">Use as featured image</string>
+    <string name="set_featured_image">Set as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="delete_post">Delete post?</string>

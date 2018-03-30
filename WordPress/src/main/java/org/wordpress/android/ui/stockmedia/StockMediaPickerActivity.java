@@ -140,17 +140,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         mTextAdd = findViewById(R.id.text_add);
         mTextPreview = findViewById(R.id.text_preview);
 
-        mTextAdd.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                uploadSelection();
-            }
-        });
-        mTextPreview.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                previewSelection();
-            }
-        });
-
         if (savedInstanceState == null) {
             showEmptyView(true);
             mEnableMultiselect = getIntent().getExtras().getBoolean(KEY_ENABLE_MULTI_SELECT, true);
@@ -172,6 +161,23 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     submitSearch(mSearchQuery, true);
                 }
             }
+        }
+
+        mTextAdd.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                uploadSelection();
+            }
+        });
+
+        if (mEnableMultiselect) {
+            mTextPreview.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    previewSelection();
+                }
+            });
+        } else {
+            mTextAdd.setText(R.string.set_featured_image);
+            mTextPreview.setVisibility(View.GONE);
         }
 
         configureSearchView();
@@ -476,12 +482,13 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            String labelAdd = String.format(getString(R.string.add_count), numSelected);
-            mTextAdd.setText(labelAdd);
+            if (mEnableMultiselect) {
+                String labelAdd = String.format(getString(R.string.add_count), numSelected);
+                mTextAdd.setText(labelAdd);
 
-            String labelPreview = String.format(getString(R.string.preview_count), numSelected);
-            mTextPreview.setText(labelPreview);
-
+                String labelPreview = String.format(getString(R.string.preview_count), numSelected);
+                mTextPreview.setText(labelPreview);
+            }
             showSelectionBar(true);
             if (numSelected == 1) {
                 ActivityUtils.hideKeyboardForced(mSearchView);
