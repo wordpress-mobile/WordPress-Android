@@ -56,11 +56,11 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     private boolean mInProgress;
     private boolean mLoginFinished;
 
-    protected @Inject Dispatcher mDispatcher;
-    protected @Inject SiteStore mSiteStore;
-    protected @Inject AccountStore mAccountStore;
+    @Inject protected Dispatcher mDispatcher;
+    @Inject protected SiteStore mSiteStore;
+    @Inject protected AccountStore mAccountStore;
 
-    protected @Inject LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(@NonNull TextView label);
