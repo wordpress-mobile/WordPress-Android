@@ -115,7 +115,7 @@ class ActivityLogSqlUtils
 
     @Table(name = "ActivityLog")
     data class ActivityLogBuilder(@PrimaryKey
-                                  @Column private var mId: Int? = null,
+                                  @Column private var mId: Int = -1,
                                   @Column var localSiteId: Int,
                                   @Column var remoteSiteId: Long,
                                   @Column var activityID: String,
@@ -140,7 +140,7 @@ class ActivityLogSqlUtils
             mId = id
         }
 
-        override fun getId() = mId ?: -1
+        override fun getId() = mId
 
         fun build(): ActivityLogModel {
             var actor: ActivityLogModel.ActivityActor? = null
@@ -164,7 +164,7 @@ class ActivityLogSqlUtils
 
     @Table(name = "RewindStatus")
     data class RewindStatusBuilder(@PrimaryKey
-                                   @Column private var mId: Int? = null,
+                                   @Column private var mId: Int = -1,
                                    @Column var localSiteId: Int,
                                    @Column var remoteSiteId: Long,
                                    @Column var rewindState: String? = null,
@@ -179,7 +179,7 @@ class ActivityLogSqlUtils
             this.mId = id
         }
 
-        override fun getId() = mId ?: -1
+        override fun getId() = mId
 
         constructor() : this(-1, 0, 0)
 
