@@ -11,6 +11,7 @@
 
     <style name="LoginTheme.Toolbar" parent="LoginTheme">
         <item name="colorControlNormal">@color/color_control_normal</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
     </style>
 
     <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">

@@ -160,7 +160,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        m2FaInput = (WPLoginInputRow) rootView.findViewById(R.id.login_2fa_row);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.verification_2fa_screen_title);
+        m2FaInput = rootView.findViewById(R.id.login_2fa_row);
         m2FaInput.addTextChangedListener(this);
         m2FaInput.setOnEditorCommitListener(this);
 
@@ -500,7 +502,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mLoginListener.startPostLoginServices();
 
         if (mIsSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }

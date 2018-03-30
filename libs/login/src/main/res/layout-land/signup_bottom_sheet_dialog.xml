@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/grey_lighten_30"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium" >
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/signup_tos"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="@dimen/margin_extra_large"
+        android:text="@string/signup_terms_of_service_text"
+        style="@style/LoginTheme.Button.Secondary" >
+    </android.support.v7.widget.AppCompatButton>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_width="match_parent"
+        android:orientation="horizontal" >
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/signup_email"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:text="@string/signup_with_email_button"
+            android:theme="@style/LoginTheme.Button" >
+        </android.support.v7.widget.AppCompatButton>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/signup_google"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:text="@string/signup_with_google_button"
+            android:theme="@style/LoginTheme.Button" >
+        </android.support.v7.widget.AppCompatButton>
+
+    </LinearLayout>
+
+</LinearLayout>

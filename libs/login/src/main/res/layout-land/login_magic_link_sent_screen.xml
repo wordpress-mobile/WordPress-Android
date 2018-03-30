@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <include
         android:id="@+id/toolbar"
@@ -20,7 +21,7 @@
             android:layout_width="@dimen/magic_link_sent_illustration_sz"
             android:layout_height="@dimen/magic_link_sent_illustration_sz"
             android:scaleType="centerInside"
-            android:contentDescription="@string/login_magic_links_sent_description"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/img_email_alert_120dp"/>
 
         <TextView
@@ -45,7 +46,8 @@
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
         android:layout_alignParentBottom="true"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        tools:ignore="InconsistentLayout">
 
         <android.support.v7.widget.AppCompatButton
             style="@style/LoginTheme.Button.Secondary"

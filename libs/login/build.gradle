@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
     }
 }
 
@@ -17,26 +17,26 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
 
         vectorDrawables.useSupportLibrary = true
     }
 }
 
 dependencies {
-    implementation ('org.wordpress:utils:1.19.0') {
+    implementation ('org.wordpress:utils:1.20.1') {
         exclude group: "com.mcxiaoke.volley"
     }
 
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
 
     api 'com.google.android.gms:play-services-auth:10.0.1'
 
@@ -47,8 +47,8 @@ dependencies {
         implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.1.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
     // Dagger
     implementation 'com.google.dagger:dagger:2.11'
@@ -56,6 +56,8 @@ dependencies {
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+
+    lintChecks 'org.wordpress:lint:1.0.0'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig
