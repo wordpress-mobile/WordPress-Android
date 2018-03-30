@@ -18,6 +18,12 @@ public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
         mStoreClass = token;
     }
 
+    public SingleStoreWellSqlConfigForTests(Context context, Class<? extends Identifiable> token,
+                                            @AddOn String... addOns) {
+        super(context, addOns);
+        mStoreClass = token;
+    }
+
     @Override
     public String getDbName() {
         return "test-fluxc";
