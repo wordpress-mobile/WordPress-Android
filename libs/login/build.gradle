@@ -42,9 +42,13 @@ dependencies {
 
     // Share FluxC version from host project if defined, otherwise fallback to default
     if (project.hasProperty("fluxCVersion")) {
-        implementation "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
+            exclude group: "org.wordpress", module: "utils"
+        }
     } else {
-        implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6'
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6") {
+            exclude group: "org.wordpress", module: "utils"
+        }
     }
 
     implementation 'com.github.bumptech.glide:glide:4.1.1'

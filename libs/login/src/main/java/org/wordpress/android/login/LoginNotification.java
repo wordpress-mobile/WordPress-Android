@@ -32,8 +32,8 @@ class LoginNotification {
                 .setStyle(bigTextStyle)
                 .setContentTitle(context.getString(title))
                 .setContentText(context.getString(content))
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                .setColor(context.getResources().getColor(R.color.blue_wordpress))
+                .setSmallIcon(R.drawable.login_notification_icon)
+                .setColor(context.getResources().getColor(R.color.login_notification_accent_color))
                 .setAutoCancel(true);
     }
 
