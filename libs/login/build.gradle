@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
     }
 }
 
@@ -47,8 +47,8 @@ dependencies {
         implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.1.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
     // Dagger
     implementation 'com.google.dagger:dagger:2.11'
