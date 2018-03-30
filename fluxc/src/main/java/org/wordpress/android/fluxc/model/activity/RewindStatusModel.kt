@@ -1,10 +1,5 @@
 package org.wordpress.android.fluxc.model.activity
 
-import com.yarolegovich.wellsql.core.Identifiable
-import com.yarolegovich.wellsql.core.annotation.Column
-import com.yarolegovich.wellsql.core.annotation.PrimaryKey
-import com.yarolegovich.wellsql.core.annotation.Table
-
 data class RewindStatusModel(val state: State, val reason: String?, val restore: RestoreStatus?) {
     enum class State(val value: String) {
         ACTIVE("active"),
