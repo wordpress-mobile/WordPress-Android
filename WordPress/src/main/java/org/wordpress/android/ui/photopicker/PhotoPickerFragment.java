@@ -154,7 +154,11 @@ public class PhotoPickerFragment extends Fragment {
             mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showPickerPopupMenu(v);
+                    if (mBrowserType == MediaBrowserType.GRAVATAR_IMAGE_PICKER) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    } else {
+                        showPickerPopupMenu(v);
+                    }
                 }
             });
 
