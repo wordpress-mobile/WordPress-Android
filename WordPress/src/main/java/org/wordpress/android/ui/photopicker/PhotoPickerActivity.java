@@ -218,6 +218,13 @@ public class PhotoPickerActivity extends AppCompatActivity
                     }
                 }
                 break;
+            // user selected a stock photo
+            case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
+                    long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
+                    doMediaIdSelected(mediaId);
+                }
+                break;
         }
     }
 
@@ -240,6 +247,13 @@ public class PhotoPickerActivity extends AppCompatActivity
     private void launchWPMediaLibrary() {
         if (mSite != null) {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, mBrowserType);
+        }
+    }
+
+    private void launchStockMediaPicker() {
+        if (mSite != null) {
+            ActivityLauncher.showStockMediaPickerForResult(this,
+                    mSite, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT);
         }
     }
 
@@ -288,6 +302,9 @@ public class PhotoPickerActivity extends AppCompatActivity
                 break;
             case WP_MEDIA:
                 launchWPMediaLibrary();
+                break;
+            case STOCK_MEDIA:
+                launchStockMediaPicker();
                 break;
         }
     }

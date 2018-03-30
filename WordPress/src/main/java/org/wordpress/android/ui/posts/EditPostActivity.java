@@ -2461,7 +2461,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                case RequestCodes.STOCK_MEDIA_PICKER_FEATURED_IMAGE:
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     // user chose a featured image - pass it to the settings fragment
                     if (mEditPostSettingsFragment != null) {
                         mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);

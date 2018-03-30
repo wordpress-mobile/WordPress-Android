@@ -154,11 +154,7 @@ public class PhotoPickerFragment extends Fragment {
             mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mBrowserType.isSingleImagePicker()) {
-                        doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                    } else {
-                        showPickerPopupMenu(v);
-                    }
+                    showPickerPopupMenu(v);
                 }
             });
 
@@ -250,14 +246,16 @@ public class PhotoPickerFragment extends Fragment {
             }
         });
 
-        MenuItem itemVideo = popup.getMenu().add(R.string.photo_picker_choose_video);
-        itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
-                return true;
-            }
-        });
+        if (!mBrowserType.isSingleImagePicker()) {
+            MenuItem itemVideo = popup.getMenu().add(R.string.photo_picker_choose_video);
+            itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
+                    return true;
+                }
+            });
+        }
 
         MenuItem itemStock = popup.getMenu().add(R.string.photo_picker_stock_media);
         itemStock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
