@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
@@ -93,8 +94,9 @@ public class EditPostSettingsFragment extends Fragment {
     private static final int ACTIVITY_REQUEST_CODE_PICK_LOCATION = 7;
     private static final int ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION = 8;
 
-    private static final int CHOOSE_FEATURED_IMAGE_MENU_ID = 100;
-    private static final int REMOVE_FEATURED_IMAGE_MENU_ID = 101;
+    private static final int CHOOSE_FEATURED_IMAGE_DEVICE_MENU_ID = 100;
+    private static final int CHOOSE_FEATURED_IMAGE_STOCK_MENU_ID = 101;
+    private static final int REMOVE_FEATURED_IMAGE_MENU_ID = 102;
 
     private SiteSettingsInterface mSiteSettings;
 
@@ -232,6 +234,7 @@ public class EditPostSettingsFragment extends Fragment {
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
+            registerForContextMenu(mFeaturedImageButton);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -241,7 +244,7 @@ public class EditPostSettingsFragment extends Fragment {
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchFeaturedMediaPicker();
+                    view.showContextMenu();
                 }
             });
         } else {
@@ -320,7 +323,6 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-
         if (getPost() != null && getPost().isPage()) { // remove post specific views
             final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
             final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
@@ -334,15 +336,22 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
-        menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        menu.add(0, CHOOSE_FEATURED_IMAGE_DEVICE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
+        menu.add(0, CHOOSE_FEATURED_IMAGE_STOCK_MENU_ID, 0, getString(R.string.photo_picker_stock_media));
+        PostModel postModel = getPost();
+        if (postModel != null && postModel.hasFeaturedImage()) {
+            menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case CHOOSE_FEATURED_IMAGE_MENU_ID:
+            case CHOOSE_FEATURED_IMAGE_DEVICE_MENU_ID:
                 launchFeaturedMediaPicker();
+                return true;
+            case CHOOSE_FEATURED_IMAGE_STOCK_MENU_ID:
+                launchStockMediaPicker();
                 return true;
             case REMOVE_FEATURED_IMAGE_MENU_ID:
                 clearFeaturedImage();
@@ -871,8 +880,14 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
-            // TODO: ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
-            ActivityLauncher.showStockMediaPickerForResult(getActivity(), getSite(), RequestCodes.STOCK_MEDIA_PICKER_FEATURED_IMAGE);
+            ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
+        }
+    }
+
+    private void launchStockMediaPicker() {
+        if (isAdded()) {
+            ActivityLauncher.showStockMediaPickerForResult(getActivity(),
+                    getSite(), RequestCodes.STOCK_MEDIA_PICKER_FEATURED_IMAGE);
         }
     }
 
