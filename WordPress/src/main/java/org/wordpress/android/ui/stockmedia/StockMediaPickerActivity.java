@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
@@ -62,7 +63,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
-    public static final String KEY_ENABLE_MULTISELCT = "enable_multiselect";
+    public static final String KEY_ENABLE_MULTI_SELECT = "enable_multi_select";
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -152,11 +153,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         if (savedInstanceState == null) {
             showEmptyView(true);
-            mEnableMultiselect = getIntent().getExtras().getBoolean(KEY_ENABLE_MULTISELCT, true);
+            mEnableMultiselect = getIntent().getExtras().getBoolean(KEY_ENABLE_MULTI_SELECT, true);
         } else {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
             mIsUploading = savedInstanceState.getBoolean(KEY_IS_UPLOADING);
-            mEnableMultiselect = savedInstanceState.getBoolean(KEY_ENABLE_MULTISELCT, true);
+            mEnableMultiselect = savedInstanceState.getBoolean(KEY_ENABLE_MULTI_SELECT, true);
             if (mIsUploading) {
                 showUploadProgressDialog(true);
             }
@@ -195,7 +196,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IS_UPLOADING, mIsUploading);
-        outState.putBoolean(KEY_ENABLE_MULTISELCT, mEnableMultiselect);
+        outState.putBoolean(KEY_ENABLE_MULTI_SELECT, mEnableMultiselect);
 
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
@@ -411,15 +412,23 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             AppLog.e(AppLog.T.MEDIA, "An error occurred while uploading stock media");
         } else {
             trackUploadedStockMediaEvent(event.mediaList);
-
             int count = event.mediaList.size();
-            long[] idArray = new long[count];
-            for (int i = 0; i < count; i++) {
-                idArray[i] = event.mediaList.get(i).getMediaId();
+            if (count == 0) {
+                AppLog.w(AppLog.T.MEDIA, "No stock media chosen");
+                return;
             }
 
             Intent intent = new Intent();
-            intent.putExtra(KEY_UPLOADED_MEDIA_IDS, idArray);
+            if (mEnableMultiselect) {
+                long[] idArray = new long[count];
+                for (int i = 0; i < count; i++) {
+                    idArray[i] = event.mediaList.get(i).getMediaId();
+                }
+                intent.putExtra(KEY_UPLOADED_MEDIA_IDS, idArray);
+            } else {
+                intent.putExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, event.mediaList.get(0).getMediaId());
+            }
+
             setResult(RESULT_OK, intent);
             finish();
         }

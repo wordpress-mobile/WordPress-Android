@@ -120,10 +120,12 @@ public class ActivityLauncher {
         properties.put("from", activity.getClass().getSimpleName());
         AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_ACCESSED, properties);
 
+        int requestCode = enableMultiSelect ?
+                RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT : RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT;
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(StockMediaPickerActivity.KEY_ENABLE_MULTISELCT, enableMultiSelect);
-        activity.startActivityForResult(intent, RequestCodes.STOCK_MEDIA_PICKER);
+        intent.putExtra(StockMediaPickerActivity.KEY_ENABLE_MULTI_SELECT, enableMultiSelect);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {

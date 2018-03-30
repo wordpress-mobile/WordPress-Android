@@ -411,6 +411,7 @@ public class EditPostSettingsFragment extends Fragment {
                     }
                     break;
                 case RequestCodes.PHOTO_PICKER:
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
                         updateFeaturedImage(mediaId);
@@ -871,7 +872,8 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
-            ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
+            // TODO: ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
+            ActivityLauncher.showStockMediaPickerForResult(getActivity(), getSite(), false);
         }
     }
 
