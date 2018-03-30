@@ -20,8 +20,8 @@ repositories {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         versionCode 4
@@ -64,7 +64,7 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 
     // WordPress libs
-    implementation ('org.wordpress:utils:1.16.0') {
+    implementation ('org.wordpress:utils:1.20.0') {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
