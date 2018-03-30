@@ -232,6 +232,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID TEXT,PUBLISHED "
                         + "TEXT NOT NULL,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID INTEGER,"
                         + "AVATAR_URL TEXT,ROLE TEXT)");
+                db.execSQL(
+                        "CREATE TABLE RewindStatus (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,REWIND_STATE TEXT,REASON TEXT,RESTORE_ID TEXT,RESTORE_STATE TEXT,"
+                        + "RESTORE_PROGRESS INTEGER,RESTORE_MESSAGE TEXT,RESTORE_ERROR_CODE TEXT,"
+                        + "RESTORE_FAILURE_REASON TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
