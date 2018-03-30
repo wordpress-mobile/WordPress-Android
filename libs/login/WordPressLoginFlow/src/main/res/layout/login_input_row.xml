@@ -8,10 +8,10 @@
     tools:ignore="UnusedAttribute">
 
     <ImageView
+        android:layout_centerVertical="true"
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/input_layout"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:importantForAccessibility="no"
@@ -19,6 +19,7 @@
         app:srcCompat="@drawable/ic_user_grey_24dp"/>
 
     <org.wordpress.android.util.widgets.WPTextInputLayout
+        android:layout_centerVertical="true"
         app:theme="@style/LoginTheme.EditText"
         android:id="@+id/input_layout"
         android:layout_width="match_parent"

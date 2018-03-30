@@ -470,6 +470,10 @@
             android:name=".ui.photopicker.PhotoPickerActivity"
             android:label="@string/photo_picker_title"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.stockmedia.StockMediaPickerActivity"
+            android:label=""
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Notifications activities -->
         <activity

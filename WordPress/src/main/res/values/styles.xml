@@ -662,4 +662,15 @@
     <style name="WPRatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
         <item name="android:progressTint">@color/blue_medium</item>
     </style>
+
+    <!--Comment Styles-->
+    <style name="CommentActionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
 </resources>

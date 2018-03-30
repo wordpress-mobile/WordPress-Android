@@ -77,6 +77,7 @@ public final class AnalyticsTracker {
         EDITOR_ADDED_VIDEO_NEW,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
         EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY,
+        EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY,
         MEDIA_PHOTO_OPTIMIZED,
         MEDIA_PHOTO_OPTIMIZE_ERROR,
         MEDIA_VIDEO_OPTIMIZED,
@@ -337,7 +338,10 @@ public final class AnalyticsTracker {
         PLUGIN_INSTALLED,
         PLUGIN_REMOVED,
         PLUGIN_SEARCH_PERFORMED,
-        PLUGIN_UPDATED
+        PLUGIN_UPDATED,
+        STOCK_MEDIA_ACCESSED,
+        STOCK_MEDIA_SEARCHED,
+        STOCK_MEDIA_UPLOADED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
