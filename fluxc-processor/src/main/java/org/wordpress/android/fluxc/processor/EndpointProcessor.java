@@ -71,7 +71,8 @@ public class EndpointProcessor extends AbstractProcessor {
 
         try {
             String outputPath = mFiler.getResource(StandardLocation.CLASS_OUTPUT, "", "tmp").getName();
-            if (outputPath.contains("/fluxc/build/")) {
+            String fs = File.separator;
+            if (outputPath.contains(fs + "fluxc" + fs + "build")) {
                 generateWPCOMRESTEndpointFile();
                 generateWPCOMV2EndpointFile();
                 generateXMLRPCEndpointFile();
