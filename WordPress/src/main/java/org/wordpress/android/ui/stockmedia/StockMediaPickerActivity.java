@@ -62,6 +62,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
+    public static final String KEY_ENABLE_MULTISELCT = "enable_multiselect";
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -85,6 +86,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private boolean mIsFetching;
     private boolean mIsUploading;
     private boolean mCanLoadMore;
+    private boolean mEnableMultiselect;
     private int mNextPage;
 
     @SuppressWarnings("unused")
@@ -150,9 +152,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         if (savedInstanceState == null) {
             showEmptyView(true);
+            mEnableMultiselect = getIntent().getExtras().getBoolean(KEY_ENABLE_MULTISELCT, true);
         } else {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
             mIsUploading = savedInstanceState.getBoolean(KEY_IS_UPLOADING);
+            mEnableMultiselect = savedInstanceState.getBoolean(KEY_ENABLE_MULTISELCT, true);
             if (mIsUploading) {
                 showUploadProgressDialog(true);
             }
@@ -191,6 +195,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IS_UPLOADING, mIsUploading);
+        outState.putBoolean(KEY_ENABLE_MULTISELCT, mEnableMultiselect);
 
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
@@ -691,6 +696,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     return true;
                 }
             });
+
+            mSelectionCountTextView.setVisibility(mEnableMultiselect ? View.VISIBLE : View.GONE);
         }
     }
 

@@ -872,7 +872,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 WPMediaUtils.launchVideoLibrary(this, true);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                ActivityLauncher.showStockMediaPickerForResult(this, mSite, true);
                 break;
         }
     }

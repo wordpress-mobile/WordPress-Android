@@ -928,7 +928,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
             case STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                ActivityLauncher.showStockMediaPickerForResult(this, mSite, true);
                 break;
         }
     }
