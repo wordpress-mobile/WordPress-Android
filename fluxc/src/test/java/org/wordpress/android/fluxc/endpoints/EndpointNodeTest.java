@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc;
+package org.wordpress.android.fluxc.endpoints;
 
 import org.junit.Test;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
