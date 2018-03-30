@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
@@ -63,7 +64,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
-    public static final String KEY_ENABLE_MULTI_SELECT = "enable_multi_select";
+    public static final String KEY_REQUEST_CODE = "request_code";
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -87,8 +88,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private boolean mIsFetching;
     private boolean mIsUploading;
     private boolean mCanLoadMore;
-    private boolean mEnableMultiselect;
+
     private int mNextPage;
+    private int mRequestCode;
 
     @SuppressWarnings("unused")
     @Inject StockMediaStore mStockMediaStore;
@@ -142,11 +144,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         if (savedInstanceState == null) {
             showEmptyView(true);
-            mEnableMultiselect = getIntent().getExtras().getBoolean(KEY_ENABLE_MULTI_SELECT, true);
+            mRequestCode = getIntent().getIntExtra(KEY_REQUEST_CODE, 0);
         } else {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
             mIsUploading = savedInstanceState.getBoolean(KEY_IS_UPLOADING);
-            mEnableMultiselect = savedInstanceState.getBoolean(KEY_ENABLE_MULTI_SELECT, true);
+            mRequestCode = savedInstanceState.getInt(KEY_REQUEST_CODE);
             if (mIsUploading) {
                 showUploadProgressDialog(true);
             }
@@ -169,7 +171,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
         });
 
-        if (mEnableMultiselect) {
+        if (enableMultiselect()) {
             mTextPreview.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     previewSelection();
@@ -202,7 +204,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IS_UPLOADING, mIsUploading);
-        outState.putBoolean(KEY_ENABLE_MULTI_SELECT, mEnableMultiselect);
+        outState.putInt(KEY_REQUEST_CODE, mRequestCode);
 
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
@@ -246,6 +248,10 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean enableMultiselect() {
+        return mRequestCode == RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT;
     }
 
     @Override
@@ -425,7 +431,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
 
             Intent intent = new Intent();
-            if (mEnableMultiselect) {
+            if (enableMultiselect()) {
                 long[] idArray = new long[count];
                 for (int i = 0; i < count; i++) {
                     idArray[i] = event.mediaList.get(i).getMediaId();
@@ -482,7 +488,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            if (mEnableMultiselect) {
+            if (enableMultiselect()) {
                 String labelAdd = String.format(getString(R.string.add_count), numSelected);
                 mTextAdd.setText(labelAdd);
 
@@ -578,8 +584,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             holder.mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
 
             boolean isSelected = isItemSelected(position);
-            if (mEnableMultiselect) {
-                holder.mSelectionCountTextView.setSelected(isSelected);
+            holder.mSelectionCountTextView.setSelected(isSelected);
+            if (enableMultiselect()) {
                 if (isSelected) {
                     int count = mSelectedItems.indexOf(position) + 1;
                     String label = Integer.toString(count);
@@ -611,7 +617,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         void setItemSelected(StockViewHolder holder, int position, boolean selected) {
             if (!isValidPosition(position)) return;
 
-            if (selected && !mEnableMultiselect && !mSelectedItems.isEmpty()) {
+            if (selected && !enableMultiselect() && !mSelectedItems.isEmpty()) {
                 mSelectedItems.clear();
             }
 
@@ -626,16 +632,16 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
 
             // show and animate the count
-            if (mEnableMultiselect) {
+            if (enableMultiselect()) {
                 if (selected) {
                     String label = Integer.toString(mSelectedItems.indexOf(position) + 1);
                     holder.mSelectionCountTextView.setText(label);
                 } else {
                     holder.mSelectionCountTextView.setText(null);
                 }
-                AniUtils.startAnimation(holder.mSelectionCountTextView, R.anim.pop);
-                holder.mSelectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
             }
+            AniUtils.startAnimation(holder.mSelectionCountTextView, R.anim.pop);
+            holder.mSelectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
 
             // scale the thumbnail
             if (selected) {
@@ -720,8 +726,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     return true;
                 }
             });
-
-            mSelectionCountTextView.setVisibility(mEnableMultiselect ? View.VISIBLE : View.GONE);
         }
     }
 
