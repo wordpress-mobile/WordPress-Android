@@ -617,8 +617,16 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         void setItemSelected(StockViewHolder holder, int position, boolean selected) {
             if (!isValidPosition(position)) return;
 
+            // if this is single select, make sure to deselect any existing selection
             if (selected && !enableMultiselect() && !mSelectedItems.isEmpty()) {
-                mSelectedItems.clear();
+                int prevPosition = mSelectedItems.get(0);
+                StockViewHolder prevHolder = (StockViewHolder) mRecycler.findViewHolderForAdapterPosition(prevPosition);
+                if (prevHolder != null) {
+                    setItemSelected(prevHolder, prevPosition, false);
+                } else {
+                    // holder may be null if not laid out
+                    mSelectedItems.clear();
+                }
             }
 
             if (selected) {
