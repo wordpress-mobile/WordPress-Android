@@ -90,9 +90,7 @@
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/photo_picker_device_desc"
-            android:padding="@dimen/margin_medium"
-            android:tint="@color/grey_darken_10"
-            app:srcCompat="@drawable/ic_image_white_48dp"/>
+            app:srcCompat="@drawable/media_bar_button_image_multiple"/>
 
         <ImageView
             android:id="@+id/icon_camera"
@@ -101,9 +99,7 @@
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/photo_picker_camera_desc"
-            android:padding="@dimen/margin_medium"
-            android:tint="@color/grey_darken_10"
-            app:srcCompat="@drawable/ic_camera_white_48dp"/>
+            app:srcCompat="@drawable/media_bar_button_camera"/>
 
         <ImageView
             android:id="@+id/icon_wpmedia"
@@ -112,9 +108,7 @@
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/photo_picker_wpmedia_desc"
-            android:padding="@dimen/margin_medium"
-            android:tint="@color/grey_darken_10"
-            app:srcCompat="@drawable/ic_my_sites_white_50dp"/>
+            app:srcCompat="@drawable/media_bar_button_library"/>
     </LinearLayout>
 
 </RelativeLayout>
