@@ -303,18 +303,22 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 configureImage(false);
                 break;
             case NEW_SITE:
+                getView().announceForAccessibility(getText(R.string.site_creation_creating_laying_foundation));
                 disableUntil(R.id.site_creation_creating_laying_foundation);
                 configureImage(false);
                 break;
             case FETCHING_NEW_SITE:
+                getView().announceForAccessibility(getText(R.string.site_creation_creating_fetching_info));
                 disableUntil(R.id.site_creation_creating_fetching_info);
                 configureImage(false);
                 break;
             case SET_TAGLINE:
+                getView().announceForAccessibility(getText(R.string.site_creation_creating_configuring_content));
                 disableUntil(R.id.site_creation_creating_configuring_content);
                 configureImage(false);
                 break;
             case SET_THEME:
+                getView().announceForAccessibility(getText(R.string.site_creation_creating_configuring_theme));
                 disableUntil(R.id.site_creation_creating_configuring_theme);
                 configureImage(false);
                 break;
@@ -327,6 +331,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 NetworkUtils.checkConnection(getContext());
                 break;
             case PRELOAD:
+                getView().announceForAccessibility(getText(R.string.site_creation_creating_preparing_frontend));
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
                 configureImage(false);
                 mPreviewWebViewClient = loadWebview();
