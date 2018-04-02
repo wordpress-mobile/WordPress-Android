@@ -713,6 +713,10 @@ public class EditPostActivity extends AppCompatActivity implements
             return getString(R.string.submit_for_review);
         }
 
+        if (isNewPost()) {
+            return getString(R.string.menu_save_as_draft);
+        }
+
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
                 return getString(R.string.menu_publish_now);
