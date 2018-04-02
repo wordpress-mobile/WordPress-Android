@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -1051,9 +1052,17 @@ public abstract class SiteSettingsInterface {
                     mContext.getString(R.string.file_size_in_megabytes),
                     mContext.getString(R.string.file_size_in_gigabytes),
                     mContext.getString(R.string.file_size_in_terabytes) };
-            String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
-            String quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_value),
-                    percentage, spaceAllowed);
+
+            String quotaAvailableSentence;
+            if (mSite.getPlanId() == PlansConstants.BUSINESS_PLAN_ID) {
+                String usedSpace = FormatUtils.formatFileSize(mSite.getSpaceUsed(), units);
+                quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_unlimited),
+                        usedSpace);
+            } else {
+                String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
+                quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_value),
+                        percentage, spaceAllowed);
+            }
             setQuotaDiskSpace(quotaAvailableSentence);
         }
         // Self hosted always read account data from the main table
