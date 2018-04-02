@@ -1980,7 +1980,7 @@
     <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
     <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
     <string name="notification_site_creation_step_theme">Step 4 of 4</string>
-    <string name="notification_site_creation_title_in_progress">Creating site…</string>
+    <string name="notification_site_creation_title_in_progress">Creating site… This might take a couple of minutes.</string>
     <string name="notification_site_creation_title_stopped">Site creation stopped</string>
     <string name="notification_site_creation_failed">An error has occurred.</string>
 
