@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey_dark">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager"
@@ -29,5 +29,18 @@
         android:paddingEnd="@dimen/margin_large"
         android:paddingStart="@dimen/margin_large"
         android:layout_marginStart="@dimen/margin_small"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="@dimen/appbar_elevation"
+        app:contentInsetEnd="@dimen/toolbar_content_offset_end"
+        app:contentInsetLeft="@dimen/toolbar_content_offset"
+        app:contentInsetRight="@dimen/toolbar_content_offset_end"
+        app:contentInsetStart="@dimen/toolbar_content_offset"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        tools:targetApi="LOLLIPOP" />
 
 </RelativeLayout>
