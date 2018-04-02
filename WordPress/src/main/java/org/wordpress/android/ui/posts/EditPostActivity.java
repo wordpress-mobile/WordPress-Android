@@ -1065,9 +1065,23 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
                 //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
+
+                // we update the mPost object first, so we can pre-check Post publishability and inform the user
+                updatePostObject();
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                    if (isDiscardable()) {
+                        String message = getString(
+                                mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                        ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+                        return false;
+                    }
                     showPublishConfirmationDialog();
                 } else {
+                    if (isDiscardable()) {
+                        ToastUtils.showToast(EditPostActivity.this,
+                                getString(R.string.error_save_empty_draft), Duration.SHORT);
+                        return false;
+                    }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
                     if (isNewPost()) {
                         mPost.setStatus(PostStatus.DRAFT.toString());
