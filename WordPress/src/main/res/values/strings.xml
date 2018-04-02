@@ -532,6 +532,7 @@
     <string name="site_settings_quota_space_title">Space Used</string>
     <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
     <string name="site_settings_quota_space_value">%1$s of %2$s</string>
+    <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
