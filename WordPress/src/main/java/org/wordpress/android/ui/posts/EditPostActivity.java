@@ -3243,6 +3243,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             mPost = post;
+            mIsNewPost = false;
             invalidateOptionsMenu();
             switch (PostStatus.fromPost(post)) {
                 case PUBLISHED:
