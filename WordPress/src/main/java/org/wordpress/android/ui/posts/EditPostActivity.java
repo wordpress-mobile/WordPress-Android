@@ -1064,11 +1064,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
                     showPublishConfirmationDialog();
                 } else {
-                    UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
-                    if (isNewPost()) {
-                        mPost.setStatus(PostStatus.DRAFT.toString());
-                    }
-                    savePostAndOptionallyFinish(false);
+                    showPublishConfirmationOrUpdateIfNotLocalDraft();
                 }
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
