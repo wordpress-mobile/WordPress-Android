@@ -530,9 +530,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                             public void onResponse(InitiateAutomatedTransferResponse response) {
                                 InitiateAutomatedTransferResponsePayload payload =
                                         new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
-                                payload.status = response.status;
                                 payload.success = response.success;
-                                payload.transferId = response.transferId;
                                 mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
                             }
                         },
@@ -558,7 +556,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                             public void onResponse(AutomatedTransferStatusResponse response) {
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
                                         new AutomatedTransferStatusResponsePayload(site, response.status,
-                                                response.transferId)));
+                                                response.currentStep, response.totalSteps)));
                             }
                         },
                         new BaseErrorListener() {
