@@ -10,9 +10,11 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import java.util.Date
 import java.util.UUID
 
-class ActivityLogDao (val site: SiteModel, val store: ActivityLogStore, val dispatcher: Dispatcher) : BaseDataSource<ActivityLogModel>() {
+class ActivityLogDataSource (val site: SiteModel, val store: ActivityLogStore, val dispatcher: Dispatcher) : BaseDataSource<ActivityLogModel>() {
+    val arrayList = ArrayList<ActivityLogModel>()
+
     override fun countItems(): Int {
-        return 100
+        return arrayList.size
     }
 
     override fun loadRangeAtPosition(position: Int, size: Int): List<ActivityLogModel>? {
@@ -21,7 +23,7 @@ class ActivityLogDao (val site: SiteModel, val store: ActivityLogStore, val disp
 //        dispatcher.dispatch(action)
 
         Log.d("Onko", "position $position, size $size")
-        val arrayList = ArrayList<ActivityLogModel>()
+
         for (a in 1..size) {
             arrayList.add(ActivityLogModel(UUID.randomUUID().toString(), "Summary", "Text", "Name $a", "Type", "x", "Status", true, "1", Date(), false, ActivityLogModel.ActivityActor("ActorName", "ActorType", 123, null, "Admin")))
         }
@@ -30,7 +32,7 @@ class ActivityLogDao (val site: SiteModel, val store: ActivityLogStore, val disp
 
     class Factory(val site: SiteModel, val store: ActivityLogStore, val dispatcher: Dispatcher) : DataSource.Factory<Int, ActivityLogModel>() {
         override fun create(): DataSource<Int, ActivityLogModel> {
-            return ActivityLogDao(site, store, dispatcher)
+            return ActivityLogDataSource(site, store, dispatcher)
         }
     }
 }

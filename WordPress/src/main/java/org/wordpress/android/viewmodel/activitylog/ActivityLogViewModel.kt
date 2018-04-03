@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
@@ -17,15 +16,15 @@ import javax.inject.Inject
 class ActivityLogViewModel() : ViewModel() {
     private lateinit var dispatcher: Dispatcher
     private lateinit var activityLogStore: ActivityLogStore
-    private lateinit var dao: ActivityLogDao
+    private lateinit var dataSource: ActivityLogDataSource
 
     lateinit var events: LiveData<PagedList<ActivityLogModel>>
 
     var site: SiteModel? = null
         set (value) {
             field = value
-            this.dao = ActivityLogDao(value!!, activityLogStore, dispatcher)
-            this.events = LivePagedListBuilder(ActivityLogDao.Factory(value, activityLogStore, dispatcher),
+            this.dataSource = ActivityLogDataSource(value!!, activityLogStore, dispatcher)
+            this.events = LivePagedListBuilder(ActivityLogDataSource.Factory(value, activityLogStore, dispatcher),
                     PagedList.Config.Builder().setPageSize(5).build()).build()
         }
 
