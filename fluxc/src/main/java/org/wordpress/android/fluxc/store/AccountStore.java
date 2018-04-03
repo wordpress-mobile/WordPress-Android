@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SubscriptionModel;
+import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
@@ -722,6 +723,29 @@ public class AccountStore extends Store {
             case CHECKED_IS_AVAILABLE:
                 handleCheckedIsAvailable((IsAvailableResponsePayload) payload);
                 break;
+            case FETCH_SUBSCRIPTIONS:
+                mAccountRestClient.fetchSubscriptions();
+                break;
+            case FETCHED_SUBSCRIPTIONS:
+                updateSubscriptions((SubscriptionsModel) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_EMAIL_COMMENT:
+                createAddOrDeleteSubscriptionEmailComment((AddOrDeleteSubscriptionPayload) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_EMAIL_POST:
+                createAddOrDeleteSubscriptionEmailPost((AddOrDeleteSubscriptionPayload) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_EMAIL_POST_FREQUENCY:
+                createUpdateSubscriptionEmailPostFrequency((UpdateSubscriptionPayload) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_NOTIFICATION_POST:
+                createAddOrDeleteSubscriptionNotificationPost((AddOrDeleteSubscriptionPayload) payload);
+                break;
+            case UPDATED_SUBSCRIPTION_EMAIL_COMMENT:
+            case UPDATED_SUBSCRIPTION_EMAIL_POST:
+            case UPDATED_SUBSCRIPTION_NOTIFICATION_POST:
+                handleUpdatedSubscription((SubscriptionResponsePayload) payload);
+                break;
         }
     }
 
@@ -1052,5 +1076,41 @@ public class AccountStore extends Store {
      */
     public List<SubscriptionModel> getSubscriptionsByNameOrUrlMatching(@NonNull String searchString) {
         return AccountSqlUtils.getSubscriptionsByNameOrUrlMatching(searchString);
+    }
+
+    private void updateSubscriptions(SubscriptionsModel subscriptions) {
+        OnSubscriptionsChanged event = new OnSubscriptionsChanged();
+        if (subscriptions.isError()) {
+            event.error = new SubscriptionsError(subscriptions.error);
+        } else {
+            AccountSqlUtils.updateSubscriptions(subscriptions.getSubscriptions());
+        }
+        emitChange(event);
+    }
+
+    private void createAddOrDeleteSubscriptionEmailComment(AddOrDeleteSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionEmailComment(payload.site, payload.action);
+    }
+
+    private void createAddOrDeleteSubscriptionEmailPost(AddOrDeleteSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionEmailPost(payload.site, payload.action);
+    }
+
+    private void createUpdateSubscriptionEmailPostFrequency(UpdateSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionEmailPostFrequency(payload.site, payload.frequency);
+    }
+
+    private void createAddOrDeleteSubscriptionNotificationPost(AddOrDeleteSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionNotificationPost(payload.site, payload.action);
+    }
+
+    private void handleUpdatedSubscription(SubscriptionResponsePayload payload) {
+        OnSubscriptionUpdated event = new OnSubscriptionUpdated();
+        if (payload.isError()) {
+            event.error = new SubscriptionError(event.error.toString(), event.error.message);
+        } else {
+            event.subscribed = payload.subscribed;
+        }
+        emitChange(event);
     }
 }
