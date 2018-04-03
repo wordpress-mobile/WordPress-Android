@@ -34,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
+import org.wordpress.android.models.ListNetworkResourceState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -97,7 +98,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         } else {
             mViewModel.readFromBundle(savedInstanceState);
         }
-        mViewModel.start();
 
         if (mViewModel.getSite() == null) {
             ToastUtils.showToast(this, R.string.blog_not_found);
@@ -168,44 +168,49 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getSitePlugins().getLiveData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
             }
         });
 
-        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getFeaturedPlugins().getLiveData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.FEATURED, featuredPlugins);
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getNewPlugins().getLiveData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getPopularPlugins().getLiveData().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
 
-        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+        mViewModel.getSitePlugins().getLiveStatus().observe(this, new Observer<ListNetworkResourceState>() {
             @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                             && mViewModel.isSitePluginsEmpty());
+            public void onChanged(@Nullable ListNetworkResourceState status) {
+                if (status == null) {
+                    return;
+                }
+                boolean isFetchingFirstPage = status.isFetchingFirstPage();
+                List<ImmutablePluginModel> data = mViewModel.getSitePlugins().getLiveData().getValue();
+                boolean isEmpty = data == null || data.isEmpty();
+                showProgress(isFetchingFirstPage && isEmpty);
 
                 // We should ignore the errors due to network condition, unless this is the first fetch, the user can
                 // use the cached version of them and showing the error while the data is loaded might cause confusion
-                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
-                    && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
+                String errorMessage = status.errorMessage();
+                if (errorMessage != null && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
                 }
             }
@@ -236,9 +241,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
+        if (!TextUtils.isEmpty(mViewModel.getSearchResults().getSearchQuery())) {
             mSearchMenuItem.expandActionView();
-            mSearchView.setQuery(mViewModel.getSearchQuery(), false);
+            mSearchView.setQuery(mViewModel.getSearchResults().getSearchQuery(), false);
             mSearchView.setOnQueryTextListener(this);
         }
 
@@ -494,6 +499,8 @@ public class PluginBrowserActivity extends AppCompatActivity
                 break;
             case NEW:
                 type = "newest";
+                break;
+            case SEARCH:
                 break;
         }
         properties.put("type", type);
