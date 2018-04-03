@@ -72,7 +72,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private int mThumbWidth;
     private int mThumbHeight;
 
-    private boolean mIsMultiSelectEnabled;
     private boolean mIsListTaskRunning;
     private boolean mDisableImageReset;
     private boolean mLoadThumbnails = true;
@@ -164,17 +163,14 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             return;
         }
 
-        int selectedIndex = mIsMultiSelectEnabled ? mSelectedUris.indexOfUri(item.mUri) : -1;
-        if (mBrowserType.canMultiselect()) {
+        int selectedIndex = mSelectedUris.indexOfUri(item.mUri);
+        holder.mTxtSelectionCount.setSelected(selectedIndex > -1);
+        if (canMultiselect()) {
             if (selectedIndex > -1) {
-                holder.mTxtSelectionCount.setSelected(true);
                 holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", selectedIndex + 1));
             } else {
-                holder.mTxtSelectionCount.setSelected(false);
                 holder.mTxtSelectionCount.setText(null);
             }
-        } else {
-            holder.mTxtSelectionCount.setVisibility(View.GONE);
         }
 
         holder.mVideoOverlay.setVisibility(item.mIsVideo ? View.VISIBLE : View.GONE);
@@ -213,19 +209,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return position >= 0 && position < mMediaList.size();
     }
 
-    void setMultiSelectEnabled(boolean enabled) {
-        if (mIsMultiSelectEnabled == enabled) {
-            return;
-        }
-
-        mIsMultiSelectEnabled = enabled;
-
-        if (!enabled && mSelectedUris.size() > 0) {
-            mSelectedUris.clear();
-            notifyDataSetChangedInternal();
-        }
-    }
-
     /*
      * toggles the selection state of the item at the passed position
      */
@@ -235,17 +218,22 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             return;
         }
 
-        boolean isSelected;
         int selectedIndex = mSelectedUris.indexOfUri(item.mUri);
-        if (selectedIndex > -1) {
-            mSelectedUris.remove(selectedIndex);
-            isSelected = false;
-            holder.mTxtSelectionCount.setText(null);
-        } else {
+        boolean wasSelected = selectedIndex > -1;
+        boolean isSelected = !wasSelected;
+
+        if (isSelected) {
+            if (canMultiselect()) {
+                holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", mSelectedUris.size()));
+            } else {
+                mSelectedUris.clear();
+            }
             mSelectedUris.add(item.mUri);
-            isSelected = true;
-            holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", mSelectedUris.size()));
+        } else {
+            mSelectedUris.remove(selectedIndex);
+            holder.mTxtSelectionCount.setText(null);
         }
+
         holder.mTxtSelectionCount.setSelected(isSelected);
 
         // animate the count
@@ -278,8 +266,12 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return (ArrayList<Uri>) mSelectedUris.clone();
     }
 
+    private boolean canMultiselect() {
+        return mBrowserType.canMultiselect();
+    }
+
     int getNumSelected() {
-        return mIsMultiSelectEnabled ? mSelectedUris.size() : 0;
+        return mSelectedUris.size();
     }
 
     /*
@@ -320,15 +312,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
-                        if (mBrowserType.canMultiselect()) {
-                            if (!mIsMultiSelectEnabled) {
-                                setMultiSelectEnabled(true);
-                            }
-                            toggleSelection(ThumbnailViewHolder.this, position);
-                        } else if (mListener != null) {
-                            Uri uri = getItemAtPosition(position).mUri;
-                            mListener.onItemTapped(uri);
-                        }
+                        toggleSelection(ThumbnailViewHolder.this, position);
                     }
                 }
             });
