@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-public class TestUtils {
+public class UnitTestUtils {
     public static final int DEFAULT_TIMEOUT_MS = 30000;
 
     public static void waitFor(long milliseconds) {
