@@ -32,7 +32,7 @@ class ListNetworkResource<T>(private var fetchFunction: (Boolean) -> Unit) : ILi
 }
 
 class SearchListNetworkResource<T>(
-        minCharacterCount: Int = 2,
+        private val minCharacterCount: Int = 2,
         private val delayMillis: Long = 250,
         private val searchFunction: (String, Boolean) -> Unit) : ISearchListNetworkResource<T> {
     private val base = BaseListNetworkResource<T> { loadMore ->
@@ -55,12 +55,10 @@ class SearchListNetworkResource<T>(
         }
     }
 
-    private val canSearch: Boolean = searchQuery.length >= minCharacterCount
-
     override val shouldShowEmptySearchResultsView: Boolean
         get() {
             // Search query is less than min characters
-            if (!canSearch) {
+            if (!canSearch(searchQuery)) {
                 return false
             }
             // Only show empty view if content is empty, we are not fetching new data and no errors occurred
@@ -79,9 +77,11 @@ class SearchListNetworkResource<T>(
             }, delayMillis)
         } else {
             base.reset()
-            if (canSearch) {
+            if (canSearch(query)) {
                 base.fetchFirstPage()
             }
         }
     }
+
+    private fun canSearch(query: String) = query.length >= minCharacterCount
 }
