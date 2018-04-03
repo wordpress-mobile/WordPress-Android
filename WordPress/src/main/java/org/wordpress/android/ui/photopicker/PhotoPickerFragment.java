@@ -319,16 +319,6 @@ public class PhotoPickerFragment extends Fragment {
 
     private final PhotoPickerAdapterListener mAdapterListener = new PhotoPickerAdapterListener() {
         @Override
-        public void onItemTapped(Uri mediaUri) {
-            if (mListener != null) {
-                List<Uri> uriList = new ArrayList<>();
-                uriList.add(mediaUri);
-                mListener.onPhotoPickerMediaChosen(uriList);
-                trackAddRecentMediaEvent(uriList);
-            }
-        }
-
-        @Override
         public void onSelectedCountChanged(int count) {
             if (count == 0) {
                 finishActionMode();

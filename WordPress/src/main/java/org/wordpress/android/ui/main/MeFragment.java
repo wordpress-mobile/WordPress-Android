@@ -372,7 +372,8 @@ public class MeFragment extends Fragment {
                                     : AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED;
                     AnalyticsTracker.track(stat);
                     Uri imageUri = Uri.parse(strMediaUri);
-                    if (imageUri != null) {
+                    // TODO uncomment
+                    /*if (imageUri != null) {
                         boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
                                                                              new WPMediaUtils.MediaFetchDoNext() {
                                                                                  @Override
@@ -384,7 +385,7 @@ public class MeFragment extends Fragment {
                         if (!didGoWell) {
                             AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
                         }
-                    }
+                    }*/
                 }
                 break;
             case UCrop.REQUEST_CROP:
