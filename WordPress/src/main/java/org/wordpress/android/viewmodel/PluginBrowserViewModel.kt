@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.os.Bundle
 import android.support.annotation.WorkerThread
-import android.text.TextUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.WordPress
@@ -27,7 +26,6 @@ import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.NEW
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.POPULAR
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.SEARCH
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.SITE
-import java.util.HashSet
 import javax.inject.Inject
 
 private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
@@ -45,7 +43,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
 //    private val handler = Handler()
-    private val updatedPluginSlugSet = HashSet<String>()
+//    private val updatedPluginSlugSet = HashSet<String>()
 
     private val _featuredPlugins = ListNetworkResource<ImmutablePluginModel> { loadMore ->
         fetchPluginDirectory(PluginDirectoryType.FEATURED, loadMore)
@@ -134,6 +132,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
+    // TODO: Expose the page parameter from SearchListNetworkResource instead of / in addition to `loadMore`
     private fun searchPlugins(searchQuery: String, loadMore: Boolean) {
         site?.let {
             val searchPayload = PluginStore.SearchPluginDirectoryPayload(it, searchQuery, 1)
@@ -160,9 +159,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (!event.pluginSlug.isNullOrEmpty() && updatedPluginSlugSet.add(event.pluginSlug)) {
-            updateAllPluginListsIfNecessary()
-        }
+//        if (!event.pluginSlug.isNullOrEmpty() && updatedPluginSlugSet.add(event.pluginSlug)) {
+//            updateAllPluginListsIfNecessary()
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -204,9 +203,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+//        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
+//            updateAllPluginListsIfNecessary()
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -218,9 +217,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+//        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
+//            updateAllPluginListsIfNecessary()
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -232,9 +231,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+//        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
+//            updateAllPluginListsIfNecessary()
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -246,14 +245,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+//        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
+//            updateAllPluginListsIfNecessary()
+//        }
     }
 
     // Keeping the data up to date
 
-    private fun updateAllPluginListsIfNecessary() {
+//    private fun updateAllPluginListsIfNecessary() {
 //        val copiedSet = HashSet(updatedPluginSlugSet)
 //        handler.postDelayed({
 //            // Using the size of the set for comparison might fail since we clear the updatedPluginSlugSet
@@ -262,8 +261,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 //                updatedPluginSlugSet.clear()
 //            }
 //        }, 250)
-    }
-
+//    }
+//
 //    private fun updateAllPluginListsWithNewPlugins(updatedPluginSlugSet: Set<String>) {
 //        if (updatedPluginSlugSet.isEmpty()) {
 //            return
@@ -291,10 +290,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 //            }
 //        }
 //    }
-
-//    private fun updatePluginListWithNewPlugin(pluginListNetworkResource: ListResource<ImmutablePluginModel>,
+//
+//    private fun updatePluginListWithNewPlugin(pluginListNetworkResource: IListNetworkResource<ImmutablePluginModel>,
 //                                              newPluginMap: Map<String, ImmutablePluginModel>) {
-//        val pluginList = pluginListNetworkResource.data
+//        val pluginList = pluginListNetworkResource.items
 //        if (pluginList.isEmpty() || newPluginMap.isEmpty()) {
 //            // Nothing to update
 //            return
@@ -316,7 +315,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 //        }
 //        // Only update if the list is actually changed
 //        if (isChanged) {
-//            pluginListNetworkResource.something()
 //            pluginListNetworkResource.updateData(newList)
 //        }
 //    }
