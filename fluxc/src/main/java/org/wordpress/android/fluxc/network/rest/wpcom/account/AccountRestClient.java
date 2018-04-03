@@ -19,14 +19,19 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.SubscriptionModel;
+import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionRestResponse.Subscriptions;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
@@ -36,6 +41,8 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError;
+import org.wordpress.android.fluxc.store.AccountStore.SubscriptionResponsePayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
@@ -622,6 +629,217 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         request.disableRetries();
         add(request);
+    }
+
+    /**
+     * Performs an HTTP GET call to v1.2 /read/following/mins endpoint.  Upon receiving a response
+     * (success or error) a {@link AccountAction#FETCHED_SUBSCRIPTIONS} action is dispatched with a
+     * payload of type {@link SubscriptionsModel}.
+     *
+     * {@link SubscriptionsModel#isError()} can be used to check the request result.
+     */
+    public void fetchSubscriptions() {
+        String url = WPCOMREST.read.following.mine.getUrlV1_2();
+        final Map<String, String> params = new HashMap<>();
+        params.put("meta", "site");
+        final WPComGsonRequest<Subscriptions> request = WPComGsonRequest.buildGetRequest(url, params,
+                Subscriptions.class,
+                new Listener<Subscriptions>() {
+                    @Override
+                    public void onResponse(Subscriptions response) {
+                        if (response != null) {
+                            List<SubscriptionModel> subscriptionArray = new ArrayList<>();
+
+                            for (SubscriptionRestResponse subscriptionResponse : response.subscriptions) {
+                                subscriptionArray.add(responseToSubscriptionModel(subscriptionResponse));
+                            }
+
+                            mDispatcher.dispatch(AccountActionBuilder.newFetchedSubscriptionsAction(
+                                    new SubscriptionsModel(subscriptionArray)));
+                        } else {
+                            AppLog.e(T.API, "Received empty response from /read/following/mine");
+                            SubscriptionsModel payload = new SubscriptionsModel();
+                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(AccountActionBuilder.newFetchedSubscriptionsAction(payload));
+                        }
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SubscriptionsModel payload = new SubscriptionsModel();
+                        payload.error = error;
+                        mDispatcher.dispatch(AccountActionBuilder.newFetchedSubscriptionsAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP POST call to v1.2 /read/site/$site/comment_email_subscriptions/$action endpoint.  Upon
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_EMAIL_COMMENT} action
+     * is dispatched with a payload of type {@link SubscriptionResponsePayload}.
+     *
+     * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
+     *
+     * @param site      Site to update comment email subscription
+     * @param action    "new" to add comment email subscription, "delete" to remove comment email subscription
+     */
+    public void updateSubscriptionEmailComment(@NonNull String site, @NonNull String action) {
+        String url = WPCOMREST.read.site.item(site).comment_email_subscriptions.action(action).getUrlV1_2();
+        final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                SubscriptionResponse.class,
+                new Listener<SubscriptionResponse>() {
+                    @Override
+                    public void onResponse(SubscriptionResponse response) {
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailCommentAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
+                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailCommentAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP POST call to v1.2 /read/site/$site/post_email_subscriptions/$action endpoint.  Upon
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_EMAIL_POST} action
+     * is dispatched with a payload of type {@link SubscriptionResponsePayload}.
+     *
+     * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
+     *
+     * @param site      Site to update post email subscription
+     * @param action    "new" to add post email subscription, "delete" to remove post email subscription
+     */
+    public void updateSubscriptionEmailPost(@NonNull String site, @NonNull String action) {
+        String url = WPCOMREST.read.site.item(site).post_email_subscriptions.action(action).getUrlV1_2();
+        final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                SubscriptionResponse.class,
+                new Listener<SubscriptionResponse>() {
+                    @Override
+                    public void onResponse(SubscriptionResponse response) {
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
+                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP POST call to v1.2 /read/site/$site/post_email_subscriptions/update endpoint.  Upon
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_EMAIL_POST} action
+     * is dispatched with a payload of type {@link SubscriptionResponsePayload}.
+     *
+     * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
+     *
+     * @param site          Site to update post email subscription
+     * @param frequency     rate at which post emails are sent; "instantly", "daily", or "weekly"
+     */
+    public void updateSubscriptionEmailPostFrequency(@NonNull String site, @NonNull String frequency) {
+        String url = WPCOMREST.read.site.item(site).post_email_subscriptions.update.getUrlV1_2();
+        Map<String, Object> body = new HashMap<>();
+        body.put("delivery_frequency", frequency);
+        final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, body,
+                SubscriptionResponse.class,
+                new Listener<SubscriptionResponse>() {
+                    @Override
+                    public void onResponse(SubscriptionResponse response) {
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
+                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP POST call to v2 /read/sites/$site/notification-subscriptions/$action endpoint.  Upon
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_NOTIFICATION_POST}
+     * action is dispatched with a payload of type {@link SubscriptionResponsePayload}.
+     *
+     * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
+     *
+     * @param site      Site to update post notification subscription
+     * @param action    "new" to add post notification subscription, "delete" to remove post notification subscription
+     */
+    public void updateSubscriptionNotificationPost(@NonNull String site, @NonNull String action) {
+        String url = WPCOMV2.read.sites.site(site).notification_subscriptions.action(action).getUrl();
+        final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                SubscriptionResponse.class,
+                new Listener<SubscriptionResponse>() {
+                    @Override
+                    public void onResponse(SubscriptionResponse response) {
+                        SubscriptionResponsePayload payload = new AccountStore.SubscriptionResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionNotificationPostAction(
+                                payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
+                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionNotificationPostAction(
+                                payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    private SubscriptionModel responseToSubscriptionModel(SubscriptionRestResponse response) {
+        SubscriptionModel subscription = new SubscriptionModel();
+        subscription.setSubscriptionId(response.ID);
+        subscription.setBlogId(response.blog_ID);
+        subscription.setFeedId(response.feed_ID);
+        subscription.setUrl(response.URL);
+
+        if (response.delivery_methods != null) {
+            if (response.delivery_methods.email != null) {
+                subscription.setShouldEmailPosts(response.delivery_methods.email.send_posts);
+                subscription.setShouldEmailComments(response.delivery_methods.email.send_comments);
+                subscription.setEmailPostsFrequency(response.delivery_methods.email.post_delivery_frequency);
+            }
+
+            if (response.delivery_methods.notification != null) {
+                subscription.setShouldNotifyPosts(response.delivery_methods.notification.send_posts);
+            }
+        }
+
+        if (response.meta != null && response.meta.data != null && response.meta.data.site != null) {
+            subscription.setBlogName(response.meta.data.site.name);
+        }
+
+        return subscription;
     }
 
     private String getLocaleForUsersNewEndpoint() {
