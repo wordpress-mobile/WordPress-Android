@@ -70,6 +70,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
     @Column private boolean mIsJetpackConnected;
     @Column private String mJetpackVersion;
+    @Column private boolean mIsAutomatedTransfer;
     @Column private boolean mIsWpComStore;
     @Column private boolean mHasWooCommerce;
 
@@ -82,11 +83,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mIconUrl;
     @Column private boolean mHasFreePlan;
     @Column private String mUnmappedUrl;
-
-    // Automated Transfer
-    @Column private boolean mIsAutomatedTransfer;
-    @Column private boolean mIsEligibleForAutomatedTransfer;
-    @Column private int mAutomatedTransferId;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -517,30 +513,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mUnmappedUrl = unMappedUrl;
     }
 
-    public boolean isAutomatedTransfer() {
-        return mIsAutomatedTransfer;
-    }
-
-    public void setIsAutomatedTransfer(boolean automatedTransfer) {
-        mIsAutomatedTransfer = automatedTransfer;
-    }
-
-    public boolean isEligibleForAutomatedTransfer() {
-        return mIsEligibleForAutomatedTransfer;
-    }
-
-    public void setIsEligibleForAutomatedTransfer(boolean eligibleForAutomatedTransfer) {
-        mIsEligibleForAutomatedTransfer = eligibleForAutomatedTransfer;
-    }
-
-    public int getAutomatedTransferId() {
-        return mAutomatedTransferId;
-    }
-
-    public void setAutomatedTransferId(int automatedTransferId) {
-        mAutomatedTransferId = automatedTransferId;
-    }
-
     public boolean isJetpackInstalled() {
         return mIsJetpackInstalled;
     }
@@ -563,6 +535,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setJetpackVersion(String jetpackVersion) {
         mJetpackVersion = jetpackVersion;
+    }
+
+    public boolean isAutomatedTransfer() {
+        return mIsAutomatedTransfer;
+    }
+
+    public void setIsAutomatedTransfer(boolean automatedTransfer) {
+        mIsAutomatedTransfer = automatedTransfer;
     }
 
     public boolean isWpComStore() {

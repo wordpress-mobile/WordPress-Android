@@ -203,38 +203,6 @@ public class SiteSqlUtils {
                 }).execute();
     }
 
-    public static int setAutomatedTransferEligibility(SiteModel site, boolean isEligible) {
-        if (site == null) {
-            return 0;
-        }
-        return WellSql.update(SiteModel.class)
-                      .whereId(site.getId())
-                      .put(isEligible, new InsertMapper<Boolean>() {
-                          @Override
-                          public ContentValues toCv(Boolean item) {
-                              ContentValues cv = new ContentValues();
-                              cv.put(SiteModelTable.IS_ELIGIBLE_FOR_AUTOMATED_TRANSFER, item);
-                              return cv;
-                          }
-                      }).execute();
-    }
-
-    public static int setAutomatedTransferId(SiteModel site, int transferId) {
-        if (site == null) {
-            return 0;
-        }
-        return WellSql.update(SiteModel.class)
-                      .whereId(site.getId())
-                      .put(transferId, new InsertMapper<Integer>() {
-                          @Override
-                          public ContentValues toCv(Integer item) {
-                              ContentValues cv = new ContentValues();
-                              cv.put(SiteModelTable.AUTOMATED_TRANSFER_ID, item);
-                              return cv;
-                          }
-                      }).execute();
-    }
-
     public static SelectQuery<SiteModel> getWPComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()

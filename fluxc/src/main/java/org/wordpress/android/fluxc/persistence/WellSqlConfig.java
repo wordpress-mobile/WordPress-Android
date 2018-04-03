@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 28;
+        return 27;
     }
 
     @Override
@@ -223,11 +223,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE SiteModel ADD IS_WP_COM_STORE INTEGER");
                 db.execSQL("ALTER TABLE SiteModel ADD HAS_WOO_COMMERCE INTEGER");
-                oldVersion++;
-            case 27:
-                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table SiteModel add IS_ELIGIBLE_FOR_AUTOMATED_TRANSFER INTEGER");
-                db.execSQL("alter table SiteModel add AUTOMATED_TRANSFER_ID INTEGER");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
