@@ -40,7 +40,6 @@ public class SubscriptionRestResponse implements Response {
     public String blog_ID;
     public String feed_ID;
     public String URL;
-    public String date_subscribed;
     public DeliveryMethod delivery_methods;
     public Meta meta;
 }
