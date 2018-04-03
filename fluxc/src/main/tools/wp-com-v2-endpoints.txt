@@ -1,2 +1,5 @@
-/users/username/suggestions/
 /plugins/featured
+
+/read/sites/$site#String/notification-subscriptions/$action#String
+
+/users/username/suggestions/
