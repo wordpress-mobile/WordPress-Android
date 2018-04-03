@@ -173,9 +173,7 @@ public class SiteStore extends Store {
     public static class InitiateAutomatedTransferResponsePayload extends Payload<AutomatedTransferError> {
         public SiteModel site;
         public String pluginSlugToInstall;
-        public String status;
         public boolean success;
-        public int transferId;
 
         public InitiateAutomatedTransferResponsePayload(SiteModel site, String pluginSlugToInstall) {
             this.site = site;
@@ -186,12 +184,14 @@ public class SiteStore extends Store {
     public static class AutomatedTransferStatusResponsePayload extends Payload<AutomatedTransferError> {
         public SiteModel site;
         public String status;
-        public String transferId;
+        public int currentStep;
+        public int totalSteps;
 
-        public AutomatedTransferStatusResponsePayload(SiteModel site, String status, String transferId) {
+        public AutomatedTransferStatusResponsePayload(SiteModel site, String status, int currentStep, int totalSteps) {
             this.site = site;
             this.status = status;
-            this.transferId = transferId;
+            this.currentStep = currentStep;
+            this.totalSteps = totalSteps;
         }
         public AutomatedTransferStatusResponsePayload(SiteModel site, AutomatedTransferError error) {
             this.site = site;
@@ -384,8 +384,10 @@ public class SiteStore extends Store {
 
     public static class OnAutomatedTransferEligibilityChecked extends OnChanged<AutomatedTransferError> {
         public SiteModel site;
-        public OnAutomatedTransferEligibilityChecked(SiteModel site, AutomatedTransferError error) {
+        public boolean isEligible;
+        public OnAutomatedTransferEligibilityChecked(SiteModel site, boolean isEligible, AutomatedTransferError error) {
             this.site = site;
+            this.isEligible = isEligible;
             this.error = error;
         }
     }
@@ -403,8 +405,16 @@ public class SiteStore extends Store {
     public static class OnAutomatedTransferStatusChecked extends OnChanged<AutomatedTransferError> {
         public SiteModel site;
         public boolean isCompleted;
-        public OnAutomatedTransferStatusChecked(SiteModel site, boolean isCompleted,
-                                                @Nullable AutomatedTransferError error) {
+        public int currentStep;
+        public int totalSteps;
+        public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, boolean isCompleted, int currentStep,
+                                                int totalSteps) {
+            this.site = site;
+            this.isCompleted = isCompleted;
+            this.currentStep = currentStep;
+            this.totalSteps = totalSteps;
+        }
+        public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.isCompleted = isCompleted;
             this.error = error;
@@ -1228,30 +1238,14 @@ public class SiteStore extends Store {
     }
 
     private void handleCheckedAutomatedTransferEligibility(AutomatedTransferEligibilityResponsePayload payload) {
-        if (!payload.isError()) {
-            SiteSqlUtils.setAutomatedTransferEligibility(payload.site, payload.isEligible);
-        }
-        // Refresh the site from DB
-        SiteModel updatedSite = getSiteByLocalId(payload.site.getId());
-        emitChange(new OnAutomatedTransferEligibilityChecked(updatedSite, payload.error));
+        emitChange(new OnAutomatedTransferEligibilityChecked(payload.site, payload.isEligible, payload.error));
     }
 
     private void initiateAutomatedTransfer(InitiateAutomatedTransferPayload payload) {
-        if (payload.site.isEligibleForAutomatedTransfer()) {
-            mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall);
-        } else {
-            InitiateAutomatedTransferResponsePayload responsePayload =
-                    new InitiateAutomatedTransferResponsePayload(payload.site, payload.pluginSlugToInstall);
-            responsePayload.error =
-                    new AutomatedTransferError(AutomatedTransferErrorType.NOT_ELIGIBLE.toString(), null);
-            mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(responsePayload));
-        }
+        mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall);
     }
 
     private void handleInitiatedAutomatedTransfer(InitiateAutomatedTransferResponsePayload payload) {
-        if (!payload.isError()) {
-            SiteSqlUtils.setAutomatedTransferId(payload.site, payload.transferId);
-        }
         // Refresh the site from DB
         SiteModel updatedSite = getSiteByLocalId(payload.site.getId());
         emitChange(new OnAutomatedTransferInitiated(updatedSite, payload.pluginSlugToInstall, payload.error));
@@ -1262,10 +1256,14 @@ public class SiteStore extends Store {
     }
 
     private void handleCheckedAutomatedTransferStatus(AutomatedTransferStatusResponsePayload payload) {
-        boolean isTransferCompleted = false;
+        OnAutomatedTransferStatusChecked event;
         if (!payload.isError()) {
-            isTransferCompleted = payload.status.equalsIgnoreCase("complete");
+            boolean isTransferCompleted = payload.status.equalsIgnoreCase("complete");
+            event = new OnAutomatedTransferStatusChecked(payload.site, isTransferCompleted, payload.currentStep,
+                    payload.totalSteps);
+        } else {
+            event = new OnAutomatedTransferStatusChecked(payload.site, payload.error);
         }
-        emitChange(new OnAutomatedTransferStatusChecked(payload.site, isTransferCompleted, payload.error));
+        emitChange(event);
     }
 }
