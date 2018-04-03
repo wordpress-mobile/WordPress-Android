@@ -411,10 +411,14 @@ public class PhotoPickerFragment extends Fragment {
         if (mActionMode == null) {
             return;
         }
-
-        int numSelected = getAdapter().getNumSelected();
-        String title = String.format(getString(R.string.cab_selected), numSelected);
-        mActionMode.setTitle(title);
+        String title;
+        if (mBrowserType.isSingleImagePicker()) {
+            mActionMode.setTitle(R.string.photo_picker_use_photo);
+        } else {
+            int numSelected = getAdapter().getNumSelected();
+            title = String.format(getString(R.string.cab_selected), numSelected);
+            mActionMode.setTitle(title);
+        }
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {

@@ -178,7 +178,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 }
             });
         } else {
-            mTextAdd.setText(R.string.set_featured_image);
+            mTextAdd.setText(R.string.photo_picker_use_photo);
             mTextPreview.setVisibility(View.GONE);
         }
 
