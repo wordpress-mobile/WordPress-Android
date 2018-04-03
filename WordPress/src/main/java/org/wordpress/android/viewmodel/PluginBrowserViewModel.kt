@@ -16,9 +16,10 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
-import org.wordpress.android.models.IListNetworkResource
-import org.wordpress.android.models.ListNetworkResource
-import org.wordpress.android.models.SearchListNetworkResource
+import org.wordpress.android.models.networkresource.IListNetworkResource
+import org.wordpress.android.models.networkresource.ISearchListNetworkResource
+import org.wordpress.android.models.networkresource.ListNetworkResource
+import org.wordpress.android.models.networkresource.SearchListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.FEATURED
@@ -61,6 +62,17 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val _searchResults = SearchListNetworkResource<ImmutablePluginModel> { searchQuery, loadMore ->
         searchPlugins(searchQuery, loadMore)
     }
+
+    val featuredPlugins: IListNetworkResource<ImmutablePluginModel>
+        get() = _featuredPlugins
+    val newPlugins: IListNetworkResource<ImmutablePluginModel>
+        get() = _newPlugins
+    val popularPlugins: IListNetworkResource<ImmutablePluginModel>
+        get() = _popularPlugins
+    val sitePlugins: IListNetworkResource<ImmutablePluginModel>
+        get() = _sitePlugins
+    val searchResults: ISearchListNetworkResource<ImmutablePluginModel>
+        get() = _searchResults
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -171,10 +183,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            _searchResults.error(event.error.message)
+            _searchResults.error(event.error.message, false)
             return
         }
-        _searchResults.success(event.plugins, event.canLoadMore)
+        // Disable loading more pages for search results
+        _searchResults.success(event.plugins, false)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

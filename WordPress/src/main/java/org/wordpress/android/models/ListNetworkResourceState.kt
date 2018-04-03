@@ -21,4 +21,11 @@ sealed class ListNetworkResourceState {
         is ListNetworkResourceState.Loading -> loadingMore
         else -> false
     }
+
+    // This is a temporary method since Java doesn't work well with sealed classes, once PluginBrowserActivity is
+    // converted to Kotlin, we can get rid of it
+    fun errorMessage(): String? = when (this) {
+        is Error -> message
+        else -> null
+    }
 }
