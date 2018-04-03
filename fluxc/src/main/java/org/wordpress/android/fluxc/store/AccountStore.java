@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store;
 import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
+import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
@@ -948,5 +950,25 @@ public class AccountStore extends Store {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get all subscriptions in store as a {@link SubscriptionModel} list.
+     *
+     * @return {@link List} of {@link SubscriptionModel}
+     */
+    public List<SubscriptionModel> getSubscriptions() {
+        return WellSql.select(SubscriptionModel.class).getAsModel();
+    }
+
+    /**
+     * Get all subscriptions in store matching {@param searchString} as a {@link SubscriptionModel} list.
+     *
+     * @param searchString      Text to filter subscriptions by
+     *
+     * @return {@link List} of {@link SubscriptionModel}
+     */
+    public List<SubscriptionModel> getSubscriptionsByNameOrUrlMatching(@NonNull String searchString) {
+        return AccountSqlUtils.getSubscriptionsByNameOrUrlMatching(searchString);
     }
 }
