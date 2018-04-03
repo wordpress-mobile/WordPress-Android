@@ -7,6 +7,7 @@ sealed class ListNetworkResourceState {
         // TODO: When we add the ability to handle connection errors in VMs, we should add `CONNECTION_ERROR` type
     }
 
+    object Init : ListNetworkResourceState() // not setup or ready yet (for example site is null)
     object Ready : ListNetworkResourceState()
     data class Error(val type: ErrorType, val message: String?) : ListNetworkResourceState()
     data class Loading(val loadingMore: Boolean) : ListNetworkResourceState()

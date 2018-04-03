@@ -6,7 +6,7 @@ import org.wordpress.android.models.ListNetworkResourceState
 
 class BaseListNetworkResource<T>(private val fetchFunction: (Boolean) -> Unit) {
     private var _items: List<T> = ArrayList()
-    private var _status: ListNetworkResourceState = ListNetworkResourceState.Ready
+    private var _status: ListNetworkResourceState = ListNetworkResourceState.Init
     private var _liveData = MutableLiveData<List<T>>()
     private var _liveStatus = MutableLiveData<ListNetworkResourceState>()
 
@@ -20,7 +20,11 @@ class BaseListNetworkResource<T>(private val fetchFunction: (Boolean) -> Unit) {
         get() = _liveStatus
 
     fun ready(items: List<T>) {
-        updateItemsAndStatus(items, ListNetworkResourceState.Ready)
+        // Only update the status and fetch first page if this is the first time
+        if (status === ListNetworkResourceState.Init) {
+            updateItemsAndStatus(items, ListNetworkResourceState.Ready)
+            fetchFirstPage()
+        }
     }
 
     fun error(message: String?, wasLoadingMore: Boolean) {
@@ -38,6 +42,9 @@ class BaseListNetworkResource<T>(private val fetchFunction: (Boolean) -> Unit) {
     }
 
     fun fetchFirstPage() {
+        require(status !== ListNetworkResourceState.Init) {
+            "ready() needs to be called before first page can be fetched!"
+        }
         if (!_status.isFetchingFirstPage()) {
             loading(false)
             fetchFunction(false)

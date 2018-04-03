@@ -24,6 +24,7 @@ class ListNetworkResource<T>(private var fetchFunction: (Boolean) -> Unit) : ILi
 
     override val liveData = base.liveData
     override val liveStatus = base.liveStatus
+    fun ready(items: List<T>) = base.ready(items)
     fun error(message: String?, wasLoadingMore: Boolean) = base.error(message, wasLoadingMore)
     fun success(items: List<T>, canLoadMore: Boolean) = base.success(items, canLoadMore)
     override fun pullToRefresh() = base.fetchFirstPage()
@@ -40,6 +41,7 @@ class SearchListNetworkResource<T>(
 
     override val liveData = base.liveData
     override val liveStatus = base.liveStatus
+    fun ready(items: List<T>) = base.ready(items)
     fun error(message: String?, wasLoadingMore: Boolean) = base.error(message, wasLoadingMore)
     fun success(items: List<T>, canLoadMore: Boolean) = base.success(items, canLoadMore)
     override fun pullToRefresh() = base.fetchFirstPage()

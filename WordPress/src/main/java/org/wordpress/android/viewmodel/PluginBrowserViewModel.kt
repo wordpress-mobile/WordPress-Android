@@ -80,14 +80,19 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     var site: SiteModel? = null
         set(value) {
-            val wasNull = field == null
-            field = value
-            if (wasNull) {
-                TODO("do the initial setup here")
-//                fetchPlugins(SITE, false)
-//                fetchPlugins(FEATURED, false)
-//                fetchPlugins(POPULAR, false)
-//                fetchPlugins(NEW, false)
+            requireNotNull(value) {
+                "Site shouldn't be set to null, make sure it's properly saved and retrieved from Bundle"
+            }
+            value?.let {
+                val wasNull = field == null
+                field = it
+                if (wasNull) {
+                    _featuredPlugins.ready(mPluginStore.getPluginDirectory(it, PluginDirectoryType.FEATURED))
+                    _newPlugins.ready(mPluginStore.getPluginDirectory(it, PluginDirectoryType.NEW))
+                    _popularPlugins.ready(mPluginStore.getPluginDirectory(it, PluginDirectoryType.POPULAR))
+                    _sitePlugins.ready(mPluginStore.getPluginDirectory(it, PluginDirectoryType.SITE))
+                    _searchResults.ready(ArrayList())
+                }
             }
         }
 
