@@ -220,10 +220,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return mSelectedItems.contains(position);
     }
 
-    /*
-     * toggles the selection state of the item at the passed position
-     */
-    private void toggleSelection(int position) {
+    private void toggleItemSelected(int position) {
         setItemSelected(position, !isItemSelected(position));
     }
 
@@ -351,7 +348,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
-                        toggleSelection(position);
+                        toggleItemSelected(position);
                     }
                 }
             });
