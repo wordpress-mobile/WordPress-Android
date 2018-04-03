@@ -19,11 +19,13 @@ class BaseListNetworkResource<T>(private val fetchFunction: (Boolean) -> Unit) {
     val liveStatus: LiveData<ListNetworkResourceState>
         get() = _liveStatus
 
-    fun ready(items: List<T>) {
+    fun ready(items: List<T>, shouldFetch: Boolean) {
         // Only update the status and fetch first page if this is the first time
         if (status === ListNetworkResourceState.Init) {
             updateItemsAndStatus(items, ListNetworkResourceState.Ready)
-            fetchFirstPage()
+            if (shouldFetch) {
+                fetchFirstPage()
+            }
         }
     }
 
