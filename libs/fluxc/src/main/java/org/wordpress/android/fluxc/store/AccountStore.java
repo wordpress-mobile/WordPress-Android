@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.yarolegovich.wellsql.WellSql;
@@ -28,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
@@ -153,6 +155,75 @@ public class AccountStore extends Store {
         }
 
         public String token;
+    }
+
+    public static class AddOrDeleteSubscriptionPayload extends Payload<BaseNetworkError> {
+        public String site;
+        public String action;
+        public AddOrDeleteSubscriptionPayload(@NonNull String site, @NonNull String action) {
+            this.site = site;
+            this.action = action;
+        }
+    }
+
+    public static class UpdateSubscriptionPayload extends Payload<BaseNetworkError> {
+        public String site;
+        public String frequency;
+        public UpdateSubscriptionPayload(@NonNull String site, @NonNull String frequency) {
+            this.site = site;
+            this.frequency = frequency;
+        }
+    }
+
+    public static class SubscriptionResponsePayload extends Payload<SubscriptionError> {
+        public boolean subscribed;
+        public SubscriptionResponsePayload() {
+        }
+        public SubscriptionResponsePayload(SubscriptionResponse response) {
+            this.subscribed = response.subscribed;
+        }
+    }
+
+    public static class SubscriptionError implements OnChangedError {
+        public SubscriptionErrorType type;
+        public String message;
+
+        public SubscriptionError(@NonNull String type, @NonNull String message) {
+            this(SubscriptionErrorType.fromString(type), message);
+        }
+
+        public SubscriptionError(SubscriptionErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum SubscriptionErrorType {
+        ALREADY_SUBSCRIBED,
+        AUTHORIZATION_REQUIRED,
+        EMAIL_ADDRESS_MISSING,
+        REST_CANNOT_VIEW,
+        GENERIC_ERROR;
+
+        public static SubscriptionErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (SubscriptionErrorType type : SubscriptionErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
+    public static class SubscriptionsError implements OnChangedError {
+        public String message;
+
+        public SubscriptionsError(BaseNetworkError error) {
+            this.message = error.message;
+        }
     }
 
     // OnChanged Events
