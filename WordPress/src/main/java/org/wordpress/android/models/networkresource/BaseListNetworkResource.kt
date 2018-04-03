@@ -19,20 +19,22 @@ class BaseListNetworkResource<T>(private val fetchFunction: (Boolean) -> Unit) {
     val liveStatus: LiveData<ListNetworkResourceState>
         get() = _liveStatus
 
+    fun ready(items: List<T>) {
+        updateItemsAndStatus(items, ListNetworkResourceState.Ready)
+    }
+
     fun error(message: String?, wasLoadingMore: Boolean) {
         val type = if (wasLoadingMore)
             ListNetworkResourceState.ErrorType.PAGINATION_ERROR else ListNetworkResourceState.ErrorType.FETCH_ERROR
-        updateStatus(ListNetworkResourceState.Error(type, message))
+        updateItemsAndStatus(newStatus = ListNetworkResourceState.Error(type, message))
     }
 
     fun success(items: List<T>, canLoadMore: Boolean) {
-        updateItems(items)
-        updateStatus(ListNetworkResourceState.Success(canLoadMore))
+        updateItemsAndStatus(items, ListNetworkResourceState.Success(canLoadMore))
     }
 
     fun reset() {
-        updateItems(ArrayList())
-        updateStatus(ListNetworkResourceState.Ready)
+        updateItemsAndStatus(ArrayList(), ListNetworkResourceState.Ready)
     }
 
     fun fetchFirstPage() {
@@ -51,16 +53,18 @@ class BaseListNetworkResource<T>(private val fetchFunction: (Boolean) -> Unit) {
     }
 
     private fun loading(isLoadingMore: Boolean) {
-        updateStatus(ListNetworkResourceState.Loading(isLoadingMore))
+        updateItemsAndStatus(newStatus = ListNetworkResourceState.Loading(isLoadingMore))
     }
 
-    private fun updateItems(newItems: List<T>) {
-        _items = newItems
-        _liveData.postValue(_items)
-    }
-
-    private fun updateStatus(newStatus: ListNetworkResourceState) {
-        _status = newStatus
-        _liveStatus.postValue(_status)
+    // Attempt to post value updates together after both values are updated
+    private fun updateItemsAndStatus(newItems: List<T>? = null, newStatus: ListNetworkResourceState? = null) {
+        newItems?.let {
+            _items = it
+        }
+        newStatus?.let {
+            _status = it
+        }
+        if (newItems != null) _liveData.postValue(_items)
+        if (newStatus != null) _liveStatus.postValue(_status)
     }
 }
