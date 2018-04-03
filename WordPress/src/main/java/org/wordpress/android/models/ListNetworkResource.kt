@@ -3,18 +3,14 @@ package org.wordpress.android.models
 import android.os.Handler
 import kotlin.properties.Delegates
 
-private class BaseListNetworkResource<in T>(private val fetchFunction: (Boolean) -> Unit) {
-    private var items: List<T> = ArrayList()
-    private var status: ListNetworkResourceState = ListNetworkResourceState.Ready
+private class BaseListNetworkResource<T>(private val fetchFunction: (Boolean) -> Unit) {
+    var items: List<T> = ArrayList()
+    var status: ListNetworkResourceState = ListNetworkResourceState.Ready
 
     fun error(message: String?, isLoadingMore: Boolean) {
         val type = if (isLoadingMore)
             ListNetworkResourceState.ErrorType.PAGINATION_ERROR else ListNetworkResourceState.ErrorType.FETCH_ERROR
         updateStatus(ListNetworkResourceState.Error(type, message))
-    }
-
-    fun loading(isLoadingMore: Boolean) {
-        updateStatus(ListNetworkResourceState.Loading(isLoadingMore))
     }
 
     fun success(items: List<T>, canLoadMore: Boolean) {
@@ -29,6 +25,7 @@ private class BaseListNetworkResource<in T>(private val fetchFunction: (Boolean)
 
     fun fetchFirstPage() {
         if (!status.isFetchingFirstPage()) {
+            loading(false)
             fetchFunction(false)
         }
     }
@@ -36,16 +33,13 @@ private class BaseListNetworkResource<in T>(private val fetchFunction: (Boolean)
     fun loadMore() {
         val currentStatus = status
         if (currentStatus is ListNetworkResourceState.Success && currentStatus.canLoadMore) {
+            loading(true)
             fetchFunction(true)
         }
     }
 
-    private fun shouldFetch(loadMore: Boolean): Boolean {
-        val currentStatus = status
-        return when (currentStatus) {
-            is ListNetworkResourceState.Success -> !loadMore || currentStatus.canLoadMore
-            else -> true
-        }
+    private fun loading(isLoadingMore: Boolean) {
+        updateStatus(ListNetworkResourceState.Loading(isLoadingMore))
     }
 
     private fun updateItems(newItems: List<T>) {
@@ -57,24 +51,35 @@ private class BaseListNetworkResource<in T>(private val fetchFunction: (Boolean)
     }
 }
 
-class ListNetworkResource<in T>(private var fetchFunction: (Boolean) -> Unit) {
+interface IListNetworkResource<in T> {
+    fun error(message: String?, isLoadingMore: Boolean = false)
+    fun success(items: List<T>, canLoadMore: Boolean = false)
+    fun pullToRefresh()
+    fun loadMore()
+}
+
+class ListNetworkResource<in T>(private var fetchFunction: (Boolean) -> Unit) : IListNetworkResource<T> {
     private val base = BaseListNetworkResource<T> { loadMore ->
         fetchFunction(loadMore)
     }
 
-    fun error(message: String?, isLoadingMore: Boolean = false) = base.error(message, isLoadingMore)
-    fun loading(isLoadingMore: Boolean = false) = base.loading(isLoadingMore)
-    fun success(items: List<T>, canLoadMore: Boolean = false) = base.success(items, canLoadMore)
-    fun pullToRefresh() = base.fetchFirstPage()
-    fun loadMore() = base.loadMore()
+    override fun error(message: String?, isLoadingMore: Boolean = false) = base.error(message, isLoadingMore)
+    override fun success(items: List<T>, canLoadMore: Boolean = false) = base.success(items, canLoadMore)
+    override fun pullToRefresh() = base.fetchFirstPage()
+    override fun loadMore() = base.loadMore()
 }
 
-class SearchListNetworkResource<in T>(private val minCharacterCount: Int = 2,
+class SearchListNetworkResource<in T>(minCharacterCount: Int = 2,
                                       private val delayMillis: Long = 250,
-                                      private val searchFunction: (String, Boolean) -> Unit) {
+                                      private val searchFunction: (String, Boolean) -> Unit) : IListNetworkResource<T> {
     private val base = BaseListNetworkResource<T> { loadMore ->
         searchFunction(searchQuery, loadMore)
     }
+
+    override fun error(message: String?, isLoadingMore: Boolean = false) = base.error(message, isLoadingMore)
+    override fun success(items: List<T>, canLoadMore: Boolean = false) = base.success(items, canLoadMore)
+    override fun pullToRefresh() = base.fetchFirstPage()
+    override fun loadMore() = base.loadMore()
 
     private val handler by lazy { Handler() }
 
@@ -84,11 +89,19 @@ class SearchListNetworkResource<in T>(private val minCharacterCount: Int = 2,
         }
     }
 
-    fun error(message: String?, isLoadingMore: Boolean = false) = base.error(message, isLoadingMore)
-    fun loading(isLoadingMore: Boolean = false) = base.loading(isLoadingMore)
-    fun success(items: List<T>, canLoadMore: Boolean = false) = base.success(items, canLoadMore)
-    fun pullToRefresh() = base.fetchFirstPage()
-    fun loadMore() = base.loadMore()
+    private val canSearch: Boolean = searchQuery.length >= minCharacterCount
+    val shouldShowEmptySearchResultsView: Boolean
+        get() {
+            // Search query is less than min characters
+            if (!canSearch) {
+                return false
+            }
+            // Only show empty view if content is empty, we are not fetching new data and no errors occurred
+            return when (base.status) {
+                is ListNetworkResourceState.Success -> base.items.isEmpty()
+                else -> false
+            }
+        }
 
     private fun submitSearch(query: String, delayed: Boolean) {
         if (delayed) {
@@ -99,7 +112,7 @@ class SearchListNetworkResource<in T>(private val minCharacterCount: Int = 2,
             }, delayMillis)
         } else {
             base.reset()
-            if (query.length > minCharacterCount) {
+            if (canSearch) {
                 base.fetchFirstPage()
             }
         }
