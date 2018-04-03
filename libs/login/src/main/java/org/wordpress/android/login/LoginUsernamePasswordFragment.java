@@ -119,7 +119,9 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.selfhosted_site_login_title);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
 
         rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
         rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
@@ -133,17 +135,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
                 .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
         }
 
-        TextView siteNameView = ((TextView) rootView.findViewById(R.id.login_site_title));
+        TextView siteNameView = (rootView.findViewById(R.id.login_site_title));
         siteNameView.setText(mSiteName);
         siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
 
-        TextView siteAddressView = ((TextView) rootView.findViewById(R.id.login_site_address));
+        TextView siteAddressView = (rootView.findViewById(R.id.login_site_address));
         siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mInputSiteAddressWithoutSuffix = UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
 
-        mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
+        mUsernameInput = rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
         if (BuildConfig.DEBUG) {
             mUsernameInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_USERNAME);
@@ -157,7 +159,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             }
         });
 
-        mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
+        mPasswordInput = rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setText(mInputPassword);
         if (BuildConfig.DEBUG) {
             mPasswordInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_PASSWORD);
@@ -252,7 +254,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
-        outState.putIntegerArrayList(KEY_REQUESTED_PASSWORD, mOldSitesIDs);
+        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
     }
 
     protected void next() {

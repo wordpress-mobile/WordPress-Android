@@ -32,52 +32,89 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:wpIconDrawable="@drawable/ic_user_grey_24dp"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         tools:ignore="UnusedAttribute" >
     </org.wordpress.android.login.widgets.WPLoginInputRow>
 
-    <LinearLayout
-        android:id="@+id/login_google_layout"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
+    <TextView
+        android:gravity="center_vertical"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_width="match_parent"
-        android:orientation="horizontal" >
+        android:layout_width="wrap_content"
+        android:text="@string/alternatively"
+        style="@style/LoginTheme.TextLabel" >
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/login_google_button"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
+        android:gravity="center_vertical"
+        tools:ignore="RtlSymmetry" >
+
+        <ImageView
+            android:importantForAccessibility="no"
+            android:layout_height="@dimen/google_button_icon_sz"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_width="@dimen/google_button_icon_sz"
+            app:srcCompat="@drawable/ic_google_60dp" >
+        </ImageView>
 
         <TextView
             android:gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:text="@string/login_google_button_prefix"
-            style="@style/LoginTheme.TextLabel" >
-        </TextView>
-
-        <LinearLayout
-            android:id="@+id/login_google_button"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/margin_medium" >
+            android:text="@string/login_google_button_suffix"
+            style="@style/LoginTheme.Button.Google" >
+        </TextView>
 
-            <ImageView
-                android:importantForAccessibility="no"
-                android:layout_height="@dimen/google_button_icon_sz"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:layout_width="@dimen/google_button_icon_sz"
-                app:srcCompat="@drawable/ic_google_60dp" >
-            </ImageView>
+    </LinearLayout>
 
-            <TextView
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"
-                android:text="@string/login_google_button_suffix"
-                style="@style/LoginTheme.Button.Google" >
-            </TextView>
+    <LinearLayout
+        android:id="@+id/login_site_button"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
+        android:gravity="center_vertical"
+        tools:ignore="RtlSymmetry" >
 
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/login_site_button_icon"
+            android:importantForAccessibility="no"
+            android:layout_height="@dimen/google_button_icon_sz"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_width="@dimen/google_button_icon_sz"
+            app:srcCompat="@drawable/ic_domains_grey_24dp" >
+        </ImageView>
+
+        <TextView
+            android:id="@+id/login_site_button_text"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/enter_site_address_instead"
+            style="@style/LoginTheme.Button.Google" >
+        </TextView>
 
     </LinearLayout>
 

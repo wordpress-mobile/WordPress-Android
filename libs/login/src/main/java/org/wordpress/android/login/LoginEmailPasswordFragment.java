@@ -18,7 +18,7 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
-import org.wordpress.android.login.LoginWpcomService.OnLoginStateUpdated;
+import org.wordpress.android.login.LoginWpcomService.LoginState;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -103,7 +103,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         // connect to the Service. We'll receive updates via EventBus.
         mServiceEventConnection = new AutoForeground.ServiceEventConnection(getContext(),
-                LoginWpcomService.class, this);
+                                                                            LoginWpcomService.class, this);
 
         // install the change listener as late as possible so the UI can be setup (updated from the Service state)
         //  before triggering the state cleanup happening in the change listener.
@@ -124,8 +124,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.login_email_password_screen;
     }
 
@@ -141,6 +140,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.selfhosted_site_login_title);
         ((TextView) rootView.findViewById(R.id.login_email)).setText(mEmailAddress);
 
         mPasswordInput = rootView.findViewById(R.id.login_password_row);
@@ -214,7 +215,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
         LoginWpcomService.loginWithEmailAndPassword(getContext(), mEmailAddress, mRequestedPassword, mIdToken, mService,
-                mIsSocialLogin);
+                                                    mIsSocialLogin);
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
 
@@ -253,7 +254,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mLoginListener.startPostLoginServices();
 
         if (mIsSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }
@@ -267,10 +268,10 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onLoginStateUpdated(OnLoginStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.state.name());
+    public void onLoginStateUpdated(LoginState loginState) {
+        AppLog.i(T.NUX, "Received state: " + loginState.getStepName());
 
-        switch (event.state) {
+        switch (loginState.getStep()) {
             case IDLE:
                 // nothing special to do, we'll start the service on next()
                 break;

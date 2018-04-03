@@ -15,7 +15,7 @@
         android:layout_below="@+id/toolbar"
         android:scaleType="centerInside"
         android:layout_marginTop="@dimen/margin_extra_extra_large"
-        android:contentDescription="@string/login_magic_links_sent_description"
+        android:contentDescription="@null"
         app:srcCompat="@drawable/img_email_alert_120dp"/>
 
     <TextView
@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/login_enter_password"
-        style="@style/Base.TextAppearance.AppCompat.Caption"
+        style="@style/LoginTheme.Button.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_open_email_client"

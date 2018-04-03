@@ -91,7 +91,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mSiteAddressInput = (WPLoginInputRow) rootView.findViewById(R.id.login_site_address_row);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.site_address_login_title);
+        mSiteAddressInput = rootView.findViewById(R.id.login_site_address_row);
         mSiteAddressInput.addTextChangedListener(this);
         mSiteAddressInput.setOnEditorCommitListener(this);
     }

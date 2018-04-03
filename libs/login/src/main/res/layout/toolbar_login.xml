@@ -10,6 +10,8 @@
     android:elevation="@dimen/appbar_elevation"
     app:contentInsetLeft="@dimen/toolbar_content_offset"
     app:contentInsetStart="@dimen/toolbar_content_offset"
+    app:contentInsetRight="@dimen/toolbar_content_offset_end"
+    app:contentInsetEnd="@dimen/toolbar_content_offset_end"
     app:theme="@style/LoginTheme.Toolbar"
     tools:targetApi="LOLLIPOP">
 
@@ -17,5 +19,6 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
+        android:contentDescription="@null"
         app:srcCompat="@drawable/login_toolbar_icon"/>
 </android.support.v7.widget.Toolbar>
