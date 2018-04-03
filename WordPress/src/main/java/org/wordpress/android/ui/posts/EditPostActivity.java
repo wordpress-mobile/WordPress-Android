@@ -713,6 +713,10 @@ public class EditPostActivity extends AppCompatActivity implements
             return getString(R.string.submit_for_review);
         }
 
+        if (isNewPost()) {
+            return getString(R.string.menu_save_as_draft);
+        }
+
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
                 return getString(R.string.menu_publish_now);
@@ -1061,10 +1065,28 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
                 //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
+
+                // we update the mPost object first, so we can pre-check Post publishability and inform the user
+                updatePostObject();
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                    if (isDiscardable()) {
+                        String message = getString(
+                                mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                        ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+                        return false;
+                    }
                     showPublishConfirmationDialog();
                 } else {
-                    showPublishConfirmationOrUpdateIfNotLocalDraft();
+                    if (isDiscardable()) {
+                        ToastUtils.showToast(EditPostActivity.this,
+                                getString(R.string.error_save_empty_draft), Duration.SHORT);
+                        return false;
+                    }
+                    UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
+                    if (isNewPost()) {
+                        mPost.setStatus(PostStatus.DRAFT.toString());
+                    }
+                    savePostAndOptionallyFinish(false);
                 }
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
@@ -3221,6 +3243,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             mPost = post;
+            mIsNewPost = false;
             invalidateOptionsMenu();
             switch (PostStatus.fromPost(post)) {
                 case PUBLISHED:
