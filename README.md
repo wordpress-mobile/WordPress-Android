@@ -59,7 +59,7 @@ Once you've created your application in the [applications manager](https://devel
 need to edit the `./gradle.properties` file and change the
 `WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
-account. Note that authenticating to WordPress.com via Google is not supported in development builds of the app, only in the offical release.
+account. Note that authenticating to WordPress.com via Google is not supported in development builds of the app, only in the official release.
 
 Read more about [OAuth2](https://developer.wordpress.com/docs/oauth2/) and the [WordPress.com REST endpoint](https://developer.wordpress.com/docs/api/).
 
