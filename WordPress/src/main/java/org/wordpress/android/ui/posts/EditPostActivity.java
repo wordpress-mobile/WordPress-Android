@@ -32,6 +32,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,6 +108,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -147,6 +149,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -171,7 +174,9 @@ public class EditPostActivity extends AppCompatActivity implements
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
-        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface {
+        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface,
+        PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
+        PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -200,6 +205,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
+
+    enum AddExistingdMediaSource {
+        WP_MEDIA_LIBRARY,
+        STOCK_PHOTO_LIBRARY
+    }
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -442,7 +452,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost(mPost);
+                                            mEditPostPreviewFragment.loadPost();
                                         }
                                     }
                                 });
@@ -917,6 +927,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case WP_MEDIA:
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
+            case STOCK_MEDIA:
+                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                break;
         }
     }
 
@@ -1338,6 +1351,29 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * user clicked OK on a settings list dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
+    @Override
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment dialog) {
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(dialog);
+        }
+    }
+
+    /*
+     * user clicked OK on a settings date/time dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
+    @Override
+    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog,
+                                                            @NonNull Calendar calender) {
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostDatePickerDialogPositiveButtonClicked(dialog, calender);
+        }
+    }
+
     private interface AfterSavePostListener {
         void onPostSave();
     }
@@ -1484,7 +1520,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
                                     account.getEmail());
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
@@ -1733,7 +1770,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 1:
                     return EditPostSettingsFragment.newInstance();
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite);
+                    return EditPostPreviewFragment.newInstance(mPost);
             }
         }
 
@@ -1783,23 +1820,19 @@ public class EditPostActivity extends AppCompatActivity implements
         return mMaxThumbWidth;
     }
 
-    private boolean addExistingMediaToEditor(long mediaId) {
+    private boolean addExistingMediaToEditor(@NonNull AddExistingdMediaSource source, long mediaId) {
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media == null) {
+            AppLog.w(T.MEDIA, "Cannot add null media to post");
             return false;
         }
 
+        trackAddMediaEvent(source, media);
+
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-        trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
         String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
         mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
         return true;
-    }
-
-    private void addExistingMediaToEditorAndSave(long mediaId) {
-        if (addExistingMediaToEditor(mediaId)) {
-            savePostAsync(null);
-        }
     }
 
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
@@ -1985,7 +2018,7 @@ public class EditPostActivity extends AppCompatActivity implements
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
         ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
         for (Long id : idsList) {
-            addExistingMediaToEditor(id);
+            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
         }
         savePostAsync(null);
     }
@@ -2175,20 +2208,21 @@ public class EditPostActivity extends AppCompatActivity implements
 
     /**
      * Analytics about media already available in the blog's library.
-     *
-     * @param isVideo Whether is a video or not
-     * @param mediaId The ID of the media in the WP blog's library, or null if device media.
+     * @param source where the media is being added from
+     * @param media media being added
      */
-    private void trackAddMediaFromWPLibraryEvents(boolean isVideo, long mediaId) {
-        if (mediaId == 0) {
-            AppLog.e(T.MEDIA, "Cannot track media events if mediaId is 0");
-            return;
-        }
-
-        if (isVideo) {
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY, mSite, null);
-        } else {
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, mSite, null);
+    private void trackAddMediaEvent(@NonNull AddExistingdMediaSource source, @NonNull MediaModel media) {
+        switch (source) {
+            case WP_MEDIA_LIBRARY:
+                if (media.isVideo()) {
+                    AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY, mSite, null);
+                } else {
+                    AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, mSite, null);
+                }
+                break;
+            case STOCK_PHOTO_LIBRARY:
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY, mSite, null);
+                break;
         }
     }
 
@@ -2464,6 +2498,16 @@ public class EditPostActivity extends AppCompatActivity implements
                                                          Activity.RESULT_OK, data);
                     }
                     break;
+                case RequestCodes.STOCK_MEDIA_PICKER:
+                    if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
+                        long[] mediaIds =
+                                data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
+                        for (long id : mediaIds) {
+                            addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
+                        }
+                        savePostAsync(null);
+                    }
+                    break;
             }
         }
     }
@@ -2554,7 +2598,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showInsertMediaDialog(ids);
         } else {
             for (Long id : ids) {
-                addExistingMediaToEditor(id);
+                addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
             }
             savePostAsync(null);
         }
@@ -2577,7 +2621,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         break;
                     case INDIVIDUALLY:
                         for (Long id : mediaIds) {
-                            addExistingMediaToEditor(id);
+                            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
                         }
                         savePostAsync(null);
                         break;
@@ -2797,7 +2841,8 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -2999,7 +3044,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 shouldFinishInit = false;
                 mMediaInsertedOnCreation = true;
                 for (MediaModel media : mediaList) {
-                    addExistingMediaToEditor(media.getMediaId());
+                    addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, media.getMediaId());
                 }
                 savePostAsync(new AfterSavePostListener() {
                     @Override

@@ -33,13 +33,13 @@ android {
         dexInProcess = true
     }
 
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-103"
-        versionCode 541
+        versionName "alpha-105"
+        versionCode 547
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -105,18 +105,19 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.+'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'com.android.support:support-compat:26.1.0'
-    implementation 'com.android.support:support-core-ui:26.1.0'
-    implementation 'com.android.support:support-fragment:26.1.0'
+    implementation 'com.android.support:support-compat:27.1.0'
+    implementation 'com.android.support:support-core-ui:27.1.0'
+    implementation 'com.android.support:support-fragment:27.1.0'
 
     implementation 'com.android.support:multidex:1.0.2'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v13:26.1.0'
-    implementation 'com.android.support:cardview-v7:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:percent:26.1.0'
-    implementation 'com.android.support:preference-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:support-v13:27.1.0'
+    implementation 'com.android.support:cardview-v7:27.1.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:percent:27.1.0'
+    implementation 'com.android.support:preference-v7:27.1.0'
+
     // ViewModel and LiveData
     implementation 'android.arch.lifecycle:extensions:1.1.0'
 
@@ -138,9 +139,9 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.1.1'
-    kapt 'com.github.bumptech.glide:compiler:4.1.1'
-    implementation 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    kapt 'com.github.bumptech.glide:compiler:4.6.1'
+    implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'

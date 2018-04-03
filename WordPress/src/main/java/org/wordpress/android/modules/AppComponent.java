@@ -66,12 +66,14 @@ import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListFragment;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostPreviewFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
@@ -287,6 +289,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PhotoPickerActivity object);
 
+    void inject(StockMediaPickerActivity object);
+
     void inject(SiteSettingsTagListActivity object);
 
     void inject(SiteSettingsTagDetailFragment object);
@@ -304,6 +308,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(EditPostActivity object);
 
     void inject(EditPostSettingsFragment object);
+
+    void inject(EditPostPreviewFragment object);
 
     void inject(PostSettingsTagsActivity object);
 

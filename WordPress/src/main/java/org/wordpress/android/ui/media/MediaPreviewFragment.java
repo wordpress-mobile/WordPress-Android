@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -10,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,22 +141,22 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.media_preview_fragment, container, false);
 
-        mImageView = (ImageView) view.findViewById(R.id.image_preview);
-        mVideoView = (VideoView) view.findViewById(R.id.video_preview);
+        mImageView = view.findViewById(R.id.image_preview);
+        mVideoView = view.findViewById(R.id.video_preview);
 
-        mVideoFrame = (ViewGroup) view.findViewById(R.id.frame_video);
-        mAudioFrame = (ViewGroup) view.findViewById(R.id.frame_audio);
+        mVideoFrame = view.findViewById(R.id.frame_video);
+        mAudioFrame = view.findViewById(R.id.frame_audio);
 
         mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
 
         if (mIsAudio && !TextUtils.isEmpty(mTitle)) {
-            TextView txtAudioTitle = (TextView) view.findViewById(R.id.text_audio_title);
+            TextView txtAudioTitle = view.findViewById(R.id.text_audio_title);
             txtAudioTitle.setText(mTitle);
             txtAudioTitle.setVisibility(View.VISIBLE);
         }
@@ -228,7 +228,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if (mIsVideo) {
