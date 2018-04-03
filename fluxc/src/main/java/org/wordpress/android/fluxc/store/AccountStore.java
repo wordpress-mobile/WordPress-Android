@@ -312,6 +312,17 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class OnSubscriptionsChanged extends OnChanged<SubscriptionsError> {
+        public OnSubscriptionsChanged() {
+        }
+    }
+
+    public static class OnSubscriptionUpdated extends OnChanged<SubscriptionError> {
+        public boolean subscribed;
+        public OnSubscriptionUpdated() {
+        }
+    }
+
     // Enums
     public enum AuthenticationErrorType {
         // From response's "error" field
