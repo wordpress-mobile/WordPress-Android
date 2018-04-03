@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.shadows.ShadowLog;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.TestUtils;
+import org.wordpress.android.fluxc.UnitTestUtils;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -139,7 +139,7 @@ public class SiteXMLRPCClientTest {
                           + "  </struct>\n"
                           + "</value></param></params></methodResponse>";
         mSiteXMLRPCClient.fetchSite(site);
-        assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+        assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     @Test
@@ -186,7 +186,7 @@ public class SiteXMLRPCClientTest {
 
         mCountDownLatch = new CountDownLatch(3);
         mSiteXMLRPCClient.fetchSite(site);
-        assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+        assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     @Test
@@ -208,7 +208,7 @@ public class SiteXMLRPCClientTest {
 
         mCountDownLatch = new CountDownLatch(1);
         mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt");
-        assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+        assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     @Test
@@ -251,6 +251,6 @@ public class SiteXMLRPCClientTest {
 
         mCountDownLatch = new CountDownLatch(3);
         mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt");
-        assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+        assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 }
