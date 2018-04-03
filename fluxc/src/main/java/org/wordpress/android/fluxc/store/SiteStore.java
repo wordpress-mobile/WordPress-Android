@@ -45,8 +45,6 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferErrorType.NOT_ELIGIBLE;
-
 /**
  * SQLite based only. There is no in memory copy of mapped data, everything is queried from the DB.
  */
@@ -522,8 +520,8 @@ public class SiteStore extends Store {
     }
 
     public enum AutomatedTransferErrorType {
-        GENERIC_ERROR,
-        NOT_ELIGIBLE;
+        // TODO: What other types of errors can we get here?
+        GENERIC_ERROR;
 
         public static AutomatedTransferErrorType fromString(String type) {
             if (!TextUtils.isEmpty(type)) {
@@ -1246,9 +1244,7 @@ public class SiteStore extends Store {
     }
 
     private void handleInitiatedAutomatedTransfer(InitiateAutomatedTransferResponsePayload payload) {
-        // Refresh the site from DB
-        SiteModel updatedSite = getSiteByLocalId(payload.site.getId());
-        emitChange(new OnAutomatedTransferInitiated(updatedSite, payload.pluginSlugToInstall, payload.error));
+        emitChange(new OnAutomatedTransferInitiated(payload.site, payload.pluginSlugToInstall, payload.error));
     }
 
     private void checkAutomatedTransferStatus(SiteModel site) {

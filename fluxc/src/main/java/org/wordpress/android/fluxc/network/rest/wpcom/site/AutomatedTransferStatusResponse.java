@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class AutomatedTransferStatusResponse {
     public String status;
-    @SerializedName("transfer_id")
-    public String transferId;
     @SerializedName("step")
     public int currentStep;
     @SerializedName("total")
