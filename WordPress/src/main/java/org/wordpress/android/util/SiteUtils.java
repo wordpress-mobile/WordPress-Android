@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -86,6 +87,10 @@ public class SiteUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
+        return site != null && !site.isAutomatedTransfer() && SiteUtils.hasBusinessPlan(site);
     }
 
     public static boolean hasBusinessPlan(SiteModel site) {

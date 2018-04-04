@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
@@ -210,6 +211,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
+        if (listType == PluginListType.SITE || SiteUtils.isNonAtomicBusinessPlanSite(site)) {
+            return false
+        }
         val currentStatus = when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> sitePluginsListStatus.value
             PluginBrowserViewModel.PluginListType.FEATURED -> featuredPluginsListStatus.value
