@@ -26,20 +26,21 @@ public class AutoForegroundNotification {
         return resumeIntent;
     }
 
-    private static NotificationCompat.Builder getNotificationBuilder(Context context, int requestCode,
+    private static NotificationCompat.Builder getNotificationBuilder(Context context, String channelId, int requestCode,
                                                                      @StringRes int title, @StringRes int content,
                                                                      @DrawableRes int icon, @ColorRes int accentColor) {
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.setBigContentTitle(context.getString(title));
         bigTextStyle.bigText(context.getString(content));
 
-        return new NotificationCompat.Builder(context)
+        return new NotificationCompat.Builder(context, channelId)
                 .setStyle(bigTextStyle)
                 .setContentTitle(context.getString(title))
                 .setContentText(context.getString(content))
                 .setSmallIcon(icon)
                 .setColor(context.getResources().getColor(accentColor))
                 .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         requestCode,
@@ -47,20 +48,23 @@ public class AutoForegroundNotification {
                         PendingIntent.FLAG_ONE_SHOT));
     }
 
-    public static Notification progress(Context context, int progress, @StringRes int title, @StringRes int content,
+    public static Notification progress(Context context, String channelId, int progress, @StringRes int title,
+                                        @StringRes int content,
                                         @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, NOTIFICATION_ID_PROGRESS, title, content, icon, accentColor)
+        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_PROGRESS, title, content, icon, accentColor)
                 .setProgress(100, progress, false)
                 .build();
     }
 
-    public static Notification success(Context context, @StringRes int title, @StringRes int content,
+    public static Notification success(Context context, String channelId, @StringRes int title, @StringRes int content,
                                        @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, NOTIFICATION_ID_SUCCESS, title, content, icon, accentColor).build();
+        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_SUCCESS, title, content, icon, accentColor)
+                .build();
     }
 
-    public static Notification failure(Context context, @StringRes int title, @StringRes int content,
+    public static Notification failure(Context context, String channelId, @StringRes int title, @StringRes int content,
                                        @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, NOTIFICATION_ID_FAILURE, title, content, icon, accentColor).build();
+        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_FAILURE, title, content, icon, accentColor)
+                .build();
     }
 }
