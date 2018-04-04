@@ -180,6 +180,11 @@ public class AccountRestClient extends BaseWPComRestClient {
         DOMAIN
     }
 
+    public enum SubscriptionAction {
+        DELETE,
+        NEW
+    }
+
     public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                              AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
@@ -684,10 +689,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
      * @param siteId    Identification number of site to update comment email subscription
-     * @param action    "new" to add comment email subscription, "delete" to remove comment email subscription
+     * @param action    {@link SubscriptionAction} to add or remove comment email subscription
      */
-    public void updateSubscriptionEmailComment(@NonNull String siteId, @NonNull String action) {
-        String url = WPCOMREST.read.site.item(siteId).comment_email_subscriptions.action(action).getUrlV1_2();
+    public void updateSubscriptionEmailComment(@NonNull String siteId, @NonNull SubscriptionAction action) {
+        String actionLowerCase = action.toString().toLowerCase();
+        String url = WPCOMREST.read.site.item(siteId).comment_email_subscriptions.action(actionLowerCase).getUrlV1_2();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
                 new Listener<SubscriptionResponse>() {
@@ -718,10 +724,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
      * @param siteId    Identification number of site to update post email subscription
-     * @param action    "new" to add post email subscription, "delete" to remove post email subscription
+     * @param action    {@link SubscriptionAction} to add or remove post email subscription
      */
-    public void updateSubscriptionEmailPost(@NonNull String siteId, @NonNull String action) {
-        String url = WPCOMREST.read.site.item(siteId).post_email_subscriptions.action(action).getUrlV1_2();
+    public void updateSubscriptionEmailPost(@NonNull String siteId, @NonNull SubscriptionAction action) {
+        String actionLowerCase = action.toString().toLowerCase();
+        String url = WPCOMREST.read.site.item(siteId).post_email_subscriptions.action(actionLowerCase).getUrlV1_2();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
                 new Listener<SubscriptionResponse>() {
@@ -788,10 +795,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
      * @param siteId    Identification number of site to update post notification subscription
-     * @param action    "new" to add post notification subscription, "delete" to remove post notification subscription
+     * @param action    {@link SubscriptionAction} to add or remove post notification subscription
      */
-    public void updateSubscriptionNotificationPost(@NonNull String siteId, @NonNull String action) {
-        String url = WPCOMV2.read.sites.site(siteId).notification_subscriptions.action(action).getUrl();
+    public void updateSubscriptionNotificationPost(@NonNull String siteId, @NonNull SubscriptionAction action) {
+        String actionLowerCase = action.toString().toLowerCase();
+        String url = WPCOMV2.read.sites.site(siteId).notification_subscriptions.action(actionLowerCase).getUrl();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
                 new Listener<SubscriptionResponse>() {
