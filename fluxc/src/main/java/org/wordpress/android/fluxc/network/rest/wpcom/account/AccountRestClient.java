@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionRestResponse.SubscriptionsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
@@ -699,7 +698,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<SubscriptionResponse>() {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
-                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response);
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailCommentAction(payload));
                     }
                 },
@@ -734,7 +733,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<SubscriptionResponse>() {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
-                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response);
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
                     }
                 },
@@ -770,7 +769,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<SubscriptionResponse>() {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
-                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response);
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
                     }
                 },
@@ -805,7 +804,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<SubscriptionResponse>() {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
-                        SubscriptionResponsePayload payload = new AccountStore.SubscriptionResponsePayload(response);
+                        SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionNotificationPostAction(
                                 payload));
                     }
