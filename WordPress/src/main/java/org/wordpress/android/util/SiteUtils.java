@@ -87,4 +87,8 @@ public class SiteUtils {
         }
         return false;
     }
+
+    public static boolean hasBusinessPlan(SiteModel site) {
+        return site.getPlanShortName() != null && site.getPlanShortName().equalsIgnoreCase("business");
+    }
 }
