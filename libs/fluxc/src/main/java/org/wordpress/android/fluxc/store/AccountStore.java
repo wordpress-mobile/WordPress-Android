@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.SubscriptionAction;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
@@ -159,8 +160,8 @@ public class AccountStore extends Store {
 
     public static class AddOrDeleteSubscriptionPayload extends Payload<BaseNetworkError> {
         public String site;
-        public String action;
-        public AddOrDeleteSubscriptionPayload(@NonNull String site, @NonNull String action) {
+        public SubscriptionAction action;
+        public AddOrDeleteSubscriptionPayload(@NonNull String site, @NonNull SubscriptionAction action) {
             this.site = site;
             this.action = action;
         }
