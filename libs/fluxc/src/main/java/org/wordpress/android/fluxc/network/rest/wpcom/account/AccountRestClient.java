@@ -632,7 +632,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to v1.2 /read/following/mins endpoint.  Upon receiving a response
+     * Performs an HTTP GET call to v1.2 /read/following/mine endpoint.  Upon receiving a response
      * (success or error) a {@link AccountAction#FETCHED_SUBSCRIPTIONS} action is dispatched with a
      * payload of type {@link SubscriptionsModel}.
      *
