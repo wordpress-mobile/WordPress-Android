@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionRestResponse.Subscriptions;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionRestResponse.SubscriptionsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -647,11 +647,11 @@ public class AccountRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.read.following.mine.getUrlV1_2();
         final Map<String, String> params = new HashMap<>();
         params.put("meta", "site");
-        final WPComGsonRequest<Subscriptions> request = WPComGsonRequest.buildGetRequest(url, params,
-                Subscriptions.class,
-                new Listener<Subscriptions>() {
+        final WPComGsonRequest<SubscriptionsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                SubscriptionsResponse.class,
+                new Listener<SubscriptionsResponse>() {
                     @Override
-                    public void onResponse(Subscriptions response) {
+                    public void onResponse(SubscriptionsResponse response) {
                         if (response != null) {
                             List<SubscriptionModel> subscriptionArray = new ArrayList<>();
 
@@ -677,7 +677,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedSubscriptionsAction(payload));
                     }
                 }
-        );
+                                                                                                );
         add(request);
     }
 
