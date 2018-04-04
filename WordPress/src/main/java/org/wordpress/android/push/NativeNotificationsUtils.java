@@ -20,7 +20,8 @@ public class NativeNotificationsUtils {
     }
 
     public static void showMessageToUser(String message, boolean intermediateMessage, int pushId, Context context) {
-        NotificationCompat.Builder builder = getBuilder(context, NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID)
+        NotificationCompat.Builder builder = getBuilder(context,
+                context.getString(R.string.notification_channel_normal_id))
                 .setContentText(message).setTicker(message);
         showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
     }

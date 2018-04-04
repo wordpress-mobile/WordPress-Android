@@ -76,7 +76,7 @@ class PostUploadNotifier {
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                                                                               Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
-                NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
+                context.getString(R.string.notification_channel_normal_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
                             .setColor(context.getResources().getColor(R.color.blue_wordpress));
     }
@@ -284,7 +284,7 @@ class PostUploadNotifier {
         // Notification builder
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext.getApplicationContext(),
-                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
+                        mContext.getString(R.string.notification_channel_normal_id));
         String notificationTitle;
         String notificationMessage;
 
@@ -366,7 +366,7 @@ class PostUploadNotifier {
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext.getApplicationContext(),
-                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
+                        mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForMedia(site);
         // Tap notification intent (open the media browser)
@@ -444,7 +444,7 @@ class PostUploadNotifier {
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext.getApplicationContext(),
-                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
+                        mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForPost(post);
         // Tap notification intent (open the post list)
@@ -497,7 +497,7 @@ class PostUploadNotifier {
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext.getApplicationContext(),
-                        NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID);
+                        mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForMedia(site);
         // Tap notification intent (open the media browser)
