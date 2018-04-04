@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;

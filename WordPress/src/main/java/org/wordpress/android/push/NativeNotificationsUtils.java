@@ -6,7 +6,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 

@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
