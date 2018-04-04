@@ -683,11 +683,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
-     * @param site      Site to update comment email subscription
+     * @param siteId    Identification number of site to update comment email subscription
      * @param action    "new" to add comment email subscription, "delete" to remove comment email subscription
      */
-    public void updateSubscriptionEmailComment(@NonNull String site, @NonNull String action) {
-        String url = WPCOMREST.read.site.item(site).comment_email_subscriptions.action(action).getUrlV1_2();
+    public void updateSubscriptionEmailComment(@NonNull String siteId, @NonNull String action) {
+        String url = WPCOMREST.read.site.item(siteId).comment_email_subscriptions.action(action).getUrlV1_2();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
                 new Listener<SubscriptionResponse>() {
@@ -717,11 +717,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
-     * @param site      Site to update post email subscription
+     * @param siteId    Identification number of site to update post email subscription
      * @param action    "new" to add post email subscription, "delete" to remove post email subscription
      */
-    public void updateSubscriptionEmailPost(@NonNull String site, @NonNull String action) {
-        String url = WPCOMREST.read.site.item(site).post_email_subscriptions.action(action).getUrlV1_2();
+    public void updateSubscriptionEmailPost(@NonNull String siteId, @NonNull String action) {
+        String url = WPCOMREST.read.site.item(siteId).post_email_subscriptions.action(action).getUrlV1_2();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
                 new Listener<SubscriptionResponse>() {
@@ -751,11 +751,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
-     * @param site          Site to update post email subscription
+     * @param siteId        Identification number of site to update post email subscription
      * @param frequency     rate at which post emails are sent; "instantly", "daily", or "weekly"
      */
-    public void updateSubscriptionEmailPostFrequency(@NonNull String site, @NonNull String frequency) {
-        String url = WPCOMREST.read.site.item(site).post_email_subscriptions.update.getUrlV1_2();
+    public void updateSubscriptionEmailPostFrequency(@NonNull String siteId, @NonNull String frequency) {
+        String url = WPCOMREST.read.site.item(siteId).post_email_subscriptions.update.getUrlV1_2();
         Map<String, Object> body = new HashMap<>();
         body.put("delivery_frequency", frequency);
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, body,
@@ -787,11 +787,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
-     * @param site      Site to update post notification subscription
+     * @param siteId    Identification number of site to update post notification subscription
      * @param action    "new" to add post notification subscription, "delete" to remove post notification subscription
      */
-    public void updateSubscriptionNotificationPost(@NonNull String site, @NonNull String action) {
-        String url = WPCOMV2.read.sites.site(site).notification_subscriptions.action(action).getUrl();
+    public void updateSubscriptionNotificationPost(@NonNull String siteId, @NonNull String action) {
+        String url = WPCOMV2.read.sites.site(siteId).notification_subscriptions.action(action).getUrl();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
                 new Listener<SubscriptionResponse>() {
