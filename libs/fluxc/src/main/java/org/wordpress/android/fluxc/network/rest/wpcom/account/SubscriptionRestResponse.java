@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.network.Response;
 import java.util.List;
 
 public class SubscriptionRestResponse implements Response {
-    public class Subscriptions {
+    public class SubscriptionsResponse {
         public List<SubscriptionRestResponse> subscriptions;
     }
 
