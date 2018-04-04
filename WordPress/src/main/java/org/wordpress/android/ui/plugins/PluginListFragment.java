@@ -86,7 +86,7 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSsPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getSiteLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -96,7 +96,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getFfPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getFeaturedLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -106,7 +106,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getPpPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getPopularLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -116,7 +116,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getNnPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getNewLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
