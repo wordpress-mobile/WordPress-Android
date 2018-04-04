@@ -19,7 +19,7 @@ sealed class NetworkResource<T> {
     fun shouldFetch(loadMore: Boolean): Boolean {
         return when (this) {
             is Loading -> false // Already fetching
-            is Success -> loadMore && canLoadMore // Trying to load more and it's possible to do so
+            is Success -> if (loadMore) canLoadMore else true // Trying to load more and it's possible to do so
             else -> !loadMore // First page can be fetched since we are not fetching anything else
         }
     }

@@ -213,15 +213,19 @@ public class PluginListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void setPlugins(@Nullable List<? extends ImmutablePluginModel> plugins) {
-        PluginListAdapter adapter;
+    private void setPlugins(@Nullable final List<? extends ImmutablePluginModel> plugins) {
+        final PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
             mRecycler.setAdapter(adapter);
         } else {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
-        adapter.setPlugins(plugins);
+        mRecycler.post(new Runnable() {
+            @Override public void run() {
+                adapter.setPlugins(plugins);
+            }
+        });
     }
 
     protected void refreshProgressBars(PluginBrowserViewModel.PluginListStatus pluginListStatus) {

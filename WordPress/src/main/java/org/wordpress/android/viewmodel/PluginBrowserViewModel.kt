@@ -212,10 +212,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
         return when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> ssPlugins.value.isFetching(loadMore)
-            PluginBrowserViewModel.PluginListType.FEATURED -> ffPlugins.value.isFetching(loadMore)
-            PluginBrowserViewModel.PluginListType.POPULAR -> ppPlugins.value.isFetching(loadMore)
-            PluginBrowserViewModel.PluginListType.NEW -> nnPlugins.value.isFetching(loadMore)
+            PluginBrowserViewModel.PluginListType.SITE -> ssPlugins.value.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.FEATURED -> ffPlugins.value.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.POPULAR -> ppPlugins.value.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.NEW -> nnPlugins.value.shouldFetch(loadMore)
             // We should always do the initial search because the string might have changed and it is
             // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
             // pages of search, so if we are trying to load more, we can ignore it
@@ -229,7 +229,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     // Network Callbacks
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onWPOrgPluginFetched(event: PluginStore.OnWPOrgPluginFetched) {
         if (event.isError) {
@@ -243,7 +243,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: PluginStore.OnPluginDirectoryFetched) {
         val liveData = getPluginListLiveData(event.type)
@@ -257,7 +257,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onPluginDirectorySearched(event: PluginStore.OnPluginDirectorySearched) {
         if (searchQuery != event.searchTerm) {
@@ -272,7 +272,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         _searchPluginsListStatus.postValue(PluginListStatus.DONE)
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onSitePluginConfigured(event: PluginStore.OnSitePluginConfigured) {
         if (event.isError) {
@@ -286,7 +286,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onSitePluginDeleted(event: PluginStore.OnSitePluginDeleted) {
         if (event.isError) {
@@ -300,7 +300,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onSitePluginInstalled(event: PluginStore.OnSitePluginInstalled) {
         if (event.isError) {
@@ -314,7 +314,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onSitePluginUpdated(event: PluginStore.OnSitePluginUpdated) {
         if (event.isError) {
