@@ -34,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
+import org.wordpress.android.models.networkresource.NetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -168,48 +169,48 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getSsPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+                reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource.getData());
             }
         });
 
-        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getFfPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.FEATURED, featuredPlugins);
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+                reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource.getData());
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getPpPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+                reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource.getData());
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getNnPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+                reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource.getData());
             }
         });
 
-        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                             && mViewModel.isSitePluginsEmpty());
-
-                // We should ignore the errors due to network condition, unless this is the first fetch, the user can
-                // use the cached version of them and showing the error while the data is loaded might cause confusion
-                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
-                    && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
-                    ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
-                }
-            }
-        });
+//        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+//            @Override
+//            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+//                showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
+//                             && mViewModel.isSitePluginsEmpty());
+//
+//                // We should ignore the errors due to network condition, unless this is the first fetch, the user can
+//                // use the cached version of them and showing the error while the data is loaded might cause confusion
+//                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
+//                    && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
+//                    ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
+//                }
+//            }
+//        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -257,7 +258,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
-                                                    @Nullable List<ImmutablePluginModel> plugins) {
+                                                    @Nullable List<? extends ImmutablePluginModel> plugins) {
         PluginBrowserAdapter adapter = null;
         View cardView = null;
         switch (pluginType) {
@@ -354,7 +355,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
+        void setPlugins(@Nullable List<? extends ImmutablePluginModel> items) {
             mItems.clear();
             mItems.addAll(items);
             notifyDataSetChanged();

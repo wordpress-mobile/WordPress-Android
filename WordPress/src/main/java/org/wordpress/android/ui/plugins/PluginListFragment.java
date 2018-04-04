@@ -28,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
+import org.wordpress.android.models.networkresource.NetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -85,87 +86,88 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getSsPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
                 if (mListType == PluginListType.SITE) {
-                    reloadPlugins();
+                    setPlugins(listNetworkResource.getData());
                 }
             }
         });
 
-        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getFfPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
                 if (mListType == PluginListType.FEATURED) {
-                    reloadPlugins();
+                    setPlugins(listNetworkResource.getData());
                 }
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getPpPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
-                if (mListType == PluginListType.NEW) {
-                    reloadPlugins();
-                }
-            }
-        });
-
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
                 if (mListType == PluginListType.POPULAR) {
-                    reloadPlugins();
+                    setPlugins(listNetworkResource.getData());
                 }
             }
         });
+
+        mViewModel.getNnPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+            @Override
+            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+                if (mListType == PluginListType.NEW) {
+                    setPlugins(listNetworkResource.getData());
+                }
+            }
+        });
+
 
         mViewModel.getSearchResults().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
+            public void onChanged(@Nullable final List<ImmutablePluginModel> searchResults) {
                 if (mListType == PluginListType.SEARCH) {
-                    reloadPlugins();
+                    setPlugins(searchResults);
                 }
             }
         });
 
-        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.SITE) {
-                    refreshProgressBars(listStatus);
-                }
-            }
-        });
-
-        mViewModel.getFeaturedPluginsListStatus()
-                  .observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-                      @Override
-                      public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                          if (mListType == PluginListType.FEATURED) {
-                              refreshProgressBars(listStatus);
-                          }
-                      }
-                  });
-
-        mViewModel.getNewPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.NEW) {
-                    refreshProgressBars(listStatus);
-                }
-            }
-        });
-
-        mViewModel.getPopularPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.POPULAR) {
-                    refreshProgressBars(listStatus);
-                }
-            }
-        });
+//        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+//            @Override
+//            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+//                if (mListType == PluginListType.SITE) {
+//                    refreshProgressBars(listStatus);
+//                }
+//            }
+//        });
+//
+//        mViewModel.getFeaturedPluginsListStatus()
+//                  .observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+//                      @Override
+//                      public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+//                          if (mListType == PluginListType.FEATURED) {
+//                              refreshProgressBars(listStatus);
+//                          }
+//                      }
+//                  });
+//
+//        mViewModel.getNewPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+//            @Override
+//            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+//                if (mListType == PluginListType.NEW) {
+//                    refreshProgressBars(listStatus);
+//                }
+//            }
+//        });
+//
+//        mViewModel.getPopularPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+//            @Override
+//            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+//                if (mListType == PluginListType.POPULAR) {
+//                    refreshProgressBars(listStatus);
+//                }
+//            }
+//        });
 
         mViewModel.getSearchPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
             @Override
@@ -211,11 +213,7 @@ public class PluginListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    void reloadPlugins() {
-        setPlugins(mViewModel.getPluginsForListType(mListType));
-    }
-
-    private void setPlugins(@Nullable List<ImmutablePluginModel> plugins) {
+    private void setPlugins(@Nullable List<? extends ImmutablePluginModel> plugins) {
         PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
@@ -252,7 +250,7 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
+        void setPlugins(@Nullable List<? extends ImmutablePluginModel> items) {
             mItems.clear();
             mItems.addAll(items);
             notifyDataSetChanged();

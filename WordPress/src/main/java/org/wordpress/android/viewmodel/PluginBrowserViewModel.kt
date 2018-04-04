@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -17,10 +16,10 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
+import org.wordpress.android.models.networkresource.NetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.util.ArrayList
-import java.util.HashMap
 import java.util.HashSet
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -28,7 +27,19 @@ import kotlin.properties.Delegates
 private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
 private const val KEY_TITLE = "KEY_TITLE"
 
-@WorkerThread
+typealias PluginList = List<ImmutablePluginModel>
+typealias PluginListNetworkResource = NetworkResource<PluginList>
+
+class PluginListLiveData: MutableLiveData<PluginListNetworkResource>() {
+    init {
+        value = NetworkResource.Init()
+    }
+
+    override fun getValue(): PluginListNetworkResource {
+        return super.getValue()!!
+    }
+}
+
 class PluginBrowserViewModel @Inject
 constructor(private val mDispatcher: Dispatcher, private val mPluginStore: PluginStore) : ViewModel() {
     enum class PluginListType {
@@ -52,43 +63,22 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val handler = Handler()
     private val updatedPluginSlugSet = HashSet<String>()
 
-    private val _featuredPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val featuredPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _featuredPlugins
+    val ffPlugins = PluginListLiveData()
+    val ppPlugins = PluginListLiveData()
+    val nnPlugins = PluginListLiveData()
+    val ssPlugins = PluginListLiveData()
 
-    private val _popularPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val popularPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _popularPlugins
-
-    private val _newPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val newPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _newPlugins
-
-    private val _sitePlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val sitePlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _sitePlugins
     val isSitePluginsEmpty: Boolean
-        get() = sitePlugins.value == null || sitePlugins.value!!.isEmpty()
+        get() {
+            ssPlugins.value.data?.let {
+                return it.isEmpty()
+            }
+            return true
+        }
 
     private val _searchResults = MutableLiveData<List<ImmutablePluginModel>>()
     val searchResults: LiveData<List<ImmutablePluginModel>>
         get() = _searchResults
-
-    private val _featuredPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val featuredPluginsListStatus: LiveData<PluginListStatus>
-        get() = _featuredPluginsListStatus
-
-    private val _newPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val newPluginsListStatus: LiveData<PluginListStatus>
-        get() = _newPluginsListStatus
-
-    private val _popularPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val popularPluginsListStatus: LiveData<PluginListStatus>
-        get() = _popularPluginsListStatus
-
-    private val _sitePluginsListStatus = MutableLiveData<PluginListStatus>()
-    val sitePluginsListStatus: LiveData<PluginListStatus>
-        get() = _sitePluginsListStatus
 
     private val _searchPluginsListStatus = MutableLiveData<PluginListStatus>()
     val searchPluginsListStatus: LiveData<PluginListStatus>
@@ -140,10 +130,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (isStarted) {
             return
         }
-        reloadPluginDirectory(PluginDirectoryType.FEATURED)
-        reloadPluginDirectory(PluginDirectoryType.NEW)
-        reloadPluginDirectory(PluginDirectoryType.POPULAR)
-        reloadPluginDirectory(PluginDirectoryType.SITE)
+        readyDirectory(PluginDirectoryType.FEATURED)
+        readyDirectory(PluginDirectoryType.NEW)
+        readyDirectory(PluginDirectoryType.POPULAR)
+        readyDirectory(PluginDirectoryType.SITE)
 
         fetchPlugins(PluginListType.SITE, false)
         fetchPlugins(PluginListType.FEATURED, false)
@@ -155,15 +145,26 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     // Site & WPOrg plugin management
 
-    private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
+    private fun readyDirectory(directoryType: PluginDirectoryType) {
         site?.let {
-            val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
-            when (directoryType) {
-                PluginDirectoryType.FEATURED -> _featuredPlugins.postValue(pluginList)
-                PluginDirectoryType.NEW -> _newPlugins.postValue(pluginList)
-                PluginDirectoryType.POPULAR -> _popularPlugins.postValue(pluginList)
-                PluginDirectoryType.SITE -> _sitePlugins.postValue(pluginList)
-            }
+            val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
+            getPluginListLiveData(directoryType).value = NetworkResource.Ready(pluginList)
+        }
+    }
+
+    private fun successDirectory(directoryType: PluginDirectoryType, canLoadMore: Boolean) {
+        site?.let {
+            val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
+            getPluginListLiveData(directoryType).value = NetworkResource.Success(pluginList, canLoadMore)
+        }
+    }
+
+    private fun getPluginListLiveData(directoryType: PluginDirectoryType): PluginListLiveData {
+        return when (directoryType) {
+            PluginDirectoryType.FEATURED -> ffPlugins
+            PluginDirectoryType.NEW -> nnPlugins
+            PluginDirectoryType.POPULAR -> ppPlugins
+            PluginDirectoryType.SITE -> ssPlugins
         }
     }
 
@@ -179,29 +180,29 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldFetchPlugins(listType, loadMore)) {
             return
         }
-        val newStatus = if (loadMore) PluginListStatus.LOADING_MORE else PluginListStatus.FETCHING
         when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> {
-                _sitePluginsListStatus.postValue(newStatus)
+                ssPlugins.value = NetworkResource.Loading(ssPlugins.value, loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             PluginBrowserViewModel.PluginListType.FEATURED -> {
-                _featuredPluginsListStatus.postValue(newStatus)
+                ffPlugins.value = NetworkResource.Loading(ffPlugins.value, loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             PluginBrowserViewModel.PluginListType.POPULAR -> {
-                _popularPluginsListStatus.postValue(newStatus)
+                ppPlugins.value = NetworkResource.Loading(ppPlugins.value, loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             PluginBrowserViewModel.PluginListType.NEW -> {
-                _newPluginsListStatus.postValue(newStatus)
+                nnPlugins.value = NetworkResource.Loading(nnPlugins.value, loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             PluginBrowserViewModel.PluginListType.SEARCH -> {
+                val newStatus = if (loadMore) PluginListStatus.LOADING_MORE else PluginListStatus.FETCHING
                 _searchPluginsListStatus.postValue(newStatus)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
@@ -210,22 +211,16 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
-        val currentStatus = when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> sitePluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.POPULAR -> popularPluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.NEW -> newPluginsListStatus.value
+        return when (listType) {
+            PluginBrowserViewModel.PluginListType.SITE -> ssPlugins.value.isFetching(loadMore)
+            PluginBrowserViewModel.PluginListType.FEATURED -> ffPlugins.value.isFetching(loadMore)
+            PluginBrowserViewModel.PluginListType.POPULAR -> ppPlugins.value.isFetching(loadMore)
+            PluginBrowserViewModel.PluginListType.NEW -> nnPlugins.value.isFetching(loadMore)
             // We should always do the initial search because the string might have changed and it is
             // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
             // pages of search, so if we are trying to load more, we can ignore it
-            PluginBrowserViewModel.PluginListType.SEARCH -> return !loadMore
+            PluginBrowserViewModel.PluginListType.SEARCH -> !loadMore
         }
-        if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
-            // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
-            // and the user pulled to refresh, we don't want (or need) the 2 requests colliding
-            return false
-        }
-        return !(loadMore && currentStatus != PluginListStatus.CAN_LOAD_MORE)
     }
 
     fun loadMore(listType: PluginListType) {
@@ -251,22 +246,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: PluginStore.OnPluginDirectoryFetched) {
-        val listStatus = if (event.isError) {
+        val liveData = getPluginListLiveData(event.type)
+
+        if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
-            PluginListStatus.ERROR
+            liveData.value = NetworkResource.Error(liveData.value, event.error.message, event.loadMore)
         } else {
-            if (event.canLoadMore) PluginListStatus.CAN_LOAD_MORE else PluginListStatus.DONE
-        }
-        when (event.type) {
-            PluginDirectoryType.FEATURED -> _featuredPluginsListStatus.postValue(listStatus)
-            PluginDirectoryType.NEW -> _newPluginsListStatus.postValue(listStatus)
-            PluginDirectoryType.POPULAR -> _popularPluginsListStatus.postValue(listStatus)
-            PluginDirectoryType.SITE -> _sitePluginsListStatus.postValue(listStatus)
-            null -> AppLog.d(T.PLUGINS, "Plugin directory type shouldn't be null")
-        }
-        if (!event.isError) {
-            reloadPluginDirectory(event.type)
+            successDirectory(event.type, event.canLoadMore)
         }
     }
 
@@ -344,67 +331,67 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     // Keeping the data up to date
 
     private fun updateAllPluginListsIfNecessary() {
-        val copiedSet = HashSet(updatedPluginSlugSet)
-        handler.postDelayed({
-            // Using the size of the set for comparison might fail since we clear the updatedPluginSlugSet
-            if (copiedSet == updatedPluginSlugSet) {
-                updateAllPluginListsWithNewPlugins(copiedSet)
-                updatedPluginSlugSet.clear()
-            }
-        }, 250)
+//        val copiedSet = HashSet(updatedPluginSlugSet)
+//        handler.postDelayed({
+//            // Using the size of the set for comparison might fail since we clear the updatedPluginSlugSet
+//            if (copiedSet == updatedPluginSlugSet) {
+//                updateAllPluginListsWithNewPlugins(copiedSet)
+//                updatedPluginSlugSet.clear()
+//            }
+//        }, 250)
     }
-
-    private fun updateAllPluginListsWithNewPlugins(updatedPluginSlugSet: Set<String>) {
-        if (updatedPluginSlugSet.isEmpty()) {
-            return
-        }
-        val newPluginMap = HashMap<String, ImmutablePluginModel>(updatedPluginSlugSet.size)
-        for (slug in updatedPluginSlugSet) {
-            val immutablePlugin = mPluginStore.getImmutablePluginBySlug(site!!, slug)
-            if (immutablePlugin != null) {
-                newPluginMap[slug] = immutablePlugin
-            }
-        }
-        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
-        // reflected
-        updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
-
-        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
-        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
-        // information is much more reliable than any manual update we can make
-        reloadPluginDirectory(PluginDirectoryType.SITE)
-    }
-
-    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
-                                              newPluginMap: Map<String, ImmutablePluginModel>) {
-        val pluginList = mutableLiveData.value
-        if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
-            // Nothing to update
-            return
-        }
-        // When a site or wporg plugin is updated we need to update every occurrence of that item
-        val newList = ArrayList<ImmutablePluginModel>(pluginList.size)
-        var isChanged = false
-        for (immutablePlugin in pluginList) {
-            val slug = immutablePlugin.slug
-            val newPlugin = newPluginMap[slug]
-            if (newPlugin != null) {
-                // add new item
-                newList.add(newPlugin)
-                isChanged = true
-            } else {
-                // add old item
-                newList.add(immutablePlugin)
-            }
-        }
-        // Only update if the list is actually changed
-        if (isChanged) {
-            mutableLiveData.postValue(newList)
-        }
-    }
+//
+//    private fun updateAllPluginListsWithNewPlugins(updatedPluginSlugSet: Set<String>) {
+//        if (updatedPluginSlugSet.isEmpty()) {
+//            return
+//        }
+//        val newPluginMap = HashMap<String, ImmutablePluginModel>(updatedPluginSlugSet.size)
+//        for (slug in updatedPluginSlugSet) {
+//            val immutablePlugin = mPluginStore.getImmutablePluginBySlug(site!!, slug)
+//            if (immutablePlugin != null) {
+//                newPluginMap[slug] = immutablePlugin
+//            }
+//        }
+//        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
+//        // reflected
+//        updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
+//        updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
+//        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
+//        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
+//
+//        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
+//        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
+//        // information is much more reliable than any manual update we can make
+//        reloadPluginDirectory(PluginDirectoryType.SITE)
+//    }
+//
+//    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
+//                                              newPluginMap: Map<String, ImmutablePluginModel>) {
+//        val pluginList = mutableLiveData.value
+//        if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
+//            // Nothing to update
+//            return
+//        }
+//        // When a site or wporg plugin is updated we need to update every occurrence of that item
+//        val newList = ArrayList<ImmutablePluginModel>(pluginList.size)
+//        var isChanged = false
+//        for (immutablePlugin in pluginList) {
+//            val slug = immutablePlugin.slug
+//            val newPlugin = newPluginMap[slug]
+//            if (newPlugin != null) {
+//                // add new item
+//                newList.add(newPlugin)
+//                isChanged = true
+//            } else {
+//                // add old item
+//                newList.add(immutablePlugin)
+//            }
+//        }
+//        // Only update if the list is actually changed
+//        if (isChanged) {
+//            mutableLiveData.postValue(newList)
+//        }
+//    }
 
     private fun submitSearch(query: String, delayed: Boolean) {
         // If the query is not long enough we don't need to delay it
@@ -450,15 +437,5 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     fun setTitle(title: String?) {
         _title.postValue(title)
-    }
-
-    fun getPluginsForListType(listType: PluginListType): List<ImmutablePluginModel>? {
-        return when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> sitePlugins.value
-            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPlugins.value
-            PluginBrowserViewModel.PluginListType.POPULAR -> popularPlugins.value
-            PluginBrowserViewModel.PluginListType.NEW -> newPlugins.value
-            PluginBrowserViewModel.PluginListType.SEARCH -> searchResults.value
-        }
     }
 }
