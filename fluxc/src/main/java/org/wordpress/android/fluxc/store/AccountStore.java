@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.SubscriptionAction;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.SubscriptionFrequency;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
@@ -169,8 +170,8 @@ public class AccountStore extends Store {
 
     public static class UpdateSubscriptionPayload extends Payload<BaseNetworkError> {
         public String site;
-        public String frequency;
-        public UpdateSubscriptionPayload(@NonNull String site, @NonNull String frequency) {
+        public SubscriptionFrequency frequency;
+        public UpdateSubscriptionPayload(@NonNull String site, @NonNull SubscriptionFrequency frequency) {
             this.site = site;
             this.frequency = frequency;
         }
@@ -189,7 +190,7 @@ public class AccountStore extends Store {
      * Error for any of these methods:
      *      {@link AccountRestClient#updateSubscriptionEmailComment(String, SubscriptionAction)}
      *      {@link AccountRestClient#updateSubscriptionEmailPost(String, SubscriptionAction)}
-     *      {@link AccountRestClient#updateSubscriptionEmailPostFrequency(String, String)}
+     *      {@link AccountRestClient#updateSubscriptionEmailPostFrequency(String, SubscriptionFrequency)}
      *      {@link AccountRestClient#updateSubscriptionNotificationPost(String, SubscriptionAction)}
      */
     public static class SubscriptionError implements OnChangedError {

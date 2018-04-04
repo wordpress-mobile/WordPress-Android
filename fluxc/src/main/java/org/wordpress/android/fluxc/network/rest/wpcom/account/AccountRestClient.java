@@ -184,6 +184,12 @@ public class AccountRestClient extends BaseWPComRestClient {
         NEW
     }
 
+    public enum SubscriptionFrequency {
+        DAILY,
+        INSTANTLY,
+        WEEKLY
+    }
+
     public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                              AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
@@ -758,12 +764,13 @@ public class AccountRestClient extends BaseWPComRestClient {
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
      * @param siteId        Identification number of site to update post email subscription
-     * @param frequency     rate at which post emails are sent; "instantly", "daily", or "weekly"
+     * @param frequency     rate at which post emails are sent as {@link SubscriptionFrequency} value
      */
-    public void updateSubscriptionEmailPostFrequency(@NonNull String siteId, @NonNull String frequency) {
+    public void updateSubscriptionEmailPostFrequency(@NonNull String siteId, @NonNull SubscriptionFrequency frequency) {
+        String frequencyLowerCase = frequency.toString().toLowerCase();
         String url = WPCOMREST.read.site.item(siteId).post_email_subscriptions.update.getUrlV1_2();
         Map<String, Object> body = new HashMap<>();
-        body.put("delivery_frequency", frequency);
+        body.put("delivery_frequency", frequencyLowerCase);
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 SubscriptionResponse.class,
                 new Listener<SubscriptionResponse>() {
