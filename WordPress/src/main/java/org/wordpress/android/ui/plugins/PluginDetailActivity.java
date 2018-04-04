@@ -94,6 +94,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private static final String KEY_IS_AUTO_UPDATE_ENABLED = "KEY_IS_AUTO_UPDATE_ENABLED";
     private static final String KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG
             = "KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG";
+    private static final String KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG
+            = "KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG";
 
     private SiteModel mSite;
     private String mSlug;
@@ -131,6 +133,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
     protected boolean mIsShowingRemovePluginConfirmationDialog;
+    protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
 
     // These flags reflects the UI state
     protected boolean mIsActive;
@@ -186,6 +189,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsAutoUpdateEnabled = savedInstanceState.getBoolean(KEY_IS_AUTO_UPDATE_ENABLED);
             mIsShowingRemovePluginConfirmationDialog =
                     savedInstanceState.getBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG);
+            mIsShowingInstallFirstPluginConfirmationDialog = savedInstanceState
+                    .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
         }
 
         setContentView(R.layout.plugin_detail_activity);
@@ -208,6 +213,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else if (mIsRemovingPlugin) {
             // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
+        }
+
+        if (mIsShowingInstallFirstPluginConfirmationDialog) {
+            confirmInstallPluginForAutomatedTransfer();
         }
     }
 
@@ -266,6 +275,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_ACTIVE, mIsActive);
         outState.putBoolean(KEY_IS_AUTO_UPDATE_ENABLED, mIsAutoUpdateEnabled);
         outState.putBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG, mIsShowingRemovePluginConfirmationDialog);
+        outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
+                mIsShowingInstallFirstPluginConfirmationDialog);
     }
 
     // UI Helpers
@@ -380,7 +391,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mInstallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchInstallPluginAction();
+                installPlugin();
             }
         });
 
@@ -716,7 +727,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dispatchInstallPluginAction();
+                        installPlugin();
                     }
                 })
                 .show();
@@ -746,6 +757,30 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
             mRemovePluginProgressDialog.cancel();
         }
+    }
+
+    private void confirmInstallPluginForAutomatedTransfer() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        builder.setTitle(getResources().getText(R.string.plugin_install));
+        builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+                startAutomatedTransfer();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+            }
+        });
+        builder.setCancelable(true);
+        builder.create();
+        mIsShowingInstallFirstPluginConfirmationDialog = true;
+        builder.show();
+
     }
 
     // Network Helpers
@@ -780,15 +815,20 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
-    protected void dispatchInstallPluginAction() {
+    private void installPlugin() {
         if (!NetworkUtils.checkConnection(this) || mPlugin.isInstalled() || mIsInstallingPlugin) {
             return;
         }
 
         mIsInstallingPlugin = true;
         refreshUpdateVersionViews();
-        PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
-        mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
+
+        if (SiteUtils.isNonAtomicBusinessPlanSite(mSite)) {
+            confirmInstallPluginForAutomatedTransfer();
+        } else {
+            PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
+            mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
+        }
     }
 
     protected void dispatchRemovePluginAction() {
@@ -798,6 +838,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         mRemovePluginProgressDialog.setMessage(getRemovingPluginMessage());
         DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mPlugin.getName(), mSlug);
         mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
+    }
+
+    private void startAutomatedTransfer() {
+        // TODO
     }
 
     protected void disableAndRemovePlugin() {

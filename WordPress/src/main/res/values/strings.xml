@@ -1693,6 +1693,7 @@
     <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute and until it\'s complete you won\'t be able to use your site or make any changes to it. Would you like to proceed?</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
     <string name="plugin_search_error">Unable to search plugins</string>
     <string name="plugin_manage">Manage</string>
