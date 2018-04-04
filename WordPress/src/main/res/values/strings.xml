@@ -948,7 +948,9 @@
     <string name="notification_settings_master_hint_off">Enable notifications</string>
     <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
     <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
+    <string name="notification_settings_category_followed_sites">Followed Sites</string>
     <string name="notification_settings_category_your_sites">Your Sites</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">All My Followed Sites</string>
     <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
     <string name="notification_settings_category_other">Other</string>
     <string name="notification_settings_item_other_comments_other_blogs">Comments on other sites</string>

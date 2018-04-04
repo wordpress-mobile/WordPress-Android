@@ -30,6 +30,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
@@ -52,6 +53,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.RequestCodes.NOTIFICATION_SETTINGS;
+
 public class NotificationsSettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String KEY_SEARCH_QUERY = "search_query";
@@ -67,13 +70,19 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private boolean mSearchMenuItemCollapsed = true;
 
     private String mDeviceId;
+    private String mNotificationUpdatedSite;
+    private String mPreviousEmailPostsFrequency;
     private String mRestoredQuery;
     private boolean mNotificationsEnabled;
+    private boolean mPreviousShouldEmailComments;
+    private boolean mPreviousShouldEmailPosts;
+    private boolean mPreviousShouldNotifyPosts;
     private int mSiteCount;
+    private int mSubscriptionCount;
 
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
     private PreferenceCategory mBlogsCategory;
-
+    private PreferenceCategory mFollowedBlogsCategory;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -111,7 +120,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Override
     public void onStart() {
         super.onStart();
-
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -126,7 +134,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Override
     public void onStop() {
         super.onStop();
-
         getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
@@ -139,11 +146,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         mSearchView.setQueryHint(getString(R.string.search_sites));
         mBlogsCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_blogs));
+        mFollowedBlogsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_blogs_followed));
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 configureBlogsSettings(mBlogsCategory, true);
+                configureFollowedBlogsSettings(mFollowedBlogsCategory, true);
                 return true;
             }
 
@@ -153,6 +163,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 // a new queryTExtChange event is triggered with an empty value "", and we only
                 // would want to take care of it when the user actively opened/cleared the search term
                 configureBlogsSettings(mBlogsCategory, !mSearchMenuItemCollapsed);
+                configureFollowedBlogsSettings(mFollowedBlogsCategory, !mSearchMenuItemCollapsed);
                 return true;
             }
         });
@@ -162,6 +173,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             public boolean onMenuItemActionExpand(MenuItem item) {
                 mSearchMenuItemCollapsed = false;
                 configureBlogsSettings(mBlogsCategory, true);
+                configureFollowedBlogsSettings(mFollowedBlogsCategory, true);
                 return true;
             }
 
@@ -169,6 +181,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 mSearchMenuItemCollapsed = true;
                 configureBlogsSettings(mBlogsCategory, false);
+                configureFollowedBlogsSettings(mFollowedBlogsCategory, false);
                 return true;
             }
         });
@@ -266,7 +279,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                         getString(R.string.pref_notification_blogs));
             }
 
+            if (mFollowedBlogsCategory == null) {
+                mFollowedBlogsCategory = (PreferenceCategory) findPreference(
+                        getString(R.string.pref_notification_blogs_followed));
+            }
+
             configureBlogsSettings(mBlogsCategory, false);
+            configureFollowedBlogsSettings(mFollowedBlogsCategory, false);
             configureOtherSettings();
             configureWPComSettings();
         }
@@ -362,26 +381,106 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         if (mSiteCount > maxSitesToShow && !showAll) {
             // append a "view all" option
-            appendViewAllSitesOption(context);
+            appendViewAllSitesOption(context, getString(R.string.pref_notification_blogs), false);
         }
 
         updateSearchMenuVisibility();
     }
 
-    private void appendViewAllSitesOption(Context context) {
-        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
-                getString(R.string.pref_notification_blogs));
+    private void configureFollowedBlogsSettings(PreferenceCategory blogsCategory, final boolean showAll) {
+        if (!isAdded()) {
+            return;
+        }
+
+        List<SubscriptionModel> subscriptions;
+        String query = "";
+
+        if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
+            query = mSearchView.getQuery().toString().trim();
+            subscriptions = mAccountStore.getSubscriptionsByNameOrUrlMatching(query);
+        } else {
+            subscriptions = mAccountStore.getSubscriptions();
+        }
+
+        mSubscriptionCount = subscriptions.size();
+        Context context = getActivity();
+        blogsCategory.removeAll();
+
+        int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
+        int count = 0;
+
+        for (final SubscriptionModel subscription : subscriptions) {
+            if (context == null) {
+                return;
+            }
+
+            count++;
+
+            if (maxSitesToShow != NO_MAXIMUM && count > maxSitesToShow) {
+                break;
+            }
+
+            PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
+            prefScreen.setTitle(subscription.getBlogName());
+            prefScreen.setSummary(subscription.getUrl());
+
+            prefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override public boolean onPreferenceClick(Preference preference) {
+                    mNotificationUpdatedSite = subscription.getBlogId();
+                    mPreviousShouldNotifyPosts = subscription.getShouldNotifyPosts();
+                    mPreviousShouldEmailPosts = subscription.getShouldEmailPosts();
+                    mPreviousEmailPostsFrequency = subscription.getEmailPostsFrequency();
+                    mPreviousShouldEmailComments = subscription.getShouldEmailComments();
+                    NotificationSettingsFollowedDialog dialog = new NotificationSettingsFollowedDialog();
+                    Bundle args = new Bundle();
+                    args.putBoolean(NotificationSettingsFollowedDialog.ARG_NOTIFICATION_POSTS,
+                            mPreviousShouldNotifyPosts);
+                    args.putBoolean(NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS,
+                            mPreviousShouldEmailPosts);
+                    args.putString(NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS_FREQUENCY,
+                            mPreviousEmailPostsFrequency);
+                    args.putBoolean(NotificationSettingsFollowedDialog.ARG_EMAIL_COMMENTS,
+                            mPreviousShouldEmailComments);
+                    dialog.setArguments(args);
+                    dialog.setTargetFragment(NotificationsSettingsFragment.this, NOTIFICATION_SETTINGS);
+                    dialog.show(getFragmentManager(), NotificationSettingsFollowedDialog.TAG);
+                    return true;
+                }
+            });
+
+            blogsCategory.addPreference(prefScreen);
+        }
+
+        // Add message if there are no matching search results.
+        if (mSubscriptionCount == 0 && !TextUtils.isEmpty(query)) {
+            Preference searchResultsPref = new Preference(context);
+            searchResultsPref.setSummary(String.format(getString(R.string.notifications_no_search_results), query));
+            blogsCategory.addPreference(searchResultsPref);
+        }
+
+        // Add view all entry when more sites than maximum to show.
+        if (mSubscriptionCount > maxSitesToShow && !showAll) {
+            appendViewAllSitesOption(context, getString(R.string.pref_notification_blogs_followed), true);
+        }
+
+        updateSearchMenuVisibility();
+    }
+
+    private void appendViewAllSitesOption(Context context, String preference, boolean isFollowed) {
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(preference);
 
         PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
-        prefScreen.setTitle(R.string.notification_settings_item_your_sites_all_your_sites);
-        addSitesForViewAllSitesScreen(prefScreen);
+        prefScreen.setTitle(isFollowed ? R.string.notification_settings_item_your_sites_all_followed_sites
+                : R.string.notification_settings_item_your_sites_all_your_sites);
+        addSitesForViewAllSitesScreen(prefScreen, isFollowed);
         blogsCategory.addPreference(prefScreen);
     }
 
     private void updateSearchMenuVisibility() {
         // Show the search menu item in the toolbar if we have enough sites
         if (mSearchMenuItem != null) {
-            mSearchMenuItem.setVisible(mSiteCount > SITE_SEARCH_VISIBILITY_COUNT);
+            mSearchMenuItem.setVisible(mSiteCount > SITE_SEARCH_VISIBILITY_COUNT
+                                       || mSubscriptionCount > SITE_SEARCH_VISIBILITY_COUNT);
         }
     }
 
@@ -452,17 +551,22 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         mTypePreferenceCategories.add(rootCategory);
     }
 
-    private void addSitesForViewAllSitesScreen(PreferenceScreen preferenceScreen) {
+    private void addSitesForViewAllSitesScreen(PreferenceScreen preferenceScreen, boolean isFollowed) {
         Context context = getActivity();
         if (context == null) {
             return;
         }
 
         PreferenceCategory rootCategory = new PreferenceCategory(context);
-        rootCategory.setTitle(R.string.notification_settings_category_your_sites);
+        rootCategory.setTitle(isFollowed ? R.string.notification_settings_category_followed_sites
+                : R.string.notification_settings_category_your_sites);
         preferenceScreen.addPreference(rootCategory);
 
-        configureBlogsSettings(rootCategory, true);
+        if (isFollowed) {
+            configureFollowedBlogsSettings(rootCategory, true);
+        } else {
+            configureBlogsSettings(rootCategory, true);
+        }
     }
 
     private final NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener
