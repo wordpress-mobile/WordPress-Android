@@ -160,7 +160,8 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(context,
                 context.getString(R.string.notification_channel_important_id));
         builder.setContentText(message)
-               .setPriority(NotificationCompat.PRIORITY_MAX);
+               .setPriority(NotificationCompat.PRIORITY_MAX)
+               .setOnlyAlertOnce(true);
         builder.setContentIntent(intent);
 
         if (postId != 0) {

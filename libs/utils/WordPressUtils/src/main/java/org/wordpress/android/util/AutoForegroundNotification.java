@@ -40,6 +40,7 @@ public class AutoForegroundNotification {
                 .setSmallIcon(icon)
                 .setColor(context.getResources().getColor(accentColor))
                 .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         requestCode,

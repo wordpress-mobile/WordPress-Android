@@ -607,6 +607,7 @@ public class GCMMessageService extends GcmListenerService {
                     .setContentTitle(title)
                     .setContentText(message)
                     .setTicker(message)
+                    .setOnlyAlertOnce(true)
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setGroup(NOTIFICATION_GROUP_KEY);
@@ -940,6 +941,7 @@ public class GCMMessageService extends GcmListenerService {
                     .setContentText(message)
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                    .setOnlyAlertOnce(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX);
 
             PendingIntent pendingIntent =

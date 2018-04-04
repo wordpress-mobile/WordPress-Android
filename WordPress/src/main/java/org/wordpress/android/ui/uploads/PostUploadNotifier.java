@@ -77,7 +77,8 @@ class PostUploadNotifier {
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
                 context.getString(R.string.notification_channel_normal_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
-                            .setColor(context.getResources().getColor(R.color.blue_wordpress));
+                            .setColor(context.getResources().getColor(R.color.blue_wordpress))
+                            .setOnlyAlertOnce(true);
     }
 
     private void updateForegroundNotification(@Nullable PostModel post) {
@@ -311,6 +312,7 @@ class PostUploadNotifier {
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationMessage);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(notificationMessage));
+        notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
 
         long notificationId = getNotificationIdForPost(post);
@@ -390,6 +392,7 @@ class PostUploadNotifier {
         notificationBuilder.setContentText(notificationMessage);
         // notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newSuccessMessage));
         notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
 
         // Add WRITE POST action - only if there is media we can insert in the Post
@@ -472,6 +475,7 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setOnlyAlertOnce(true);
 
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
@@ -523,6 +527,7 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setOnlyAlertOnce(true);
 
         // Add RETRY action - only if there is media to retry
         if (mediaList != null && !mediaList.isEmpty()) {
