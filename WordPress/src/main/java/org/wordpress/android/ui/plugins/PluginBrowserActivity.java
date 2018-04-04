@@ -34,13 +34,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
-import org.wordpress.android.models.networkresource.NetworkResource;
+import org.wordpress.android.models.networkresource.ListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
@@ -169,30 +168,34 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSsPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getSsPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource.getData());
             }
         });
 
-        mViewModel.getFfPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getFfPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource.getData());
             }
         });
 
-        mViewModel.getPpPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getPpPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource.getData());
             }
         });
 
-        mViewModel.getNnPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getNnPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource.getData());
             }
         });
@@ -258,7 +261,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
-                                                    @Nullable List<? extends ImmutablePluginModel> plugins) {
+                                                    @Nullable List<ImmutablePluginModel> plugins) {
         PluginBrowserAdapter adapter = null;
         View cardView = null;
         switch (pluginType) {

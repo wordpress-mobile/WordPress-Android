@@ -28,7 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
-import org.wordpress.android.models.networkresource.NetworkResource;
+import org.wordpress.android.models.networkresource.ListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -86,42 +86,45 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSsPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getSsPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (mListType == PluginListType.SITE) {
                     setPlugins(listNetworkResource.getData());
                 }
             }
         });
 
-        mViewModel.getFfPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getFfPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (mListType == PluginListType.FEATURED) {
                     setPlugins(listNetworkResource.getData());
                 }
             }
         });
 
-        mViewModel.getPpPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getPpPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (mListType == PluginListType.POPULAR) {
                     setPlugins(listNetworkResource.getData());
                 }
             }
         });
 
-        mViewModel.getNnPlugins().observe(this, new Observer<NetworkResource<List<? extends ImmutablePluginModel>>>() {
+        mViewModel.getNnPlugins().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable NetworkResource<List<? extends ImmutablePluginModel>> listNetworkResource) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (mListType == PluginListType.NEW) {
                     setPlugins(listNetworkResource.getData());
                 }
             }
         });
-
 
         mViewModel.getSearchResults().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
@@ -213,7 +216,7 @@ public class PluginListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void setPlugins(@Nullable final List<? extends ImmutablePluginModel> plugins) {
+    private void setPlugins(@Nullable final List<ImmutablePluginModel> plugins) {
         final PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());

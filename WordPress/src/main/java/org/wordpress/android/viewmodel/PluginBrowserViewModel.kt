@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
-import org.wordpress.android.models.networkresource.NetworkResource
+import org.wordpress.android.models.networkresource.ListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.util.ArrayList
@@ -27,12 +27,11 @@ import kotlin.properties.Delegates
 private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
 private const val KEY_TITLE = "KEY_TITLE"
 
-typealias PluginList = List<ImmutablePluginModel>
-typealias PluginListNetworkResource = NetworkResource<PluginList>
+typealias PluginListNetworkResource = ListNetworkResource<ImmutablePluginModel>
 
 class PluginListLiveData: MutableLiveData<PluginListNetworkResource>() {
     init {
-        value = NetworkResource.Init()
+        value = ListNetworkResource.Init()
     }
 
     override fun getValue(): PluginListNetworkResource {
@@ -148,14 +147,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private fun readyDirectory(directoryType: PluginDirectoryType) {
         site?.let {
             val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
-            getPluginListLiveData(directoryType).value = NetworkResource.Ready(pluginList)
+            getPluginListLiveData(directoryType).value = ListNetworkResource.Ready(pluginList)
         }
     }
 
     private fun successDirectory(directoryType: PluginDirectoryType, canLoadMore: Boolean) {
         site?.let {
             val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
-            getPluginListLiveData(directoryType).value = NetworkResource.Success(pluginList, canLoadMore)
+            getPluginListLiveData(directoryType).value = ListNetworkResource.Success(pluginList, canLoadMore)
         }
     }
 
@@ -182,22 +181,22 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> {
-                ssPlugins.value = NetworkResource.Loading(ssPlugins.value, loadMore)
+                ssPlugins.value = ListNetworkResource.Loading(ssPlugins.value, loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             PluginBrowserViewModel.PluginListType.FEATURED -> {
-                ffPlugins.value = NetworkResource.Loading(ffPlugins.value, loadMore)
+                ffPlugins.value = ListNetworkResource.Loading(ffPlugins.value, loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             PluginBrowserViewModel.PluginListType.POPULAR -> {
-                ppPlugins.value = NetworkResource.Loading(ppPlugins.value, loadMore)
+                ppPlugins.value = ListNetworkResource.Loading(ppPlugins.value, loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             PluginBrowserViewModel.PluginListType.NEW -> {
-                nnPlugins.value = NetworkResource.Loading(nnPlugins.value, loadMore)
+                nnPlugins.value = ListNetworkResource.Loading(nnPlugins.value, loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
@@ -251,7 +250,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
-            liveData.value = NetworkResource.Error(liveData.value, event.error.message, event.loadMore)
+            liveData.value = ListNetworkResource.Error(liveData.value, event.error.message, event.loadMore)
         } else {
             successDirectory(event.type, event.canLoadMore)
         }
