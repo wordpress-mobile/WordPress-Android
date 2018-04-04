@@ -47,7 +47,8 @@ public class AutoForegroundNotification {
                         PendingIntent.FLAG_ONE_SHOT));
     }
 
-    public static Notification progress(Context context, String channelId, int progress, @StringRes int title, @StringRes int content,
+    public static Notification progress(Context context, String channelId, int progress, @StringRes int title,
+                                        @StringRes int content,
                                         @DrawableRes int icon, @ColorRes int accentColor) {
         return getNotificationBuilder(context, channelId, NOTIFICATION_ID_PROGRESS, title, content, icon, accentColor)
                 .setProgress(100, progress, false)
@@ -56,11 +57,13 @@ public class AutoForegroundNotification {
 
     public static Notification success(Context context, String channelId, @StringRes int title, @StringRes int content,
                                        @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_SUCCESS, title, content, icon, accentColor).build();
+        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_SUCCESS, title, content, icon, accentColor)
+                .build();
     }
 
     public static Notification failure(Context context, String channelId, @StringRes int title, @StringRes int content,
                                        @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_FAILURE, title, content, icon, accentColor).build();
+        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_FAILURE, title, content, icon, accentColor)
+                .build();
     }
 }
