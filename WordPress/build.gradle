@@ -120,9 +120,9 @@ dependencies {
     // ViewModel and LiveData
     implementation 'android.arch.lifecycle:extensions:1.1.0'
 
-    implementation 'com.google.android.gms:play-services-gcm:10.0.1'
-    implementation 'com.google.android.gms:play-services-auth:10.0.1'
-    implementation 'com.google.android.gms:play-services-places:10.0.1'
+    implementation 'com.google.android.gms:play-services-gcm:12.0.1'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
+    implementation 'com.google.android.gms:play-services-places:12.0.1'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'com.helpshift:android-helpshift-aar:6.4.1'
     implementation 'de.greenrobot:eventbus:2.4.0'
