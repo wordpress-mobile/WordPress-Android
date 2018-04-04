@@ -40,6 +40,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
@@ -51,6 +52,8 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferEligibilityChecked;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -112,6 +115,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
+    private ProgressDialog mAutomatedTransferProgressDialog;
 
     private CardView mWPOrgPluginDetailsContainer;
     private RelativeLayout mRatingsSectionContainer;
@@ -741,6 +745,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showRemovePluginProgressDialog() {
+        // TODO: check if mRemovePluginProgressDialog is not null
         mRemovePluginProgressDialog = new ProgressDialog(this);
         mRemovePluginProgressDialog.setCancelable(false);
         mRemovePluginProgressDialog.setIndeterminate(true);
@@ -781,6 +786,16 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsShowingInstallFirstPluginConfirmationDialog = true;
         builder.show();
 
+    }
+
+    private void showAutomatedTransferDialog() {
+        // TODO: check if mAutomatedTransferProgressDialog is not null
+        mAutomatedTransferProgressDialog = new ProgressDialog(this);
+        mAutomatedTransferProgressDialog.setCancelable(false);
+        mAutomatedTransferProgressDialog.setIndeterminate(false);
+        String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
+        mAutomatedTransferProgressDialog.setMessage(message);
+        mAutomatedTransferProgressDialog.show();
     }
 
     // Network Helpers
@@ -841,7 +856,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void startAutomatedTransfer() {
-        // TODO
+        showAutomatedTransferDialog();
+
+        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
     }
 
     protected void disableAndRemovePlugin() {
@@ -1053,6 +1070,16 @@ public class PluginDetailActivity extends AppCompatActivity {
             invalidateOptionsMenu();
         }
         showSuccessfulPluginRemovedSnackbar();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferEligibilityChecked(OnAutomatedTransferEligibilityChecked event) {
+        if (event.isError()) {
+            // TODO
+            return;
+        }
+        // TODO
     }
 
     // This check should only handle events for already installed plugins - onSitePluginConfigured,
