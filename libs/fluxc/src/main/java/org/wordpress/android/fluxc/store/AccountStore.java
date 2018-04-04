@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
@@ -180,8 +179,8 @@ public class AccountStore extends Store {
         public boolean subscribed;
         public SubscriptionResponsePayload() {
         }
-        public SubscriptionResponsePayload(SubscriptionResponse response) {
-            this.subscribed = response.subscribed;
+        public SubscriptionResponsePayload(boolean subscribed) {
+            this.subscribed = subscribed;
         }
     }
 
