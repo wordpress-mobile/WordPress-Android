@@ -340,7 +340,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
 
             // Create the IMPORTANT channel (used for 2fa auth, for example)
-            NotificationChannel importantChannel = new NotificationChannel(NotificationsUtils.GENERAL_IMPORTANT_CHANNEL_ID,
+            NotificationChannel importantChannel = new NotificationChannel(
+                    NotificationsUtils.GENERAL_IMPORTANT_CHANNEL_ID,
                     getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
