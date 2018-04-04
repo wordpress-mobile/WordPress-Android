@@ -185,6 +185,13 @@ public class AccountStore extends Store {
         }
     }
 
+    /**
+     * Error for any of these methods:
+     *      {@link AccountRestClient#updateSubscriptionEmailComment(String, SubscriptionAction)}
+     *      {@link AccountRestClient#updateSubscriptionEmailPost(String, SubscriptionAction)}
+     *      {@link AccountRestClient#updateSubscriptionEmailPostFrequency(String, String)}
+     *      {@link AccountRestClient#updateSubscriptionNotificationPost(String, SubscriptionAction)}
+     */
     public static class SubscriptionError implements OnChangedError {
         public SubscriptionErrorType type;
         public String message;
@@ -219,6 +226,9 @@ public class AccountStore extends Store {
         }
     }
 
+    /**
+     * Error for {@link AccountRestClient#fetchSubscriptions()} method.
+     */
     public static class SubscriptionsError implements OnChangedError {
         public String message;
 
