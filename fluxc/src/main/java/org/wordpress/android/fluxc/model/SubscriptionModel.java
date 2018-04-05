@@ -44,9 +44,6 @@ public class SubscriptionModel extends Payload<BaseNetworkError> implements Iden
         mId = id;
     }
 
-    public SubscriptionModel() {
-    }
-
     public String getSubscriptionId() {
         return mSubscriptionId;
     }
