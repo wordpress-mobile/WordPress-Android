@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,7 +54,10 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferEligibilityChecked;
+import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferInitiated;
+import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChecked;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -103,6 +107,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private SiteModel mSite;
     private String mSlug;
     protected ImmutablePluginModel mPlugin;
+    private Handler mHandler;
 
     private ViewGroup mContainer;
     private TextView mTitleTextView;
@@ -792,10 +797,17 @@ public class PluginDetailActivity extends AppCompatActivity {
         // TODO: check if mAutomatedTransferProgressDialog is not null
         mAutomatedTransferProgressDialog = new ProgressDialog(this);
         mAutomatedTransferProgressDialog.setCancelable(false);
+        mAutomatedTransferProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mAutomatedTransferProgressDialog.setIndeterminate(false);
         String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
         mAutomatedTransferProgressDialog.setMessage(message);
         mAutomatedTransferProgressDialog.show();
+    }
+
+    private void cancelAutomatedTransferDialog() {
+        if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
+            mAutomatedTransferProgressDialog.cancel();
+        }
     }
 
     // Network Helpers
@@ -835,12 +847,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        mIsInstallingPlugin = true;
-        refreshUpdateVersionViews();
-
         if (SiteUtils.isNonAtomicBusinessPlanSite(mSite)) {
             confirmInstallPluginForAutomatedTransfer();
         } else {
+            mIsInstallingPlugin = true;
+            refreshUpdateVersionViews();
+
             PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
             mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
         }
@@ -856,6 +868,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void startAutomatedTransfer() {
+        mIsInstallingPlugin = true;
+        refreshUpdateVersionViews();
         showAutomatedTransferDialog();
 
         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
@@ -1023,18 +1037,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        refreshPluginFromStore();
-
-        // FluxC will try to activate and enable autoupdates for the plugin after it's installed, let's assume that
-        // it'll be successful.
-        mIsActive = true;
-        mIsAutoUpdateEnabled = true;
-
-        refreshViews();
-        showSuccessfulInstallSnackbar();
-        invalidateOptionsMenu();
-
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);
+        handlePluginInstalled();
     }
 
     @SuppressWarnings("unused")
@@ -1072,14 +1075,61 @@ public class PluginDetailActivity extends AppCompatActivity {
         showSuccessfulPluginRemovedSnackbar();
     }
 
+    // Automated Transfer Events
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferEligibilityChecked(OnAutomatedTransferEligibilityChecked event) {
-        if (event.isError()) {
-            // TODO
+        if (isFinishing()) {
             return;
         }
-        // TODO
+        if (!event.isEligible) {
+            handleAutomatedTransferFailed(getString(R.string.plugin_install_error_site_ineligible));
+        } else{
+            mDispatcher.dispatch(SiteActionBuilder
+                    .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferInitiated(OnAutomatedTransferInitiated event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (!event.isError()) {
+            handleAutomatedTransferFailed(event.error.message);
+        } else{
+            mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (!event.isError()) {
+            handleAutomatedTransferFailed(event.error.message);
+        } else{
+            if (event.isCompleted) {
+                cancelAutomatedTransferDialog();
+                handlePluginInstalled();
+            } else {
+                mAutomatedTransferProgressDialog.setProgress(event.currentStep);
+                mAutomatedTransferProgressDialog.setMax(event.totalSteps);
+                if (mHandler == null) {
+                    mHandler = new Handler();
+                }
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+                    }
+                }, 1000);
+            }
+        }
     }
 
     // This check should only handle events for already installed plugins - onSitePluginConfigured,
@@ -1089,6 +1139,32 @@ public class PluginDetailActivity extends AppCompatActivity {
                && mPlugin.isInstalled() // needs plugin to be already installed
                && mPlugin.getName() != null // sanity check for NPE since if plugin is installed it'll have the name
                && mPlugin.getName().equals(eventPluginName); // event is for the plugin we are showing
+    }
+
+    private void handlePluginInstalled() {
+        mIsInstallingPlugin = false;
+
+        refreshPluginFromStore();
+
+        // TODO: Handle activation and enabling auto-updates for AT first plugin
+        // FluxC will try to activate and enable autoupdates for the plugin after it's installed, let's assume that
+        // it'll be successful.
+        mIsActive = true;
+        mIsAutoUpdateEnabled = true;
+
+        refreshViews();
+        showSuccessfulInstallSnackbar();
+        invalidateOptionsMenu();
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);
+    }
+
+    private void handleAutomatedTransferFailed(String errorMessage) {
+        // TODO: Better handle specific errors
+        cancelAutomatedTransferDialog();
+        mIsInstallingPlugin = false;
+        refreshPluginVersionViews();
+        ToastUtils.showToast(this, errorMessage, Duration.LONG);
     }
 
     // Utils

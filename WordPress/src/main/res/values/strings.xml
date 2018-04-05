@@ -1700,6 +1700,7 @@
     <string name="plugin_see_all">See All</string>
     <string name="plugins_empty_search_list">No matches</string>
     <string name="plugin_install_first_plugin_progress_dialog_title">Install Plugin</string>
+    <string name="plugin_install_error_site_ineligible">Plugins feature is not available on this site.</string>
 
     <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
     <string name="plugin_caption_featured">Featured</string>
