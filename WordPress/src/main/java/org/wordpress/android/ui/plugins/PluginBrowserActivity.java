@@ -171,7 +171,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         // TODO: Only reload data for certain status changes or if the data is missing
 
-        mViewModel.getSiteLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getSitePluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -190,7 +190,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getFeaturedLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getFeaturedPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -200,7 +200,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getPopularLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getPopularPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -210,7 +210,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getNewLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getNewPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {

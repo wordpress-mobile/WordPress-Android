@@ -85,7 +85,7 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSiteLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getSitePluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -96,7 +96,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getFeaturedLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getFeaturedPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -107,7 +107,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getPopularLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getPopularPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -118,7 +118,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getNewLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getNewPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
@@ -129,7 +129,7 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getSearchLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+        mViewModel.getSearchResultsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
