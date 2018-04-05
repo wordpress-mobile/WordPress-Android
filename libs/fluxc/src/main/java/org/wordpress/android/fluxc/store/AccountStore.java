@@ -325,8 +325,6 @@ public class AccountStore extends Store {
     }
 
     public static class OnSubscriptionsChanged extends OnChanged<SubscriptionsError> {
-        public OnSubscriptionsChanged() {
-        }
     }
 
     public static class OnSubscriptionUpdated extends OnChanged<SubscriptionError> {
