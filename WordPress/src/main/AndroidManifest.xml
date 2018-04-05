@@ -547,7 +547,7 @@
             android:exported="false"
             android:label="Stats Update Service" />
         <service
-            android:name=".ui.reader.services.ReaderUpdateService"
+            android:name=".ui.reader.services.update.ReaderUpdateService"
             android:exported="false"
             android:label="Reader Update Service" />
         <service
