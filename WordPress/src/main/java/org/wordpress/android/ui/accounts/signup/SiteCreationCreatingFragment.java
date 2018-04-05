@@ -262,7 +262,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private void configureImage(boolean hasFailure) {
         mImageView.setImageResource(hasFailure ? R.drawable.img_site_error_camera_pencils_226dp
-                                            : R.drawable.img_site_wordpress_camera_pencils_226dp);
+                : R.drawable.img_site_wordpress_camera_pencils_226dp);
     }
 
     private void handleFailure(final SiteCreationState failedState) {
@@ -278,7 +278,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 AppLog.d(T.NUX, "User retries failed site creation on step: " + failedState.getStepName());
                 if (failedState.isTerminal()) {
                     throw new RuntimeException("Internal inconsistency: Cannot resume site creation from "
-                            + failedState.getStepName());
+                                               + failedState.getStepName());
                 } else {
                     createSite(failedState);
                 }
@@ -296,34 +296,36 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         configureBackButton();
 
+        CharSequence statusAnnouncement = "";
+
         switch (event.getStep()) {
             case IDLE:
-                getView().announceForAccessibility(getText(R.string.notification_site_creation_title_in_progress));
+                statusAnnouncement = getText(R.string.notification_site_creation_title_in_progress);
                 disableUntil(0);
                 configureImage(false);
                 break;
             case NEW_SITE:
-                getView().announceForAccessibility(getText(R.string.site_creation_creating_laying_foundation));
+                statusAnnouncement = getText(R.string.site_creation_creating_laying_foundation);
                 disableUntil(R.id.site_creation_creating_laying_foundation);
                 configureImage(false);
                 break;
             case FETCHING_NEW_SITE:
-                getView().announceForAccessibility(getText(R.string.site_creation_creating_fetching_info));
+                statusAnnouncement = getText(R.string.site_creation_creating_fetching_info);
                 disableUntil(R.id.site_creation_creating_fetching_info);
                 configureImage(false);
                 break;
             case SET_TAGLINE:
-                getView().announceForAccessibility(getText(R.string.site_creation_creating_configuring_content));
+                statusAnnouncement = getText(R.string.site_creation_creating_configuring_content);
                 disableUntil(R.id.site_creation_creating_configuring_content);
                 configureImage(false);
                 break;
             case SET_THEME:
-                getView().announceForAccessibility(getText(R.string.site_creation_creating_configuring_theme));
+                statusAnnouncement = getText(R.string.site_creation_creating_configuring_theme);
                 disableUntil(R.id.site_creation_creating_configuring_theme);
                 configureImage(false);
                 break;
             case FAILURE:
-                getView().announceForAccessibility(getText(R.string.notification_site_creation_failed));
+                statusAnnouncement = getText(R.string.notification_site_creation_failed);
                 configureImage(true);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
@@ -331,13 +333,13 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 NetworkUtils.checkConnection(getContext());
                 break;
             case PRELOAD:
-                getView().announceForAccessibility(getText(R.string.site_creation_creating_preparing_frontend));
+                statusAnnouncement = getText(R.string.site_creation_creating_preparing_frontend);
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
                 configureImage(false);
                 mPreviewWebViewClient = loadWebview();
                 break;
             case SUCCESS:
-                getView().announceForAccessibility(getText(R.string.notification_site_creation_title_success));
+                statusAnnouncement = getText(R.string.notification_site_creation_title_success);
                 mNewSiteLocalId = (Integer) event.getPayload();
 
                 if (mPreviewWebViewClient == null) {
@@ -350,5 +352,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mutateToCompleted(mWebViewLoadedInTime);
                 break;
         }
+
+        getView().announceForAccessibility(statusAnnouncement);
     }
+
 }
