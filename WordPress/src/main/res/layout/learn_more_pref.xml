@@ -31,6 +31,8 @@
         android:text="@string/learn_more"
         android:textSize="@dimen/text_sz_medium"
         android:textColor="@color/blue_medium"
+        android:focusable="false"
+        android:clickable="false"
         android:fontFamily="sans-serif-light" />
 
 </LinearLayout>

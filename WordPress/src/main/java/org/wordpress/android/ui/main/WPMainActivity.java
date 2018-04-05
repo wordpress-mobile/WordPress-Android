@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
@@ -37,6 +38,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
+import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
@@ -94,6 +96,7 @@ public class WPMainActivity extends AppCompatActivity {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private boolean mWasSwiped;
     private int mAppBarElevation;
 
     private SiteModel mSelectedSite;
@@ -102,6 +105,7 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
+    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -132,13 +136,13 @@ public class WPMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
+        mViewPager = findViewById(R.id.viewpager_main);
         mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);
 
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
-        mConnectionBar = (TextView) findViewById(R.id.connection_bar);
+        mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +158,7 @@ public class WPMainActivity extends AppCompatActivity {
                 }, 2000);
             }
         });
-        mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
+        mTabLayout = findViewById(R.id.tab_layout);
         mTabLayout.createTabs();
 
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -210,7 +214,22 @@ public class WPMainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                // noop
+                if (!mWasSwiped && state == ViewPager.SCROLL_STATE_DRAGGING) {
+                    mWasSwiped = true;
+                }
+
+                if (mWasSwiped && state == ViewPager.SCROLL_STATE_IDLE) {
+                    mWasSwiped = false;
+
+                    switch (AppPrefs.getMainTabIndex()) {
+                        case WPMainTabAdapter.TAB_MY_SITE:
+                        case WPMainTabAdapter.TAB_READER:
+                        case WPMainTabAdapter.TAB_ME:
+                        case WPMainTabAdapter.TAB_NOTIFS:
+                        default:
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.MAIN_TABS_SWIPED);
+                    }
+                }
             }
 
             @Override
@@ -222,7 +241,6 @@ public class WPMainActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         String authTokenToSet = null;
 
@@ -283,7 +301,7 @@ public class WPMainActivity extends AppCompatActivity {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
+            mLoginAnalyticsListener.trackCreatedAccount();
             ActivityLauncher.showSignupEpilogue(this,
                                                 getIntent().getStringExtra(
                                                         SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
@@ -489,6 +507,8 @@ public class WPMainActivity extends AppCompatActivity {
             GCMMessageService.removeAllNotifications(this);
         }
 
+        announceTitleForAccessibility(currentItem);
+
         checkConnection();
 
         // Update account to update the notification unseen status
@@ -499,6 +519,29 @@ public class WPMainActivity extends AppCompatActivity {
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+    }
+
+    private void announceTitleForAccessibility(int currentTabIndex) {
+        @StringRes int stringRes = -1;
+        switch (currentTabIndex) {
+            case WPMainTabAdapter.TAB_MY_SITE:
+                stringRes = R.string.my_site_section_screen_title;
+                break;
+            case WPMainTabAdapter.TAB_READER:
+                stringRes = R.string.reader_screen_title;
+                break;
+            case WPMainTabAdapter.TAB_ME:
+                stringRes = R.string.me_section_screen_title;
+                break;
+            case WPMainTabAdapter.TAB_NOTIFS:
+                stringRes = R.string.notifications_screen_title;
+                break;
+            default:
+                AppLog.w(T.MAIN, "announceTitleForAccessibility unknown tab index.");
+        }
+        if (stringRes != -1) {
+            getWindow().getDecorView().announceForAccessibility(getString(stringRes));
+        }
     }
 
     @Override
@@ -521,7 +564,7 @@ public class WPMainActivity extends AppCompatActivity {
     private void checkMagicLinkSignIn() {
         if (getIntent() != null) {
             if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
                 startWithNewAccount();
             }
         }
@@ -742,12 +785,12 @@ public class WPMainActivity extends AppCompatActivity {
 
             if (hasMagicLinkLoginIntent()) {
                 if (hasMagicLinkSignupIntent()) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+                    mLoginAnalyticsListener.trackCreatedAccount();
+                    mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
                     Intent intent = getIntent();
                     ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                    mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
                     ActivityLauncher
                             .showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
                 }

@@ -31,6 +31,7 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -188,6 +189,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
             holder.mFileTypeImageView.setImageResource(placeholderResId);
         }
+        holder.mImageView.setContentDescription(mContext.getString(R.string.media_grid_item_image_desc,
+                StringUtils.notNullStr(media.getFileName())));
 
         if (mBrowserType.canMultiselect() && canSelect) {
             holder.mSelectionCountContainer.setVisibility(View.VISIBLE);

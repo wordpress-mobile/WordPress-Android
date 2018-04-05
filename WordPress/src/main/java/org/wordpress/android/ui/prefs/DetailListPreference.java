@@ -85,7 +85,7 @@ public class DetailListPreference extends ListPreference
     protected void showDialog(Bundle state) {
         Context context = getContext();
         Resources res = context.getResources();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_Dialog);
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(android.R.string.ok, this);
@@ -248,12 +248,6 @@ public class DetailListPreference extends ListPreference
 
             if (radioButton != null) {
                 radioButton.setChecked(mSelectedIndex == position);
-                radioButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        changeSelection(position);
-                    }
-                });
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {

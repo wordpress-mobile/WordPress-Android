@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.view.ContextThemeWrapper;
 import android.view.ViewConfiguration;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -148,7 +149,8 @@ public class WPMediaUtils {
             }
         };
 
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(activity, R.style.Calypso_Dialog));
         builder.setTitle(org.wordpress.android.R.string.image_optimization_promo_title);
         builder.setMessage(org.wordpress.android.R.string.image_optimization_promo_desc);
         builder.setPositiveButton(R.string.turn_on, onClickListener);
@@ -209,7 +211,8 @@ public class WPMediaUtils {
     }
 
     private static void showSDCardRequiredDialog(Context context) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                new ContextThemeWrapper(context, R.style.Calypso_Dialog));
         dialogBuilder.setTitle(context.getResources().getText(R.string.sdcard_title));
         dialogBuilder.setMessage(context.getResources().getText(R.string.sdcard_message));
         dialogBuilder.setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {

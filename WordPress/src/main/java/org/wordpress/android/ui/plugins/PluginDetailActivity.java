@@ -52,6 +52,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -615,7 +616,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 from,
                 to);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
         builder.setCancelable(true);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
@@ -649,7 +650,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void confirmRemovePlugin() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
         builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
         String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
                 mPlugin.getDisplayName(),
@@ -698,7 +699,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void showUpdateFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mPlugin.getDisplayName()),
-                Snackbar.LENGTH_LONG)
+                AccessibilityUtils.getSnackbarDuration(this))
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -711,7 +712,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void showInstallFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_installed_failed, mPlugin.getDisplayName()),
-                Snackbar.LENGTH_LONG)
+                AccessibilityUtils.getSnackbarDuration(this))
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

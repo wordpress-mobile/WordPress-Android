@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
+    android:focusable="true"
     android:clipToPadding="false"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -26,6 +27,7 @@
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/invite_names_title"
             android:textColor="@color/grey_dark"
+            android:labelFor="@+id/invite_usernames"
             android:textSize="@dimen/text_sz_large" />
 
         <LinearLayout
@@ -112,6 +114,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/role"
                     android:textColor="@color/grey_dark"
+                    android:labelFor="@+id/role"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="@string/role" />
 
@@ -121,6 +124,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/margin_small"
                     android:paddingRight="@dimen/margin_small"
+                    android:contentDescription="@string/people_invite_role_info_desc"
                     app:srcCompat="@drawable/ic_info_black_24dp"
                     android:paddingEnd="@dimen/margin_small"
                     android:paddingStart="@dimen/margin_small"/>
@@ -151,9 +155,11 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/invite_message_title"
             android:textColor="@color/grey_dark"
+            android:labelFor="@+id/message"
             android:textSize="@dimen/text_sz_large" />
 
         <RelativeLayout
+            android:id="@+id/message_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

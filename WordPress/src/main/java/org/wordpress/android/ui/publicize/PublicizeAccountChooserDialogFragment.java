@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -47,7 +48,8 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
         //noinspection InflateParams
         View view = inflater.inflate(R.layout.publicize_account_chooser_dialog, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         configureAlertDialog(view, builder);
         configureRecyclerViews(view);
 

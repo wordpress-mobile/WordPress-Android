@@ -382,6 +382,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             currentRowData.getDateSubscribed()
                                             )
                                          );
+            holder.totalsTextView.setContentDescription(
+                    holder.totalsTextView.getContext().getString(
+                            R.string.stats_follower_since_desc,
+                            holder.totalsTextView.getText()));
 
             // Avatar
             holder.networkImageView.setImageUrl(

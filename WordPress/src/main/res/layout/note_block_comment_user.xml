@@ -63,6 +63,7 @@
                     tools:visibility="visible" />
 
                 <org.wordpress.android.widgets.WPTextView
+                    android:importantForAccessibility="no"
                     android:id="@+id/user_comment_bullet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,6 +85,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
+                    android:focusable="true"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
@@ -96,7 +98,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/user_comment"
         android:layout_width="match_parent"
@@ -108,6 +109,7 @@
         android:textSize="@dimen/text_sz_large"
         android:fontFamily="serif"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />
+
 
     <View
         android:id="@+id/divider_view"

@@ -10,6 +10,7 @@
 
     <!-- Posts item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -28,6 +29,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
+                android:contentDescription="@null"
                 app:srcCompat="@drawable/ic_posts_grey_dark_24dp" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
@@ -56,6 +58,7 @@
 
     <!-- Views Item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -73,6 +76,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
+                android:contentDescription="@null"
                 app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
@@ -101,6 +105,7 @@
 
     <!-- Visitors Item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -118,6 +123,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
+                android:contentDescription="@null"
                 app:srcCompat="@drawable/ic_user_grey_dark_12dp" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
@@ -146,6 +152,7 @@
 
     <!-- Best Ever Item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -163,6 +170,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
+                android:contentDescription="@null"
                 app:srcCompat="@drawable/ic_trophy_alert_yellow_32dp" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView

@@ -27,6 +27,26 @@
     <!-- comment form labels -->
     <string name="anonymous">Anonymous</string>
 
+    <!-- Screen titles -->
+    <string name="release_notes_screen_title">Release notes</string>
+    <string name="license_screen_title">License</string>
+    <string name="help_screen_title">Help and Support</string>
+    <string name="passcode_screen_title">WordPress Passcode</string>
+    <string name="notif_settings_screen_title">Notification settings</string>
+    <string name="my_site_section_screen_title">My site</string>
+    <string name="me_section_screen_title">Me</string>
+    <string name="reader_screen_title">Reader</string>
+    <string name="notifications_screen_title">Notifications</string>
+    <string name="publicize_buttons_screen_title">Sharing buttons</string>
+    <string name="media_settings_screen_title">File details</string>
+    <string name="person_detail_screen_title">Person detail</string>
+    <string name="login_epilogue_screen_title">Logged in as</string>
+    <string name="login_prologue_screen_title">Login</string>
+    <string name="signup_epilogue_screen_title">New account</string>
+    <string name="share_intent_screen_title">Pick site</string>
+    <string name="edit_photo_screen_title">Edit Photo</string>
+    <string name="notif_detail_screen_title">Notification detail %s</string>
+
     <!-- general strings -->
     <string name="posts">Posts</string>
     <string name="media">Media</string>
@@ -81,6 +101,8 @@
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
     <string name="delete_no">Don\'t Delete</string>
+    <string name="add_count">Add %d</string>
+    <string name="preview_count">Preview %d</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -303,6 +325,15 @@
     <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comments_fetching">Fetching comments…</string>
+    <string name="comment_approved_talkback">Comment approved</string>
+    <string name="comment_unapproved_talkback">Comment unapproved</string>
+    <string name="comment_liked_talkback">Comment liked</string>
+    <string name="comment_unliked_talkback">Comment unliked</string>
+    <string name="comment_trash_talkback">Comment sent to trash</string>
+    <string name="comment_untrash_talkback">Comment restored</string>
+    <string name="comment_delete_talkback">Comment deleted</string>
+    <string name="comment_spam_talkback">Comment marked as spam</string>
+    <string name="comment_unspam_talkback">Comment marked as not spam</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -1030,8 +1061,6 @@
     <string name="publish_date">Publish</string>
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
-    <string name="select_date">Select date</string>
-    <string name="select_time">Select time</string>
 
     <!-- location -->
     <string name="post_settings_location">Location</string>
@@ -1253,7 +1282,6 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
-    <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
@@ -1471,7 +1499,6 @@
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_add_new_site">Add new site</string>
-    <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -1603,6 +1630,7 @@
     <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
     <string name="person_removed">Successfully removed %1$s</string>
+    <string name="invite_people">Invite People</string>
     <string name="invite_names_title">Usernames or Emails</string>
     <string name="invite">Invite</string>
     <string name="button_invite" translatable="false">@string/invite</string>
@@ -1816,9 +1844,15 @@
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
+    <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
+
+    <string name="stock_media_picker_search_hint">Search free photo library</string>
+    <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
+    <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+    <string name="stock_media_picker_empty_results">No matches</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -1867,7 +1901,6 @@
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
-    <string name="login_magic_links_sent_description">Magic link sent illustration</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
@@ -1926,6 +1959,7 @@
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
+    <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
     <string name="content_description_add_avatar">Add avatar</string>
 
     <string name="username_changer_action">Save</string>
@@ -1953,6 +1987,7 @@
     <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
     <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
     <string name="notification_site_creation_step_theme">Step 4 of 4</string>
+    <string name="notification_site_creation_title_in_progress">Creating site…</string>
     <string name="notification_site_creation_title_stopped">Site creation stopped</string>
     <string name="notification_site_creation_failed">An error has occurred.</string>
 
@@ -1967,8 +2002,68 @@
     <string name="notification_login_failed">An error has occurred.</string>
     <string name="change_photo">Change photo</string>
 
+    <!-- Content description for accessibility  -->
+    <string name="comment_checkmark_desc">check mark</string>
+    <string name="profile_picture">%s\'s profile picture</string>
+    <string name="invite_user_delete_desc">remove %s</string>
+    <string name="media_grid_item_image_desc">media preview, filename %s</string>
+    <string name="media_grid_item_retry_desc">retry</string>
+    <string name="media_grid_item_trash_desc">trash</string>
+    <string name="media_grid_item_play_video_desc">play video</string>
+    <string name="media_preview_audio_desc">audio</string>
+    <string name="media_preview_desc">preview</string>
+    <string name="media_preview_title">%1$d of %2$d</string>
+    <string name="media_settings_image_preview_desc">image preview</string>
+    <string name="media_settings_play">play</string>
+    <string name="people_invite_role_info_desc">role info</string>
+    <string name="photo_picker_device_desc">pick from device</string>
+    <string name="photo_picker_camera_desc">open camera</string>
+    <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
+    <string name="plugin_detail_banner_desc">plugin banner</string>
+    <string name="plugin_detail_logo_desc">plugin logo</string>
+    <string name="post_cardview_featured_desc">featured</string>
+    <string name="reader_cardview_post_play_video_desc">play featured video</string>
+    <string name="photo_picker_thumbnail_desc">Play video</string>
+    <string name="reader_list_item_suggestion_remove_desc">delete</string>
+    <string name="reader_photo_view_desc">photo</string>
+    <string name="stats_list_cell_chevron_expand_desc">expand</string>
+    <string name="show_more_desc">show more</string>
+    <string name="open_external_link_desc">open external link</string>
+    <string name="notification_settings_switch_desc">Notifications</string>
+    <string name="navigate_up_desc">navigate up</string>
+    <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
+    <string name="stats_bar_desc">Showing %s</string>
+    <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
+    <string name="stats_bar_date_value_desc">%s, %d views</string>
+    <string name="stats_bar_week_desc">Week of %s</string>
+    <string name="fab_add_tag_desc">create tag</string>
+    <string name="fab_create_post_desc">create post</string>
+    <string name="fab_create_desc">create</string>
+    <string name="stats_legend">stats graph legend</string>
+    <string name="stats_tab_tap_content_description">showing %s</string>
+    <string name="stats_follower_since_desc">since %s ago</string>
+    <string name="stats_views_zero_desc">zero views</string>
+    <string name="stats_views_one_desc">one view</string>
+    <string name="stats_views_many_desc">%d views</string>
+    <string name="stats_clicks_zero_desc">zero clicks</string>
+    <string name="stats_clicks_one_desc">one click</string>
+    <string name="stats_clicks_many_desc">%d clicks</string>
+    <string name="stats_plays_zero_desc">zero plays</string>
+    <string name="stats_plays_one_desc">one play</string>
+    <string name="stats_plays_many_desc">%d plays</string>
+    <string name="stats_comments_zero_desc">zero comments</string>
+    <string name="stats_comments_one_desc">one comment</string>
+    <string name="stats_comments_many_desc">%d comments</string>
+    <string name="stats_followers_zero_desc">zero followers</string>
+    <string name="stats_followers_one_desc">one follower</string>
+    <string name="stats_followers_many_desc">%d followers</string>
+
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
+    <string name="site_creation_category_title">Create New Site Step 1</string>
+    <string name="site_creation_theme_selection_title">Create New Site Step 2</string>
+    <string name="site_creation_site_details_title">Create New Site Step 3</string>
+    <string name="site_creation_domain_selection_title">Create New Site Step 4</string>
     <string name="site_creation_label_category_title">Step 1 of 4</string>
     <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
     <string name="site_creation_title_blog">Start with a Blog</string>
@@ -2002,6 +2097,4 @@
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
-    <string name="site_creation_content_description_confetti">Site creation completed successfully!</string>
-
 </resources>
