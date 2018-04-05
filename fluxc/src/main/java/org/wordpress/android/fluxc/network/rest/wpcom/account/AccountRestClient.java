@@ -37,11 +37,13 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError;
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionResponsePayload;
+import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
@@ -177,17 +179,6 @@ public class AccountRestClient extends BaseWPComRestClient {
         USERNAME,
         BLOG,
         DOMAIN
-    }
-
-    public enum SubscriptionAction {
-        DELETE,
-        NEW
-    }
-
-    public enum SubscriptionFrequency {
-        DAILY,
-        INSTANTLY,
-        WEEKLY
     }
 
     public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,

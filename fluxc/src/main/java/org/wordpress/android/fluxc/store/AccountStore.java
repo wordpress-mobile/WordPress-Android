@@ -30,8 +30,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.SubscriptionAction;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.SubscriptionFrequency;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
@@ -166,6 +164,10 @@ public class AccountStore extends Store {
             this.site = site;
             this.action = action;
         }
+        public enum SubscriptionAction {
+            DELETE,
+            NEW
+        }
     }
 
     public static class UpdateSubscriptionPayload extends Payload<BaseNetworkError> {
@@ -174,6 +176,11 @@ public class AccountStore extends Store {
         public UpdateSubscriptionPayload(@NonNull String site, @NonNull SubscriptionFrequency frequency) {
             this.site = site;
             this.frequency = frequency;
+        }
+        public enum SubscriptionFrequency {
+            DAILY,
+            INSTANTLY,
+            WEEKLY
         }
     }
 
@@ -188,10 +195,14 @@ public class AccountStore extends Store {
 
     /**
      * Error for any of these methods:
-     *      {@link AccountRestClient#updateSubscriptionEmailComment(String, SubscriptionAction)}
-     *      {@link AccountRestClient#updateSubscriptionEmailPost(String, SubscriptionAction)}
-     *      {@link AccountRestClient#updateSubscriptionEmailPostFrequency(String, SubscriptionFrequency)}
-     *      {@link AccountRestClient#updateSubscriptionNotificationPost(String, SubscriptionAction)}
+     * {@link AccountRestClient#updateSubscriptionEmailComment(String,
+     *      AddOrDeleteSubscriptionPayload.SubscriptionAction)}
+     * {@link AccountRestClient#updateSubscriptionEmailPost(String,
+     *      AddOrDeleteSubscriptionPayload.SubscriptionAction)}
+     * {@link AccountRestClient#updateSubscriptionEmailPostFrequency(String,
+     *      UpdateSubscriptionPayload.SubscriptionFrequency)}
+     * {@link AccountRestClient#updateSubscriptionNotificationPost(String,
+     *      AddOrDeleteSubscriptionPayload.SubscriptionAction)}
      */
     public static class SubscriptionError implements OnChangedError {
         public SubscriptionErrorType type;
