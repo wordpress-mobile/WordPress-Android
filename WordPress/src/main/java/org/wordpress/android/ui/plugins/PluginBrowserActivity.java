@@ -169,54 +169,61 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (listNetworkResource != null) {
-                    reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource);
+        mViewModel.getSitePluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource);
 
-                    showProgress(listNetworkResource.isFetchingFirstPage() && listNetworkResource.getData().isEmpty());
+                              showProgress(listNetworkResource.isFetchingFirstPage()
+                                           && listNetworkResource.getData().isEmpty());
 
-                    // We should ignore the errors due to network condition, unless this is the first fetch, the user
-                    // can use the cached data and showing the error while the data is loaded might cause confusion
-                    if (listNetworkResource instanceof ListNetworkResource.Error
-                        && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
-                        ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
-                    }
-                }
-            }
-        });
+                              // We should ignore the errors due to network condition, unless this is the first
+                              // fetch, the user
+                              // can use the cached data and showing the error while the data is loaded might cause
+                              // confusion
+                              if (listNetworkResource instanceof ListNetworkResource.Error
+                                  && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
+                                  ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
+                              }
+                          }
+                      }
+                  });
 
-        mViewModel.getFeaturedPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (listNetworkResource != null) {
-                    reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource);
-                }
-            }
-        });
+        mViewModel.getFeaturedPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource);
+                          }
+                      }
+                  });
 
-        mViewModel.getPopularPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                    if (listNetworkResource != null) {
-                        reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource);
-                    }
-            }
-        });
+        mViewModel.getPopularPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource);
+                          }
+                      }
+                  });
 
-        mViewModel.getNewPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (listNetworkResource != null) {
-                    reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource);
-                }
-            }
-        });
+        mViewModel.getNewPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource);
+                          }
+                      }
+                  });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
