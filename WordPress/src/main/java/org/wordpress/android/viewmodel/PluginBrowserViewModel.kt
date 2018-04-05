@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.models.networkresource.ListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import java.util.ArrayList
 import java.util.HashSet
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -56,27 +55,28 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     val popularLiveData = MutableLiveData<PluginListNetworkResource>()
     val newLiveData = MutableLiveData<PluginListNetworkResource>()
     val siteLiveData = MutableLiveData<PluginListNetworkResource>()
+    val searchLiveData = MutableLiveData<ListNetworkResource<ImmutablePluginModel>>()
 
-    private var listFeatured: ListNetworkResource<ImmutablePluginModel> by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
-        featuredLiveData.postValue(new)
-    }
-    private var listPopular: ListNetworkResource<ImmutablePluginModel> by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
-        popularLiveData.postValue(new)
-    }
-    private var listNew: ListNetworkResource<ImmutablePluginModel> by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
-        newLiveData.postValue(new)
-    }
-    private var listSite: ListNetworkResource<ImmutablePluginModel> by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
-        siteLiveData.postValue(new)
-    }
-
-    private val _searchResults = MutableLiveData<List<ImmutablePluginModel>>()
-    val searchResults: LiveData<List<ImmutablePluginModel>>
-        get() = _searchResults
-
-    private val _searchPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val searchPluginsListStatus: LiveData<PluginListStatus>
-        get() = _searchPluginsListStatus
+    private var listFeatured: ListNetworkResource<ImmutablePluginModel>
+            by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
+                featuredLiveData.postValue(new)
+            }
+    private var listPopular: ListNetworkResource<ImmutablePluginModel>
+            by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
+                popularLiveData.postValue(new)
+            }
+    private var listNew: ListNetworkResource<ImmutablePluginModel>
+            by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
+                newLiveData.postValue(new)
+            }
+    private var listSite: ListNetworkResource<ImmutablePluginModel>
+            by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
+                siteLiveData.postValue(new)
+            }
+    private var listSearch: ListNetworkResource<ImmutablePluginModel>
+            by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
+                searchLiveData.postValue(new)
+            }
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -163,6 +163,15 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
+    private fun errorDirectory(directoryType: PluginDirectoryType, errorMessage: String?, loadMore: Boolean) {
+        when (directoryType) {
+            PluginDirectoryType.FEATURED -> listFeatured = ListNetworkResource.Error(listFeatured, errorMessage, loadMore)
+            PluginDirectoryType.NEW -> listNew = ListNetworkResource.Error(listNew, errorMessage, loadMore)
+            PluginDirectoryType.POPULAR -> listPopular = ListNetworkResource.Error(listPopular, errorMessage, loadMore)
+            PluginDirectoryType.SITE -> listSite = ListNetworkResource.Error(listSite, errorMessage, loadMore)
+        }
+    }
+
     // Pull to refresh
 
     fun pullToRefresh(pluginListType: PluginListType) {
@@ -197,8 +206,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             PluginBrowserViewModel.PluginListType.SEARCH -> {
-                val newStatus = if (loadMore) PluginListStatus.LOADING_MORE else PluginListStatus.FETCHING
-                _searchPluginsListStatus.postValue(newStatus)
+                listSearch = ListNetworkResource.Loading(listSearch, loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
             }
@@ -244,13 +252,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
-            when (event.type) {
-                PluginDirectoryType.FEATURED -> listFeatured = ListNetworkResource.Error(listFeatured, event.error.message, event.loadMore)
-                PluginDirectoryType.NEW -> listNew = ListNetworkResource.Error(listNew, event.error.message, event.loadMore)
-                PluginDirectoryType.POPULAR -> listPopular = ListNetworkResource.Error(listPopular, event.error.message, event.loadMore)
-                PluginDirectoryType.SITE -> listSite = ListNetworkResource.Error(listSite, event.error.message, event.loadMore)
-                null -> AppLog.e(T.PLUGINS, "shouldn't be null")
-            }
+            errorDirectory(event.type, event.error.message, event.loadMore)
         } else {
             successDirectory(event.type, event.canLoadMore)
         }
@@ -264,11 +266,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            _searchPluginsListStatus.postValue(PluginListStatus.ERROR)
+            listSearch = ListNetworkResource.Error(listSearch, event.error.message)
             return
         }
-        _searchResults.postValue(event.plugins)
-        _searchPluginsListStatus.postValue(PluginListStatus.DONE)
+        listSearch = ListNetworkResource.Success(event.plugins, false) // Disable pagination for search
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -393,34 +394,19 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 //    }
 
     private fun submitSearch(query: String, delayed: Boolean) {
-        // If the query is not long enough we don't need to delay it
-        if (delayed && shouldSearch) {
+        if (delayed) {
             handler.postDelayed({
                 if (query == searchQuery) {
                     submitSearch(query, false)
                 }
             }, 250)
         } else {
-            clearSearchResults()
+            listSearch = ListNetworkResource.Ready(ArrayList())
 
             if (shouldSearch) {
                 fetchPlugins(PluginListType.SEARCH, false)
-            } else {
-                // Due to the query being changed after the last fetch, the status won't ever be updated, so we need
-                // to manually do it. Consider the following case:
-                // 1. Search the plugins for "contact" which will change the status to FETCHING
-                // 2. Before the fetch completes delete the text
-                // 3. In `onPluginDirectorySearched` the result will be ignored, because the query changed, but it won't
-                // be triggered again, because another fetch didn't happen (due to query being empty)
-                // 4. The status will be stuck in FETCHING until another search occurs. The following reset fixes the
-                // problem.
-                _searchPluginsListStatus.postValue(PluginListStatus.DONE)
             }
         }
-    }
-
-    private fun clearSearchResults() {
-        _searchResults.postValue(ArrayList())
     }
 
     fun shouldShowEmptySearchResultsView(): Boolean {
@@ -428,10 +414,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldSearch) {
             return false
         }
-        return if (searchPluginsListStatus.value != PluginListStatus.DONE
-                && searchPluginsListStatus.value != PluginListStatus.ERROR) {
-            false
-        } else searchResults.value == null || searchResults.value!!.isEmpty()
+        return when (listSearch) {
+            is ListNetworkResource.Success, is ListNetworkResource.Error -> listSearch.data?.isEmpty() ?: true
+            else -> false
+        }
     }
 
     fun setTitle(title: String?) {

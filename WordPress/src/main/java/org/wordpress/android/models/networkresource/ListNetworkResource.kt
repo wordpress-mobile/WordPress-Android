@@ -32,34 +32,3 @@ sealed class ListNetworkResource<T> {
         }
     }
 }
-
-@Suppress("unused")
-sealed class SearchNetworkResource<T> {
-    protected var listNetworkResource: ListNetworkResource<T> = ListNetworkResource.Init()
-
-    class Ready<T> : SearchNetworkResource<T>() {
-        init {
-            listNetworkResource = ListNetworkResource.Ready(ArrayList())
-        }
-    }
-    class Error<T>(previous: SearchNetworkResource<T>,
-                   val errorMessage: String?,
-                   wasLoadingMore: Boolean = false) : SearchNetworkResource<T>() {
-        init {
-            listNetworkResource = ListNetworkResource.Error(previous.listNetworkResource, errorMessage, wasLoadingMore)
-        }
-    }
-    class Loading<T>(previous: SearchNetworkResource<T>, loadingMore: Boolean = false) : SearchNetworkResource<T>() {
-        init {
-            listNetworkResource = ListNetworkResource.Loading(previous.listNetworkResource, loadingMore)
-        }
-    }
-    class Success<T>(val data: List<T>, canLoadMore: Boolean = false) : SearchNetworkResource<T>() {
-        init {
-            listNetworkResource = ListNetworkResource.Success(data, canLoadMore)
-        }
-    }
-
-    fun shouldFetch(loadMore: Boolean): Boolean = listNetworkResource.shouldFetch(loadMore)
-    fun isFetching(loadMore: Boolean = false) = listNetworkResource.isFetching(loadMore)
-}

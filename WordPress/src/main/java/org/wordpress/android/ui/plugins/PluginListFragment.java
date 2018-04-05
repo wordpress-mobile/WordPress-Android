@@ -126,11 +126,19 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getSearchResults().observe(this, new Observer<List<ImmutablePluginModel>>() {
+        mViewModel.getSearchLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> searchResults) {
+            public void onChanged(
+                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (mListType == PluginListType.SEARCH) {
-                    setPlugins(searchResults);
+                    setPlugins(listNetworkResource.getData());
+
+//                    refreshProgressBars(listStatus);
+//                    if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
+//                        ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
+//                    }
+
+                    showEmptyView(mViewModel.shouldShowEmptySearchResultsView());
                 }
             }
         });
@@ -171,20 +179,6 @@ public class PluginListFragment extends Fragment {
 //                }
 //            }
 //        });
-
-        mViewModel.getSearchPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.SEARCH) {
-                    refreshProgressBars(listStatus);
-                    if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
-                        ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
-                    }
-
-                    showEmptyView(mViewModel.shouldShowEmptySearchResultsView());
-                }
-            }
-        });
     }
 
     @Override
