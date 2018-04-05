@@ -385,7 +385,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
-            startService(new Intent(this, GCMRegistrationIntentService.class));
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
         }
 
         // Refresh account informations
@@ -756,7 +757,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Synch Push Notifications settings
             if (isPushNotificationPingNeeded() && mAccountStore.hasAccessToken()) {
                 // Register for Cloud messaging
-                startService(new Intent(getContext(), GCMRegistrationIntentService.class));
+                GCMRegistrationIntentService.enqueueWork(getContext(),
+                        new Intent(getContext(), GCMRegistrationIntentService.class));
             }
         }
 

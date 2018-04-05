@@ -34,7 +34,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
         ((WordPress) getApplication()).component().inject(this);
     }
 
-    static void enqueueWork(Context context, Intent work) {
+    public static void enqueueWork(Context context, Intent work) {
         enqueueWork(context, GCMRegistrationIntentService.class, GCM_REG_SERVICE_JOB_ID, work);
     }
 
