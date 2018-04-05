@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -159,9 +158,10 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     private void buildNotificationWithIntent(Context context, PendingIntent intent, String message, int postId,
                                              boolean isPage) {
         NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(context,
-                NotificationsUtils.GENERAL_IMPORTANT_CHANNEL_ID);
+                context.getString(R.string.notification_channel_important_id));
         builder.setContentText(message)
-               .setPriority(NotificationCompat.PRIORITY_MAX);
+               .setPriority(NotificationCompat.PRIORITY_MAX)
+               .setOnlyAlertOnce(true);
         builder.setContentIntent(intent);
 
         if (postId != 0) {

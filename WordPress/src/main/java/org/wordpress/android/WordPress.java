@@ -330,7 +330,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // create Notification channels introduced in Android Oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the NORMAL channel (used for likes, comments, replies, etc.)
-            NotificationChannel normalChannel = new NotificationChannel(NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID,
+            NotificationChannel normalChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_normal_id),
                     getString(R.string.notification_channel_general_title), NotificationManager.IMPORTANCE_DEFAULT);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
@@ -341,7 +342,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
             // Create the IMPORTANT channel (used for 2fa auth, for example)
             NotificationChannel importantChannel = new NotificationChannel(
-                    NotificationsUtils.GENERAL_IMPORTANT_CHANNEL_ID,
+                    getString(R.string.notification_channel_important_id),
                     getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this

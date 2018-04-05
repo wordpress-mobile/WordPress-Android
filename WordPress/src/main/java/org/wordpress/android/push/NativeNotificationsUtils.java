@@ -6,7 +6,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 
@@ -20,8 +19,10 @@ public class NativeNotificationsUtils {
     }
 
     public static void showMessageToUser(String message, boolean intermediateMessage, int pushId, Context context) {
-        NotificationCompat.Builder builder = getBuilder(context, NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID)
-                .setContentText(message).setTicker(message);
+        NotificationCompat.Builder builder = getBuilder(context,
+                context.getString(R.string.notification_channel_normal_id))
+                .setContentText(message).setTicker(message)
+                .setOnlyAlertOnce(true);
         showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
     }
 

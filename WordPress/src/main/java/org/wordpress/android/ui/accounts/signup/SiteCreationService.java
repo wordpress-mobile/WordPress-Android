@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -121,7 +120,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         static Notification progress(Context context, int progress, @StringRes int titleString,
                                      @StringRes int stepString) {
             return AutoForegroundNotification.progress(context,
-                                                       NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID,
+                                                       context.getString(R.string.notification_channel_normal_id),
                                                        progress,
                                                        titleString,
                                                        stepString,
@@ -131,7 +130,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         static Notification success(Context context) {
             return AutoForegroundNotification.success(context,
-                                                      NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID,
+                                                      context.getString(R.string.notification_channel_normal_id),
                                                       R.string.notification_site_creation_title_success,
                                                       R.string.notification_site_creation_created,
                                                       R.drawable.ic_my_sites_24dp,
@@ -140,7 +139,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         static Notification failure(Context context, @StringRes int content) {
             return AutoForegroundNotification.failure(context,
-                                                      NotificationsUtils.GENERAL_NORMAL_CHANNEL_ID,
+                                                      context.getString(R.string.notification_channel_normal_id),
                                                       R.string.notification_site_creation_title_stopped,
                                                       content,
                                                       R.drawable.ic_my_sites_24dp,
