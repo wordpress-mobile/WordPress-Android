@@ -309,14 +309,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 val map: (ImmutablePluginModel) -> ImmutablePluginModel? = { currentPlugin ->
                     if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
                 }
-                listFeatured = listFeatured.updated(map)
-                listNew = listNew.updated(map)
-                listSearch = listSearch.updated(map)
-                listPopular = listPopular.updated(map)
+                listFeatured = listFeatured.updatedListNetworkResource(map)
+                listNew = listNew.updatedListNetworkResource(map)
+                listSearch = listSearch.updatedListNetworkResource(map)
+                listPopular = listPopular.updatedListNetworkResource(map)
 
-                // TODO: explain why we use different map here
-                listSite = listSite.updated { currentPlugin ->
+                listSite = listSite.updatedListNetworkResource { currentPlugin ->
                     if (currentPlugin.slug == slug) {
+                        // plugin might be uninstalled
                         if (updatedPlugin.isInstalled) updatedPlugin else null
                     } else {
                         currentPlugin
