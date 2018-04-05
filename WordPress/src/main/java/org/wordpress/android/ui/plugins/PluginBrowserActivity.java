@@ -57,7 +57,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    protected PluginBrowserViewModel mViewModel;
+    private PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mFeaturedPluginsRecycler;
@@ -169,14 +169,12 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        // TODO: Only reload data for certain status changes or if the data is missing
-
         mViewModel.getSitePluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (listNetworkResource != null) {
-                    reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource.getData());
+                    reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource);
 
                     showProgress(listNetworkResource.isFetchingFirstPage() && listNetworkResource.getData().isEmpty());
 
@@ -195,7 +193,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (listNetworkResource != null) {
-                    reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource.getData());
+                    reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource);
                 }
             }
         });
@@ -205,7 +203,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                     if (listNetworkResource != null) {
-                        reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource.getData());
+                        reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource);
                     }
             }
         });
@@ -215,7 +213,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
                 if (listNetworkResource != null) {
-                    reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource.getData());
+                    reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource);
                 }
             }
         });
@@ -265,8 +263,15 @@ public class PluginBrowserActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
-                                                    @Nullable List<ImmutablePluginModel> plugins) {
+    private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
+                                                  @Nullable ListNetworkResource<ImmutablePluginModel>
+                                                          listNetworkResource) {
+        // TODO: Find a better way to check for the status change and when to reload the data
+        // Don't reload for every status change, only do it when necessary
+        if (listNetworkResource == null || !(listNetworkResource instanceof ListNetworkResource.Ready
+                                             || listNetworkResource instanceof ListNetworkResource.Success)) {
+            return;
+        }
         PluginBrowserAdapter adapter = null;
         View cardView = null;
         switch (pluginType) {
@@ -292,9 +297,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (adapter == null || cardView == null) {
             return;
         }
+        List<ImmutablePluginModel> plugins = listNetworkResource.getData();
         adapter.setPlugins(plugins);
 
-        int newVisibility = plugins != null && plugins.size() > 0 ? View.VISIBLE : View.GONE;
+        int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
         if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
             AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
@@ -318,7 +324,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return true;
     }
 
-    protected void showListFragment(@NonNull PluginListType listType) {
+    private void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
         getSupportFragmentManager().beginTransaction()
                                    .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
@@ -335,7 +341,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    protected void showProgress(boolean show) {
+    private void showProgress(boolean show) {
         findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
@@ -369,7 +375,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             notifyDataSetChanged();
         }
 
-        protected @Nullable Object getItem(int position) {
+        private @Nullable Object getItem(int position) {
             return mItems.getItem(position);
         }
 

@@ -85,66 +85,61 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSitePluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (mListType == PluginListType.SITE && listNetworkResource != null) {
-                    setPlugins(listNetworkResource.getData());
-                    refreshProgressBars(listNetworkResource);
-                }
-            }
-        });
+        mViewModel.getSitePluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (mListType == PluginListType.SITE) {
+                              refreshPluginsAndProgressBars(listNetworkResource);
+                          }
+                      }
+                  });
 
-        mViewModel.getFeaturedPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (mListType == PluginListType.FEATURED && listNetworkResource != null) {
-                    setPlugins(listNetworkResource.getData());
-                    refreshProgressBars(listNetworkResource);
-                }
-            }
-        });
+        mViewModel.getFeaturedPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (mListType == PluginListType.FEATURED) {
+                              refreshPluginsAndProgressBars(listNetworkResource);
+                          }
+                      }
+                  });
 
-        mViewModel.getPopularPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (mListType == PluginListType.POPULAR && listNetworkResource != null) {
-                    setPlugins(listNetworkResource.getData());
-                    refreshProgressBars(listNetworkResource);
-                }
-            }
-        });
+        mViewModel.getPopularPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (mListType == PluginListType.POPULAR) {
+                              refreshPluginsAndProgressBars(listNetworkResource);
+                          }
+                      }
+                  });
 
-        mViewModel.getNewPluginsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (mListType == PluginListType.NEW && listNetworkResource != null) {
-                    setPlugins(listNetworkResource.getData());
-                    refreshProgressBars(listNetworkResource);
-                }
-            }
-        });
+        mViewModel.getNewPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (mListType == PluginListType.NEW) {
+                              refreshPluginsAndProgressBars(listNetworkResource);
+                          }
+                      }
+                  });
 
-        mViewModel.getSearchResultsLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(
-                    @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                if (mListType == PluginListType.SEARCH && listNetworkResource != null) {
-                    setPlugins(listNetworkResource.getData());
-                    refreshProgressBars(listNetworkResource);
+        mViewModel.getSearchResultsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (mListType == PluginListType.SEARCH) {
+                              refreshPluginsAndProgressBars(listNetworkResource);
 
-                    if (listNetworkResource instanceof ListNetworkResource.Error) {
-                        ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
-                    }
+                              if (listNetworkResource instanceof ListNetworkResource.Error) {
+                                  ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
+                              }
 
-                    showEmptyView(mViewModel.shouldShowEmptySearchResultsView());
-                }
-            }
-        });
+                              showEmptyView(mViewModel.shouldShowEmptySearchResultsView());
+                          }
+                      }
+                  });
     }
 
     @Override
@@ -176,23 +171,32 @@ public class PluginListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void setPlugins(@Nullable final List<ImmutablePluginModel> plugins) {
+    private void refreshPluginsAndProgressBars(
+            @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+        if (listNetworkResource == null) {
+            return;
+        }
         final PluginListAdapter adapter;
+        boolean firstTime = false;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
             mRecycler.setAdapter(adapter);
+            firstTime = true;
         } else {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
-        mRecycler.post(new Runnable() {
-            @Override public void run() {
-                adapter.setPlugins(plugins);
-            }
-        });
+        // TODO: Find a better way to check for the status change and when to reload the data
+        // Don't reload for every status change, only do it when necessary
+        if (firstTime
+            || listNetworkResource instanceof ListNetworkResource.Ready
+            || listNetworkResource instanceof ListNetworkResource.Success) {
+            adapter.setPlugins(listNetworkResource.getData());
+        }
+        refreshProgressBars(listNetworkResource);
     }
 
-    protected void refreshProgressBars(@NonNull ListNetworkResource listNetworkResource) {
-        if (!isAdded() || getView() == null) {
+    protected void refreshProgressBars(@Nullable ListNetworkResource listNetworkResource) {
+        if (!isAdded() || getView() == null || listNetworkResource == null) {
             return;
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
