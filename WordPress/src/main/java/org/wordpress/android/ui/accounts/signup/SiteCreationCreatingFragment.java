@@ -352,7 +352,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mutateToCompleted(mWebViewLoadedInTime);
                 break;
         }
-        
         getView().announceForAccessibility(statusAnnouncement);
     }
 }
