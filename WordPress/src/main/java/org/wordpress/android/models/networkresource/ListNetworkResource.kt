@@ -1,40 +1,31 @@
 package org.wordpress.android.models.networkresource
 
 @Suppress("unused")
-sealed class ListNetworkResource<T>(val data: List<T>) {
-    class Init<T> : ListNetworkResource<T>(ArrayList()) {
-        override fun updated(newItem: T, compare: (old: T, new: T) -> Boolean): ListNetworkResource<T> {
-            return this
-        }
+sealed class ListNetworkResource<T : Any>(val data: List<T>) {
+    class Init<T : Any> : ListNetworkResource<T>(ArrayList()) {
+        override fun updated(map: (old: T) -> T?) = this
     }
 
-    class Ready<T>(data: List<T>) : ListNetworkResource<T>(data) {
-        override fun updated(newItem: T, compare: (old: T, new: T) -> Boolean): ListNetworkResource<T> {
-            return Ready(updatedData(newItem, compare))
-        }
+    class Ready<T : Any>(data: List<T>) : ListNetworkResource<T>(data) {
+        override fun updated(map: (old: T) -> T?) = Ready(mappedData(map))
     }
 
-    class Success<T>(data: List<T>, val canLoadMore: Boolean = false) : ListNetworkResource<T>(data) {
-        override fun updated(newItem: T, compare: (old: T, new: T) -> Boolean): ListNetworkResource<T> {
-            return Success(updatedData(newItem, compare), canLoadMore)
-        }
+    class Success<T : Any>(data: List<T>, val canLoadMore: Boolean = false) : ListNetworkResource<T>(data) {
+        override fun updated(map: (old: T) -> T?) = Success(mappedData(map), canLoadMore)
     }
 
-    class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean) : ListNetworkResource<T>(data) {
+    class Loading<T : Any> private constructor(data: List<T>, val loadingMore: Boolean) : ListNetworkResource<T>(data) {
         constructor(previous: ListNetworkResource<T>, loadingMore: Boolean = false): this(previous.data, loadingMore)
 
-        override fun updated(newItem: T, compare: (old: T, new: T) -> Boolean): ListNetworkResource<T> {
-            return Loading(updatedData(newItem, compare), loadingMore)
-        }
+        override fun updated(map: (old: T) -> T?) = Loading(mappedData(map), loadingMore)
     }
 
-    class Error<T>private constructor(data: List<T>, val errorMessage: String?, val wasLoadingMore: Boolean)
+    class Error<T : Any> private constructor(data: List<T>, val errorMessage: String?, val wasLoadingMore: Boolean)
         : ListNetworkResource<T>(data) {
         constructor(previous: ListNetworkResource<T>, errorMessage: String?, wasLoadingMore: Boolean = false)
                 : this(previous.data, errorMessage, wasLoadingMore)
-        override fun updated(newItem: T, compare: (old: T, new: T) -> Boolean): ListNetworkResource<T> {
-            return Error(updatedData(newItem, compare), errorMessage, wasLoadingMore)
-        }
+
+        override fun updated(map: (old: T) -> T?) = Error(mappedData(map), errorMessage, wasLoadingMore)
     }
 
     fun shouldFetch(loadMore: Boolean): Boolean {
@@ -49,9 +40,9 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
 
     fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
 
-    abstract fun updated(newItem: T, compare: (old: T, new: T) -> Boolean): ListNetworkResource<T>
+    abstract fun updated(map: (old: T) -> T?): ListNetworkResource<T>
 
-    protected fun updatedData(newItem: T, compare: (old: T, new: T) -> Boolean): List<T> {
-        return data.map { if (compare(it, newItem)) newItem else it }
+    protected fun mappedData(map: (old: T) -> T?): List<T> {
+        return data.mapNotNull { map(it) }
     }
 }

@@ -306,17 +306,22 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private fun updateAllPluginListsForSlug(slug: String?) {
         site?.let { site ->
             mPluginStore.getImmutablePluginBySlug(site, slug)?.let { updatedPlugin ->
-                val compare: (ImmutablePluginModel, ImmutablePluginModel) -> Boolean = { first, second ->
-                    first.slug.equals(second.slug)
+                val map: (ImmutablePluginModel) -> ImmutablePluginModel? = { currentPlugin ->
+                    if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
                 }
-                listFeatured = listFeatured.updated(updatedPlugin, compare)
-                listNew = listNew.updated(updatedPlugin, compare)
-                listSearch = listSearch.updated(updatedPlugin, compare)
-                listPopular = listPopular.updated(updatedPlugin, compare)
+                listFeatured = listFeatured.updated(map)
+                listNew = listNew.updated(map)
+                listSearch = listSearch.updated(map)
+                listPopular = listPopular.updated(map)
 
-                // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins
-                // can mess up the list. Also we care most about the Site Plugins and using the store to get the correct
-                // plugin information is much more reliable than any manual update we can make
+                // TODO: explain why we use different map here
+                listSite = listSite.updated { currentPlugin ->
+                    if (currentPlugin.slug == slug) {
+                        if (updatedPlugin.isInstalled) updatedPlugin else null
+                    } else {
+                        currentPlugin
+                    }
+                }
             }
         }
     }
