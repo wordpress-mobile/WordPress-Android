@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 
 import java.util.EnumSet;
@@ -37,7 +38,7 @@ public class ReaderUpdateService extends Service implements ServiceCompletionLis
     @Override
     public void onCreate() {
         super.onCreate();
-        mReaderUpdateLogic = new ReaderUpdateLogic(this);
+        mReaderUpdateLogic = new ReaderUpdateLogic((WordPress) getApplication(), this);
         AppLog.i(AppLog.T.READER, "reader service > created");
     }
 

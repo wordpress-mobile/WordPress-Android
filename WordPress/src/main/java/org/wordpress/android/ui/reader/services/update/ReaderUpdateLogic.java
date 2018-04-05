@@ -42,12 +42,13 @@ public class ReaderUpdateLogic {
     }
 
     private EnumSet<UpdateTask> mCurrentTasks;
-    private final ServiceCompletionListener mCompletionListener;
+    private ServiceCompletionListener mCompletionListener;
 
     @Inject AccountStore mAccountStore;
 
-    public ReaderUpdateLogic(ServiceCompletionListener listener) {
+    public ReaderUpdateLogic(WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
+        app.component().inject(this);
     }
 
     public void performTasks(EnumSet<UpdateTask> tasks) {
