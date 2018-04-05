@@ -752,9 +752,7 @@ public class AccountStore extends Store {
             case UPDATE_SUBSCRIPTION_NOTIFICATION_POST:
                 createAddOrDeleteSubscriptionNotificationPost((AddOrDeleteSubscriptionPayload) payload);
                 break;
-            case UPDATED_SUBSCRIPTION_EMAIL_COMMENT:
-            case UPDATED_SUBSCRIPTION_EMAIL_POST:
-            case UPDATED_SUBSCRIPTION_NOTIFICATION_POST:
+            case UPDATED_SUBSCRIPTION:
                 handleUpdatedSubscription((SubscriptionResponsePayload) payload);
                 break;
         }
