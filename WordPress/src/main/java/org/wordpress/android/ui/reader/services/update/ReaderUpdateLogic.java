@@ -42,7 +42,6 @@ public class ReaderUpdateLogic {
     }
 
     private EnumSet<UpdateTask> mCurrentTasks;
-    private static final String ARG_UPDATE_TASKS = "update_tasks";
     private final ServiceCompletionListener mCompletionListener;
 
     @Inject AccountStore mAccountStore;
