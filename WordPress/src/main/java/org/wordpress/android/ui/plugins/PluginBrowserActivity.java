@@ -40,6 +40,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
@@ -172,7 +173,18 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource.getData());
+                if (listNetworkResource != null) {
+                    reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource.getData());
+
+                    showProgress(listNetworkResource.isFetchingFirstPage() && listNetworkResource.getData().isEmpty());
+
+                    // We should ignore the errors due to network condition, unless this is the first fetch, the user
+                    // can use the cached data and showing the error while the data is loaded might cause confusion
+                    if (listNetworkResource instanceof ListNetworkResource.Error
+                        && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
+                        ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
+                    }
+                }
             }
         });
 
@@ -180,7 +192,9 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource.getData());
+                if (listNetworkResource != null) {
+                    reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource.getData());
+                }
             }
         });
 
@@ -188,7 +202,9 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource.getData());
+                    if (listNetworkResource != null) {
+                        reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource.getData());
+                    }
             }
         });
 
@@ -196,24 +212,11 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onChanged(
                     @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-                reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource.getData());
+                if (listNetworkResource != null) {
+                    reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource.getData());
+                }
             }
         });
-
-//        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-//            @Override
-//            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-//                showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-//                             && mViewModel.isSitePluginsEmpty());
-//
-//                // We should ignore the errors due to network condition, unless this is the first fetch, the user can
-//                // use the cached version of them and showing the error while the data is loaded might cause confusion
-//                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
-//                    && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
-//                    ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
-//                }
-//            }
-//        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {

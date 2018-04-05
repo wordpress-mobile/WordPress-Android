@@ -38,14 +38,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         SEARCH
     }
 
-    enum class PluginListStatus {
-        CAN_LOAD_MORE,
-        DONE,
-        ERROR,
-        FETCHING,
-        LOADING_MORE
-    }
-
     private var isStarted = false
 
     private val handler = Handler()
@@ -165,10 +157,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     private fun errorDirectory(directoryType: PluginDirectoryType, errorMessage: String?, loadMore: Boolean) {
         when (directoryType) {
-            PluginDirectoryType.FEATURED -> listFeatured = ListNetworkResource.Error(listFeatured, errorMessage, loadMore)
-            PluginDirectoryType.NEW -> listNew = ListNetworkResource.Error(listNew, errorMessage, loadMore)
-            PluginDirectoryType.POPULAR -> listPopular = ListNetworkResource.Error(listPopular, errorMessage, loadMore)
-            PluginDirectoryType.SITE -> listSite = ListNetworkResource.Error(listSite, errorMessage, loadMore)
+            PluginDirectoryType.FEATURED ->
+                listFeatured = ListNetworkResource.Error(listFeatured, errorMessage, loadMore)
+            PluginDirectoryType.NEW ->
+                listNew = ListNetworkResource.Error(listNew, errorMessage, loadMore)
+            PluginDirectoryType.POPULAR ->
+                listPopular = ListNetworkResource.Error(listPopular, errorMessage, loadMore)
+            PluginDirectoryType.SITE ->
+                listSite = ListNetworkResource.Error(listSite, errorMessage, loadMore)
         }
     }
 
@@ -359,9 +355,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 //        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
 //        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
 //
-//        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
-//        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
-//        // information is much more reliable than any manual update we can make
+//        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins
+//        // can mess up the list. Also we care most about the Site Plugins and using the store to get the correct
+//        // plugin information is much more reliable than any manual update we can make
 //        reloadPluginDirectory(PluginDirectoryType.SITE)
 //    }
 //
@@ -415,7 +411,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             return false
         }
         return when (listSearch) {
-            is ListNetworkResource.Success, is ListNetworkResource.Error -> listSearch.data?.isEmpty() ?: true
+            is ListNetworkResource.Success, is ListNetworkResource.Error -> listSearch.data.isEmpty()
             else -> false
         }
     }

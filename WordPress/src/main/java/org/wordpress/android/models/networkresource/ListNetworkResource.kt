@@ -1,21 +1,15 @@
 package org.wordpress.android.models.networkresource
 
 @Suppress("unused")
-sealed class ListNetworkResource<T> {
-    open val data: List<T>? = null
+sealed class ListNetworkResource<T>(val data: List<T>) {
+    class Init<T> : ListNetworkResource<T>(ArrayList())
+    class Ready<T>(data: List<T>) : ListNetworkResource<T>(data)
+    class Success<T>(data: List<T>, val canLoadMore: Boolean = false) : ListNetworkResource<T>(data)
+    class Loading<T>(previous: ListNetworkResource<T>, val loadingMore: Boolean = false)
+        : ListNetworkResource<T>(previous.data)
 
-    class Init<T> : ListNetworkResource<T>()
-    class Ready<T>(override val data: List<T>) : ListNetworkResource<T>()
     class Error<T>(previous: ListNetworkResource<T>, val errorMessage: String?, val wasLoadingMore: Boolean = false)
-        : ListNetworkResource<T>() {
-        override val data = previous.data
-    }
-
-    class Loading<T>(previous: ListNetworkResource<T>, val loadingMore: Boolean = false) : ListNetworkResource<T>() {
-        override val data = previous.data
-    }
-
-    class Success<T>(override val data: List<T>, val canLoadMore: Boolean = false) : ListNetworkResource<T>()
+        : ListNetworkResource<T>(previous.data)
 
     fun shouldFetch(loadMore: Boolean): Boolean {
         return when (this) {
@@ -25,10 +19,6 @@ sealed class ListNetworkResource<T> {
         }
     }
 
-    fun isFetching(loadMore: Boolean = false): Boolean {
-        return when (this) {
-            is Loading -> if (loadMore) loadingMore else !loadingMore
-            else -> false
-        }
-    }
+    fun isFetchingFirstPage(): Boolean = if (this is Loading) !loadingMore else false
+    fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
 }
