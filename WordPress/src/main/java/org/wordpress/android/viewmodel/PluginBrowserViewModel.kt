@@ -211,7 +211,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
-        if (listType == PluginListType.SITE || SiteUtils.isNonAtomicBusinessPlanSite(site)) {
+        if (listType == PluginListType.SITE && SiteUtils.isNonAtomicBusinessPlanSite(site)) {
             return false
         }
         val currentStatus = when (listType) {

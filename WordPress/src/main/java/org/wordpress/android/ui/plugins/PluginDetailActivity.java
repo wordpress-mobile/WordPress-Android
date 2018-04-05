@@ -1097,7 +1097,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (isFinishing()) {
             return;
         }
-        if (!event.isError()) {
+        if (event.isError()) {
             handleAutomatedTransferFailed(event.error.message);
         } else{
             mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
@@ -1110,7 +1110,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (isFinishing()) {
             return;
         }
-        if (!event.isError()) {
+        if (event.isError()) {
             handleAutomatedTransferFailed(event.error.message);
         } else{
             if (event.isCompleted) {
