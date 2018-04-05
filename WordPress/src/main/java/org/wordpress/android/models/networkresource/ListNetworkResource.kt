@@ -32,10 +32,11 @@ sealed class ListNetworkResource<T : Any>(val data: List<T>) {
 
     fun shouldFetch(loadMore: Boolean): Boolean {
         return when (this) {
-            is Init -> {
+            is Init -> { // Not ready yet
+                // TODO: Don't use T.MAIN for the log
                 AppLog.e(AppLog.T.MAIN, "ListNetworkResource should be ready before fetching")
                 false
-            } // Not ready yet
+            }
             is Loading -> false // Already fetching
             is Success -> if (loadMore) canLoadMore else true // Trying to load more or refreshing
             else -> !loadMore // First page can be fetched since we are not fetching anything else

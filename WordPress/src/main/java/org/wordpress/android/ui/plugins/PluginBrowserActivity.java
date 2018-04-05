@@ -369,7 +369,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<? extends ImmutablePluginModel> items) {
+        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
             mItems.clear();
             mItems.addAll(items);
             notifyDataSetChanged();

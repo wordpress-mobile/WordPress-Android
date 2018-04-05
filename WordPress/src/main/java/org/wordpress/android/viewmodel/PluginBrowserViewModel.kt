@@ -294,6 +294,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                     if (currentPlugin.slug == slug) {
                         // plugin might be uninstalled
                         if (updatedPlugin.isInstalled) updatedPlugin else null
+                        // TODO: Handle the case where a new plugin is installed so can't be mapped
                     } else {
                         currentPlugin
                     }
