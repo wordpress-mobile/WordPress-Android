@@ -93,11 +93,7 @@ public enum AccountAction implements IAction {
     @Action(payloadType = SubscriptionsModel.class)
     FETCHED_SUBSCRIPTIONS,
     @Action(payloadType = SubscriptionResponsePayload.class)
-    UPDATED_SUBSCRIPTION_EMAIL_COMMENT,
-    @Action(payloadType = SubscriptionResponsePayload.class)
-    UPDATED_SUBSCRIPTION_EMAIL_POST,
-    @Action(payloadType = SubscriptionResponsePayload.class)
-    UPDATED_SUBSCRIPTION_NOTIFICATION_POST,
+    UPDATED_SUBSCRIPTION,
 
     // Local actions
     @Action(payloadType = AccountModel.class)

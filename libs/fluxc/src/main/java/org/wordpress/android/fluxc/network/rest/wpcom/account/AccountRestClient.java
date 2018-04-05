@@ -688,7 +688,7 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     /**
      * Performs an HTTP POST call to v1.2 /read/site/$site/comment_email_subscriptions/$action endpoint.  Upon
-     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_EMAIL_COMMENT} action
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION} action
      * is dispatched with a payload of type {@link SubscriptionResponsePayload}.
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
@@ -705,7 +705,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailCommentAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -714,7 +714,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
                         payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
                                 error.message);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailCommentAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 }
         );
@@ -723,7 +723,7 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     /**
      * Performs an HTTP POST call to v1.2 /read/site/$site/post_email_subscriptions/$action endpoint.  Upon
-     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_EMAIL_POST} action
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION} action
      * is dispatched with a payload of type {@link SubscriptionResponsePayload}.
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
@@ -740,7 +740,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -749,7 +749,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
                         payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
                                 error.message);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 }
         );
@@ -758,7 +758,7 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     /**
      * Performs an HTTP POST call to v1.2 /read/site/$site/post_email_subscriptions/update endpoint.  Upon
-     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_EMAIL_POST} action
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION} action
      * is dispatched with a payload of type {@link SubscriptionResponsePayload}.
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
@@ -777,7 +777,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -786,7 +786,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
                         payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
                                 error.message);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionEmailPostAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 }
         );
@@ -795,8 +795,8 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     /**
      * Performs an HTTP POST call to v2 /read/sites/$site/notification-subscriptions/$action endpoint.  Upon
-     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION_NOTIFICATION_POST}
-     * action is dispatched with a payload of type {@link SubscriptionResponsePayload}.
+     * receiving a response (success or error) a {@link AccountAction#UPDATED_SUBSCRIPTION} action
+     * is dispatched with a payload of type {@link SubscriptionResponsePayload}.
      *
      * {@link SubscriptionResponsePayload#isError()} can be used to check the request result.
      *
@@ -812,7 +812,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionNotificationPostAction(
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(
                                 payload));
                     }
                 },
@@ -822,7 +822,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
                         payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
                                 error.message);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionNotificationPostAction(
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(
                                 payload));
                     }
                 }
