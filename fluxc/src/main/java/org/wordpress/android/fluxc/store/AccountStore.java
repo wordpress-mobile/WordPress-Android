@@ -165,8 +165,19 @@ public class AccountStore extends Store {
             this.action = action;
         }
         public enum SubscriptionAction {
-            DELETE,
-            NEW
+            DELETE("delete"),
+            NEW("new");
+
+            private final String mString;
+
+            SubscriptionAction(final String s) {
+                mString = s;
+            }
+
+            @Override
+            public String toString() {
+                return mString;
+            }
         }
     }
 
@@ -178,9 +189,20 @@ public class AccountStore extends Store {
             this.frequency = frequency;
         }
         public enum SubscriptionFrequency {
-            DAILY,
-            INSTANTLY,
-            WEEKLY
+            DAILY("daily"),
+            INSTANTLY("instantly"),
+            WEEKLY("weekly");
+
+            private final String mString;
+
+            SubscriptionFrequency(final String s) {
+                mString = s;
+            }
+
+            @Override
+            public String toString() {
+                return mString;
+            }
         }
     }
 
