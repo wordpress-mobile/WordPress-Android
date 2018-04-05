@@ -1,5 +1,7 @@
 package org.wordpress.android.models.networkresource
 
+import org.wordpress.android.util.AppLog
+
 sealed class ListNetworkResource<T : Any>(val data: List<T>) {
     class Init<T : Any> : ListNetworkResource<T>(ArrayList()) {
         override fun updatedListNetworkResource(map: (old: T) -> T?) = this
@@ -30,6 +32,10 @@ sealed class ListNetworkResource<T : Any>(val data: List<T>) {
 
     fun shouldFetch(loadMore: Boolean): Boolean {
         return when (this) {
+            is Init -> {
+                AppLog.e(AppLog.T.MAIN, "ListNetworkResource should be ready before fetching")
+                false
+            } // Not ready yet
             is Loading -> false // Already fetching
             is Success -> if (loadMore) canLoadMore else true // Trying to load more or refreshing
             else -> !loadMore // First page can be fetched since we are not fetching anything else
