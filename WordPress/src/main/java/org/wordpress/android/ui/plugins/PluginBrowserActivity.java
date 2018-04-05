@@ -169,6 +169,8 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
+        // TODO: Only reload data for certain status changes or if the data is missing
+
         mViewModel.getSiteLiveData().observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
             @Override
             public void onChanged(

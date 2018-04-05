@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.os.Bundle
 import android.os.Handler
-import android.text.TextUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.WordPress
@@ -19,7 +18,6 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.models.networkresource.ListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import java.util.HashSet
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -41,7 +39,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private var isStarted = false
 
     private val handler = Handler()
-    private val updatedPluginSlugSet = HashSet<String>()
 
     val featuredLiveData = MutableLiveData<PluginListNetworkResource>()
     val popularLiveData = MutableLiveData<PluginListNetworkResource>()
@@ -235,11 +232,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!event.pluginSlug.isNullOrEmpty() && updatedPluginSlugSet.add(event.pluginSlug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.pluginSlug)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -275,11 +268,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -289,11 +278,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -303,11 +288,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -317,77 +298,28 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
     // Keeping the data up to date
 
-    private fun updateAllPluginListsIfNecessary() {
-//        val copiedSet = HashSet(updatedPluginSlugSet)
-//        handler.postDelayed({
-//            // Using the size of the set for comparison might fail since we clear the updatedPluginSlugSet
-//            if (copiedSet == updatedPluginSlugSet) {
-//                updateAllPluginListsWithNewPlugins(copiedSet)
-//                updatedPluginSlugSet.clear()
-//            }
-//        }, 250)
+    private fun updateAllPluginListsForSlug(slug: String?) {
+        site?.let { site ->
+            mPluginStore.getImmutablePluginBySlug(site, slug)?.let { updatedPlugin ->
+                val compare: (ImmutablePluginModel, ImmutablePluginModel) -> Boolean = { first, second ->
+                    first.slug.equals(second.slug)
+                }
+                listFeatured = listFeatured.updated(updatedPlugin, compare)
+                listNew = listNew.updated(updatedPlugin, compare)
+                listSearch = listSearch.updated(updatedPlugin, compare)
+                listPopular = listPopular.updated(updatedPlugin, compare)
+
+                // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins
+                // can mess up the list. Also we care most about the Site Plugins and using the store to get the correct
+                // plugin information is much more reliable than any manual update we can make
+            }
+        }
     }
-//
-//    private fun updateAllPluginListsWithNewPlugins(updatedPluginSlugSet: Set<String>) {
-//        if (updatedPluginSlugSet.isEmpty()) {
-//            return
-//        }
-//        val newPluginMap = HashMap<String, ImmutablePluginModel>(updatedPluginSlugSet.size)
-//        for (slug in updatedPluginSlugSet) {
-//            val immutablePlugin = mPluginStore.getImmutablePluginBySlug(site!!, slug)
-//            if (immutablePlugin != null) {
-//                newPluginMap[slug] = immutablePlugin
-//            }
-//        }
-//        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
-//        // reflected
-//        updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
-//        updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
-//        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
-//        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
-//
-//        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins
-//        // can mess up the list. Also we care most about the Site Plugins and using the store to get the correct
-//        // plugin information is much more reliable than any manual update we can make
-//        reloadPluginDirectory(PluginDirectoryType.SITE)
-//    }
-//
-//    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
-//                                              newPluginMap: Map<String, ImmutablePluginModel>) {
-//        val pluginList = mutableLiveData.value
-//        if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
-//            // Nothing to update
-//            return
-//        }
-//        // When a site or wporg plugin is updated we need to update every occurrence of that item
-//        val newList = ArrayList<ImmutablePluginModel>(pluginList.size)
-//        var isChanged = false
-//        for (immutablePlugin in pluginList) {
-//            val slug = immutablePlugin.slug
-//            val newPlugin = newPluginMap[slug]
-//            if (newPlugin != null) {
-//                // add new item
-//                newList.add(newPlugin)
-//                isChanged = true
-//            } else {
-//                // add old item
-//                newList.add(immutablePlugin)
-//            }
-//        }
-//        // Only update if the list is actually changed
-//        if (isChanged) {
-//            mutableLiveData.postValue(newList)
-//        }
-//    }
 
     private fun submitSearch(query: String, delayed: Boolean) {
         if (delayed) {
