@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.widgets.AutoResizeTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -130,8 +132,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // internally and overriding it with paddingLeft causes the issue report here
         // https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            ViewCompat.setPaddingRelative(mVisitorsCheckbox,
-                    getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
+            ViewCompat
+                    .setPaddingRelative(mVisitorsCheckbox, getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                            0, 0, 0);
         }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
@@ -154,7 +157,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private class TabViewHolder {
         private final LinearLayout mTab;
         private final LinearLayout mInnerContainer;
-        private final TextView mLabel;
+        private final AutoResizeTextView mLabel;
         private final TextView mValue;
         private final ImageView mIcon;
         private final OverviewLabel mLabelItem;
@@ -164,7 +167,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
             mTab = currentTab;
             mInnerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
-            mLabel = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+            mLabel = (AutoResizeTextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+            mLabel.setMinTextSize(getResources().getDimensionPixelSize(R.dimen.stats_label_min_text_size));
             mLabel.setText(labelItem.getLabel());
             mValue = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
             mIcon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
@@ -217,6 +221,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public void setChecked(boolean checked) {
+            if (checked) {
+                mTab.announceForAccessibility(
+                        mTab.getContext().getString(R.string.stats_tab_tap_content_description, mLabelItem.getLabel()));
+            }
             this.mIsChecked = checked;
         }
     }
@@ -256,8 +264,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mSelectedOverviewItemIndex = checkedId;
             if (mOverviewItemChangeListener != null) {
                 mOverviewItemChangeListener.onOverviewItemChanged(
-                        mOverviewItems[mSelectedOverviewItemIndex]
-                                                                 );
+                        mOverviewItems[mSelectedOverviewItemIndex]);
             }
             updateUI();
         }
@@ -487,10 +494,15 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         // Set the maximum size a column can get on the screen in PX
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
-                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
-                                                        );
+                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
+        mGraphView.getGraphViewStyle().setTextSize(
+                getResources().getDimensionPixelOffset(R.dimen.stats_legent_text_size));
         mGraphView.setHorizontalLabels(horLabels);
+        mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
+                mainSeriesItems, selectedStatsType));
         mGraphView.setGestureListener(this);
+        mGraphView.setImportantForAccessibility(atLeastOneResultIsAvailable
+                ? View.IMPORTANT_FOR_ACCESSIBILITY_YES : View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
         // If zero results in the current section disable clicks on the graph and show the dialog.
         mNoActivtyThisPeriodContainer.setVisibility(atLeastOneResultIsAvailable ? View.GONE : View.VISIBLE);
@@ -524,6 +536,35 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         updateUIBelowTheGraph(barSelectedOnGraph);
         mGraphView.highlightBar(barSelectedOnGraph);
+    }
+
+    private String[] makeAccessibleHorizontalLabels(String[] horizontalLabels,
+                                                    GraphView.GraphViewData[] dataToShowOnGraph,
+                                                    OverviewLabel typeOfStats) {
+        String[] accessibleLabels = new String[horizontalLabels.length];
+
+        for (int i = 0; i < horizontalLabels.length; i++) {
+            String barDate;
+
+            if (getTimeframe() == StatsTimeframe.MONTH) {
+                barDate = StatsUtils.parseDateToLocalizedFormat(
+                        horizontalLabels[i],
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT);
+            } else if (getTimeframe() == StatsTimeframe.WEEK) {
+                barDate = getString(R.string.stats_bar_week_desc, StatsUtils.parseDateToLocalizedFormat(
+                        horizontalLabels[i],
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
+            } else {
+                barDate = horizontalLabels[i];
+            }
+
+            accessibleLabels[i] = getString(R.string.stats_bar_date_value_type_desc, barDate,
+                    (int) dataToShowOnGraph[i].getY(), typeOfStats.getLabel());
+        }
+
+        return accessibleLabels;
     }
 
     private int getDefaultBarIndex(final VisitModel[] dataToShowOnGraph) {
@@ -660,7 +701,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private String getDateLabelForBarInGraph(String dateToFormat) {
         switch (getTimeframe()) {
             case DAY:
-                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT,
+                return StatsUtils.parseDateToLocalizedFormat(
+                        dateToFormat,
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case WEEK:
                 // first four digits are the year
@@ -670,7 +713,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy'W'MM'W'dd",
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case MONTH:
-                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy-MM", "MMM");
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy-MM",
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_FORMAT);
             case YEAR:
                 return StatsUtils.parseDateToLocalizedFormat(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT);
@@ -845,6 +889,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
         }
 
+        String selectedDate = mStatsDate[tappedBar];
+
+        if (!TextUtils.isEmpty(selectedDate)) {
+            mGraphView.announceForAccessibility(getString(R.string.stats_bar_desc,
+                    getDateForDisplayInLabels(selectedDate, getTimeframe())));
+        }
+
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
                 mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
     }
@@ -853,7 +904,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         VIEWS(R.string.stats_views),
         VISITORS(R.string.stats_visitors),
         LIKES(R.string.stats_likes),
-        COMMENTS(R.string.stats_comments),;
+        COMMENTS(R.string.stats_comments);
 
         private final int mLabelResId;
 

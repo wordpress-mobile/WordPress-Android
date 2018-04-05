@@ -7,7 +7,9 @@ import android.net.http.SslCertificate;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.ContextThemeWrapper;
 
+import org.wordpress.android.R;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog.T;
@@ -26,7 +28,7 @@ public class SelfSignedSSLUtils {
     public static void showSSLWarningDialog(@NonNull final Context context,
                                             @NonNull final MemorizingTrustManager memorizingTrustManager,
                                             @Nullable final Callback callback) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog));
         alert.setTitle(context.getString(org.wordpress.android.R.string.ssl_certificate_error));
         alert.setMessage(context.getString(org.wordpress.android.R.string.ssl_certificate_ask_trust));
         alert.setPositiveButton(org.wordpress.android.R.string.yes, new DialogInterface.OnClickListener() {

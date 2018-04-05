@@ -19,6 +19,7 @@
             android:text="@string/category_name"
             android:textColor="@color/grey_dark"
             android:textStyle="bold"
+            android:labelFor="@+id/category_name"
             android:textSize="@dimen/text_sz_large"
             android:paddingEnd="4dp"
             android:paddingStart="4dp"/>
@@ -48,6 +49,7 @@
             android:text="@string/category_parent"
             android:textColor="@color/grey_dark"
             android:textStyle="bold"
+            android:labelFor="@+id/parent_category"
             android:textSize="@dimen/text_sz_large"
             android:paddingEnd="4dp"
             android:paddingStart="4dp"/>

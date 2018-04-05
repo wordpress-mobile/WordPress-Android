@@ -30,6 +30,7 @@
         android:layout_toEndOf="@+id/image_featured">
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:contentDescription="@string/reader_btn_follow"
             android:id="@+id/simple_post_follow_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

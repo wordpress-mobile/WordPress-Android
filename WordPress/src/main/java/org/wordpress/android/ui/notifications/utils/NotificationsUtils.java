@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.TextView;
 
@@ -370,7 +371,7 @@ public class NotificationsUtils {
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog));
         builder.setTitle(title).setMessage(message);
 
         builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {

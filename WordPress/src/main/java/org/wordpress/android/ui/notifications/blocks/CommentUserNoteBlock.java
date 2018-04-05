@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
@@ -52,6 +53,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return R.layout.note_block_comment_user;
     }
 
+    @SuppressLint("ClickableViewAccessibility") // fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
@@ -72,17 +74,34 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.mSiteTextView.setVisibility(View.GONE);
         }
 
+        noteBlockHolder.mSiteTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+
         if (hasImageMediaItem()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.mAvatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
+            noteBlockHolder.mAvatarImageView.setContentDescription(
+                    view.getContext().getString(R.string.profile_picture, getNoteText().toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
+                noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBlogPreview();
+                    }
+                });
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {
+                noteBlockHolder.mAvatarImageView.setOnClickListener(null);
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+                noteBlockHolder.mAvatarImageView.setContentDescription(null);
             }
         } else {
             noteBlockHolder.mAvatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            noteBlockHolder.mAvatarImageView.setOnClickListener(null);
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+            noteBlockHolder.mAvatarImageView.setContentDescription(null);
         }
 
         noteBlockHolder.mCommentTextView.setText(

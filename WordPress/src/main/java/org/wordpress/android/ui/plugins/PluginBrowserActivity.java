@@ -258,9 +258,13 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
                                                     @Nullable List<ImmutablePluginModel> plugins) {
-        PluginBrowserAdapter adapter;
-        View cardView;
+        PluginBrowserAdapter adapter = null;
+        View cardView = null;
         switch (pluginType) {
+            case SITE:
+                adapter = (PluginBrowserAdapter) mSitePluginsRecycler.getAdapter();
+                cardView = findViewById(R.id.installed_plugins_cardview);
+                break;
             case FEATURED:
                 adapter = (PluginBrowserAdapter) mFeaturedPluginsRecycler.getAdapter();
                 cardView = findViewById(R.id.featured_plugins_cardview);
@@ -275,10 +279,9 @@ public class PluginBrowserActivity extends AppCompatActivity
                 break;
             case SEARCH:
                 return;
-            default:
-                adapter = (PluginBrowserAdapter) mSitePluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.installed_plugins_cardview);
-                break;
+        }
+        if (adapter == null || cardView == null) {
+            return;
         }
         adapter.setPlugins(plugins);
 
@@ -302,7 +305,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onQueryTextChange(String query) {
-        mViewModel.setSearchQuery(query);
+        mViewModel.setSearchQuery(query != null ? query : "");
         return true;
     }
 
@@ -338,7 +341,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     public boolean onMenuItemActionCollapse(MenuItem menuItem) {
         mSearchView.setOnQueryTextListener(null);
         hideListFragment();
-        mViewModel.setSearchQuery(null);
+        mViewModel.setSearchQuery("");
         return true;
     }
 
