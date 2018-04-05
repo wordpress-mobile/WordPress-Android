@@ -697,7 +697,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      * @param action    {@link SubscriptionAction} to add or remove comment email subscription
      */
     public void updateSubscriptionEmailComment(@NonNull String siteId, @NonNull SubscriptionAction action) {
-        String actionLowerCase = action.toString().toLowerCase();
+        String actionLowerCase = action.toString().toLowerCase(Locale.ROOT);
         String url = WPCOMREST.read.site.item(siteId).comment_email_subscriptions.action(actionLowerCase).getUrlV1_2();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
@@ -732,7 +732,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      * @param action    {@link SubscriptionAction} to add or remove post email subscription
      */
     public void updateSubscriptionEmailPost(@NonNull String siteId, @NonNull SubscriptionAction action) {
-        String actionLowerCase = action.toString().toLowerCase();
+        String actionLowerCase = action.toString().toLowerCase(Locale.ROOT);
         String url = WPCOMREST.read.site.item(siteId).post_email_subscriptions.action(actionLowerCase).getUrlV1_2();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
@@ -767,7 +767,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      * @param frequency     rate at which post emails are sent as {@link SubscriptionFrequency} value
      */
     public void updateSubscriptionEmailPostFrequency(@NonNull String siteId, @NonNull SubscriptionFrequency frequency) {
-        String frequencyLowerCase = frequency.toString().toLowerCase();
+        String frequencyLowerCase = frequency.toString().toLowerCase(Locale.ROOT);
         String url = WPCOMREST.read.site.item(siteId).post_email_subscriptions.update.getUrlV1_2();
         Map<String, Object> body = new HashMap<>();
         body.put("delivery_frequency", frequencyLowerCase);
@@ -804,7 +804,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      * @param action    {@link SubscriptionAction} to add or remove post notification subscription
      */
     public void updateSubscriptionNotificationPost(@NonNull String siteId, @NonNull SubscriptionAction action) {
-        String actionLowerCase = action.toString().toLowerCase();
+        String actionLowerCase = action.toString().toLowerCase(Locale.ROOT);
         String url = WPCOMV2.read.sites.site(siteId).notification_subscriptions.action(actionLowerCase).getUrl();
         final WPComGsonRequest<SubscriptionResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SubscriptionResponse.class,
