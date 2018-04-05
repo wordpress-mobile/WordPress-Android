@@ -355,8 +355,17 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to https://wordpress.com/wp-login.php"
+                                             + "?action=two-step-authentication-endpoint";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -398,8 +407,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to /me/social-login/connect";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -442,8 +459,17 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to https://wordpress.com/wp-login.php"
+                                             + "?action=social-login-endpoint";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -484,8 +510,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to /users/social/new";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -526,8 +560,17 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to https://wordpress.com/wp-login.php"
+                                             + "?action=send-sms-code-endpoint";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
