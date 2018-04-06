@@ -46,7 +46,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
@@ -612,7 +612,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         ReaderUpdateServiceStarter.startService(getApplicationContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
         // Start Notification service
-        NotificationsUpdateService.startService(getApplicationContext());
+        NotificationsUpdateServiceStarter.startService(getApplicationContext());
     }
 
     @Override

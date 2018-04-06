@@ -62,7 +62,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -393,7 +393,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-            NotificationsUpdateService.startService(getContext());
+            NotificationsUpdateServiceStarter.startService(getContext());
         }
     }
 
@@ -856,11 +856,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 if (mAccountStore.hasAccessToken()) {
                     Intent intent = activity.getIntent();
                     if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-                        NotificationsUpdateService.startService(getContext(),
+                        NotificationsUpdateServiceStarter.startService(getContext(),
                                                                 getNoteIdFromNoteDetailActivityIntent(
                                                                         activity.getIntent()));
                     } else {
-                        NotificationsUpdateService.startService(getContext());
+                        NotificationsUpdateServiceStarter.startService(getContext());
                     }
                 }
 
