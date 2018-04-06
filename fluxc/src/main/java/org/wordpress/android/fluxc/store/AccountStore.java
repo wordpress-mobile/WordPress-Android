@@ -369,6 +369,7 @@ public class AccountStore extends Store {
     }
 
     public static class OnSubscriptionUpdated extends OnChanged<SubscriptionError> {
+        public SubscriptionType type;
         public boolean subscribed;
         public OnSubscriptionUpdated() {
         }
@@ -1158,6 +1159,7 @@ public class AccountStore extends Store {
             event.error = new SubscriptionError(event.error.toString(), event.error.message);
         } else {
             event.subscribed = payload.isSubscribed;
+            event.type = payload.type;
         }
         emitChange(event);
     }
