@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
 import org.wordpress.android.util.WPPrefUtils;
 
 /**
@@ -36,9 +37,9 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
     public static final String KEY_NOTIFICATION_POSTS = "KEY_NOTIFICATION_POSTS";
     public static final String TAG = "notification-settings-followed-dialog";
 
-    private static final String EMAIL_POSTS_FREQUENCY_DAILY = "daily";
-    private static final String EMAIL_POSTS_FREQUENCY_INSTANTLY = "instantly";
-    private static final String EMAIL_POSTS_FREQUENCY_WEEKLY = "weekly";
+    private static final String EMAIL_POSTS_FREQUENCY_DAILY = SubscriptionFrequency.DAILY.toString();
+    private static final String EMAIL_POSTS_FREQUENCY_INSTANTLY = SubscriptionFrequency.INSTANTLY.toString();
+    private static final String EMAIL_POSTS_FREQUENCY_WEEKLY = SubscriptionFrequency.WEEKLY.toString();
 
     private RadioButton mRadioButtonFrequencyDaily;
     private RadioButton mRadioButtonFrequencyInstantly;
@@ -80,16 +81,12 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
             mSwitchEmailComments.setChecked(args.getBoolean(ARG_EMAIL_COMMENTS, false));
             mRadioButtonSelected = args.getString(ARG_EMAIL_POSTS_FREQUENCY, "");
 
-            switch (mRadioButtonSelected) {
-                case EMAIL_POSTS_FREQUENCY_INSTANTLY:
-                    mRadioButtonFrequencyInstantly.setChecked(true);
-                    break;
-                case EMAIL_POSTS_FREQUENCY_DAILY:
-                    mRadioButtonFrequencyDaily.setChecked(true);
-                    break;
-                case EMAIL_POSTS_FREQUENCY_WEEKLY:
-                    mRadioButtonFrequencyWeekly.setChecked(true);
-                    break;
+            if (mRadioButtonSelected.equalsIgnoreCase(EMAIL_POSTS_FREQUENCY_INSTANTLY)) {
+                mRadioButtonFrequencyInstantly.setChecked(true);
+            } else if (mRadioButtonSelected.equalsIgnoreCase(EMAIL_POSTS_FREQUENCY_DAILY)) {
+                mRadioButtonFrequencyDaily.setChecked(true);
+            } else if (mRadioButtonSelected.equalsIgnoreCase(EMAIL_POSTS_FREQUENCY_WEEKLY)) {
+                mRadioButtonFrequencyWeekly.setChecked(true);
             }
         }
 
