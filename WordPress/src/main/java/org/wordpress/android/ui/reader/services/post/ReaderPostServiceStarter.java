@@ -13,7 +13,9 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.util.AppLog;
 
 public class ReaderPostServiceStarter {
-    private static final int JOB_READER_POST_SERVICE_ID = 4000;
+    private static final int JOB_READER_POST_SERVICE_ID_TAG = 4001;
+    private static final int JOB_READER_POST_SERVICE_ID_BLOG = 4002;
+    private static final int JOB_READER_POST_SERVICE_ID_FEED = 4003;
     public static final String ARG_TAG = "tag";
     public static final String ARG_ACTION = "action";
     public static final String ARG_BLOG_ID = "blog_id";
@@ -45,7 +47,7 @@ public class ReaderPostServiceStarter {
             PersistableBundle extras = new PersistableBundle();
             extras.putInt(ARG_ACTION, action.ordinal());
             putReaderTagExtras(extras, tag);
-            doScheduleJobWithBundle(context, extras);
+            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_TAG);
         }
     }
 
@@ -62,7 +64,7 @@ public class ReaderPostServiceStarter {
             PersistableBundle extras = new PersistableBundle();
             extras.putLong(ARG_BLOG_ID, blogId);
             extras.putInt(ARG_ACTION, action.ordinal());
-            doScheduleJobWithBundle(context, extras);
+            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_BLOG);
         }
     }
 
@@ -79,17 +81,17 @@ public class ReaderPostServiceStarter {
             PersistableBundle extras = new PersistableBundle();
             extras.putLong(ARG_FEED_ID, feedId);
             extras.putInt(ARG_ACTION, action.ordinal());
-            doScheduleJobWithBundle(context, extras);
+            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_FEED);
         }
     }
 
     @TargetApi(21)
-    private static void doScheduleJobWithBundle(Context context, PersistableBundle extras) {
+    private static void doScheduleJobWithBundle(Context context, PersistableBundle extras, int jobId) {
         // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
         // it's preferrable to use it only since enforcement in API 26 to not break any old behavior
         ComponentName componentName = new ComponentName(context, ReaderPostJobService.class);
 
-        JobInfo jobInfo = new JobInfo.Builder(JOB_READER_POST_SERVICE_ID, componentName)
+        JobInfo jobInfo = new JobInfo.Builder(jobId, componentName)
                 .setRequiresCharging(false)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setOverrideDeadline(0) // if possible, try to run right away
