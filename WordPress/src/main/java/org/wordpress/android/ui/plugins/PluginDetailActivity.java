@@ -1116,6 +1116,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // Automated Transfer
 
+    /**
+     * Automated Transfer starts by confirming that the user will not be able to use their site. We'll need to block the
+     * UI for it, so we get a confirmation first in this step.
+     */
     private void confirmInstallPluginForAutomatedTransfer() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
         builder.setTitle(getResources().getText(R.string.plugin_install));
@@ -1139,12 +1143,21 @@ public class PluginDetailActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * We'll trigger an eligibility check for the site for Automated Transfer and show a determinate progress bar.
+     * Check out `OnAutomatedTransferEligibilityChecked` for its callback.
+     */
     private void startAutomatedTransfer() {
         showAutomatedTransferProgressDialog();
 
         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
     }
 
+    /**
+     * The reason we are using a blocking progress bar is that if the user changes anything about the site, adds a post,
+     * updates site settings etc, it'll be lost when the Automated Transfer is completed. The process takes about 1 min
+     * on average, and we'll be able to update the progress by checking the status of the transfer.
+     */
     private void showAutomatedTransferProgressDialog() {
         if (mAutomatedTransferProgressDialog == null) {
             mAutomatedTransferProgressDialog = new ProgressDialog(this);
@@ -1160,6 +1173,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Either Automated Transfer is completed or an error occurred.
+     */
     private void cancelAutomatedTransferDialog() {
         if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
             mAutomatedTransferProgressDialog.cancel();
@@ -1167,6 +1183,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Automated Transfer successfully completed, the site has been refreshed and site plugins has been fetched. We can
+     * close the progress dialog, get the new version of the plugin from Store and refresh the views
+     */
     private void automatedTransferCompleted() {
         cancelAutomatedTransferDialog();
         refreshPluginFromStore();
@@ -1175,11 +1195,23 @@ public class PluginDetailActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
+    /**
+     * Helper for if any of the FluxC Automated Transfer events fail. We are using a Toast for now, but the only likely
+     * error is the site missing a domain which will be implemented later on and will be handled differently.
+     */
     private void handleAutomatedTransferFailed(String errorMessage) {
         cancelAutomatedTransferDialog();
         ToastUtils.showToast(this, errorMessage, Duration.LONG);
     }
 
+    /**
+     * This is the first Automated Transfer FluxC event. It returns whether the site is eligible or not with a set of
+     * errors for why it's not eligible. We are handling a single error at a time right now, but the only likely error
+     * is the custom domain being missing from the business plan site which will be handled as a separate project soon.
+     *
+     * If the site is eligible, we'll initiate the Automated Transfer. Check out `onAutomatedTransferInitiated` for next
+     * step.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferEligibilityChecked(OnAutomatedTransferEligibilityChecked event) {
@@ -1197,6 +1229,17 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * After we check the eligibility of a site, the Automated Transfer will be initiated. This is its callback and it
+     * should be a fairly quick one, that's why we are not updating the progress bar. The event contains the plugin that
+     * will be installed after Automated Transfer is completed, but we don't need to handle anything about that.
+     *
+     * We don't know if there is any specific errors we might need to handle, so we are just showing a message about it
+     * for now.
+     *
+     * Once the transfer is initiated, we need to start checking the status of it. Check out
+     * `onAutomatedTransferStatusChecked` for the callback.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferInitiated(OnAutomatedTransferInitiated event) {
@@ -1210,6 +1253,19 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * After Automated Transfer is initiated, we'll need to check for the status of it several times as the process
+     * takes about 1 minute on average. We don't know if there are any specific errors we can handle, so for now we are
+     * simply showing the message.
+     *
+     * We'll get an `isCompleted` flag from the event and when that's `true` we'll need to re-fetch the site. It'll
+     * become a Jetpack site at that point and we'll need the updated site to be able to fetch the plugins and refresh
+     * this page. If the transfer is not completed, we use the current step and total steps to update the progress bar
+     * and check the status again after waiting for a second.
+     *
+     * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
+     * `onSiteChanged` for the next step.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
@@ -1237,6 +1293,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Once the Automated Transfer is completed, we'll trigger a fetch for the site since it'll become a Jetpack site.
+     * Whenever the site is updated we update `mSite` property. If the Automated Transfer progress dialog is
+     * showing and we make sure that the updated site has the correct `isAutomatedTransfer` flag, we fetch the site
+     * plugins so we can refresh this page.
+     *
+     * Check out `onPluginDirectoryFetched` for the last step of a successful Automated Transfer.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
@@ -1254,6 +1318,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Completing an Automated Transfer will trigger a site fetch which then will trigger a fetch for the site plugins.
+     * We'll complete the Automated Transfer if the progress dialog is showing and only update the plugin and the views
+     * if it's not.
+     *
+     * This event is unlikely to happen outside of Automated Transfer process, and it is even less likely that the views
+     * will need to be updated because of it, but they are both still possible and we try to handle it with a refresh.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(OnPluginDirectoryFetched event) {
