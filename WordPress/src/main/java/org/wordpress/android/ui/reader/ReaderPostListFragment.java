@@ -652,7 +652,7 @@ public class ReaderPostListFragment extends Fragment
 
         // remove cached results for this search - search results are ephemeral so each search
         // should be treated as a "fresh" one
-        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(trimQuery);
+        ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(trimQuery);
         ReaderPostTable.deletePostsWithTag(searchTag);
 
         mPostAdapter.setCurrentTag(searchTag);
@@ -1016,7 +1016,7 @@ public class ReaderPostListFragment extends Fragment
                             break;
 
                         case SEARCH_RESULTS:
-                            ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                            ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
                             int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
                             if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 updatePostsInCurrentSearch(offset);
@@ -1044,7 +1044,7 @@ public class ReaderPostListFragment extends Fragment
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
                 mPostAdapter.setCurrentTag(searchTag);
             }
         }

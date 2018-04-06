@@ -58,13 +58,4 @@ public class ReaderSearchService extends Service implements ServiceCompletionLis
         AppLog.i(AppLog.T.READER, "reader search service > all tasks completed");
         stopSelf();
     }
-
-    /*
-     * used when storing search results in the reader post table
-     */
-    public static ReaderTag getTagForSearchQuery(@NonNull String query) {
-        String trimQuery = query != null ? query.trim() : "";
-        String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
-        return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
-    }
 }

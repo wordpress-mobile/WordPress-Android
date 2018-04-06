@@ -15,7 +15,7 @@ import org.wordpress.android.util.UrlUtils;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.reader.services.search.ReaderSearchService.getTagForSearchQuery;
+import static org.wordpress.android.ui.reader.utils.ReaderUtils.getTagForSearchQuery;
 
 public class ReaderSearchLogic {
     private ServiceCompletionListener mCompletionListener;
