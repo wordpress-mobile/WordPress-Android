@@ -3,12 +3,8 @@ package org.wordpress.android.ui.reader.services.search;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
