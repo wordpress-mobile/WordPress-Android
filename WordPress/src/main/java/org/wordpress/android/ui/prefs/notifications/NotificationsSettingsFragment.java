@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -163,7 +162,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         inflater.inflate(R.menu.notifications_settings, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.search_sites));
         mBlogsCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_blogs));
