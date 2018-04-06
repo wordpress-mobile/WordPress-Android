@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -83,8 +84,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        addPreferencesFromResource(R.xml.notifications_settings);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // on API26 we removed the Sight & Sounds category altogether, as it can always be
+            // overriden by the user in the Device settings, and the settings here
+            // wouldn't either reflect nor have any effect anyway.
+            addPreferencesFromResource(R.xml.notifications_settings_api26);
+        } else {
+            addPreferencesFromResource(R.xml.notifications_settings);
+        }
         setHasOptionsMenu(true);
+
 
         // Bump Analytics
         if (savedInstanceState == null) {
