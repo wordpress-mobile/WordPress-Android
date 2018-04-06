@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -240,21 +241,34 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     data.getBooleanExtra(NotificationSettingsFollowedDialog.KEY_EMAIL_COMMENTS, false);
 
             if (notifyPosts != mPreviousNotifyPosts) {
-                // TODO: Add analytics tracking.
-                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite,
-                        notifyPosts ? SubscriptionAction.NEW : SubscriptionAction.DELETE);
+                AddOrDeleteSubscriptionPayload payload;
+
+                if (notifyPosts) {
+                    AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_ON);
+                    payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite, SubscriptionAction.NEW);
+                } else {
+                    AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_OFF);
+                    payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite, SubscriptionAction.DELETE);
+                }
+
                 mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
             }
 
             if (emailPosts != mPreviousEmailPosts) {
-                // TODO: Add analytics tracking.
-                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite,
-                        emailPosts ? SubscriptionAction.NEW : SubscriptionAction.DELETE);
+                AddOrDeleteSubscriptionPayload payload;
+
+                if (emailPosts) {
+                    AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_ON);
+                    payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite, SubscriptionAction.NEW);
+                } else {
+                    AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_OFF);
+                    payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite, SubscriptionAction.DELETE);
+                }
+
                 mDispatcher.dispatch(newUpdateSubscriptionEmailPostAction(payload));
             }
 
             if (emailPostsFrequency != null && !emailPostsFrequency.equalsIgnoreCase(mPreviousEmailPostsFrequency)) {
-                // TODO: Add analytics tracking.
                 mSubscriptionFrequency = getSubscriptionFrequencyFromString(emailPostsFrequency);
                 mUpdateSubscriptionFrequencyPayload = new UpdateSubscriptionPayload(mNotificationUpdatedSite,
                         mSubscriptionFrequency);
@@ -272,9 +286,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             if (emailComments != mPreviousEmailComments) {
-                // TODO: Add analytics tracking.
-                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite,
-                        emailComments ? SubscriptionAction.NEW : SubscriptionAction.DELETE);
+                AddOrDeleteSubscriptionPayload payload;
+
+                if (emailComments) {
+                    AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_ON);
+                    payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite, SubscriptionAction.NEW);
+                } else {
+                    AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_OFF);
+                    payload = new AddOrDeleteSubscriptionPayload(mNotificationUpdatedSite, SubscriptionAction.DELETE);
+                }
+
                 mDispatcher.dispatch(newUpdateSubscriptionEmailCommentAction(payload));
             }
         }
@@ -305,10 +326,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     private SubscriptionFrequency getSubscriptionFrequencyFromString(String s) {
         if (s.equalsIgnoreCase(SubscriptionFrequency.DAILY.toString())) {
+            AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_DAILY);
             return SubscriptionFrequency.DAILY;
         } else if (s.equalsIgnoreCase(SubscriptionFrequency.WEEKLY.toString())) {
+            AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_WEEKLY);
             return SubscriptionFrequency.WEEKLY;
         } else {
+            AnalyticsTracker.track(Stat.FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_INSTANTLY);
             return SubscriptionFrequency.INSTANTLY;
         }
     }

@@ -515,6 +515,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_OFF:
+                return "followed_blog_notifications_settings_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_ON:
+                return "followed_blog_notifications_settings_on";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_OFF:
+                return "followed_blog_notifications_settings_email_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_ON:
+                return "followed_blog_notifications_settings_email_on";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_INSTANTLY:
+                return "followed_blog_notifications_settings_email_instantly";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_DAILY:
+                return "followed_blog_notifications_settings_email_daily";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_WEEKLY:
+                return "followed_blog_notifications_settings_email_weekly";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_OFF:
+                return "followed_blog_notifications_settings_comments_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_ON:
+                return "followed_blog_notifications_settings_comments_on";
             case NOTIFICATIONS_ACCESSED:
                 return "notifications_accessed";
             case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
