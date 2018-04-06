@@ -13,11 +13,6 @@ import static org.wordpress.android.ui.reader.services.update.ReaderUpdateServic
 
 @TargetApi(21)
 public class ReaderUpdateJobService extends JobService implements ServiceCompletionListener {
-    /***
-     * service which updates followed/recommended tags and blogs for the Reader, relies
-     * on EventBus to notify of changes
-     */
-
     private ReaderUpdateLogic mReaderUpdateLogic;
 
     @Override

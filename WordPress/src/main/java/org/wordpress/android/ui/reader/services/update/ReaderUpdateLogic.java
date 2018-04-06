@@ -31,7 +31,9 @@ import de.greenrobot.event.EventBus;
 
 public class ReaderUpdateLogic {
     /***
-     * service which updates followed/recommended tags and blogs for the Reader, relies
+     * This class holds the business logic for Reader Updates, serving both ReaderUpdateService (<API26)
+     * and ReaderUpdateJobService (API26+).
+     * Updates followed/recommended tags and blogs for the Reader, relies
      * on EventBus to notify of changes
      */
 
