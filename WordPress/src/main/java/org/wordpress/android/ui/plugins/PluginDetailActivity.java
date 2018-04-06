@@ -765,17 +765,20 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showRemovePluginProgressDialog() {
-        // TODO: check if mRemovePluginProgressDialog is not null
-        mRemovePluginProgressDialog = new ProgressDialog(this);
-        mRemovePluginProgressDialog.setCancelable(false);
-        mRemovePluginProgressDialog.setIndeterminate(true);
-        // Even though we are deactivating the plugin to make sure it's disabled on the server side, since the user
-        // sees that the plugin is disabled, it'd be confusing to say we are disabling the plugin
-        String message = mIsActive
-                ? getString(R.string.plugin_disable_progress_dialog_message, mPlugin.getDisplayName())
-                : getRemovingPluginMessage();
-        mRemovePluginProgressDialog.setMessage(message);
-        mRemovePluginProgressDialog.show();
+        if (mRemovePluginProgressDialog == null) {
+            mRemovePluginProgressDialog = new ProgressDialog(this);
+            mRemovePluginProgressDialog.setCancelable(false);
+            mRemovePluginProgressDialog.setIndeterminate(true);
+            // Even though we are deactivating the plugin to make sure it's disabled on the server side, since the user
+            // sees that the plugin is disabled, it'd be confusing to say we are disabling the plugin
+            String message = mIsActive
+                    ? getString(R.string.plugin_disable_progress_dialog_message, mPlugin.getDisplayName())
+                    : getRemovingPluginMessage();
+            mRemovePluginProgressDialog.setMessage(message);
+        }
+        if (!mRemovePluginProgressDialog.isShowing()) {
+            mRemovePluginProgressDialog.show();
+        }
     }
 
     private void cancelRemovePluginProgressDialog() {
@@ -827,7 +830,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsInstallingPlugin = true;
             refreshUpdateVersionViews();
 
-            PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
+            InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
             mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
         }
     }
@@ -1143,15 +1146,18 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showAutomatedTransferProgressDialog() {
-        // TODO: check if mAutomatedTransferProgressDialog is not null
-        mAutomatedTransferProgressDialog = new ProgressDialog(this);
-        mAutomatedTransferProgressDialog.setCancelable(false);
-        mAutomatedTransferProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mAutomatedTransferProgressDialog.setIndeterminate(false);
-        String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
-        mAutomatedTransferProgressDialog.setMessage(message);
-        mIsShowingAutomatedTransferProgress = true;
-        mAutomatedTransferProgressDialog.show();
+        if (mAutomatedTransferProgressDialog == null) {
+            mAutomatedTransferProgressDialog = new ProgressDialog(this);
+            mAutomatedTransferProgressDialog.setCancelable(false);
+            mAutomatedTransferProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mAutomatedTransferProgressDialog.setIndeterminate(false);
+            String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
+            mAutomatedTransferProgressDialog.setMessage(message);
+        }
+        if (!mAutomatedTransferProgressDialog.isShowing()) {
+            mIsShowingAutomatedTransferProgress = true;
+            mAutomatedTransferProgressDialog.show();
+        }
     }
 
     private void cancelAutomatedTransferDialog() {
