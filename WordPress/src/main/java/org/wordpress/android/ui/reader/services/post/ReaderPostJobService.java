@@ -89,7 +89,7 @@ public class ReaderPostJobService extends JobService implements ServiceCompletio
         String title = bundle.getString(ARG_TAG_PARAM_TITLE);
         String endpoint = bundle.getString(ARG_TAG_PARAM_ENDPOINT);
         int tagType = bundle.getInt(ARG_TAG_PARAM_TAGTYPE);
-        ReaderTag tag = new ReaderTag(slug, displayName, title, endpoint, ReaderTagType.values()[tagType]);
+        ReaderTag tag = new ReaderTag(slug, displayName, title, endpoint, ReaderTagType.fromInt(tagType));
         return tag;
     }
 }
