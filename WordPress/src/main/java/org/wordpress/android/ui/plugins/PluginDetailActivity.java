@@ -1064,12 +1064,6 @@ public class PluginDetailActivity extends AppCompatActivity {
                && mPlugin.getName().equals(eventPluginName); // event is for the plugin we are showing
     }
 
-    private void handleAutomatedTransferFailed(String errorMessage) {
-        // TODO: Better handle specific errors
-        cancelAutomatedTransferDialog();
-        ToastUtils.showToast(this, errorMessage, Duration.LONG);
-    }
-
     // Utils
 
     private void refreshPluginFromStore() {
@@ -1175,6 +1169,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
+    private void handleAutomatedTransferFailed(String errorMessage) {
+        cancelAutomatedTransferDialog();
+        ToastUtils.showToast(this, errorMessage, Duration.LONG);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferEligibilityChecked(OnAutomatedTransferEligibilityChecked event) {
@@ -1182,7 +1181,10 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         if (!event.isEligible) {
-            handleAutomatedTransferFailed(getString(R.string.plugin_install_error_site_ineligible));
+            String message =
+                    event.eligibilityErrors.isEmpty() ? getString(R.string.plugin_install_error_site_ineligible)
+                            : event.eligibilityErrors.get(0);
+            handleAutomatedTransferFailed(message);
         } else {
             mDispatcher.dispatch(SiteActionBuilder
                     .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
