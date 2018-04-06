@@ -152,6 +152,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
             }
             return true;
         }
