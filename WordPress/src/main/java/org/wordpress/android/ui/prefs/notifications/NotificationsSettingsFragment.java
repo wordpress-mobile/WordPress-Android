@@ -305,7 +305,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSubscriptionsChanged(OnSubscriptionsChanged event) {
         if (event.isError()) {
-            // TODO: Add application logging.
+            AppLog.e(T.API, "NotificationsSettingsFragment.onSubscriptionsChanged: " + event.error.message);
         } else {
             configureFollowedBlogsSettings(mFollowedBlogsCategory, !mSearchMenuItemCollapsed);
         }
@@ -315,7 +315,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSubscriptionUpdated(OnSubscriptionUpdated event) {
         if (event.isError()) {
-            // TODO: Add application logging.
+            AppLog.e(T.API, "NotificationsSettingsFragment.onSubscriptionUpdated: " + event.error.message);
         } else if (event.type == SubscriptionType.EMAIL_POST && mUpdateEmailPostsFirst) {
             mUpdateEmailPostsFirst = false;
             mDispatcher.dispatch(newUpdateSubscriptionEmailPostFrequencyAction(mUpdateSubscriptionFrequencyPayload));
