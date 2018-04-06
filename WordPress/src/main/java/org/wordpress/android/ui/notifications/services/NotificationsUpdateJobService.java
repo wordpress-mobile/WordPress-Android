@@ -16,35 +16,18 @@ public class NotificationsUpdateJobService extends JobService
 
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
 
-    public static void startService(Context context) {
-        if (context == null) {
-            return;
-        }
-        Intent intent = new Intent(context, NotificationsUpdateJobService.class);
-        context.startService(intent);
-    }
-
-    public static void startService(Context context, String noteId) {
-        if (context == null) {
-            return;
-        }
-        Intent intent = new Intent(context, NotificationsUpdateJobService.class);
-        intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-        intent.putExtra(IS_TAPPED_ON_NOTIFICATION, true);
-        context.startService(intent);
-    }
-
     @TargetApi(22)
     @Override
     public boolean onStartJob(JobParameters params) {
+        String noteId = null;
+        boolean isStartedByTappingOnNotification = false;
         if (params.getExtras() != null && params.getExtras().containsKey(NotificationsListFragment.NOTE_ID_EXTRA)) {
-            String noteId = params.getExtras().getString(NotificationsListFragment.NOTE_ID_EXTRA);
-            boolean isStartedByTappingOnNotification = params.getExtras().getBoolean(
+            noteId = params.getExtras().getString(NotificationsListFragment.NOTE_ID_EXTRA);
+            isStartedByTappingOnNotification = params.getExtras().getBoolean(
                     IS_TAPPED_ON_NOTIFICATION, false);
-            mNotificationsUpdateLogic.performRefresh(noteId, isStartedByTappingOnNotification, params);
-            return true;
         }
-        return false;
+        mNotificationsUpdateLogic.performRefresh(noteId, isStartedByTappingOnNotification, params);
+        return true;
     }
 
     @Override

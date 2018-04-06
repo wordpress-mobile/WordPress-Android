@@ -593,10 +593,17 @@
             android:name=".push.NotificationsProcessingService"
             android:exported="false"
             android:label="Notifications Quick Actions processing Service" />
+
         <service
             android:name=".ui.notifications.services.NotificationsUpdateService"
             android:exported="false"
             android:label="Notifications Update Service" />
+        <service
+            android:name=".ui.notifications.services.NotificationsUpdateJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"
+            android:label="Notifications Update Job Service" />
+
         <service
             android:name=".login.LoginWpcomService"
             android:exported="false"

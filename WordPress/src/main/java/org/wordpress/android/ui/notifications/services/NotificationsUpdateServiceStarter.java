@@ -36,11 +36,13 @@ public class NotificationsUpdateServiceStarter {
         } else {
             // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
             // it's preferrable to use it only since enforcement in API 26 to not break any old behavior
-            ComponentName componentName = new ComponentName(context, NotificationsUpdateService.class);
+            ComponentName componentName = new ComponentName(context, NotificationsUpdateJobService.class);
 
             PersistableBundle extras = new PersistableBundle();
-            extras.putString(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-            extras.putBoolean(IS_TAPPED_ON_NOTIFICATION, true);
+            if (noteId != null) {
+                extras.putString(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+                extras.putBoolean(IS_TAPPED_ON_NOTIFICATION, true);
+            }
 
             JobInfo jobInfo = new JobInfo.Builder(JOB_NOTIFICATIONS_UPDATE_SERVICE_ID, componentName)
                     .setRequiresCharging(false)
