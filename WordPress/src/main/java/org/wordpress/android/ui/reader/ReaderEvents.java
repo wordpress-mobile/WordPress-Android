@@ -6,7 +6,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
-import org.wordpress.android.ui.reader.services.post.ReaderPostService;
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.util.StringUtils;
 
 /**
@@ -45,13 +45,13 @@ public class ReaderEvents {
     }
 
     public static class UpdatePostsStarted {
-        private final ReaderPostService.UpdateAction mAction;
+        private final ReaderPostServiceStarter.UpdateAction mAction;
 
-        public UpdatePostsStarted(ReaderPostService.UpdateAction action) {
+        public UpdatePostsStarted(ReaderPostServiceStarter.UpdateAction action) {
             mAction = action;
         }
 
-        public ReaderPostService.UpdateAction getAction() {
+        public ReaderPostServiceStarter.UpdateAction getAction() {
             return mAction;
         }
     }
@@ -59,10 +59,10 @@ public class ReaderEvents {
     public static class UpdatePostsEnded {
         private final ReaderTag mReaderTag;
         private final ReaderActions.UpdateResult mResult;
-        private final ReaderPostService.UpdateAction mAction;
+        private final ReaderPostServiceStarter.UpdateAction mAction;
 
         public UpdatePostsEnded(ReaderActions.UpdateResult result,
-                                ReaderPostService.UpdateAction action) {
+                                ReaderPostServiceStarter.UpdateAction action) {
             mResult = result;
             mAction = action;
             mReaderTag = null;
@@ -70,7 +70,7 @@ public class ReaderEvents {
 
         public UpdatePostsEnded(ReaderTag readerTag,
                                 ReaderActions.UpdateResult result,
-                                ReaderPostService.UpdateAction action) {
+                                ReaderPostServiceStarter.UpdateAction action) {
             mReaderTag = readerTag;
             mResult = result;
             mAction = action;
@@ -84,7 +84,7 @@ public class ReaderEvents {
             return mResult;
         }
 
-        public ReaderPostService.UpdateAction getAction() {
+        public ReaderPostServiceStarter.UpdateAction getAction() {
             return mAction;
         }
     }

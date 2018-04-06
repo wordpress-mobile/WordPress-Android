@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -32,10 +33,9 @@ public class ReaderPostLogic {
         mCompletionListener = listener;
     }
 
-    public void performTask(Object companion, ReaderPostService.UpdateAction action,
+    public void performTask(Object companion, UpdateAction action,
                             ReaderTag tag, long blogId, long feedId) {
         mListenerCompanion = companion;
-        //ReaderPostService.UpdateAction action = ReaderPostService.UpdateAction.REQUEST_NEWER;
 
         EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
 
@@ -49,7 +49,7 @@ public class ReaderPostLogic {
     }
 
 
-    private void updatePostsWithTag(final ReaderTag tag, final ReaderPostService.UpdateAction action) {
+    private void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
         requestPostsWithTag(
                 tag,
                 action,
@@ -62,7 +62,7 @@ public class ReaderPostLogic {
                 });
     }
 
-    private void updatePostsInBlog(long blogId, final ReaderPostService.UpdateAction action) {
+    private void updatePostsInBlog(long blogId, final UpdateAction action) {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
@@ -73,7 +73,7 @@ public class ReaderPostLogic {
         requestPostsForBlog(blogId, action, listener);
     }
 
-    private void updatePostsInFeed(long feedId, final ReaderPostService.UpdateAction action) {
+    private void updatePostsInFeed(long feedId, final UpdateAction action) {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
@@ -85,7 +85,7 @@ public class ReaderPostLogic {
     }
 
     private static void requestPostsWithTag(final ReaderTag tag,
-                                            final ReaderPostService.UpdateAction updateAction,
+                                            final UpdateAction updateAction,
                                             final ReaderActions.UpdateResultListener resultListener) {
         String path = getRelativeEndpointForTag(tag);
         if (TextUtils.isEmpty(path)) {
@@ -125,7 +125,7 @@ public class ReaderPostLogic {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 // remember when this tag was updated if newer posts were requested
-                if (updateAction == ReaderPostService.UpdateAction.REQUEST_NEWER) {
+                if (updateAction == UpdateAction.REQUEST_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tag);
                 }
                 handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener);
@@ -143,12 +143,12 @@ public class ReaderPostLogic {
     }
 
     private static void requestPostsForBlog(final long blogId,
-                                            final ReaderPostService.UpdateAction updateAction,
+                                            final UpdateAction updateAction,
                                             final ReaderActions.UpdateResultListener resultListener) {
         String path = "read/sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
-        if (updateAction == ReaderPostService.UpdateAction.REQUEST_OLDER) {
+        if (updateAction == UpdateAction.REQUEST_OLDER) {
             String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId);
             if (!TextUtils.isEmpty(dateOldest)) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest);
@@ -173,10 +173,10 @@ public class ReaderPostLogic {
     }
 
     private static void requestPostsForFeed(final long feedId,
-                                            final ReaderPostService.UpdateAction updateAction,
+                                            final UpdateAction updateAction,
                                             final ReaderActions.UpdateResultListener resultListener) {
         String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
-        if (updateAction == ReaderPostService.UpdateAction.REQUEST_OLDER) {
+        if (updateAction == UpdateAction.REQUEST_OLDER) {
             String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
             if (!TextUtils.isEmpty(dateOldest)) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest);
@@ -206,7 +206,7 @@ public class ReaderPostLogic {
      */
     private static void handleUpdatePostsResponse(final ReaderTag tag,
                                                   final JSONObject jsonObject,
-                                                  final ReaderPostService.UpdateAction updateAction,
+                                                  final UpdateAction updateAction,
                                                   final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
@@ -256,7 +256,7 @@ public class ReaderPostLogic {
                         ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
                     }
                 } else if (updateResult == ReaderActions.UpdateResult.UNCHANGED
-                           && updateAction == ReaderPostService.UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                           && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
                     // edge case - request to fill gap returned nothing new, so remove the gap marker
                     ReaderPostTable.removeGapMarkerForTag(tag);
                     AppLog.w(AppLog.T.READER, "attempt to fill gap returned nothing new");

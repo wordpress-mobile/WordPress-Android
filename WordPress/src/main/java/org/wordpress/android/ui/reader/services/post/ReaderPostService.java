@@ -10,6 +10,12 @@ import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 
+import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_ACTION;
+import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_BLOG_ID;
+import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_FEED_ID;
+import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_TAG;
+import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -18,49 +24,7 @@ import de.greenrobot.event.EventBus;
  */
 
 public class ReaderPostService extends Service implements ServiceCompletionListener {
-    private static final String ARG_TAG = "tag";
-    private static final String ARG_ACTION = "action";
-    private static final String ARG_BLOG_ID = "blog_id";
-    private static final String ARG_FEED_ID = "feed_id";
-
     private ReaderPostLogic mReaderPostLogic;
-
-    public enum UpdateAction {
-        REQUEST_NEWER, // request the newest posts for this tag/blog/feed
-        REQUEST_OLDER, // request posts older than the oldest existing one for this tag/blog/feed
-        REQUEST_OLDER_THAN_GAP // request posts older than the one with the gap marker for this tag
-                               // (not supported for blog/feed)
-    }
-
-    /*
-     * update posts with the passed tag
-     */
-    public static void startServiceForTag(Context context, ReaderTag tag, UpdateAction action) {
-        Intent intent = new Intent(context, ReaderPostService.class);
-        intent.putExtra(ARG_TAG, tag);
-        intent.putExtra(ARG_ACTION, action);
-        context.startService(intent);
-    }
-
-    /*
-     * update posts in the passed blog
-     */
-    public static void startServiceForBlog(Context context, long blogId, UpdateAction action) {
-        Intent intent = new Intent(context, ReaderPostService.class);
-        intent.putExtra(ARG_BLOG_ID, blogId);
-        intent.putExtra(ARG_ACTION, action);
-        context.startService(intent);
-    }
-
-    /*
-     * update posts in the passed feed
-     */
-    public static void startServiceForFeed(Context context, long feedId, UpdateAction action) {
-        Intent intent = new Intent(context, ReaderPostService.class);
-        intent.putExtra(ARG_FEED_ID, feedId);
-        intent.putExtra(ARG_ACTION, action);
-        context.startService(intent);
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
