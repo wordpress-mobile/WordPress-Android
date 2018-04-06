@@ -52,9 +52,9 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
-import org.wordpress.android.ui.reader.services.ReaderPostService;
-import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.ReaderSearchService;
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -349,7 +349,7 @@ public class ReaderPostListFragment extends Fragment
                 if (getPostListType().isTagType()) {
                     updateCurrentTagIfTime();
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                    updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
+                    updatePostsInCurrentBlogOrFeed(ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER);
                 }
             }
         }
@@ -1190,9 +1190,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         if (mCurrentFeedId != 0) {
-            ReaderPostService.startServiceForFeed(getActivity(), mCurrentFeedId, updateAction);
+            ReaderPostServiceStarter.startServiceForFeed(getActivity(), mCurrentFeedId, updateAction);
         } else {
-            ReaderPostService.startServiceForBlog(getActivity(), mCurrentBlogId, updateAction);
+            ReaderPostServiceStarter.startServiceForBlog(getActivity(), mCurrentBlogId, updateAction);
         }
     }
 
@@ -1266,7 +1266,7 @@ public class ReaderPostListFragment extends Fragment
         }
         AppLog.d(T.READER,
                  "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
-        ReaderPostService.startServiceForTag(getActivity(), tag, updateAction);
+        ReaderPostServiceStarter.startServiceForTag(getActivity(), tag, updateAction);
     }
 
     private void updateCurrentTag() {

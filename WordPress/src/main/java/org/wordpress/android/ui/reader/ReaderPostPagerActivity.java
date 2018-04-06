@@ -37,7 +37,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.ui.reader.services.ReaderPostService;
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -772,17 +772,17 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         switch (getPostListType()) {
             case TAG_PREVIEW:
             case TAG_FOLLOWED:
-                ReaderPostService.startServiceForTag(
+                ReaderPostServiceStarter.startServiceForTag(
                         this,
                         getCurrentTag(),
-                        ReaderPostService.UpdateAction.REQUEST_OLDER);
+                        ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER);
                 break;
 
             case BLOG_PREVIEW:
-                ReaderPostService.startServiceForBlog(
+                ReaderPostServiceStarter.startServiceForBlog(
                         this,
                         mBlogId,
-                        ReaderPostService.UpdateAction.REQUEST_OLDER);
+                        ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER);
                 break;
         }
     }
