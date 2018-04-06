@@ -282,21 +282,23 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private fun updateAllPluginListsForSlug(slug: String?) {
         site?.let { site ->
             mPluginStore.getImmutablePluginBySlug(site, slug)?.let { updatedPlugin ->
-                val map: (ImmutablePluginModel) -> ImmutablePluginModel? = { currentPlugin ->
-                    if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
+                val transform: (List<ImmutablePluginModel>) -> List<ImmutablePluginModel> = { list ->
+                    list.map { currentPlugin ->
+                        if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
+                    }
                 }
-                featuredPlugins = featuredPlugins.updatedListNetworkResource(map)
-                newPlugins = newPlugins.updatedListNetworkResource(map)
-                searchResults = searchResults.updatedListNetworkResource(map)
-                popularPlugins = popularPlugins.updatedListNetworkResource(map)
+                featuredPlugins = featuredPlugins.getTransformedListNetworkResource(transform)
+                newPlugins = newPlugins.getTransformedListNetworkResource(transform)
+                searchResults = searchResults.getTransformedListNetworkResource(transform)
+                popularPlugins = popularPlugins.getTransformedListNetworkResource(transform)
 
-                sitePlugins = sitePlugins.updatedListNetworkResource { currentPlugin ->
-                    if (currentPlugin.slug == slug) {
-                        // plugin might be uninstalled
-                        if (updatedPlugin.isInstalled) updatedPlugin else null
-                        // TODO: Handle the case where a new plugin is installed so can't be mapped
+                sitePlugins = sitePlugins.getTransformedListNetworkResource { list ->
+                    if (!updatedPlugin.isInstalled) {
+                        list.filter { it.slug != slug }
+                    } else if (list.none { it.slug == slug }) {
+                        list.plus(updatedPlugin).sortedBy { it.displayName }
                     } else {
-                        currentPlugin
+                        list.map { if (it.slug == slug) updatedPlugin else it }
                     }
                 }
             }

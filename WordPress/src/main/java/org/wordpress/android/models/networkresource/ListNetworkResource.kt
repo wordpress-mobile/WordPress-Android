@@ -4,21 +4,23 @@ import org.wordpress.android.util.AppLog
 
 sealed class ListNetworkResource<T : Any>(val data: List<T>) {
     class Init<T : Any> : ListNetworkResource<T>(ArrayList()) {
-        override fun updatedListNetworkResource(map: (old: T) -> T?) = this
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = this
     }
 
     class Ready<T : Any>(data: List<T>) : ListNetworkResource<T>(data) {
-        override fun updatedListNetworkResource(map: (old: T) -> T?) = Ready(mapNotNull(map))
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(transform(data))
     }
 
     class Success<T : Any>(data: List<T>, val canLoadMore: Boolean = false) : ListNetworkResource<T>(data) {
-        override fun updatedListNetworkResource(map: (old: T) -> T?) = Success(mapNotNull(map), canLoadMore)
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
+                Success(transform(data), canLoadMore)
     }
 
     class Loading<T : Any> private constructor(data: List<T>, val loadingMore: Boolean) : ListNetworkResource<T>(data) {
         constructor(previous: ListNetworkResource<T>, loadingMore: Boolean = false): this(previous.data, loadingMore)
 
-        override fun updatedListNetworkResource(map: (old: T) -> T?) = Loading(mapNotNull(map), loadingMore)
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
+                Loading(transform(data), loadingMore)
     }
 
     class Error<T : Any> private constructor(data: List<T>, val errorMessage: String?, val wasLoadingMore: Boolean)
@@ -26,8 +28,8 @@ sealed class ListNetworkResource<T : Any>(val data: List<T>) {
         constructor(previous: ListNetworkResource<T>, errorMessage: String?, wasLoadingMore: Boolean = false)
                 : this(previous.data, errorMessage, wasLoadingMore)
 
-        override fun updatedListNetworkResource(map: (old: T) -> T?) =
-                Error(mapNotNull(map), errorMessage, wasLoadingMore)
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
+                Error(transform(data), errorMessage, wasLoadingMore)
     }
 
     fun shouldFetch(loadMore: Boolean): Boolean {
@@ -47,9 +49,5 @@ sealed class ListNetworkResource<T : Any>(val data: List<T>) {
 
     fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
 
-    abstract fun updatedListNetworkResource(map: (old: T) -> T?): ListNetworkResource<T>
-
-    protected fun mapNotNull(map: (old: T) -> T?): List<T> {
-        return data.mapNotNull { map(it) }
-    }
+    abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
 }
