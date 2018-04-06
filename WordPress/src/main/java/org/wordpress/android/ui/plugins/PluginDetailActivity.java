@@ -105,6 +105,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             = "KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG";
     private static final String KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG
             = "KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG";
+    private static final String KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS
+            = "KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS";
 
     private SiteModel mSite;
     private String mSlug;
@@ -144,6 +146,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean mIsRemovingPlugin;
     protected boolean mIsShowingRemovePluginConfirmationDialog;
     protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
+    protected boolean mIsShowingAutomatedTransferProgress;
 
     // These flags reflects the UI state
     protected boolean mIsActive;
@@ -202,6 +205,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                     savedInstanceState.getBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG);
             mIsShowingInstallFirstPluginConfirmationDialog = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
+            mIsShowingAutomatedTransferProgress = savedInstanceState
+                    .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
         }
 
         setContentView(R.layout.plugin_detail_activity);
@@ -228,6 +233,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         if (mIsShowingInstallFirstPluginConfirmationDialog) {
             confirmInstallPluginForAutomatedTransfer();
+        }
+
+        if (mIsShowingAutomatedTransferProgress) {
+            showAutomatedTransferProgressDialog();
         }
     }
 
@@ -288,6 +297,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG, mIsShowingRemovePluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
                 mIsShowingInstallFirstPluginConfirmationDialog);
+        outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
     }
 
     // UI Helpers
@@ -1130,12 +1140,12 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void startAutomatedTransfer() {
-        showAutomatedTransferDialog();
+        showAutomatedTransferProgressDialog();
 
         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
     }
 
-    private void showAutomatedTransferDialog() {
+    private void showAutomatedTransferProgressDialog() {
         // TODO: check if mAutomatedTransferProgressDialog is not null
         mAutomatedTransferProgressDialog = new ProgressDialog(this);
         mAutomatedTransferProgressDialog.setCancelable(false);
@@ -1143,12 +1153,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         mAutomatedTransferProgressDialog.setIndeterminate(false);
         String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
         mAutomatedTransferProgressDialog.setMessage(message);
+        mIsShowingAutomatedTransferProgress = true;
         mAutomatedTransferProgressDialog.show();
     }
 
     private void cancelAutomatedTransferDialog() {
         if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
             mAutomatedTransferProgressDialog.cancel();
+            mIsShowingAutomatedTransferProgress = false;
         }
     }
 
@@ -1197,6 +1209,9 @@ public class PluginDetailActivity extends AppCompatActivity {
             handleAutomatedTransferFailed(event.error.message);
         } else {
             if (event.isCompleted) {
+                // The flow is almost complete, we can show 99% complete to give us a second or so to fetch the site
+                // and its plugins
+                mAutomatedTransferProgressDialog.setProgress(99);
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
             } else {
                 mAutomatedTransferProgressDialog.setProgress(event.currentStep * 100 / event.totalSteps);
@@ -1214,7 +1229,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (!event.isError()) {
             mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
 
-            if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
+            // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
+            // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
+            if (mIsShowingAutomatedTransferProgress && mSite.isAutomatedTransfer()) {
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
                         .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
             }
@@ -1224,15 +1241,22 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(OnPluginDirectoryFetched event) {
-        if (isFinishing()) {
+        // We should be safe to ignore any errors related to plugin directory fetches since the only time we trigger it
+        // from this view is during AT progress and it should hopefully always succeed and we can't really do much about
+        // it anyway.
+        if (isFinishing() || event.isError()) {
             return;
         }
-        // We are only interested in this event for AT purposes
-        if (!event.isError() && event.type == PluginDirectoryType.SITE) {
-            // Automated Transfer completed
-            if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
-                automatedTransferCompleted();
-            }
+        if (event.type == PluginDirectoryType.SITE && mIsShowingAutomatedTransferProgress) {
+            // After Automated Transfer flow is completed, we fetch the site and then it's plugins. The only way site's
+            // plugins could be fetched without an error is if the AT is completed and now that we have it's plugins
+            // we can finish the whole flow
+            automatedTransferCompleted();
+        } else {
+            // Although it's unlikely that a directory might be fetched while we are in the plugin detail page, we
+            // should be safe to refresh the plugin and the view in case the plugin we are showing has changed
+            refreshPluginFromStore();
+            refreshViews();
         }
     }
 }
