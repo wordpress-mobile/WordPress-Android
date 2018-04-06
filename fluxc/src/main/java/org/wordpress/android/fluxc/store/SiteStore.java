@@ -143,8 +143,8 @@ public class SiteStore extends Store {
     }
 
     public static class InitiateAutomatedTransferPayload extends Payload<AutomatedTransferError> {
-        public SiteModel site;
-        public String pluginSlugToInstall;
+        public @NonNull SiteModel site;
+        public @NonNull String pluginSlugToInstall;
 
         public InitiateAutomatedTransferPayload(SiteModel site, String pluginSlugToInstall) {
             this.site = site;
@@ -153,44 +153,51 @@ public class SiteStore extends Store {
     }
 
     public static class AutomatedTransferEligibilityResponsePayload extends Payload<AutomatedTransferError> {
-        public SiteModel site;
+        public @NonNull SiteModel site;
         public boolean isEligible;
+        public @NonNull List<String> errors;
 
-        public AutomatedTransferEligibilityResponsePayload(SiteModel site, boolean isEligible) {
+        public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site,
+                                                           boolean isEligible,
+                                                           @NonNull List<String> errors) {
             this.site = site;
             this.isEligible = isEligible;
+            this.errors = errors;
         }
 
-        public AutomatedTransferEligibilityResponsePayload(SiteModel site, AutomatedTransferError error) {
+        public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
         }
     }
 
     public static class InitiateAutomatedTransferResponsePayload extends Payload<AutomatedTransferError> {
-        public SiteModel site;
-        public String pluginSlugToInstall;
+        public @NonNull SiteModel site;
+        public @NonNull String pluginSlugToInstall;
         public boolean success;
 
-        public InitiateAutomatedTransferResponsePayload(SiteModel site, String pluginSlugToInstall) {
+        public InitiateAutomatedTransferResponsePayload(@NonNull SiteModel site, @NonNull String pluginSlugToInstall) {
             this.site = site;
             this.pluginSlugToInstall = pluginSlugToInstall;
         }
     }
 
     public static class AutomatedTransferStatusResponsePayload extends Payload<AutomatedTransferError> {
-        public SiteModel site;
-        public String status;
+        public @NonNull SiteModel site;
+        public @NonNull String status;
         public int currentStep;
         public int totalSteps;
 
-        public AutomatedTransferStatusResponsePayload(SiteModel site, String status, int currentStep, int totalSteps) {
+        public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site,
+                                                      @NonNull String status,
+                                                      int currentStep,
+                                                      int totalSteps) {
             this.site = site;
             this.status = status;
             this.currentStep = currentStep;
             this.totalSteps = totalSteps;
         }
-        public AutomatedTransferStatusResponsePayload(SiteModel site, AutomatedTransferError error) {
+        public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
         }
@@ -380,19 +387,27 @@ public class SiteStore extends Store {
     }
 
     public static class OnAutomatedTransferEligibilityChecked extends OnChanged<AutomatedTransferError> {
-        public SiteModel site;
+        public @NonNull SiteModel site;
         public boolean isEligible;
-        public OnAutomatedTransferEligibilityChecked(SiteModel site, boolean isEligible, AutomatedTransferError error) {
+        public @NonNull List<String> eligibilityErrors;
+        public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
+                                                     boolean isEligible,
+                                                     @NonNull List<String> eligibilityErrors,
+                                                     @Nullable AutomatedTransferError error) {
             this.site = site;
             this.isEligible = isEligible;
+            this.eligibilityErrors = eligibilityErrors;
             this.error = error;
         }
     }
 
     public static class OnAutomatedTransferInitiated extends OnChanged<AutomatedTransferError> {
-        public SiteModel site;
-        public String pluginSlugToInstall;
-        public OnAutomatedTransferInitiated(SiteModel site, String pluginSlugToInstall, AutomatedTransferError error) {
+        public @NonNull SiteModel site;
+        public @NonNull String pluginSlugToInstall;
+
+        public OnAutomatedTransferInitiated(@NonNull SiteModel site,
+                                            @NonNull String pluginSlugToInstall,
+                                            AutomatedTransferError error) {
             this.site = site;
             this.pluginSlugToInstall = pluginSlugToInstall;
             this.error = error;
@@ -400,7 +415,7 @@ public class SiteStore extends Store {
     }
 
     public static class OnAutomatedTransferStatusChecked extends OnChanged<AutomatedTransferError> {
-        public SiteModel site;
+        public @NonNull SiteModel site;
         public boolean isCompleted;
         public int currentStep;
         public int totalSteps;
@@ -413,7 +428,6 @@ public class SiteStore extends Store {
         }
         public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
-            this.isCompleted = isCompleted;
             this.error = error;
         }
     }
@@ -1235,7 +1249,8 @@ public class SiteStore extends Store {
     }
 
     private void handleCheckedAutomatedTransferEligibility(AutomatedTransferEligibilityResponsePayload payload) {
-        emitChange(new OnAutomatedTransferEligibilityChecked(payload.site, payload.isEligible, payload.error));
+        emitChange(new OnAutomatedTransferEligibilityChecked(payload.site, payload.isEligible, payload.errors,
+                payload.error));
     }
 
     private void initiateAutomatedTransfer(InitiateAutomatedTransferPayload payload) {
