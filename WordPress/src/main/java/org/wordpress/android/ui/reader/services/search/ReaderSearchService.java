@@ -23,22 +23,6 @@ public class ReaderSearchService extends Service implements ServiceCompletionLis
 
     private ReaderSearchLogic mReaderSearchLogic;
 
-    public static void startService(Context context, @NonNull String query, int offset) {
-        Intent intent = new Intent(context, ReaderSearchService.class);
-        intent.putExtra(ARG_QUERY, query);
-        intent.putExtra(ARG_OFFSET, offset);
-        context.startService(intent);
-    }
-
-    public static void stopService(Context context) {
-        if (context == null) {
-            return;
-        }
-
-        Intent intent = new Intent(context, ReaderSearchService.class);
-        context.stopService(intent);
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;

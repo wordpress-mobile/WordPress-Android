@@ -572,6 +572,12 @@
             android:exported="false"
             android:label="Reader Search Service" />
         <service
+            android:name=".ui.reader.services.search.ReaderSearchJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"
+            android:label="Reader Search Job Service" />
+
+        <service
             android:name=".ui.reader.services.ReaderCommentService"
             android:exported="false"
             android:label="Reader Comment Service" />

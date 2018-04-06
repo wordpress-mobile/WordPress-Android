@@ -55,6 +55,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchService;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
+import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -634,7 +635,7 @@ public class ReaderPostListFragment extends Fragment
      * offset is used during infinite scroll, pass zero for initial search
      */
     private void updatePostsInCurrentSearch(int offset) {
-        ReaderSearchService.startService(getActivity(), mCurrentSearchQuery, offset);
+        ReaderSearchServiceStarter.startService(getActivity(), mCurrentSearchQuery, offset);
     }
 
     private void submitSearchQuery(@NonNull String query) {
