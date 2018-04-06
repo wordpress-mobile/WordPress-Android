@@ -44,7 +44,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val _popularPluginsLiveData = MutableLiveData<PluginListNetworkResource>()
     private val _newPluginsLiveData = MutableLiveData<PluginListNetworkResource>()
     private val _sitePluginsLiveData = MutableLiveData<PluginListNetworkResource>()
-    private val _searchResultsLiveData = MutableLiveData<ListNetworkResource<ImmutablePluginModel>>()
+    private val _searchResultsLiveData = MutableLiveData<PluginListNetworkResource>()
 
     val featuredPluginsLiveData: LiveData<PluginListNetworkResource>
         get() = _featuredPluginsLiveData

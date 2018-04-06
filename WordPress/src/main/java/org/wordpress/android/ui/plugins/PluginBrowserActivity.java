@@ -275,8 +275,8 @@ public class PluginBrowserActivity extends AppCompatActivity
                                                           listNetworkResource) {
         // TODO: Find a better way to check for the status change and when to reload the data
         // Don't reload for every status change, only do it when necessary
-        if (listNetworkResource == null || !(listNetworkResource instanceof ListNetworkResource.Ready
-                                             || listNetworkResource instanceof ListNetworkResource.Success)) {
+        if (!(listNetworkResource instanceof ListNetworkResource.Ready
+              || listNetworkResource instanceof ListNetworkResource.Success)) {
             return;
         }
         PluginBrowserAdapter adapter = null;
