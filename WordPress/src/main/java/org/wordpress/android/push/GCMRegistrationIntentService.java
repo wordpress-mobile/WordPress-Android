@@ -1,9 +1,11 @@
 package org.wordpress.android.push;
 
-import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -22,12 +24,9 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-public class GCMRegistrationIntentService extends IntentService {
+public class GCMRegistrationIntentService extends JobIntentService {
+    static final int GCM_REG_SERVICE_JOB_ID = 1000;
     @Inject AccountStore mAccountStore;
-
-    public GCMRegistrationIntentService() {
-        super("GCMRegistrationIntentService");
-    }
 
     @Override
     public void onCreate() {
@@ -35,8 +34,12 @@ public class GCMRegistrationIntentService extends IntentService {
         ((WordPress) getApplication()).component().inject(this);
     }
 
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, GCMRegistrationIntentService.class, GCM_REG_SERVICE_JOB_ID, work);
+    }
+
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
             String gcmId = BuildConfig.GCM_ID;
@@ -53,6 +56,12 @@ public class GCMRegistrationIntentService extends IntentService {
         }
     }
 
+    @Override
+    public boolean onStopCurrentWork() {
+        // if this job is stopped, we really need this to be re-scheduled and re-register the token with
+        // our servers and Helpshift in order to keep receiving notifications, so let's just return `true`.
+        return true;
+    }
 
     public void sendRegistrationToken(String gcmToken) {
         if (!TextUtils.isEmpty(gcmToken)) {
