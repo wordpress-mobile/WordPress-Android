@@ -3,8 +3,6 @@ package org.wordpress.android.ui.notifications.services;
 import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.content.Context;
-import android.content.Intent;
 
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
