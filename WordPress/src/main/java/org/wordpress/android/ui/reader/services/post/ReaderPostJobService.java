@@ -33,7 +33,7 @@ public class ReaderPostJobService extends JobService implements ServiceCompletio
     private ReaderPostLogic mReaderPostLogic;
 
     @Override public boolean onStartJob(JobParameters params) {
-        AppLog.i(AppLog.T.READER, "reader post service > started");
+        AppLog.i(AppLog.T.READER, "reader post job service > started");
         UpdateAction action;
         if (params.getExtras() != null) {
             if (params.getExtras().containsKey(ARG_ACTION)) {
@@ -59,7 +59,7 @@ public class ReaderPostJobService extends JobService implements ServiceCompletio
     }
 
     @Override public boolean onStopJob(JobParameters params) {
-        AppLog.i(AppLog.T.READER, "reader post service > stopped");
+        AppLog.i(AppLog.T.READER, "reader post job service > stopped");
         jobFinished(params, false);
         return false;
     }
@@ -68,18 +68,18 @@ public class ReaderPostJobService extends JobService implements ServiceCompletio
     public void onCreate() {
         super.onCreate();
         mReaderPostLogic = new ReaderPostLogic(this);
-        AppLog.i(AppLog.T.READER, "reader post service > created");
+        AppLog.i(AppLog.T.READER, "reader post job service > created");
     }
 
     @Override
     public void onDestroy() {
-        AppLog.i(AppLog.T.READER, "reader post service > destroyed");
+        AppLog.i(AppLog.T.READER, "reader post job service > destroyed");
         super.onDestroy();
     }
 
     @Override
     public void onCompleted(Object companion) {
-        AppLog.i(AppLog.T.READER, "reader post service > all tasks completed");
+        AppLog.i(AppLog.T.READER, "reader post job service > all tasks completed");
         jobFinished((JobParameters) companion, false);
     }
 
