@@ -189,7 +189,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
         });
 
-        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+        mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 mSearchMenuItemCollapsed = false;
