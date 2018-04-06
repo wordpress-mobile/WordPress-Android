@@ -49,7 +49,7 @@ public class NotificationsUpdateJobService extends JobService
 
     @Override
     public void onCompleted(Object companion) {
-        AppLog.i(AppLog.T.READER, "notifications update job service > all tasks completed");
+        AppLog.i(AppLog.T.NOTIFS, "notifications update job service > all tasks completed");
         jobFinished((JobParameters) companion, false);
     }
 }

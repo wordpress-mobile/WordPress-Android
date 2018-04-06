@@ -42,7 +42,7 @@ public class NotificationsUpdateService extends Service implements Notifications
     }
 
     @Override public void onCompleted(Object companion) {
-        AppLog.i(AppLog.T.READER, "notifications update service > all tasks completed");
+        AppLog.i(AppLog.T.NOTIFS, "notifications update service > all tasks completed");
         stopSelf();
     }
 }
