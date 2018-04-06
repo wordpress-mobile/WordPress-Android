@@ -53,8 +53,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
-import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
+import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -634,7 +634,7 @@ public class ReaderPostListFragment extends Fragment
      * offset is used during infinite scroll, pass zero for initial search
      */
     private void updatePostsInCurrentSearch(int offset) {
-        ReaderSearchService.startService(getActivity(), mCurrentSearchQuery, offset);
+        ReaderSearchServiceStarter.startService(getActivity(), mCurrentSearchQuery, offset);
     }
 
     private void submitSearchQuery(@NonNull String query) {
@@ -651,7 +651,7 @@ public class ReaderPostListFragment extends Fragment
 
         // remove cached results for this search - search results are ephemeral so each search
         // should be treated as a "fresh" one
-        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(trimQuery);
+        ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(trimQuery);
         ReaderPostTable.deletePostsWithTag(searchTag);
 
         mPostAdapter.setCurrentTag(searchTag);
@@ -1015,7 +1015,7 @@ public class ReaderPostListFragment extends Fragment
                             break;
 
                         case SEARCH_RESULTS:
-                            ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                            ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
                             int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
                             if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 updatePostsInCurrentSearch(offset);
@@ -1043,7 +1043,7 @@ public class ReaderPostListFragment extends Fragment
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
                 mPostAdapter.setCurrentTag(searchTag);
             }
         }
