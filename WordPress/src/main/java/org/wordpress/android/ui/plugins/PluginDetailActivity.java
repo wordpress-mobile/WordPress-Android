@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -111,6 +112,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private SiteModel mSite;
     private String mSlug;
     protected ImmutablePluginModel mPlugin;
+    private Handler mHandler;
 
     private ViewGroup mContainer;
     private TextView mTitleTextView;
@@ -221,6 +223,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             actionBar.setElevation(0);
         }
 
+        mHandler = new Handler();
         setupViews();
 
         if (mIsShowingRemovePluginConfirmationDialog) {
@@ -1215,7 +1218,13 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
             } else {
                 mAutomatedTransferProgressDialog.setProgress(event.currentStep * 100 / event.totalSteps);
-                mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Let's wait a second before checking the status again
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+                    }
+                }, 1000);
             }
         }
     }
@@ -1223,18 +1232,17 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (isFinishing()) {
+        // We should be safe to ignore the errors
+        if (isFinishing() && event.isError()) {
             return;
         }
-        if (!event.isError()) {
-            mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
+        mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
 
-            // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
-            // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
-            if (mIsShowingAutomatedTransferProgress && mSite.isAutomatedTransfer()) {
-                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
-                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
-            }
+        // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
+        // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
+        if (mIsShowingAutomatedTransferProgress && mSite.isAutomatedTransfer()) {
+            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                    .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
         }
     }
 
