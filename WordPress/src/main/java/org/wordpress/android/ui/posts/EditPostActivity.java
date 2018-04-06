@@ -1068,7 +1068,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (UploadService.hasInProgressMediaUploadsForPost(mPost)) {
                     ToastUtils.showToast(EditPostActivity.this,
-                            getString(R.string.error_save_draft_while_media_uploading), Duration.SHORT);
+                            getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
                     return false;
                 }
 
