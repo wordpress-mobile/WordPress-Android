@@ -42,7 +42,8 @@ public class ReaderUpdateService extends Service implements ServiceCompletionLis
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.hasExtra(ARG_UPDATE_TASKS)) {
             //noinspection unchecked
-            EnumSet<ReaderUpdateLogic.UpdateTask> tasks = (EnumSet<ReaderUpdateLogic.UpdateTask>) intent.getSerializableExtra(ARG_UPDATE_TASKS);
+            EnumSet<ReaderUpdateLogic.UpdateTask> tasks = (EnumSet<ReaderUpdateLogic.UpdateTask>)
+                    intent.getSerializableExtra(ARG_UPDATE_TASKS);
             mReaderUpdateLogic.performTasks(tasks, null);
         }
 

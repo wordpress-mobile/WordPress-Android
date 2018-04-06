@@ -55,8 +55,9 @@ public class ReaderUpdateServiceStarter {
     private static int[] getIntArrayFromEnumSet(EnumSet<ReaderUpdateLogic.UpdateTask> enumSet) {
         int[] ordinals2 = new int[enumSet.size()];
         int index = 0;
-        for (ReaderUpdateLogic.UpdateTask e : enumSet)
+        for (ReaderUpdateLogic.UpdateTask e : enumSet) {
             ordinals2[index++] = e.ordinal();
+        }
         return ordinals2;
     }
 }
