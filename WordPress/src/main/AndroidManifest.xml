@@ -568,7 +568,7 @@
             android:label="Reader Post JobService" />
 
         <service
-            android:name=".ui.reader.services.ReaderSearchService"
+            android:name=".ui.reader.services.search.ReaderSearchService"
             android:exported="false"
             android:label="Reader Search Service" />
         <service
