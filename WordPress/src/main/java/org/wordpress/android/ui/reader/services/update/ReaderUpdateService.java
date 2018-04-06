@@ -43,14 +43,14 @@ public class ReaderUpdateService extends Service implements ServiceCompletionLis
         if (intent != null && intent.hasExtra(ARG_UPDATE_TASKS)) {
             //noinspection unchecked
             EnumSet<ReaderUpdateLogic.UpdateTask> tasks = (EnumSet<ReaderUpdateLogic.UpdateTask>) intent.getSerializableExtra(ARG_UPDATE_TASKS);
-            mReaderUpdateLogic.performTasks(tasks);
+            mReaderUpdateLogic.performTasks(tasks, null);
         }
 
         return START_NOT_STICKY;
     }
 
     @Override
-    public void onCompleted() {
+    public void onCompleted(Object companion) {
         AppLog.i(AppLog.T.READER, "reader service > all tasks completed");
         stopSelf();
     }

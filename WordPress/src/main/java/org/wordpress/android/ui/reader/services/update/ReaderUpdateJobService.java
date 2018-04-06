@@ -19,22 +19,17 @@ public class ReaderUpdateJobService extends JobService implements ServiceComplet
      */
 
     private ReaderUpdateLogic mReaderUpdateLogic;
-    private JobParameters mParams;
 
     @Override
     public boolean onStartJob(JobParameters params) {
         AppLog.i(AppLog.T.READER, "reader service > started");
         if (params.getExtras() != null && params.getExtras().containsKey(ARG_UPDATE_TASKS)) {
-            //noinspection unchecked
-//            EnumSet<ReaderUpdateLogic.UpdateTask> tasks = (EnumSet<ReaderUpdateLogic.UpdateTask>)
-//                    params.getExtras().get(ARG_UPDATE_TASKS);
-
             int[] tmp = (int[]) params.getExtras().get(ARG_UPDATE_TASKS);
             EnumSet<ReaderUpdateLogic.UpdateTask> tasks = EnumSet.noneOf(ReaderUpdateLogic.UpdateTask.class);
             for (int i : tmp) {
                 tasks.add(ReaderUpdateLogic.UpdateTask.values()[i]);
             }
-            mReaderUpdateLogic.performTasks(tasks);
+            mReaderUpdateLogic.performTasks(tasks, params);
         }
         return true;
     }
@@ -42,7 +37,6 @@ public class ReaderUpdateJobService extends JobService implements ServiceComplet
     @Override
     public boolean onStopJob(JobParameters params) {
         AppLog.i(AppLog.T.READER, "reader service > stopped");
-        mParams = params;
         jobFinished(params, false);
         return false;
     }
@@ -61,8 +55,8 @@ public class ReaderUpdateJobService extends JobService implements ServiceComplet
     }
 
     @Override
-    public void onCompleted() {
+    public void onCompleted(Object companion) {
         AppLog.i(AppLog.T.READER, "reader service > all tasks completed");
-        jobFinished(mParams, false);
+        jobFinished((JobParameters) companion, false);
     }
 }

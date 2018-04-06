@@ -43,6 +43,7 @@ public class ReaderUpdateLogic {
 
     private EnumSet<UpdateTask> mCurrentTasks;
     private ServiceCompletionListener mCompletionListener;
+    private Object mListenerCompanion;
 
     @Inject AccountStore mAccountStore;
 
@@ -51,8 +52,9 @@ public class ReaderUpdateLogic {
         app.component().inject(this);
     }
 
-    public void performTasks(EnumSet<UpdateTask> tasks) {
+    public void performTasks(EnumSet<UpdateTask> tasks, Object companion) {
         mCurrentTasks = EnumSet.copyOf(tasks);
+        mListenerCompanion = companion;
 
         // perform in priority order - we want to update tags first since without them
         // the Reader can't show anything
@@ -76,7 +78,7 @@ public class ReaderUpdateLogic {
 
     private void allTasksCompleted() {
         AppLog.i(AppLog.T.READER, "reader service > all tasks completed");
-        mCompletionListener.onCompleted();
+        mCompletionListener.onCompleted(mListenerCompanion);
     }
 
     /***

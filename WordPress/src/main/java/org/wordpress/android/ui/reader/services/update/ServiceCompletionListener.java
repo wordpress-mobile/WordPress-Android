@@ -1,5 +1,5 @@
 package org.wordpress.android.ui.reader.services.update;
 
 public interface ServiceCompletionListener {
-    void onCompleted();
+    void onCompleted(Object companion);
 }
