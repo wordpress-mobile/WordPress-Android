@@ -55,8 +55,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderSearchService;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -1594,7 +1594,7 @@ public class ReaderPostListFragment extends Fragment
 
         AppLog.d(T.READER, "reader post list > updating tags and blogs");
         mLastAutoUpdateDt = new Date();
-        ReaderUpdateService.startService(getActivity(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+        ReaderUpdateServiceStarter.startService(getActivity(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.services.update;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -10,6 +9,8 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.EnumSet;
 
+import static org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter.ARG_UPDATE_TASKS;
+
 
 public class ReaderUpdateService extends Service implements ServiceCompletionListener {
     /***
@@ -17,18 +18,7 @@ public class ReaderUpdateService extends Service implements ServiceCompletionLis
      * on EventBus to notify of changes
      */
 
-    private static final String ARG_UPDATE_TASKS = "update_tasks";
-
     private ReaderUpdateLogic mReaderUpdateLogic;
-
-    public static void startService(Context context, EnumSet<ReaderUpdateLogic.UpdateTask> tasks) {
-        if (context == null || tasks == null || tasks.size() == 0) {
-            return;
-        }
-        Intent intent = new Intent(context, ReaderUpdateService.class);
-        intent.putExtra(ARG_UPDATE_TASKS, tasks);
-        context.startService(intent);
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
