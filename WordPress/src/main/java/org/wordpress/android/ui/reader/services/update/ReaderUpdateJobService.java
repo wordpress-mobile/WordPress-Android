@@ -5,6 +5,7 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 
 import java.util.EnumSet;

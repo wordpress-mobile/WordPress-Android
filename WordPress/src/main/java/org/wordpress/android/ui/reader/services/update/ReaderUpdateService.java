@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 
 import java.util.EnumSet;

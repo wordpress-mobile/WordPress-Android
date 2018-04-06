@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
