@@ -35,7 +35,7 @@ public class NotificationsUpdateServiceStarter {
             context.startService(intent);
         } else {
             // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
-            // it's preferrable to use it only since enforcement in API 26 to not break any old behavior
+            // it's preferable to use it only since enforcement in API 26 to not break any old behavior
             ComponentName componentName = new ComponentName(context, NotificationsUpdateJobService.class);
 
             PersistableBundle extras = new PersistableBundle();
