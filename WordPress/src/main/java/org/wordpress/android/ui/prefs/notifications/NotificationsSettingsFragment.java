@@ -102,7 +102,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             PreferenceScreen preferenceScreen =
                     (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
 
-            PreferenceCategory categorySightsAndSounds = (PreferenceCategory) preferenceScreen.findPreference(getActivity()
+            PreferenceCategory categorySightsAndSounds =
+                    (PreferenceCategory) preferenceScreen.findPreference(getActivity()
                     .getString(
                             R.string.pref_notification_sights_sounds));
             preferenceScreen.removePreference(categorySightsAndSounds);
