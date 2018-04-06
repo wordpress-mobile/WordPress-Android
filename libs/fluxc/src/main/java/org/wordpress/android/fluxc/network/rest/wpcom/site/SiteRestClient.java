@@ -496,15 +496,21 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     // Automated Transfers
 
-    public void checkAutomatedTransferEligibility(final SiteModel site) {
+    public void checkAutomatedTransferEligibility(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.eligibility.getUrlV1_1();
         final WPComGsonRequest<AutomatedTransferEligibilityCheckResponse> request = WPComGsonRequest
                 .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse.class,
                 new Listener<AutomatedTransferEligibilityCheckResponse>() {
                     @Override
                     public void onResponse(AutomatedTransferEligibilityCheckResponse response) {
+                        List<String> strErrors = new ArrayList<>();
+                        if (response.errors != null) {
+                            for (int i = 0; i < response.errors.length; i++) {
+                                strErrors.add(response.errors[i].message);
+                            }
+                        }
                         mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
-                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible)));
+                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible, strErrors)));
                     }
                 },
                 new BaseErrorListener() {
@@ -519,7 +525,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void initiateAutomatedTransfer(final SiteModel site, final String pluginSlugToInstall) {
+    public void initiateAutomatedTransfer(@NonNull final SiteModel site, @NonNull final String pluginSlugToInstall) {
         String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.initiate.getUrlV1_1();
         Map<String, Object> params = new HashMap<>();
         params.put("plugin", pluginSlugToInstall);
@@ -547,7 +553,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void checkAutomatedTransferStatus(final SiteModel site) {
+    public void checkAutomatedTransferStatus(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.status.getUrlV1_1();
         final WPComGsonRequest<AutomatedTransferStatusResponse> request = WPComGsonRequest
                 .buildGetRequest(url, null, AutomatedTransferStatusResponse.class,
