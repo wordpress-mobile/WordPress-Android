@@ -402,7 +402,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mInstallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                installPlugin();
+                dispatchInstallPluginAction();
             }
         });
 
@@ -738,7 +738,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        installPlugin();
+                        dispatchInstallPluginAction();
                     }
                 })
                 .show();
@@ -768,46 +768,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void cancelRemovePluginProgressDialog() {
         if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
             mRemovePluginProgressDialog.cancel();
-        }
-    }
-
-    private void confirmInstallPluginForAutomatedTransfer() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
-        builder.setTitle(getResources().getText(R.string.plugin_install));
-        builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mIsShowingInstallFirstPluginConfirmationDialog = false;
-                startAutomatedTransfer();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mIsShowingInstallFirstPluginConfirmationDialog = false;
-            }
-        });
-        builder.setCancelable(true);
-        builder.create();
-        mIsShowingInstallFirstPluginConfirmationDialog = true;
-        builder.show();
-    }
-
-    private void showAutomatedTransferDialog() {
-        // TODO: check if mAutomatedTransferProgressDialog is not null
-        mAutomatedTransferProgressDialog = new ProgressDialog(this);
-        mAutomatedTransferProgressDialog.setCancelable(false);
-        mAutomatedTransferProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mAutomatedTransferProgressDialog.setIndeterminate(false);
-        String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
-        mAutomatedTransferProgressDialog.setMessage(message);
-        mAutomatedTransferProgressDialog.show();
-    }
-
-    private void cancelAutomatedTransferDialog() {
-        if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
-            mAutomatedTransferProgressDialog.cancel();
         }
     }
 
@@ -843,7 +803,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
-    private void installPlugin() {
+    protected void dispatchInstallPluginAction() {
         if (!NetworkUtils.checkConnection(this) || mPlugin.isInstalled() || mIsInstallingPlugin) {
             return;
         }
@@ -866,12 +826,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         mRemovePluginProgressDialog.setMessage(getRemovingPluginMessage());
         DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mPlugin.getName(), mSlug);
         mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
-    }
-
-    private void startAutomatedTransfer() {
-        showAutomatedTransferDialog();
-
-        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
     }
 
     protected void disableAndRemovePlugin() {
@@ -1088,102 +1042,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         showSuccessfulPluginRemovedSnackbar();
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginDirectoryFetched(OnPluginDirectoryFetched event) {
-        if (isFinishing()) {
-            return;
-        }
-        // We are only interested in this event for AT purposes
-        if (!event.isError() && event.type == PluginDirectoryType.SITE) {
-            // Automated Transfer completed
-            if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
-                automatedTransferCompleted();
-            }
-        }
-    }
-
-    // Automated Transfer Events
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAutomatedTransferEligibilityChecked(OnAutomatedTransferEligibilityChecked event) {
-        if (isFinishing()) {
-            return;
-        }
-        if (!event.isEligible) {
-            handleAutomatedTransferFailed(getString(R.string.plugin_install_error_site_ineligible));
-        } else {
-            mDispatcher.dispatch(SiteActionBuilder
-                    .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAutomatedTransferInitiated(OnAutomatedTransferInitiated event) {
-        if (isFinishing()) {
-            return;
-        }
-        if (event.isError()) {
-            handleAutomatedTransferFailed(event.error.message);
-        } else {
-            mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
-        if (isFinishing()) {
-            return;
-        }
-        if (event.isError()) {
-            handleAutomatedTransferFailed(event.error.message);
-        } else {
-            updateAutomatedTransferProgressDialog(event.isCompleted, event.currentStep, event.totalSteps);
-            if (event.isCompleted) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
-            } else {
-                mAutomatedTransferProgressDialog.setProgress(event.currentStep);
-                mAutomatedTransferProgressDialog.setMax(event.totalSteps);
-                mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(OnSiteChanged event) {
-        if (isFinishing()) {
-            return;
-        }
-        if (!event.isError()) {
-            mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
-
-            if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
-                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
-                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
-                mAutomatedTransferProgressDialog.setProgress(mAutomatedTransferProgressDialog.getMax() - 1);
-            }
-        }
-    }
-
-    private void updateAutomatedTransferProgressDialog(boolean isCompleted, int currentStep, int totalSteps) {
-        // Let's add 2 extra steps to give us time to fetch the site and its plugins
-        mAutomatedTransferProgressDialog.setProgress(isCompleted ? totalSteps : currentStep);
-        mAutomatedTransferProgressDialog.setMax(totalSteps + 2);
-    }
-
-    private void automatedTransferCompleted() {
-        mAutomatedTransferProgressDialog.setProgress(mAutomatedTransferProgressDialog.getMax());
-        cancelAutomatedTransferDialog();
-        refreshPluginFromStore();
-        refreshViews();
-        showSuccessfulInstallSnackbar();
-        invalidateOptionsMenu();
-    }
-
     // This check should only handle events for already installed plugins - onSitePluginConfigured,
     // onSitePluginUpdated, onSitePluginDeleted
     private boolean shouldHandleFluxCSitePluginEvent(SiteModel eventSite, String eventPluginName) {
@@ -1244,5 +1102,137 @@ public class PluginDetailActivity extends AppCompatActivity {
             return false;
         }
         return mPlugin.isActive() != mIsActive || mPlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled;
+    }
+
+    // Automated Transfer
+
+    private void confirmInstallPluginForAutomatedTransfer() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        builder.setTitle(getResources().getText(R.string.plugin_install));
+        builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+                startAutomatedTransfer();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+            }
+        });
+        builder.setCancelable(true);
+        builder.create();
+        mIsShowingInstallFirstPluginConfirmationDialog = true;
+        builder.show();
+    }
+
+    private void startAutomatedTransfer() {
+        showAutomatedTransferDialog();
+
+        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
+    }
+
+    private void showAutomatedTransferDialog() {
+        // TODO: check if mAutomatedTransferProgressDialog is not null
+        mAutomatedTransferProgressDialog = new ProgressDialog(this);
+        mAutomatedTransferProgressDialog.setCancelable(false);
+        mAutomatedTransferProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mAutomatedTransferProgressDialog.setIndeterminate(false);
+        String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
+        mAutomatedTransferProgressDialog.setMessage(message);
+        mAutomatedTransferProgressDialog.show();
+    }
+
+    private void cancelAutomatedTransferDialog() {
+        if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
+            mAutomatedTransferProgressDialog.cancel();
+        }
+    }
+
+    private void automatedTransferCompleted() {
+        cancelAutomatedTransferDialog();
+        refreshPluginFromStore();
+        refreshViews();
+        showSuccessfulInstallSnackbar();
+        invalidateOptionsMenu();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferEligibilityChecked(OnAutomatedTransferEligibilityChecked event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (!event.isEligible) {
+            handleAutomatedTransferFailed(getString(R.string.plugin_install_error_site_ineligible));
+        } else {
+            mDispatcher.dispatch(SiteActionBuilder
+                    .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferInitiated(OnAutomatedTransferInitiated event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (event.isError()) {
+            handleAutomatedTransferFailed(event.error.message);
+        } else {
+            mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (event.isError()) {
+            handleAutomatedTransferFailed(event.error.message);
+        } else {
+            if (event.isCompleted) {
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+            } else {
+                mAutomatedTransferProgressDialog.setProgress(event.currentStep * 100 / event.totalSteps);
+                mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (!event.isError()) {
+            mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
+
+            if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginDirectoryFetched(OnPluginDirectoryFetched event) {
+        if (isFinishing()) {
+            return;
+        }
+        // We are only interested in this event for AT purposes
+        if (!event.isError() && event.type == PluginDirectoryType.SITE) {
+            // Automated Transfer completed
+            if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
+                automatedTransferCompleted();
+            }
+        }
     }
 }
