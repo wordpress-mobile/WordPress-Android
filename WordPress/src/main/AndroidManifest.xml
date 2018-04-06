@@ -556,7 +556,7 @@
             android:exported="false"
             android:label="Reader Update JobService" />
         <service
-            android:name=".ui.reader.services.ReaderPostService"
+            android:name=".ui.reader.services.post.ReaderPostService"
             android:exported="false"
             android:label="Reader Post Service" />
         <service

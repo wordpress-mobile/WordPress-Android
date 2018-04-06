@@ -6,7 +6,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
-import org.wordpress.android.ui.reader.services.ReaderPostService;
+import org.wordpress.android.ui.reader.services.post.ReaderPostService;
 import org.wordpress.android.util.StringUtils;
 
 /**

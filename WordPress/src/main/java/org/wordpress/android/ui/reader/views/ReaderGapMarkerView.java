@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.reader.services.ReaderPostService;
-import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
+import org.wordpress.android.ui.reader.services.post.ReaderPostService;
+import org.wordpress.android.ui.reader.services.post.ReaderPostService.UpdateAction;
 import org.wordpress.android.util.NetworkUtils;
 
 /**

@@ -52,8 +52,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
-import org.wordpress.android.ui.reader.services.ReaderPostService;
-import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
+import org.wordpress.android.ui.reader.services.post.ReaderPostService;
+import org.wordpress.android.ui.reader.services.post.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;

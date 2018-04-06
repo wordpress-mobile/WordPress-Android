@@ -1,9 +1,5 @@
-package org.wordpress.android.ui.reader.services;
+package org.wordpress.android.ui.reader.services.post;
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -19,8 +15,8 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -28,141 +24,72 @@ import org.wordpress.android.util.UrlUtils;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * service which updates posts with specific tags or in specific blogs/feeds - relies on
- * EventBus to alert of update status
- */
+public class ReaderPostLogic {
+    private ServiceCompletionListener mCompletionListener;
+    private Object mListenerCompanion;
 
-public class ReaderPostService extends Service {
-    private static final String ARG_TAG = "tag";
-    private static final String ARG_ACTION = "action";
-    private static final String ARG_BLOG_ID = "blog_id";
-    private static final String ARG_FEED_ID = "feed_id";
-
-    public enum UpdateAction {
-        REQUEST_NEWER, // request the newest posts for this tag/blog/feed
-        REQUEST_OLDER, // request posts older than the oldest existing one for this tag/blog/feed
-        REQUEST_OLDER_THAN_GAP // request posts older than the one with the gap marker for this tag
-                               // (not supported for blog/feed)
+    public ReaderPostLogic(ServiceCompletionListener listener) {
+        mCompletionListener = listener;
     }
 
-    /*
-     * update posts with the passed tag
-     */
-    public static void startServiceForTag(Context context, ReaderTag tag, UpdateAction action) {
-        Intent intent = new Intent(context, ReaderPostService.class);
-        intent.putExtra(ARG_TAG, tag);
-        intent.putExtra(ARG_ACTION, action);
-        context.startService(intent);
-    }
-
-    /*
-     * update posts in the passed blog
-     */
-    public static void startServiceForBlog(Context context, long blogId, UpdateAction action) {
-        Intent intent = new Intent(context, ReaderPostService.class);
-        intent.putExtra(ARG_BLOG_ID, blogId);
-        intent.putExtra(ARG_ACTION, action);
-        context.startService(intent);
-    }
-
-    /*
-     * update posts in the passed feed
-     */
-    public static void startServiceForFeed(Context context, long feedId, UpdateAction action) {
-        Intent intent = new Intent(context, ReaderPostService.class);
-        intent.putExtra(ARG_FEED_ID, feedId);
-        intent.putExtra(ARG_ACTION, action);
-        context.startService(intent);
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        AppLog.i(AppLog.T.READER, "reader post service > created");
-    }
-
-    @Override
-    public void onDestroy() {
-        AppLog.i(AppLog.T.READER, "reader post service > destroyed");
-        super.onDestroy();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
-            return START_NOT_STICKY;
-        }
-
-        UpdateAction action;
-        if (intent.hasExtra(ARG_ACTION)) {
-            action = (UpdateAction) intent.getSerializableExtra(ARG_ACTION);
-        } else {
-            action = UpdateAction.REQUEST_NEWER;
-        }
+    public void performTask(Object companion, ReaderPostService.UpdateAction action,
+                            ReaderTag tag, long blogId, long feedId) {
+        mListenerCompanion = companion;
+        //ReaderPostService.UpdateAction action = ReaderPostService.UpdateAction.REQUEST_NEWER;
 
         EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
 
-        if (intent.hasExtra(ARG_TAG)) {
-            ReaderTag tag = (ReaderTag) intent.getSerializableExtra(ARG_TAG);
+        if (tag != null) {
             updatePostsWithTag(tag, action);
-        } else if (intent.hasExtra(ARG_BLOG_ID)) {
-            long blogId = intent.getLongExtra(ARG_BLOG_ID, 0);
+        } else if (blogId > -1) {
             updatePostsInBlog(blogId, action);
-        } else if (intent.hasExtra(ARG_FEED_ID)) {
-            long feedId = intent.getLongExtra(ARG_FEED_ID, 0);
+        } else if (feedId > -1) {
             updatePostsInFeed(feedId, action);
         }
-
-        return START_NOT_STICKY;
     }
 
-    private void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
+
+    private void updatePostsWithTag(final ReaderTag tag, final ReaderPostService.UpdateAction action) {
         requestPostsWithTag(
                 tag,
                 action,
-                new UpdateResultListener() {
+                new ReaderActions.UpdateResultListener() {
                     @Override
-                    public void onUpdateResult(UpdateResult result) {
+                    public void onUpdateResult(ReaderActions.UpdateResult result) {
                         EventBus.getDefault().post(new ReaderEvents.UpdatePostsEnded(tag, result, action));
-                        stopSelf();
+                        mCompletionListener.onCompleted(mListenerCompanion);
                     }
                 });
     }
 
-    private void updatePostsInBlog(long blogId, final UpdateAction action) {
-        UpdateResultListener listener = new UpdateResultListener() {
+    private void updatePostsInBlog(long blogId, final ReaderPostService.UpdateAction action) {
+        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
-            public void onUpdateResult(UpdateResult result) {
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
                 EventBus.getDefault().post(new ReaderEvents.UpdatePostsEnded(result, action));
-                stopSelf();
+                mCompletionListener.onCompleted(mListenerCompanion);
             }
         };
         requestPostsForBlog(blogId, action, listener);
     }
 
-    private void updatePostsInFeed(long feedId, final UpdateAction action) {
-        UpdateResultListener listener = new UpdateResultListener() {
+    private void updatePostsInFeed(long feedId, final ReaderPostService.UpdateAction action) {
+        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
-            public void onUpdateResult(UpdateResult result) {
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
                 EventBus.getDefault().post(new ReaderEvents.UpdatePostsEnded(result, action));
-                stopSelf();
+                mCompletionListener.onCompleted(mListenerCompanion);
             }
         };
         requestPostsForFeed(feedId, action, listener);
     }
 
     private static void requestPostsWithTag(final ReaderTag tag,
-                                            final UpdateAction updateAction,
-                                            final UpdateResultListener resultListener) {
+                                            final ReaderPostService.UpdateAction updateAction,
+                                            final ReaderActions.UpdateResultListener resultListener) {
         String path = getRelativeEndpointForTag(tag);
         if (TextUtils.isEmpty(path)) {
-            resultListener.onUpdateResult(UpdateResult.FAILED);
+            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             return;
         }
 
@@ -198,7 +125,7 @@ public class ReaderPostService extends Service {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 // remember when this tag was updated if newer posts were requested
-                if (updateAction == UpdateAction.REQUEST_NEWER) {
+                if (updateAction == ReaderPostService.UpdateAction.REQUEST_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tag);
                 }
                 handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener);
@@ -208,7 +135,7 @@ public class ReaderPostService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                resultListener.onUpdateResult(UpdateResult.FAILED);
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }
         };
 
@@ -216,12 +143,12 @@ public class ReaderPostService extends Service {
     }
 
     private static void requestPostsForBlog(final long blogId,
-                                            final UpdateAction updateAction,
-                                            final UpdateResultListener resultListener) {
+                                            final ReaderPostService.UpdateAction updateAction,
+                                            final ReaderActions.UpdateResultListener resultListener) {
         String path = "read/sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
-        if (updateAction == UpdateAction.REQUEST_OLDER) {
+        if (updateAction == ReaderPostService.UpdateAction.REQUEST_OLDER) {
             String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId);
             if (!TextUtils.isEmpty(dateOldest)) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest);
@@ -238,7 +165,7 @@ public class ReaderPostService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                resultListener.onUpdateResult(UpdateResult.FAILED);
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }
         };
         AppLog.d(AppLog.T.READER, "updating posts in blog " + blogId);
@@ -246,10 +173,10 @@ public class ReaderPostService extends Service {
     }
 
     private static void requestPostsForFeed(final long feedId,
-                                            final UpdateAction updateAction,
-                                            final UpdateResultListener resultListener) {
+                                            final ReaderPostService.UpdateAction updateAction,
+                                            final ReaderActions.UpdateResultListener resultListener) {
         String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
-        if (updateAction == UpdateAction.REQUEST_OLDER) {
+        if (updateAction == ReaderPostService.UpdateAction.REQUEST_OLDER) {
             String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
             if (!TextUtils.isEmpty(dateOldest)) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest);
@@ -266,7 +193,7 @@ public class ReaderPostService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                resultListener.onUpdateResult(UpdateResult.FAILED);
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }
         };
 
@@ -279,10 +206,10 @@ public class ReaderPostService extends Service {
      */
     private static void handleUpdatePostsResponse(final ReaderTag tag,
                                                   final JSONObject jsonObject,
-                                                  final UpdateAction updateAction,
-                                                  final UpdateResultListener resultListener) {
+                                                  final ReaderPostService.UpdateAction updateAction,
+                                                  final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
-            resultListener.onUpdateResult(UpdateResult.FAILED);
+            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             return;
         }
 
@@ -290,7 +217,7 @@ public class ReaderPostService extends Service {
             @Override
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
+                ReaderActions.UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
                 if (updateResult.isNewOrChanged()) {
                     // gap detection - only applies to posts with a specific tag
                     ReaderPost postWithGap = null;
@@ -328,8 +255,8 @@ public class ReaderPostService extends Service {
                     if (postWithGap != null) {
                         ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
                     }
-                } else if (updateResult == UpdateResult.UNCHANGED
-                           && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                } else if (updateResult == ReaderActions.UpdateResult.UNCHANGED
+                           && updateAction == ReaderPostService.UpdateAction.REQUEST_OLDER_THAN_GAP) {
                     // edge case - request to fill gap returned nothing new, so remove the gap marker
                     ReaderPostTable.removeGapMarkerForTag(tag);
                     AppLog.w(AppLog.T.READER, "attempt to fill gap returned nothing new");
