@@ -1066,6 +1066,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
                 //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
 
+                if (UploadService.hasInProgressMediaUploadsForPost(mPost)) {
+                    ToastUtils.showToast(EditPostActivity.this,
+                            getString(R.string.error_save_draft_while_media_uploading), Duration.SHORT);
+                    return false;
+                }
+
                 // we update the mPost object first, so we can pre-check Post publishability and inform the user
                 updatePostObject();
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
