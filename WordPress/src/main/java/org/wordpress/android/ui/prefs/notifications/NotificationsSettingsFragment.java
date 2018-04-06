@@ -89,7 +89,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private String mNotificationUpdatedSite;
     private String mPreviousEmailPostsFrequency;
     private String mRestoredQuery;
-    private SubscriptionFrequency mSubscriptionFrequency;
     private UpdateSubscriptionPayload mUpdateSubscriptionFrequencyPayload;
     private boolean mNotificationsEnabled;
     private boolean mPreviousEmailComments;
@@ -269,9 +268,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             if (emailPostsFrequency != null && !emailPostsFrequency.equalsIgnoreCase(mPreviousEmailPostsFrequency)) {
-                mSubscriptionFrequency = getSubscriptionFrequencyFromString(emailPostsFrequency);
+                SubscriptionFrequency subscriptionFrequency = getSubscriptionFrequencyFromString(emailPostsFrequency);
                 mUpdateSubscriptionFrequencyPayload = new UpdateSubscriptionPayload(mNotificationUpdatedSite,
-                        mSubscriptionFrequency);
+                        subscriptionFrequency);
                 /*
                  * The email post frequency update will be overridden by the email post update if the email post
                  * frequency callback returns first.  Thus, the updates must be dispatched sequentially when the
