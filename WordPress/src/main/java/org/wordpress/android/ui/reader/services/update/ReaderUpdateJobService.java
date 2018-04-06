@@ -22,7 +22,7 @@ public class ReaderUpdateJobService extends JobService implements ServiceComplet
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        AppLog.i(AppLog.T.READER, "reader service > started");
+        AppLog.i(AppLog.T.READER, "reader job service > started");
         if (params.getExtras() != null && params.getExtras().containsKey(ARG_UPDATE_TASKS)) {
             int[] tmp = (int[]) params.getExtras().get(ARG_UPDATE_TASKS);
             EnumSet<ReaderUpdateLogic.UpdateTask> tasks = EnumSet.noneOf(ReaderUpdateLogic.UpdateTask.class);
@@ -36,7 +36,7 @@ public class ReaderUpdateJobService extends JobService implements ServiceComplet
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        AppLog.i(AppLog.T.READER, "reader service > stopped");
+        AppLog.i(AppLog.T.READER, "reader job service > stopped");
         jobFinished(params, false);
         return false;
     }
@@ -45,18 +45,18 @@ public class ReaderUpdateJobService extends JobService implements ServiceComplet
     public void onCreate() {
         super.onCreate();
         mReaderUpdateLogic = new ReaderUpdateLogic((WordPress) getApplication(), this);
-        AppLog.i(AppLog.T.READER, "reader service > created");
+        AppLog.i(AppLog.T.READER, "reader job service > created");
     }
 
     @Override
     public void onDestroy() {
-        AppLog.i(AppLog.T.READER, "reader service > destroyed");
+        AppLog.i(AppLog.T.READER, "reader job service > destroyed");
         super.onDestroy();
     }
 
     @Override
     public void onCompleted(Object companion) {
-        AppLog.i(AppLog.T.READER, "reader service > all tasks completed");
+        AppLog.i(AppLog.T.READER, "reader job service > all tasks completed");
         jobFinished((JobParameters) companion, false);
     }
 }
