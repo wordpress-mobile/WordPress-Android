@@ -52,8 +52,10 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
@@ -552,8 +554,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
-            prefScreen.setTitle(subscription.getBlogName());
-            prefScreen.setSummary(subscription.getUrl());
+            prefScreen.setTitle(getSiteNameOrHomeUrlFromSubscription(subscription));
+            prefScreen.setSummary(getHomeUrlOrHostNameFromSubscription(subscription));
 
             prefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override public boolean onPreferenceClick(Preference preference) {
@@ -595,6 +597,25 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         updateSearchMenuVisibility();
+    }
+
+    private String getSiteNameOrHomeUrlFromSubscription(SubscriptionModel subscription) {
+        String name = subscription.getBlogName();
+
+        if (name != null) {
+            if (name.trim().length() == 0) {
+                name = getHomeUrlOrHostNameFromSubscription(subscription);
+            }
+        } else {
+            name = getHomeUrlOrHostNameFromSubscription(subscription);
+        }
+
+        return name;
+    }
+
+    private String getHomeUrlOrHostNameFromSubscription(SubscriptionModel subscription) {
+        String url = UrlUtils.removeScheme(subscription.getUrl());
+        return StringUtils.removeTrailingSlash(url);
     }
 
     private void appendViewAllSitesOption(Context context, String preference, boolean isFollowed) {
