@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.service;
 
-import android.content.Intent;
+import android.os.Bundle;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -72,9 +72,9 @@ public class StatsServiceLogic {
         AppLog.i(T.STATS, "service destroyed");
     }
 
-    public void performTask(Intent intent, int flags, int startId, Object companion) {
+    public void performTask(Bundle extras, int flags, int startId, Object companion) {
         mListenerCompanion = companion;
-        if (intent == null) {
+        if (extras == null) {
             AppLog.e(T.STATS, "StatsService was killed and restarted with a null intent.");
             // if this service's process is killed while it is started (after returning
             // from onStartCommand(Intent, int, int)), then leave it in the started state but don't retain
@@ -86,13 +86,13 @@ public class StatsServiceLogic {
             return;
         }
 
-        final long siteId = intent.getLongExtra(StatsService.ARG_BLOG_ID, 0);
+        final long siteId = extras.getLong(StatsService.ARG_BLOG_ID, 0);
         if (siteId == 0) {
             AppLog.e(T.STATS, "StatsService was started with siteid == 0");
             return;
         }
 
-        int[] sectionFromIntent = intent.getIntArrayExtra(StatsService.ARG_SECTION);
+        int[] sectionFromIntent = extras.getIntArray(StatsService.ARG_SECTION);
         if (sectionFromIntent == null || sectionFromIntent.length == 0) {
             // No sections to update
             AppLog.e(T.STATS, "StatsService was started without valid sections info");
@@ -100,28 +100,29 @@ public class StatsServiceLogic {
         }
 
         final StatsTimeframe period;
-        if (intent.hasExtra(StatsService.ARG_PERIOD)) {
-            period = (StatsTimeframe) intent.getSerializableExtra(StatsService.ARG_PERIOD);
+        if (extras.containsKey(StatsService.ARG_PERIOD)) {
+            period = (StatsTimeframe) extras.getSerializable(StatsService.ARG_PERIOD);
         } else {
             period = StatsTimeframe.DAY;
         }
 
         final String requestedDate;
-        if (intent.getStringExtra(StatsService.ARG_DATE) == null) {
+        if (extras.getString(StatsService.ARG_DATE) == null) {
             AppLog.w(T.STATS, "StatsService is started with a NULL date on this blogID - "
                               + siteId + ". Using current date.");
             SiteModel site = mSiteStore.getSiteBySiteId(siteId);
             requestedDate = StatsUtils.getCurrentDateTZ(site);
         } else {
-            requestedDate = intent.getStringExtra(StatsService.ARG_DATE);
+            requestedDate = extras.getString(StatsService.ARG_DATE);
         }
 
-        final int maxResultsRequested = intent.getIntExtra(StatsService.ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
-        final int pageRequested = intent.getIntExtra(StatsService.ARG_PAGE_REQUESTED, -1);
+        final int maxResultsRequested = extras.getInt(StatsService.ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
+        final int pageRequested = extras.getInt(StatsService.ARG_PAGE_REQUESTED, -1);
 
         this.mServiceStartId = startId;
         for (int i = 0; i < sectionFromIntent.length; i++) {
-            final StatsService.StatsEndpointsEnum currentSectionsToUpdate = StatsService.StatsEndpointsEnum.values()[sectionFromIntent[i]];
+            final StatsService.StatsEndpointsEnum currentSectionsToUpdate =
+                    StatsService.StatsEndpointsEnum.values()[sectionFromIntent[i]];
             mSingleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
@@ -434,8 +435,8 @@ public class StatsServiceLogic {
         if (currentServiceBlogId == null || currentServiceBlogId.equals(mRequestBlogId)) {
             stopService();
         }*/
-        //EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
-        //stopSelf(mServiceStartId);
+        // EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
+        // stopSelf(mServiceStartId);
         synchronized (mStatsNetworkRequests) {
             mStatsNetworkRequests.clear();
         }
