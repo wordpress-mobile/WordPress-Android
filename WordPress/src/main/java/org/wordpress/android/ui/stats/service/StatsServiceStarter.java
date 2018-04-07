@@ -34,7 +34,7 @@ public class StatsServiceStarter {
             PersistableBundle extras = passBundleExtrasToPersistableBundle(originalExtras);
             extras.putInt(ARG_START_ID, getNewStartId());
 
-            JobInfo jobInfo = new JobInfo.Builder(JOB_STATS_SERVICE_ID, componentName)
+            JobInfo jobInfo = new JobInfo.Builder(JOB_STATS_SERVICE_ID + jobId, componentName)
                     .setRequiresCharging(false)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .setOverrideDeadline(0) // if possible, try to run right away
