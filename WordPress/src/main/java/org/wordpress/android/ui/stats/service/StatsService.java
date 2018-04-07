@@ -203,14 +203,14 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     @Override
     public void onCreate() {
         super.onCreate();
-        AppLog.i(T.STATS, "service created");
+        AppLog.i(T.STATS, "stats service created");
         mStatsServiceLogic = new StatsServiceLogic(this);
         mStatsServiceLogic.onCreate((WordPress) getApplication());
     }
 
     @Override
     public void onDestroy() {
-        AppLog.i(T.STATS, "service destroyed");
+        AppLog.i(T.STATS, "stats service destroyed");
         mStatsServiceLogic.onDestroy();
         super.onDestroy();
     }
@@ -223,7 +223,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         AppLog.i(AppLog.T.STATS, "stats service > task: " + startId + " started");
-        mStatsServiceLogic.performTask(intent.getExtras(), flags, startId, new Integer(startId));
+        mStatsServiceLogic.performTask(intent.getExtras(), new Integer(startId));
         return START_NOT_STICKY;
     }
 

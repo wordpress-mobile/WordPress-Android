@@ -47,7 +47,6 @@ public class StatsServiceLogic {
     private static final int DEFAULT_NUMBER_OF_RESULTS = 12;
 
     private WordPress mApplication;
-    private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
     private final ThreadPoolExecutor mSingleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
@@ -72,7 +71,7 @@ public class StatsServiceLogic {
         AppLog.i(T.STATS, "service destroyed");
     }
 
-    public void performTask(Bundle extras, int flags, int startId, Object companion) {
+    public void performTask(Bundle extras, Object companion) {
         mListenerCompanion = companion;
         if (extras == null) {
             AppLog.e(T.STATS, "StatsService was killed and restarted with a null intent.");
@@ -119,7 +118,6 @@ public class StatsServiceLogic {
         final int maxResultsRequested = extras.getInt(StatsService.ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
         final int pageRequested = extras.getInt(StatsService.ARG_PAGE_REQUESTED, -1);
 
-        this.mServiceStartId = startId;
         for (int i = 0; i < sectionFromIntent.length; i++) {
             final StatsService.StatsEndpointsEnum currentSectionsToUpdate =
                     StatsService.StatsEndpointsEnum.values()[sectionFromIntent[i]];
@@ -137,7 +135,6 @@ public class StatsServiceLogic {
 
     private void stopRefresh() {
         synchronized (mStatsNetworkRequests) {
-            this.mServiceStartId = 0;
             for (Request<JSONObject> req : mStatsNetworkRequests) {
                 if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {
                     req.cancel();

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.android.volley.NoConnectionError;
@@ -14,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
 
@@ -118,22 +118,22 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         // start service to get stats
-        Intent intent = new Intent(getActivity(), StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, siteId);
-        intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
-        intent.putExtra(StatsService.ARG_DATE, mDate);
+        Bundle extras = new Bundle();
+        extras.putLong(StatsService.ARG_BLOG_ID, siteId);
+        extras.putSerializable(StatsService.ARG_PERIOD, mStatsTimeframe);
+        extras.putString(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
             // Single Item screen: request 20 items per page on paged requests.
             // Default to the first 100 items otherwise.
             int maxElementsToRetrieve =
                     pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
-            intent.putExtra(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);
+            extras.putInt(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);
         }
         if (pageNumberRequested > 0) {
-            intent.putExtra(StatsService.ARG_PAGE_REQUESTED, pageNumberRequested);
+            extras.putInt(StatsService.ARG_PAGE_REQUESTED, pageNumberRequested);
         }
-        intent.putExtra(StatsService.ARG_SECTION, sectionsForTheService);
-        getActivity().startService(intent);
+        extras.putIntArray(StatsService.ARG_SECTION, sectionsForTheService);
+        StatsServiceStarter.startService(getActivity(), extras);
     }
 
     @Override
