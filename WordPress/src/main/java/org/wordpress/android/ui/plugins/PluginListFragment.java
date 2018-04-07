@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.models.networkresource.ListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.ListDiffCallback;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -177,21 +179,13 @@ public class PluginListFragment extends Fragment {
             return;
         }
         final PluginListAdapter adapter;
-        boolean firstTime = false;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
             mRecycler.setAdapter(adapter);
-            firstTime = true;
         } else {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
-        // TODO: Find a better way to check for the status change and when to reload the data
-        // Don't reload for every status change, only do it when necessary
-        if (firstTime
-            || listNetworkResource instanceof ListNetworkResource.Ready
-            || listNetworkResource instanceof ListNetworkResource.Success) {
-            adapter.setPlugins(listNetworkResource.getData());
-        }
+        adapter.setPlugins(listNetworkResource.getData(), mViewModel.getDiffCallback(listNetworkResource));
         refreshProgressBars(listNetworkResource);
     }
 
@@ -221,10 +215,11 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<? extends ImmutablePluginModel> items) {
+        void setPlugins(@Nullable List<ImmutablePluginModel> items,
+                        ListDiffCallback<ImmutablePluginModel> diffCallback) {
             mItems.clear();
             mItems.addAll(items);
-            notifyDataSetChanged();
+            DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(this);
         }
 
         protected @Nullable Object getItem(int position) {

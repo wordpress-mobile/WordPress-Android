@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.models.networkresource.ListNetworkResource
+import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -141,7 +142,38 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         isStarted = true
     }
 
-    // Pull to refresh
+    // Actions
+
+    fun getDiffCallback(listNetworkResource: ListNetworkResource<ImmutablePluginModel>)
+            : ListDiffCallback<ImmutablePluginModel> {
+        val areItemsTheSame: (ImmutablePluginModel?, ImmutablePluginModel?) -> Boolean = { old, new ->
+            old?.slug == new?.slug
+        }
+
+        val areContentsTheSame: (ImmutablePluginModel?, ImmutablePluginModel?) -> Boolean = { old, new ->
+            var same = false
+            old?.let {
+                new?.let {
+                    same = old.slug == new.slug
+                            && old.displayName == new.displayName
+                            && old.authorName == new.authorName
+                            && old.icon == new.icon
+                            && old.isInstalled == new.isInstalled
+                            && old.isActive == new.isActive
+                            && old.isAutoUpdateEnabled == new.isAutoUpdateEnabled
+                            && old.installedVersion == new.installedVersion
+                            && old.wpOrgPluginVersion == new.wpOrgPluginVersion
+                            && old.averageStarRating == new.averageStarRating
+                }
+            }
+            same
+        }
+        return listNetworkResource.getDiffCallback(areItemsTheSame, areContentsTheSame)
+    }
+
+    fun loadMore(listType: PluginListType) {
+        fetchPlugins(listType, true)
+    }
 
     fun pullToRefresh(pluginListType: PluginListType) {
         fetchPlugins(pluginListType, false)
@@ -193,10 +225,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             // pages of search, so if we are trying to load more, we can ignore it
             PluginBrowserViewModel.PluginListType.SEARCH -> !loadMore
         }
-    }
-
-    fun loadMore(listType: PluginListType) {
-        fetchPlugins(listType, true)
     }
 
     // Network Callbacks

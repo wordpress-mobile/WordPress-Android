@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -36,6 +37,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.models.networkresource.ListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.ListDiffCallback;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -273,10 +275,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
                                                   @Nullable ListNetworkResource<ImmutablePluginModel>
                                                           listNetworkResource) {
-        // TODO: Find a better way to check for the status change and when to reload the data
-        // Don't reload for every status change, only do it when necessary
-        if (!(listNetworkResource instanceof ListNetworkResource.Ready
-              || listNetworkResource instanceof ListNetworkResource.Success)) {
+        if (listNetworkResource == null) {
             return;
         }
         PluginBrowserAdapter adapter = null;
@@ -305,7 +304,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
         List<ImmutablePluginModel> plugins = listNetworkResource.getData();
-        adapter.setPlugins(plugins);
+        adapter.setPlugins(plugins, mViewModel.getDiffCallback(listNetworkResource));
 
         int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
@@ -376,10 +375,11 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
+        void setPlugins(@Nullable List<ImmutablePluginModel> items,
+                        ListDiffCallback<ImmutablePluginModel> diffCallback) {
             mItems.clear();
             mItems.addAll(items);
-            notifyDataSetChanged();
+            DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(this);
         }
 
         private @Nullable Object getItem(int position) {
