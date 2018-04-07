@@ -2,35 +2,14 @@ package org.wordpress.android.models.networkresource
 
 import org.wordpress.android.util.AppLog
 
-sealed class ListNetworkResource<T : Any>(val data: List<T>) {
-    class Init<T : Any> : ListNetworkResource<T>(ArrayList()) {
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = this
-    }
+sealed class ListNetworkResource<T>(val data: List<T>) {
+    fun ready(data: List<T>): ListNetworkResource<T> =  Ready(this, data)
 
-    class Ready<T : Any>(data: List<T>) : ListNetworkResource<T>(data) {
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(transform(data))
-    }
+    fun success(data: List<T>, canLoadMore: Boolean = false) = Success(this, data, canLoadMore)
 
-    class Success<T : Any>(data: List<T>, val canLoadMore: Boolean = false) : ListNetworkResource<T>(data) {
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Success(transform(data), canLoadMore)
-    }
+    fun loading(loadingMore: Boolean) = Loading(this, loadingMore)
 
-    class Loading<T : Any> private constructor(data: List<T>, val loadingMore: Boolean) : ListNetworkResource<T>(data) {
-        constructor(previous: ListNetworkResource<T>, loadingMore: Boolean = false): this(previous.data, loadingMore)
-
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Loading(transform(data), loadingMore)
-    }
-
-    class Error<T : Any> private constructor(data: List<T>, val errorMessage: String?, val wasLoadingMore: Boolean)
-        : ListNetworkResource<T>(data) {
-        constructor(previous: ListNetworkResource<T>, errorMessage: String?, wasLoadingMore: Boolean = false)
-                : this(previous.data, errorMessage, wasLoadingMore)
-
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Error(transform(data), errorMessage, wasLoadingMore)
-    }
+    fun error(errorMessage: String?) = Error(this, errorMessage)
 
     fun shouldFetch(loadMore: Boolean): Boolean {
         return when (this) {
@@ -50,4 +29,37 @@ sealed class ListNetworkResource<T : Any>(val data: List<T>) {
     fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
 
     abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
+
+    class Init<T> : ListNetworkResource<T>(ArrayList()) {
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = this
+    }
+
+    class Ready<T>(previous: ListNetworkResource<T>, data: List<T>) : ListNetworkResource<T>(data) {
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(this, transform(data))
+    }
+
+    class Success<T>(previous: ListNetworkResource<T>, data: List<T>, val canLoadMore: Boolean = false)
+        : ListNetworkResource<T>(data) {
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
+                Success(this, transform(data), canLoadMore)
+    }
+
+    class Loading<T> private constructor(previous: ListNetworkResource<T>,
+                                               data: List<T>,
+                                               val loadingMore: Boolean) : ListNetworkResource<T>(data) {
+        constructor(previous: ListNetworkResource<T>, loadingMore: Boolean = false)
+                : this(previous, previous.data, loadingMore)
+
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
+                Loading(this, transform(data), loadingMore)
+    }
+
+    class Error<T> private constructor(previous: ListNetworkResource<T>, data: List<T>, val errorMessage: String?)
+        : ListNetworkResource<T>(data) {
+        constructor(previous: ListNetworkResource<T>, errorMessage: String?)
+                : this(previous, previous.data, errorMessage)
+
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
+                Error(this, transform(data), errorMessage)
+    }
 }

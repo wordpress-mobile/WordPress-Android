@@ -155,27 +155,27 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> {
-                sitePlugins = ListNetworkResource.Loading(sitePlugins, loadMore)
+                sitePlugins = sitePlugins.loading(loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             PluginBrowserViewModel.PluginListType.FEATURED -> {
-                featuredPlugins = ListNetworkResource.Loading(featuredPlugins, loadMore)
+                featuredPlugins = featuredPlugins.loading(loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             PluginBrowserViewModel.PluginListType.POPULAR -> {
-                popularPlugins = ListNetworkResource.Loading(popularPlugins, loadMore)
+                popularPlugins = popularPlugins.loading(loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             PluginBrowserViewModel.PluginListType.NEW -> {
-                newPlugins = ListNetworkResource.Loading(newPlugins, loadMore)
+                newPlugins = newPlugins.loading(loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             PluginBrowserViewModel.PluginListType.SEARCH -> {
-                searchResults = ListNetworkResource.Loading(searchResults, loadMore)
+                searchResults = searchResults.loading(loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
             }
@@ -217,7 +217,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
-            errorListNetworkResource(event.type, event.error.message, event.loadMore)
+            errorListNetworkResource(event.type, event.error.message)
         } else {
             successListNetworkResource(event.type, event.canLoadMore)
         }
@@ -231,10 +231,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            searchResults = ListNetworkResource.Error(searchResults, event.error.message)
+            searchResults = searchResults.error(event.error.message)
             return
         }
-        searchResults = ListNetworkResource.Success(event.plugins, false) // Disable pagination for search
+        searchResults = searchResults.success(event.plugins, false) // Disable pagination for search
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -313,7 +313,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 }
             }, 250)
         } else {
-            searchResults = ListNetworkResource.Ready(ArrayList())
+            searchResults = searchResults.ready(ArrayList())
 
             if (shouldSearch) {
                 fetchPlugins(PluginListType.SEARCH, false)
@@ -342,10 +342,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         site?.let {
             val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
             when (directoryType) {
-                PluginDirectoryType.FEATURED -> featuredPlugins = ListNetworkResource.Ready(pluginList)
-                PluginDirectoryType.NEW -> newPlugins = ListNetworkResource.Ready(pluginList)
-                PluginDirectoryType.POPULAR -> popularPlugins = ListNetworkResource.Ready(pluginList)
-                PluginDirectoryType.SITE -> sitePlugins = ListNetworkResource.Ready(pluginList)
+                PluginDirectoryType.FEATURED -> featuredPlugins = featuredPlugins.ready(pluginList)
+                PluginDirectoryType.NEW -> newPlugins = newPlugins.ready(pluginList)
+                PluginDirectoryType.POPULAR -> popularPlugins = popularPlugins.ready(pluginList)
+                PluginDirectoryType.SITE -> sitePlugins = sitePlugins.ready(pluginList)
             }
         }
     }
@@ -354,24 +354,20 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         site?.let {
             val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
             when (directoryType) {
-                PluginDirectoryType.FEATURED -> featuredPlugins = ListNetworkResource.Success(pluginList, canLoadMore)
-                PluginDirectoryType.NEW -> newPlugins = ListNetworkResource.Success(pluginList, canLoadMore)
-                PluginDirectoryType.POPULAR -> popularPlugins = ListNetworkResource.Success(pluginList, canLoadMore)
-                PluginDirectoryType.SITE -> sitePlugins = ListNetworkResource.Success(pluginList, canLoadMore)
+                PluginDirectoryType.FEATURED -> featuredPlugins = featuredPlugins.success(pluginList, canLoadMore)
+                PluginDirectoryType.NEW -> newPlugins = newPlugins.success(pluginList, canLoadMore)
+                PluginDirectoryType.POPULAR -> popularPlugins = popularPlugins.success(pluginList, canLoadMore)
+                PluginDirectoryType.SITE -> sitePlugins = sitePlugins.success(pluginList, canLoadMore)
             }
         }
     }
 
-    private fun errorListNetworkResource(directoryType: PluginDirectoryType, errorMessage: String?, loadMore: Boolean) {
+    private fun errorListNetworkResource(directoryType: PluginDirectoryType, errorMessage: String?) {
         when (directoryType) {
-            PluginDirectoryType.FEATURED ->
-                featuredPlugins = ListNetworkResource.Error(featuredPlugins, errorMessage, loadMore)
-            PluginDirectoryType.NEW ->
-                newPlugins = ListNetworkResource.Error(newPlugins, errorMessage, loadMore)
-            PluginDirectoryType.POPULAR ->
-                popularPlugins = ListNetworkResource.Error(popularPlugins, errorMessage, loadMore)
-            PluginDirectoryType.SITE ->
-                sitePlugins = ListNetworkResource.Error(sitePlugins, errorMessage, loadMore)
+            PluginDirectoryType.FEATURED -> featuredPlugins = featuredPlugins.error(errorMessage)
+            PluginDirectoryType.NEW -> newPlugins = newPlugins.error(errorMessage)
+            PluginDirectoryType.POPULAR -> popularPlugins = popularPlugins.error(errorMessage)
+            PluginDirectoryType.SITE -> sitePlugins = sitePlugins.error(errorMessage)
         }
     }
 }
