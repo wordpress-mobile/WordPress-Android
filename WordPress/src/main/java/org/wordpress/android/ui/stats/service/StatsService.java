@@ -222,6 +222,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        AppLog.i(AppLog.T.STATS, "stats service > task: " + startId + " started");
         mStatsServiceLogic.performTask(intent, flags, startId, new Integer(startId));
         return START_NOT_STICKY;
     }
@@ -229,8 +230,10 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     @Override
     public void onCompleted(Object companion) {
         if (companion instanceof Integer) {
+            AppLog.i(AppLog.T.STATS, "stats service > task: " + companion + " completed");
             stopSelf((Integer) companion);
         } else {
+            AppLog.i(AppLog.T.STATS, "stats service > task: <not identified> completed");
             stopSelf();
         }
     }
