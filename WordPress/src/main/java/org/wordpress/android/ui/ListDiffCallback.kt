@@ -20,9 +20,9 @@ class ListDiffCallback<T>(private val oldList: List<T>?,
 
     override fun getNewListSize(): Int = newList?.size ?: 0
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
-            = areItemsTheSame(oldList?.get(oldItemPosition), newList?.get(newItemPosition))
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            areItemsTheSame(oldList?.get(oldItemPosition), newList?.get(newItemPosition))
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
-            = areContentsTheSame(oldList?.get(oldItemPosition), newList?.get(newItemPosition))
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            areContentsTheSame(oldList?.get(oldItemPosition), newList?.get(newItemPosition))
 }

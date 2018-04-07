@@ -3,7 +3,7 @@ package org.wordpress.android.models.networkresource
 sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val data: List<T>) {
     abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
 
-    fun ready(data: List<T>): ListNetworkResource<T> =  Ready(this, data)
+    fun ready(data: List<T>): ListNetworkResource<T> = Ready(this, data)
 
     fun success(data: List<T>, canLoadMore: Boolean = false) = Success(this, data, canLoadMore)
 
@@ -15,16 +15,12 @@ sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val d
 
     fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
 
-    fun shouldFetch(loadMore: Boolean): Boolean {
-        return when (this) {
-            is Init -> false // Not ready yet
-            is Loading -> false // Already fetching
-            is Success -> if (loadMore) canLoadMore else true // Trying to load more or refreshing
-            else -> !loadMore // First page can be fetched since we are not fetching anything else
-        }
+    fun shouldFetch(loadMore: Boolean): Boolean = when (this) {
+        is Init -> false // Not ready yet
+        is Loading -> false // Already fetching
+        is Success -> if (loadMore) canLoadMore else true // Trying to load more or refreshing
+        else -> !loadMore // First page can be fetched since we are not fetching anything else
     }
-
-    // Classes
 
     class Init<T> : ListNetworkResource<T>(null, ArrayList()) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = this

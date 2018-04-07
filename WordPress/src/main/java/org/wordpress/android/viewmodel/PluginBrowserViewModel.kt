@@ -144,8 +144,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     // Actions
 
-    fun getDiffCallback(listNetworkResource: ListNetworkResource<ImmutablePluginModel>)
-            : ListDiffCallback<ImmutablePluginModel> {
+    fun getDiffCallback(listNetworkResource: ListNetworkResource<ImmutablePluginModel>):
+            ListDiffCallback<ImmutablePluginModel> {
         val areItemsTheSame: (ImmutablePluginModel?, ImmutablePluginModel?) -> Boolean = { old, new ->
             old?.slug == new?.slug
         }
