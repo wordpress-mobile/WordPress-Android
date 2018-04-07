@@ -1,9 +1,6 @@
 package org.wordpress.android.models.networkresource
 
-import org.wordpress.android.ui.ListDiffCallback
-import org.wordpress.android.util.AppLog
-
-sealed class ListNetworkResource<T>(private val previous: ListNetworkResource<T>?, val data: List<T>) {
+sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val data: List<T>) {
     abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
 
     fun ready(data: List<T>): ListNetworkResource<T> =  Ready(this, data)
@@ -20,20 +17,11 @@ sealed class ListNetworkResource<T>(private val previous: ListNetworkResource<T>
 
     fun shouldFetch(loadMore: Boolean): Boolean {
         return when (this) {
-            is Init -> { // Not ready yet
-                // TODO: Don't use T.MAIN for the log
-                AppLog.e(AppLog.T.MAIN, "ListNetworkResource should be ready before fetching")
-                false
-            }
+            is Init -> false // Not ready yet
             is Loading -> false // Already fetching
             is Success -> if (loadMore) canLoadMore else true // Trying to load more or refreshing
             else -> !loadMore // First page can be fetched since we are not fetching anything else
         }
-    }
-
-    fun getDiffCallback(areItemsTheSame: (T?, T?) -> Boolean,
-                        areContentsTheSame: (T?, T?) -> Boolean): ListDiffCallback<T> {
-        return ListDiffCallback(previous?.data, data, areItemsTheSame, areContentsTheSame)
     }
 
     // Classes

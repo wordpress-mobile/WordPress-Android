@@ -168,7 +168,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             }
             same
         }
-        return listNetworkResource.getDiffCallback(areItemsTheSame, areContentsTheSame)
+        return ListDiffCallback.fromListNetworkResource(listNetworkResource, areItemsTheSame, areContentsTheSame)
     }
 
     fun loadMore(listType: PluginListType) {
