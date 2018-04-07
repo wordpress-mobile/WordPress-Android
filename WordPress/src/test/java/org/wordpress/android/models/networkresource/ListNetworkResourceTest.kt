@@ -103,4 +103,29 @@ class ListNetworkResourceTest {
         assertThat(errorState.previous?.isLoadingMore(), `is`(true))
         assertThat(errorState.previous?.isFetchingFirstPage(), `is`(false))
     }
+
+    @Test
+    fun testGetTransformedListNetworkResource() {
+        val testDataReady = listOf("item10", "item11", "not-item")
+        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(ListNetworkResource.Init(),
+                testDataReady)
+        val toUpperCase: (List<String>) -> List<String> = { list ->
+            list.map { it.toUpperCase() }
+        }
+        val newReadyState = readyState.getTransformedListNetworkResource(toUpperCase)
+        assertThat(newReadyState.data, `is`(equalTo(toUpperCase(testDataReady))))
+        assertThat(newReadyState.data.size, `is`(3))
+        assertThat(newReadyState.previous, `is`(equalTo(readyState)))
+        assertThat(newReadyState is ListNetworkResource.Ready, `is`(true))
+
+        val filterNotItem: (List<String>) -> List<String> = { list ->
+            list.filter { it != "not-item".toUpperCase() }
+        }
+        val loadingState: ListNetworkResource<String> = newReadyState.loading(true)
+        val newLoadingState = loadingState.getTransformedListNetworkResource(filterNotItem)
+        assertThat(newLoadingState.data, `is`(equalTo(filterNotItem(loadingState.data))))
+        assertThat(newLoadingState.data.size, `is`(2))
+        assertThat(newLoadingState.previous, `is`(equalTo(loadingState)))
+        assertThat(newLoadingState is ListNetworkResource.Loading, `is`(true))
+    }
 }
