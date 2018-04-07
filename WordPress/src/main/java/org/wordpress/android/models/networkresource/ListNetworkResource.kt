@@ -1,8 +1,11 @@
 package org.wordpress.android.models.networkresource
 
+import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 
-sealed class ListNetworkResource<T>(val data: List<T>) {
+sealed class ListNetworkResource<T>(private val previous: ListNetworkResource<T>?, val data: List<T>) {
+    abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
+
     fun ready(data: List<T>): ListNetworkResource<T> =  Ready(this, data)
 
     fun success(data: List<T>, canLoadMore: Boolean = false) = Success(this, data, canLoadMore)
@@ -10,6 +13,10 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     fun loading(loadingMore: Boolean) = Loading(this, loadingMore)
 
     fun error(errorMessage: String?) = Error(this, errorMessage)
+
+    fun isFetchingFirstPage(): Boolean = if (this is Loading) !loadingMore else false
+
+    fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
 
     fun shouldFetch(loadMore: Boolean): Boolean {
         return when (this) {
@@ -24,29 +31,29 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
         }
     }
 
-    fun isFetchingFirstPage(): Boolean = if (this is Loading) !loadingMore else false
+    fun getDiffCallback(areItemsTheSame: (T?, T?) -> Boolean,
+                        areContentsTheSame: (T?, T?) -> Boolean): ListDiffCallback<T> {
+        return ListDiffCallback(previous?.data, data, areItemsTheSame, areContentsTheSame)
+    }
 
-    fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
+    // Classes
 
-    abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
-
-    class Init<T> : ListNetworkResource<T>(ArrayList()) {
+    class Init<T> : ListNetworkResource<T>(null, ArrayList()) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = this
     }
 
-    class Ready<T>(previous: ListNetworkResource<T>, data: List<T>) : ListNetworkResource<T>(data) {
+    class Ready<T>(previous: ListNetworkResource<T>, data: List<T>) : ListNetworkResource<T>(previous, data) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(this, transform(data))
     }
 
     class Success<T>(previous: ListNetworkResource<T>, data: List<T>, val canLoadMore: Boolean = false)
-        : ListNetworkResource<T>(data) {
+        : ListNetworkResource<T>(previous, data) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
                 Success(this, transform(data), canLoadMore)
     }
 
-    class Loading<T> private constructor(previous: ListNetworkResource<T>,
-                                               data: List<T>,
-                                               val loadingMore: Boolean) : ListNetworkResource<T>(data) {
+    class Loading<T> private constructor(previous: ListNetworkResource<T>, data: List<T>, val loadingMore: Boolean)
+        : ListNetworkResource<T>(previous, data) {
         constructor(previous: ListNetworkResource<T>, loadingMore: Boolean = false)
                 : this(previous, previous.data, loadingMore)
 
@@ -55,7 +62,7 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     }
 
     class Error<T> private constructor(previous: ListNetworkResource<T>, data: List<T>, val errorMessage: String?)
-        : ListNetworkResource<T>(data) {
+        : ListNetworkResource<T>(previous, data) {
         constructor(previous: ListNetworkResource<T>, errorMessage: String?)
                 : this(previous, previous.data, errorMessage)
 
