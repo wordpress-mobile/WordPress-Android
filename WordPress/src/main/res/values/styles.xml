@@ -290,6 +290,7 @@
     </style>
 
     <style name="MySiteListRowIcon">
+        <item name="android:tint">@color/grey_darken_30</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
@@ -347,6 +348,7 @@
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
+        <item name="android:tint">@color/grey_darken_30</item>
     </style>
 
     <style name="MySiteListHeaderLayout">

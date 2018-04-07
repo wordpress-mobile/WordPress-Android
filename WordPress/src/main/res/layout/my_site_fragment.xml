@@ -98,6 +98,7 @@
                                 android:drawableLeft="@drawable/ic_arrow_left_grey"
                                 android:drawablePadding="@dimen/margin_small"
                                 android:drawableStart="@drawable/ic_arrow_left_grey"
+                                android:drawableTint="@color/grey_dark"
                                 android:gravity="center_vertical|start"
                                 android:minHeight="0dp"
                                 android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
@@ -405,7 +406,6 @@
                     android:id="@+id/my_site_view_site_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:tint="@color/grey_darken_10"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
@@ -431,7 +431,6 @@
                     android:id="@+id/my_site_admin_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:tint="@color/grey_darken_10"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
