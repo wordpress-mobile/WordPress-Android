@@ -18,7 +18,23 @@ import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.BaseStatsModel;
+import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.CommentFollowersModel;
+import org.wordpress.android.ui.stats.models.CommentsModel;
+import org.wordpress.android.ui.stats.models.FollowersModel;
+import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
+import org.wordpress.android.ui.stats.models.PublicizeModel;
+import org.wordpress.android.ui.stats.models.ReferrersModel;
+import org.wordpress.android.ui.stats.models.SearchTermsModel;
+import org.wordpress.android.ui.stats.models.TagsContainerModel;
+import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.util.AppLog;
@@ -55,6 +71,157 @@ public class StatsServiceLogic {
 
 
     @Inject SiteStore mSiteStore;
+
+    public enum StatsEndpointsEnum {
+        VISITS,
+        TOP_POSTS,
+        REFERRERS,
+        CLICKS,
+        GEO_VIEWS,
+        AUTHORS,
+        VIDEO_PLAYS,
+        COMMENTS,
+        FOLLOWERS_WPCOM,
+        FOLLOWERS_EMAIL,
+        COMMENT_FOLLOWERS,
+        TAGS_AND_CATEGORIES,
+        PUBLICIZE,
+        SEARCH_TERMS,
+        INSIGHTS_POPULAR,
+        INSIGHTS_ALL_TIME,
+        INSIGHTS_TODAY,
+        INSIGHTS_LATEST_POST_SUMMARY,
+        INSIGHTS_LATEST_POST_VIEWS;
+
+        public String getRestEndpointPath() {
+            switch (this) {
+                case VISITS:
+                    return "visits";
+                case TOP_POSTS:
+                    return "top-posts";
+                case REFERRERS:
+                    return "referrers";
+                case CLICKS:
+                    return "clicks";
+                case GEO_VIEWS:
+                    return "country-views";
+                case AUTHORS:
+                    return "top-authors";
+                case VIDEO_PLAYS:
+                    return "video-plays";
+                case COMMENTS:
+                    return "comments";
+                case FOLLOWERS_WPCOM:
+                    return "followers?type=wpcom";
+                case FOLLOWERS_EMAIL:
+                    return "followers?type=email";
+                case COMMENT_FOLLOWERS:
+                    return "comment-followers";
+                case TAGS_AND_CATEGORIES:
+                    return "tags";
+                case PUBLICIZE:
+                    return "publicize";
+                case SEARCH_TERMS:
+                    return "search-terms";
+                case INSIGHTS_POPULAR:
+                    return "insights";
+                case INSIGHTS_ALL_TIME:
+                    return "";
+                case INSIGHTS_TODAY:
+                    return "summary";
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    return "posts";
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    return "post";
+                default:
+                    AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
+                    return "";
+            }
+        }
+
+        public StatsEvents.SectionUpdatedAbstract getEndpointUpdateEvent(final long siteId,
+                                                                         final StatsTimeframe timeframe,
+                                                                         final String date,
+                                                                         final int maxResultsRequested,
+                                                                         final int pageRequested,
+                                                                         final BaseStatsModel data) {
+            switch (this) {
+                case VISITS:
+                    return new StatsEvents.VisitorsAndViewsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (VisitsModel) data);
+                case TOP_POSTS:
+                    return new StatsEvents.TopPostsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (TopPostsAndPagesModel) data);
+                case REFERRERS:
+                    return new StatsEvents.ReferrersUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested, (ReferrersModel) data);
+                case CLICKS:
+                    return new StatsEvents.ClicksUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested, (ClicksModel) data);
+                case AUTHORS:
+                    return new StatsEvents.AuthorsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested, (AuthorsModel) data);
+                case GEO_VIEWS:
+                    return new StatsEvents.CountriesUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested, (GeoviewsModel) data);
+                case VIDEO_PLAYS:
+                    return new StatsEvents.VideoPlaysUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (VideoPlaysModel) data);
+                case SEARCH_TERMS:
+                    return new StatsEvents.SearchTermsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (SearchTermsModel) data);
+                case COMMENTS:
+                    return new StatsEvents.CommentsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested, (CommentsModel) data);
+                case COMMENT_FOLLOWERS:
+                    return new StatsEvents.CommentFollowersUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (CommentFollowersModel) data);
+                case TAGS_AND_CATEGORIES:
+                    return new StatsEvents.TagsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested, (TagsContainerModel) data);
+                case PUBLICIZE:
+                    return new StatsEvents.PublicizeUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested, (PublicizeModel) data);
+                case FOLLOWERS_WPCOM:
+                    return new StatsEvents.FollowersWPCOMUdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (FollowersModel) data);
+                case FOLLOWERS_EMAIL:
+                    return new StatsEvents.FollowersEmailUdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (FollowersModel) data);
+                case INSIGHTS_POPULAR:
+                    return new StatsEvents.InsightsPopularUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (InsightsPopularModel) data);
+                case INSIGHTS_ALL_TIME:
+                    return new StatsEvents.InsightsAllTimeUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (InsightsAllTimeModel) data);
+                case INSIGHTS_TODAY:
+                    return new StatsEvents.VisitorsAndViewsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (VisitsModel) data);
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    return new StatsEvents.InsightsLatestPostSummaryUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (InsightsLatestPostModel) data);
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    return new StatsEvents.InsightsLatestPostDetailsUpdated(siteId, timeframe, date,
+                            maxResultsRequested, pageRequested,
+                            (InsightsLatestPostDetailsModel) data);
+                default:
+                    AppLog.e(T.STATS, "Can't find an Update Event that match the current endpoint: " + this.name());
+            }
+
+            return null;
+        }
+    }
 
     public StatsServiceLogic(ServiceCompletionListener completionListener) {
         mCompletionListener = completionListener;
@@ -119,8 +286,8 @@ public class StatsServiceLogic {
         final int pageRequested = extras.getInt(StatsService.ARG_PAGE_REQUESTED, -1);
 
         for (int i = 0; i < sectionFromIntent.length; i++) {
-            final StatsService.StatsEndpointsEnum currentSectionsToUpdate =
-                    StatsService.StatsEndpointsEnum.values()[sectionFromIntent[i]];
+            final StatsServiceLogic.StatsEndpointsEnum currentSectionsToUpdate =
+                    StatsServiceLogic.StatsEndpointsEnum.values()[sectionFromIntent[i]];
             mSingleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
@@ -152,7 +319,7 @@ public class StatsServiceLogic {
 
     // Check if we already have Stats
     private String getCachedStats(final long siteId, final StatsTimeframe timeframe, final String date,
-                                  final StatsService.StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
+                                  final StatsServiceLogic.StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
                                   final int pageRequested) {
         if (!isCacheEnabled()) {
             return null;
@@ -162,7 +329,7 @@ public class StatsServiceLogic {
     }
 
     private void startTasks(final long blogId, final StatsTimeframe timeframe, final String date,
-                            final StatsService.StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
+                            final StatsServiceLogic.StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
                             final int pageRequested) {
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
@@ -306,13 +473,13 @@ public class StatsServiceLogic {
 
     // Call an updates on the installed widgets if the blog is the primary, the endpoint is Visits
     // the timeframe is DAY or INSIGHTS, and the date = TODAY
-    private void updateWidgetsUI(long siteId, final StatsService.StatsEndpointsEnum endpointName,
+    private void updateWidgetsUI(long siteId, final StatsServiceLogic.StatsEndpointsEnum endpointName,
                                  StatsTimeframe timeframe, String date, int pageRequested,
                                  Serializable responseObjectModel) {
         if (pageRequested != -1) {
             return;
         }
-        if (endpointName != StatsService.StatsEndpointsEnum.VISITS) {
+        if (endpointName != StatsServiceLogic.StatsEndpointsEnum.VISITS) {
             return;
         }
         if (timeframe != StatsTimeframe.DAY && timeframe != StatsTimeframe.INSIGHTS) {
@@ -357,12 +524,12 @@ public class StatsServiceLogic {
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         final long mRequestBlogId;
         private final StatsTimeframe mTimeframe;
-        final StatsService.StatsEndpointsEnum mEndpointName;
+        final StatsServiceLogic.StatsEndpointsEnum mEndpointName;
         private final String mDate;
         private Request<JSONObject> mCurrentRequest;
         private final int mMaxResultsRequested, mPageRequested;
 
-        RestListener(StatsService.StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe, String date,
+        RestListener(StatsServiceLogic.StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe, String date,
                      final int maxResultsRequested, final int pageRequested) {
             mRequestBlogId = blogId;
             mTimeframe = timeframe;

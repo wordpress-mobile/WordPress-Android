@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.FollowerModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -193,7 +194,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() - 1,
-                                        new StatsService.StatsEndpointsEnum[]{
+                                        new StatsServiceLogic.StatsEndpointsEnum[]{
                                                 sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                             );
                             }
@@ -214,7 +215,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() + 1,
-                                        new StatsService.StatsEndpointsEnum[]{
+                                        new StatsServiceLogic.StatsEndpointsEnum[]{
                                                 sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                             );
                             }
@@ -445,9 +446,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.FOLLOWERS_WPCOM, StatsService.StatsEndpointsEnum.FOLLOWERS_EMAIL
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.FOLLOWERS_WPCOM, StatsServiceLogic.StatsEndpointsEnum.FOLLOWERS_EMAIL
         };
     }
 

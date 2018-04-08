@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stats.service.StatsServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
@@ -37,7 +38,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     private String mDate;
     private StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
 
-    protected abstract StatsService.StatsEndpointsEnum[] sectionsToUpdate();
+    protected abstract StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate();
 
     protected abstract void showPlaceholderUI();
 
@@ -76,7 +77,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     // call an update for the stats shown in the fragment
-    void refreshStats(int pageNumberRequested, StatsService.StatsEndpointsEnum[] sections) {
+    void refreshStats(int pageNumberRequested, StatsServiceLogic.StatsEndpointsEnum[] sections) {
         if (!isAdded()) {
             return;
         }
@@ -251,8 +252,8 @@ public abstract class StatsAbstractFragment extends Fragment {
             return false;
         }
 
-        StatsService.StatsEndpointsEnum sectionToUpdate = errorEvent.mEndPointName;
-        StatsService.StatsEndpointsEnum[] sectionsToUpdate = sectionsToUpdate();
+        StatsServiceLogic.StatsEndpointsEnum sectionToUpdate = errorEvent.mEndPointName;
+        StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate = sectionsToUpdate();
 
         for (int i = 0; i < sectionsToUpdate().length; i++) {
             if (sectionToUpdate == sectionsToUpdate[i]) {

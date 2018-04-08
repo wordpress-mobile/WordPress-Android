@@ -28,6 +28,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stats.service.StatsServiceStarter;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -299,7 +300,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         extras.putLong(StatsService.ARG_BLOG_ID, remoteBlogID);
         extras.putInt(StatsService.ARG_PERIOD, StatsTimeframe.DAY.ordinal());
         extras.putString(StatsService.ARG_DATE, date);
-        extras.putIntArray(StatsService.ARG_SECTION, new int[]{StatsService.StatsEndpointsEnum.VISITS.ordinal()});
+        extras.putIntArray(StatsService.ARG_SECTION, new int[]{StatsServiceLogic.StatsEndpointsEnum.VISITS.ordinal()});
         StatsServiceStarter.startService(context, extras);
     }
 

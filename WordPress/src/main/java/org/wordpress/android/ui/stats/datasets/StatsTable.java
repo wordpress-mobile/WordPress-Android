@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.service.StatsService.StatsEndpointsEnum;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic.StatsEndpointsEnum;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
