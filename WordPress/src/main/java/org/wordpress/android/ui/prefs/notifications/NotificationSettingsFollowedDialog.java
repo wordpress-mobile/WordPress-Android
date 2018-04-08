@@ -54,7 +54,6 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        //noinspection InflateParams
         @SuppressLint("InflateParams")
         View layout = inflater.inflate(R.layout.followed_sites_dialog, null);
 
