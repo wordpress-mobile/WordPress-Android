@@ -121,7 +121,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         // start service to get stats
         Bundle extras = new Bundle();
         extras.putLong(StatsService.ARG_BLOG_ID, siteId);
-        extras.putSerializable(StatsService.ARG_PERIOD, mStatsTimeframe);
+        extras.putInt(StatsService.ARG_PERIOD, mStatsTimeframe.ordinal());
         extras.putString(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
             // Single Item screen: request 20 items per page on paged requests.

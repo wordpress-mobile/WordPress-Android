@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
-import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.AppLog;
 
 public class StatsServiceStarter {
@@ -60,41 +59,7 @@ public class StatsServiceStarter {
             }
 
             if (originalExtras.containsKey(StatsService.ARG_PERIOD)) {
-                bundle.putInt(StatsService.ARG_PERIOD,
-                        ((StatsTimeframe) originalExtras.getSerializable(StatsService.ARG_PERIOD)).ordinal());
-            }
-
-            if (originalExtras.containsKey(StatsService.ARG_DATE)) {
-                bundle.putString(StatsService.ARG_DATE, originalExtras.getString(StatsService.ARG_DATE));
-            }
-
-            if (originalExtras.containsKey(StatsService.ARG_SECTION)) {
-                bundle.putIntArray(StatsService.ARG_SECTION, originalExtras.getIntArray(StatsService.ARG_SECTION));
-            }
-
-            if (originalExtras.containsKey(StatsService.ARG_MAX_RESULTS)) {
-                bundle.putInt(StatsService.ARG_MAX_RESULTS, originalExtras.getInt(StatsService.ARG_MAX_RESULTS));
-            }
-
-            if (originalExtras.containsKey(StatsService.ARG_PAGE_REQUESTED)) {
-                bundle.putInt(StatsService.ARG_PAGE_REQUESTED, originalExtras.getInt(StatsService.ARG_PAGE_REQUESTED));
-            }
-        }
-
-        return bundle;
-    }
-
-    @TargetApi(21)
-    public static Bundle passPersistableBundleExtrasToBundle(PersistableBundle originalExtras) {
-        Bundle bundle = new Bundle();
-        if (originalExtras != null) {
-            if (originalExtras.containsKey(StatsService.ARG_BLOG_ID)) {
-                bundle.putLong(StatsService.ARG_BLOG_ID, originalExtras.getLong(StatsService.ARG_BLOG_ID));
-            }
-
-            if (originalExtras.containsKey(StatsService.ARG_PERIOD)) {
-                StatsTimeframe timeFrame = StatsTimeframe.values()[originalExtras.getInt(StatsService.ARG_PERIOD)];
-                bundle.putSerializable(StatsService.ARG_PERIOD, timeFrame);
+                bundle.putInt(StatsService.ARG_PERIOD, originalExtras.getInt(StatsService.ARG_PERIOD));
             }
 
             if (originalExtras.containsKey(StatsService.ARG_DATE)) {

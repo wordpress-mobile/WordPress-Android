@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.service;
 import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.os.Bundle;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
@@ -42,7 +43,7 @@ public class StatsJobService extends JobService implements StatsServiceLogic.Ser
             int startId = params.getExtras().getInt(ARG_START_ID);
             AppLog.i(T.STATS, "stats job service > task: " + startId + " started");
             mStatsServiceLogic.performTask(
-                    StatsServiceStarter.passPersistableBundleExtrasToBundle(params.getExtras()),
+                    new Bundle(params.getExtras()),
                     params);
         }
         return true;

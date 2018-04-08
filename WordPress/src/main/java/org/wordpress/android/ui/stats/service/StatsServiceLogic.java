@@ -267,7 +267,7 @@ public class StatsServiceLogic {
 
         final StatsTimeframe period;
         if (extras.containsKey(StatsService.ARG_PERIOD)) {
-            period = (StatsTimeframe) extras.getSerializable(StatsService.ARG_PERIOD);
+            period = StatsTimeframe.values()[extras.getInt(StatsService.ARG_PERIOD)];
         } else {
             period = StatsTimeframe.DAY;
         }
@@ -317,7 +317,8 @@ public class StatsServiceLogic {
 
     // Check if we already have Stats
     private String getCachedStats(final long siteId, final StatsTimeframe timeframe, final String date,
-                                  final StatsServiceLogic.StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
+                                  final StatsServiceLogic.StatsEndpointsEnum sectionToUpdate,
+                                  final int maxResultsRequested,
                                   final int pageRequested) {
         if (!isCacheEnabled()) {
             return null;
