@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.models.networkresource.ListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.ListDiffCallback;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -185,7 +184,7 @@ public class PluginListFragment extends Fragment {
         } else {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
-        adapter.setPlugins(listNetworkResource.getData(), mViewModel.getDiffCallback(listNetworkResource));
+        adapter.setPlugins(listNetworkResource.getData());
         refreshProgressBars(listNetworkResource);
     }
 
@@ -215,11 +214,11 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<ImmutablePluginModel> items,
-                        ListDiffCallback<ImmutablePluginModel> diffCallback) {
+        void setPlugins(@NonNull List<ImmutablePluginModel> items) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mViewModel.getDiffCallback(mItems, items));
             mItems.clear();
             mItems.addAll(items);
-            DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(this);
+            diffResult.dispatchUpdatesTo(this);
         }
 
         protected @Nullable Object getItem(int position) {

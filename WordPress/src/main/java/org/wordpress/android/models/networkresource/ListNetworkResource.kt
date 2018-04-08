@@ -19,7 +19,7 @@ package org.wordpress.android.models.networkresource
  * In situations where the data needs to be changed outside of a fetch [getTransformedListNetworkResource] can be used
  * to get a new instance by using a transform function.
  */
-sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val data: List<T>) {
+sealed class ListNetworkResource<T>(val data: List<T>) {
     /**
      * In some situations the data might change outside of a fetch for the list. Adding a new item, removing one,
      * changing contents would be some typical examples. In these situations, the current data might need to be
@@ -38,14 +38,14 @@ sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val d
      *
      * @return a new [ListNetworkResource] instance.
      */
-    fun ready(data: List<T>): ListNetworkResource<T> = Ready(this, data)
+    fun ready(data: List<T>): ListNetworkResource<T> = Ready(data)
 
     /**
      * Helper function for [Success] which passes `this` as the previous state.
      *
      * @return a new [ListNetworkResource] instance.
      */
-    fun success(data: List<T>, canLoadMore: Boolean = false) = Success(this, data, canLoadMore)
+    fun success(data: List<T>, canLoadMore: Boolean = false) = Success(data, canLoadMore)
 
     /**
      * Helper function for [Loading] which passes `this` as the previous state.
@@ -93,7 +93,7 @@ sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val d
      * example would be to initialize a resource as a property and then [ready] it after the necessary setup, such as
      * getting the `SiteModel` from a `Store`.
      */
-    class Init<T> : ListNetworkResource<T>(null, ArrayList()) {
+    class Init<T> : ListNetworkResource<T>(ArrayList()) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = this
     }
 
@@ -109,8 +109,8 @@ sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val d
      *
      * @see ready helper function for easier initialization.
      */
-    class Ready<T>(previous: ListNetworkResource<T>, data: List<T>) : ListNetworkResource<T>(previous, data) {
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(this, transform(data))
+    class Ready<T>(data: List<T>) : ListNetworkResource<T>(data) {
+        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(transform(data))
     }
 
     /**
@@ -127,13 +127,13 @@ sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val d
      *
      * @see loading helper function for easier initialization.
      */
-    class Loading<T> private constructor(previous: ListNetworkResource<T>, data: List<T>, val loadingMore: Boolean)
-        : ListNetworkResource<T>(previous, data) {
+    class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean)
+        : ListNetworkResource<T>(data) {
         constructor(previous: ListNetworkResource<T>, loadingMore: Boolean = false)
-                : this(previous, previous.data, loadingMore)
+                : this(previous.data, loadingMore)
 
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Loading(this, transform(data), loadingMore)
+                Loading(transform(data), loadingMore)
     }
 
     /** This state means that at least one fetch has successfully completed.
@@ -149,10 +149,10 @@ sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val d
      *
      * @see success helper function for easier initialization.
      */
-    class Success<T>(previous: ListNetworkResource<T>, data: List<T>, val canLoadMore: Boolean = false)
-        : ListNetworkResource<T>(previous, data) {
+    class Success<T>(data: List<T>, val canLoadMore: Boolean = false)
+        : ListNetworkResource<T>(data) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Success(this, transform(data), canLoadMore)
+                Success(transform(data), canLoadMore)
     }
 
     /**
@@ -174,12 +174,12 @@ sealed class ListNetworkResource<T>(val previous: ListNetworkResource<T>?, val d
      * Some possible improvements to this state would be to add a helper function to get a flag for whether
      * first page or more data was being loaded. Adding an error type `enum` could also prove useful.
      */
-    class Error<T> private constructor(previous: ListNetworkResource<T>, data: List<T>, val errorMessage: String?)
-        : ListNetworkResource<T>(previous, data) {
+    class Error<T> private constructor(data: List<T>, val errorMessage: String?)
+        : ListNetworkResource<T>(data) {
         constructor(previous: ListNetworkResource<T>, errorMessage: String?)
-                : this(previous, previous.data, errorMessage)
+                : this(previous.data, errorMessage)
 
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Error(this, transform(data), errorMessage)
+                Error(transform(data), errorMessage)
     }
 }

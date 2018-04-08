@@ -304,7 +304,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
         List<ImmutablePluginModel> plugins = listNetworkResource.getData();
-        adapter.setPlugins(plugins, mViewModel.getDiffCallback(listNetworkResource));
+        adapter.setPlugins(plugins);
 
         int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
@@ -375,11 +375,11 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<ImmutablePluginModel> items,
-                        ListDiffCallback<ImmutablePluginModel> diffCallback) {
+        void setPlugins(@NonNull List<ImmutablePluginModel> items) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mViewModel.getDiffCallback(mItems, items));
             mItems.clear();
             mItems.addAll(items);
-            DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(this);
+            diffResult.dispatchUpdatesTo(this);
         }
 
         private @Nullable Object getItem(int position) {
