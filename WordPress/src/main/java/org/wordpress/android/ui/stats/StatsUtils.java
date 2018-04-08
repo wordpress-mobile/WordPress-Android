@@ -310,7 +310,8 @@ public class StatsUtils {
         }
     }
 
-    public static synchronized BaseStatsModel parseResponse(StatsServiceLogic.StatsEndpointsEnum endpointName, long siteId,
+    public static synchronized BaseStatsModel parseResponse(StatsServiceLogic.StatsEndpointsEnum endpointName,
+                                                            long siteId,
                                                             JSONObject response) throws JSONException {
         BaseStatsModel model = null;
         switch (endpointName) {

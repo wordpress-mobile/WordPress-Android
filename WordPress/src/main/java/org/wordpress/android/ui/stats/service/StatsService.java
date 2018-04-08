@@ -5,26 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.stats.StatsEvents;
-import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.models.AuthorsModel;
-import org.wordpress.android.ui.stats.models.BaseStatsModel;
-import org.wordpress.android.ui.stats.models.ClicksModel;
-import org.wordpress.android.ui.stats.models.CommentFollowersModel;
-import org.wordpress.android.ui.stats.models.CommentsModel;
-import org.wordpress.android.ui.stats.models.FollowersModel;
-import org.wordpress.android.ui.stats.models.GeoviewsModel;
-import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
-import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
-import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
-import org.wordpress.android.ui.stats.models.InsightsPopularModel;
-import org.wordpress.android.ui.stats.models.PublicizeModel;
-import org.wordpress.android.ui.stats.models.ReferrersModel;
-import org.wordpress.android.ui.stats.models.SearchTermsModel;
-import org.wordpress.android.ui.stats.models.TagsContainerModel;
-import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
-import org.wordpress.android.ui.stats.models.VideoPlaysModel;
-import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 

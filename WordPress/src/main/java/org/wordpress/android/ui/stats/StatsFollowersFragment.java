@@ -448,7 +448,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     @Override
     protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsServiceLogic.StatsEndpointsEnum[]{
-                StatsServiceLogic.StatsEndpointsEnum.FOLLOWERS_WPCOM, StatsServiceLogic.StatsEndpointsEnum.FOLLOWERS_EMAIL
+                StatsServiceLogic.StatsEndpointsEnum.FOLLOWERS_WPCOM,
+                StatsServiceLogic.StatsEndpointsEnum.FOLLOWERS_EMAIL
         };
     }
 

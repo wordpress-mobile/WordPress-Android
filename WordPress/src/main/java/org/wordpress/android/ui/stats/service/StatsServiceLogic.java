@@ -528,7 +528,8 @@ public class StatsServiceLogic {
         private Request<JSONObject> mCurrentRequest;
         private final int mMaxResultsRequested, mPageRequested;
 
-        RestListener(StatsServiceLogic.StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe, String date,
+        RestListener(StatsServiceLogic.StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe,
+                     String date,
                      final int maxResultsRequested, final int pageRequested) {
             mRequestBlogId = blogId;
             mTimeframe = timeframe;
