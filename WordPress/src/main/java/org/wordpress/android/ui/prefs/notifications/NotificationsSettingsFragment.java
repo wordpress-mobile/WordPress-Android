@@ -52,7 +52,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
@@ -554,8 +553,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
-            prefScreen.setTitle(getSiteNameOrHomeUrlFromSubscription(subscription));
-            prefScreen.setSummary(getHomeUrlOrHostNameFromSubscription(subscription));
+            prefScreen.setTitle(getSiteNameOrHostFromSubscription(subscription));
+            prefScreen.setSummary(getHostFromSubscriptionUrl(subscription));
 
             prefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override public boolean onPreferenceClick(Preference preference) {
@@ -599,23 +598,22 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         updateSearchMenuVisibility();
     }
 
-    private String getSiteNameOrHomeUrlFromSubscription(SubscriptionModel subscription) {
+    private String getSiteNameOrHostFromSubscription(SubscriptionModel subscription) {
         String name = subscription.getBlogName();
 
         if (name != null) {
             if (name.trim().length() == 0) {
-                name = getHomeUrlOrHostNameFromSubscription(subscription);
+                name = getHostFromSubscriptionUrl(subscription);
             }
         } else {
-            name = getHomeUrlOrHostNameFromSubscription(subscription);
+            name = getHostFromSubscriptionUrl(subscription);
         }
 
         return name;
     }
 
-    private String getHomeUrlOrHostNameFromSubscription(SubscriptionModel subscription) {
-        String url = UrlUtils.removeScheme(subscription.getUrl());
-        return StringUtils.removeTrailingSlash(url);
+    private String getHostFromSubscriptionUrl(SubscriptionModel subscription) {
+        return UrlUtils.getHost(subscription.getUrl());
     }
 
     private void appendViewAllSitesOption(Context context, String preference, boolean isFollowed) {
