@@ -66,7 +66,7 @@ public class StatsServiceLogic {
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
     private final ThreadPoolExecutor mSingleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
-    private ServiceCompletionListener mCompletionListener;
+    private final ServiceCompletionListener mCompletionListener;
     private Object mListenerCompanion;
 
 
@@ -285,7 +285,7 @@ public class StatsServiceLogic {
         final int maxResultsRequested = extras.getInt(StatsService.ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
         final int pageRequested = extras.getInt(StatsService.ARG_PAGE_REQUESTED, -1);
 
-        for (int i = 0; i < sectionFromIntent.length; i++) {
+        for (int i : sectionFromIntent) {
             final StatsServiceLogic.StatsEndpointsEnum currentSectionsToUpdate =
                     StatsServiceLogic.StatsEndpointsEnum.values()[sectionFromIntent[i]];
             mSingleThreadNetworkHandler.submit(new Thread() {
