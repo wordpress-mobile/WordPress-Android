@@ -296,8 +296,6 @@ public class StatsServiceLogic {
                 }
             });
         }
-
-        return;
     }
 
     private void stopRefresh() {
