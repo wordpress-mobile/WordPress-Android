@@ -45,8 +45,9 @@ public class StatsJobService extends JobService implements StatsServiceLogic.Ser
             mStatsServiceLogic.performTask(
                     new Bundle(params.getExtras()),
                     params);
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
