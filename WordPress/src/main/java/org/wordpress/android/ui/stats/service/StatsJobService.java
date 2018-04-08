@@ -39,7 +39,7 @@ public class StatsJobService extends JobService implements StatsServiceLogic.Ser
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        if (params.getExtras() != null && params.getExtras() != null) {
+        if (params.getExtras() != null) {
             int startId = params.getExtras().getInt(ARG_START_ID);
             AppLog.i(T.STATS, "stats job service > task: " + startId + " started");
             mStatsServiceLogic.performTask(
@@ -58,12 +58,8 @@ public class StatsJobService extends JobService implements StatsServiceLogic.Ser
 
     @Override
     public void onCompleted(Object companion) {
-        if (companion instanceof JobParameters) {
-            int startId = ((JobParameters) companion).getExtras().getInt(ARG_START_ID, 0);
-            AppLog.i(T.STATS, "stats job service > task: " + startId + " completed");
-        } else {
-            AppLog.i(T.STATS, "stats job service > task: <not identified> completed");
-        }
+        int startId = ((JobParameters) companion).getExtras().getInt(ARG_START_ID, 0);
+        AppLog.i(T.STATS, "stats job service > task: " + startId + " completed");
         jobFinished((JobParameters) companion, false);
     }
 }
