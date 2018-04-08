@@ -52,7 +52,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         AppLog.i(AppLog.T.STATS, "stats service > task: " + startId + " started");
-        mStatsServiceLogic.performTask(intent.getExtras(), new Integer(startId));
+        mStatsServiceLogic.performTask(intent.getExtras(), Integer.valueOf(startId));
         return START_NOT_STICKY;
     }
 
