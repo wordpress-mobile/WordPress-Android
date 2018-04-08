@@ -2,16 +2,11 @@ package org.wordpress.android.models.networkresource
 
 /**
  * ListNetworkResource aims to give a highly structured and easy to use way to manage any list that's network bound. It
- * was specifically designed to be as simple as possible. In order to utilize it you don't need to understand the inner
- * workings of the class, although it'd be straightforward to do so.
+ * was specifically designed to be as simple as possible and in order to utilize it, you don't need to understand the
+ * inner workings of the class, although it'd be straightforward to do so.
  *
  * There are 5 different states: [Init], [Ready], [Success], [Loading], [Error]. Check out their documentation to see
  * how each state behaves.
- *
- * @property previous is the previous state. There are several use cases for it one of which is calculating the
- * difference in data in [org.wordpress.android.ui.ListDiffCallback]. Another example would be to check the previous
- * [Loading] state to see if the first page or more data was being fetched to show the proper error to the user.
- * In [Init] state this should be `null`, but for every other state a previous one will need to be passed in.
  *
  * @property data is initialized depending on each state and once initialized it can not be altered. In [Ready] and
  * [Success] states, it'll be passed as a parameter. In [Loading] and [Error] states, it'll be initialized from the
@@ -26,22 +21,19 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      * transformed.
      *
      * This method can be used to handle any such transformation easily while preserving the current state. Any function
-     * that takes a [List] and returns a new one can be used. The only important thing to keep in mind is that, the new
-     * instance that'll be returned from this method will have the current resource as its [previous] state. That way
-     * there is a continuity to the states and the data difference can be calculated correctly in
-     * [org.wordpress.android.ui.ListDiffCallback].
+     * that takes a [List] and returns a new one can be used.
      */
     abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
 
     /**
-     * Helper function for [Ready] which passes `this` as the previous state.
+     * Helper function for [Ready].
      *
      * @return a new [ListNetworkResource] instance.
      */
     fun ready(data: List<T>): ListNetworkResource<T> = Ready(data)
 
     /**
-     * Helper function for [Success] which passes `this` as the previous state.
+     * Helper function for [Success].
      *
      * @return a new [ListNetworkResource] instance.
      */
@@ -69,7 +61,7 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
 
     /**
      * Helper function for checking whether more data is being loaded. It can be used to either show or hide a
-     * [android.widget.ProgressBar] such as at the bottom of a screen.
+     * [android.widget.ProgressBar] for instance, at the bottom of a screen.
      */
     fun isLoadingMore(): Boolean = (this as? Loading)?.loadingMore == true
 
@@ -100,14 +92,10 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     /**
      * Ready state signifies that this resource can start being used.
      *
-     * @param previous The previous state. In most cases, [Init] state should be passed in for it, however in cases
-     * where a reset is necessary such as change to a search term (which invalidates the current data), another state
-     * might be passed in for it. See the property explanation in [ListNetworkResource] for more details.
-     *
      * @param data This is one of 2 places where the data can be directly passed in. In most cases, it will be set
      * using the cached version of the data, for example from its `Store`.
      *
-     * @see ready helper function for easier initialization.
+     * @see ready helper function for alternative initialization.
      */
     class Ready<T>(data: List<T>) : ListNetworkResource<T>(data) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(transform(data))
@@ -116,16 +104,14 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     /**
      * This state means that a network request has been started to fetch either the first page or more data.
      *
-     * @param previous The previous state. See the property explanation in [ListNetworkResource] for more details.
-     *
      * @param data can not be passed directly to [Loading] state as it's prevented by a private constructor.
-     * The only time it's used is when the existing data needs to be transformed. See
-     * [ListNetworkResource.getTransformedListNetworkResource] for more details.
+     * It's initialized either from the previous state or from the transformed data using
+     * [ListNetworkResource.getTransformedListNetworkResource].
      *
      * @param loadingMore flag is used to indicate whether the first page or more data is being fetched. It's default
      * value is `false` which should be useful in situations where pagination is not available.
      *
-     * @see loading helper function for easier initialization.
+     * @see loading helper function for alternative initialization.
      */
     class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean)
         : ListNetworkResource<T>(data) {
@@ -137,9 +123,6 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     }
 
     /** This state means that at least one fetch has successfully completed.
-     *
-     * @param previous The previous state. The [Loading] state is expected to be passed in for it, but it's not forced.
-     * See the property explanation in [ListNetworkResource] for more details.
      *
      * @param data This is the second and final state where the data can be passed in directly.
      *
@@ -158,13 +141,9 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     /**
      * This state means that at least one fetch has resulted in error.
      *
-     * @param previous The previous state. The [Loading] state is expected to be passed in for it, but it's not forced.
-     * [previous] property in this state can be used to check whether first page or more data was being loaded. See
-     * the property explanation in [ListNetworkResource] for more details.
-     *
      * @param data can not be passed directly to [Error] state as it's prevented by a private constructor.
-     * The only time it's used is when the existing data needs to be transformed. See
-     * [ListNetworkResource.getTransformedListNetworkResource] for more details.
+     * It's initialized either from the previous state or from the transformed data using
+     * [ListNetworkResource.getTransformedListNetworkResource].
      *
      * @param errorMessage will be the error string received from the API. It can also be used to show connection errors
      * where the network is not available.
