@@ -32,4 +32,31 @@ public class FormatUtils {
     public static final String formatDecimal(int value) {
         return DECIMAL_INSTANCE.get().format(value).toString();
     }
+
+    /*
+     * returns the passed long formatted as an human readable filesize. Ex: 10 GB
+     * unitStrings is expected to be an array of all possible sizes from byte to TeraByte, in the current locale
+     */
+    public static final String formatFileSize(long size, final String[] unitStrings) {
+        final double log1024 = Math.log10(1024);
+        if (size <= 0) {
+            return "0";
+        }
+        int digitGroups = (int) (Math.log10(size) / log1024);
+
+        NumberFormat f = NumberFormat.getInstance();
+        if (f instanceof DecimalFormat) {
+            ((DecimalFormat) f).applyPattern("#,##0.#");
+        }
+        return String.format(unitStrings[digitGroups], f.format(size / Math.pow(1024, digitGroups)));
+    }
+
+    /*
+     * returns the passed double percentage (0 to 1) formatted as an human readable percentage. Ex: 0.25 returns 25%
+     */
+    public static final String formatPercentage(double value) {
+        NumberFormat percentFormat = NumberFormat.getPercentInstance();
+        percentFormat.setMaximumFractionDigits(1);
+        return percentFormat.format(value);
+    }
 }
