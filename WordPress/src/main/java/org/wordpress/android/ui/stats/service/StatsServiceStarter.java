@@ -36,7 +36,7 @@ public class StatsServiceStarter {
 
             // don't schedule the same kind of request twice for Stats - just wait for the pending Job to be
             // executed.
-            if (!JobServiceId.isJobServiceWithSameParamsPending(context, componentName, extras)) {
+            if (!JobServiceId.isJobServiceWithSameParamsPending(context, componentName, extras, ARG_START_ID)) {
                 // if not found, let's add a new Job Id and schedule this onw
                 extras.putInt(ARG_START_ID, getNewStartId());
 
