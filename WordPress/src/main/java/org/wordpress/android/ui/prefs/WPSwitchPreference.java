@@ -5,11 +5,14 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -46,6 +49,29 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
                 ViewCompat.setPaddingRelative(titleView, res.getDimensionPixelSize(R.dimen.margin_large), 0, 0, 0);
             }
         }
+
+        Switch theSwitch = findSwitchInChildviews((ViewGroup) view);
+        if (theSwitch != null) {
+            //do styling here
+            DrawableCompat.setTintList(theSwitch.getThumbDrawable(),
+                    view.getResources().getColorStateList(R.color.dialog_compound_button));
+        }
+
+    }
+
+    private Switch findSwitchInChildviews(ViewGroup view) {
+        for (int i = 0; i < view.getChildCount(); i++) {
+            View thisChildview = view.getChildAt(i);
+            if (thisChildview instanceof Switch) {
+                return (Switch) thisChildview;
+            } else if (thisChildview instanceof ViewGroup) {
+                Switch theSwitch = findSwitchInChildviews((ViewGroup) thisChildview);
+                if (theSwitch != null) {
+                    return theSwitch;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

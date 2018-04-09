@@ -8,10 +8,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.widget.CompoundButtonCompat;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -125,9 +125,8 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
 
         for (int i = 0; i < mEntries.length; i++) {
             RadioButton radio = new RadioButton(getActivity());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                radio.setButtonTintList(getResources().getColorStateList(R.color.dialog_compound_button));
-            }
+            CompoundButtonCompat.setButtonTintList(radio,
+                    getResources().getColorStateList(R.color.dialog_compound_button));
             radio.setText(mEntries[i]);
             radio.setId(i);
             mRadioGroup.addView(radio);
