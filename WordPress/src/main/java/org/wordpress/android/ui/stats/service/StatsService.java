@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -33,7 +36,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     public void onCreate() {
         super.onCreate();
         AppLog.i(T.STATS, "stats service created");
-        mStatsServiceLogic = new StatsServiceLogic(this);
+        mStatsServiceLogic = new StatsServiceLogic(this, false);
         mStatsServiceLogic.onCreate((WordPress) getApplication());
     }
 
@@ -51,7 +54,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        AppLog.i(AppLog.T.STATS, "stats service > task: " + startId + " started");
+        EventBus.getDefault().post(new StatsEvents.UpdateStatusStarted(startId));
         mStatsServiceLogic.performTask(intent.getExtras(), Integer.valueOf(startId));
         return START_NOT_STICKY;
     }
@@ -59,6 +62,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     @Override
     public void onCompleted(Object companion) {
         if (companion instanceof Integer) {
+            EventBus.getDefault().post(new StatsEvents.UpdateStatusFinished((Integer) companion));
             AppLog.i(AppLog.T.STATS, "stats service > task: " + companion + " completed");
             stopSelf((Integer) companion);
         } else {
