@@ -90,6 +90,7 @@ Language: eu_ES
     <string name="invite_names_title">Erabiltzaile-izenak edo e–postak</string>
     <string name="my_site_header_external">Kanpokoak</string>
     <string name="send_link">Bidali esteka</string>
+    <string name="invite_people">Gonbidatu jendea</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
     <string name="reader_label_post_search_running">Bilatzen…</string>
@@ -498,9 +499,7 @@ Language: eu_ES
     <string name="comment_spammed">Iruzkina spam bezala markatuta</string>
     <string name="reader_likes_multi">%,d pertsonak hau gustuko dute</string>
     <string name="reader_likes_you_and_multi">Zuk eta %,d pertsonak hau gustuko duzue</string>
-    <string name="select_time">Aukeratu ordua</string>
     <string name="reader_likes_you_and_one">Zuk eta beste batek hau gustuko duzue.</string>
-    <string name="select_date">Aukeratu eguna</string>
     <string name="pick_photo">Aukeratu argazkia</string>
     <string name="pick_video">Aukeratu bideoa</string>
     <string name="reader_toast_err_get_post">Ezin izan da bidalketa hau eskuratu</string>
