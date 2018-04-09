@@ -19,7 +19,7 @@ import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
-import org.wordpress.android.ui.stats.service.StatsService.StatsEndpointsEnum;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic.StatsEndpointsEnum;
 
 public class StatsEvents {
     public static class UpdateStatusChanged {

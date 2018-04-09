@@ -112,10 +112,10 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
-import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
@@ -209,7 +209,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(StatsAbstractFragment object);
 
-    void inject(StatsService object);
+    void inject(StatsServiceLogic object);
 
     void inject(StatsWidgetProvider object);
 

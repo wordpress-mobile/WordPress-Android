@@ -13,7 +13,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
@@ -194,9 +194,9 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.VISITS
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.VISITS
         };
     }
 
