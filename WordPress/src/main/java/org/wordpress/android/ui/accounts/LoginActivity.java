@@ -366,7 +366,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
         // Get device locale and remove region to pass only language.
         String locale = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
-        locale = locale.substring(0, locale.indexOf("_"));
+        int pos = locale.indexOf("_");
+        if (pos > -1) {
+            locale = locale.substring(0, pos);
+        }
         ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url, locale));
     }
 
