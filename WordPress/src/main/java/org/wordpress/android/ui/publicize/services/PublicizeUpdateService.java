@@ -21,12 +21,13 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.JobServiceId.JOB_PUBLICIZE_UPDATE_SERVICE_ID;
+
 /**
  * service which requests the user's available sharing services and publicize connections
  */
 
 public class PublicizeUpdateService extends JobIntentService {
-    static final int PUBLICIZE_UPDATE_SERVICE_JOB_ID = 3000;
     private static boolean mHasUpdatedServices;
 
     /*
@@ -39,7 +40,7 @@ public class PublicizeUpdateService extends JobIntentService {
     }
 
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, PublicizeUpdateService.class, PUBLICIZE_UPDATE_SERVICE_JOB_ID, work);
+        enqueueWork(context, PublicizeUpdateService.class, JOB_PUBLICIZE_UPDATE_SERVICE_ID, work);
     }
 
     @Override

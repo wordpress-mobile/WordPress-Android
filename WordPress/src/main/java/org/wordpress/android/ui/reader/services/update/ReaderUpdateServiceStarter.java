@@ -12,12 +12,13 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.EnumSet;
 
+import static org.wordpress.android.JobServiceId.JOB_READER_UPDATE_SERVICE_ID;
+
 /*
  * this class provides a way to decide which kind of Service to start, depending on the platform we're running on
  */
 public class ReaderUpdateServiceStarter {
     public static final String ARG_UPDATE_TASKS = "update_tasks";
-    private static final int JOB_READER_UPDATE_SERVICE_ID = 2000;
 
     public static void startService(Context context, EnumSet<ReaderUpdateLogic.UpdateTask> tasks) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {

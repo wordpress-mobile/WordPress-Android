@@ -11,12 +11,13 @@ import android.support.annotation.NonNull;
 
 import org.wordpress.android.util.AppLog;
 
+import static org.wordpress.android.JobServiceId.JOB_READER_SEARCH_SERVICE_ID;
+
 /**
  * service which searches for reader posts on wordpress.com
  */
 
 public class ReaderSearchServiceStarter {
-    private static final int JOB_READER_SEARCH_SERVICE_ID = 5000;
     public static final String ARG_QUERY = "query";
     public static final String ARG_OFFSET = "offset";
 

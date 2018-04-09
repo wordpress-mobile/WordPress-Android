@@ -12,9 +12,10 @@ import android.os.PersistableBundle;
 
 import org.wordpress.android.util.AppLog;
 
+import static org.wordpress.android.JobServiceId.JOB_STATS_SERVICE_ID;
+
 public class StatsServiceStarter {
     public static final String ARG_START_ID = "start-id";
-    private static final int JOB_STATS_SERVICE_ID = 8000;
     private static int jobId = 0;
 
     public static void startService(Context context, Bundle originalExtras) {
