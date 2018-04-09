@@ -18,7 +18,8 @@ public class JobServiceId {
     public static final int JOB_GCM_REG_SERVICE_ID = 1000;
 
     @TargetApi(21)
-    public static boolean isJobServiceWithSameParamsPending(Context context, ComponentName componentName, PersistableBundle bundleCompare) {
+    public static boolean isJobServiceWithSameParamsPending(Context context, ComponentName componentName,
+                                                            PersistableBundle bundleCompare) {
         JobScheduler scheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         boolean jobAlreadyScheduled = false;
 
