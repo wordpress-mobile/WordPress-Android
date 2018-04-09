@@ -36,7 +36,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     public void onCreate() {
         super.onCreate();
         AppLog.i(T.STATS, "stats service created");
-        mStatsServiceLogic = new StatsServiceLogic(this, false);
+        mStatsServiceLogic = new StatsServiceLogic(this);
         mStatsServiceLogic.onCreate((WordPress) getApplication());
     }
 

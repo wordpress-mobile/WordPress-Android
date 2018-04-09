@@ -67,7 +67,6 @@ public class StatsServiceLogic {
     private final ThreadPoolExecutor mSingleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     private final ServiceCompletionListener mCompletionListener;
-    private final boolean mSingleTasked;
     private Object mListenerCompanion;
 
 
@@ -224,9 +223,8 @@ public class StatsServiceLogic {
         }
     }
 
-    public StatsServiceLogic(ServiceCompletionListener completionListener, boolean singleTasked) {
+    public StatsServiceLogic(ServiceCompletionListener completionListener) {
         mCompletionListener = completionListener;
-        mSingleTasked = singleTasked;
     }
 
     public void onCreate(WordPress app) {
@@ -613,13 +611,9 @@ public class StatsServiceLogic {
                 mStatsNetworkRequests.remove(req);
             }
 
-            if (!mSingleTasked) {
-                boolean isStillWorking =
-                        mStatsNetworkRequests.size() > 0 || mSingleThreadNetworkHandler.getQueue().size() > 0;
-                if (!isStillWorking) {
-                    stopService();
-                }
-            } else {
+            boolean isStillWorking =
+                    mStatsNetworkRequests.size() > 0 || mSingleThreadNetworkHandler.getQueue().size() > 0;
+            if (!isStillWorking) {
                 stopService();
             }
         }

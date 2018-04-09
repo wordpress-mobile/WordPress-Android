@@ -29,7 +29,7 @@ public class StatsJobService extends JobService implements StatsServiceLogic.Ser
             int startId = params.getExtras().getInt(ARG_START_ID);
             EventBus.getDefault().post(new StatsEvents.UpdateStatusStarted(startId));
             AppLog.i(T.STATS, "stats job service > task: " + startId + " started");
-            StatsServiceLogic logic = new StatsServiceLogic(this, true);
+            StatsServiceLogic logic = new StatsServiceLogic(this);
             logic.onCreate((WordPress) getApplication());
             logic.performTask(
                     new Bundle(params.getExtras()),
