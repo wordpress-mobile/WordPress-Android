@@ -1,7 +1,6 @@
 package org.wordpress.android.ui
 
 import android.support.v7.util.DiffUtil
-import org.wordpress.android.models.networkresource.ListNetworkResource
 
 class ListDiffCallback<T>(private val oldList: List<T>?,
                           private val newList: List<T>?,

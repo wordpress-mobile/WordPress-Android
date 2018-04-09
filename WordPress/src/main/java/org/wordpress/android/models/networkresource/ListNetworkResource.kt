@@ -1,9 +1,7 @@
 package org.wordpress.android.models.networkresource
 
 /**
- * ListNetworkResource aims to give a highly structured and easy to use way to manage any list that's network bound. It
- * was specifically designed to be as simple as possible and in order to utilize it, you don't need to understand the
- * inner workings of the class, although it'd be straightforward to do so.
+ * ListNetworkResource aims to give a highly structured and easy to use way to manage any list that's network bound.
  *
  * There are 5 different states: [Init], [Ready], [Success], [Loading], [Error]. Check out their documentation to see
  * how each state behaves.
@@ -16,38 +14,40 @@ package org.wordpress.android.models.networkresource
  */
 sealed class ListNetworkResource<T>(val data: List<T>) {
     /**
-     * In some situations the data might change outside of a fetch for the list. Adding a new item, removing one,
-     * changing contents would be some typical examples. In these situations, the current data might need to be
-     * transformed.
+     * In some situations the underlying data might change outside of a fetch. Adding a new item, removing one,
+     * a single item getting updated would be some typical examples. Since the [data] property can not be altered
+     * directly, by design, we need a different way to update it.
      *
-     * This method can be used to handle any such transformation easily while preserving the current state. Any function
-     * that takes a [List] and returns a new one can be used.
+     * This method can be used to handle any transformation easily while preserving the current state. Any function
+     * that takes a [List] and returns a new one can be used as the transformation.
+     *
+     * @return a new ListNetworkResource instance that has the transformed data while preserving the state
      */
     abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
 
     /**
-     * Helper function for [Ready].
+     * Helper function for initializing [Ready] state.
      *
      * @return a new [ListNetworkResource] instance.
      */
     fun ready(data: List<T>): ListNetworkResource<T> = Ready(data)
 
     /**
-     * Helper function for [Success].
+     * Helper function for initializing [Success] state.
      *
      * @return a new [ListNetworkResource] instance.
      */
     fun success(data: List<T>, canLoadMore: Boolean = false) = Success(data, canLoadMore)
 
     /**
-     * Helper function for [Loading] which passes `this` as the previous state.
+     * Helper function for initializing [Loading] state which passes `this` as the previous state.
      *
      * @return a new [ListNetworkResource] instance.
      */
     fun loading(loadingMore: Boolean) = Loading(this, loadingMore)
 
     /**
-     * Helper function for [Error] which passes `this` as the previous state.
+     * Helper function for initializing [Error] state which passes `this` as the previous state.
      *
      * @return a new [ListNetworkResource] instance.
      */
@@ -149,9 +149,6 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      * where the network is not available.
      *
      * @see error helper function for easier initialization.
-     *
-     * Some possible improvements to this state would be to add a helper function to get a flag for whether
-     * first page or more data was being loaded. Adding an error type `enum` could also prove useful.
      */
     class Error<T> private constructor(data: List<T>, val errorMessage: String?)
         : ListNetworkResource<T>(data) {
