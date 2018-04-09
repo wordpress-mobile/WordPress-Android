@@ -353,7 +353,6 @@ Language: zh_TW
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">剩下 1 個檔案</string>
     <string name="uploading_subtitle_media_only">剩下 %1$d 個檔案 (共 %2$d 個)</string>
-    <string name="uploading_subtitle_posts_only_one">剩下 1 篇文章</string>
     <string name="uploading_title">上傳中…</string>
     <string name="media_files_uploaded_write_post">新增文章</string>
     <string name="media_all_files_uploaded_successfully">已成功上傳　%d 個檔案</string>

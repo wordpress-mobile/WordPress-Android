@@ -470,7 +470,6 @@ Language: ar
     <string name="login_site_address">عنوان الموقع</string>
     <string name="enter_site_address">أدخل عنوان موقع وردبرس الذي تود الاتصال به.</string>
     <string name="login_already_logged_in_wpcom">تم التسجيل بالفعل في موقع وردبرس.كوم</string>
-    <string name="login_username_at">\@</string>
     <string name="login_continue">المتابعة</string>
     <string name="connect_more">الاتصال بموقع آخر</string>
     <string name="enter_wpcom_password">أدخل كلمة مرور وردبرس.كوم.</string>

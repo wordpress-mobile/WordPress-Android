@@ -347,7 +347,6 @@ Language: zh_CN
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">还剩一个文件</string>
     <string name="uploading_subtitle_media_only">还剩 %1$d / %2$d 个文件</string>
-    <string name="uploading_subtitle_posts_only_one">还有 1 篇文章</string>
     <string name="uploading_title">正在上传…</string>
     <string name="media_files_uploaded_write_post">撰写文章</string>
     <string name="media_all_files_uploaded_successfully">%d 个文件已成功上传</string>

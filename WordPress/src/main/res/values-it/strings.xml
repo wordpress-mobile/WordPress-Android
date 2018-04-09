@@ -327,7 +327,6 @@ Language: it
     <string name="size_medium">Media</string>
     <string name="size_thumbnail">Miniatura</string>
     <string name="uploading_subtitle_media_only">%1$d di %2$d file rimanenti</string>
-    <string name="uploading_subtitle_posts_only_one">%1$d %2$s rimanenti</string>
     <string name="uploading_title">Caricamento in corso…</string>
     <string name="media_files_uploaded_write_post">Scrivi articolo</string>
     <string name="media_all_files_uploaded_successfully">%d file caricati correttamente</string>

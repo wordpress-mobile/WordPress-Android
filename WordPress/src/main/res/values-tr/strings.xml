@@ -354,7 +354,6 @@ Language: tr
     <string name="image_size">Boyut</string>
     <string name="uploading_subtitle_media_only_one">1 dosya kaldı</string>
     <string name="uploading_subtitle_media_only">%2$d dosyadan %1$d kaldı</string>
-    <string name="uploading_subtitle_posts_only_one">1 yazı kaldı</string>
     <string name="uploading_title">Yükleniyor…</string>
     <string name="media_files_uploaded_write_post">Yazı yaz</string>
     <string name="media_all_files_uploaded_successfully">%d dosya başarıyla yüklendi</string>

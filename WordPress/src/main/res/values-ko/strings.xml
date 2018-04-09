@@ -355,7 +355,6 @@ Language: ko_KR
     <string name="image_size">크기</string>
     <string name="uploading_subtitle_media_only_one">1개 파일 남음</string>
     <string name="uploading_subtitle_media_only">%1$d/%2$d개 파일 남음</string>
-    <string name="uploading_subtitle_posts_only_one">%1$d %2$s 남음</string>
     <string name="uploading_title">업로드 중…</string>
     <string name="media_files_uploaded_write_post">글 작성</string>
     <string name="media_all_files_uploaded_successfully">%d개 파일이 업로드됨</string>
@@ -453,8 +452,6 @@ Language: ko_KR
     <string name="error_unknown_post">서버에서 글을 찾을 수 없습니다</string>
     <string name="error_post_does_not_exist">이 글은 더 이상 존재하지 않습니다</string>
     <string name="error_media_canceled">미디어 업로드가 취소되었습니다</string>
-    <string name="error_upload_page_media_param">이 %1$s에서 미디어를 업로드하는 동안 오류가 발생했습니다. %2$s</string>
-    <string name="error_upload_page_param">이 %1$s을(를) 업로드하는 중 오류가 발생했습니다. %2$s</string>
     <string name="async_promo_description">이제 편집기를 나가면 글이 저장되고 미공개로 게시됩니다! 사용해 보세요!</string>
     <string name="async_promo_link">어떻게 작동하나요?</string>
     <string name="async_promo_title">자신있게 공개하세요</string>
