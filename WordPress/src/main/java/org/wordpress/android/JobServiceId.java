@@ -44,7 +44,7 @@ public class JobServiceId {
                             // this is contained, check the value is the same now
                             Object one = extras.get(key);
                             Object two = bundleCompare.get(key);
-                            if (!one.equals(two)) {
+                            if (one != null && !one.equals(two)) {
                                 jobAlreadyScheduled = false;
                                 break;
                             }
