@@ -2476,7 +2476,8 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void onPostSave() {
                 EditPostActivity.this.runOnUiThread(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.updateFeaturedImage(mediaId);
                         }

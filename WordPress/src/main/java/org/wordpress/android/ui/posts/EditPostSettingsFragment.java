@@ -817,10 +817,6 @@ public class EditPostSettingsFragment extends Fragment {
 
     public void updateFeaturedImage(long featuredImageId) {
         PostModel postModel = getPost();
-        if (postModel.getFeaturedImageId() == featuredImageId) {
-            return;
-        }
-
         postModel.setFeaturedImageId(featuredImageId);
         updateFeaturedImageView();
     }
