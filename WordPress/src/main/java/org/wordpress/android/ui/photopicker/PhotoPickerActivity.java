@@ -60,6 +60,8 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
+
+    // note that the site isn't required and may be null
     private SiteModel mSite;
 
     private ProgressDialog mProgressDialog;
@@ -248,6 +250,8 @@ public class PhotoPickerActivity extends AppCompatActivity
     private void launchWPMediaLibrary() {
         if (mSite != null) {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, mBrowserType);
+        } else {
+            ToastUtils.showToast(this, R.string.blog_not_found);
         }
     }
 
@@ -255,6 +259,8 @@ public class PhotoPickerActivity extends AppCompatActivity
         if (mSite != null) {
             ActivityLauncher.showStockMediaPickerForResult(this,
                     mSite, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT);
+        } else {
+            ToastUtils.showToast(this, R.string.blog_not_found);
         }
     }
 
