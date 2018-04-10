@@ -10,6 +10,7 @@ import android.os.PersistableBundle;
 import org.wordpress.android.util.AppLog;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class JobServiceId {
@@ -34,7 +35,12 @@ public class JobServiceId {
         JobScheduler scheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         boolean jobAlreadyScheduled = false;
 
-        for (JobInfo jobInfo : scheduler.getAllPendingJobs()) {
+        List<JobInfo> jobs = scheduler.getAllPendingJobs();
+        if (jobs == null) {
+            return jobAlreadyScheduled;
+        }
+        
+        for (JobInfo jobInfo : jobs) {
             // check this is the same Service we are looking for
             if (jobInfo.getService().getClassName().compareTo(componentName.getClassName()) == 0) {
                 PersistableBundle extras = jobInfo.getExtras();
