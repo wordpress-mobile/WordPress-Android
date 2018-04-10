@@ -163,6 +163,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     submitSearch(mSearchQuery, true);
                 }
             }
+            showEmptyView(mAdapter.isEmpty());
         }
 
         mTextAdd.setOnClickListener(new View.OnClickListener() {
