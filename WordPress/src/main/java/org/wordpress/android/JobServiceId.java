@@ -59,7 +59,7 @@ public class JobServiceId {
                             Object one = extras.get(key);
                             Object two = bundleCompare.get(key);
 
-                            if ((one != null && two == null) || (one == null)) {
+                            if ((one != null && two == null) || (one == null && two != null)) {
                                 jobAlreadyScheduled = false;
                                 break;
                             }
