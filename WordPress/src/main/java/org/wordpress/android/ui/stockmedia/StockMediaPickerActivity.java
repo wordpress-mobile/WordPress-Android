@@ -414,7 +414,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         showEmptyView(mAdapter.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
     }
 
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onStockMediaUploaded(MediaStore.OnStockMediaUploaded event) {
