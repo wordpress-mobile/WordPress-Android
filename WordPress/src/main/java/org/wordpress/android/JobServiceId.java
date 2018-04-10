@@ -20,6 +20,14 @@ public class JobServiceId {
     public static final int JOB_READER_UPDATE_SERVICE_ID = 2000;
     public static final int JOB_GCM_REG_SERVICE_ID = 1000;
 
+    /*
+     * This method checks that a spefic bundle for a given JobServie matches perfectly (all extras and all of its
+     * values match) to check if it is already scheduled or not.
+     * TODO IMPORTANT: note that this particular method checks for int[] and compares within the array, as that's
+     * a case we needed to implement. In the future, if you need to compare other kind of arrays, you'll need to
+     * implement each case as you see fit.
+     */
+
     @TargetApi(21)
     public static boolean isJobServiceWithSameParamsPending(Context context, ComponentName componentName,
                                                             PersistableBundle bundleCompare, String exceptKey) {
@@ -60,6 +68,10 @@ public class JobServiceId {
                                     jobAlreadyScheduled = false;
                                     break;
                                 }
+                                // TODO here implement other cases, i.e.
+                                // if (one instanceof StringArray && two instanceof StringArray) {
+                                //   ...
+                                // }
                             } else {
                                 if (!one.equals(two)) {
                                     jobAlreadyScheduled = false;
