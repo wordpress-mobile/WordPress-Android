@@ -100,6 +100,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
@@ -2470,7 +2471,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
@@ -2486,9 +2487,10 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
-                    // user chose a featured image - pass it to the settings fragment
-                    if (mEditPostSettingsFragment != null) {
-                        mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
+                    // user chose a featured image
+                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                        setFeaturedImageId(mediaId);
                     }
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
@@ -2535,6 +2537,23 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
             }
+        }
+    }
+
+    private void setFeaturedImageId(final long mediaId) {
+        mPost.setFeaturedImageId(mediaId);
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+        } else {
+            // fragment may not exist if device was rotated while choosing featured image, so try again
+            // after a brief delay
+            new Handler().postDelayed(new Runnable() {
+                @Override public void run() {
+                    if (!isFinishing() && mEditPostSettingsFragment != null) {
+                        mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+                    }
+                }
+            }, 250);
         }
     }
 
@@ -3004,8 +3023,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onFeaturedImageChanged(long mediaId) {
-        mPost.setFeaturedImageId(mediaId);
-        mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+        setFeaturedImageId(mediaId);
     }
 
     @Override

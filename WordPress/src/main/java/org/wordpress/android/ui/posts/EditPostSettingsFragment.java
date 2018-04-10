@@ -55,7 +55,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -408,13 +407,6 @@ public class EditPostSettingsFragment extends Fragment {
                     if (resultCode == RESULT_OK && extras != null) {
                         String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
                         updateTags(selectedTags);
-                    }
-                    break;
-                case RequestCodes.PHOTO_PICKER:
-                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
-                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
-                        updateFeaturedImage(mediaId);
                     }
                     break;
             }
@@ -825,10 +817,6 @@ public class EditPostSettingsFragment extends Fragment {
 
     public void updateFeaturedImage(long featuredImageId) {
         PostModel postModel = getPost();
-        if (postModel.getFeaturedImageId() == featuredImageId) {
-            return;
-        }
-
         postModel.setFeaturedImageId(featuredImageId);
         updateFeaturedImageView();
     }

@@ -163,6 +163,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     submitSearch(mSearchQuery, true);
                 }
             }
+            showEmptyView(mAdapter.isEmpty());
         }
 
         mTextAdd.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +179,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 }
             });
         } else {
-            mTextAdd.setText(R.string.set_featured_image);
+            mTextAdd.setText(R.string.photo_picker_use_photo);
             mTextPreview.setVisibility(View.GONE);
         }
 
@@ -191,6 +192,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             mSearchView.setOnQueryTextListener(null);
             mSearchView.setOnCloseListener(null);
         }
+        showUploadProgressDialog(false);
         super.onDestroy();
     }
 
@@ -411,7 +413,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         showEmptyView(mAdapter.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
     }
-
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
