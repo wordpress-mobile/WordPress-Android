@@ -76,7 +76,8 @@ public class ReaderPostTable {
             + "tag_name," // 41
             + "tag_type," // 42
             + "has_gap_marker," // 43
-            + "card_type"; // 44
+            + "card_type," // 44
+            + "use_excerpt"; // 45
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -122,7 +123,8 @@ public class ReaderPostTable {
             + "tag_name," // 40
             + "tag_type," // 41
             + "has_gap_marker," // 42
-            + "card_type"; // 43
+            + "card_type," // 43
+            + "use_excerpt"; // 44
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -170,6 +172,7 @@ public class ReaderPostTable {
                    + " tag_type INTEGER DEFAULT 0,"
                    + " has_gap_marker INTEGER DEFAULT 0,"
                    + " card_type TEXT,"
+                   + " use_excerpt INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -734,7 +737,7 @@ public class ReaderPostTable {
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
-                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44)");
+                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45)");
 
         db.beginTransaction();
         try {
@@ -790,6 +793,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(42, tagType);
                 stmtPosts.bindLong(43, SqlUtils.boolToSql(hasGapMarker));
                 stmtPosts.bindString(44, ReaderCardType.toString(post.getCardType()));
+                stmtPosts.bindLong(45, SqlUtils.boolToSql(post.useExcerpt));
                 stmtPosts.execute();
             }
 
@@ -993,6 +997,8 @@ public class ReaderPostTable {
 
         post.setRailcarJson(c.getString(c.getColumnIndex("railcar_json")));
         post.setCardType(ReaderCardType.fromString(c.getString(c.getColumnIndex("card_type"))));
+
+        post.useExcerpt = SqlUtils.sqlToBool(c.getColumnIndex("use_excerpt"));
 
         return post;
     }

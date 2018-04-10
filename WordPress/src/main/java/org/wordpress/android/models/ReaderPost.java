@@ -61,6 +61,7 @@ public class ReaderPost {
     public boolean isPrivate;
     public boolean isVideoPress;
     public boolean isJetpack;
+    public boolean useExcerpt;
 
     private String mAttachmentsJson;
     private String mDiscoverJson;
@@ -106,6 +107,7 @@ public class ReaderPost {
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
         post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
+        post.useExcerpt = JSONUtils.getBool(json, "use_excerpt");
 
         JSONObject jsonDiscussion = json.optJSONObject("discussion");
         if (jsonDiscussion != null) {
@@ -626,10 +628,10 @@ public class ReaderPost {
     }
 
     /*
-     * we should show the excerpt rather than full content for Jetpack posts that have one
+     * we should show the excerpt rather than full content for Jetpack posts that specify to show only the excerpt
      */
     public boolean shouldShowExcerpt() {
-        return isJetpack && hasExcerpt();
+        return isJetpack && useExcerpt;
     }
 
     /*
@@ -661,6 +663,7 @@ public class ReaderPost {
                && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
                && post.isLikedByCurrentUser == this.isLikedByCurrentUser
                && post.isCommentsOpen == this.isCommentsOpen
+               && post.useExcerpt == this.useExcerpt
                && post.getTitle().equals(this.getTitle())
                && post.getExcerpt().equals(this.getExcerpt())
                && post.getText().equals(this.getText());
