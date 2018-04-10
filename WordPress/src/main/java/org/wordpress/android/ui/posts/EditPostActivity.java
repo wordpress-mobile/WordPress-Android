@@ -100,6 +100,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
@@ -2469,6 +2470,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private void setFeaturedImageId(final long mediaId) {
+        mPost.setFeaturedImageId(mediaId);
+        savePostAsync(new AfterSavePostListener() {
+            @Override
+            public void onPostSave() {
+                EditPostActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2486,9 +2504,10 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
-                    // user chose a featured image - pass it to the settings fragment
-                    if (mEditPostSettingsFragment != null) {
-                        mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
+                    // user chose a featured image
+                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                        setFeaturedImageId(mediaId);
                     }
                     break;
                 case RequestCodes.PICTURE_LIBRARY:

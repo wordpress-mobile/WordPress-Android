@@ -191,6 +191,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             mSearchView.setOnQueryTextListener(null);
             mSearchView.setOnCloseListener(null);
         }
+        showUploadProgressDialog(false);
         super.onDestroy();
     }
 
