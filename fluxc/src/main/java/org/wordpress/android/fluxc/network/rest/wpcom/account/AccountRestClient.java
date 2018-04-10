@@ -808,6 +808,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setNewEmail(from.new_user_email);
         account.setAvatarUrl(from.avatar_URL);
         account.setPendingEmailChange(from.user_email_change_pending);
+        account.setTracksOptOut(from.tracks_opt_out);
         account.setWebAddress(from.user_URL);
         account.setPrimarySiteId(from.primary_site_ID);
         return account;
@@ -834,6 +835,9 @@ public class AccountRestClient extends BaseWPComRestClient {
         if (from.containsKey("user_email")) accountModel.setEmail((String) from.get("user_email"));
         if (from.containsKey("user_email_change_pending")) {
             accountModel.setPendingEmailChange((Boolean) from.get("user_email_change_pending"));
+        }
+        if (from.containsKey("tracks_opt_out")) {
+            accountModel.setTracksOptOut((Boolean) from.get("tracks_opt_out"));
         }
         if (from.containsKey("new_user_email")) accountModel.setEmail((String) from.get("new_user_email"));
         if (from.containsKey("user_URL")) accountModel.setWebAddress((String) from.get("user_URL"));
