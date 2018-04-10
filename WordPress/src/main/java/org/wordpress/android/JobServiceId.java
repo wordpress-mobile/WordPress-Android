@@ -52,7 +52,7 @@ public class JobServiceId {
                         // if all is good, we found it
                         if (jobAlreadyScheduled) {
                             AppLog.i(AppLog.T.STATS, "Job was already scheduled");
-                            break;
+                            return jobAlreadyScheduled;
                         }
                     }
                 }
