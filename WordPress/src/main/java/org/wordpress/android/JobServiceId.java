@@ -39,7 +39,6 @@ public class JobServiceId {
         if (jobs == null) {
             return jobAlreadyScheduled;
         }
-        
         for (JobInfo jobInfo : jobs) {
             // check this is the same Service we are looking for
             if (jobInfo.getService().getClassName().compareTo(componentName.getClassName()) == 0) {
