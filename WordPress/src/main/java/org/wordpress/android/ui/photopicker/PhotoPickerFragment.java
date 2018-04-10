@@ -261,14 +261,16 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        MenuItem itemStock = popup.getMenu().add(R.string.photo_picker_stock_media);
-        itemStock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                doIconClicked(PhotoPickerIcon.STOCK_MEDIA);
-                return true;
-            }
-        });
+        if (mSite != null) {
+            MenuItem itemStock = popup.getMenu().add(R.string.photo_picker_stock_media);
+            itemStock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    doIconClicked(PhotoPickerIcon.STOCK_MEDIA);
+                    return true;
+                }
+            });
+        }
 
         popup.show();
     }

@@ -224,8 +224,6 @@ Language: mk
     <string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>
     <string name="pick_video">Избери видео</string>
     <string name="reader_likes_you_and_one">На вас и на уште еден му се допаѓа ова</string>
-    <string name="select_time">Избери време</string>
-    <string name="select_date">Избери дата</string>
     <string name="reader_label_removed_tag">Одстранети %s</string>
     <string name="empty_list_default">Оваа листа е празна</string>
     <string name="reader_untitled_post">(без наслов)</string>

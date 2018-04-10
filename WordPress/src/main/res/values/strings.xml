@@ -533,6 +533,7 @@
     <string name="site_settings_quota_space_title">Space Used</string>
     <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
     <string name="site_settings_quota_space_value">%1$s of %2$s</string>
+    <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
@@ -1235,6 +1236,7 @@
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
+    <string name="error_save_empty_draft">Can\'t save an empty draft</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
@@ -1979,7 +1981,7 @@
     <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
     <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
     <string name="notification_site_creation_step_theme">Step 4 of 4</string>
-    <string name="notification_site_creation_title_in_progress">Creating site…</string>
+    <string name="notification_site_creation_title_in_progress">Creating site… This might take a couple of minutes.</string>
     <string name="notification_site_creation_title_stopped">Site creation stopped</string>
     <string name="notification_site_creation_failed">An error has occurred.</string>
 
