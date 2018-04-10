@@ -9,6 +9,7 @@ import android.os.PersistableBundle;
 
 import org.wordpress.android.util.AppLog;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class JobServiceId {
@@ -44,9 +45,26 @@ public class JobServiceId {
                             // this is contained, check the value is the same now
                             Object one = extras.get(key);
                             Object two = bundleCompare.get(key);
-                            if (one != null && !one.equals(two)) {
+
+                            if ((one != null && two == null) || (one == null)) {
                                 jobAlreadyScheduled = false;
                                 break;
+                            }
+                            if (one == two) {
+                                continue;
+                            }
+                            if (one instanceof int[] && two instanceof int[]) {
+                                if (Arrays.equals((int[]) one, (int[]) two)) {
+                                    continue;
+                                } else {
+                                    jobAlreadyScheduled = false;
+                                    break;
+                                }
+                            } else {
+                                if (!one.equals(two)) {
+                                    jobAlreadyScheduled = false;
+                                    break;
+                                }
                             }
                         }
                         // if all is good, we found it
