@@ -54,6 +54,7 @@
         android:paddingEnd="@dimen/margin_extra_large">
 
         <EditText
+            android:textSize="@dimen/text_sz_medium"
             android:textAlignment="viewStart"
             android:gravity="start"
             android:id="@+id/edit_add"

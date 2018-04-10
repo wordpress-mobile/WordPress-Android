@@ -301,7 +301,6 @@ public class WPMainActivity extends AppCompatActivity {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            mLoginAnalyticsListener.trackCreatedAccount();
             ActivityLauncher.showSignupEpilogue(this,
                                                 getIntent().getStringExtra(
                                                         SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),

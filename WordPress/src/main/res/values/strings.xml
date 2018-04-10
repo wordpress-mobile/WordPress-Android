@@ -101,6 +101,8 @@
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
     <string name="delete_no">Don\'t Delete</string>
+    <string name="add_count">Add %d</string>
+    <string name="preview_count">Preview %d</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -532,6 +534,7 @@
     <string name="site_settings_quota_space_title">Space Used</string>
     <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
     <string name="site_settings_quota_space_value">%1$s of %2$s</string>
+    <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
@@ -1234,6 +1237,7 @@
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
+    <string name="error_save_empty_draft">Can\'t save an empty draft</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
@@ -1842,9 +1846,15 @@
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
+    <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
+
+    <string name="stock_media_picker_search_hint">Search free photo library</string>
+    <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
+    <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+    <string name="stock_media_picker_empty_results">No matches</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -1997,6 +2007,7 @@
     <string name="media_grid_item_play_video_desc">play video</string>
     <string name="media_preview_audio_desc">audio</string>
     <string name="media_preview_desc">preview</string>
+    <string name="media_preview_title">%1$d of %2$d</string>
     <string name="media_settings_image_preview_desc">image preview</string>
     <string name="media_settings_play">play</string>
     <string name="people_invite_role_info_desc">role info</string>

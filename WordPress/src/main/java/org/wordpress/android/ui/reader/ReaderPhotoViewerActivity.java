@@ -4,13 +4,18 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -38,6 +43,9 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
     private boolean mIsTitleVisible;
+    private Toolbar mToolbar;
+    private static final long FADE_DELAY_MS = 3000;
+    private final Handler mFadeHandler = new Handler();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -67,16 +75,26 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
 
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.FLOW));
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 updateTitle(position);
+                showToolbar();
             }
         });
 
         mViewPager.setAdapter(getAdapter());
         loadImageList();
+        showToolbar();
     }
 
     private void loadImageList() {
@@ -96,6 +114,65 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         }
 
         getAdapter().setImageList(imageList, mInitialImageUrl);
+    }
+
+    private void showToolbar() {
+        if (!isFinishing()) {
+            mFadeHandler.removeCallbacks(mFadeOutRunnable);
+            mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
+            if (mToolbar.getVisibility() != View.VISIBLE) {
+                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        mToolbar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+            }
+        }
+    }
+
+    private final Runnable mFadeOutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
+                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mToolbar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+            }
+        }
+    };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private PhotoPagerAdapter getAdapter() {
@@ -169,6 +246,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
     @Override
     public void onTapPhotoView() {
         toggleTitle();
+        showToolbar();
     }
 
     private class PhotoPagerAdapter extends FragmentStatePagerAdapter {

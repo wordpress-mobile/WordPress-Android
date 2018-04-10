@@ -20,41 +20,47 @@
             android:id="@+id/image_blavatar"
             android:layout_width="@dimen/blavatar_sz"
             android:layout_height="@dimen/blavatar_sz"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"
             android:layout_marginLeft="@dimen/site_picker_blavatar_margin_left"
             android:layout_marginRight="@dimen/site_picker_blavatar_margin_right"
+            android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
             android:background="@color/white"
             android:gravity="center_vertical"
             android:padding="1dp"
-            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
-            android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
-            android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"/>
+            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/image_blavatar"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@id/image_blavatar"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="text_title" />
+            android:layout_toRightOf="@id/image_blavatar"
+            android:orientation="vertical">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_domain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_title"
-            android:layout_toRightOf="@id/image_blavatar"
-            android:layout_toEndOf="@id/image_blavatar"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="text_domain" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="text_title"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_domain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="text_domain"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -66,6 +72,6 @@
         android:layout_marginTop="@dimen/margin_medium"
         android:background="@color/grey_lighten_20"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
 </LinearLayout>

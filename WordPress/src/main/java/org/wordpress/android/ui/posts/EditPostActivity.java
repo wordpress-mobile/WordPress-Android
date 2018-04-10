@@ -108,6 +108,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -204,6 +205,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
+
+    enum AddExistingdMediaSource {
+        WP_MEDIA_LIBRARY,
+        STOCK_PHOTO_LIBRARY
+    }
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -713,6 +719,10 @@ public class EditPostActivity extends AppCompatActivity implements
             return getString(R.string.submit_for_review);
         }
 
+        if (isNewPost()) {
+            return getString(R.string.menu_save_as_draft);
+        }
+
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
                 return getString(R.string.menu_publish_now);
@@ -921,6 +931,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case WP_MEDIA:
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
+            case STOCK_MEDIA:
+                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                break;
         }
     }
 
@@ -1061,9 +1074,29 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
                 //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
+
+                if (UploadService.hasInProgressMediaUploadsForPost(mPost)) {
+                    ToastUtils.showToast(EditPostActivity.this,
+                            getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
+                    return false;
+                }
+
+                // we update the mPost object first, so we can pre-check Post publishability and inform the user
+                updatePostObject();
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                    if (isDiscardable()) {
+                        String message = getString(
+                                mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                        ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+                        return false;
+                    }
                     showPublishConfirmationDialog();
                 } else {
+                    if (isDiscardable()) {
+                        ToastUtils.showToast(EditPostActivity.this,
+                                getString(R.string.error_save_empty_draft), Duration.SHORT);
+                        return false;
+                    }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
                     if (isNewPost()) {
                         mPost.setStatus(PostStatus.DRAFT.toString());
@@ -1811,23 +1844,19 @@ public class EditPostActivity extends AppCompatActivity implements
         return mMaxThumbWidth;
     }
 
-    private boolean addExistingMediaToEditor(long mediaId) {
+    private boolean addExistingMediaToEditor(@NonNull AddExistingdMediaSource source, long mediaId) {
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media == null) {
+            AppLog.w(T.MEDIA, "Cannot add null media to post");
             return false;
         }
 
+        trackAddMediaEvent(source, media);
+
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-        trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
         String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
         mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
         return true;
-    }
-
-    private void addExistingMediaToEditorAndSave(long mediaId) {
-        if (addExistingMediaToEditor(mediaId)) {
-            savePostAsync(null);
-        }
     }
 
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
@@ -2013,7 +2042,7 @@ public class EditPostActivity extends AppCompatActivity implements
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
         ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
         for (Long id : idsList) {
-            addExistingMediaToEditor(id);
+            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
         }
         savePostAsync(null);
     }
@@ -2203,20 +2232,21 @@ public class EditPostActivity extends AppCompatActivity implements
 
     /**
      * Analytics about media already available in the blog's library.
-     *
-     * @param isVideo Whether is a video or not
-     * @param mediaId The ID of the media in the WP blog's library, or null if device media.
+     * @param source where the media is being added from
+     * @param media media being added
      */
-    private void trackAddMediaFromWPLibraryEvents(boolean isVideo, long mediaId) {
-        if (mediaId == 0) {
-            AppLog.e(T.MEDIA, "Cannot track media events if mediaId is 0");
-            return;
-        }
-
-        if (isVideo) {
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY, mSite, null);
-        } else {
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, mSite, null);
+    private void trackAddMediaEvent(@NonNull AddExistingdMediaSource source, @NonNull MediaModel media) {
+        switch (source) {
+            case WP_MEDIA_LIBRARY:
+                if (media.isVideo()) {
+                    AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY, mSite, null);
+                } else {
+                    AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, mSite, null);
+                }
+                break;
+            case STOCK_PHOTO_LIBRARY:
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY, mSite, null);
+                break;
         }
     }
 
@@ -2492,6 +2522,16 @@ public class EditPostActivity extends AppCompatActivity implements
                                                          Activity.RESULT_OK, data);
                     }
                     break;
+                case RequestCodes.STOCK_MEDIA_PICKER:
+                    if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
+                        long[] mediaIds =
+                                data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
+                        for (long id : mediaIds) {
+                            addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
+                        }
+                        savePostAsync(null);
+                    }
+                    break;
             }
         }
     }
@@ -2582,7 +2622,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showInsertMediaDialog(ids);
         } else {
             for (Long id : ids) {
-                addExistingMediaToEditor(id);
+                addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
             }
             savePostAsync(null);
         }
@@ -2605,7 +2645,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         break;
                     case INDIVIDUALLY:
                         for (Long id : mediaIds) {
-                            addExistingMediaToEditor(id);
+                            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
                         }
                         savePostAsync(null);
                         break;
@@ -3028,7 +3068,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 shouldFinishInit = false;
                 mMediaInsertedOnCreation = true;
                 for (MediaModel media : mediaList) {
-                    addExistingMediaToEditor(media.getMediaId());
+                    addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, media.getMediaId());
                 }
                 savePostAsync(new AfterSavePostListener() {
                     @Override
@@ -3225,6 +3265,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             mPost = post;
+            mIsNewPost = false;
             invalidateOptionsMenu();
             switch (PostStatus.fromPost(post)) {
                 case PUBLISHED:

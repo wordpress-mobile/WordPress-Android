@@ -316,14 +316,14 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(titleResId);
 
             TextView descriptionTextView = (TextView) mEmptyView.findViewById(R.id.text_empty_description);
-            if (descriptionResId > 0) {
+            if (descriptionResId != 0) {
                 descriptionTextView.setText(descriptionResId);
             } else {
                 descriptionTextView.setVisibility(View.GONE);
             }
 
             TextView btnAction = (TextView) mEmptyView.findViewById(R.id.button_empty_action);
-            if (buttonResId > 0) {
+            if (buttonResId != 0) {
                 btnAction.setText(buttonResId);
                 btnAction.setVisibility(View.VISIBLE);
             } else {
