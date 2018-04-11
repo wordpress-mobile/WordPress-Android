@@ -172,6 +172,8 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             } else {
                 holder.mTxtSelectionCount.setText(null);
             }
+        } else {
+            holder.mTxtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }
 
         float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -249,17 +251,23 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         ThumbnailViewHolder holder = getViewHolderAtPosition(position);
         if (holder != null) {
-            if (isSelected && canMultiselect()) {
-                int count = mSelectedItems.indexOf(position) + 1;
-                holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
-            } else if (!isSelected) {
-                holder.mTxtSelectionCount.setText(null);
+            if (canMultiselect()) {
+                if (isSelected) {
+                    int count = mSelectedItems.indexOf(position) + 1;
+                    holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
+                } else if (!isSelected) {
+                    holder.mTxtSelectionCount.setText(null);
+                }
+                AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
+            } else {
+                if (isSelected) {
+                    AniUtils.scaleIn(holder.mTxtSelectionCount, AniUtils.Duration.MEDIUM);
+                } else {
+                    AniUtils.scaleOut(holder.mTxtSelectionCount, AniUtils.Duration.MEDIUM);
+                }
             }
 
             holder.mTxtSelectionCount.setSelected(isSelected);
-
-            // animate the count
-            AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
 
             // scale the thumbnail
             if (isSelected) {
