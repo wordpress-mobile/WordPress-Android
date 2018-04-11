@@ -53,7 +53,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private boolean mIsVideo;
     }
 
-    private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+    private final ArrayList<Integer> mSelectedPositions = new ArrayList<>();
 
     private final Context mContext;
     private RecyclerView mRecycler;
@@ -167,7 +167,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         holder.mTxtSelectionCount.setSelected(isSelected);
         if (canMultiselect()) {
             if (isSelected) {
-                int count = mSelectedItems.indexOf(position) + 1;
+                int count = mSelectedPositions.indexOf(position) + 1;
                 holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
             } else {
                 holder.mTxtSelectionCount.setText(null);
@@ -219,7 +219,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     }
 
     private boolean isItemSelected(int position) {
-        return mSelectedItems.contains(position);
+        return mSelectedPositions.contains(position);
     }
 
     private void toggleItemSelected(int position) {
@@ -234,18 +234,18 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         if (isSelected) {
             // if an item is already selected and multiselect isn't allowed, deselect the previous selection
-            if (!canMultiselect() && !mSelectedItems.isEmpty()) {
-                ThumbnailViewHolder prevHolder = getViewHolderAtPosition(mSelectedItems.get(0));
+            if (!canMultiselect() && !mSelectedPositions.isEmpty()) {
+                ThumbnailViewHolder prevHolder = getViewHolderAtPosition(mSelectedPositions.get(0));
                 if (prevHolder != null) {
                     AniUtils.scale(prevHolder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
                 }
-                mSelectedItems.clear();
+                mSelectedPositions.clear();
             }
-            mSelectedItems.add(position);
+            mSelectedPositions.add(position);
         } else {
-            int selectedIndex = mSelectedItems.indexOf(position);
+            int selectedIndex = mSelectedPositions.indexOf(position);
             if (selectedIndex > -1) {
-                mSelectedItems.remove(selectedIndex);
+                mSelectedPositions.remove(selectedIndex);
             }
         }
 
@@ -253,9 +253,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         if (holder != null) {
             if (canMultiselect()) {
                 if (isSelected) {
-                    int count = mSelectedItems.indexOf(position) + 1;
+                    int count = mSelectedPositions.indexOf(position) + 1;
                     holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
-                } else if (!isSelected) {
+                } else {
                     holder.mTxtSelectionCount.setText(null);
                 }
                 AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
@@ -301,7 +301,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     @NonNull
     ArrayList<Uri> getSelectedURIs() {
         ArrayList<Uri> uriList = new ArrayList<>();
-        for (Integer position : mSelectedItems) {
+        for (Integer position : mSelectedPositions) {
             PhotoPickerItem item = getItemAtPosition(position);
             if (item != null) {
                 uriList.add(item.mUri);
@@ -310,12 +310,22 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return uriList;
     }
 
+    ArrayList<Integer> getSelectedPositions() {
+        return mSelectedPositions;
+    }
+
+    void setSelectedPositions(@NonNull ArrayList<Integer> selectedPositions) {
+        mSelectedPositions.clear();
+        mSelectedPositions.addAll(selectedPositions);
+        notifyDataSetChanged();
+    }
+
     private boolean canMultiselect() {
         return mBrowserType.canMultiselect();
     }
 
     int getNumSelected() {
-        return mSelectedItems.size();
+        return mSelectedPositions.size();
     }
 
     /*

@@ -45,7 +45,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PhotoPickerFragment extends Fragment {
-    private static final String KEY_LAST_TAPPED_ICON = "KEY_LAST_TAPPED_ICON";
+    private static final String KEY_LAST_TAPPED_ICON = "last_tapped_icon";
+    private static final String KEY_SELECTED_POSITIONS = "selected_positions";
 
     static final int NUM_COLUMNS = 3;
     public static final String ARG_BROWSER_TYPE = "browser_type";
@@ -79,6 +80,7 @@ public class PhotoPickerFragment extends Fragment {
     private PhotoPickerIcon mLastTappedIcon;
     private MediaBrowserType mBrowserType;
     private SiteModel mSite;
+    private ArrayList<Integer> mSelectedPositions;
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   @NonNull MediaBrowserType browserType,
@@ -105,6 +107,9 @@ public class PhotoPickerFragment extends Fragment {
         if (savedInstanceState != null) {
             String savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON);
             mLastTappedIcon = savedLastTappedIconName == null ? null : PhotoPickerIcon.valueOf(savedLastTappedIconName);
+            if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
+                mSelectedPositions = savedInstanceState.getIntegerArrayList(KEY_SELECTED_POSITIONS);
+            }
         }
     }
 
@@ -112,7 +117,7 @@ public class PhotoPickerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_picker_fragment, container, false);
 
-        mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
+        mRecycler = view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
 
         // disable thumbnail loading during a fling to conserve memory
@@ -176,7 +181,7 @@ public class PhotoPickerFragment extends Fragment {
             }
         }
 
-        mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
+        mSoftAskContainer = view.findViewById(R.id.container_soft_ask);
 
         return view;
     }
@@ -196,6 +201,11 @@ public class PhotoPickerFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_LAST_TAPPED_ICON, mLastTappedIcon == null ? null : mLastTappedIcon.name());
+
+        if (hasAdapter() && getAdapter().getNumSelected() > 0) {
+            ArrayList<Integer> selectedItems = getAdapter().getSelectedPositions();
+            outState.putIntegerArrayList(KEY_SELECTED_POSITIONS, selectedItems);
+        }
     }
 
     @Override
@@ -335,6 +345,12 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public void onAdapterLoaded(boolean isEmpty) {
             showEmptyView(isEmpty);
+            // restore previous selection
+            if (mSelectedPositions != null) {
+                getAdapter().setSelectedPositions(mSelectedPositions);
+                mSelectedPositions = null;
+            }
+            // restore previous state
             if (mRestoreState != null) {
                 mGridManager.onRestoreInstanceState(mRestoreState);
                 mRestoreState = null;
@@ -531,7 +547,7 @@ public class PhotoPickerFragment extends Fragment {
 
         if (show) {
             String appName = "<strong>" + getString(R.string.app_name) + "</strong>";
-            TextView txtLabel = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
+            TextView txtLabel = mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
             String label;
             if (isAlwaysDenied) {
                 String permissionName = "<strong>"
@@ -548,7 +564,7 @@ public class PhotoPickerFragment extends Fragment {
             // when the user taps Allow, request the required permissions unless the user already
             // denied them permanently, in which case take them to the device settings for this
             // app so the user can change permissions there
-            TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
+            TextView txtAllow = mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
             int allowId = isAlwaysDenied
                     ? R.string.button_edit_permissions : R.string.photo_picker_soft_ask_allow;
             txtAllow.setText(allowId);
