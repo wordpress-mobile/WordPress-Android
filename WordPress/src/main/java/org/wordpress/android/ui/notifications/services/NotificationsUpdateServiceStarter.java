@@ -11,9 +11,10 @@ import android.os.PersistableBundle;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
 
+import static org.wordpress.android.JobServiceId.JOB_NOTIFICATIONS_UPDATE_SERVICE_ID;
+
 public class NotificationsUpdateServiceStarter {
     public static final String IS_TAPPED_ON_NOTIFICATION = "is-tapped-on-notification";
-    private static final int JOB_NOTIFICATIONS_UPDATE_SERVICE_ID = 7000;
 
     public static void startService(Context context) {
         if (context == null) {

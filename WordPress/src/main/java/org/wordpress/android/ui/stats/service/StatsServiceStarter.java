@@ -10,11 +10,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
+import org.wordpress.android.JobServiceId;
 import org.wordpress.android.util.AppLog;
+
+import static org.wordpress.android.JobServiceId.JOB_STATS_SERVICE_ID;
 
 public class StatsServiceStarter {
     public static final String ARG_START_ID = "start-id";
-    private static final int JOB_STATS_SERVICE_ID = 8000;
     private static int jobId = 0;
 
     public static void startService(Context context, Bundle originalExtras) {
@@ -31,21 +33,27 @@ public class StatsServiceStarter {
             ComponentName componentName = new ComponentName(context, StatsJobService.class);
 
             PersistableBundle extras = passBundleExtrasToPersistableBundle(originalExtras);
-            extras.putInt(ARG_START_ID, getNewStartId());
 
-            JobInfo jobInfo = new JobInfo.Builder(JOB_STATS_SERVICE_ID + jobId, componentName)
-                    .setRequiresCharging(false)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setOverrideDeadline(0) // if possible, try to run right away
-                    .setExtras(extras)
-                    .build();
+            // don't schedule the same kind of request twice for Stats - just wait for the pending Job to be
+            // executed.
+            if (!JobServiceId.isJobServiceWithSameParamsPending(context, componentName, extras, ARG_START_ID)) {
+                // if not found, let's add a new Job Id and schedule this onw
+                extras.putInt(ARG_START_ID, getNewStartId());
 
-            JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-            int resultCode = jobScheduler.schedule(jobInfo);
-            if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                AppLog.i(AppLog.T.STATS, "stats job service > job scheduled");
-            } else {
-                AppLog.e(AppLog.T.STATS, "stats job service > job could not be scheduled");
+                JobInfo jobInfo = new JobInfo.Builder(JOB_STATS_SERVICE_ID + jobId, componentName)
+                        .setRequiresCharging(false)
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                        .setOverrideDeadline(0) // if possible, try to run right away
+                        .setExtras(extras)
+                        .build();
+
+                JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+                int resultCode = jobScheduler.schedule(jobInfo);
+                if (resultCode == JobScheduler.RESULT_SUCCESS) {
+                    AppLog.i(AppLog.T.STATS, "stats job service > job scheduled");
+                } else {
+                    AppLog.e(AppLog.T.STATS, "stats job service > job could not be scheduled");
+                }
             }
         }
     }

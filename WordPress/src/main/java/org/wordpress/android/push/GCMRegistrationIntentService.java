@@ -24,8 +24,9 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.JobServiceId.JOB_GCM_REG_SERVICE_ID;
+
 public class GCMRegistrationIntentService extends JobIntentService {
-    static final int GCM_REG_SERVICE_JOB_ID = 1000;
     @Inject AccountStore mAccountStore;
 
     @Override
@@ -35,7 +36,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
     }
 
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, GCMRegistrationIntentService.class, GCM_REG_SERVICE_JOB_ID, work);
+        enqueueWork(context, GCMRegistrationIntentService.class, JOB_GCM_REG_SERVICE_ID, work);
     }
 
     @Override
