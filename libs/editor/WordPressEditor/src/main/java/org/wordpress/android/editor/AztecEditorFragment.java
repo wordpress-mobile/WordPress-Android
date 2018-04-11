@@ -119,6 +119,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         public AztecLoggingException(String message) {
             super(message);
         }
+        public AztecLoggingException(Throwable originalException) {
+            super(originalException);
+        }
     }
 
     private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
