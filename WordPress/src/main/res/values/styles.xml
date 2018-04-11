@@ -388,6 +388,7 @@
     </style>
 
     <style name="MeListRowIcon">
+        <item name="android:tint">@color/grey_darken_30</item>
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
