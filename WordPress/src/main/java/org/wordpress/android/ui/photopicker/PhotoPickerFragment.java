@@ -471,6 +471,7 @@ public class PhotoPickerFragment extends Fragment {
             WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar_tint);
             mActionMode = null;
             showBottomBar();
+            getAdapter().clearSelection();
         }
     }
 

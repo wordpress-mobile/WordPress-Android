@@ -320,6 +320,11 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         notifyDataSetChanged();
     }
 
+    void clearSelection() {
+        mSelectedPositions.clear();
+        notifyDataSetChanged();
+    }
+
     private boolean canMultiselect() {
         return mBrowserType.canMultiselect();
     }
