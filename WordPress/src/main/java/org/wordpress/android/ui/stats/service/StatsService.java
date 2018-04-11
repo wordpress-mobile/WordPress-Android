@@ -29,6 +29,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
     // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will
     // default to 20 on the server.
     public static final int MAX_RESULTS_REQUESTED_PER_PAGE = 20;
+    public static final int TASK_ID_GROUP_ALL = -2;
 
     private StatsServiceLogic mStatsServiceLogic;
 
@@ -61,8 +62,8 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
 
     @Override
     public void onCompleted(Object companion) {
+        EventBus.getDefault().post(new StatsEvents.UpdateStatusFinished(-2));
         if (companion instanceof Integer) {
-            EventBus.getDefault().post(new StatsEvents.UpdateStatusFinished((Integer) companion));
             AppLog.i(AppLog.T.STATS, "stats service > task: " + companion + " completed");
             stopSelf((Integer) companion);
         } else {

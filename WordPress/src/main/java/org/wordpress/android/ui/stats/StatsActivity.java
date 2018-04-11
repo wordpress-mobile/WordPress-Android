@@ -52,6 +52,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.stats.service.StatsService.TASK_ID_GROUP_ALL;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
@@ -667,8 +668,13 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
-        if (mCallsToWaitFor > 0) {
-            mCallsToWaitFor--;
+        // in legacy StatsService we just need this signal to know one taskID grouped all concurrent requests
+        if (event.mTaskId == TASK_ID_GROUP_ALL) {
+            mCallsToWaitFor = 0;
+        } else {
+            if (mCallsToWaitFor > 0) {
+                mCallsToWaitFor--;
+            }
         }
 
         if (mCallsToWaitFor == 0) {
