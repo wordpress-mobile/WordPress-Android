@@ -49,7 +49,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/stats_insights_most_popular_percent_views"
-                android:textColor="@color/grey_darken_10"/>
+                android:textColor="@color/grey_text_min"/>
 
         </LinearLayout>
 
@@ -89,7 +89,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/stats_insights_most_popular_percent_views"
-                android:textColor="@color/grey_darken_10"/>
+                android:textColor="@color/grey_text_min"/>
 
         </LinearLayout>
 
