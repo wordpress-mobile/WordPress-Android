@@ -63,7 +63,7 @@ public class StatsService extends Service implements StatsServiceLogic.ServiceCo
 
     @Override
     public void onCompleted(Object companion) {
-        EventBus.getDefault().post(new StatsEvents.UpdateStatusFinished(-2));
+        EventBus.getDefault().post(new StatsEvents.UpdateStatusFinished(TASK_ID_GROUP_ALL));
         if (companion instanceof Integer) {
             AppLog.i(AppLog.T.STATS, "stats service > task: " + companion + " completed");
             stopSelf((Integer) companion);
