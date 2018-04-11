@@ -47,7 +47,7 @@
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:drawableLeft">@drawable/ic_time_grey_darken_10_16dp</item>
         <item name="android:drawableStart">@drawable/ic_time_grey_darken_10_16dp</item>
     </style>
