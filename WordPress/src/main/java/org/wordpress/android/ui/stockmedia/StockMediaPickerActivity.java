@@ -594,6 +594,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 } else {
                     holder.mSelectionCountTextView.setText(null);
                 }
+            } else {
+                holder.mSelectionCountTextView.setVisibility(
+                        isSelected || enableMultiselect() ? View.VISIBLE : View.GONE);
             }
 
             float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -640,7 +643,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 mSelectedItems.remove(index);
             }
 
-            // show and animate the count
+            // show and animate the count bubble
             if (enableMultiselect()) {
                 if (selected) {
                     String label = Integer.toString(mSelectedItems.indexOf(position) + 1);
@@ -648,9 +651,14 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 } else {
                     holder.mSelectionCountTextView.setText(null);
                 }
+                AniUtils.startAnimation(holder.mSelectionCountTextView, R.anim.pop);
+            } else {
+                if (selected) {
+                    AniUtils.scaleIn(holder.mSelectionCountTextView, AniUtils.Duration.MEDIUM);
+                } else {
+                    AniUtils.scaleOut(holder.mSelectionCountTextView, AniUtils.Duration.MEDIUM);
+                }
             }
-            AniUtils.startAnimation(holder.mSelectionCountTextView, R.anim.pop);
-            holder.mSelectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
 
             // scale the thumbnail
             if (selected) {
