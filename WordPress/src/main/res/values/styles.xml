@@ -443,7 +443,7 @@
     <style name="MyProfileText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
