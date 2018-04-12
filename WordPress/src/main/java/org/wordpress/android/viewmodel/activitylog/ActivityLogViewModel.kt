@@ -39,7 +39,7 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    var site: SiteModel? = null
+    lateinit var site: SiteModel
 
     init {
         dispatcher.register(this)
@@ -75,10 +75,8 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
     }
 
     private fun reloadEvents() {
-        site?.let {
-            val eventList = activityLogStore.getActivityLogForSite(site!!)
-            _events.postValue(eventList)
-        }
+        val eventList = activityLogStore.getActivityLogForSite(site)
+        _events.postValue(eventList)
     }
 
     fun pullToRefresh() {
@@ -91,7 +89,7 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
         }
         val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
         _eventListStatus.postValue(newStatus)
-        val payload = ActivityLogStore.FetchActivityLogPayload(site!!, 10, 0)
+        val payload = ActivityLogStore.FetchActivityLogPayload(site, loadMore)
         dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
     }
 
@@ -112,15 +110,15 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
-    fun onWPOrgPluginFetched(event: ActivityLogStore.OnActivityLogFetched) {
+    fun onActivityLogFetched(event: ActivityLogStore.OnActivityLogFetched) {
         if (event.isError) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the Activity log events")
             return
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
         // if the slug is not in the set
-        if (event.rowsAffected > 0 && event.activityLogModels != null) {
-            updateEventListIfNecessary(event.activityLogModels!!)
+        if (event.rowsAffected > 0) {
+            updateEventListIfNecessary(activityLogStore.getActivityLogForSite(site))
         }
     }
 
