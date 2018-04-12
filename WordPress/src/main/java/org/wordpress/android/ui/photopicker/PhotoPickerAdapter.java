@@ -54,6 +54,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     }
 
     private final ArrayList<Integer> mSelectedPositions = new ArrayList<>();
+    private static final AniUtils.Duration ANI_DURATION = AniUtils.Duration.SHORT;
 
     private final Context mContext;
     private RecyclerView mRecycler;
@@ -232,15 +233,16 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             return;
         }
 
-        if (isSelected) {
-            // if an item is already selected and multiselect isn't allowed, deselect the previous selection
-            if (!canMultiselect() && !mSelectedPositions.isEmpty()) {
-                ThumbnailViewHolder prevHolder = getViewHolderAtPosition(mSelectedPositions.get(0));
-                if (prevHolder != null) {
-                    AniUtils.scale(prevHolder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
-                }
-                mSelectedPositions.clear();
+        // if an item is already selected and multiselect isn't allowed, deselect the previous selection
+        if (isSelected && !canMultiselect() && !mSelectedPositions.isEmpty()) {
+            ThumbnailViewHolder prevHolder = getViewHolderAtPosition(mSelectedPositions.get(0));
+            if (prevHolder != null) {
+                AniUtils.scale(prevHolder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, ANI_DURATION);
             }
+            mSelectedPositions.clear();
+        }
+
+        if (isSelected) {
             mSelectedPositions.add(position);
         } else {
             int selectedIndex = mSelectedPositions.indexOf(position);
@@ -251,29 +253,22 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         ThumbnailViewHolder holder = getViewHolderAtPosition(position);
         if (holder != null) {
-            if (canMultiselect()) {
-                if (isSelected) {
-                    int count = mSelectedPositions.indexOf(position) + 1;
-                    holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
-                } else {
-                    holder.mTxtSelectionCount.setText(null);
-                }
-                AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
+            holder.mTxtSelectionCount.setSelected(isSelected);
+            AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
+
+            if (canMultiselect() && isSelected) {
+                int count = mSelectedPositions.indexOf(position) + 1;
+                holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
             } else {
-                if (isSelected) {
-                    AniUtils.scaleIn(holder.mTxtSelectionCount, AniUtils.Duration.MEDIUM);
-                } else {
-                    AniUtils.scaleOut(holder.mTxtSelectionCount, AniUtils.Duration.MEDIUM);
-                }
+                holder.mTxtSelectionCount.setText(null);
             }
 
-            holder.mTxtSelectionCount.setSelected(isSelected);
-
-            // scale the thumbnail
             if (isSelected) {
-                AniUtils.scale(holder.mImgThumbnail, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
+                AniUtils.scaleIn(holder.mTxtSelectionCount, ANI_DURATION);
+                AniUtils.scale(holder.mImgThumbnail, SCALE_NORMAL, SCALE_SELECTED, ANI_DURATION);
             } else {
-                AniUtils.scale(holder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
+                AniUtils.scaleOut(holder.mTxtSelectionCount, ANI_DURATION);
+                AniUtils.scale(holder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, ANI_DURATION);
             }
         }
 
@@ -282,7 +277,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         // redraw the grid after the scale animation completes
-        long delayMs = AniUtils.Duration.SHORT.toMillis(mContext);
+        long delayMs = ANI_DURATION.toMillis(mContext);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
