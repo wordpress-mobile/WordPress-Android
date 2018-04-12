@@ -46,8 +46,9 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -611,10 +612,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // Get reader tags so they're available as soon as the Reader is accessed - done for
         // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
         // uses the application context since the activity is finished immediately below
-        ReaderUpdateService.startService(getApplicationContext(), EnumSet.of(ReaderUpdateService.UpdateTask.TAGS));
+        ReaderUpdateServiceStarter.startService(getApplicationContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
         // Start Notification service
-        NotificationsUpdateService.startService(getApplicationContext());
+        NotificationsUpdateServiceStarter.startService(getApplicationContext());
     }
 
     @Override

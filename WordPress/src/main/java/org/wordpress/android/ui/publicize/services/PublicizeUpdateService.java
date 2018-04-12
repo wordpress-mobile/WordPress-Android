@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.publicize.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -21,11 +21,13 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.JobServiceId.JOB_PUBLICIZE_UPDATE_SERVICE_ID;
+
 /**
  * service which requests the user's available sharing services and publicize connections
  */
 
-public class PublicizeUpdateService extends IntentService {
+public class PublicizeUpdateService extends JobIntentService {
     private static boolean mHasUpdatedServices;
 
     /*
@@ -34,11 +36,11 @@ public class PublicizeUpdateService extends IntentService {
     public static void updateConnectionsForSite(Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, PublicizeUpdateService.class);
         intent.putExtra(WordPress.SITE, site);
-        context.startService(intent);
+        enqueueWork(context, intent);
     }
 
-    public PublicizeUpdateService() {
-        super("PublicizeUpdateService");
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, PublicizeUpdateService.class, JOB_PUBLICIZE_UPDATE_SERVICE_ID, work);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class PublicizeUpdateService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         if (intent == null) {
             return;
         }
@@ -69,6 +71,14 @@ public class PublicizeUpdateService extends IntentService {
 
         SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
         updateConnections(site.getSiteId());
+    }
+
+    @Override
+    public boolean onStopCurrentWork() {
+        // this Service was failing silently if it couldn't get to update its data, so
+        // that hints us that we shouldn't really care about rescheduling this job
+        // in the case something failed.
+        return false;
     }
 
     /*

@@ -1975,6 +1975,13 @@
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
+    <!-- Android O notification channels, these show in the Android app settings -->
+    <string name="notification_channel_general_title">General</string>
+    <string name="notification_channel_important_title">Important</string>
+
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
