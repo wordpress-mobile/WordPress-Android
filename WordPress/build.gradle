@@ -163,7 +163,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     kapt 'com.google.dagger:dagger-android-processor:2.11'
 
-    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:04077106fd581e4759c12cf542ef3415bd7e2a03") {
+    implementation ("com.github.wordpress-mobile:WordPress-FluxC-Android:feature~activity_store_6_move_pagination_to_store-SNAPSHOT") {
         exclude group: "com.android.volley"
     }
 
