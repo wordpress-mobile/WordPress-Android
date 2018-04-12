@@ -1334,17 +1334,18 @@ public class EditPostActivity extends AppCompatActivity implements
                     // entries and 64kb max, and they only travel with the next crash happening, so logging an
                     // Exception assures us to have this information sent in the next batch).
                     // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(s));
+                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable) {
-                    CrashlyticsUtils.logException(throwable);
+                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable, String s) {
-                    CrashlyticsUtils.logException(throwable, T.EDITOR, s);
+                    CrashlyticsUtils.logException(
+                            new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
                 }
             });
         }
