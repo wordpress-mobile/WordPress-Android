@@ -185,7 +185,6 @@ public class SignupGoogleFragment extends GoogleFragment {
             switch (event.error.type) {
                 // WordPress account exists with input email address, and two-factor authentication is required.
                 case TWO_STEP_ENABLED:
-                    mAnalyticsListener.trackSignupSocial2faNeeded();
                     mAnalyticsListener.trackSignupSocialToLogin();
                     mLoginListener.showSignupToLoginMessage();
                     // Dispatch social login action to retrieve data required for two-factor authentication.
