@@ -138,11 +138,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackSignupSocial2faNeeded() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
-    }
-
-    @Override
     public void trackSignupSocialAccountsNeedConnecting() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING);
     }

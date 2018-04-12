@@ -771,8 +771,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_magic_link_sent";
             case SIGNUP_MAGIC_LINK_SUCCEEDED:
                 return "signup_magic_link_succeeded";
-            case SIGNUP_SOCIAL_2FA_NEEDED:
-                return "signup_social_2fa_needed";
             case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "signup_social_accounts_need_connecting";
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
