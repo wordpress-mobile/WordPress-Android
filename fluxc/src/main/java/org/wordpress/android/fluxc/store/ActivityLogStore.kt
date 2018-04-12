@@ -17,6 +17,8 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val ACTIVITY_LOG_PAGE_SIZE = 10
+
 @Singleton
 class ActivityLogStore
 @Inject constructor(private val activityLogRestClient: ActivityLogRestClient,
@@ -30,10 +32,10 @@ class ActivityLogStore
             ActivityLogAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivityLogPayload)
             ActivityLogAction.FETCHED_ACTIVITIES ->
                 storeActivityLog(action.payload as FetchedActivityLogPayload,
-                    actionType)
+                                 actionType)
             ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
             ActivityLogAction.FETCHED_REWIND_STATE -> storeRewindState(action.payload as FetchedRewindStatePayload,
-                    actionType)
+                                                                       actionType)
         }
     }
 
@@ -51,15 +53,21 @@ class ActivityLogStore
     }
 
     private fun fetchActivities(fetchActivityLogPayload: FetchActivityLogPayload) {
-        activityLogRestClient.fetchActivity(fetchActivityLogPayload.site,
-                fetchActivityLogPayload.number,
-                fetchActivityLogPayload.offset)
+        var offset = 0
+        if (fetchActivityLogPayload.loadMore) {
+            offset = activityLogSqlUtils.getActivitiesForSite(fetchActivityLogPayload.site,
+                                                                             SelectQuery.ORDER_ASCENDING).size
+        } else {
+            activityLogSqlUtils.deleteActivityLog()
+        }
+        activityLogRestClient.fetchActivity(fetchActivityLogPayload.site, ACTIVITY_LOG_PAGE_SIZE, offset)
     }
 
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
         if (payload.activityLogModels.isNotEmpty()) {
-            val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
-            emitChange(OnActivityLogFetched(rowsAffected, payload.activityLogModels, action))
+            val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site,
+                                                                            payload.activityLogModels)
+            emitChange(OnActivityLogFetched(rowsAffected, action))
         } else if (payload.error != null) {
             emitChange(OnActivityLogFetched(payload.error, action))
         }
@@ -67,7 +75,8 @@ class ActivityLogStore
 
     private fun storeRewindState(payload: FetchedRewindStatePayload, action: ActivityLogAction) {
         if (payload.rewindStatusModelResponse != null) {
-            activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
+            activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site,
+                                                           payload.rewindStatusModelResponse)
             emitChange(OnRewindStatusFetched(action))
         } else if (payload.error != null) {
             emitChange(OnRewindStatusFetched(payload.error, action))
@@ -80,10 +89,9 @@ class ActivityLogStore
 
     // Actions
     data class OnActivityLogFetched(val rowsAffected: Int,
-                                    val activityLogModels: List<ActivityLogModel>?,
                                     var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
-                this(rowsAffected = 0, activityLogModels = null, causeOfChange = causeOfChange) {
+                this(rowsAffected = 0, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -97,8 +105,7 @@ class ActivityLogStore
 
     // Payloads
     class FetchActivityLogPayload(val site: SiteModel,
-                                  val number: Int,
-                                  val offset: Int) : Payload<BaseRequest.BaseNetworkError>()
+                                  val loadMore: Boolean = false) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
@@ -132,7 +139,8 @@ class ActivityLogStore
         MISSING_PUBLISHED_DATE
     }
 
-    class ActivityError(var type: ActivityLogErrorType, var message: String? = null) : Store.OnChangedError
+    class ActivityError(var type: ActivityLogErrorType,
+                        var message: String? = null) : Store.OnChangedError
 
     enum class RewindStatusErrorType {
         GENERIC_ERROR,
@@ -145,5 +153,6 @@ class ActivityLogStore
         INVALID_RESTORE_STATUS
     }
 
-    class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError
+    class RewindStatusError(var type: RewindStatusErrorType,
+                            var message: String? = null) : Store.OnChangedError
 }
