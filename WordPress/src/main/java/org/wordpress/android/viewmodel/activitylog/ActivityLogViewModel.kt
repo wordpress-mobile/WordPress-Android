@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.viewmodel.PluginBrowserViewModel
 import javax.inject.Inject
 
 class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, private val activityLogStore: ActivityLogStore) : ViewModel() {
@@ -95,11 +94,9 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
 
     private fun shouldFetchEvents(loadMore: Boolean): Boolean {
         if (_eventListStatus == ActivityLogListStatus.FETCHING || _eventListStatus == ActivityLogListStatus.LOADING_MORE) {
-            // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
-            // and the user pulled to refresh, we don't want (or need) the 2 requests colliding
             return false
         }
-        return !(loadMore && _eventListStatus != PluginBrowserViewModel.PluginListStatus.CAN_LOAD_MORE)
+        return loadMore
     }
 
     fun loadMore() {
@@ -115,17 +112,14 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the Activity log events")
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (event.rowsAffected > 0) {
-            updateEventListIfNecessary(activityLogStore.getActivityLogForSite(site))
-        }
+
+        updateEventListIfNecessary(activityLogStore.getActivityLogForSite(site, false))
     }
 
     private fun updateEventListIfNecessary(list: List<ActivityLogModel>) {
-        handler.postDelayed({
-            // Using the size of the set for comparison might fail since we clear the updatedPluginSlugSet
+        handler.post({
             _events.postValue(list)
-        }, 250)
+            _eventListStatus.postValue(ActivityLogListStatus.DONE)
+        })
     }
 }
