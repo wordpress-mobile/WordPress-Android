@@ -229,6 +229,7 @@ public class AppSettingsFragment extends PreferenceFragment
                         int index = Integer.parseInt(value.toString());
                         CharSequence[] entries = editorTypePreference.getEntries();
                         editorTypePreference.setSummary(entries[index]);
+                        editorTypePreference.setValue(value.toString());
 
                         switch (index) {
                             case IDX_VISUAL_EDITOR:
