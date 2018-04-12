@@ -131,6 +131,7 @@ Language: cy_GB
     <string name="invite_names_title">Enwau defnyddwyr neu E–byst</string>
     <string name="send_link">Anfon dolen</string>
     <string name="my_site_header_external">Allanol</string>
+    <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
     <string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
     <string name="reader_empty_posts_in_search_description">Dim cofnodion gan %s yn eich iaith</string>
@@ -758,8 +759,6 @@ Language: cy_GB
     <string name="pick_video">Dewiswch fideo</string>
     <string name="reader_toast_err_get_post">Does dim modd adfer y cofnod hwn</string>
     <string name="pick_photo">Dewis ffoto</string>
-    <string name="select_date">Dewis dyddiad</string>
-    <string name="select_time">Dewis amser</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
     <string name="reader_empty_followed_blogs_description">Ond peidiwch â phoeni, tapiwch yr eicon tag ar y brig de i ddechrau darganfod!</string>
     <string name="nux_tutorial_get_started_title">Cychwyn arni!</string>

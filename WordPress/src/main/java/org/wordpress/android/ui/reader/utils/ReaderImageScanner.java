@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 
@@ -14,7 +13,7 @@ public class ReaderImageScanner {
     private final boolean mContentContainsImages;
 
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
-            "<img(\\s+.*?) (?:src\\s*=\\s*(?:'|\") (.*?) (?:'|\")) (.*?)>",
+            ".*(<img\\s+.*src\\s*=\\s*\"([^\"]+)\".*>).*",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
@@ -37,11 +36,9 @@ public class ReaderImageScanner {
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
-            String imageTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
-            String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imageTag);
-            if (!TextUtils.isEmpty(imageUrl)) {
-                listener.onTagFound(imageTag, imageUrl);
-            }
+            String imageTag = imgMatcher.group(1);
+            String imageUrl = imgMatcher.group(2);
+            listener.onTagFound(imageTag, imageUrl);
         }
     }
 
@@ -58,13 +55,13 @@ public class ReaderImageScanner {
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
-            String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
-            String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
+            String imageTag = imgMatcher.group(1);
+            String imageUrl = imgMatcher.group(2);
 
             if (minImageWidth == 0) {
                 imageList.addImageUrl(imageUrl);
             } else {
-                int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag),
+                int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imageTag),
                                      ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
                 if (width >= minImageWidth) {
                     imageList.addImageUrl(imageUrl);
@@ -100,15 +97,15 @@ public class ReaderImageScanner {
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
-            String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
-            String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
+            String imageTag = imgMatcher.group(1);
+            String imageUrl = imgMatcher.group(2);
 
-            int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag),
+            int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imageTag),
                                  ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
             if (width > currentMaxWidth) {
                 currentImageUrl = imageUrl;
                 currentMaxWidth = width;
-            } else if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imgTag)) {
+            } else if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
                 currentImageUrl = imageUrl;
             }
         }
