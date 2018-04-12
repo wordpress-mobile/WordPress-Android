@@ -39,13 +39,6 @@ class   ActivityLogActivity : AppCompatActivity() {
         }
 
         viewModel.start()
-
-        if (viewModel.site == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found)
-            finish()
-            return
-        }
-
         showListFragment()
     }
 
