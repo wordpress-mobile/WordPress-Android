@@ -11,7 +11,7 @@ import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
-import java.util.Date
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,8 +33,9 @@ class ActivityLogSqlUtils
             WellSql.update(ActivityLogBuilder::class.java)
                     .where()
                     .equals(ActivityLogTable.ACTIVITY_ID, it.activityID)
+                    .equals(ActivityLogTable.LOCAL_SITE_ID, it.localSiteId)
                     .endWhere()
-                    .put(it)
+                    .put(it, UpdateAllExceptId<ActivityLogBuilder>(ActivityLogBuilder::class.java))
         }
         insertQuery.execute()
         return updateQueries.map { it.execute() }.sum() + new.count()
