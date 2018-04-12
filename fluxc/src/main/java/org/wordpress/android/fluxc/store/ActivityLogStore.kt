@@ -31,11 +31,10 @@ class ActivityLogStore
         when (actionType) {
             ActivityLogAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivityLogPayload)
             ActivityLogAction.FETCHED_ACTIVITIES ->
-                storeActivityLog(action.payload as FetchedActivityLogPayload,
-                                 actionType)
+                storeActivityLog(action.payload as FetchedActivityLogPayload, actionType)
             ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
-            ActivityLogAction.FETCHED_REWIND_STATE -> storeRewindState(action.payload as FetchedRewindStatePayload,
-                                                                       actionType)
+            ActivityLogAction.FETCHED_REWIND_STATE ->
+                storeRewindState(action.payload as FetchedRewindStatePayload, actionType)
         }
     }
 
@@ -56,7 +55,7 @@ class ActivityLogStore
         var offset = 0
         if (fetchActivityLogPayload.loadMore) {
             offset = activityLogSqlUtils.getActivitiesForSite(fetchActivityLogPayload.site,
-                                                                             SelectQuery.ORDER_ASCENDING).size
+                    SelectQuery.ORDER_ASCENDING).size
         } else {
             activityLogSqlUtils.deleteActivityLog()
         }
@@ -65,8 +64,7 @@ class ActivityLogStore
 
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
         if (payload.activityLogModels.isNotEmpty()) {
-            val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site,
-                                                                            payload.activityLogModels)
+            val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
             emitChange(OnActivityLogFetched(rowsAffected, action))
         } else if (payload.error != null) {
             emitChange(OnActivityLogFetched(payload.error, action))
@@ -75,8 +73,7 @@ class ActivityLogStore
 
     private fun storeRewindState(payload: FetchedRewindStatePayload, action: ActivityLogAction) {
         if (payload.rewindStatusModelResponse != null) {
-            activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site,
-                                                           payload.rewindStatusModelResponse)
+            activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
             emitChange(OnRewindStatusFetched(action))
         } else if (payload.error != null) {
             emitChange(OnRewindStatusFetched(payload.error, action))
