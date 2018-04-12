@@ -28,6 +28,7 @@ public interface LoginAnalyticsListener {
     void trackPasswordFormViewed();
     void trackSignupEmailToLogin();
     void trackSignupMagicLinkFailed();
+    void trackSignupMagicLinkOpenEmailClientClicked();
     void trackSignupMagicLinkSent();
     void trackSignupMagicLinkSucceeded();
     void trackSignupSocial2faNeeded();
