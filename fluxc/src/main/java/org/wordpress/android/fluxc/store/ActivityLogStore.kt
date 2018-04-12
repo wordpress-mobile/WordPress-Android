@@ -63,20 +63,24 @@ class ActivityLogStore
     }
 
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
-        if (payload.activityLogModels.isNotEmpty()) {
-            val rowsAffected = activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
-            emitChange(OnActivityLogFetched(rowsAffected, action))
-        } else if (payload.error != null) {
+        if (payload.error != null) {
             emitChange(OnActivityLogFetched(payload.error, action))
+        } else {
+            val rowsAffected = if (payload.activityLogModels.isNotEmpty())
+                activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
+            else 0
+            emitChange(OnActivityLogFetched(rowsAffected, action))
         }
     }
 
     private fun storeRewindState(payload: FetchedRewindStatePayload, action: ActivityLogAction) {
-        if (payload.rewindStatusModelResponse != null) {
-            activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
-            emitChange(OnRewindStatusFetched(action))
-        } else if (payload.error != null) {
+        if (payload.error != null) {
             emitChange(OnRewindStatusFetched(payload.error, action))
+        } else {
+            if (payload.rewindStatusModelResponse != null) {
+                activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
+            }
+            emitChange(OnRewindStatusFetched(action))
         }
     }
 
