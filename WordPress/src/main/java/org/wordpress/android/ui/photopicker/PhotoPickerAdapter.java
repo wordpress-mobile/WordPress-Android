@@ -157,6 +157,17 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return new ThumbnailViewHolder(view);
     }
 
+    private void updateSelectionCountForPosition(int position,
+                                                 boolean isSelected,
+                                                 @NonNull TextView txtSelectionCount) {
+        if (canMultiselect() && isSelected) {
+            int count = mSelectedPositions.indexOf(position) + 1;
+            txtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
+        } else {
+            txtSelectionCount.setText(null);
+        }
+    }
+
     @Override
     public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
         PhotoPickerItem item = getItemAtPosition(position);
@@ -166,16 +177,8 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         boolean isSelected = isItemSelected(position);
         holder.mTxtSelectionCount.setSelected(isSelected);
-        if (canMultiselect()) {
-            if (isSelected) {
-                int count = mSelectedPositions.indexOf(position) + 1;
-                holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
-            } else {
-                holder.mTxtSelectionCount.setText(null);
-            }
-        } else {
-            holder.mTxtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-        }
+        holder.mTxtSelectionCount.setVisibility(isSelected || canMultiselect() ? View.VISIBLE : View.GONE);
+        updateSelectionCountForPosition(position, isSelected, holder.mTxtSelectionCount);
 
         float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
         if (holder.mImgThumbnail.getScaleX() != scale) {
@@ -250,13 +253,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         ThumbnailViewHolder holder = getViewHolderAtPosition(position);
         if (holder != null) {
             holder.mTxtSelectionCount.setSelected(isSelected);
-
-            if (canMultiselect() && isSelected) {
-                int count = mSelectedPositions.indexOf(position) + 1;
-                holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
-            } else {
-                holder.mTxtSelectionCount.setText(null);
-            }
+            updateSelectionCountForPosition(position, isSelected, holder.mTxtSelectionCount);
 
             if (isSelected) {
                 AniUtils.scale(holder.mImgThumbnail, SCALE_NORMAL, SCALE_SELECTED, ANI_DURATION);
