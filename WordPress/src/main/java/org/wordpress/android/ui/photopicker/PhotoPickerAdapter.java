@@ -323,7 +323,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     void clearSelection() {
         if (mSelectedPositions.size() > 0) {
             mSelectedPositions.clear();
-            notifyDataSetChanged();
+            notifyDataSetChangedInternal();
         }
     }
 
