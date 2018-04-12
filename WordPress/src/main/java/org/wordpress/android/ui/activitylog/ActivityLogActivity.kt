@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 
