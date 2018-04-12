@@ -1,10 +1,6 @@
 package org.wordpress.android.fluxc.store
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import com.yarolegovich.wellsql.SelectQuery
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -35,15 +31,31 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun onFetchActivitiesActionCallRestClient() {
+    fun onFetchActivityLogFirstPageActionCleanupDbAndCallRestClient() {
         val number = 10
         val offset = 0
 
-        val payload = ActivityLogStore.FetchActivityLogPayload(siteModel, number, offset)
+        val payload = ActivityLogStore.FetchActivityLogPayload(siteModel)
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
+        verify(activityLogSqlUtils).deleteActivityLog()
         verify(activityLogRestClient).fetchActivity(siteModel, number, offset)
+    }
+
+    @Test
+    fun onFetchActivityLogNextActionReadCurrentDataAndCallRestClient() {
+        val number = 10
+
+        val existingActivities = listOf<ActivityLogModel>(mock())
+        whenever(activityLogSqlUtils.getActivitiesForSite(siteModel, SelectQuery.ORDER_ASCENDING))
+                .thenReturn(existingActivities)
+
+        val payload = ActivityLogStore.FetchActivityLogPayload(siteModel, true)
+        val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
+        activityLogStore.onAction(action)
+
+        verify(activityLogRestClient).fetchActivity(siteModel, number, existingActivities.size)
     }
 
     @Test
@@ -67,7 +79,6 @@ class ActivityLogStoreTest {
 
         verify(activityLogSqlUtils).insertOrUpdateActivities(siteModel, activityModels)
         val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
-                activityModels,
                 ActivityLogAction.FETCHED_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }

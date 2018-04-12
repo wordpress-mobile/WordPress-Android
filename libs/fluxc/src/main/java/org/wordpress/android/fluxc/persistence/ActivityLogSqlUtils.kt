@@ -51,6 +51,10 @@ class ActivityLogSqlUtils
                 .map { it.build() }
     }
 
+    fun deleteActivityLog(): Int {
+        return WellSql.delete(ActivityLogBuilder::class.java).execute()
+    }
+
     fun insertOrUpdateRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
         val existingRewindStatus = getRewindStatusBuilder(site)
         val rewindStatusBuilder = rewindStatusModel.toBuilder(site)
