@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    implementation ('org.wordpress:utils:1.20.2-beta1') {
+    implementation ('org.wordpress:utils:1.20.2') {
         exclude group: "com.mcxiaoke.volley"
     }
 
