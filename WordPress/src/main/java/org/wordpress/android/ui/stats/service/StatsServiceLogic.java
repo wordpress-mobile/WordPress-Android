@@ -330,8 +330,6 @@ public class StatsServiceLogic {
     private void startTasks(final long blogId, final StatsTimeframe timeframe, final String date,
                             final StatsServiceLogic.StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
                             final int pageRequested) {
-        EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
-
         String cachedStats =
                 getCachedStats(blogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
         if (cachedStats != null) {
@@ -612,9 +610,9 @@ public class StatsServiceLogic {
             if (req != null) {
                 mStatsNetworkRequests.remove(req);
             }
+
             boolean isStillWorking =
                     mStatsNetworkRequests.size() > 0 || mSingleThreadNetworkHandler.getQueue().size() > 0;
-            EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(isStillWorking));
             if (!isStillWorking) {
                 stopService();
             }

@@ -182,13 +182,23 @@ public class StatsViewAllActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
+    public void onEventMainThread(StatsEvents.UpdateStatusStarted event) {
         if (isFinishing() || !mIsInFront) {
             return;
         }
-        mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
-        mIsUpdatingStats = event.mUpdating;
+        mSwipeToRefreshHelper.setRefreshing(true);
+        mIsUpdatingStats = true;
     }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.UpdateStatusFinished event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+        mSwipeToRefreshHelper.setRefreshing(false);
+        mIsUpdatingStats = false;
+    }
+
 
     private String getDateForDisplayInLabels(String date, StatsTimeframe timeframe) {
         String prefix = getString(R.string.stats_for);
