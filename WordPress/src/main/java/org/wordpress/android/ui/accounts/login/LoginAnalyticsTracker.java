@@ -123,6 +123,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackSignupMagicLinkOpenEmailClientClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+    }
+
+    @Override
     public void trackSignupMagicLinkSent() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SENT);
     }
