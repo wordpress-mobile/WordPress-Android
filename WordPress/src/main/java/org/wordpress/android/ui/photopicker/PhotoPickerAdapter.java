@@ -231,6 +231,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     }
 
     private void setItemSelected(int position, boolean isSelected) {
+        setItemSelected(position, isSelected, true);
+    }
+
+    private void setItemSelected(int position, boolean isSelected, boolean updateAfter) {
         PhotoPickerItem item = getItemAtPosition(position);
         if (item == null) {
             return;
@@ -238,7 +242,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         // if an item is already selected and multiselect isn't allowed, deselect the previous selection
         if (isSelected && !canMultiselect() && !mSelectedPositions.isEmpty()) {
-            setItemSelected(mSelectedPositions.get(0), false);
+            setItemSelected(mSelectedPositions.get(0), false, false);
         }
 
         if (isSelected) {
@@ -270,18 +274,19 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             }
         }
 
-        if (mListener != null) {
-            mListener.onSelectedCountChanged(getNumSelected());
-        }
-
-        // redraw the grid after the scale animation completes
-        long delayMs = ANI_DURATION.toMillis(mContext);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChangedInternal();
+        if (updateAfter) {
+            if (mListener != null) {
+                mListener.onSelectedCountChanged(getNumSelected());
             }
-        }, delayMs);
+            // redraw the grid after the scale animation completes
+            long delayMs = ANI_DURATION.toMillis(mContext);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChangedInternal();
+                }
+            }, delayMs);
+        }
     }
 
     private ThumbnailViewHolder getViewHolderAtPosition(int position) {
