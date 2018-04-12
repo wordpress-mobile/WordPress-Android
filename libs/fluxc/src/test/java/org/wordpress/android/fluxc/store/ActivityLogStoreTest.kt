@@ -1,6 +1,10 @@
 package org.wordpress.android.fluxc.store
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.yarolegovich.wellsql.SelectQuery
 import org.junit.Assert.assertEquals
 import org.junit.Before
