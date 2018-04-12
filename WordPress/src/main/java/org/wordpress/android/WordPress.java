@@ -3,6 +3,8 @@ package org.wordpress.android;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
@@ -60,7 +62,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -277,6 +279,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
+        createNotificationChannelsOnSdk26();
+
         disableRtlLayoutDirectionOnSdk17();
 
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
@@ -322,6 +326,30 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
     }
 
+    private void createNotificationChannelsOnSdk26() {
+        // create Notification channels introduced in Android Oreo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NORMAL channel (used for likes, comments, replies, etc.)
+            NotificationChannel normalChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_normal_id),
+                    getString(R.string.notification_channel_general_title), NotificationManager.IMPORTANCE_DEFAULT);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(normalChannel);
+
+
+            // Create the IMPORTANT channel (used for 2fa auth, for example)
+            NotificationChannel importantChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_important_id),
+                    getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(importantChannel);
+        }
+    }
+
     private void initAnalytics(final long elapsedTimeOnCreate) {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
@@ -358,14 +386,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
-            startService(new Intent(this, GCMRegistrationIntentService.class));
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
         }
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-            NotificationsUpdateService.startService(getContext());
+            NotificationsUpdateServiceStarter.startService(getContext());
         }
     }
 
@@ -729,7 +758,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Synch Push Notifications settings
             if (isPushNotificationPingNeeded() && mAccountStore.hasAccessToken()) {
                 // Register for Cloud messaging
-                startService(new Intent(getContext(), GCMRegistrationIntentService.class));
+                GCMRegistrationIntentService.enqueueWork(getContext(),
+                        new Intent(getContext(), GCMRegistrationIntentService.class));
             }
         }
 
@@ -828,11 +858,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 if (mAccountStore.hasAccessToken()) {
                     Intent intent = activity.getIntent();
                     if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-                        NotificationsUpdateService.startService(getContext(),
+                        NotificationsUpdateServiceStarter.startService(getContext(),
                                                                 getNoteIdFromNoteDetailActivityIntent(
                                                                         activity.getIntent()));
                     } else {
-                        NotificationsUpdateService.startService(getContext());
+                        NotificationsUpdateServiceStarter.startService(getContext());
                     }
                 }
 

@@ -15,7 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -124,7 +124,7 @@ class ReferrerSpamHelper {
                 if (success) {
                     mReferrerGroup.isMarkedAsSpam = mIsMarkingAsSpamInProgress;
                     StatsTable.deleteStatsForBlog(mActivityRef.get(), mReferrerGroup.getBlogId(),
-                                                  StatsService.StatsEndpointsEnum.REFERRERS);
+                                                  StatsServiceLogic.StatsEndpointsEnum.REFERRERS);
                 } else {
                     // It's not a success. Something went wrong on the server
                     String errorMessage = null;

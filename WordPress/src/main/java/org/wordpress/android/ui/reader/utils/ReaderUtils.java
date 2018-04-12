@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -210,5 +211,14 @@ public class ReaderUtils {
      */
     public static ReaderTag getDefaultTag() {
         return getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
+    }
+
+    /*
+  * used when storing search results in the reader post table
+  */
+    public static ReaderTag getTagForSearchQuery(@NonNull String query) {
+        String trimQuery = query != null ? query.trim() : "";
+        String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
+        return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
     }
 }
