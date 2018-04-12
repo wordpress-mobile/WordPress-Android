@@ -235,11 +235,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         // if an item is already selected and multiselect isn't allowed, deselect the previous selection
         if (isSelected && !canMultiselect() && !mSelectedPositions.isEmpty()) {
-            ThumbnailViewHolder prevHolder = getViewHolderAtPosition(mSelectedPositions.get(0));
-            if (prevHolder != null) {
-                AniUtils.scale(prevHolder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, ANI_DURATION);
-            }
-            mSelectedPositions.clear();
+            setItemSelected(mSelectedPositions.get(0), false);
         }
 
         if (isSelected) {
@@ -254,7 +250,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         ThumbnailViewHolder holder = getViewHolderAtPosition(position);
         if (holder != null) {
             holder.mTxtSelectionCount.setSelected(isSelected);
-            AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
 
             if (canMultiselect() && isSelected) {
                 int count = mSelectedPositions.indexOf(position) + 1;
@@ -264,11 +259,17 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             }
 
             if (isSelected) {
-                AniUtils.scaleIn(holder.mTxtSelectionCount, ANI_DURATION);
                 AniUtils.scale(holder.mImgThumbnail, SCALE_NORMAL, SCALE_SELECTED, ANI_DURATION);
             } else {
-                AniUtils.scaleOut(holder.mTxtSelectionCount, ANI_DURATION);
                 AniUtils.scale(holder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, ANI_DURATION);
+            }
+
+            if (canMultiselect()) {
+                AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
+            } else if (isSelected) {
+                AniUtils.fadeIn(holder.mTxtSelectionCount, ANI_DURATION);
+            } else {
+                AniUtils.fadeOut(holder.mTxtSelectionCount, ANI_DURATION);
             }
         }
 
