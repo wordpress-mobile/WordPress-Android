@@ -5,10 +5,12 @@
     android:key="@string/wp_pref_notifications_root" >
 
     <PreferenceCategory
+        android:layout="@layout/preference_category"
         android:key="@string/pref_notification_blogs"
         android:title="@string/notification_settings_category_your_sites" />
 
     <PreferenceCategory
+        android:layout="@layout/preference_category"
         android:key="@string/pref_notification_other_category"
         android:title="@string/notification_settings_category_other" >
 
@@ -24,6 +26,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:layout="@layout/preference_category"
         android:key="@string/pref_notification_sights_sounds"
         android:title="@string/notification_settings_category_sights_and_sounds" >
 
@@ -40,6 +43,7 @@
             android:title="@string/notification_settings_item_sights_and_sounds_vibrate_device" />
 
         <SwitchPreference
+            android:widgetLayout="@layout/preference_switch"
             android:key="@string/wp_pref_notification_light"
             android:defaultValue="true"
             android:title="@string/notification_settings_item_sights_and_sounds_blink_light" />

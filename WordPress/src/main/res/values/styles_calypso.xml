@@ -28,7 +28,7 @@
         <item name="colorPrimaryDark">@color/grey_darken_10</item>
 
         <item name="android:windowContentOverlay">@color/grey_lighten_30</item>
-        <item name="alertDialogTheme">@style/Calypso.Dialog</item>
+        <item name="android:alertDialogTheme">@style/Calypso.Dialog</item>
         <item name="dialogTheme">@style/Calypso.Dialog</item>
         <item name="colorControlActivated">@color/blue_medium</item>
         <item name="colorControlNormal">@color/grey_lighten_20</item>
@@ -79,6 +79,11 @@
     </style>
 
     <style name="Calypso.NoActionBar" parent="CalypsoTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Calypso.NoActionBar.Preferences" parent="Calypso.SiteSettingsTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

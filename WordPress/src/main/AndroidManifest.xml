@@ -177,7 +177,7 @@
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/Calypso.NoActionBar.Preferences"
             android:label="@string/notif_settings_screen_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
