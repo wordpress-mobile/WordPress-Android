@@ -34,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
+import org.wordpress.android.models.networkresource.ListNetworkResource;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -56,7 +57,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    protected PluginBrowserViewModel mViewModel;
+    private PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mFeaturedPluginsRecycler;
@@ -168,48 +169,61 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
-            }
-        });
+        mViewModel.getSitePluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.SITE, listNetworkResource);
 
-        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.FEATURED, featuredPlugins);
-            }
-        });
+                              showProgress(listNetworkResource.isFetchingFirstPage()
+                                           && listNetworkResource.getData().isEmpty());
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
-            }
-        });
+                              // We should ignore the errors due to network condition, unless this is the first
+                              // fetch, the user
+                              // can use the cached data and showing the error while the data is loaded might cause
+                              // confusion
+                              if (listNetworkResource instanceof ListNetworkResource.Error
+                                  && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
+                                  ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
+                              }
+                          }
+                      }
+                  });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
-                reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
-            }
-        });
+        mViewModel.getFeaturedPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listNetworkResource);
+                          }
+                      }
+                  });
 
-        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                             && mViewModel.isSitePluginsEmpty());
+        mViewModel.getPopularPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listNetworkResource);
+                          }
+                      }
+                  });
 
-                // We should ignore the errors due to network condition, unless this is the first fetch, the user can
-                // use the cached version of them and showing the error while the data is loaded might cause confusion
-                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
-                    && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
-                    ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
-                }
-            }
-        });
+        mViewModel.getNewPluginsLiveData()
+                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(
+                              @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                          if (listNetworkResource != null) {
+                              reloadPluginAdapterAndVisibility(PluginListType.NEW, listNetworkResource);
+                          }
+                      }
+                  });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -256,8 +270,15 @@ public class PluginBrowserActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
-                                                    @Nullable List<ImmutablePluginModel> plugins) {
+    private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
+                                                  @Nullable ListNetworkResource<ImmutablePluginModel>
+                                                          listNetworkResource) {
+        // TODO: Find a better way to check for the status change and when to reload the data
+        // Don't reload for every status change, only do it when necessary
+        if (!(listNetworkResource instanceof ListNetworkResource.Ready
+              || listNetworkResource instanceof ListNetworkResource.Success)) {
+            return;
+        }
         PluginBrowserAdapter adapter = null;
         View cardView = null;
         switch (pluginType) {
@@ -283,9 +304,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (adapter == null || cardView == null) {
             return;
         }
+        List<ImmutablePluginModel> plugins = listNetworkResource.getData();
         adapter.setPlugins(plugins);
 
-        int newVisibility = plugins != null && plugins.size() > 0 ? View.VISIBLE : View.GONE;
+        int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
         if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
             AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
@@ -309,7 +331,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return true;
     }
 
-    protected void showListFragment(@NonNull PluginListType listType) {
+    private void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
         getSupportFragmentManager().beginTransaction()
                                    .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
@@ -326,7 +348,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    protected void showProgress(boolean show) {
+    private void showProgress(boolean show) {
         findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
@@ -360,7 +382,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             notifyDataSetChanged();
         }
 
-        protected @Nullable Object getItem(int position) {
+        private @Nullable Object getItem(int position) {
             return mItems.getItem(position);
         }
 
