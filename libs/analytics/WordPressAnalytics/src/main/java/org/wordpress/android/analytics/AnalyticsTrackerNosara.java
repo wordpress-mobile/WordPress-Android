@@ -755,6 +755,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_email_epilogue_shot_new";
             case SIGNUP_EMAIL_EPILOGUE_VIEWED:
                 return "signup_email_epilogue_viewed";
+            case SIGNUP_EPILOGUE_USERNAME_TAPPED:
+                return "signup_epilogue_username_tapped";
             case SIGNUP_GOOGLE_BUTTON_TAPPED:
                 return "signup_google_button_tapped";
             case SIGNUP_TERMS_OF_SERVICE_TAPPED:

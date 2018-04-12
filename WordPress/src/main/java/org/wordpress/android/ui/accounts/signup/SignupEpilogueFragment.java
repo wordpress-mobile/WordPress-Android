@@ -544,6 +544,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void launchDialog() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EPILOGUE_USERNAME_TAPPED);
+
         final Bundle bundle = UsernameChangerFullScreenDialogFragment.newBundle(
                 mEditTextDisplayName.getText().toString(), mEditTextUsername.getText().toString());
 
