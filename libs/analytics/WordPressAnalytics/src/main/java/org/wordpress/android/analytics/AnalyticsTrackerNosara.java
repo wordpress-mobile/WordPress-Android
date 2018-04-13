@@ -194,6 +194,26 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_QUICK_ACTIONS_APPROVED:
                 predefinedEventProperties.put("is_quick_action", true);
                 break;
+            case SIGNUP_EMAIL_EPILOGUE_UNCHANGED:
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_FAILED:
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
+            case SIGNUP_EMAIL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
+            case SIGNUP_EMAIL_EPILOGUE_USERNAME_TAPPED:
+            case SIGNUP_EMAIL_EPILOGUE_VIEWED:
+                predefinedEventProperties.put("source", "email");
+                break;
+            case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
+            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
+            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_TAPPED:
+            case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
+                predefinedEventProperties.put("source", "social");
+                break;
         }
 
         final String user;
@@ -753,10 +773,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_email_epilogue_gallery_picked";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW:
                 return "signup_email_epilogue_shot_new";
-            case SIGNUP_EMAIL_EPILOGUE_VIEWED:
-                return "signup_email_epilogue_viewed";
-            case SIGNUP_EPILOGUE_USERNAME_TAPPED:
+            case SIGNUP_EMAIL_EPILOGUE_UNCHANGED:
+                return "signup_epilogue_unchanged";
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
+                return "signup_epilogue_update_display_name_failed";
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
+                return "signup_epilogue_update_display_name_succeeded";
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_FAILED:
+                return "signup_epilogue_update_username_failed";
+            case SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
+                return "signup_epilogue_update_username_succeeded";
+            case SIGNUP_EMAIL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
+                return "signup_epilogue_username_suggestions_failed";
+            case SIGNUP_EMAIL_EPILOGUE_USERNAME_TAPPED:
                 return "signup_epilogue_username_tapped";
+            case SIGNUP_EMAIL_EPILOGUE_VIEWED:
+                return "signup_epilogue_viewed";
             case SIGNUP_GOOGLE_BUTTON_TAPPED:
                 return "signup_google_button_tapped";
             case SIGNUP_TERMS_OF_SERVICE_TAPPED:
@@ -778,19 +810,21 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "signup_social_accounts_need_connecting";
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
-                return "signup_social_epilogue_unchanged";
+                return "signup_epilogue_unchanged";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
-                return "signup_social_epilogue_update_display_name_failed";
+                return "signup_epilogue_update_display_name_failed";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
-                return "signup_social_epilogue_update_display_name_succeeded";
+                return "signup_epilogue_update_display_name_succeeded";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
-                return "signup_social_epilogue_update_username_failed";
+                return "signup_epilogue_update_username_failed";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
-                return "signup_social_epilogue_update_username_succeeded";
+                return "signup_epilogue_update_username_succeeded";
             case SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
-                return "signup_social_epilogue_username_suggestions_failed";
+                return "signup_epilogue_username_suggestions_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_TAPPED:
+                return "signup_epilogue_username_tapped";
             case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
-                return "signup_social_epilogue_viewed";
+                return "signup_epilogue_viewed";
             case SIGNUP_SOCIAL_SUCCESS:
                 return "signup_social_success";
             case SIGNUP_SOCIAL_TO_LOGIN:

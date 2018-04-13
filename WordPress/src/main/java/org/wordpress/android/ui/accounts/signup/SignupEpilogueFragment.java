@@ -312,9 +312,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                             data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-                                                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
-                                                    : AnalyticsTracker.Stat
-                                                            .SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
+                                                ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
+                                                : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
                                     Uri imageUri = Uri.parse(mediaUriString);
 
@@ -422,7 +421,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (event.isError()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
+            AnalyticsTracker.track(mIsEmailSignup
+                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED
+                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
             AppLog.e(T.API, "SignupEpilogueFragment.onAccountChanged: "
                             + event.error.type + " - " + event.error.message);
             endProgress();
@@ -435,11 +436,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             populateViews();
         } else if (changedUsername()) {
             startProgress(false);
-            PushUsernamePayload payload = new PushUsernamePayload(mUsername,
-                                                                  AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
+            PushUsernamePayload payload = new PushUsernamePayload(
+                    mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
         } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS && mSignupEpilogueListener != null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
+            AnalyticsTracker.track(mIsEmailSignup
+                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED
+                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
             mSignupEpilogueListener.onContinue();
         }
     }
@@ -448,13 +451,17 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUsernameChanged(OnUsernameChanged event) {
         if (event.isError()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED);
+            AnalyticsTracker.track(mIsEmailSignup
+                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_FAILED
+                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED);
             AppLog.e(T.API, "SignupEpilogueFragment.onUsernameChanged: "
                             + event.error.type + " - " + event.error.message);
             endProgress();
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (mSignupEpilogueListener != null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED);
+            AnalyticsTracker.track(mIsEmailSignup
+                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED
+                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED);
             mSignupEpilogueListener.onContinue();
         }
     }
@@ -544,7 +551,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void launchDialog() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EPILOGUE_USERNAME_TAPPED);
+        AnalyticsTracker.track(mIsEmailSignup
+                ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_USERNAME_TAPPED
+                : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_TAPPED);
 
         final Bundle bundle = UsernameChangerFullScreenDialogFragment.newBundle(
                 mEditTextDisplayName.getText().toString(), mEditTextUsername.getText().toString());
@@ -725,11 +734,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         } else if (changedUsername()) {
             startProgress(false);
-            PushUsernamePayload payload = new PushUsernamePayload(mUsername,
-                                                                  AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
+            PushUsernamePayload payload = new PushUsernamePayload(
+                    mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
         } else if (mSignupEpilogueListener != null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
+            AnalyticsTracker.track(mIsEmailSignup
+                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UNCHANGED
+                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
             mSignupEpilogueListener.onContinue();
         }
     }
