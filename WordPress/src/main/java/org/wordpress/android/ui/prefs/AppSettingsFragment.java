@@ -76,12 +76,16 @@ public class AppSettingsFragment extends PreferenceFragment
                         if (newValue == null) {
                             return false;
                         }
-                        synchAnalyticsOption(!(boolean) newValue);
+                        AnalyticsUtils.syncAnalyticsOptionWithWpCom(
+                                getActivity(),
+                                mDispatcher,
+                                mAccountStore,
+                                !(boolean) newValue);
                         return true;
                     }
                 }
                                                                                              );
-        updateAnalyticsSyncOptionUI();
+        updateAnalyticsSyncUI();
 
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
@@ -185,31 +189,17 @@ public class AppSettingsFragment extends PreferenceFragment
                     ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
                     break;
             }
-        } else {
-            updateAnalyticsSyncOptionUI();
         }
+        // no need to sync with remote here, or do anything else here, since the logic is already in WordPress.java
+        updateAnalyticsSyncUI();
     }
 
-
-    private void updateAnalyticsSyncOptionUI() {
+    /* Make sure the UI is synced with the backend value */
+    private void updateAnalyticsSyncUI() {
+        if (mAccountStore.hasAccessToken()) {
         SwitchPreference tracksOptOutPreference =
                 (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
-        if (mAccountStore.hasAccessToken()) {
             tracksOptOutPreference.setChecked(!mAccountStore.getAccount().getTracksOptOut());
-        }
-    }
-
-    private void synchAnalyticsOption(boolean optOut) {
-        AnalyticsTracker.setHasUserOptedOut(optOut);
-        if (optOut) {
-            AnalyticsTracker.clearAllData();
-        }
-        if (mAccountStore.hasAccessToken()) {
-            mAccountStore.getAccount().setTracksOptOut(optOut);
-            AccountStore.PushAccountSettingsPayload payload = new AccountStore.PushAccountSettingsPayload();
-            payload.params = new HashMap<>();
-            payload.params.put("tracks_opt_out", optOut);
-            mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         }
     }
 
