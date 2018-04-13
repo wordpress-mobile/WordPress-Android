@@ -320,6 +320,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
         mNosaraClient.clearUserProperties();
+        mNosaraClient.clearQueues();
     }
 
     @Override
