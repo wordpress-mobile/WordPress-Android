@@ -275,9 +275,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         if (updateAfter) {
-            if (mListener != null) {
-                mListener.onSelectedCountChanged(getNumSelected());
-            }
+            notifySelectionCountChanged();
             // redraw the grid after the scale animation completes
             long delayMs = ANI_DURATION.toMillis(mContext);
             new Handler().postDelayed(new Runnable() {
@@ -316,6 +314,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         mSelectedPositions.clear();
         mSelectedPositions.addAll(selectedPositions);
         notifyDataSetChanged();
+        notifySelectionCountChanged();
     }
 
     void clearSelection() {
@@ -346,6 +345,12 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 mDisableImageReset = false;
             }
         }, 500);
+    }
+
+    private void notifySelectionCountChanged() {
+        if (mListener != null) {
+            mListener.onSelectedCountChanged(getNumSelected());
+        }
     }
 
     /*
