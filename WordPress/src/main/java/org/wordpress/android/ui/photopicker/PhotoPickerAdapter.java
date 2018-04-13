@@ -371,6 +371,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             mImgThumbnail.getLayoutParams().width = mThumbWidth;
             mImgThumbnail.getLayoutParams().height = mThumbHeight;
 
+            if (!canMultiselect()) {
+                mTxtSelectionCount.setBackgroundResource(R.drawable.photo_picker_circle_pressed);
+            }
+
             mImgThumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
