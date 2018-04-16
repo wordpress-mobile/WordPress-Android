@@ -79,7 +79,7 @@ class ListNetworkResourceTest {
         val loadingState: ListNetworkResource<String> = ListNetworkResource.Loading(readyState, true)
 
         val errorMessage = "Some error message"
-        val errorState = loadingState.error(errorMessage)
+        val errorState = ListNetworkResource.Error(loadingState, errorMessage)
         assertThat(errorState.errorMessage, `is`(equalTo(errorMessage)))
         assertThat(errorState.data, `is`(testDataReady))
     }
@@ -99,7 +99,7 @@ class ListNetworkResourceTest {
         val filterNotItem: (List<String>) -> List<String> = { list ->
             list.filter { it != "not-item".toUpperCase() }
         }
-        val loadingState: ListNetworkResource<String> = newReadyState.loading(true)
+        val loadingState: ListNetworkResource<String> = ListNetworkResource.Loading(newReadyState, true)
         val newLoadingState = loadingState.getTransformedListNetworkResource(filterNotItem)
         assertThat(newLoadingState.data, `is`(equalTo(filterNotItem(loadingState.data))))
         assertThat(newLoadingState.data.size, `is`(2))

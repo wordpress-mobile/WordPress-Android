@@ -26,34 +26,6 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
 
     /**
-     * Helper function for initializing [Ready] state.
-     *
-     * @return a new [ListNetworkResource] instance.
-     */
-    fun ready(data: List<T>): ListNetworkResource<T> = Ready(data)
-
-    /**
-     * Helper function for initializing [Success] state.
-     *
-     * @return a new [ListNetworkResource] instance.
-     */
-    fun success(data: List<T>, canLoadMore: Boolean = false) = Success(data, canLoadMore)
-
-    /**
-     * Helper function for initializing [Loading] state which passes `this` as the previous state.
-     *
-     * @return a new [ListNetworkResource] instance.
-     */
-    fun loading(loadingMore: Boolean) = Loading(this, loadingMore)
-
-    /**
-     * Helper function for initializing [Error] state which passes `this` as the previous state.
-     *
-     * @return a new [ListNetworkResource] instance.
-     */
-    fun error(errorMessage: String?) = Error(this, errorMessage)
-
-    /**
      * Helper function for checking whether the first page is being loaded. It can be used to either show or hide a
      * [android.support.v4.widget.SwipeRefreshLayout].
      */
@@ -94,8 +66,6 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      *
      * @param data This is one of 2 places where the data can be directly passed in. In most cases, it will be set
      * using the cached version of the data, for example from its `Store`.
-     *
-     * @see ready helper function for alternative initialization.
      */
     class Ready<T>(data: List<T>) : ListNetworkResource<T>(data) {
         override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(transform(data))
@@ -110,8 +80,6 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      *
      * @param loadingMore flag is used to indicate whether the first page or more data is being fetched. It's default
      * value is `false` which should be useful in situations where pagination is not available.
-     *
-     * @see loading helper function for alternative initialization.
      */
     class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean)
         : ListNetworkResource<T>(data) {
@@ -129,8 +97,6 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      * @param canLoadMore For resources where pagination is available, this flag can be used to indicate if more data
      * can be fetched. It's default value is `false` which should be useful in situations where pagination is not
      * available.
-     *
-     * @see success helper function for easier initialization.
      */
     class Success<T>(data: List<T>, val canLoadMore: Boolean = false)
         : ListNetworkResource<T>(data) {
@@ -147,8 +113,6 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      *
      * @param errorMessage will be the error string received from the API. It can also be used to show connection errors
      * where the network is not available.
-     *
-     * @see error helper function for easier initialization.
      */
     class Error<T> private constructor(data: List<T>, val errorMessage: String?)
         : ListNetworkResource<T>(data) {
