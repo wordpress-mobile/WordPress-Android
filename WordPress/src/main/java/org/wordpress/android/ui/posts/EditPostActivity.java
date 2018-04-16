@@ -100,6 +100,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
@@ -719,6 +720,10 @@ public class EditPostActivity extends AppCompatActivity implements
             return getString(R.string.submit_for_review);
         }
 
+        if (isNewPost()) {
+            return getString(R.string.menu_save_as_draft);
+        }
+
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
                 return getString(R.string.menu_publish_now);
@@ -928,7 +933,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
             case STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                ActivityLauncher.showStockMediaPickerForResult(
+                        this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
         }
     }
@@ -1070,9 +1076,29 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
                 //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
+
+                if (UploadService.hasInProgressMediaUploadsForPost(mPost)) {
+                    ToastUtils.showToast(EditPostActivity.this,
+                            getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
+                    return false;
+                }
+
+                // we update the mPost object first, so we can pre-check Post publishability and inform the user
+                updatePostObject();
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                    if (isDiscardable()) {
+                        String message = getString(
+                                mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                        ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+                        return false;
+                    }
                     showPublishConfirmationDialog();
                 } else {
+                    if (isDiscardable()) {
+                        ToastUtils.showToast(EditPostActivity.this,
+                                getString(R.string.error_save_empty_draft), Duration.SHORT);
+                        return false;
+                    }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
                     if (isNewPost()) {
                         mPost.setStatus(PostStatus.DRAFT.toString());
@@ -1308,17 +1334,18 @@ public class EditPostActivity extends AppCompatActivity implements
                     // entries and 64kb max, and they only travel with the next crash happening, so logging an
                     // Exception assures us to have this information sent in the next batch).
                     // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(s));
+                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable) {
-                    CrashlyticsUtils.logException(throwable);
+                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable, String s) {
-                    CrashlyticsUtils.logException(throwable, T.EDITOR, s);
+                    CrashlyticsUtils.logException(
+                            new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
                 }
             });
         }
@@ -2444,6 +2471,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private void setFeaturedImageId(final long mediaId) {
+        mPost.setFeaturedImageId(mediaId);
+        savePostAsync(new AfterSavePostListener() {
+            @Override
+            public void onPostSave() {
+                EditPostActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2460,9 +2504,11 @@ public class EditPostActivity extends AppCompatActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                    // user chose a featured image - pass it to the settings fragment
-                    if (mEditPostSettingsFragment != null) {
-                        mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                    // user chose a featured image
+                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                        setFeaturedImageId(mediaId);
                     }
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
@@ -2498,7 +2544,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                                          Activity.RESULT_OK, data);
                     }
                     break;
-                case RequestCodes.STOCK_MEDIA_PICKER:
+                case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                     if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
                         long[] mediaIds =
                                 data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
@@ -3241,6 +3287,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             mPost = post;
+            mIsNewPost = false;
             invalidateOptionsMenu();
             switch (PostStatus.fromPost(post)) {
                 case PUBLISHED:

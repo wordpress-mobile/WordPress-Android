@@ -8,6 +8,7 @@ public class InstanceIDService extends InstanceIDListenerService {
     @Override
     public void onTokenRefresh() {
         // Register for Cloud messaging
-        startService(new Intent(this, GCMRegistrationIntentService.class));
+        GCMRegistrationIntentService.enqueueWork(this,
+                new Intent(this, GCMRegistrationIntentService.class));
     }
 }

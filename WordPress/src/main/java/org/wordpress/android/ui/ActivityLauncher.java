@@ -115,14 +115,17 @@ public class ActivityLauncher {
     }
 
     public static void showStockMediaPickerForResult(Activity activity,
-                                                     @NonNull SiteModel site) {
+                                                     @NonNull SiteModel site,
+                                                     int requestCode) {
         Map<String, String> properties = new HashMap<>();
         properties.put("from", activity.getClass().getSimpleName());
         AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_ACCESSED, properties);
 
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        activity.startActivityForResult(intent, RequestCodes.STOCK_MEDIA_PICKER);
+        intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
+
+        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {

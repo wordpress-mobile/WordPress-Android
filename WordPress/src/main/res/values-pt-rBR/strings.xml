@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-16 11:43:41+0000
+Translation-Revision-Date: 2018-04-05 22:58:59+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
@@ -15,7 +15,7 @@ Language: pt_BR
     <string name="sharing_disabled_description">Não é possível acessar suas configurações de compartilhamento porque o seu módulo de compartilhamento do Jetpack está desabilitado.</string>
     <string name="sharing_disabled">Módulo de compartilhamento desabilitado</string>
     <string name="version_with_name_param">Versão %s</string>
-    <string name="copyright_with_year_and_company_params">© %d %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Editor(a): %s</string>
     <string name="async_promo_publish_now">Publicar agora</string>
     <string name="notification_sound_has_invalid_path">O som escolhido não tem um caminho válido. Escolha outro.</string>
@@ -58,9 +58,8 @@ Language: pt_BR
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post com 1 arquivo não enviado</string>
     <string name="untitled_in_parentheses">(Sem título)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%s, %s</string>
-    <string name="latitude_longitude">%f, %f</string>
-    <string name="site_creation_content_description_confetti">Criação do site concluída!</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_epilogue_write">Escrever primeiro post</string>
     <string name="site_creation_epilogue_configure">Configurar</string>
     <string name="site_creation_epilogue_congrats">Parabéns!\nSeu site está pronto.</string>
@@ -100,6 +99,7 @@ Language: pt_BR
     <string name="notification_site_creation_step_tagline">Passo 3 de 4</string>
     <string name="notification_site_creation_step_fetching">Passo 2 de 4</string>
     <string name="notification_site_creation_step_creating">Passo 1 de 4</string>
+    <string name="notification_site_creation_title_in_progress">Criando site…</string>
     <string name="notification_site_creation_created">Toque para continuar.</string>
     <string name="notification_site_creation_title_success">Site criado!</string>
     <string name="google_error_timeout">O Google demorou muito tempo para responder. Pode ser preciso esperar até que você tenha uma conexão melhor com a internet.</string>
@@ -342,7 +342,6 @@ Language: pt_BR
     <string name="error_upload_post_param">Ocorreu um erro durante o upload deste post: %s.</string>
     <string name="add_media_progress">Adicionando mídia</string>
     <string name="reader_excerpt_link">Visite %s para mais</string>
-    <string name="login_site_address_help_image">O endereço do site pode ser encontrado na barra superior do seu navegador</string>
     <string name="error_unknown_page">Não foi possível encontrar a página no servidor</string>
     <string name="error_publish_empty_page">Não é possível publicar uma página em branco</string>
     <string name="upload_failed_param">O upload de \"%s\" falhou</string>
@@ -388,7 +387,6 @@ Language: pt_BR
     <string name="connect_more">Conectar outro site</string>
     <string name="enter_wpcom_password">Digite sua senha do WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Solicitando o e–mail de login</string>
-    <string name="login_magic_links_sent_description">Ilustração do link mágico enviado</string>
     <string name="login_magic_links_sent_label">Seu link mágico está a caminho! Verifique seu e–mail neste dispositivo e toque no link que você recebeu do WordPress.com.</string>
     <string name="login_magic_links_label">Enviaremos um e–mail pra você com um link mágico que fará você se conectar instantaneamente, sem precisar de senha. Chega de catar milho no teclado!</string>
     <string name="password_incorrect">Parece que esta senha está errada. Verifique seus dados e tente novamente.</string>
@@ -517,7 +515,6 @@ Language: pt_BR
     <string name="tabbar_accessibility_label_reader">Leitor. Siga conteúdo de outros sites.</string>
     <string name="tabbar_accessibility_label_me">Eu. Veja e altere seu perfil.</string>
     <string name="tabbar_accessibility_label_my_site">Meu site. Veja e gerencie seu site, incluindo estatísticas.</string>
-    <string name="fab_content_description_write">Escrever</string>
     <string name="my_site_btn_sharing">Compartilhar</string>
     <string name="button_not_now">Não agora</string>
     <string name="media_error_internal_server_error">Erro no upload. Tente alterar Otimizar imagens nas configurações do seu aplicativo</string>
@@ -706,6 +703,7 @@ Language: pt_BR
     <string name="invite_message_title">Mensagem personalizada</string>
     <string name="invite">Convidar</string>
     <string name="invite_names_title">Nome de usuários ou e–mails</string>
+    <string name="invite_people">Convidar pessoas</string>
     <string name="my_site_header_external">Externo</string>
     <string name="send_link">Enviar link</string>
     <string name="label_clear_search_history">Limpar histórico de pesquisa</string>
@@ -1351,10 +1349,8 @@ Language: pt_BR
     <string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>
     <string name="pick_video">Selecionar vídeo</string>
     <string name="pick_photo">Selecione a foto</string>
-    <string name="select_date">Selecione a data</string>
     <string name="reader_empty_followed_blogs_description">Não se preocupe! Toque no ícone na parte superior direita para começar a explorar!</string>
     <string name="reader_likes_you_and_one">Você e mais um gostaram disso</string>
-    <string name="select_time">Selecione o tempo</string>
     <string name="nux_tutorial_get_started_title">Iniciar Tutorial</string>
     <string name="reader_empty_followed_tags">Você não segue nenhuma tag</string>
     <string name="reader_toast_err_url_intent">Não é possível abrir %s</string>

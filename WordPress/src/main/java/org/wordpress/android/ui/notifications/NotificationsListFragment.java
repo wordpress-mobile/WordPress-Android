@@ -35,7 +35,7 @@ import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -393,7 +393,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             return;
         }
 
-        NotificationsUpdateService.startService(getActivity());
+        NotificationsUpdateServiceStarter.startService(getActivity());
     }
 
     // Show different empty list message and action button based on the active filter

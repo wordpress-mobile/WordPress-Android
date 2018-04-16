@@ -301,7 +301,6 @@ public class WPMainActivity extends AppCompatActivity {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            mLoginAnalyticsListener.trackCreatedAccount();
             ActivityLauncher.showSignupEpilogue(this,
                                                 getIntent().getStringExtra(
                                                         SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
@@ -686,7 +685,8 @@ public class WPMainActivity extends AppCompatActivity {
             case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
-                    startService(new Intent(this, GCMRegistrationIntentService.class));
+                    GCMRegistrationIntentService.enqueueWork(this,
+                            new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -728,7 +728,8 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void startWithNewAccount() {
-        startService(new Intent(this, GCMRegistrationIntentService.class));
+        GCMRegistrationIntentService.enqueueWork(this,
+                new Intent(this, GCMRegistrationIntentService.class));
         resetFragments();
     }
 

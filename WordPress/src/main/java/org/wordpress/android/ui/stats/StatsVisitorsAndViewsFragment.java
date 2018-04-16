@@ -26,7 +26,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -918,9 +918,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.VISITS
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.VISITS
         };
     }
 }

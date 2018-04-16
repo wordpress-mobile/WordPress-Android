@@ -413,7 +413,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     reloadMediaGrid();
                 }
                 break;
-            case RequestCodes.STOCK_MEDIA_PICKER:
+            case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK) {
                     reloadMediaGrid();
                 }
@@ -872,7 +872,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 WPMediaUtils.launchVideoLibrary(this, true);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                ActivityLauncher.showStockMediaPickerForResult(this,
+                        mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
         }
     }

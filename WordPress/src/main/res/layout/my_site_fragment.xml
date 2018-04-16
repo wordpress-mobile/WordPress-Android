@@ -500,6 +500,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/empty_list_button_top_margin"
             android:text="@string/my_site_add_new_site"
+            android:contentDescription="@string/my_site_add_new_site"
             android:theme="@style/WordPress.Button.Primary"/>
 
     </LinearLayout>
