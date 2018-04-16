@@ -207,12 +207,20 @@ public class AccountStore extends Store {
     }
 
     public static class SubscriptionResponsePayload extends Payload<SubscriptionError> {
-        public boolean subscribed;
+        public SubscriptionType type;
+        public boolean isSubscribed;
         public SubscriptionResponsePayload() {
         }
-        public SubscriptionResponsePayload(boolean subscribed) {
-            this.subscribed = subscribed;
+        public SubscriptionResponsePayload(boolean isSubscribed) {
+            this.isSubscribed = isSubscribed;
         }
+    }
+
+    public enum SubscriptionType {
+        EMAIL_COMMENT,
+        EMAIL_POST,
+        EMAIL_POST_FREQUENCY,
+        NOTIFICATION_POST
     }
 
     /**
@@ -361,6 +369,7 @@ public class AccountStore extends Store {
     }
 
     public static class OnSubscriptionUpdated extends OnChanged<SubscriptionError> {
+        public SubscriptionType type;
         public boolean subscribed;
         public OnSubscriptionUpdated() {
         }
@@ -1149,7 +1158,8 @@ public class AccountStore extends Store {
         if (payload.isError()) {
             event.error = new SubscriptionError(event.error.toString(), event.error.message);
         } else {
-            event.subscribed = payload.subscribed;
+            event.subscribed = payload.isSubscribed;
+            event.type = payload.type;
         }
         emitChange(event);
     }
