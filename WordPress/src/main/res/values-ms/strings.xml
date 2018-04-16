@@ -112,7 +112,6 @@ Language: ms
     <string name="error_upload_post_media_param">Terdapat ralat memuat naik media dalam kiriman ini: %s.</string>
     <string name="error_upload_post_param">Terdapat ralat memuat naik kiriman ini: %s.</string>
     <string name="add_media_progress">Menambah media</string>
-    <string name="login_site_address_help_image">Alamat laman boleh didapati dalam palang navigasi di pelayar web anda</string>
     <string name="reader_excerpt_link">Lawati %s untuk lebih lanjut</string>
     <string name="error_unknown_page">Tidak dapat mencari halaman di pelayan</string>
     <string name="error_publish_empty_page">Tidak dapat menerbit halaman kosong</string>
@@ -159,7 +158,6 @@ Language: ms
     <string name="login_continue">Teruskan</string>
     <string name="enter_wpcom_password">Masukkan kata laluan WordPress.com anda.</string>
     <string name="login_magic_link_email_requesting">Memohon emel log masuk</string>
-    <string name="login_magic_links_sent_description">Ilustrasi dihantar pautan ajaib</string>
     <string name="login_magic_links_sent_label">Pautan sihir anda sedang dalam perjalanan! Semak e-mel anda pada peranti ini dan ketik pautan dalam e–mel yang anda terima dari WordPress.com.</string>
     <string name="login_magic_links_label">Kami akan mengemel anda pautan ajaib yang akan melog masuk anda dengan serta–merta, tiada kata laluan diperlukan. Tidak perlu lagi mengetik!</string>
     <string name="password_incorrect">Nampaknya seperti kata laluan ini tidak betul. Sila periksa semula maklumat anda dan cuba lagi.</string>
@@ -290,7 +288,6 @@ Language: ms
     <string name="tabbar_accessibility_label_my_site">Laman Saya. Lihat laman anda dan uruskannya, termasuk statistik.</string>
     <string name="button_not_now">Bikan sekarang</string>
     <string name="my_site_btn_sharing">Berkongsi</string>
-    <string name="fab_content_description_write">Tulis</string>
     <string name="media_error_internal_server_error">Ralat muat naik. Cuba ubah Optimumkan Imej dalam tetapan aplikasi anda</string>
     <string name="media_downloading">Menyimpan media ke peranti ini</string>
     <string name="error_media_save">Tidak dapat menyimpan media</string>
@@ -478,6 +475,7 @@ Language: ms
     <string name="invite_names_title">Nama Pengguna atau Emel</string>
     <string name="send_link">Hantar pautan</string>
     <string name="my_site_header_external">Luaran</string>
+    <string name="invite_people">Jemput Orang</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
     <string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
     <string name="reader_empty_posts_in_search_description">Tiada kiriman dijumpai untuk %s bagi bahasa anda</string>
@@ -1112,9 +1110,7 @@ Language: ms
     <string name="video">Video</string>
     <string name="cant_share_no_visible_blog">Anda tidak boleh berkongsi ke WordPress tanpa blog yang kelihatan</string>
     <string name="comment_spammed">Ulasan ditanda sebagai spam</string>
-    <string name="select_time">Pilih masa</string>
     <string name="reader_likes_you_and_one">Anda dan seorang lagi sukakannya</string>
-    <string name="select_date">Pilih tarikh</string>
     <string name="pick_photo">Pilih gambar</string>
     <string name="pick_video">Pilih video</string>
     <string name="reader_toast_err_get_post">Tidak boleh mendapatkan kiriman ini</string>

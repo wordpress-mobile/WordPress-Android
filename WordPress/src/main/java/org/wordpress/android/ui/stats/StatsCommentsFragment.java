@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -108,7 +108,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     @Override
     protected void updateUI() {
         // This module is a kind of exception to the normal way we build page interface.
-        // In this module only the first rest endpoint StatsService.StatsEndpointsEnum.COMMENTS
+        // In this module only the first rest endpoint StatsServiceLogic.StatsEndpointsEnum.COMMENTS
         // is used to populate 99% of the UI even if there is a tab on the top.
         // Switching to a different tab on the UI doesn't switch the underlying datamodel index as in all other modules.
 
@@ -283,9 +283,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.COMMENTS, StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.COMMENTS, StatsServiceLogic.StatsEndpointsEnum.COMMENT_FOLLOWERS
         };
     }
 
