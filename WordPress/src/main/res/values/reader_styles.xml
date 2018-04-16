@@ -71,6 +71,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/max_length_reader_topic_name</item>
+        <item name="android:textColorHint">@color/grey_text_min</item>
     </style>
 
     <!-- images -->

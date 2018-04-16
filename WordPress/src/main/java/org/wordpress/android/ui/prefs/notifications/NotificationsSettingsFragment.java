@@ -430,7 +430,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         PreferenceCategory rootCategory = new PreferenceCategory(context);
-        rootCategory.setLayoutResource(R.layout.preference_category);
+        rootCategory.setLayoutResource(R.layout.wp_preference_category);
         rootCategory.setTitle(R.string.notification_types);
         preferenceScreen.addPreference(rootCategory);
 
@@ -479,7 +479,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         PreferenceCategory rootCategory = new PreferenceCategory(context);
-        rootCategory.setLayoutResource(R.layout.preference_category);
+        rootCategory.setLayoutResource(R.layout.wp_preference_category);
         rootCategory.setTitle(R.string.notification_settings_category_your_sites);
         preferenceScreen.addPreference(rootCategory);
 

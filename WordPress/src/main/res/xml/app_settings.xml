@@ -8,25 +8,25 @@
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
-        android:layout="@layout/preference_layout"
+        android:layout="@layout/wp_preference_layout"
         android:title="@string/interface_language"/>
 
     <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_key_send_usage"
-        android:layout="@layout/preference_layout"
+        android:layout="@layout/wp_preference_layout"
         android:summary="@string/preference_send_usage_stats_summary"
         android:title="@string/preference_send_usage_stats"
-        android:widgetLayout="@layout/preference_switch"/>
+        android:widgetLayout="@layout/wp_preference_switch"/>
 
     <Preference
         android:key="@string/pref_key_device_settings"
-        android:layout="@layout/preference_layout"
+        android:layout="@layout/wp_preference_layout"
         android:title="@string/preference_open_device_settings"/>
 
     <PreferenceCategory
         android:key="@string/pref_key_editor"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/preference_editor">
 
         <org.wordpress.android.ui.prefs.DetailListPreference
@@ -34,23 +34,23 @@
             android:entries="@array/editor_entries"
             android:entryValues="@array/editor_values"
             android:key="@string/pref_key_editor_type"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:title="@string/preference_editor_type"
             tools:summary="Visual"/>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_key_optimize_media"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/media">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
             android:key="@string/pref_key_optimize_image"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_images_summary"
             android:title="@string/site_settings_optimize_images"
-            android:widgetLayout="@layout/preference_switch"/>
+            android:widgetLayout="@layout/wp_preference_switch"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_image_width"
@@ -73,10 +73,10 @@
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_video"
             android:key="@string/pref_key_optimize_video"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_video_summary"
             android:title="@string/site_settings_optimize_videos"
-            android:widgetLayout="@layout/preference_switch"/>
+            android:widgetLayout="@layout/wp_preference_switch"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_video_size"
@@ -101,20 +101,20 @@
 
     <PreferenceCategory
         android:key="@string/pref_key_passlock_section"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:persistent="false"
         android:title="@string/passcode_preference_title">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/pref_key_passcode_toggle"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:persistent="false"
             android:title="@string/passcode_turn_on"
-            android:widgetLayout="@layout/preference_switch"/>
+            android:widgetLayout="@layout/wp_preference_switch"/>
 
         <Preference
             android:key="@string/pref_key_change_passcode"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:persistent="false"
             android:title="@string/passcode_change_passcode"/>
 
@@ -122,17 +122,17 @@
 
     <PreferenceCategory
         android:key="@string/pref_key_about_section"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/about_the_app">
 
         <Preference
             android:key="@string/pref_key_app_about"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:title="@string/app_title"/>
 
         <Preference
             android:key="@string/pref_key_oss_licenses"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:title="@string/open_source_licenses"/>
 
     </PreferenceCategory>
