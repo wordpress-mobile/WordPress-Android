@@ -58,7 +58,7 @@ class ActivityLogSqlUtils
             WellSql.update(RewindStatusBuilder::class.java)
                     .where()
                     .equals(RewindStatusTable.ID, existingRewindStatus.id)
-                    .equals(ActivityLogTable.LOCAL_SITE_ID, existingRewindStatus.localSiteId)
+                    .equals(RewindStatusTable.LOCAL_SITE_ID, existingRewindStatus.localSiteId)
                     .endWhere()
                     .put(rewindStatusBuilder, UpdateAllExceptId<RewindStatusBuilder>(RewindStatusBuilder::class.java))
         } else {
