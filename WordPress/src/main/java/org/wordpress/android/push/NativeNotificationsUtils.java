@@ -19,7 +19,10 @@ public class NativeNotificationsUtils {
     }
 
     public static void showMessageToUser(String message, boolean intermediateMessage, int pushId, Context context) {
-        NotificationCompat.Builder builder = getBuilder(context).setContentText(message).setTicker(message);
+        NotificationCompat.Builder builder = getBuilder(context,
+                context.getString(R.string.notification_channel_normal_id))
+                .setContentText(message).setTicker(message)
+                .setOnlyAlertOnce(true);
         showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
     }
 
@@ -34,8 +37,8 @@ public class NativeNotificationsUtils {
         notificationManager.notify(pushId, builder.build());
     }
 
-    public static NotificationCompat.Builder getBuilder(Context context) {
-        return new NotificationCompat.Builder(context)
+    public static NotificationCompat.Builder getBuilder(Context context, String channelId) {
+        return new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress))
                 .setContentTitle(context.getString(R.string.app_name))

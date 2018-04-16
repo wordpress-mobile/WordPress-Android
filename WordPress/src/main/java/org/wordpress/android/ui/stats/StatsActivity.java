@@ -52,6 +52,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.stats.service.StatsService.TASK_ID_GROUP_ALL;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
@@ -79,6 +80,8 @@ public class StatsActivity extends AppCompatActivity
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
     public static final String LOGGED_INTO_JETPACK = "LOGGED_INTO_JETPACK";
+    private static final int TOTAL_FRAGMENT_QUANTITY = 8;
+    private int mCallsToWaitFor = TOTAL_FRAGMENT_QUANTITY;
 
     public enum StatsLaunchedFrom {
         STATS_WIDGET,
@@ -507,6 +510,7 @@ public class StatsActivity extends AppCompatActivity
         FragmentManager fm = getFragmentManager();
 
         if (mCurrentTimeframe != StatsTimeframe.INSIGHTS) {
+            mCallsToWaitFor = TOTAL_FRAGMENT_QUANTITY;
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
@@ -516,8 +520,11 @@ public class StatsActivity extends AppCompatActivity
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
             if (includeGraph) {
                 updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+            } else {
+                mCallsToWaitFor--;
             }
         } else {
+            mCallsToWaitFor = TOTAL_FRAGMENT_QUANTITY;
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsTodayFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsAllTimeFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsMostPopularFragment.TAG);
@@ -647,12 +654,33 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
+    public void onEventMainThread(StatsEvents.UpdateStatusStarted event) {
         if (isFinishing() || !mIsInFront) {
             return;
         }
-        mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
-        mIsUpdatingStats = event.mUpdating;
+        mSwipeToRefreshHelper.setRefreshing(true);
+        mIsUpdatingStats = true;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.UpdateStatusFinished event) {
+        if (isFinishing()) {
+            return;
+        }
+
+        // in legacy StatsService we just need this signal to know one taskID grouped all concurrent requests
+        if (event.mTaskId == TASK_ID_GROUP_ALL) {
+            mCallsToWaitFor = 0;
+        } else {
+            if (mCallsToWaitFor > 0) {
+                mCallsToWaitFor--;
+            }
+        }
+
+        if (mCallsToWaitFor == 0) {
+            mSwipeToRefreshHelper.setRefreshing(false);
+        }
+        mIsUpdatingStats = false;
 
         if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
             // Do not bump promo analytics or show the dialog in case of errors or when it's still loading
