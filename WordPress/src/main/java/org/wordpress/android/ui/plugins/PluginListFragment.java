@@ -28,7 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
-import org.wordpress.android.models.networkresource.ListNetworkResource;
+import org.wordpress.android.models.networkresource.ListState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -87,53 +87,53 @@ public class PluginListFragment extends Fragment {
 
     private void setupObservers() {
         mViewModel.getSitePluginsLiveData()
-                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
-                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
                           if (mListType == PluginListType.SITE) {
-                              refreshPluginsAndProgressBars(listNetworkResource);
+                              refreshPluginsAndProgressBars(listState);
                           }
                       }
                   });
 
         mViewModel.getFeaturedPluginsLiveData()
-                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
-                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
                           if (mListType == PluginListType.FEATURED) {
-                              refreshPluginsAndProgressBars(listNetworkResource);
+                              refreshPluginsAndProgressBars(listState);
                           }
                       }
                   });
 
         mViewModel.getPopularPluginsLiveData()
-                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
-                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
                           if (mListType == PluginListType.POPULAR) {
-                              refreshPluginsAndProgressBars(listNetworkResource);
+                              refreshPluginsAndProgressBars(listState);
                           }
                       }
                   });
 
         mViewModel.getNewPluginsLiveData()
-                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
-                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
                           if (mListType == PluginListType.NEW) {
-                              refreshPluginsAndProgressBars(listNetworkResource);
+                              refreshPluginsAndProgressBars(listState);
                           }
                       }
                   });
 
         mViewModel.getSearchResultsLiveData()
-                  .observe(this, new Observer<ListNetworkResource<ImmutablePluginModel>>() {
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
-                      public void onChanged(@Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
                           if (mListType == PluginListType.SEARCH) {
-                              refreshPluginsAndProgressBars(listNetworkResource);
+                              refreshPluginsAndProgressBars(listState);
 
-                              if (listNetworkResource instanceof ListNetworkResource.Error) {
+                              if (listState instanceof ListState.Error) {
                                   ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
                               }
 
@@ -172,9 +172,8 @@ public class PluginListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void refreshPluginsAndProgressBars(
-            @Nullable ListNetworkResource<ImmutablePluginModel> listNetworkResource) {
-        if (listNetworkResource == null) {
+    private void refreshPluginsAndProgressBars(@Nullable ListState<ImmutablePluginModel> listState) {
+        if (listState == null) {
             return;
         }
         final PluginListAdapter adapter;
@@ -184,19 +183,19 @@ public class PluginListFragment extends Fragment {
         } else {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
-        adapter.setPlugins(listNetworkResource.getData());
-        refreshProgressBars(listNetworkResource);
+        adapter.setPlugins(listState.getData());
+        refreshProgressBars(listState);
     }
 
-    protected void refreshProgressBars(@Nullable ListNetworkResource listNetworkResource) {
-        if (!isAdded() || getView() == null || listNetworkResource == null) {
+    protected void refreshProgressBars(@Nullable ListState listState) {
+        if (!isAdded() || getView() == null || listState == null) {
             return;
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
-        mSwipeToRefreshHelper.setRefreshing(listNetworkResource.isFetchingFirstPage());
+        mSwipeToRefreshHelper.setRefreshing(listState.isFetchingFirstPage());
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
         getView().findViewById(R.id.progress).setVisibility(
-                listNetworkResource.isLoadingMore() ? View.VISIBLE : View.GONE);
+                listState.isLoadingMore() ? View.VISIBLE : View.GONE);
     }
 
     void showEmptyView(boolean show) {
