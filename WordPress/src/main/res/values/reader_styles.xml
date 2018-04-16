@@ -15,7 +15,7 @@
         <item name="android:textColorLink">@color/reader_hyperlink</item>
     </style>
     <style name="ReaderTextView.Label" parent="ReaderTextView">
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
