@@ -321,7 +321,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
                 showPost(interceptType, blogIdentifier, postIdentifier);
                 return;
-            } else if (segments.size() == 4) {
+            } else if (segments.size() >= 4) {
                 blogIdentifier = uri.getHost();
                 try {
                     postIdentifier = URLEncoder.encode(segments.get(3), "UTF-8");
