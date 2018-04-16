@@ -8,9 +8,7 @@ import android.view.WindowManager;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-
 public class ToastMatcher extends TypeSafeMatcher<Root> {
-
         @Override public void describeTo(Description description) {
             description.appendText("is toast");
         }

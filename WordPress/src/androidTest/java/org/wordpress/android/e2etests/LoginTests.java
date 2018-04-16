@@ -8,8 +8,8 @@ import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
-import org.wordpress.android.e2etests.utils.TestData;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -27,9 +27,8 @@ public class LoginTests {
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
-    private TestData mData = new TestData();
-    private String mUserEmail = mData.getEmail();
-    private String mUserPassword = mData.getPassword();
+    String mUsername = BuildConfig.ESPRESSO_USERNAME;
+    String mPassword = BuildConfig.ESPRESSO_PASSWORD;
 
     @Test
     public void testLoginSuccess() {
@@ -37,7 +36,7 @@ public class LoginTests {
                 .perform(click());
 
         onView(withId(R.id.input))
-                .perform(replaceText(mUserEmail), closeSoftKeyboard());
+                .perform(replaceText(mUsername), closeSoftKeyboard());
 
         onView(withText("Next"))
                 .perform(click());
@@ -52,7 +51,7 @@ public class LoginTests {
                 .perform(click());
 
         onView(withId(R.id.input))
-                .perform(replaceText(mUserPassword), closeSoftKeyboard());
+                .perform(replaceText(mPassword), closeSoftKeyboard());
 
         onView(withText("Next"))
                 .perform(click());

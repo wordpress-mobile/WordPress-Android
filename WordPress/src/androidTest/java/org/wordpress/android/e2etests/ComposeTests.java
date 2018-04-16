@@ -6,8 +6,8 @@ import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
-import org.wordpress.android.e2etests.utils.TestData;
 import org.wordpress.android.e2etests.utils.ToastMatcher;
 import org.wordpress.android.ui.WPLaunchActivity;
 
@@ -24,9 +24,8 @@ public class ComposeTests {
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
-    private TestData mData = new TestData();
-    private String mUserEmail = mData.getEmail();
-    private String mUserPassword = mData.getPassword();
+    String mUsername = BuildConfig.ESPRESSO_USERNAME;
+    String mPassword = BuildConfig.ESPRESSO_PASSWORD;
 
     @Test
     public void testBlogPosting() {
@@ -34,7 +33,7 @@ public class ComposeTests {
                 .perform(click());
 
         onView(withId(R.id.input))
-                .perform(replaceText(mUserEmail), closeSoftKeyboard());
+                .perform(replaceText(mUsername), closeSoftKeyboard());
 
         onView(withText("Next"))
                 .perform(click());
@@ -49,7 +48,7 @@ public class ComposeTests {
                 .perform(click());
 
         onView(withId(R.id.input))
-                .perform(replaceText(mUserPassword), closeSoftKeyboard());
+                .perform(replaceText(mPassword), closeSoftKeyboard());
 
         onView(withText("Next"))
                 .perform(click());
