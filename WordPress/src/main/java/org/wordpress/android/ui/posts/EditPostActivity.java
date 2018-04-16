@@ -788,12 +788,14 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaBrowserType mediaBrowserType =
                 mShowAztecEditor ? MediaBrowserType.AZTEC_EDITOR_PICKER : MediaBrowserType.EDITOR_PICKER;
 
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, mediaBrowserType, getSite());
-
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.photo_fragment_container, mPhotoPickerFragment, PHOTO_PICKER_TAG)
-                .commit();
+        mPhotoPickerFragment = (PhotoPickerFragment) getFragmentManager().findFragmentByTag(PHOTO_PICKER_TAG);
+        if (mPhotoPickerFragment == null) {
+            mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, mediaBrowserType, getSite());
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.photo_fragment_container, mPhotoPickerFragment, PHOTO_PICKER_TAG)
+                    .commit();
+        }
     }
 
     /*
