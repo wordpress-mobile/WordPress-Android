@@ -66,6 +66,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 predefinedEventProperties.put("via", "media_library");
                 break;
+            case EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY:
+                predefinedEventProperties.put("via", "stock_photos");
+                break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 predefinedEventProperties.put("button", "blockquote");
                 break;
@@ -447,6 +450,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_video_added";
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_video_added";
+            case EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY:
+                return "editor_photo_added";
             case MEDIA_PHOTO_OPTIMIZED:
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
@@ -980,6 +985,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_search_performed";
             case PLUGIN_UPDATED:
                 return "plugin_updated";
+            case STOCK_MEDIA_ACCESSED:
+                return "stock_media_accessed";
+            case STOCK_MEDIA_SEARCHED :
+                return "stock_media_searched";
+            case STOCK_MEDIA_UPLOADED:
+                return "stock_media_uploaded";
             default:
                 return null;
         }

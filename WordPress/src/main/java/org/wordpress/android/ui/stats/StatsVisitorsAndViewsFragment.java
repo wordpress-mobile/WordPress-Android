@@ -26,7 +26,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -35,6 +35,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.widgets.AutoResizeTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -156,7 +157,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private class TabViewHolder {
         private final LinearLayout mTab;
         private final LinearLayout mInnerContainer;
-        private final TextView mLabel;
+        private final AutoResizeTextView mLabel;
         private final TextView mValue;
         private final ImageView mIcon;
         private final OverviewLabel mLabelItem;
@@ -166,7 +167,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
             mTab = currentTab;
             mInnerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
-            mLabel = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+            mLabel = (AutoResizeTextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+            mLabel.setMinTextSize(getResources().getDimensionPixelSize(R.dimen.stats_label_min_text_size));
             mLabel.setText(labelItem.getLabel());
             mValue = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
             mIcon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
@@ -493,6 +495,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Set the maximum size a column can get on the screen in PX
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
+        mGraphView.getGraphViewStyle().setTextSize(
+                getResources().getDimensionPixelOffset(R.dimen.stats_legent_text_size));
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
                 mainSeriesItems, selectedStatsType));
@@ -914,9 +918,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.VISITS
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.VISITS
         };
     }
 }

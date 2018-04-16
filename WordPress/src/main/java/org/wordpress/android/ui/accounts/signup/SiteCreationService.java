@@ -119,7 +119,9 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     private static class SiteCreationNotification {
         static Notification progress(Context context, int progress, @StringRes int titleString,
                                      @StringRes int stepString) {
-            return AutoForegroundNotification.progress(context, progress,
+            return AutoForegroundNotification.progress(context,
+                                                       context.getString(R.string.notification_channel_normal_id),
+                                                       progress,
                                                        titleString,
                                                        stepString,
                                                        R.drawable.ic_my_sites_24dp,
@@ -128,6 +130,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         static Notification success(Context context) {
             return AutoForegroundNotification.success(context,
+                                                      context.getString(R.string.notification_channel_normal_id),
                                                       R.string.notification_site_creation_title_success,
                                                       R.string.notification_site_creation_created,
                                                       R.drawable.ic_my_sites_24dp,
@@ -136,6 +139,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         static Notification failure(Context context, @StringRes int content) {
             return AutoForegroundNotification.failure(context,
+                                                      context.getString(R.string.notification_channel_normal_id),
                                                       R.string.notification_site_creation_title_stopped,
                                                       content,
                                                       R.drawable.ic_my_sites_24dp,

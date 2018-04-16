@@ -326,8 +326,6 @@ Language: sr_RS
     <string name="comment_spammed">Коментар означен као непожељан</string>
     <string name="reader_likes_you_and_one">Вама и још некоме се ово свиђа</string>
     <string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>
-    <string name="select_time">Одаберите време</string>
-    <string name="select_date">Одаберите датум</string>
     <string name="pick_photo">Одаберите фотографију</string>
     <string name="pick_video">Одаберите видео снимак</string>
     <string name="reader_empty_followed_blogs_description">Не брините, потребно је само да додирнете иконицу горе десно да бисте започели истраживање!</string>

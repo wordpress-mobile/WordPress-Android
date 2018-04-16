@@ -74,9 +74,11 @@ class PostUploadNotifier {
         sNotificationData = new NotificationData();
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                                                                               Context.NOTIFICATION_SERVICE);
-        mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
+        mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
+                context.getString(R.string.notification_channel_normal_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
-                            .setColor(context.getResources().getColor(R.color.blue_wordpress));
+                            .setColor(context.getResources().getColor(R.color.blue_wordpress))
+                            .setOnlyAlertOnce(true);
     }
 
     private void updateForegroundNotification(@Nullable PostModel post) {
@@ -281,7 +283,8 @@ class PostUploadNotifier {
 
         // Notification builder
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        mContext.getString(R.string.notification_channel_normal_id));
         String notificationTitle;
         String notificationMessage;
 
@@ -309,6 +312,7 @@ class PostUploadNotifier {
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationMessage);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(notificationMessage));
+        notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
 
         long notificationId = getNotificationIdForPost(post);
@@ -362,7 +366,8 @@ class PostUploadNotifier {
         AppLog.d(AppLog.T.MEDIA, "updateNotificationSuccessForMedia");
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForMedia(site);
         // Tap notification intent (open the media browser)
@@ -387,6 +392,7 @@ class PostUploadNotifier {
         notificationBuilder.setContentText(notificationMessage);
         // notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newSuccessMessage));
         notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
 
         // Add WRITE POST action - only if there is media we can insert in the Post
@@ -439,7 +445,8 @@ class PostUploadNotifier {
         AppLog.d(AppLog.T.POSTS, "updateNotificationErrorForPost: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForPost(post);
         // Tap notification intent (open the post list)
@@ -468,6 +475,7 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setOnlyAlertOnce(true);
 
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
@@ -491,7 +499,8 @@ class PostUploadNotifier {
         AppLog.d(AppLog.T.MEDIA, "updateNotificationErrorForMedia: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext(),
+                        mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForMedia(site);
         // Tap notification intent (open the media browser)
@@ -518,6 +527,7 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setOnlyAlertOnce(true);
 
         // Add RETRY action - only if there is media to retry
         if (mediaList != null && !mediaList.isEmpty()) {

@@ -53,6 +53,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
@@ -119,7 +120,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         ITEM_CAPTURE_PHOTO,
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_PHOTO,
-        ITEM_CHOOSE_VIDEO
+        ITEM_CHOOSE_VIDEO,
+        ITEM_CHOOSE_STOCK_MEDIA
     }
 
     @Override
@@ -408,6 +410,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case RequestCodes.MEDIA_SETTINGS:
                 if (resultCode == MediaSettingsActivity.RESULT_MEDIA_DELETED) {
+                    reloadMediaGrid();
+                }
+                break;
+            case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
+                if (resultCode == RESULT_OK) {
                     reloadMediaGrid();
                 }
                 break;
@@ -820,34 +827,54 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     });
         }
 
+        if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()) {
+            popup.getMenu().add(R.string.photo_picker_stock_media).setOnMenuItemClickListener(
+                    new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA);
+                            return true;
+                        }
+                    });
+        }
+
         popup.show();
     }
 
     private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
         mLastAddMediaItemClicked = item;
 
-        String[] permissions;
-        if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
-            permissions = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        } else {
-            permissions = new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        }
-        if (PermissionUtils.checkAndRequestPermissions(
-                this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
-            switch (item) {
-                case ITEM_CAPTURE_PHOTO:
-                    WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
-                    break;
-                case ITEM_CAPTURE_VIDEO:
-                    WPMediaUtils.launchVideoCamera(this);
-                    break;
-                case ITEM_CHOOSE_PHOTO:
-                    WPMediaUtils.launchPictureLibrary(this, true);
-                    break;
-                case ITEM_CHOOSE_VIDEO:
-                    WPMediaUtils.launchVideoLibrary(this, true);
-                    break;
+        // stock photos item requires no permission, all other items do
+        if (item != AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA) {
+            String[] permissions;
+            if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
+                permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            } else {
+                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
             }
+            if (!PermissionUtils.checkAndRequestPermissions(
+                    this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
+                return;
+            }
+        }
+
+        switch (item) {
+            case ITEM_CAPTURE_PHOTO:
+                WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
+                break;
+            case ITEM_CAPTURE_VIDEO:
+                WPMediaUtils.launchVideoCamera(this);
+                break;
+            case ITEM_CHOOSE_PHOTO:
+                WPMediaUtils.launchPictureLibrary(this, true);
+                break;
+            case ITEM_CHOOSE_VIDEO:
+                WPMediaUtils.launchVideoLibrary(this, true);
+                break;
+            case ITEM_CHOOSE_STOCK_MEDIA:
+                ActivityLauncher.showStockMediaPickerForResult(this,
+                        mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                break;
         }
     }
 

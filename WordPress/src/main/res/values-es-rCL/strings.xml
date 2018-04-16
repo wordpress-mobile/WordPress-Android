@@ -359,11 +359,9 @@ Language: es_CL
     <string name="comment_spammed">Comentado marcado como spam</string>
     <string name="cant_share_no_visible_blog">No puedes compartir en WordPress sin un blog visible</string>
     <string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
-    <string name="select_date">Elegir fecha</string>
     <string name="pick_photo">Elige una foto</string>
     <string name="pick_video">Elige un vídeo</string>
     <string name="reader_toast_err_get_post">No fue posible cargar esta entrada</string>
-    <string name="select_time">Elige hora</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona les gusta esto.</string>
     <string name="empty_list_default">Esta lista esta vacía</string>
     <string name="reader_untitled_post">Sin título</string>
