@@ -33,11 +33,11 @@ class ListNetworkResourceTest {
 
     @Test
     fun testLoadingFirstPageState() {
-        val testDataReady = listOf("item3", "item4")
-        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testDataReady)
+        val testData = listOf("item3", "item4")
+        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testData)
         val loadingState: ListNetworkResource<String> = ListNetworkResource.Loading(readyState)
 
-        assertThat(loadingState.data, `is`(equalTo(testDataReady)))
+        assertThat(loadingState.data, `is`(equalTo(testData)))
 
         assertThat(loadingState.isFetchingFirstPage(), `is`(true))
         assertThat(loadingState.isLoadingMore(), `is`(false))
@@ -47,11 +47,11 @@ class ListNetworkResourceTest {
 
     @Test
     fun testLoadMoreState() {
-        val testDataReady = listOf("item5", "item6")
-        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testDataReady)
+        val testData = listOf("item5", "item6")
+        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testData)
         val loadingState: ListNetworkResource<String> = ListNetworkResource.Loading(readyState, true)
 
-        assertThat(loadingState.data, `is`(equalTo(testDataReady)))
+        assertThat(loadingState.data, `is`(equalTo(testData)))
 
         assertThat(loadingState.isFetchingFirstPage(), `is`(false))
         assertThat(loadingState.isLoadingMore(), `is`(true))
@@ -60,21 +60,26 @@ class ListNetworkResourceTest {
     }
 
     @Test
-    fun testSuccessState() {
-        val testDataSuccess = listOf("item 7")
+    fun testSuccessStateWhereAllDataIsLoaded() {
+        val testData = listOf("item7")
 
-        val successState = ListNetworkResource.Success(testDataSuccess)
-        assertThat(successState.data, `is`(equalTo(testDataSuccess)))
+        val successState = ListNetworkResource.Success(testData)
+        assertThat(successState.data, `is`(equalTo(testData)))
         assertThat(successState.canLoadMore, `is`(false))
+    }
 
-        val successState2 = ListNetworkResource.Success(testDataSuccess, true)
-        assertThat(successState2.data, `is`(equalTo(testDataSuccess)))
+    @Test
+    fun testSuccessStatesWhereMoreDataCanBeLoaded() {
+        val testData = listOf("item8")
+
+        val successState2 = ListNetworkResource.Success(testData, true)
+        assertThat(successState2.data, `is`(equalTo(testData)))
         assertThat(successState2.canLoadMore, `is`(true))
     }
 
     @Test
     fun testErrorState() {
-        val testDataReady = listOf("item8", "item9")
+        val testDataReady = listOf("item9", "item10")
         val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testDataReady)
         val loadingState: ListNetworkResource<String> = ListNetworkResource.Loading(readyState, true)
 
@@ -85,24 +90,29 @@ class ListNetworkResourceTest {
     }
 
     @Test
-    fun testGetTransformedListNetworkResource() {
-        val testDataReady = listOf("item10", "item11", "not-item")
-        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testDataReady)
+    fun testGetTransformedByUpperCaseListNetworkResource() {
+        val testData = listOf("item11", "item12", "item13")
+        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testData)
         val toUpperCase: (List<String>) -> List<String> = { list ->
             list.map { it.toUpperCase() }
         }
-        val newReadyState = readyState.getTransformedListNetworkResource(toUpperCase)
-        assertThat(newReadyState.data, `is`(equalTo(toUpperCase(testDataReady))))
-        assertThat(newReadyState.data.size, `is`(3))
-        assertThat(newReadyState is ListNetworkResource.Ready, `is`(true))
+        val transformedReadyState = readyState.getTransformedListNetworkResource(toUpperCase)
+        assertThat(transformedReadyState.data, `is`(equalTo(toUpperCase(testData))))
+        assertThat(transformedReadyState.data.size, `is`(3))
+        assertThat(transformedReadyState is ListNetworkResource.Ready, `is`(true))
+    }
 
+    @Test
+    fun testGetTransformedByFilterListNetworkResource() {
+        val testData = listOf("item14", "item15", "not-item")
+        val readyState: ListNetworkResource<String> = ListNetworkResource.Ready(testData)
+        val loadingState: ListNetworkResource<String> = ListNetworkResource.Loading(readyState, true)
         val filterNotItem: (List<String>) -> List<String> = { list ->
-            list.filter { it != "not-item".toUpperCase() }
+            list.filter { it != "not-item" }
         }
-        val loadingState: ListNetworkResource<String> = ListNetworkResource.Loading(newReadyState, true)
-        val newLoadingState = loadingState.getTransformedListNetworkResource(filterNotItem)
-        assertThat(newLoadingState.data, `is`(equalTo(filterNotItem(loadingState.data))))
-        assertThat(newLoadingState.data.size, `is`(2))
-        assertThat(newLoadingState is ListNetworkResource.Loading, `is`(true))
+        val transformedLoadingState = loadingState.getTransformedListNetworkResource(filterNotItem)
+        assertThat(transformedLoadingState.data, `is`(equalTo(filterNotItem(testData))))
+        assertThat(transformedLoadingState.data.size, `is`(2))
+        assertThat(transformedLoadingState is ListNetworkResource.Loading, `is`(true))
     }
 }
