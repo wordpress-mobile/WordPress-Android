@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -96,19 +95,21 @@ class ActivityLogListFragment : Fragment() {
                 })
     }
 
-    internal fun reloadEvents() {
+    private fun reloadEvents() {
         setEvents(viewModel.events.value ?: emptyList())
     }
 
     private fun setEvents(events: List<ActivityLogModel>) {
-        val adapter: ActivityLogAdapter
-        if (activityLogList.adapter == null) {
-            adapter = ActivityLogAdapter(context!!)
-            activityLogList.adapter = adapter
-        } else {
-            adapter = activityLogList.adapter as ActivityLogAdapter
+        context?.let {
+            val adapter: ActivityLogAdapter
+            if (activityLogList.adapter == null) {
+                adapter = ActivityLogAdapter(it)
+                activityLogList.adapter = adapter
+            } else {
+                adapter = activityLogList.adapter as ActivityLogAdapter
+            }
+            adapter.setEvents(events)
         }
-        adapter.setEvents(events)
     }
 
     inner class ActivityLogAdapter(context: Context) : RecyclerView.Adapter<ActivityLogViewHolder>() {
@@ -122,8 +123,10 @@ class ActivityLogListFragment : Fragment() {
                 viewModel.loadMore()
             }
 
-            if (position % 4 == 0) {
-                holder.header.visibility = View.VISIBLE
+            holder.header.visibility = if (shouldDisplayHeader(position)) {
+                View.VISIBLE
+            } else {
+                View.GONE
             }
         }
 
@@ -137,7 +140,17 @@ class ActivityLogListFragment : Fragment() {
             notifyDataSetChanged()
         }
 
-        protected fun getItem(position: Int): ActivityLogModel {
+        private fun shouldDisplayHeader(position: Int): Boolean {
+            return if (position > 0) {
+                val date1 = list[position - 1].published.date
+                val date2 = list[position - 1].published.date
+                date1.compareTo(date2) != 0
+            } else {
+                true
+            }
+        }
+
+        private fun getItem(position: Int): ActivityLogModel {
             return list[position]
         }
 
