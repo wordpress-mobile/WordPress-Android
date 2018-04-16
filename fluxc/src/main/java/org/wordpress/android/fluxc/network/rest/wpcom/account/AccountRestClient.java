@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError;
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionResponsePayload;
+import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -739,6 +740,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
+                        payload.type = SubscriptionType.EMAIL_COMMENT;
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
@@ -774,6 +776,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
+                        payload.type = SubscriptionType.EMAIL_POST;
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
@@ -811,6 +814,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
+                        payload.type = SubscriptionType.EMAIL_POST_FREQUENCY;
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
@@ -846,6 +850,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SubscriptionResponse response) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload(response.subscribed);
+                        payload.type = SubscriptionType.NOTIFICATION_POST;
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(
                                 payload));
                     }
