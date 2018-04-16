@@ -54,7 +54,7 @@ sealed class ListState<T>(val data: List<T>) {
     /**
      * This is the state each object should be created in. In this state [data] would be empty and [shouldFetch] will
      * return `false` with the assumption that the caller will need to get ready before fetch can happen. A typical
-     * example would be to initialize a resource as a property and then [ready] it after the necessary setup, such as
+     * example would be to initialize a resource as a property and then [Ready] it after the necessary setup, such as
      * getting the `SiteModel` from a `Store`.
      */
     class Init<T> : ListState<T>(ArrayList()) {
