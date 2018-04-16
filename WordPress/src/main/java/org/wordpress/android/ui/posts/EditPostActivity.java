@@ -1035,6 +1035,8 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
+        } else if (isPhotoPickerShowing()) {
+            hidePhotoPicker();
         } else {
             savePostAndOptionallyFinish(true);
         }
@@ -1044,13 +1046,13 @@ public class EditPostActivity extends AppCompatActivity implements
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        hidePhotoPicker();
-
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
             return handleBackPressed();
         }
+
+        hidePhotoPicker();
 
         if (itemId == R.id.menu_save_post) {
             if (!AppPrefs.isAsyncPromoRequired()) {
@@ -1420,11 +1422,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (isPhotoPickerShowing()) {
-            hidePhotoPicker();
-            return;
-        }
-
         handleBackPressed();
     }
 
