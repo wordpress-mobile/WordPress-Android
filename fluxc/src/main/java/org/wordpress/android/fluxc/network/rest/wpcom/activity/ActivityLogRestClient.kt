@@ -124,7 +124,7 @@ class ActivityLogRestClient
             }
         }
         error?.let {
-            return FetchedActivityLogPayload(ActivityError(it), site, number, totalItems, offset)
+            return FetchedActivityLogPayload(ActivityError(it), site, totalItems, number, offset)
         }
         return FetchedActivityLogPayload(activities, site, totalItems, number, offset)
     }
