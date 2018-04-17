@@ -209,6 +209,8 @@ public class Authenticator {
 
         Map<String, Object> params = new HashMap<>();
         params.put("email", payload.emailOrUsername);
+        params.put("flow", payload.flow != null ? payload.flow.toString() : "");
+        params.put("source", payload.source != null ? payload.source.toString() : "");
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
