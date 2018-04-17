@@ -61,7 +61,7 @@ public class LoginMagicLinkInterceptActivity extends Activity {
             String parameter = SignupEpilogueActivity.MAGIC_SIGNUP_PARAMETER;
             String value = (mUri.getQueryParameterNames() != null && mUri.getQueryParameter(parameter) != null)
                     ? mUri.getQueryParameter(parameter) : "";
-            return Intent.ACTION_VIEW.equals(mAction) && mUri.getQueryParameterNames().contains(parameter)
+            return Intent.ACTION_VIEW.equals(mAction)
                    && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
         } else {
             return false;
