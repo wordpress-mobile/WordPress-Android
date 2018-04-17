@@ -52,7 +52,7 @@ subprojects {
     }
 
     dependencies {
-        ktlint 'com.github.shyiko:ktlint:0.14.0'
+        ktlint 'com.github.shyiko:ktlint:0.21.0'
     }
 
     task ktlint(type: JavaExec) {
