@@ -33,8 +33,11 @@ import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
-import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnStockMediaUploaded;
+import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.fluxc.store.StockMediaStore.FetchStockMediaListPayload;
+import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -375,14 +378,13 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         AppLog.d(AppLog.T.MEDIA, "Fetching stock media page " + page);
 
-        StockMediaStore.FetchStockMediaListPayload payload =
-                new StockMediaStore.FetchStockMediaListPayload(searchQuery, page);
+        FetchStockMediaListPayload payload = new FetchStockMediaListPayload(searchQuery, page);
         mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
+    public void onStockMediaListFetched(OnStockMediaListFetched event) {
         // make sure these results are for the same query
         if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
@@ -416,7 +418,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStockMediaUploaded(MediaStore.OnStockMediaUploaded event) {
+    public void onStockMediaUploaded(OnStockMediaUploaded event) {
         mIsUploading = false;
         showUploadProgressDialog(false);
 
@@ -522,8 +524,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         mIsUploading = true;
         showUploadProgressDialog(true);
         List<StockMediaModel> items = mAdapter.getSelectedStockMedia();
-        MediaStore.UploadStockMediaPayload payload =
-                new MediaStore.UploadStockMediaPayload(mSite, items);
+        UploadStockMediaPayload payload = new UploadStockMediaPayload(mSite, items);
         mDispatcher.dispatch(MediaActionBuilder.newUploadStockMediaAction(payload));
     }
 

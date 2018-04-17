@@ -63,6 +63,8 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
@@ -925,7 +927,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                 media.setCaption(thisCaption);
                 media.setAlt(thisAltText);
                 media.setDescription(thisDescription);
-                mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaStore.MediaPayload(mSite, media)));
+                mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, media)));
             }
         } else {
             String alignment = mAlignmentKeyArray[mAlignmentSpinnerView.getSelectedItemPosition()];
@@ -1060,7 +1062,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         mProgressDialog.show();
 
         AppLog.v(AppLog.T.MEDIA, "Deleting " + mMedia.getTitle() + " (id=" + mMedia.getMediaId() + ")");
-        MediaStore.MediaPayload payload = new MediaStore.MediaPayload(mSite, mMedia);
+        MediaPayload payload = new MediaPayload(mSite, mMedia);
         mDispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(payload));
     }
 
@@ -1078,7 +1080,7 @@ public class MediaSettingsActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+    public void onMediaChanged(OnMediaChanged event) {
         if (event.cause == MediaAction.DELETE_MEDIA) {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
