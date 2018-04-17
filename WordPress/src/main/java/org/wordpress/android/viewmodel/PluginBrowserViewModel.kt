@@ -259,8 +259,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     @Suppress("unused")
     fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         val listStatus = if (event.isError) {
-            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
-                    + event.error.type)
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
+                    event.error.type)
             PluginListStatus.ERROR
         } else {
             if (event.canLoadMore) PluginListStatus.CAN_LOAD_MORE else PluginListStatus.DONE
@@ -385,8 +385,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         reloadPluginDirectory(PluginDirectoryType.SITE)
     }
 
-    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
-                                              newPluginMap: Map<String, ImmutablePluginModel>) {
+    private fun updatePluginListWithNewPlugin(
+        mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
+        newPluginMap: Map<String, ImmutablePluginModel>
+    ) {
         val pluginList = mutableLiveData.value
         if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
             // Nothing to update
@@ -449,8 +451,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldSearch) {
             return false
         }
-        return if (searchPluginsListStatus.value != PluginListStatus.DONE
-                && searchPluginsListStatus.value != PluginListStatus.ERROR) {
+        return if (searchPluginsListStatus.value != PluginListStatus.DONE &&
+                searchPluginsListStatus.value != PluginListStatus.ERROR) {
             false
         } else searchResults.value == null || searchResults.value!!.isEmpty()
     }
