@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 27;
+        return 28;
     }
 
     @Override
@@ -223,6 +223,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE SiteModel ADD IS_WP_COM_STORE INTEGER");
                 db.execSQL("ALTER TABLE SiteModel ADD HAS_WOO_COMMERCE INTEGER");
+                oldVersion++;
+            case 27:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table AccountModel add TRACKS_OPT_OUT boolean;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
