@@ -109,7 +109,9 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(0, minImageWidth);
         }
 
-        imageList.addImageUrl(0, mInitialImageUrl);
+        if (!TextUtils.isEmpty(mInitialImageUrl)) {
+            imageList.addImageUrl(0, mInitialImageUrl);
+        }
 
         getAdapter().setImageList(imageList, mInitialImageUrl);
     }
