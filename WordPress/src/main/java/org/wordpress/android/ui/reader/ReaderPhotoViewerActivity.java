@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -108,10 +109,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(0, minImageWidth);
         }
 
-        // make sure initial image is in the list
-        if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
-            imageList.addImageUrl(0, mInitialImageUrl);
-        }
+        imageList.addImageUrl(0, mInitialImageUrl);
 
         getAdapter().setImageList(imageList, mInitialImageUrl);
     }
@@ -177,7 +175,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
 
     private PhotoPagerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new PhotoPagerAdapter(getFragmentManager());
+            mAdapter = new PhotoPagerAdapter(getSupportFragmentManager());
         }
         return mAdapter;
     }
