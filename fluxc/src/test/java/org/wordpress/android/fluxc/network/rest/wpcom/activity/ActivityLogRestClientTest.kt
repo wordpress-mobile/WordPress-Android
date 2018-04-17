@@ -106,6 +106,7 @@ class ActivityLogRestClientTest {
             assertEquals(this.type, ActivityLogAction.FETCHED_ACTIVITIES)
             assertEquals(this.payload.number, number)
             assertEquals(this.payload.offset, offset)
+            assertEquals(this.payload.totalItems, 1)
             assertEquals(this.payload.site, site)
             assertEquals(this.payload.activityLogModels.size, 1)
             assertNull(this.payload.error)

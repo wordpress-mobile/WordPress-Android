@@ -69,7 +69,8 @@ class ActivityLogStore
             val rowsAffected = if (payload.activityLogModels.isNotEmpty())
                 activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
             else 0
-            emitChange(OnActivityLogFetched(rowsAffected, action))
+            val canLoadMore = (payload.offset + payload.number) < payload.totalItems
+            emitChange(OnActivityLogFetched(rowsAffected, canLoadMore, action))
         }
     }
 
@@ -90,9 +91,10 @@ class ActivityLogStore
 
     // Actions
     data class OnActivityLogFetched(val rowsAffected: Int,
+                                    val canLoadMore: Boolean,
                                     var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
-                this(rowsAffected = 0, causeOfChange = causeOfChange) {
+                this(rowsAffected = 0, canLoadMore = true, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -112,12 +114,14 @@ class ActivityLogStore
 
     class FetchedActivityLogPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
                                     val site: SiteModel,
+                                    val totalItems: Int,
                                     val number: Int,
                                     val offset: Int) : Payload<ActivityError>() {
         constructor(error: ActivityError,
                     site: SiteModel,
+                    totalItems: Int = 0,
                     number: Int,
-                    offset: Int) : this(site = site, number = number, offset = offset) {
+                    offset: Int) : this(site = site, totalItems = totalItems, number = number, offset = offset) {
             this.error = error
         }
     }
