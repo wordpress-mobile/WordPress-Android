@@ -123,6 +123,7 @@
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/margin_medium"
                 android:contentDescription="@string/show_more_desc"
+                android:tint="@color/grey_text_min"
                 app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/margin_medium"/>
