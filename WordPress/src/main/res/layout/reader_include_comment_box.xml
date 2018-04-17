@@ -52,7 +52,7 @@
             android:paddingBottom="@dimen/margin_extra_small"
             android:paddingLeft="@dimen/margin_small"
             android:paddingTop="@dimen/margin_extra_small"
-            android:textColorHint="@color/grey_text_min"
+            android:textColorHint="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_large"
             android:paddingStart="@dimen/margin_small"/>
 

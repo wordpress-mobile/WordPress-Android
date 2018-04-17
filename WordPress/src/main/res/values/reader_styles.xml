@@ -48,6 +48,7 @@
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:drawableTint">@color/grey_text_min</item>
         <item name="android:drawableLeft">@drawable/ic_time_grey_darken_10_16dp</item>
         <item name="android:drawableStart">@drawable/ic_time_grey_darken_10_16dp</item>
     </style>
@@ -71,7 +72,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/max_length_reader_topic_name</item>
-        <item name="android:textColorHint">@color/grey_text_min</item>
+        <item name="android:textColorHint">@color/grey_darken_10</item>
     </style>
 
     <!-- images -->

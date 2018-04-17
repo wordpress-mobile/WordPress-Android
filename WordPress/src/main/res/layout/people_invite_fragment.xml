@@ -141,6 +141,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textColor="@color/grey_text_min"
+                android:drawableTint="@color/blue_wordpress"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="@string/role"
                 android:layout_marginStart="1dp"
@@ -185,7 +186,7 @@
                 android:layout_below="@+id/message"
                 android:gravity="end"
                 android:padding="5dp"
-                android:textColor="@color/grey_lighten_20"
+                android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_small" />
         </RelativeLayout>
 

@@ -152,7 +152,7 @@
     </style>
     <style name="MediaSettings.TextInputTheme" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/grey_text_min</item>
+        <item name="android:textColorHint">@color/grey_darken_10</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_text_min</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
