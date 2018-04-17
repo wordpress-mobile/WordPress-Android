@@ -34,7 +34,7 @@ public interface LoginListener {
     void helpMagicLinkRequest(String email);
 
     // Login Magic Link Sent callbacks
-    void openEmailClient();
+    void openEmailClient(boolean isLogin);
     void helpMagicLinkSent(String email);
 
     // Login email password callbacks
