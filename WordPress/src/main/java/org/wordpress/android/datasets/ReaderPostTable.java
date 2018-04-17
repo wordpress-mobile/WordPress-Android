@@ -998,7 +998,7 @@ public class ReaderPostTable {
         post.setRailcarJson(c.getString(c.getColumnIndex("railcar_json")));
         post.setCardType(ReaderCardType.fromString(c.getString(c.getColumnIndex("card_type"))));
 
-        post.useExcerpt = SqlUtils.sqlToBool(c.getColumnIndex("use_excerpt"));
+        post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
 
         return post;
     }
