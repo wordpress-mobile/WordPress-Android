@@ -28,10 +28,10 @@ import com.bumptech.glide.request.target.Target;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthEmailSent;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -62,7 +62,9 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
     private boolean mInProgress;
 
-    protected @Inject Dispatcher mDispatcher;
+    @Inject protected Dispatcher mDispatcher;
+
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkRequestFragment newInstance(String email) {
         LoginMagicLinkRequestFragment fragment = new LoginMagicLinkRequestFragment();
@@ -97,14 +99,15 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_magic_link_request_screen, container, false);
-        mRequestMagicLinkButton = (Button) view.findViewById(R.id.login_request_magic_link);
+        mRequestMagicLinkButton = view.findViewById(R.id.login_request_magic_link);
         mRequestMagicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
                     if (NetworkUtils.checkConnection(getActivity())) {
                         showMagicLinkRequestProgressDialog();
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
+                        AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, false);
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(authEmailPayload));
                     }
                 }
             }
@@ -120,7 +123,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         });
 
         mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
-        ImageView avatarView = (ImageView) view.findViewById(R.id.gravatar);
+        ImageView avatarView = view.findViewById(R.id.gravatar);
         Glide.with(this)
                 .load(GravatarUtils.gravatarFromEmail(mEmail,
                         getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
@@ -150,7 +153,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -160,7 +163,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         }
 
         if (savedInstanceState == null) {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED);
+            mAnalyticsListener.trackMagicLinkRequestFormViewed();
         }
     }
 
@@ -177,6 +180,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             boolean gravatarInProgress = savedInstanceState.getBoolean(KEY_GRAVATAR_IN_PROGRESS);
             mAvatarProgressBar.setVisibility(gravatarInProgress ? View.VISIBLE : View.GONE);
         }
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.magic_link_login_title);
     }
 
     @Override
@@ -267,7 +272,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         if (event.isError()) {
             HashMap<String, String> errorProperties = new HashMap<>();
             errorProperties.put(ERROR_KEY, event.error.message);
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
+            mAnalyticsListener.trackMagicLinkFailed(errorProperties);
 
             AppLog.e(AppLog.T.API, "OnAuthEmailSent has error: " + event.error.type + " - " + event.error.message);
             if (isAdded()) {
@@ -277,7 +282,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             return;
         }
 
-        mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
+        mAnalyticsListener.trackMagicLinkRequested();
 
         if (mLoginListener != null) {
             mLoginListener.showMagicLinkSentScreen(mEmail);

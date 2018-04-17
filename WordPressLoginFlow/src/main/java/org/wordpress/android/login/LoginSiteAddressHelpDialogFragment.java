@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.view.ContextThemeWrapper;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 
@@ -24,6 +24,8 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
 
+    @Inject LoginAnalyticsListener mAnalyticsListener;
+
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
@@ -38,9 +40,10 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme));
         alert.setTitle(R.string.login_site_address_help_title);
 
+        //noinspection InflateParams
         alert.setView(getActivity().getLayoutInflater().inflate(R.layout.login_alert_site_address_help, null));
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -55,7 +58,7 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
         });
 
         if (savedInstanceState == null) {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_URL_HELP_SCREEN_VIEWED);
+            mAnalyticsListener.trackUrlHelpScreenViewed();
         }
 
         return alert.create();

@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
+import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class LoginMagicLinkSentFragment extends Fragment {
     public static final String TAG = "login_magic_link_sent_fragment_tag";
@@ -24,6 +26,8 @@ public class LoginMagicLinkSentFragment extends Fragment {
     private LoginListener mLoginListener;
 
     private String mEmail;
+
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkSentFragment newInstance(String email) {
         LoginMagicLinkSentFragment fragment = new LoginMagicLinkSentFragment();
@@ -72,7 +76,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -82,12 +86,19 @@ public class LoginMagicLinkSentFragment extends Fragment {
         }
 
         if (savedInstanceState == null) {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+            mAnalyticsListener.trackMagicLinkOpenEmailClientViewed();
         }
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.magic_link_sent_login_title);
     }
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         if (context instanceof LoginListener) {
             mLoginListener = (LoginListener) context;

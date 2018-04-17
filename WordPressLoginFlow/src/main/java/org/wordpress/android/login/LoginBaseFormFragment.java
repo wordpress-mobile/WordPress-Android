@@ -56,9 +56,11 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     private boolean mInProgress;
     private boolean mLoginFinished;
 
-    protected @Inject Dispatcher mDispatcher;
-    protected @Inject SiteStore mSiteStore;
-    protected @Inject AccountStore mAccountStore;
+    @Inject protected Dispatcher mDispatcher;
+    @Inject protected SiteStore mSiteStore;
+    @Inject protected AccountStore mAccountStore;
+
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(@NonNull TextView label);
@@ -203,11 +205,18 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     protected void startProgress() {
+        startProgress(true);
+    }
+
+    protected void startProgress(boolean cancellable) {
         mPrimaryButton.setEnabled(false);
-        mSecondaryButton.setEnabled(false);
+
+        if (mSecondaryButton != null) {
+            mSecondaryButton.setEnabled(false);
+        }
 
         mProgressDialog =
-                ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, true,
+                ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,
                         new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
@@ -229,7 +238,10 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         }
 
         mPrimaryButton.setEnabled(true);
-        mSecondaryButton.setEnabled(true);
+
+        if (mSecondaryButton != null) {
+            mSecondaryButton.setEnabled(true);
+        }
     }
 
     protected void doFinishLogin() {
@@ -249,23 +261,20 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected void onLoginFinished() {
     }
 
-    private void onLoginFinished(boolean success) {
+    protected void onLoginFinished(boolean success) {
         mLoginFinished = true;
 
-        if (!success) {
-            endProgress();
-            return;
-        }
-
-        if (mLoginListener != null) {
+        if (success && mLoginListener != null) {
             onLoginFinished();
         }
+
+        endProgress();
     }
 
     protected void saveCredentialsInSmartLock(LoginListener loginListener, String username, String password) {
         // mUsername and mPassword are null when the user log in with a magic link
         if (loginListener != null) {
-            loginListener.saveCredentials(username, password, mAccountStore.getAccount().getDisplayName(),
+            loginListener.saveCredentialsInSmartLock(username, password, mAccountStore.getAccount().getDisplayName(),
                     Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
         }
     }
@@ -320,10 +329,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
                 // but continue the sign in process
                 ToastUtils.showToast(getContext(), R.string.duplicate_site_detected);
             }
-        }
-
-        if (mLoginListener instanceof LoginListener) {
-            ((LoginListener) mLoginListener).startPostLoginServices();
         }
 
         onLoginFinished(true);

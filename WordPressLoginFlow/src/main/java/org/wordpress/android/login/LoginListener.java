@@ -5,13 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public interface LoginListener {
     interface SelfSignedSSLCallback {
@@ -24,11 +21,11 @@ public interface LoginListener {
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
     void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
-    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds);
+    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
-    void showGoogleLoginScreen(Fragment fragment);
+    void addGoogleLoginFragment(@NonNull Fragment fragment);
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
@@ -56,8 +53,8 @@ public interface LoginListener {
     void helpFindingSiteAddress(String username, SiteStore siteStore);
 
     // Login username password callbacks
-    void saveCredentials(@NonNull String username, @NonNull String password,
-                         @NonNull String displayName, @Nullable Uri profilePicture);
+    void saveCredentialsInSmartLock(@Nullable String username, @Nullable String password,
+                                    @NonNull String displayName, @Nullable Uri profilePicture);
     void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);
     void helpUsernamePassword(String url, String username, boolean isWpcom);
 
@@ -70,9 +67,9 @@ public interface LoginListener {
 
     void setHelpContext(String faqId, String faqSection);
 
-    // Analytics
-    void track(AnalyticsTracker.Stat stat);
-    void track(AnalyticsTracker.Stat stat, Map<String, ?> properties);
-    void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription);
-    void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
+    // Signup
+    void helpSignupEmailScreen(String email);
+    void helpSignupMagicLinkScreen(String email);
+    void showSignupMagicLink(String email);
+    void showSignupToLoginMessage();
 }

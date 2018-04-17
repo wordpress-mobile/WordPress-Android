@@ -23,14 +23,16 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
-import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -42,6 +44,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dagger.android.support.AndroidSupportInjection;
 
@@ -116,7 +119,9 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.selfhosted_site_login_title);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
 
         rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
         rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
@@ -130,17 +135,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
                 .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
         }
 
-        TextView siteNameView = ((TextView) rootView.findViewById(R.id.login_site_title));
+        TextView siteNameView = (rootView.findViewById(R.id.login_site_title));
         siteNameView.setText(mSiteName);
         siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
 
-        TextView siteAddressView = ((TextView) rootView.findViewById(R.id.login_site_address));
+        TextView siteAddressView = (rootView.findViewById(R.id.login_site_address));
         siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mInputSiteAddressWithoutSuffix = UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
 
-        mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
+        mUsernameInput = rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
         if (BuildConfig.DEBUG) {
             mUsernameInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_USERNAME);
@@ -154,7 +159,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             }
         });
 
-        mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
+        mPasswordInput = rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setText(mInputPassword);
         if (BuildConfig.DEBUG) {
             mPasswordInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_PASSWORD);
@@ -228,7 +233,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
+            mAnalyticsListener.trackUsernamePasswordFormViewed();
 
             // auto-login if username and password are set for wpcom login
             if (mIsWpcom && !TextUtils.isEmpty(mInputUsername) && !TextUtils.isEmpty(mInputPassword)) {
@@ -249,7 +254,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
-        outState.putIntegerArrayList(KEY_REQUESTED_PASSWORD, mOldSitesIDs);
+        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
     }
 
     protected void next() {
@@ -354,6 +359,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         });
     }
 
+    private @Nullable SiteModel detectNewlyAddedXMLRPCSite() {
+        List<SiteModel> selfhostedSites = mSiteStore.getSitesAccessedViaXMLRPC();
+        for (SiteModel site : selfhostedSites) {
+            if (!mOldSitesIDs.contains(site.getId())) {
+                return site;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     protected void endProgress() {
         super.endProgress();
@@ -409,7 +425,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mAuthFailed = true;
             AppLog.e(T.API, "Login with username/pass onAuthenticationChanged has error: " + event.error.type
                     + " - " + event.error.message);
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+            mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
             handleAuthError(event.error.type, event.error.message);
@@ -428,14 +444,33 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void onLoginFinished() {
-        mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+
+        mLoginListener.startPostLoginServices();
 
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
+    private void finishLogin() {
+        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+
+        // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
+        mLoginFinished = true;
+
+        if (mLoginListener != null) {
+            if (mIsWpcom) {
+                saveCredentialsInSmartLock(mLoginListener, mRequestedUsername, mRequestedPassword);
+            }
+
+            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
+        }
+
+        endProgress();
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(SiteStore.OnSiteChanged event) {
+    public void onSiteChanged(OnSiteChanged event) {
         if (!isAdded() || mLoginFinished) {
             return;
         }
@@ -449,7 +484,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             endProgress();
 
             String errorMessage;
-            if (event.error.type == SiteStore.SiteErrorType.DUPLICATE_SITE) {
+            if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
                 if (event.rowsAffected == 0) {
                     // If there is a duplicate site and not any site has been added, show an error and
                     // stop the sign in process
@@ -474,22 +509,36 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             return;
         }
 
-        // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
-        //  with finishing the login process
+        SiteModel newlyAddedXMLRPCSite = detectNewlyAddedXMLRPCSite();
+        // newlyAddedSite will be null if the user sign in with wpcom credentials
+        if (newlyAddedXMLRPCSite != null && !newlyAddedXMLRPCSite.isUsingWpComRestApi()) {
+            mDispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(newlyAddedXMLRPCSite));
+        } else {
+            finishLogin();
+        }
+    }
 
-        mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onProfileFetched(OnProfileFetched event) {
+        if (!isAdded() || mLoginFinished) {
+            return;
+        }
 
-        mLoginListener.startPostLoginServices();
-
-        // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
-        mLoginFinished = true;
-
-        if (mLoginListener != null) {
-            if (mIsWpcom) {
-                saveCredentialsInSmartLock(mLoginListener, mRequestedUsername, mRequestedPassword);
+        if (event.isError()) {
+            if (mRequestedUsername == null) {
+                // just bail since the operation was cancelled
+                return;
             }
 
-            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
+            endProgress();
+
+            AppLog.e(T.API, "Fetching selfhosted site profile has error: " + event.error.type + " - "
+                    + event.error.message);
+
+            // continue with success, even if the operation was cancelled since the user got logged in regardless.
+            // So, go on with finishing the login process
         }
+        finishLogin();
     }
 }

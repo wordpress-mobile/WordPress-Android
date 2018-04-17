@@ -1,9 +1,10 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.0'
     }
 }
 
@@ -13,45 +14,50 @@ repositories {
     google()
     jcenter()
     maven { url "https://jitpack.io" }
-    maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
 }
 
 android {
-    publishNonDefault true
-
-    compileSdkVersion project.COMPILE_SDK_VERSION.toInteger()
-    buildToolsVersion project.BUILD_TOOLS_VERSION
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion project.TARGET_SDK_VERSION.toInteger()
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 26
+        versionCode 2
+        versionName "1.1"
 
         vectorDrawables.useSupportLibrary = true
     }
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.18.1'
-    compile 'org.wordpress:analytics:1.3.1'
-
-    compile "com.android.support:appcompat-v7:$project.SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:design:$project.SUPPORT_LIBRARY_VERSION"
-
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:2d5ba6a8475b749ae8cb2248422610e849871caf') {
-        exclude group: "com.android.volley";
+    implementation ('org.wordpress:utils:1.20.2') {
+        exclude group: "com.mcxiaoke.volley"
     }
 
-    compile 'com.github.bumptech.glide:glide:4.0.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
+
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
+
+    // Share FluxC version from host project if defined, otherwise fallback to default
+    if (project.hasProperty("fluxCVersion")) {
+        implementation "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
+    } else {
+        implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6'
+    }
+
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.11'
+    implementation 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.google.dagger:dagger-android-support:2.11'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+
+    lintChecks 'org.wordpress:lint:1.0.0'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig
