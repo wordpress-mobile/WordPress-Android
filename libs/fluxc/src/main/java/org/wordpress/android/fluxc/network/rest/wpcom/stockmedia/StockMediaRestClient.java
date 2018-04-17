@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
-import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.fluxc.store.StockMediaStore.FetchedStockMediaListPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaError;
 import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaErrorType;
 import org.wordpress.android.util.AppLog;
@@ -51,8 +51,8 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                 new Response.Listener<SearchStockMediaResponse>() {
                     @Override
                     public void onResponse(SearchStockMediaResponse response) {
-                        StockMediaStore.FetchedStockMediaListPayload payload =
-                                new StockMediaStore.FetchedStockMediaListPayload(
+                        FetchedStockMediaListPayload payload =
+                                new FetchedStockMediaListPayload(
                                         response.media,
                                         searchTerm,
                                         response.nextPage,
@@ -65,8 +65,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
                         StockMediaError mediaError = new StockMediaError(
                                 StockMediaErrorType.fromBaseNetworkError(error), error.message);
-                        StockMediaStore.FetchedStockMediaListPayload payload =
-                                new StockMediaStore.FetchedStockMediaListPayload(mediaError, searchTerm);
+                        FetchedStockMediaListPayload payload = new FetchedStockMediaListPayload(mediaError, searchTerm);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
                 }
