@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -47,6 +48,7 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
@@ -91,6 +93,8 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
+    public static final String ARG_OPEN_TAB = "open_tab";
+    public static final String ARG_NOTIFICATIONS = "show_notifications";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -106,6 +110,7 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject ShortcutsNavigator mShortcutsNavigator;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -246,10 +251,13 @@ public class WPMainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                // open note detail if activity called from a push, otherwise return to the tab
-                // that was showing last time
+                // open note detail if activity called from a push
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
-                                                                                             false));
+                        false));
+                boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
+                        ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
+                boolean openRequestedTab = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_TAB));
+
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
@@ -259,7 +267,14 @@ public class WPMainActivity extends AppCompatActivity {
                     } else {
                         launchWithNoteId();
                     }
+                } else if (openedFromShortcut) {
+                    initSelectedSite();
+                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                } else if (openRequestedTab) {
+                    handleOpenTabIntent(getIntent());
                 } else {
+                    // return to the tab that was showing last time
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
@@ -363,6 +378,22 @@ public class WPMainActivity extends AppCompatActivity {
         AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
+        }
+        if (intent.hasExtra(ARG_OPEN_TAB)) {
+            handleOpenTabIntent(intent);
+        }
+    }
+
+    private void handleOpenTabIntent(Intent intent) {
+        String tabIdentifier = intent.getStringExtra(ARG_OPEN_TAB);
+        if (StringUtils.isNotBlank(tabIdentifier)) {
+            switch (tabIdentifier) {
+                case ARG_NOTIFICATIONS:
+                    mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
+                    break;
+            }
+        } else {
+            AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
         }
     }
 
