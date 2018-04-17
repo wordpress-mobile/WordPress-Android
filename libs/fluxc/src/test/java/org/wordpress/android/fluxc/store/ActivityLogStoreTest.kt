@@ -72,9 +72,9 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun storeFetchedActivityLogToDb() {
+    fun storeFetchedActivityLogToDbAndSetsLoadMoreToFalse() {
         val activityModels = listOf<ActivityLogModel>(mock())
-        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 10, 0)
+        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 10, 10, 0)
         val action = ActivityLogActionBuilder.newFetchedActivitiesAction(payload)
         val rowsAffected = 1
         whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
@@ -83,6 +83,23 @@ class ActivityLogStoreTest {
 
         verify(activityLogSqlUtils).insertOrUpdateActivities(siteModel, activityModels)
         val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
+                false,
+                ActivityLogAction.FETCHED_ACTIVITIES)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
+    fun setsLoadMoreToTrueOnMoreItems() {
+        val activityModels = listOf<ActivityLogModel>(mock())
+        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 15, 10, 0)
+        val action = ActivityLogActionBuilder.newFetchedActivitiesAction(payload)
+        val rowsAffected = 1
+        whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
+
+        activityLogStore.onAction(action)
+
+        val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
+                true,
                 ActivityLogAction.FETCHED_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
