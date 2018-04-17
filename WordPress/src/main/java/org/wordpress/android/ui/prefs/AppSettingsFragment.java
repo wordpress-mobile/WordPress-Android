@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -189,13 +190,17 @@ public class AppSettingsFragment extends PreferenceFragment
                     ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
                     break;
             }
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            // no need to sync with remote here, or do anything else here, since the logic is already in WordPress.java
+            updateAnalyticsSyncUI();
         }
-        // no need to sync with remote here, or do anything else here, since the logic is already in WordPress.java
-        updateAnalyticsSyncUI();
     }
 
     /* Make sure the UI is synced with the backend value */
     private void updateAnalyticsSyncUI() {
+        if (!isAdded()) {
+            return;
+        }
         if (mAccountStore.hasAccessToken()) {
         SwitchPreference tracksOptOutPreference =
                 (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
