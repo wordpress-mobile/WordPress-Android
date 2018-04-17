@@ -51,14 +51,15 @@ public class AnalyticsUtils {
     private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
-    public static void syncAnalyticsOptionWithWpCom(Context ctx,
-                                                    Dispatcher mDispatcher,
-                                                    AccountStore mAccountStore,
-                                                    boolean optOut) {
+    public static void updateAnalyticsPreference(Context ctx,
+                                                 Dispatcher mDispatcher,
+                                                 AccountStore mAccountStore,
+                                                 boolean optOut) {
         AnalyticsTracker.setHasUserOptedOut(optOut);
         if (optOut) {
             AnalyticsTracker.clearAllData();
         }
+        // Sync with wpcom if a token is available
         if (mAccountStore.hasAccessToken()) {
             mAccountStore.getAccount().setTracksOptOut(optOut);
             AccountStore.PushAccountSettingsPayload payload = new AccountStore.PushAccountSettingsPayload();

@@ -76,7 +76,7 @@ public class AppSettingsFragment extends PreferenceFragment
                         if (newValue == null) {
                             return false;
                         }
-                        AnalyticsUtils.syncAnalyticsOptionWithWpCom(
+                        AnalyticsUtils.updateAnalyticsPreference(
                                 getActivity(),
                                 mDispatcher,
                                 mAccountStore,

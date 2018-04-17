@@ -524,7 +524,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut);
             // When local and remote prefs are different, force opt out to TRUE
             if (hasUserOptedOut != mAccountStore.getAccount().getTracksOptOut()) {
-                AnalyticsUtils.syncAnalyticsOptionWithWpCom(getContext(), mDispatcher, mAccountStore, true);
+                AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
             }
         }
     }
