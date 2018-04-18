@@ -158,8 +158,7 @@ class ActivityLogStore
         MISSING_PUBLISHED_DATE
     }
 
-    class ActivityError(var type: ActivityLogErrorType,
-                        var message: String? = null) : Store.OnChangedError
+    class ActivityError(var type: ActivityLogErrorType, var message: String? = null) : Store.OnChangedError
 
     enum class RewindStatusErrorType {
         GENERIC_ERROR,
@@ -172,6 +171,5 @@ class ActivityLogStore
         INVALID_RESTORE_STATUS
     }
 
-    class RewindStatusError(var type: RewindStatusErrorType,
-                            var message: String? = null) : Store.OnChangedError
+    class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError
 }
