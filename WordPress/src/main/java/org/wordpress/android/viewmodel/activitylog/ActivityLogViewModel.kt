@@ -83,20 +83,23 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
     }
 
     private fun fetchEvents(loadMore: Boolean) {
-        if (!shouldFetchEvents(loadMore)) {
-            return
+        if (shouldFetchEvents(loadMore)) {
+            val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
+            _eventListStatus.postValue(newStatus)
+            val payload = ActivityLogStore.FetchActivityLogPayload(site, loadMore)
+            dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
         }
-        val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
-        _eventListStatus.postValue(newStatus)
-        val payload = ActivityLogStore.FetchActivityLogPayload(site, loadMore)
-        dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
     }
 
     private fun shouldFetchEvents(loadMore: Boolean): Boolean {
-        if (_eventListStatus == ActivityLogListStatus.FETCHING || _eventListStatus == ActivityLogListStatus.LOADING_MORE) {
-            return false
+        return if (_eventListStatus.value == ActivityLogListStatus.FETCHING ||
+                _eventListStatus.value == ActivityLogListStatus.LOADING_MORE) {
+            false
+        } else if (loadMore) {
+            _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
+        } else {
+            true
         }
-        return loadMore
     }
 
     fun loadMore() {
@@ -113,13 +116,7 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
             return
         }
 
-        updateEventListIfNecessary(activityLogStore.getActivityLogForSite(site, false))
-    }
-
-    private fun updateEventListIfNecessary(list: List<ActivityLogModel>) {
-        handler.post({
-            _events.postValue(list)
-            _eventListStatus.postValue(ActivityLogListStatus.DONE)
-        })
+        _events.postValue(activityLogStore.getActivityLogForSite(site, false))
+        _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)
     }
 }
