@@ -534,7 +534,8 @@ public class SiteStore extends Store {
     }
 
     public enum AutomatedTransferErrorType {
-        // TODO: What other types of errors can we get here?
+        AT_NOT_ELIGIBLE, // occurs if AT is initiated when the site is not eligible
+        NOT_FOUND, // occurs if transfer status of a site with no active transfer is checked
         GENERIC_ERROR;
 
         public static AutomatedTransferErrorType fromString(String type) {
