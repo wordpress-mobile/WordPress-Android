@@ -355,8 +355,17 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to https://wordpress.com/wp-login.php"
+                                             + "?action=two-step-authentication-endpoint";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -398,8 +407,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to /me/social-login/connect";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -442,8 +459,17 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to https://wordpress.com/wp-login.php"
+                                             + "?action=social-login-endpoint";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -484,8 +510,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to /users/social/new";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -526,8 +560,17 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
-                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        if (response != null) {
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        } else {
+                            String message = "Received empty response to https://wordpress.com/wp-login.php"
+                                             + "?action=send-sms-code-endpoint";
+                            AppLog.e(T.API, message);
+                            AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                            payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, message);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -808,6 +851,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setNewEmail(from.new_user_email);
         account.setAvatarUrl(from.avatar_URL);
         account.setPendingEmailChange(from.user_email_change_pending);
+        account.setTracksOptOut(from.tracks_opt_out);
         account.setWebAddress(from.user_URL);
         account.setPrimarySiteId(from.primary_site_ID);
         return account;
@@ -834,6 +878,9 @@ public class AccountRestClient extends BaseWPComRestClient {
         if (from.containsKey("user_email")) accountModel.setEmail((String) from.get("user_email"));
         if (from.containsKey("user_email_change_pending")) {
             accountModel.setPendingEmailChange((Boolean) from.get("user_email_change_pending"));
+        }
+        if (from.containsKey("tracks_opt_out")) {
+            accountModel.setTracksOptOut((Boolean) from.get("tracks_opt_out"));
         }
         if (from.containsKey("new_user_email")) accountModel.setEmail((String) from.get("new_user_email"));
         if (from.containsKey("user_URL")) accountModel.setWebAddress((String) from.get("user_URL"));
