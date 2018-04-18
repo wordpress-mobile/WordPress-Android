@@ -7,8 +7,8 @@ public class ReaderIframeScanner {
     private final String mContent;
 
     private static final Pattern IFRAME_TAG_PATTERN = Pattern.compile(
-            ".*(<iframe\\s+.*src\\s*=\\s*'([^']+)'.*>).*",
-            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+            "<iframe[^>]* src=\\\'([^\\\']*)\\\'[^>]*>",
+            Pattern.CASE_INSENSITIVE);
 
     public ReaderIframeScanner(String contentOfPost) {
         mContent = contentOfPost;
@@ -21,8 +21,8 @@ public class ReaderIframeScanner {
 
         Matcher matcher = IFRAME_TAG_PATTERN.matcher(mContent);
         while (matcher.find()) {
-            String tag = matcher.group(1);
-            String src = matcher.group(2);
+            String tag = matcher.group(0);
+            String src = matcher.group(1);
             listener.onTagFound(tag, src);
         }
     }
@@ -33,7 +33,7 @@ public class ReaderIframeScanner {
     public String getFirstUsableVideo() {
         Matcher matcher = IFRAME_TAG_PATTERN.matcher(mContent);
         while (matcher.find()) {
-            String src = matcher.group(2);
+            String src = matcher.group(1);
             if (ReaderVideoUtils.canShowVideoThumbnail(src)) {
                 return src;
             }
