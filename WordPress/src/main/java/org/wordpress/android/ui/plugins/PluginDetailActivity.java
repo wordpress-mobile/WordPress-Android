@@ -1288,7 +1288,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                         // Let's wait a second before checking the status again
                         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
                     }
-                }, 1000);
+                }, 3000); // Wait 3 seconds before checking the status again
             }
         }
     }
