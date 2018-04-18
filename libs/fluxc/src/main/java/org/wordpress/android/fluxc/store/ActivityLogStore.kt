@@ -21,9 +21,11 @@ private const val ACTIVITY_LOG_PAGE_SIZE = 10
 
 @Singleton
 class ActivityLogStore
-@Inject constructor(private val activityLogRestClient: ActivityLogRestClient,
-                    private val activityLogSqlUtils: ActivityLogSqlUtils,
-                    dispatcher: Dispatcher) : Store(dispatcher) {
+@Inject constructor(
+    private val activityLogRestClient: ActivityLogRestClient,
+    private val activityLogSqlUtils: ActivityLogSqlUtils,
+    dispatcher: Dispatcher
+) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? ActivityLogAction ?: return
@@ -54,8 +56,10 @@ class ActivityLogStore
     private fun fetchActivities(fetchActivityLogPayload: FetchActivityLogPayload) {
         var offset = 0
         if (fetchActivityLogPayload.loadMore) {
-            offset = activityLogSqlUtils.getActivitiesForSite(fetchActivityLogPayload.site,
-                    SelectQuery.ORDER_ASCENDING).size
+            offset = activityLogSqlUtils.getActivitiesForSite(
+                    fetchActivityLogPayload.site,
+                    SelectQuery.ORDER_ASCENDING
+            ).size
         } else {
             activityLogSqlUtils.deleteActivityLog()
         }
@@ -90,9 +94,11 @@ class ActivityLogStore
     }
 
     // Actions
-    data class OnActivityLogFetched(val rowsAffected: Int,
-                                    val canLoadMore: Boolean,
-                                    var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
+    data class OnActivityLogFetched(
+        val rowsAffected: Int,
+        val canLoadMore: Boolean,
+        var causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
                 this(rowsAffected = 0, canLoadMore = true, causeOfChange = causeOfChange) {
             this.error = error
@@ -107,27 +113,35 @@ class ActivityLogStore
     }
 
     // Payloads
-    class FetchActivityLogPayload(val site: SiteModel,
-                                  val loadMore: Boolean = false) : Payload<BaseRequest.BaseNetworkError>()
+    class FetchActivityLogPayload(
+        val site: SiteModel,
+        val loadMore: Boolean = false
+    ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
-    class FetchedActivityLogPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
-                                    val site: SiteModel,
-                                    val totalItems: Int,
-                                    val number: Int,
-                                    val offset: Int) : Payload<ActivityError>() {
-        constructor(error: ActivityError,
-                    site: SiteModel,
-                    totalItems: Int = 0,
-                    number: Int,
-                    offset: Int) : this(site = site, totalItems = totalItems, number = number, offset = offset) {
+    class FetchedActivityLogPayload(
+        val activityLogModels: List<ActivityLogModel> = listOf(),
+        val site: SiteModel,
+        val totalItems: Int,
+        val number: Int,
+        val offset: Int
+    ) : Payload<ActivityError>() {
+        constructor(
+            error: ActivityError,
+            site: SiteModel,
+            totalItems: Int = 0,
+            number: Int,
+            offset: Int
+        ) : this(site = site, totalItems = totalItems, number = number, offset = offset) {
             this.error = error
         }
     }
 
-    class FetchedRewindStatePayload(val rewindStatusModelResponse: RewindStatusModel? = null,
-                                    val site: SiteModel) : Payload<RewindStatusError>() {
+    class FetchedRewindStatePayload(
+        val rewindStatusModelResponse: RewindStatusModel? = null,
+        val site: SiteModel
+    ) : Payload<RewindStatusError>() {
         constructor(error: RewindStatusError, site: SiteModel) : this(site = site) {
             this.error = error
         }
