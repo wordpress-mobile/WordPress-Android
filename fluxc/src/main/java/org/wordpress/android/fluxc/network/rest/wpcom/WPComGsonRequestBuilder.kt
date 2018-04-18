@@ -15,11 +15,13 @@ class WPComGsonRequestBuilder
      * @param listener the success listener
      * @param errorListener the error listener
      */
-    fun <T> buildGetRequest(url: String,
-                            params: Map<String, String>,
-                            clazz: Class<T>,
-                            listener: (T) -> Unit,
-                            errorListener: (BaseRequest.BaseNetworkError) -> Unit): WPComGsonRequest<T> {
+    fun <T> buildGetRequest(
+        url: String,
+        params: Map<String, String>,
+        clazz: Class<T>,
+        listener: (T) -> Unit,
+        errorListener: (BaseRequest.BaseNetworkError) -> Unit
+    ): WPComGsonRequest<T> {
         return WPComGsonRequest.buildGetRequest(url, params, clazz, listener, errorListener)
     }
 
@@ -31,11 +33,13 @@ class WPComGsonRequestBuilder
      * @param listener the success listener
      * @param errorListener the error listener
      */
-    fun <T> buildPostRequest(url: String,
-                             body: Map<String, Any>,
-                             clazz: Class<T>,
-                             listener: (T) -> Unit,
-                             errorListener: (BaseRequest.BaseNetworkError) -> Unit): WPComGsonRequest<T> {
+    fun <T> buildPostRequest(
+        url: String,
+        body: Map<String, Any>,
+        clazz: Class<T>,
+        listener: (T) -> Unit,
+        errorListener: (BaseRequest.BaseNetworkError) -> Unit
+    ): WPComGsonRequest<T> {
         return WPComGsonRequest.buildPostRequest(url, body, clazz, listener, errorListener)
     }
 }

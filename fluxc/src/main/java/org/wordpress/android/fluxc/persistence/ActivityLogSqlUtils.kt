@@ -33,8 +33,9 @@ class ActivityLogSqlUtils
             WellSql.update(ActivityLogBuilder::class.java)
                     .where()
                     .equals(ActivityLogTable.ACTIVITY_ID, it.activityID)
+                    .equals(ActivityLogTable.LOCAL_SITE_ID, it.localSiteId)
                     .endWhere()
-                    .put(it)
+                    .put(it, UpdateAllExceptId<ActivityLogBuilder>(ActivityLogBuilder::class.java))
         }
         insertQuery.execute()
         return updateQueries.map { it.execute() }.sum() + new.count()
@@ -57,8 +58,9 @@ class ActivityLogSqlUtils
             WellSql.update(RewindStatusBuilder::class.java)
                     .where()
                     .equals(RewindStatusTable.ID, existingRewindStatus.id)
+                    .equals(RewindStatusTable.LOCAL_SITE_ID, existingRewindStatus.localSiteId)
                     .endWhere()
-                    .put(rewindStatusBuilder)
+                    .put(rewindStatusBuilder, UpdateAllExceptId<RewindStatusBuilder>(RewindStatusBuilder::class.java))
         } else {
             WellSql.insert(rewindStatusBuilder)
         }
@@ -96,7 +98,8 @@ class ActivityLogSqlUtils
                 actorType = this.actor?.type,
                 wpcomUserID = this.actor?.wpcomUserID,
                 avatarURL = this.actor?.avatarURL,
-                role = this.actor?.role)
+                role = this.actor?.role
+        )
     }
 
     private fun RewindStatusModel.toBuilder(site: SiteModel): RewindStatusBuilder {
@@ -110,30 +113,33 @@ class ActivityLogSqlUtils
                 restoreMessage = this.restore?.message,
                 restoreProgress = this.restore?.progress,
                 restoreErrorCode = this.restore?.errorCode,
-                restoreState = this.restore?.status?.value)
+                restoreState = this.restore?.status?.value
+        )
     }
 
     @Table(name = "ActivityLog")
-    data class ActivityLogBuilder(@PrimaryKey
-                                  @Column private var mId: Int = -1,
-                                  @Column var localSiteId: Int,
-                                  @Column var remoteSiteId: Long,
-                                  @Column var activityID: String,
-                                  @Column var summary: String,
-                                  @Column var text: String,
-                                  @Column var name: String? = null,
-                                  @Column var type: String? = null,
-                                  @Column var gridicon: String? = null,
-                                  @Column var status: String? = null,
-                                  @Column var rewindable: Boolean? = null,
-                                  @Column var rewindID: String? = null,
-                                  @Column var published: Long,
-                                  @Column var discarded: Boolean? = null,
-                                  @Column var displayName: String? = null,
-                                  @Column var actorType: String? = null,
-                                  @Column var wpcomUserID: Long? = null,
-                                  @Column var avatarURL: String? = null,
-                                  @Column var role: String? = null) : Identifiable {
+    data class ActivityLogBuilder(
+        @PrimaryKey
+        @Column private var mId: Int = -1,
+        @Column var localSiteId: Int,
+        @Column var remoteSiteId: Long,
+        @Column var activityID: String,
+        @Column var summary: String,
+        @Column var text: String,
+        @Column var name: String? = null,
+        @Column var type: String? = null,
+        @Column var gridicon: String? = null,
+        @Column var status: String? = null,
+        @Column var rewindable: Boolean? = null,
+        @Column var rewindID: String? = null,
+        @Column var published: Long,
+        @Column var discarded: Boolean? = null,
+        @Column var displayName: String? = null,
+        @Column var actorType: String? = null,
+        @Column var wpcomUserID: Long? = null,
+        @Column var avatarURL: String? = null,
+        @Column var role: String? = null
+    ) : Identifiable {
         constructor() : this(-1, 0, 0, "", "", "", published = 0)
 
         override fun setId(id: Int) {
@@ -163,20 +169,21 @@ class ActivityLogSqlUtils
     }
 
     @Table(name = "RewindStatus")
-    data class RewindStatusBuilder(@PrimaryKey
-                                   @Column private var mId: Int = -1,
-                                   @Column var localSiteId: Int,
-                                   @Column var remoteSiteId: Long,
-                                   @Column var rewindState: String? = null,
-                                   @Column var reason: String? = null,
-                                   @Column var restoreId: String? = null,
-                                   @Column var restoreState: String? = null,
-                                   @Column var restoreProgress: Int? = null,
-                                   @Column var restoreMessage: String? = null,
-                                   @Column var restoreErrorCode: String? = null,
-                                   @Column var restoreFailureReason: String? = null) : Identifiable {
+    data class RewindStatusBuilder(
+        @PrimaryKey
+        @Column private var mId: Int = -1,
+        @Column var localSiteId: Int,
+        @Column var remoteSiteId: Long,
+        @Column var rewindState: String? = null,
+        @Column var reason: String? = null,
+        @Column var restoreId: String? = null,
+        @Column var restoreState: String? = null,
+        @Column var restoreProgress: Int? = null,
+        @Column var restoreMessage: String? = null,
+        @Column var restoreErrorCode: String? = null,
+        @Column var restoreFailureReason: String? = null
+    ) : Identifiable {
         constructor() : this(-1, 0, 0)
-
         override fun setId(id: Int) {
             this.mId = id
         }
@@ -184,12 +191,14 @@ class ActivityLogSqlUtils
         override fun getId() = mId
 
         fun build(): RewindStatusModel {
-            val restoreStatus = RewindStatusModel.RestoreStatus.build(restoreId,
+            val restoreStatus = RewindStatusModel.RestoreStatus.build(
+                    restoreId,
                     restoreState,
                     restoreProgress,
                     restoreMessage,
                     restoreErrorCode,
-                    restoreFailureReason)
+                    restoreFailureReason
+            )
             return RewindStatusModel(rewindState?.let { RewindStatusModel.State.fromValue(it) }
                     ?: RewindStatusModel.State.UNKNOWN, reason, restoreStatus)
         }
