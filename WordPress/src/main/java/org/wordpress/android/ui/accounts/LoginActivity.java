@@ -336,6 +336,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSignupSheetEmailClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
         dismissSignupSheet();
         slideInFragment(new SignupEmailFragment(), true, SignupEmailFragment.TAG);
@@ -343,6 +344,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSignupSheetGoogleClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
 
         if (NetworkUtils.checkConnection(this)) {
@@ -439,9 +441,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void openEmailClient() {
+    public void openEmailClient(boolean isLogin) {
         if (WPActivityUtils.isEmailClientAvailable(this)) {
-            mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
+            if (isLogin) {
+                mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
+            } else {
+                mLoginAnalyticsListener.trackSignupMagicLinkOpenEmailClientClicked();
+            }
+
             WPActivityUtils.openEmailClient(this);
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
