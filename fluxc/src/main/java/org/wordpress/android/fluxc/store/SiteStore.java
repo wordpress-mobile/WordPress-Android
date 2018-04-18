@@ -1269,6 +1269,7 @@ public class SiteStore extends Store {
     private void handleCheckedAutomatedTransferStatus(AutomatedTransferStatusResponsePayload payload) {
         OnAutomatedTransferStatusChecked event;
         if (!payload.isError()) {
+            // We can't rely on the currentStep and totalSteps as it may not be equal when the transfer is complete
             boolean isTransferCompleted = payload.status.equalsIgnoreCase("complete");
             event = new OnAutomatedTransferStatusChecked(payload.site, isTransferCompleted, payload.currentStep,
                     payload.totalSteps);
