@@ -19,9 +19,11 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivityLogStore
-@Inject constructor(private val activityLogRestClient: ActivityLogRestClient,
-                    private val activityLogSqlUtils: ActivityLogSqlUtils,
-                    dispatcher: Dispatcher) : Store(dispatcher) {
+@Inject constructor(
+    private val activityLogRestClient: ActivityLogRestClient,
+    private val activityLogSqlUtils: ActivityLogSqlUtils,
+    dispatcher: Dispatcher
+) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? ActivityLogAction ?: return
@@ -30,7 +32,7 @@ class ActivityLogStore
             ActivityLogAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivityLogPayload)
             ActivityLogAction.FETCHED_ACTIVITIES ->
                 storeActivityLog(action.payload as FetchedActivityLogPayload,
-                    actionType)
+                        actionType)
             ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
             ActivityLogAction.FETCHED_REWIND_STATE -> storeRewindState(action.payload as FetchedRewindStatePayload,
                     actionType)
@@ -53,9 +55,11 @@ class ActivityLogStore
     }
 
     private fun fetchActivities(fetchActivityLogPayload: FetchActivityLogPayload) {
-        activityLogRestClient.fetchActivity(fetchActivityLogPayload.site,
+        activityLogRestClient.fetchActivity(
+                fetchActivityLogPayload.site,
                 fetchActivityLogPayload.number,
-                fetchActivityLogPayload.offset)
+                fetchActivityLogPayload.offset
+        )
     }
 
     private fun rewind(rewindPayload: RewindPayload) {
@@ -93,9 +97,11 @@ class ActivityLogStore
     }
 
     // Actions
-    data class OnActivityLogFetched(val rowsAffected: Int,
-                                    val activityLogModels: List<ActivityLogModel>?,
-                                    var causeOfChange: ActivityLogAction) : Store.OnChanged<ActivityError>() {
+    data class OnActivityLogFetched(
+        val rowsAffected: Int,
+        val activityLogModels: List<ActivityLogModel>?,
+        var causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
                 this(rowsAffected = 0, activityLogModels = null, causeOfChange = causeOfChange) {
             this.error = error
@@ -109,8 +115,10 @@ class ActivityLogStore
         }
     }
 
-    data class OnRewind(val restoreId: String? = null,
-                        var causeOfChange: ActivityLogAction) : Store.OnChanged<RewindError>() {
+    data class OnRewind(
+        val restoreId: String? = null,
+        var causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<RewindError>() {
         constructor(error: RewindError, causeOfChange: ActivityLogAction) :
                 this(restoreId = null, causeOfChange = causeOfChange) {
             this.error = error
@@ -118,35 +126,42 @@ class ActivityLogStore
     }
 
     // Payloads
-    class FetchActivityLogPayload(val site: SiteModel,
-                                  val number: Int,
-                                  val offset: Int) : Payload<BaseRequest.BaseNetworkError>()
+    class FetchActivityLogPayload(
+        val site: SiteModel,
+        val number: Int,
+        val offset: Int
+    ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
     class RewindPayload(val site: SiteModel, val rewindId: String) : Payload<BaseRequest.BaseNetworkError>()
 
-    class FetchedActivityLogPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
-                                    val site: SiteModel,
-                                    val number: Int,
-                                    val offset: Int) : Payload<ActivityError>() {
-        constructor(error: ActivityError,
-                    site: SiteModel,
-                    number: Int,
-                    offset: Int) : this(site = site, number = number, offset = offset) {
+    class FetchedActivityLogPayload(
+        val activityLogModels: List<ActivityLogModel> = listOf(),
+        val site: SiteModel,
+        val number: Int,
+        val offset: Int
+    ) : Payload<ActivityError>() {
+        constructor(
+            error: ActivityError,
+            site: SiteModel,
+            number: Int,
+            offset: Int
+        ) : this(site = site, number = number, offset = offset) {
             this.error = error
         }
     }
 
-    class FetchedRewindStatePayload(val rewindStatusModelResponse: RewindStatusModel? = null,
-                                    val site: SiteModel) : Payload<RewindStatusError>() {
+    class FetchedRewindStatePayload(
+        val rewindStatusModelResponse: RewindStatusModel? = null,
+        val site: SiteModel
+    ) : Payload<RewindStatusError>() {
         constructor(error: RewindStatusError, site: SiteModel) : this(site = site) {
             this.error = error
         }
     }
 
-    class RewindResultPayload(val restoreId: String? = null,
-                              val site: SiteModel) : Payload<RewindError>() {
+    class RewindResultPayload(val restoreId: String? = null, val site: SiteModel) : Payload<RewindError>() {
         constructor(error: RewindError, site: SiteModel) : this(site = site) {
             this.error = error
         }

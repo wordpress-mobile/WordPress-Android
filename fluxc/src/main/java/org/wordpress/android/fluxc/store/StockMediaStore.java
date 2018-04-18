@@ -136,11 +136,11 @@ public class StockMediaStore extends Store {
         AppLog.d(AppLog.T.MEDIA, "StockMediaStore onRegister");
     }
 
-    private void performFetchStockMediaList(StockMediaStore.FetchStockMediaListPayload payload) {
+    private void performFetchStockMediaList(FetchStockMediaListPayload payload) {
         mStockMediaRestClient.searchStockMedia(payload.searchTerm, payload.page);
     }
 
-    private void handleStockMediaListFetched(@NonNull StockMediaStore.FetchedStockMediaListPayload payload) {
+    private void handleStockMediaListFetched(@NonNull FetchedStockMediaListPayload payload) {
         OnStockMediaListFetched onStockMediaListFetched;
 
         if (payload.isError()) {
