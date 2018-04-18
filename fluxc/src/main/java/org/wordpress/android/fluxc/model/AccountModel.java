@@ -35,6 +35,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mNewEmail;
     @Column private boolean mPendingEmailChange;
     @Column private String mWebAddress; // WPCom rest API: user_URL
+    @Column private boolean mTracksOptOut;
 
     public AccountModel() {
         init();
@@ -74,7 +75,8 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
                && StringUtils.equals(getNewEmail(), otherAccount.getNewEmail())
                && getPendingEmailChange() == otherAccount.getPendingEmailChange()
                && StringUtils.equals(getWebAddress(), otherAccount.getWebAddress())
-               && getHasUnseenNotes() == otherAccount.getHasUnseenNotes();
+               && getHasUnseenNotes() == otherAccount.getHasUnseenNotes()
+               && getTracksOptOut() == otherAccount.getTracksOptOut();
     }
 
     public void init() {
@@ -95,6 +97,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
         mNewEmail = "";
         mPendingEmailChange = false;
         mWebAddress = "";
+        mTracksOptOut = false;
     }
 
     /**
@@ -128,6 +131,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
         setDate(other.getDate());
         setNewEmail(other.getNewEmail());
         setPendingEmailChange(other.getPendingEmailChange());
+        setTracksOptOut(other.getTracksOptOut());
         setWebAddress(other.getWebAddress());
         setDisplayName(other.getDisplayName());
     }
@@ -274,5 +278,13 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
 
     public void setHasUnseenNotes(boolean hasUnseenNotes) {
         mHasUnseenNotes = hasUnseenNotes;
+    }
+
+    public boolean getTracksOptOut() {
+        return mTracksOptOut;
+    }
+
+    public void setTracksOptOut(boolean tracksOptOut) {
+        mTracksOptOut = tracksOptOut;
     }
 }
