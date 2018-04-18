@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
@@ -90,10 +91,10 @@ public class SiteUtils {
     }
 
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
-        return site != null && !site.isAutomatedTransfer() && SiteUtils.hasBusinessPlan(site);
+        return site != null && !site.isAutomatedTransfer() && SiteUtils.hasNonJetpackBusinessPlan(site);
     }
 
-    public static boolean hasBusinessPlan(SiteModel site) {
-        return site.getPlanShortName() != null && site.getPlanShortName().equalsIgnoreCase("business");
+    public static boolean hasNonJetpackBusinessPlan(SiteModel site) {
+        return site.getPlanId() == PlansConstants.BUSINESS_PLAN_ID;
     }
 }

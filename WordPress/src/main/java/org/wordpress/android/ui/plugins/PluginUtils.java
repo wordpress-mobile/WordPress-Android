@@ -16,7 +16,7 @@ public class PluginUtils {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
         }
         // If the site has business plan we can do an automated transfer
-        return SiteUtils.hasBusinessPlan(site);
+        return SiteUtils.hasNonJetpackBusinessPlan(site);
     }
 
     static boolean isUpdateAvailable(@Nullable ImmutablePluginModel immutablePlugin) {
