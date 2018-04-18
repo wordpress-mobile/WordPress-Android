@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
@@ -503,14 +504,15 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<AutomatedTransferEligibilityCheckResponse>() {
                     @Override
                     public void onResponse(AutomatedTransferEligibilityCheckResponse response) {
-                        List<String> strErrors = new ArrayList<>();
+                        List<String> strErrorCodes = new ArrayList<>();
                         if (response.errors != null) {
-                            for (int i = 0; i < response.errors.length; i++) {
-                                strErrors.add(response.errors[i].message);
+                            for (EligibilityError eligibilityError : response.errors) {
+                                strErrorCodes.add(eligibilityError.code);
                             }
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
-                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible, strErrors)));
+                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible,
+                                        strErrorCodes)));
                     }
                 },
                 new BaseErrorListener() {
