@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 28;
+        return 29;
     }
 
     @Override
@@ -225,6 +225,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("ALTER TABLE SiteModel ADD HAS_WOO_COMMERCE INTEGER");
                 oldVersion++;
             case 27:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table AccountModel add TRACKS_OPT_OUT boolean;");
+                oldVersion++;
+            case 28:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE SubscriptionModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                            + "SUBSCRIPTION_ID TEXT,BLOG_ID TEXT,BLOG_NAME TEXT,FEED_ID TEXT,URL TEXT,"
