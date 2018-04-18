@@ -785,11 +785,10 @@ public class EditPostActivity extends AppCompatActivity implements
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        MediaBrowserType mediaBrowserType =
-                mShowAztecEditor ? MediaBrowserType.AZTEC_EDITOR_PICKER : MediaBrowserType.EDITOR_PICKER;
-
         mPhotoPickerFragment = (PhotoPickerFragment) getFragmentManager().findFragmentByTag(PHOTO_PICKER_TAG);
         if (mPhotoPickerFragment == null) {
+            MediaBrowserType mediaBrowserType =
+                    mShowAztecEditor ? MediaBrowserType.AZTEC_EDITOR_PICKER : MediaBrowserType.EDITOR_PICKER;
             mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, mediaBrowserType, getSite());
             getFragmentManager()
                     .beginTransaction()
