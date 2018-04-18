@@ -178,6 +178,7 @@ public class ReaderPostActions {
                     localPost.useExcerpt = serverPost.useExcerpt;
                     localPost.setTitle(serverPost.getTitle());
                     localPost.setText(serverPost.getText());
+                    localPost.setExcerpt(serverPost.getExcerpt());
                     ReaderPostTable.updatePost(localPost);
                 }
 
