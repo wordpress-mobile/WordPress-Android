@@ -19,4 +19,5 @@ public class AccountSettingsResponse implements Response {
     public String user_URL;
     public String avatar_URL;
     public long primary_site_ID;
+    public boolean tracks_opt_out;
 }
