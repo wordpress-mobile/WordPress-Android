@@ -16,12 +16,14 @@ data class RewindStatusModel(val state: State, val reason: String?, val restore:
         }
     }
 
-    data class RestoreStatus(val id: String,
-                             val status: Status,
-                             val progress: Int,
-                             val message: String?,
-                             val errorCode: String?,
-                             val failureReason: String?) {
+    data class RestoreStatus(
+        val id: String,
+        val status: Status,
+        val progress: Int,
+        val message: String?,
+        val errorCode: String?,
+        val failureReason: String?
+    ) {
         enum class Status(val value: String) {
             QUEUED("queued"),
             FINISHED("finished"),
@@ -37,12 +39,14 @@ data class RewindStatusModel(val state: State, val reason: String?, val restore:
         }
 
         companion object {
-            fun build(restoreId: String?,
-                      restoreState: String?,
-                      restoreProgress: Int?,
-                      restoreMessage: String?,
-                      restoreErrorCode: String?,
-                      restoreFailureReason: String?): RestoreStatus? {
+            fun build(
+                restoreId: String?,
+                restoreState: String?,
+                restoreProgress: Int?,
+                restoreMessage: String?,
+                restoreErrorCode: String?,
+                restoreFailureReason: String?
+            ): RestoreStatus? {
                 return if (restoreId != null && restoreState != null && restoreProgress != null) {
                     RestoreStatus(restoreId,
                             Status.fromValue(restoreState) ?: Status.UNKNOWN,
