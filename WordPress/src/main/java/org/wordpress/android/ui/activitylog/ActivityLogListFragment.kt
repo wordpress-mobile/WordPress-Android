@@ -117,17 +117,16 @@ class ActivityLogListFragment : Fragment() {
         private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
         override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
-            holder.bind(getItem(position))
+
+            val item = getItem(position)
+            holder.bind(item)
 
             if (position == itemCount - 1) {
                 viewModel.loadMore()
             }
 
-            holder.header.visibility = if (shouldDisplayHeader(position)) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+            holder.header.visibility = if (shouldDisplayHeader(position)) View.VISIBLE else View.GONE
+            holder.button.visibility = if (item.rewindable == true) View.VISIBLE else View.GONE
         }
 
         init {
