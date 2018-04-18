@@ -175,6 +175,7 @@ public class ReaderPostActions {
                     localPost.isFollowedByCurrentUser = serverPost.isFollowedByCurrentUser;
                     localPost.isLikedByCurrentUser = serverPost.isLikedByCurrentUser;
                     localPost.isCommentsOpen = serverPost.isCommentsOpen;
+                    localPost.useExcerpt = serverPost.useExcerpt;
                     localPost.setTitle(serverPost.getTitle());
                     localPost.setText(serverPost.getText());
                     ReaderPostTable.updatePost(localPost);

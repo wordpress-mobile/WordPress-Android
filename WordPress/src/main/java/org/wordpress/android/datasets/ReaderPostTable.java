@@ -279,6 +279,7 @@ public class ReaderPostTable {
         values.put("is_liked", post.isLikedByCurrentUser);
         values.put("is_followed", post.isFollowedByCurrentUser);
         values.put("is_comments_open", post.isCommentsOpen);
+        values.put("use_excerpt", post.useExcerpt);
         ReaderDatabase.getWritableDb().update(
                 "tbl_posts", values, "pseudo_id=?", new String[]{post.getPseudoId()});
 
