@@ -53,7 +53,7 @@ class ActivityLogRestClient
                             ActivityLogErrorType.GENERIC_ERROR,
                             ActivityLogErrorType.INVALID_RESPONSE,
                             ActivityLogErrorType.AUTHORIZATION_REQUIRED
-                    ),
+                    )
                     val error = ActivityError(errorType, networkError.message)
                     val payload = FetchedActivityLogPayload(error, site, number = number, offset = offset)
                     dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
