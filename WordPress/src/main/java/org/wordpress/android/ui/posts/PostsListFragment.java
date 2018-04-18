@@ -551,11 +551,18 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
+                    String message = post.isPage() ? getString(R.string.dialog_confirm_delete_page)
+                            : getString(R.string.dialog_confirm_delete_post);
+
+                    if (post.isLocalDraft()) {
+                        message = post.isPage() ? getString(R.string.dialog_confirm_delete_permanently_page)
+                                : getString(R.string.dialog_confirm_delete_permanently_post);
+                    }
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                     builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
-                            .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page)
-                                                : getString(R.string.dialog_confirm_delete_post))
+                            .setMessage(message)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
