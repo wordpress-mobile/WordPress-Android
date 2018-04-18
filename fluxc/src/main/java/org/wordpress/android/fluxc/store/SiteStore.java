@@ -155,19 +155,20 @@ public class SiteStore extends Store {
     public static class AutomatedTransferEligibilityResponsePayload extends Payload<AutomatedTransferError> {
         public @NonNull SiteModel site;
         public boolean isEligible;
-        public @NonNull List<String> errors;
+        public @NonNull List<String> errorCodes;
 
         public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site,
                                                            boolean isEligible,
                                                            @NonNull List<String> errors) {
             this.site = site;
             this.isEligible = isEligible;
-            this.errors = errors;
+            this.errorCodes = errors;
         }
 
         public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
+            this.errorCodes = new ArrayList<>();
         }
     }
 
@@ -389,14 +390,14 @@ public class SiteStore extends Store {
     public static class OnAutomatedTransferEligibilityChecked extends OnChanged<AutomatedTransferError> {
         public @NonNull SiteModel site;
         public boolean isEligible;
-        public @NonNull List<String> eligibilityErrors;
+        public @NonNull List<String> eligibilityErrorCodes;
         public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
                                                      boolean isEligible,
-                                                     @NonNull List<String> eligibilityErrors,
+                                                     @NonNull List<String> eligibilityErrorCodes,
                                                      @Nullable AutomatedTransferError error) {
             this.site = site;
             this.isEligible = isEligible;
-            this.eligibilityErrors = eligibilityErrors;
+            this.eligibilityErrorCodes = eligibilityErrorCodes;
             this.error = error;
         }
     }
@@ -1249,7 +1250,7 @@ public class SiteStore extends Store {
     }
 
     private void handleCheckedAutomatedTransferEligibility(AutomatedTransferEligibilityResponsePayload payload) {
-        emitChange(new OnAutomatedTransferEligibilityChecked(payload.site, payload.isEligible, payload.errors,
+        emitChange(new OnAutomatedTransferEligibilityChecked(payload.site, payload.isEligible, payload.errorCodes,
                 payload.error));
     }
 
