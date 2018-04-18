@@ -792,7 +792,7 @@ public class ReaderPostDetailFragment extends Fragment
             return false;
         }
 
-        String postContent = (mRenderer != null ? mRenderer.getRenderedHtml() : null);
+        String postContent = (mPost != null ? mPost.getText() : null);
         boolean isPrivatePost = (mPost != null && mPost.isPrivate);
         EnumSet<PhotoViewerOption> options = EnumSet.noneOf(PhotoViewerOption.class);
         if (isPrivatePost) {
