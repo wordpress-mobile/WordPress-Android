@@ -15,8 +15,11 @@ public class PluginUtils {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
         }
-        // If the site has business plan we can do an automated transfer
-        return SiteUtils.hasNonJetpackBusinessPlan(site);
+        // If the site has business plan we can do an Automated Transfer
+        return site.isWPCom()
+               && SiteUtils.hasNonJetpackBusinessPlan(site)
+               && !site.getUrl().contains(".wordpress.com") // Automated Transfers require custom domains
+               && !site.isPrivate(); // Private sites are not eligible for Automated Transfer
     }
 
     static boolean isUpdateAvailable(@Nullable ImmutablePluginModel immutablePlugin) {
