@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,21 +130,5 @@ public class PostModelTest {
         assertTrue(tags.contains("ponies"));
         assertTrue(tags.contains("#popopopopopony"));
         assertEquals(3, tags.size());
-    }
-
-    @Test
-    public void testNumLocalChanges() {
-        // first make sure there aren't any local changes
-        assertEquals(PostSqlUtils.getNumLocalChanges(), 0);
-
-        // then add a post with local changes and ensure we get the correct count
-        PostModel testPost = PostTestUtils.generateSampleLocalDraftPost();
-        testPost.setIsLocallyChanged(true);
-        PostSqlUtils.insertOrUpdatePost(testPost, true);
-        assertEquals(PostSqlUtils.getNumLocalChanges(), 1);
-
-        // delete the post and again check the count
-        PostSqlUtils.deletePost(testPost);
-        assertEquals(PostSqlUtils.getNumLocalChanges(), 0);
     }
 }
