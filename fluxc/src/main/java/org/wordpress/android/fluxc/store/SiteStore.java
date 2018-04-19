@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.wellsql.generated.SiteModelTable;
@@ -141,6 +142,68 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class InitiateAutomatedTransferPayload extends Payload<AutomatedTransferError> {
+        public @NonNull SiteModel site;
+        public @NonNull String pluginSlugToInstall;
+
+        public InitiateAutomatedTransferPayload(SiteModel site, String pluginSlugToInstall) {
+            this.site = site;
+            this.pluginSlugToInstall = pluginSlugToInstall;
+        }
+    }
+
+    public static class AutomatedTransferEligibilityResponsePayload extends Payload<AutomatedTransferError> {
+        public @NonNull SiteModel site;
+        public boolean isEligible;
+        public @NonNull List<String> errorCodes;
+
+        public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site,
+                                                           boolean isEligible,
+                                                           @NonNull List<String> errors) {
+            this.site = site;
+            this.isEligible = isEligible;
+            this.errorCodes = errors;
+        }
+
+        public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
+            this.site = site;
+            this.error = error;
+            this.errorCodes = new ArrayList<>();
+        }
+    }
+
+    public static class InitiateAutomatedTransferResponsePayload extends Payload<AutomatedTransferError> {
+        public @NonNull SiteModel site;
+        public @NonNull String pluginSlugToInstall;
+        public boolean success;
+
+        public InitiateAutomatedTransferResponsePayload(@NonNull SiteModel site, @NonNull String pluginSlugToInstall) {
+            this.site = site;
+            this.pluginSlugToInstall = pluginSlugToInstall;
+        }
+    }
+
+    public static class AutomatedTransferStatusResponsePayload extends Payload<AutomatedTransferError> {
+        public @NonNull SiteModel site;
+        public @NonNull String status;
+        public int currentStep;
+        public int totalSteps;
+
+        public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site,
+                                                      @NonNull String status,
+                                                      int currentStep,
+                                                      int totalSteps) {
+            this.site = site;
+            this.status = status;
+            this.currentStep = currentStep;
+            this.totalSteps = totalSteps;
+        }
+        public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
@@ -210,6 +273,16 @@ public class SiteStore extends Store {
 
         public ExportSiteError(ExportSiteErrorType type) {
             this.type = type;
+        }
+    }
+
+    public static class AutomatedTransferError implements OnChangedError {
+        public final @NonNull AutomatedTransferErrorType type;
+        public final @Nullable String message;
+
+        public AutomatedTransferError(@Nullable String type, @Nullable String message) {
+            this.type = AutomatedTransferErrorType.fromString(type);
+            this.message = message;
         }
     }
 
@@ -314,6 +387,52 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnAutomatedTransferEligibilityChecked extends OnChanged<AutomatedTransferError> {
+        public @NonNull SiteModel site;
+        public boolean isEligible;
+        public @NonNull List<String> eligibilityErrorCodes;
+        public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
+                                                     boolean isEligible,
+                                                     @NonNull List<String> eligibilityErrorCodes,
+                                                     @Nullable AutomatedTransferError error) {
+            this.site = site;
+            this.isEligible = isEligible;
+            this.eligibilityErrorCodes = eligibilityErrorCodes;
+            this.error = error;
+        }
+    }
+
+    public static class OnAutomatedTransferInitiated extends OnChanged<AutomatedTransferError> {
+        public @NonNull SiteModel site;
+        public @NonNull String pluginSlugToInstall;
+
+        public OnAutomatedTransferInitiated(@NonNull SiteModel site,
+                                            @NonNull String pluginSlugToInstall,
+                                            AutomatedTransferError error) {
+            this.site = site;
+            this.pluginSlugToInstall = pluginSlugToInstall;
+            this.error = error;
+        }
+    }
+
+    public static class OnAutomatedTransferStatusChecked extends OnChanged<AutomatedTransferError> {
+        public @NonNull SiteModel site;
+        public boolean isCompleted;
+        public int currentStep;
+        public int totalSteps;
+        public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, boolean isCompleted, int currentStep,
+                                                int totalSteps) {
+            this.site = site;
+            this.isCompleted = isCompleted;
+            this.currentStep = currentStep;
+            this.totalSteps = totalSteps;
+        }
+        public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, AutomatedTransferError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -406,6 +525,23 @@ public class SiteStore extends Store {
                 String siteString = string.toUpperCase(Locale.US).replace(BLOG, SITE);
                 for (NewSiteErrorType v : NewSiteErrorType.values()) {
                     if (siteString.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+    }
+
+    public enum AutomatedTransferErrorType {
+        AT_NOT_ELIGIBLE, // occurs if AT is initiated when the site is not eligible
+        NOT_FOUND, // occurs if transfer status of a site with no active transfer is checked
+        GENERIC_ERROR;
+
+        public static AutomatedTransferErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (AutomatedTransferErrorType v : AutomatedTransferErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
                         return v;
                     }
                 }
@@ -823,6 +959,26 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            // Automated Transfer
+            case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
+                checkAutomatedTransferEligibility((SiteModel) action.getPayload());
+                break;
+            case INITIATE_AUTOMATED_TRANSFER:
+                initiateAutomatedTransfer((InitiateAutomatedTransferPayload) action.getPayload());
+                break;
+            case CHECK_AUTOMATED_TRANSFER_STATUS:
+                checkAutomatedTransferStatus((SiteModel) action.getPayload());
+                break;
+            case CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY:
+                handleCheckedAutomatedTransferEligibility((AutomatedTransferEligibilityResponsePayload)
+                        action.getPayload());
+                break;
+            case INITIATED_AUTOMATED_TRANSFER:
+                handleInitiatedAutomatedTransfer((InitiateAutomatedTransferResponsePayload) action.getPayload());
+                break;
+            case CHECKED_AUTOMATED_TRANSFER_STATUS:
+                handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -1084,6 +1240,42 @@ public class SiteStore extends Store {
             } else {
                 event.error = new SuggestDomainError("", payload.error.message);
             }
+        }
+        emitChange(event);
+    }
+
+    // Automated Transfers
+
+    private void checkAutomatedTransferEligibility(SiteModel site) {
+        mSiteRestClient.checkAutomatedTransferEligibility(site);
+    }
+
+    private void handleCheckedAutomatedTransferEligibility(AutomatedTransferEligibilityResponsePayload payload) {
+        emitChange(new OnAutomatedTransferEligibilityChecked(payload.site, payload.isEligible, payload.errorCodes,
+                payload.error));
+    }
+
+    private void initiateAutomatedTransfer(InitiateAutomatedTransferPayload payload) {
+        mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall);
+    }
+
+    private void handleInitiatedAutomatedTransfer(InitiateAutomatedTransferResponsePayload payload) {
+        emitChange(new OnAutomatedTransferInitiated(payload.site, payload.pluginSlugToInstall, payload.error));
+    }
+
+    private void checkAutomatedTransferStatus(SiteModel site) {
+        mSiteRestClient.checkAutomatedTransferStatus(site);
+    }
+
+    private void handleCheckedAutomatedTransferStatus(AutomatedTransferStatusResponsePayload payload) {
+        OnAutomatedTransferStatusChecked event;
+        if (!payload.isError()) {
+            // We can't rely on the currentStep and totalSteps as it may not be equal when the transfer is complete
+            boolean isTransferCompleted = payload.status.equalsIgnoreCase("complete");
+            event = new OnAutomatedTransferStatusChecked(payload.site, isTransferCompleted, payload.currentStep,
+                    payload.totalSteps);
+        } else {
+            event = new OnAutomatedTransferStatusChecked(payload.site, payload.error);
         }
         emitChange(event);
     }
