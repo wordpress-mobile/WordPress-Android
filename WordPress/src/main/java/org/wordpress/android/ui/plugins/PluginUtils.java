@@ -12,7 +12,14 @@ import org.wordpress.android.util.helpers.Version;
 
 public class PluginUtils {
     public static boolean isPluginFeatureAvailable(SiteModel site) {
-        return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
+        if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
+            return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
+        }
+        // If the site has business plan we can do an Automated Transfer
+        return site.isWPCom()
+               && SiteUtils.hasNonJetpackBusinessPlan(site)
+               && !site.getUrl().contains(".wordpress.com") // Automated Transfers require custom domains
+               && !site.isPrivate(); // Private sites are not eligible for Automated Transfer
     }
 
     static boolean isUpdateAvailable(@Nullable ImmutablePluginModel immutablePlugin) {
@@ -26,7 +33,7 @@ public class PluginUtils {
         try {
             Version currentVersion = new Version(installedVersionStr);
             Version availableVersion = new Version(availableVersionStr);
-            return currentVersion.compareTo(availableVersion) == -1;
+            return currentVersion.compareTo(availableVersion) < 0;
         } catch (IllegalArgumentException e) {
             String errorStr =
                     String.format("An IllegalArgumentException occurred while trying to compare site plugin version: %s"

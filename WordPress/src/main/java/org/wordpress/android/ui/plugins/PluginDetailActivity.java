@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,17 +41,26 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferEligibilityChecked;
+import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferInitiated;
+import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChecked;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -94,10 +104,15 @@ public class PluginDetailActivity extends AppCompatActivity {
     private static final String KEY_IS_AUTO_UPDATE_ENABLED = "KEY_IS_AUTO_UPDATE_ENABLED";
     private static final String KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG
             = "KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG";
+    private static final String KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG
+            = "KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG";
+    private static final String KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS
+            = "KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS";
 
     private SiteModel mSite;
     private String mSlug;
     protected ImmutablePluginModel mPlugin;
+    private Handler mHandler;
 
     private ViewGroup mContainer;
     private TextView mTitleTextView;
@@ -110,6 +125,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
+    private ProgressDialog mAutomatedTransferProgressDialog;
 
     private CardView mWPOrgPluginDetailsContainer;
     private RelativeLayout mRatingsSectionContainer;
@@ -131,12 +147,15 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
     protected boolean mIsShowingRemovePluginConfirmationDialog;
+    protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
+    protected boolean mIsShowingAutomatedTransferProgress;
 
     // These flags reflects the UI state
     protected boolean mIsActive;
     protected boolean mIsAutoUpdateEnabled;
 
     @Inject PluginStore mPluginStore;
+    @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
     @Override
@@ -186,6 +205,10 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsAutoUpdateEnabled = savedInstanceState.getBoolean(KEY_IS_AUTO_UPDATE_ENABLED);
             mIsShowingRemovePluginConfirmationDialog =
                     savedInstanceState.getBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG);
+            mIsShowingInstallFirstPluginConfirmationDialog = savedInstanceState
+                    .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
+            mIsShowingAutomatedTransferProgress = savedInstanceState
+                    .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
         }
 
         setContentView(R.layout.plugin_detail_activity);
@@ -200,6 +223,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             actionBar.setElevation(0);
         }
 
+        mHandler = new Handler();
         setupViews();
 
         if (mIsShowingRemovePluginConfirmationDialog) {
@@ -208,6 +232,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else if (mIsRemovingPlugin) {
             // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
+        }
+
+        if (mIsShowingInstallFirstPluginConfirmationDialog) {
+            confirmInstallPluginForAutomatedTransfer();
+        }
+
+        if (mIsShowingAutomatedTransferProgress) {
+            showAutomatedTransferProgressDialog();
         }
     }
 
@@ -266,6 +298,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_ACTIVE, mIsActive);
         outState.putBoolean(KEY_IS_AUTO_UPDATE_ENABLED, mIsAutoUpdateEnabled);
         outState.putBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG, mIsShowingRemovePluginConfirmationDialog);
+        outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
+                mIsShowingInstallFirstPluginConfirmationDialog);
+        outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
     }
 
     // UI Helpers
@@ -730,16 +765,20 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showRemovePluginProgressDialog() {
-        mRemovePluginProgressDialog = new ProgressDialog(this);
-        mRemovePluginProgressDialog.setCancelable(false);
-        mRemovePluginProgressDialog.setIndeterminate(true);
-        // Even though we are deactivating the plugin to make sure it's disabled on the server side, since the user
-        // sees that the plugin is disabled, it'd be confusing to say we are disabling the plugin
-        String message = mIsActive
-                ? getString(R.string.plugin_disable_progress_dialog_message, mPlugin.getDisplayName())
-                : getRemovingPluginMessage();
-        mRemovePluginProgressDialog.setMessage(message);
-        mRemovePluginProgressDialog.show();
+        if (mRemovePluginProgressDialog == null) {
+            mRemovePluginProgressDialog = new ProgressDialog(this);
+            mRemovePluginProgressDialog.setCancelable(false);
+            mRemovePluginProgressDialog.setIndeterminate(true);
+            // Even though we are deactivating the plugin to make sure it's disabled on the server side, since the user
+            // sees that the plugin is disabled, it'd be confusing to say we are disabling the plugin
+            String message = mIsActive
+                    ? getString(R.string.plugin_disable_progress_dialog_message, mPlugin.getDisplayName())
+                    : getRemovingPluginMessage();
+            mRemovePluginProgressDialog.setMessage(message);
+        }
+        if (!mRemovePluginProgressDialog.isShowing()) {
+            mRemovePluginProgressDialog.show();
+        }
     }
 
     private void cancelRemovePluginProgressDialog() {
@@ -785,10 +824,15 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        mIsInstallingPlugin = true;
-        refreshUpdateVersionViews();
-        PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
-        mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
+        if (SiteUtils.isNonAtomicBusinessPlanSite(mSite)) {
+            confirmInstallPluginForAutomatedTransfer();
+        } else {
+            mIsInstallingPlugin = true;
+            refreshUpdateVersionViews();
+
+            InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
+            mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
+        }
     }
 
     protected void dispatchRemovePluginAction() {
@@ -962,8 +1006,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
+        mIsInstallingPlugin = false;
+
         refreshPluginFromStore();
 
+        // TODO: Handle activation and enabling auto-updates for AT first plugin
         // FluxC will try to activate and enable autoupdates for the plugin after it's installed, let's assume that
         // it'll be successful.
         mIsActive = true;
@@ -1065,5 +1112,239 @@ public class PluginDetailActivity extends AppCompatActivity {
             return false;
         }
         return mPlugin.isActive() != mIsActive || mPlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled;
+    }
+
+    // Automated Transfer
+
+    /**
+     * Automated Transfer starts by confirming that the user will not be able to use their site. We'll need to block the
+     * UI for it, so we get a confirmation first in this step.
+     */
+    private void confirmInstallPluginForAutomatedTransfer() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        builder.setTitle(getResources().getText(R.string.plugin_install));
+        builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+                startAutomatedTransfer();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+            }
+        });
+        builder.setCancelable(true);
+        builder.create();
+        mIsShowingInstallFirstPluginConfirmationDialog = true;
+        builder.show();
+    }
+
+    /**
+     * We'll trigger an eligibility check for the site for Automated Transfer and show a determinate progress bar.
+     * Check out `OnAutomatedTransferEligibilityChecked` for its callback.
+     */
+    private void startAutomatedTransfer() {
+        showAutomatedTransferProgressDialog();
+
+        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
+    }
+
+    /**
+     * The reason we are using a blocking progress bar is that if the user changes anything about the site, adds a post,
+     * updates site settings etc, it'll be lost when the Automated Transfer is completed. The process takes about 1 min
+     * on average, and we'll be able to update the progress by checking the status of the transfer.
+     */
+    private void showAutomatedTransferProgressDialog() {
+        if (mAutomatedTransferProgressDialog == null) {
+            mAutomatedTransferProgressDialog = new ProgressDialog(this);
+            mAutomatedTransferProgressDialog.setCancelable(false);
+            mAutomatedTransferProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mAutomatedTransferProgressDialog.setIndeterminate(false);
+            String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
+            mAutomatedTransferProgressDialog.setMessage(message);
+        }
+        if (!mAutomatedTransferProgressDialog.isShowing()) {
+            mIsShowingAutomatedTransferProgress = true;
+            mAutomatedTransferProgressDialog.show();
+        }
+    }
+
+    /**
+     * Either Automated Transfer is completed or an error occurred.
+     */
+    private void cancelAutomatedTransferDialog() {
+        if (mAutomatedTransferProgressDialog != null && mAutomatedTransferProgressDialog.isShowing()) {
+            mAutomatedTransferProgressDialog.cancel();
+            mIsShowingAutomatedTransferProgress = false;
+        }
+    }
+
+    /**
+     * Automated Transfer successfully completed, the site has been refreshed and site plugins has been fetched. We can
+     * close the progress dialog, get the new version of the plugin from Store and refresh the views
+     */
+    private void automatedTransferCompleted() {
+        cancelAutomatedTransferDialog();
+        refreshPluginFromStore();
+        refreshViews();
+        showSuccessfulInstallSnackbar();
+        invalidateOptionsMenu();
+    }
+
+    /**
+     * Helper for if any of the FluxC Automated Transfer events fail. We are using a Toast for now, but the only likely
+     * error is the site missing a domain which will be implemented later on and will be handled differently.
+     */
+    private void handleAutomatedTransferFailed(String errorMessage) {
+        cancelAutomatedTransferDialog();
+        ToastUtils.showToast(this, errorMessage, Duration.LONG);
+    }
+
+    /**
+     * This is the first Automated Transfer FluxC event. It returns whether the site is eligible or not with a set of
+     * errors for why it's not eligible. We are handling a single error at a time right now, but the only likely error
+     * is the custom domain being missing from the business plan site which will be handled as a separate project soon.
+     *
+     * If the site is eligible, we'll initiate the Automated Transfer. Check out `onAutomatedTransferInitiated` for next
+     * step.
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferEligibilityChecked(OnAutomatedTransferEligibilityChecked event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (!event.isEligible) {
+            String message =
+                    event.eligibilityErrors.isEmpty() ? getString(R.string.plugin_install_error_site_ineligible)
+                            : event.eligibilityErrors.get(0);
+            handleAutomatedTransferFailed(message);
+        } else {
+            mDispatcher.dispatch(SiteActionBuilder
+                    .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
+        }
+    }
+
+    /**
+     * After we check the eligibility of a site, the Automated Transfer will be initiated. This is its callback and it
+     * should be a fairly quick one, that's why we are not updating the progress bar. The event contains the plugin that
+     * will be installed after Automated Transfer is completed, but we don't need to handle anything about that.
+     *
+     * We don't know if there is any specific errors we might need to handle, so we are just showing a message about it
+     * for now.
+     *
+     * Once the transfer is initiated, we need to start checking the status of it. Check out
+     * `onAutomatedTransferStatusChecked` for the callback.
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferInitiated(OnAutomatedTransferInitiated event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (event.isError()) {
+            handleAutomatedTransferFailed(event.error.message);
+        } else {
+            mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+        }
+    }
+
+    /**
+     * After Automated Transfer is initiated, we'll need to check for the status of it several times as the process
+     * takes about 1 minute on average. We don't know if there are any specific errors we can handle, so for now we are
+     * simply showing the message.
+     *
+     * We'll get an `isCompleted` flag from the event and when that's `true` we'll need to re-fetch the site. It'll
+     * become a Jetpack site at that point and we'll need the updated site to be able to fetch the plugins and refresh
+     * this page. If the transfer is not completed, we use the current step and total steps to update the progress bar
+     * and check the status again after waiting for a second.
+     *
+     * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
+     * `onSiteChanged` for the next step.
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (event.isError()) {
+            handleAutomatedTransferFailed(event.error.message);
+        } else {
+            if (event.isCompleted) {
+                // The flow is almost complete, we can show 99% complete to give us a second or so to fetch the site
+                // and its plugins
+                mAutomatedTransferProgressDialog.setProgress(99);
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+            } else {
+                mAutomatedTransferProgressDialog.setProgress(event.currentStep * 100 / event.totalSteps);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Let's wait a second before checking the status again
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+                    }
+                }, 3000); // Wait 3 seconds before checking the status again
+            }
+        }
+    }
+
+    /**
+     * Once the Automated Transfer is completed, we'll trigger a fetch for the site since it'll become a Jetpack site.
+     * Whenever the site is updated we update `mSite` property. If the Automated Transfer progress dialog is
+     * showing and we make sure that the updated site has the correct `isAutomatedTransfer` flag, we fetch the site
+     * plugins so we can refresh this page.
+     *
+     * Check out `onPluginDirectoryFetched` for the last step of a successful Automated Transfer.
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        // We should be safe to ignore the errors
+        if (isFinishing() && event.isError()) {
+            return;
+        }
+        mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
+
+        // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
+        // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
+        if (mIsShowingAutomatedTransferProgress && mSite.isAutomatedTransfer()) {
+            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                    .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+        }
+    }
+
+    /**
+     * Completing an Automated Transfer will trigger a site fetch which then will trigger a fetch for the site plugins.
+     * We'll complete the Automated Transfer if the progress dialog is showing and only update the plugin and the views
+     * if it's not.
+     *
+     * This event is unlikely to happen outside of Automated Transfer process, and it is even less likely that the views
+     * will need to be updated because of it, but they are both still possible and we try to handle it with a refresh.
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginDirectoryFetched(OnPluginDirectoryFetched event) {
+        // We should be safe to ignore any errors related to plugin directory fetches since the only time we trigger it
+        // from this view is during AT progress and it should hopefully always succeed and we can't really do much about
+        // it anyway.
+        if (isFinishing() || event.isError()) {
+            return;
+        }
+        if (event.type == PluginDirectoryType.SITE && mIsShowingAutomatedTransferProgress) {
+            // After Automated Transfer flow is completed, we fetch the site and then it's plugins. The only way site's
+            // plugins could be fetched without an error is if the AT is completed and now that we have it's plugins
+            // we can finish the whole flow
+            automatedTransferCompleted();
+        } else {
+            // Although it's unlikely that a directory might be fetched while we are in the plugin detail page, we
+            // should be safe to refresh the plugin and the view in case the plugin we are showing has changed
+            refreshPluginFromStore();
+            refreshViews();
+        }
     }
 }

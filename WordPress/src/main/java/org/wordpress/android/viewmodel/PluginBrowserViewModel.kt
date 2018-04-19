@@ -17,8 +17,10 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
@@ -29,8 +31,9 @@ private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
 private const val KEY_TITLE = "KEY_TITLE"
 
 @WorkerThread
-class PluginBrowserViewModel @Inject
-constructor(private val mDispatcher: Dispatcher, private val mPluginStore: PluginStore) : ViewModel() {
+class PluginBrowserViewModel @Inject constructor(private val mDispatcher: Dispatcher,
+                                                 private val mPluginStore: PluginStore,
+                                                 private val mSiteStore: SiteStore) : ViewModel() {
     enum class PluginListType {
         SITE,
         FEATURED,
@@ -210,6 +213,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
+        if (listType == PluginListType.SITE && SiteUtils.isNonAtomicBusinessPlanSite(site)) {
+            return false
+        }
         val currentStatus = when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> sitePluginsListStatus.value
             PluginBrowserViewModel.PluginListType.FEATURED -> featuredPluginsListStatus.value
@@ -338,6 +344,21 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         // if the slug is not in the set
         if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
             updateAllPluginListsIfNecessary()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
+    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+        if (event.isError) {
+            // The error should be safe to ignore since we are not triggering the action and there is nothing we need
+            // to do about it
+            return
+        }
+
+        val siteId = site?.siteId
+        siteId?.let {
+            site = mSiteStore.getSiteBySiteId(siteId)
         }
     }
 
