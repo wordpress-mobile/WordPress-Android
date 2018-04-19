@@ -274,6 +274,7 @@ public class ReaderPostTable {
         ContentValues values = new ContentValues();
         values.put("title", post.getTitle());
         values.put("text", post.getText());
+        values.put("excerpt", post.getExcerpt());
         values.put("num_replies", post.numReplies);
         values.put("num_likes", post.numLikes);
         values.put("is_liked", post.isLikedByCurrentUser);
