@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.IndexDependentColor;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
