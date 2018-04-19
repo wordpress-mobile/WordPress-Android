@@ -475,6 +475,10 @@
         <item name="colorControlActivated">@color/blue_wordpress</item>
     </style>
 
+    <style name="WPToolbarSwitch">
+        <item name="colorControlActivated">@color/blue_light</item>
+    </style>
+
     <!--Post Settings Styles-->
     <style name="PostSettingsCardView">
         <item name="android:layout_width">match_parent</item>
