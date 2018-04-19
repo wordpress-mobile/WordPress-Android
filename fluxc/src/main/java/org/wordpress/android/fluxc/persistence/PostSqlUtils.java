@@ -161,4 +161,14 @@ public class PostSqlUtils {
                 .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
                 .endGroup().endGroup().endWhere().getAsCursor().getCount() > 0;
     }
+
+    public static int getNumLocalChanges() {
+        return WellSql.select(PostModel.class)
+                      .where()
+                      .beginGroup()
+                      .equals(PostModelTable.IS_LOCAL_DRAFT, true)
+                      .or()
+                      .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
+                      .endGroup().endWhere().getAsCursor().getCount();
+    }
 }
