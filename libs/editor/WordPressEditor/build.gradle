@@ -63,7 +63,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.6.+'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 signing {

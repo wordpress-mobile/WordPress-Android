@@ -25,7 +25,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 android {

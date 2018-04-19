@@ -178,7 +178,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
     }
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.4.2'
