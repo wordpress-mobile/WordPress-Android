@@ -32,6 +32,10 @@
 /sites/$site/roles
 /sites/new/
 
+/sites/$site/automated-transfers/eligibility
+/sites/$site/automated-transfers/initiate
+/sites/$site/automated-transfers/status
+
 /sites/$site/comments/
 /sites/$site/comments/$comment_ID
 /sites/$site/comments/$comment_ID/delete
