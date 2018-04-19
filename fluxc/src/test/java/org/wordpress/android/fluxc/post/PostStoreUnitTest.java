@@ -340,8 +340,6 @@ public class PostStoreUnitTest {
         assertEquals(0, PostTestUtils.getPostsCount());
     }
 
-
-
     @Test
     public void testNumLocalChanges() {
         // first make sure there aren't any local changes
