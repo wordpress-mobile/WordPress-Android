@@ -56,16 +56,14 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     private SiteModel mSite;
+    private Source mSource;
     private JetpackConnectionWebViewClient mWebViewClient;
 
-    private static Source mSource;
-
     public static void startJetpackConnectionFlow(Context context, Source source, SiteModel site, boolean authorized) {
-        mSource = source;
         String url = "https://wordpress.com/jetpack/connect?"
                      + "url=" + site.getUrl()
                      + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK
-                     + "?source=" + mSource.toString();
+                     + "?source=" + source.toString();
         startJetpackConnectionFlow(context, url, site, authorized, source);
     }
 
@@ -103,6 +101,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        mSource = (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY);
         // We need to get the site before calling super since it'll create the web client
         super.onCreate(savedInstanceState);
     }
