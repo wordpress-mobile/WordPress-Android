@@ -122,7 +122,6 @@ class ActivityLogRestClient
                             rewindable = it.is_rewindable,
                             rewindID = it.rewind_id,
                             published = it.published,
-                            discarded = it.is_discarded,
                             actor = it.actor?.let {
                                 ActivityLogModel.ActivityActor(
                                         it.name,
@@ -211,8 +210,7 @@ class ActivityLogRestClient
             val rewind_id: String?,
             val gridicon: String?,
             val status: String?,
-            val activity_id: String?,
-            val is_discarded: Boolean?
+            val activity_id: String?
         )
 
         class Content(val text: String?)
