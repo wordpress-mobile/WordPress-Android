@@ -419,7 +419,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError uploading stock media: " + error);
                         UploadStockMediaError mediaError = new UploadStockMediaError(
-                                UploadStockMediaErrorType.fromBaseNetworkError(error), error.message);
+                                UploadStockMediaErrorType.fromNetworkError(error), error.message);
                         UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
                         mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
                     }

@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
@@ -387,16 +387,13 @@ public class MediaStore extends Store {
         UNKNOWN,
         GENERIC_ERROR;
 
-        public static UploadStockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
-            if (baseError instanceof WPComGsonRequest.WPComGsonNetworkError) {
-                WPComGsonRequest.WPComGsonNetworkError wpError = (WPComGsonRequest.WPComGsonNetworkError) baseError;
-                // invalid upload request
-                if (wpError.apiError.equalsIgnoreCase("invalid_input")) {
-                    return INVALID_INPUT;
-                }
+        public static UploadStockMediaErrorType fromNetworkError(WPComGsonNetworkError wpError) {
+            // invalid upload request
+            if (wpError.apiError.equalsIgnoreCase("invalid_input")) {
+                return INVALID_INPUT;
             }
             // can happen if invalid pexels image url is passed
-            if (baseError.type == BaseRequest.GenericErrorType.UNKNOWN) {
+            if (wpError.type == BaseRequest.GenericErrorType.UNKNOWN) {
                 return UNKNOWN;
             }
             return GENERIC_ERROR;
