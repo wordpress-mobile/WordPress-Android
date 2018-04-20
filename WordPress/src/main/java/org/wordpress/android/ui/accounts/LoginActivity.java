@@ -42,6 +42,7 @@ import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
@@ -73,6 +74,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
         HasSupportFragmentInjector {
+    public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 
@@ -90,6 +92,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private SignupBottomSheetDialog mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
+    private Source mJetpackConnectSource;
+    private boolean mIsJetpackConnect;
     private boolean mSignupSheetDisplayed;
 
     private LoginMode mLoginMode;
@@ -110,6 +114,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
+            if (getIntent() != null) {
+                mJetpackConnectSource = (Source) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
+            }
+
             mLoginAnalyticsListener.trackLoginAccessed();
 
             switch (getLoginMode()) {
@@ -310,6 +318,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
+
+            if (getLoginMode() == LoginMode.JETPACK_STATS) {
+                mIsJetpackConnect = true;
+            }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
             slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
@@ -396,8 +408,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void gotWpcomEmail(String email) {
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
-            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment =
-                    LoginMagicLinkRequestFragment.newInstance(email);
+            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
+                    email, mIsJetpackConnect, mJetpackConnectSource.toString());
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment =
@@ -439,7 +451,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void showSignupMagicLink(String email) {
-        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email);
+        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
+                mJetpackConnectSource.toString());
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 
