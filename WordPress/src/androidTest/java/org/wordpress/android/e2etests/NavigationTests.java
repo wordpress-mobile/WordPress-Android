@@ -4,10 +4,12 @@ package org.wordpress.android.e2etests;
 import android.support.test.espresso.contrib.ViewPagerActions;
 import android.support.test.rule.ActivityTestRule;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.TestUtils;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -25,6 +27,11 @@ public class NavigationTests {
 
     String mUsername = BuildConfig.ESPRESSO_USERNAME;
     String mPassword = BuildConfig.ESPRESSO_PASSWORD;
+
+    @After
+    public void tearDown() {
+        TestUtils.clearApplicationState(mActivityTestRule.getActivity());
+    }
 
     @Test
     public void testNavigation() {

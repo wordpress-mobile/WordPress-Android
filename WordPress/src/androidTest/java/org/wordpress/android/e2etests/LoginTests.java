@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.TestUtils;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -29,6 +30,11 @@ public class LoginTests {
 
     String mUsername = BuildConfig.ESPRESSO_USERNAME;
     String mPassword = BuildConfig.ESPRESSO_PASSWORD;
+
+    @After
+    public void tearDown() {
+        TestUtils.clearApplicationState(mActivityTestRule.getActivity());
+    }
 
     @Test
     public void testLoginSuccess() {
@@ -65,9 +71,5 @@ public class LoginTests {
         onView(withId(R.id.logged_in_as_heading))
                 .check(matches(isDisplayed()));
         }
-
-    @After public void tearDown() {
-        // do the logout steps
-    }
 }
 
