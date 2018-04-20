@@ -58,11 +58,14 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     private SiteModel mSite;
     private JetpackConnectionWebViewClient mWebViewClient;
 
+    private static Source mSource;
+
     public static void startJetpackConnectionFlow(Context context, Source source, SiteModel site, boolean authorized) {
+        mSource = source;
         String url = "https://wordpress.com/jetpack/connect?"
                      + "url=" + site.getUrl()
                      + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK
-                     + "?source=" + source.toString();
+                     + "?source=" + mSource.toString();
         startJetpackConnectionFlow(context, url, site, authorized, source);
     }
 
@@ -160,6 +163,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     public void onRequiresJetpackLogin() {
         Intent loginIntent = new Intent(this, LoginActivity.class);
         LoginMode.JETPACK_STATS.putInto(loginIntent);
+        loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, mSource);
         startActivityForResult(loginIntent, JETPACK_LOGIN);
     }
 
