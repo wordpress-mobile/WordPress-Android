@@ -46,6 +46,7 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
@@ -82,13 +83,18 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.NOTIFICATIONS;
+
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends AppCompatActivity {
+    public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
     public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
+    public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
@@ -277,6 +283,13 @@ public class WPMainActivity extends AppCompatActivity {
                         } else {
                             authTokenToSet = getAuthToken();
                         }
+                    }
+
+                    // Continue Jetpack connect flow if coming from login/signup magic link.
+                    if (getIntent() != null && getIntent().getExtras() != null
+                        && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
+                        JetpackConnectionWebViewActivity.startJetpackConnectionFlow(this, NOTIFICATIONS,
+                                (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
                     }
                 }
             } else {
