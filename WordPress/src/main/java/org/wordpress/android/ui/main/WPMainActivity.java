@@ -10,13 +10,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
+import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -95,6 +100,11 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
+    static final int TAB_MY_SITE = 0;
+    static final int TAB_READER = 1;
+    static final int TAB_ME = 2;
+    static final int TAB_NOTIFS = 3;
+
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
@@ -143,6 +153,8 @@ public class WPMainActivity extends AppCompatActivity {
 
         mViewPager = findViewById(R.id.viewpager_main);
         mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);
+
+        setupBottomNav();
 
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
@@ -339,6 +351,40 @@ public class WPMainActivity extends AppCompatActivity {
                               .start();
             }
         }
+    }
+
+    private int getPositionForBottomNavItem(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_sites:
+                return TAB_MY_SITE;
+            case R.id.nav_reader:
+                return TAB_READER;
+            case R.id.nav_me:
+                return TAB_ME;
+            default:
+                return TAB_MY_SITE;
+        }
+    }
+
+    private void setupBottomNav() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int position = getPositionForBottomNavItem(item);
+                mViewPager.setCurrentItem(position);
+                return true;
+            }
+        });
+        bottomNav.setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
+            @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
+                // scroll the active fragment's contents to the top when user retaps the current item
+                int position = getPositionForBottomNavItem(item);
+                Fragment fragment = mTabAdapter.getFragment(position);
+                if (fragment instanceof OnScrollToTopListener) {
+                    ((OnScrollToTopListener) fragment).onScrollToTop();
+                }
+            }
+        });
     }
 
     @Override

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_sites"
+        android:contentDescription="@string/tabbar_accessibility_label_my_site"
+        android:icon="@drawable/main_tab_sites"
+        android:title=""/>
+    <item
+        android:id="@+id/nav_reader"
+        android:contentDescription="@string/tabbar_accessibility_label_reader"
+        android:icon="@drawable/main_tab_reader"
+        android:title=""/>
+    <item
+        android:id="@+id/nav_me"
+        android:contentDescription="@string/tabbar_accessibility_label_me"
+        android:icon="@drawable/main_tab_me"
+        android:title=""/>
+    <item
+        android:id="@+id/nav_notifications"
+        android:contentDescription="@string/tabbar_accessibility_label_notifications"
+        android:icon="@drawable/main_tab_notifications"
+        android:title=""/>
+</menu>
