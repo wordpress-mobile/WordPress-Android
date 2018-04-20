@@ -47,6 +47,7 @@ import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
@@ -353,7 +354,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new WPComErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
+                                SuggestDomainError suggestDomainError =
+                                        new SuggestDomainError(error.apiError, error.message);
+                                SuggestDomainsResponsePayload payload =
+                                        new SuggestDomainsResponsePayload(query, suggestDomainError);
                                 mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
                             }
                         }
