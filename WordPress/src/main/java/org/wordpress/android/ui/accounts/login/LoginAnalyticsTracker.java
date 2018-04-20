@@ -123,6 +123,16 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackSignupMagicLinkOpened() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_OPENED);
+    }
+
+    @Override
+    public void trackSignupMagicLinkOpenEmailClientClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+    }
+
+    @Override
     public void trackSignupMagicLinkSent() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SENT);
     }
@@ -130,11 +140,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupMagicLinkSucceeded() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
-    }
-
-    @Override
-    public void trackSignupSocial2faNeeded() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
     }
 
     @Override
