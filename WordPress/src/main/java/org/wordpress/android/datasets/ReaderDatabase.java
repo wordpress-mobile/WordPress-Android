@@ -20,7 +20,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 133;
+    private static final int DB_VERSION = 134;
 
     /*
      * version history
@@ -86,6 +86,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 131 - added tbl_posts.card_type
      * 132 - no schema changes, simply clearing to accommodate gallery card_type
      * 133 - no schema changes, simply clearing to accommodate video card_type
+     * 134 - added tbl_posts.use_excerpt
      */
 
     /*
