@@ -25,7 +25,7 @@
             android:targetPackage="org.wordpress.android">
             <extra
                 android:name="org.wordpress.android.ui.ShortcutsNavigator.ACTION_OPEN_SHORTCUT"
-                android:value="CREATE_NEW_POST"/>
+                android:value="org.wordpress.android.ui.ShortcutsNavigator.CREATE_NEW_POST"/>
         </intent>
     </shortcut>
     <shortcut
@@ -38,7 +38,7 @@
             android:targetPackage="org.wordpress.android">
             <extra
                 android:name="org.wordpress.android.ui.ShortcutsNavigator.ACTION_OPEN_SHORTCUT"
-                android:value="OPEN_NOTIFICATIONS"/>
+                android:value="org.wordpress.android.ui.ShortcutsNavigator.OPEN_NOTIFICATIONS"/>
         </intent>
     </shortcut>
 </shortcuts>

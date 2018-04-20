@@ -3,6 +3,7 @@ package org.wordpress.android.ui;
 import android.app.Activity;
 
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,8 +19,7 @@ public class ShortcutsNavigator {
     private static final String CREATE_NEW_POST = "org.wordpress.android.ui.ShortcutsNavigator.CREATE_NEW_POST";
     private static final String OPEN_NOTIFICATIONS = "org.wordpress.android.ui.ShortcutsNavigator.OPEN_NOTIFICATIONS";
 
-    @Inject
-    ShortcutsNavigator() {
+    @Inject ShortcutsNavigator() {
     }
 
     public void showTargetScreen(String action, Activity activity, SiteModel currentSite) {
@@ -33,6 +33,8 @@ public class ShortcutsNavigator {
             case OPEN_NOTIFICATIONS:
                 ActivityLauncher.viewNotifications(activity);
                 break;
+            default:
+                AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut action[%s]", action));
         }
     }
 }
