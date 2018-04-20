@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.models.networkresource.ListNetworkResource
+import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -141,7 +142,38 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         isStarted = true
     }
 
-    // Pull to refresh
+    // Actions
+
+    fun getDiffCallback(oldList: List<ImmutablePluginModel>, newList: List<ImmutablePluginModel>):
+            ListDiffCallback<ImmutablePluginModel> {
+        val areItemsTheSame: (ImmutablePluginModel?, ImmutablePluginModel?) -> Boolean = { old, new ->
+            old?.slug == new?.slug
+        }
+
+        val areContentsTheSame: (ImmutablePluginModel?, ImmutablePluginModel?) -> Boolean = { old, new ->
+            var same = false
+            old?.let {
+                new?.let {
+                    same = old.slug == new.slug
+                            && old.displayName == new.displayName
+                            && old.authorName == new.authorName
+                            && old.icon == new.icon
+                            && old.isInstalled == new.isInstalled
+                            && old.isActive == new.isActive
+                            && old.isAutoUpdateEnabled == new.isAutoUpdateEnabled
+                            && old.installedVersion == new.installedVersion
+                            && old.wpOrgPluginVersion == new.wpOrgPluginVersion
+                            && old.averageStarRating == new.averageStarRating
+                }
+            }
+            same
+        }
+        return ListDiffCallback(oldList, newList, areItemsTheSame, areContentsTheSame)
+    }
+
+    fun loadMore(listType: PluginListType) {
+        fetchPlugins(listType, true)
+    }
 
     fun pullToRefresh(pluginListType: PluginListType) {
         fetchPlugins(pluginListType, false)
@@ -195,10 +227,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    fun loadMore(listType: PluginListType) {
-        fetchPlugins(listType, true)
-    }
-
     // Network Callbacks
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -217,7 +245,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
-            errorListNetworkResource(event.type, event.error.message, event.loadMore)
+            errorListNetworkResource(event.type, event.error.message)
         } else {
             successListNetworkResource(event.type, event.canLoadMore)
         }
@@ -362,16 +390,12 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    private fun errorListNetworkResource(directoryType: PluginDirectoryType, errorMessage: String?, loadMore: Boolean) {
+    private fun errorListNetworkResource(directoryType: PluginDirectoryType, errorMessage: String?) {
         when (directoryType) {
-            PluginDirectoryType.FEATURED ->
-                featuredPlugins = ListNetworkResource.Error(featuredPlugins, errorMessage, loadMore)
-            PluginDirectoryType.NEW ->
-                newPlugins = ListNetworkResource.Error(newPlugins, errorMessage, loadMore)
-            PluginDirectoryType.POPULAR ->
-                popularPlugins = ListNetworkResource.Error(popularPlugins, errorMessage, loadMore)
-            PluginDirectoryType.SITE ->
-                sitePlugins = ListNetworkResource.Error(sitePlugins, errorMessage, loadMore)
+            PluginDirectoryType.FEATURED -> featuredPlugins = ListNetworkResource.Error(featuredPlugins, errorMessage)
+            PluginDirectoryType.NEW -> newPlugins = ListNetworkResource.Error(newPlugins, errorMessage)
+            PluginDirectoryType.POPULAR -> popularPlugins = ListNetworkResource.Error(popularPlugins, errorMessage)
+            PluginDirectoryType.SITE -> sitePlugins = ListNetworkResource.Error(sitePlugins, errorMessage)
         }
     }
 }

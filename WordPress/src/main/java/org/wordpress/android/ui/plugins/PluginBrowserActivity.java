@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -273,10 +274,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
                                                   @Nullable ListNetworkResource<ImmutablePluginModel>
                                                           listNetworkResource) {
-        // TODO: Find a better way to check for the status change and when to reload the data
-        // Don't reload for every status change, only do it when necessary
-        if (!(listNetworkResource instanceof ListNetworkResource.Ready
-              || listNetworkResource instanceof ListNetworkResource.Success)) {
+        if (listNetworkResource == null) {
             return;
         }
         PluginBrowserAdapter adapter = null;
@@ -376,10 +374,11 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
+        void setPlugins(@NonNull List<ImmutablePluginModel> items) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mViewModel.getDiffCallback(mItems, items));
             mItems.clear();
             mItems.addAll(items);
-            notifyDataSetChanged();
+            diffResult.dispatchUpdatesTo(this);
         }
 
         private @Nullable Object getItem(int position) {

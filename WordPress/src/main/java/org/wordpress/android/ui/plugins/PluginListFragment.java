@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -177,21 +178,13 @@ public class PluginListFragment extends Fragment {
             return;
         }
         final PluginListAdapter adapter;
-        boolean firstTime = false;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
             mRecycler.setAdapter(adapter);
-            firstTime = true;
         } else {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
-        // TODO: Find a better way to check for the status change and when to reload the data
-        // Don't reload for every status change, only do it when necessary
-        if (firstTime
-            || listNetworkResource instanceof ListNetworkResource.Ready
-            || listNetworkResource instanceof ListNetworkResource.Success) {
-            adapter.setPlugins(listNetworkResource.getData());
-        }
+        adapter.setPlugins(listNetworkResource.getData());
         refreshProgressBars(listNetworkResource);
     }
 
@@ -221,10 +214,11 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<? extends ImmutablePluginModel> items) {
+        void setPlugins(@NonNull List<ImmutablePluginModel> items) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mViewModel.getDiffCallback(mItems, items));
             mItems.clear();
             mItems.addAll(items);
-            notifyDataSetChanged();
+            diffResult.dispatchUpdatesTo(this);
         }
 
         protected @Nullable Object getItem(int position) {
