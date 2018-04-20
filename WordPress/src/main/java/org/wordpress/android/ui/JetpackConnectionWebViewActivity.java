@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -30,36 +29,12 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
     private static final String TRACKING_SOURCE_KEY = "tracking_source";
 
-    public enum Source {
-        STATS("stats"), NOTIFICATIONS("notifications");
-        private final String mValue;
-
-        Source(String value) {
-            mValue = value;
-        }
-
-        @Nullable
-        public static Source fromString(String value) {
-            if (STATS.mValue.equals(value)) {
-                return STATS;
-            } else if (NOTIFICATIONS.mValue.equals(value)) {
-                return NOTIFICATIONS;
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return mValue;
-        }
-    }
-
     private SiteModel mSite;
-    private Source mSource;
+    private JetpackConnectionSource mSource;
     private JetpackConnectionWebViewClient mWebViewClient;
 
-    public static void startJetpackConnectionFlow(Context context, Source source, SiteModel site, boolean authorized) {
+    public static void startJetpackConnectionFlow(Context context, JetpackConnectionSource source, SiteModel site,
+                                                  boolean authorized) {
         String url = "https://wordpress.com/jetpack/connect?"
                      + "url=" + site.getUrl()
                      + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK
@@ -71,7 +46,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
                                                    String url,
                                                    SiteModel site,
                                                    boolean authorized,
-                                                   Source source) {
+                                                   JetpackConnectionSource source) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -90,7 +65,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         trackJetpackConnectionFlowStart(site, source);
     }
 
-    private static void trackJetpackConnectionFlowStart(SiteModel site, Source source) {
+    private static void trackJetpackConnectionFlowStart(SiteModel site, JetpackConnectionSource source) {
         if (!site.isJetpackInstalled()) {
             JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
         } else {
@@ -101,7 +76,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-        mSource = (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY);
+        mSource = (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY);
         // We need to get the site before calling super since it'll create the web client
         super.onCreate(savedInstanceState);
     }
@@ -116,10 +91,9 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JETPACK_LOGIN && resultCode == RESULT_OK) {
-            JetpackConnectionWebViewActivity
-                    .startJetpackConnectionFlow(this, mWebViewClient.getRedirectPage(), mSite,
-                                                mAccountStore.hasAccessToken(),
-                                                (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
+            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
+                    this, mWebViewClient.getRedirectPage(), mSite, mAccountStore.hasAccessToken(),
+                    (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
         }
         finish();
     }
@@ -127,7 +101,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     @Override
     protected void cancel() {
         JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED,
-                                               (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
+                (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
     }
 
     @Override
@@ -169,7 +143,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     @Override
     public void onJetpackSuccessfullyConnected(Uri uri) {
         JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED,
-                                               (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
+                (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.putExtra(SITE, mSite);

@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
-import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.NOTIFICATIONS;
+import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,

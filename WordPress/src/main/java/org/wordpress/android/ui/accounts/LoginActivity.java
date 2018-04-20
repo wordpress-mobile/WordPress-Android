@@ -42,7 +42,7 @@ import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
+import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private SignupBottomSheetDialog mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
-    private Source mJetpackConnectSource;
+    private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsJetpackConnect;
     private boolean mSignupSheetDisplayed;
 
@@ -115,7 +115,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
         if (savedInstanceState == null) {
             if (getIntent() != null) {
-                mJetpackConnectSource = (Source) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
+                mJetpackConnectSource =
+                        (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
             }
 
             mLoginAnalyticsListener.trackLoginAccessed();

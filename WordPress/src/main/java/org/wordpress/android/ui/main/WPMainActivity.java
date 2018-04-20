@@ -46,8 +46,8 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
-import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
@@ -85,7 +85,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.NOTIFICATIONS;
+import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -105,7 +105,7 @@ public class WPMainActivity extends AppCompatActivity {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
-    private Source mJetpackConnectSource;
+    private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
     private boolean mWasSwiped;
@@ -256,7 +256,7 @@ public class WPMainActivity extends AppCompatActivity {
 
         mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
         mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
-        mJetpackConnectSource = (Source) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
+        mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
 
         if (savedInstanceState == null) {

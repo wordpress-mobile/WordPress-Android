@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.login.LoginAnalyticsListener;
-import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
+import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.main.WPMainActivity;
 
 import javax.inject.Inject;
@@ -87,11 +87,11 @@ public class LoginMagicLinkInterceptActivity extends Activity {
         }
     }
 
-    private Source getJetpackConnectSource() {
+    private JetpackConnectionSource getJetpackConnectSource() {
         String value = (mUri != null && mUri.getQueryParameterNames() != null
                         && mUri.getQueryParameter(PARAMETER_SOURCE) != null)
                 ? mUri.getQueryParameter(PARAMETER_SOURCE) : "";
 
-        return Source.fromString(value);
+        return JetpackConnectionSource.fromString(value);
     }
 }

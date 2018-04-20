@@ -20,7 +20,7 @@ import org.wordpress.android.util.LocaleManager;
 import javax.inject.Inject;
 
 import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.STATS;
+import static org.wordpress.android.ui.JetpackConnectionSource.STATS;
 
 /**
  * An activity that shows when user tries to open Stats without Jetpack connected.

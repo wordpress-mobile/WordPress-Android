@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
-import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
@@ -128,7 +127,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void continueJetpackConnect(Context context, Source source, SiteModel site) {
+    public static void continueJetpackConnect(Context context, JetpackConnectionSource source, SiteModel site) {
         switch (source) {
             case NOTIFICATIONS:
                 continueJetpackConnectForNotifications(context, site);
