@@ -27,6 +27,8 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.S
  * It offers a link to the Jetpack connection flow.
  */
 public class StatsConnectJetpackActivity extends AppCompatActivity {
+    public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
+
     @Inject AccountStore mAccountStore;
 
     @Override
@@ -52,6 +54,12 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
         }
 
         setTitle(R.string.stats);
+
+        // Continue Jetpack connect flow if coming from login/signup magic link.
+        if (savedInstanceState == null && getIntent() != null && getIntent().getExtras() != null
+            && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
+            startJetpackConnectionFlow((SiteModel) getIntent().getSerializableExtra(SITE));
+        }
 
         Button setupButton = findViewById(R.id.jetpack_setup);
         setupButton.setOnClickListener(new View.OnClickListener() {
