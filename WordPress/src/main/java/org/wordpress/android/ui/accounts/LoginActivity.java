@@ -247,6 +247,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
         switch (requestCode) {
             case RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN:
+            case RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN:
                 // we showed the epilogue screen as informational and sites got loaded so, just
                 // return to login caller now
                 setResult(RESULT_OK);
