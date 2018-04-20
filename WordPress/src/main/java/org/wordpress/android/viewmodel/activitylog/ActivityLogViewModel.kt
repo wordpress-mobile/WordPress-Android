@@ -27,8 +27,6 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
 
     private var isStarted = false
 
-    private val handler = Handler()
-
     private val _events = MutableLiveData<List<ActivityLogModel>>()
     val events: LiveData<List<ActivityLogModel>>
         get() = _events
@@ -117,7 +115,9 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
             return
         }
 
-        _events.postValue(activityLogStore.getActivityLogForSite(site, false))
+        if (event.rowsAffected > 0) {
+            _events.postValue(activityLogStore.getActivityLogForSite(site, false))
+        }
 
         if (event.canLoadMore) {
             _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)
