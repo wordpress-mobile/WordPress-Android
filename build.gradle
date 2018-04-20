@@ -8,7 +8,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.1'
-        classpath 'com.automattic.android:fetchstyle:1.0'
+        classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
 
@@ -52,7 +52,7 @@ subprojects {
     }
 
     dependencies {
-        ktlint 'com.github.shyiko:ktlint:0.14.0'
+        ktlint 'com.github.shyiko:ktlint:0.21.0'
     }
 
     task ktlint(type: JavaExec) {

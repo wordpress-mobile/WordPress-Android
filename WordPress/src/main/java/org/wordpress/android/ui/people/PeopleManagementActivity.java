@@ -22,7 +22,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnUserRolesChanged;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
@@ -37,7 +37,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-
 
 public class PeopleManagementActivity extends AppCompatActivity
         implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
@@ -689,7 +688,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUserRolesChanged(SiteStore.OnUserRolesChanged event) {
+    public void onUserRolesChanged(OnUserRolesChanged event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.PEOPLE, "An error occurred while fetching the user roles with type: "
                                       + event.error.type);

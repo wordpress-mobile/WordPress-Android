@@ -86,12 +86,17 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
+import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -505,8 +510,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!mediaToDeleteAssociationFor.isEmpty()) {
                 // also remove the association of Media-to-Post for this post
-                UploadStore.ClearMediaPayload clearMediaPayload =
-                        new UploadStore.ClearMediaPayload(mPost, mediaToDeleteAssociationFor);
+                ClearMediaPayload clearMediaPayload = new ClearMediaPayload(mPost, mediaToDeleteAssociationFor);
                 mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
             }
         }
@@ -1171,7 +1175,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void onUploadError(MediaModel media, MediaStore.MediaError error) {
+    private void onUploadError(MediaModel media, MediaError error) {
         String localMediaId = String.valueOf(media.getId());
 
         Map<String, Object> properties = null;
@@ -3235,7 +3239,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+    public void onMediaUploaded(OnMediaUploaded event) {
         if (isFinishing()) {
             return;
         }
@@ -3251,7 +3255,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (event.media.getUrl() == null) {
-                MediaStore.MediaError error = new MediaStore.MediaError(MediaErrorType.GENERIC_ERROR);
+                MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 onUploadError(event.media, error);
             } else {
                 onUploadSuccess(event.media);
@@ -3265,7 +3269,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostChanged(PostStore.OnPostChanged event) {
+    public void onPostChanged(OnPostChanged event) {
         if (event.causeOfChange == PostAction.UPDATE_POST) {
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
@@ -3276,7 +3280,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostUploaded(PostStore.OnPostUploaded event) {
+    public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
         if (post != null && post.getId() == mPost.getId()) {
             if (event.isError()) {

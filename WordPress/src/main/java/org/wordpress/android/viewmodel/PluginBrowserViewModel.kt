@@ -17,6 +17,13 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated
+import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.util.ArrayList
@@ -235,8 +242,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     // Network Callbacks
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onWPOrgPluginFetched(event: PluginStore.OnWPOrgPluginFetched) {
+    @Suppress("unused")
+    fun onWPOrgPluginFetched(event: OnWPOrgPluginFetched) {
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
             return
@@ -249,11 +256,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onPluginDirectoryFetched(event: PluginStore.OnPluginDirectoryFetched) {
+    @Suppress("unused")
+    fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         val listStatus = if (event.isError) {
-            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
-                    + event.error.type)
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
+                    event.error.type)
             PluginListStatus.ERROR
         } else {
             if (event.canLoadMore) PluginListStatus.CAN_LOAD_MORE else PluginListStatus.DONE
@@ -271,8 +278,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onPluginDirectorySearched(event: PluginStore.OnPluginDirectorySearched) {
+    @Suppress("unused")
+    fun onPluginDirectorySearched(event: OnPluginDirectorySearched) {
         if (searchQuery != event.searchTerm) {
             return
         }
@@ -286,8 +293,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onSitePluginConfigured(event: PluginStore.OnSitePluginConfigured) {
+    @Suppress("unused")
+    fun onSitePluginConfigured(event: OnSitePluginConfigured) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -300,8 +307,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onSitePluginDeleted(event: PluginStore.OnSitePluginDeleted) {
+    @Suppress("unused")
+    fun onSitePluginDeleted(event: OnSitePluginDeleted) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -314,8 +321,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onSitePluginInstalled(event: PluginStore.OnSitePluginInstalled) {
+    @Suppress("unused")
+    fun onSitePluginInstalled(event: OnSitePluginInstalled) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -328,8 +335,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onSitePluginUpdated(event: PluginStore.OnSitePluginUpdated) {
+    @Suppress("unused")
+    fun onSitePluginUpdated(event: OnSitePluginUpdated) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -378,8 +385,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         reloadPluginDirectory(PluginDirectoryType.SITE)
     }
 
-    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
-                                              newPluginMap: Map<String, ImmutablePluginModel>) {
+    private fun updatePluginListWithNewPlugin(
+        mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
+        newPluginMap: Map<String, ImmutablePluginModel>
+    ) {
         val pluginList = mutableLiveData.value
         if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
             // Nothing to update
@@ -442,8 +451,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldSearch) {
             return false
         }
-        return if (searchPluginsListStatus.value != PluginListStatus.DONE
-                && searchPluginsListStatus.value != PluginListStatus.ERROR) {
+        return if (searchPluginsListStatus.value != PluginListStatus.DONE &&
+                searchPluginsListStatus.value != PluginListStatus.ERROR) {
             false
         } else searchResults.value == null || searchResults.value!!.isEmpty()
     }
