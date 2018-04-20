@@ -85,10 +85,10 @@ class ActivityLogStore
     }
 
     private fun emitRewindResult(payload: RewindResultPayload, action: ActivityLogAction) {
-        if (payload.restoreId != null) {
-            emitChange(OnRewind(restoreId = payload.restoreId, causeOfChange = action))
-        } else if (payload.error != null) {
+        if (payload.error != null) {
             emitChange(OnRewind(payload.error, action))
+        } else {
+            emitChange(OnRewind(restoreId = payload.restoreId, causeOfChange = action))
         }
     }
 
