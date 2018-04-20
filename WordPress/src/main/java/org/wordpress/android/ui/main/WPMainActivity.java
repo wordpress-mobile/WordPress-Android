@@ -47,6 +47,7 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
@@ -104,6 +105,7 @@ public class WPMainActivity extends AppCompatActivity {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private Source mJetpackConnectSource;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
     private boolean mWasSwiped;
@@ -254,6 +256,7 @@ public class WPMainActivity extends AppCompatActivity {
 
         mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
         mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
+        mJetpackConnectSource = (Source) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
 
         if (savedInstanceState == null) {
@@ -783,12 +786,21 @@ public class WPMainActivity extends AppCompatActivity {
                 if (mIsMagicLinkSignup) {
                     mLoginAnalyticsListener.trackCreatedAccount();
                     mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
-                    Intent intent = getIntent();
-                    ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
+
+                    if (mJetpackConnectSource != null) {
+                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
+                    } else {
+                        ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
+                    }
                 } else {
                     mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
-                    ActivityLauncher
-                            .showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+
+                    if (mJetpackConnectSource != null) {
+                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
+                    } else {
+                        ActivityLauncher.showLoginEpilogue(this, true,
+                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                    }
                 }
             }
         }
