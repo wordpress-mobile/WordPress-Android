@@ -274,11 +274,13 @@ public class ReaderPostTable {
         ContentValues values = new ContentValues();
         values.put("title", post.getTitle());
         values.put("text", post.getText());
+        values.put("excerpt", post.getExcerpt());
         values.put("num_replies", post.numReplies);
         values.put("num_likes", post.numLikes);
         values.put("is_liked", post.isLikedByCurrentUser);
         values.put("is_followed", post.isFollowedByCurrentUser);
         values.put("is_comments_open", post.isCommentsOpen);
+        values.put("use_excerpt", post.useExcerpt);
         ReaderDatabase.getWritableDb().update(
                 "tbl_posts", values, "pseudo_id=?", new String[]{post.getPseudoId()});
 
@@ -998,7 +1000,7 @@ public class ReaderPostTable {
         post.setRailcarJson(c.getString(c.getColumnIndex("railcar_json")));
         post.setCardType(ReaderCardType.fromString(c.getString(c.getColumnIndex("card_type"))));
 
-        post.useExcerpt = SqlUtils.sqlToBool(c.getColumnIndex("use_excerpt"));
+        post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
 
         return post;
     }

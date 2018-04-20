@@ -631,7 +631,7 @@ public class ReaderPost {
      * we should show the excerpt rather than full content for Jetpack posts that specify to show only the excerpt
      */
     public boolean shouldShowExcerpt() {
-        return isJetpack && useExcerpt;
+        return isJetpack && useExcerpt && hasExcerpt();
     }
 
     /*

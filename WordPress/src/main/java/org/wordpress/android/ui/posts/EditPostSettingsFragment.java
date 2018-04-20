@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -907,7 +908,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
+    public void onPostFormatsChanged(OnPostFormatsChanged event) {
         if (event.isError()) {
             AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
             return;
