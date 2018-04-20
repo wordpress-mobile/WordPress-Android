@@ -78,19 +78,23 @@ class ReaderPostRenderer {
             @Override
             public void run() {
                 final boolean hasTiledGallery = hasTiledGallery(mRenderBuilder.toString());
-                String content = mRenderBuilder.toString();
 
                 if (!(hasTiledGallery && mResourceVars.mIsWideDisplay)) {
-                    resizeImages(content);
+                    resizeImages();
                 }
 
-                resizeIframes(content);
+                resizeIframes();
 
                 // Get the set of JS scripts to inject in our Webview to support some specific Embeds.
-                Set<String> jsToInject = injectJSForSpecificEmbedSupport(content);
+                Set<String> jsToInject = injectJSForSpecificEmbedSupport();
 
                 final String htmlContent =
-                        formatPostContentForWebView(content, jsToInject, hasTiledGallery, mResourceVars.mIsWideDisplay);
+                        formatPostContentForWebView(
+                                mRenderBuilder.toString(),
+                                jsToInject,
+                                hasTiledGallery,
+                                mResourceVars.mIsWideDisplay);
+
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -110,7 +114,7 @@ class ReaderPostRenderer {
     /*
      * scan the content for images and make sure they're correctly sized for the device
      */
-    private void resizeImages(String content) {
+    private void resizeImages() {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String imageTag, String imageUrl) {
@@ -119,6 +123,7 @@ class ReaderPostRenderer {
                 }
             }
         };
+        String content = mRenderBuilder.toString();
         ReaderImageScanner scanner = new ReaderImageScanner(content, mPost.isPrivate);
         scanner.beginScan(imageListener);
     }
@@ -126,18 +131,19 @@ class ReaderPostRenderer {
     /*
      * scan the content for iframes and make sure they're correctly sized for the device
      */
-    private void resizeIframes(String content) {
+    private void resizeIframes() {
         ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String tag, String src) {
                 replaceIframeTag(tag, src);
             }
         };
+        String content = mRenderBuilder.toString();
         ReaderIframeScanner scanner = new ReaderIframeScanner(content);
         scanner.beginScan(iframeListener);
     }
 
-    private Set<String> injectJSForSpecificEmbedSupport(String content) {
+    private Set<String> injectJSForSpecificEmbedSupport() {
         final Set<String> jsToInject = new HashSet<>();
         ReaderHtmlUtils.HtmlScannerListener embedListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
@@ -145,6 +151,7 @@ class ReaderPostRenderer {
                 jsToInject.add(src);
             }
         };
+        String content = mRenderBuilder.toString();
         ReaderEmbedScanner scanner = new ReaderEmbedScanner(content);
         scanner.beginScan(embedListener);
         return jsToInject;

@@ -74,7 +74,7 @@ public class SignupMagicLinkFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mLoginListener != null) {
-                    mLoginListener.openEmailClient();
+                    mLoginListener.openEmailClient(false);
                 }
             }
         });
