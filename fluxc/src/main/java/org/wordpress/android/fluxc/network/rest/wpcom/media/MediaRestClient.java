@@ -23,13 +23,12 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
-import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
@@ -121,9 +120,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             notifyMediaPushed(site, media, error);
                         }
                     }
-                }, new BaseErrorListener() {
+                }, new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(T.MEDIA, "error editing remote media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaPushed(site, media, mediaError);
@@ -275,9 +274,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             notifyMediaListFetched(site, error, mimeType);
                         }
                     }
-                }, new BaseErrorListener() {
+                }, new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaListFetched(site, mediaError, mimeType);
@@ -313,9 +312,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             notifyMediaFetched(site, media, error);
                         }
                     }
-                }, new BaseErrorListener() {
+                }, new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaFetched(site, media, mediaError);
@@ -350,9 +349,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             notifyMediaDeleted(site, media, error);
                         }
                     }
-                }, new BaseErrorListener() {
+                }, new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                         if (mediaError == MediaErrorType.NOT_FOUND) {
@@ -415,17 +414,16 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaList);
                         mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
-                }, new BaseRequest.BaseErrorListener() {
+                }, new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError uploading stock media: " + error);
                         UploadStockMediaError mediaError = new UploadStockMediaError(
                                 UploadStockMediaErrorType.fromBaseNetworkError(error), error.message);
                         UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
                         mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
-                }
-                                                                    );
+                });
 
         add(request);
     }

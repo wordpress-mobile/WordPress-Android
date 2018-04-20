@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
-import org.wordpress.android.fluxc.network.BaseRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +20,7 @@ class WPComGsonRequestBuilder
         params: Map<String, String>,
         clazz: Class<T>,
         listener: (T) -> Unit,
-        errorListener: (BaseRequest.BaseNetworkError) -> Unit
+        errorListener: (WPComGsonNetworkError) -> Unit
     ): WPComGsonRequest<T> {
         return WPComGsonRequest.buildGetRequest(url, params, clazz, listener, errorListener)
     }
@@ -38,7 +38,7 @@ class WPComGsonRequestBuilder
         body: Map<String, Any>,
         clazz: Class<T>,
         listener: (T) -> Unit,
-        errorListener: (BaseRequest.BaseNetworkError) -> Unit
+        errorListener: (WPComGsonNetworkError) -> Unit
     ): WPComGsonRequest<T> {
         return WPComGsonRequest.buildPostRequest(url, body, clazz, listener, errorListener)
     }

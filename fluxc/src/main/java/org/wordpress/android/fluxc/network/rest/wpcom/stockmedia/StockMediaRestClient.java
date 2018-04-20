@@ -9,10 +9,11 @@ import com.android.volley.Response;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.StockMediaStore.FetchedStockMediaListPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaError;
@@ -59,9 +60,9 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                                         response.canLoadMore);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
-                }, new BaseRequest.BaseErrorListener() {
+                }, new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
                         StockMediaError mediaError = new StockMediaError(
                                 StockMediaErrorType.fromBaseNetworkError(error), error.message);
