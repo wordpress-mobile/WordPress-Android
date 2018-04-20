@@ -29,12 +29,17 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
@@ -489,6 +494,92 @@ public class SiteRestClient extends BaseWPComRestClient {
         );
         addUnauthedRequest(request);
     }
+
+    // Automated Transfers
+
+    public void checkAutomatedTransferEligibility(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.eligibility.getUrlV1_1();
+        final WPComGsonRequest<AutomatedTransferEligibilityCheckResponse> request = WPComGsonRequest
+                .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse.class,
+                new Listener<AutomatedTransferEligibilityCheckResponse>() {
+                    @Override
+                    public void onResponse(AutomatedTransferEligibilityCheckResponse response) {
+                        List<String> strErrorCodes = new ArrayList<>();
+                        if (response.errors != null) {
+                            for (EligibilityError eligibilityError : response.errors) {
+                                strErrorCodes.add(eligibilityError.code);
+                            }
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible,
+                                        strErrorCodes)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        AutomatedTransferError payloadError = new AutomatedTransferError(((WPComGsonNetworkError)
+                                networkError).apiError, networkError.message);
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                new AutomatedTransferEligibilityResponsePayload(site, payloadError)));
+                    }
+                });
+        add(request);
+    }
+
+    public void initiateAutomatedTransfer(@NonNull final SiteModel site, @NonNull final String pluginSlugToInstall) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.initiate.getUrlV1_1();
+        Map<String, Object> params = new HashMap<>();
+        params.put("plugin", pluginSlugToInstall);
+        final WPComGsonRequest<InitiateAutomatedTransferResponse> request = WPComGsonRequest
+                .buildPostRequest(url, params, InitiateAutomatedTransferResponse.class,
+                        new Listener<InitiateAutomatedTransferResponse>() {
+                            @Override
+                            public void onResponse(InitiateAutomatedTransferResponse response) {
+                                InitiateAutomatedTransferResponsePayload payload =
+                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
+                                payload.success = response.success;
+                                mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                                InitiateAutomatedTransferResponsePayload payload =
+                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
+                                payload.error = new AutomatedTransferError(((WPComGsonNetworkError)
+                                        error).apiError, error.message);
+                                mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    public void checkAutomatedTransferStatus(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.status.getUrlV1_1();
+        final WPComGsonRequest<AutomatedTransferStatusResponse> request = WPComGsonRequest
+                .buildGetRequest(url, null, AutomatedTransferStatusResponse.class,
+                        new Listener<AutomatedTransferStatusResponse>() {
+                            @Override
+                            public void onResponse(AutomatedTransferStatusResponse response) {
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
+                                        new AutomatedTransferStatusResponsePayload(site, response.status,
+                                                response.currentStep, response.totalSteps)));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                                AutomatedTransferError error = new AutomatedTransferError(((WPComGsonNetworkError)
+                                        networkError).apiError, networkError.message);
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
+                                        new AutomatedTransferStatusResponsePayload(site, error)));
+                            }
+                        });
+        add(request);
+    }
+
+    // Utils
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();

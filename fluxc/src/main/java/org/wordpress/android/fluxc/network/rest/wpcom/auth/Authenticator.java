@@ -212,6 +212,14 @@ public class Authenticator {
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
+        if (payload.flow != null) {
+            params.put("flow", payload.flow.toString());
+        }
+
+        if (payload.source != null) {
+            params.put("source", payload.source.toString());
+        }
+
         WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, AuthEmailWPComRestResponse.class,
                 new Response.Listener<AuthEmailWPComRestResponse>() {
                     @Override

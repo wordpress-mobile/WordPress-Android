@@ -68,12 +68,48 @@ public class AccountStore extends Store {
     }
 
     public static class AuthEmailPayload extends Payload<BaseNetworkError> {
+        public AuthEmailPayloadFlow flow;
+        public AuthEmailPayloadSource source;
         public String emailOrUsername;
         public boolean isSignup;
 
-        public AuthEmailPayload(String emailOrUsername, boolean isSignup) {
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
+                                AuthEmailPayloadSource source) {
             this.emailOrUsername = emailOrUsername;
             this.isSignup = isSignup;
+            this.flow = flow;
+            this.source = source;
+        }
+    }
+
+    public enum AuthEmailPayloadFlow {
+        JETPACK("jetpack");
+
+        private final String mString;
+
+        AuthEmailPayloadFlow(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
+        }
+    }
+
+    public enum AuthEmailPayloadSource {
+        NOTIFICATIONS("notifications"),
+        STATS("stats");
+
+        private final String mString;
+
+        AuthEmailPayloadSource(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
         }
     }
 
