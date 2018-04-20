@@ -409,7 +409,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void gotWpcomEmail(String email) {
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
-                    email, mIsJetpackConnect, mJetpackConnectSource.toString());
+                    email, mIsJetpackConnect, mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment =
@@ -452,7 +452,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void showSignupMagicLink(String email) {
         SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
-                mJetpackConnectSource.toString());
+                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 
