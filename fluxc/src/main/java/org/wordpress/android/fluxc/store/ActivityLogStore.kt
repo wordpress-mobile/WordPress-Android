@@ -73,7 +73,8 @@ class ActivityLogStore
             val rowsAffected = if (payload.activityLogModels.isNotEmpty())
                 activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
             else 0
-            val canLoadMore = (payload.offset + payload.number) < payload.totalItems
+            val canLoadMore = payload.activityLogModels.isNotEmpty()
+                    && (payload.offset + payload.number) < payload.totalItems
             emitChange(OnActivityLogFetched(rowsAffected, canLoadMore, action))
         }
     }
