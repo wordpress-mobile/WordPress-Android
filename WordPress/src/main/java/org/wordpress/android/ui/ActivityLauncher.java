@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
@@ -125,6 +126,31 @@ public class ActivityLauncher {
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
 
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void continueJetpackConnect(Context context, Source source, SiteModel site) {
+        switch (source) {
+            case NOTIFICATIONS:
+                continueJetpackConnectForNotifications(context, site);
+                break;
+            case STATS:
+                continueJetpackConnectForStats(context, site);
+                break;
+        }
+    }
+
+    private static void continueJetpackConnectForNotifications(Context context, SiteModel site) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(WPMainActivity.ARG_CONTINUE_JETPACK_CONNECT, true);
+        context.startActivity(intent);
+    }
+
+    private static void continueJetpackConnectForStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(StatsConnectJetpackActivity.ARG_CONTINUE_JETPACK_CONNECT, true);
+        context.startActivity(intent);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
