@@ -202,10 +202,14 @@ public class SignupMagicLinkFragment extends Fragment {
     }
 
     private AuthEmailPayloadSource getAuthEmailPayloadSource() {
-        if (mJetpackConnectSource.equalsIgnoreCase(AuthEmailPayloadSource.NOTIFICATIONS.toString())) {
-            return AuthEmailPayloadSource.NOTIFICATIONS;
-        } else if (mJetpackConnectSource.equalsIgnoreCase(AuthEmailPayloadSource.STATS.toString())) {
-            return AuthEmailPayloadSource.STATS;
+        if (mJetpackConnectSource != null) {
+            if (mJetpackConnectSource.equalsIgnoreCase(AuthEmailPayloadSource.NOTIFICATIONS.toString())) {
+                return AuthEmailPayloadSource.NOTIFICATIONS;
+            } else if (mJetpackConnectSource.equalsIgnoreCase(AuthEmailPayloadSource.STATS.toString())) {
+                return AuthEmailPayloadSource.STATS;
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
