@@ -112,11 +112,17 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
     @SuppressWarnings("unused")
     fun onActivityLogFetched(event: ActivityLogStore.OnActivityLogFetched) {
         if (event.isError) {
+            _eventListStatus.postValue(ActivityLogListStatus.ERROR)
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the Activity log events")
             return
         }
 
         _events.postValue(activityLogStore.getActivityLogForSite(site, false))
-        _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)
+
+        if (event.canLoadMore) {
+            _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)
+        } else {
+            _eventListStatus.postValue(ActivityLogListStatus.DONE)
+        }
     }
 }
