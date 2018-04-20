@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.main;
 
-import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,7 +14,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -100,19 +97,18 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
-    static final int TAB_MY_SITE = 0;
-    static final int TAB_READER = 1;
-    static final int TAB_ME = 2;
-    static final int TAB_NOTIFS = 3;
+    private static final int TAB_MY_SITE = 0;
+    private static final int TAB_READER = 1;
+    private static final int TAB_ME = 2;
+    private static final int TAB_NOTIFS = 3;
+    private static final int NUM_TABS = 4;
 
     private WPViewPager mViewPager;
-    private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
     private boolean mWasSwiped;
-    private int mAppBarElevation;
 
     private SiteModel mSelectedSite;
 
@@ -152,7 +148,7 @@ public class WPMainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
 
         mViewPager = findViewById(R.id.viewpager_main);
-        mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);
+        mViewPager.setOffscreenPageLimit(NUM_TABS - 1);
 
         setupBottomNav();
 
@@ -175,57 +171,11 @@ public class WPMainActivity extends AppCompatActivity {
                 }, 2000);
             }
         });
-        mTabLayout = findViewById(R.id.tab_layout);
-        mTabLayout.createTabs();
 
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                // nop
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                // scroll the active fragment's contents to the top when user taps the current tab
-                Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
-                if (fragment instanceof OnScrollToTopListener) {
-                    ((OnScrollToTopListener) fragment).onScrollToTop();
-                }
-            }
-        });
-
-        mAppBarElevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 AppPrefs.setMainTabIndex(position);
-
-                switch (position) {
-                    case WPMainTabAdapter.TAB_MY_SITE:
-                        setTabLayoutElevation(mAppBarElevation);
-                        break;
-                    case WPMainTabAdapter.TAB_READER:
-                        setTabLayoutElevation(0);
-                        break;
-                    case WPMainTabAdapter.TAB_ME:
-                        setTabLayoutElevation(mAppBarElevation);
-                        break;
-                    case WPMainTabAdapter.TAB_NOTIFS:
-                        setTabLayoutElevation(mAppBarElevation);
-                        Fragment fragment = mTabAdapter.getFragment(position);
-                        if (fragment instanceof OnScrollToTopListener) {
-                            ((OnScrollToTopListener) fragment).onScrollToTop();
-                        }
-                        break;
-                }
-
                 trackLastVisibleTab(position, true);
             }
 
@@ -239,10 +189,10 @@ public class WPMainActivity extends AppCompatActivity {
                     mWasSwiped = false;
 
                     switch (AppPrefs.getMainTabIndex()) {
-                        case WPMainTabAdapter.TAB_MY_SITE:
-                        case WPMainTabAdapter.TAB_READER:
-                        case WPMainTabAdapter.TAB_ME:
-                        case WPMainTabAdapter.TAB_NOTIFS:
+                        case TAB_MY_SITE:
+                        case TAB_READER:
+                        case TAB_ME:
+                        case TAB_NOTIFS:
                         default:
                             AnalyticsTracker.track(AnalyticsTracker.Stat.MAIN_TABS_SWIPED);
                     }
@@ -253,7 +203,7 @@ public class WPMainActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 // fire event if the "My Site" page is being scrolled so the fragment can
                 // animate its fab to match
-                if (position == WPMainTabAdapter.TAB_MY_SITE) {
+                if (position == TAB_MY_SITE) {
                     EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
                 }
             }
@@ -338,21 +288,6 @@ public class WPMainActivity extends AppCompatActivity {
         return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
 
-    private void setTabLayoutElevation(float newElevation) {
-        if (mTabLayout == null) {
-            return;
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            float oldElevation = mTabLayout.getElevation();
-            if (oldElevation != newElevation) {
-                ObjectAnimator.ofFloat(mTabLayout, "elevation", oldElevation, newElevation)
-                              .setDuration(1000L)
-                              .start();
-            }
-        }
-    }
-
     private int getPositionForBottomNavItem(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_sites:
@@ -362,11 +297,12 @@ public class WPMainActivity extends AppCompatActivity {
             case R.id.nav_me:
                 return TAB_ME;
             default:
-                return TAB_MY_SITE;
+                return TAB_NOTIFS;
         }
     }
 
     private void setupBottomNav() {
+        // TODO: notif badge
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -438,7 +374,7 @@ public class WPMainActivity extends AppCompatActivity {
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
 
-        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
+        mViewPager.setCurrentItem(TAB_NOTIFS);
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
@@ -531,7 +467,7 @@ public class WPMainActivity extends AppCompatActivity {
         int currentItem = mViewPager.getCurrentItem();
         trackLastVisibleTab(currentItem, false);
 
-        if (currentItem == WPMainTabAdapter.TAB_NOTIFS) {
+        if (currentItem == TAB_NOTIFS) {
             // if we are presenting the notifications list, it's safe to clear any outstanding
             // notifications
             GCMMessageService.removeAllNotifications(this);
@@ -554,16 +490,16 @@ public class WPMainActivity extends AppCompatActivity {
     private void announceTitleForAccessibility(int currentTabIndex) {
         @StringRes int stringRes = -1;
         switch (currentTabIndex) {
-            case WPMainTabAdapter.TAB_MY_SITE:
+            case TAB_MY_SITE:
                 stringRes = R.string.my_site_section_screen_title;
                 break;
-            case WPMainTabAdapter.TAB_READER:
+            case TAB_READER:
                 stringRes = R.string.reader_screen_title;
                 break;
-            case WPMainTabAdapter.TAB_ME:
+            case TAB_ME:
                 stringRes = R.string.me_section_screen_title;
                 break;
-            case WPMainTabAdapter.TAB_NOTIFS:
+            case TAB_NOTIFS:
                 stringRes = R.string.notifications_screen_title;
                 break;
             default:
@@ -602,26 +538,26 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         switch (position) {
-            case WPMainTabAdapter.TAB_MY_SITE:
+            case TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
                                                         getSelectedSite());
                 }
                 break;
-            case WPMainTabAdapter.TAB_READER:
+            case TAB_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 }
                 break;
-            case WPMainTabAdapter.TAB_ME:
+            case TAB_ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
                 }
                 break;
-            case WPMainTabAdapter.TAB_NOTIFS:
+            case TAB_NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
@@ -643,11 +579,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     public void setReaderTabActive() {
-        if (isFinishing() || mTabLayout == null) {
+        if (isFinishing() || mViewPager == null) {
             return;
         }
-
-        mTabLayout.setSelectedTabPosition(WPMainTabAdapter.TAB_READER);
+        mViewPager.setCurrentItem(TAB_READER);
     }
 
     /*
@@ -768,7 +703,7 @@ public class WPMainActivity extends AppCompatActivity {
      * returns the my site fragment from the sites tab
      */
     private MySiteFragment getMySiteFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
+        Fragment fragment = mTabAdapter.getFragment(TAB_MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
         }
@@ -779,7 +714,7 @@ public class WPMainActivity extends AppCompatActivity {
      * returns the "me" fragment from the sites tab
      */
     private MeFragment getMeFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_ME);
+        Fragment fragment = mTabAdapter.getFragment(TAB_ME);
         if (fragment instanceof MeFragment) {
             return (MeFragment) fragment;
         }
@@ -790,7 +725,7 @@ public class WPMainActivity extends AppCompatActivity {
      * returns the my site fragment from the sites tab
      */
     private NotificationsListFragment getNotificationsListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
+        Fragment fragment = mTabAdapter.getFragment(TAB_NOTIFS);
         if (fragment instanceof NotificationsListFragment) {
             return (NotificationsListFragment) fragment;
         }
@@ -833,18 +768,18 @@ public class WPMainActivity extends AppCompatActivity {
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            // mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
         }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        mTabLayout.showNoteBadge(event.hasUnseenNotes);
+        // mTabLayout.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
-        mTabLayout.showNoteBadge(event.hasUnseenNotes);
+        // mTabLayout.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
