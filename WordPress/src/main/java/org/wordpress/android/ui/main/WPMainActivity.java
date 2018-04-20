@@ -230,10 +230,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
-                    if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
-                        mViewPager.setCurrentItem(position);
-                    }
-
+                    setCurrentPage(position);
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
@@ -307,7 +304,7 @@ public class WPMainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int position = getPositionForBottomNavItem(item);
-                mViewPager.setCurrentItem(position);
+                setCurrentPage(position);
                 return true;
             }
         });
@@ -374,7 +371,7 @@ public class WPMainActivity extends AppCompatActivity {
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
 
-        mViewPager.setCurrentItem(TAB_NOTIFS);
+        setCurrentPage(TAB_NOTIFS);
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
@@ -579,10 +576,13 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     public void setReaderTabActive() {
-        if (isFinishing() || mViewPager == null) {
-            return;
+        setCurrentPage(TAB_READER);
+    }
+
+    private void setCurrentPage(int position) {
+        if (!isFinishing() && mViewPager != null && mTabAdapter.isValidPosition(position)) {
+            mViewPager.setCurrentItem(position, false);
         }
-        mViewPager.setCurrentItem(TAB_READER);
     }
 
     /*
@@ -602,9 +602,7 @@ public class WPMainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mTabAdapter);
 
         // restore previous position
-        if (mTabAdapter.isValidPosition(position)) {
-            mViewPager.setCurrentItem(position);
-        }
+        setCurrentPage(position);
     }
 
     private void setSite(Intent data) {
