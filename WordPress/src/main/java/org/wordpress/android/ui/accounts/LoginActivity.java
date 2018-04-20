@@ -757,7 +757,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_SUCCESS);
-        ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+
+        if (mIsJetpackConnect) {
+            ActivityLauncher.showSignupEpilogueForResult(this, name, email, photoUrl, username, false);
+        } else {
+            ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+        }
+
         setResult(Activity.RESULT_OK);
         finish();
     }
