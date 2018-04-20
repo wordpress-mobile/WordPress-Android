@@ -89,6 +89,20 @@ class ActivityLogStoreTest {
     }
 
     @Test
+    fun cannotLoadMoreWhenResponseEmpty() {
+        val activityModels = listOf<ActivityLogModel>()
+        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 100, 10, 0)
+        val action = ActivityLogActionBuilder.newFetchedActivitiesAction(payload)
+
+        activityLogStore.onAction(action)
+
+        val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(0,
+                false,
+                ActivityLogAction.FETCHED_ACTIVITIES)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
     fun setsLoadMoreToTrueOnMoreItems() {
         val activityModels = listOf<ActivityLogModel>(mock())
         val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 15, 10, 0)
