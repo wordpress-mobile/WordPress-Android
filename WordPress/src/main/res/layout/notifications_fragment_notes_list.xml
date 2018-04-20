@@ -217,7 +217,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:ignore="UselessParent">
@@ -254,7 +254,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
 
     </LinearLayout>
 
