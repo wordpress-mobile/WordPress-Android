@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -183,7 +184,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
-                    setCurrentPage(position);
+                    setBottomNavPosition(position);
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
@@ -236,44 +237,6 @@ public class WPMainActivity extends AppCompatActivity {
     private @Nullable String getAuthToken() {
         Uri uri = getIntent().getData();
         return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
-    }
-
-    private int getPositionForBottomNavItem(int itemId) {
-        switch (itemId) {
-            case R.id.nav_sites:
-                return WPMainPageAdapter.PAGE_MY_SITE;
-            case R.id.nav_reader:
-                return WPMainPageAdapter.PAGE_READER;
-            case R.id.nav_me:
-                return WPMainPageAdapter.PAGE_ME;
-            default:
-                return WPMainPageAdapter.PAGE_NOTIFS;
-        }
-    }
-
-    private int getBottomNavPosition() {
-        return getPositionForBottomNavItem(mBottomNav.getSelectedItemId());
-    }
-
-    private void setupBottomNav() {
-        // TODO: notif badge
-        mBottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int position = getPositionForBottomNavItem(item.getItemId());
-                setCurrentPage(position);
-                return true;
-            }
-        });
-        mBottomNav.setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
-            @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
-                // scroll the active fragment's contents to the top when user retaps the current item
-                int position = getPositionForBottomNavItem(item.getItemId());
-                Fragment fragment = mNavAdapter.getFragment(position);
-                if (fragment instanceof OnScrollToTopListener) {
-                    ((OnScrollToTopListener) fragment).onScrollToTop();
-                }
-            }
-        });
     }
 
     @Override
@@ -480,6 +443,78 @@ public class WPMainActivity extends AppCompatActivity {
         return mNavAdapter.getFragment(getBottomNavPosition());
     }
 
+    private int getPositionForBottomNavItemId(int itemId) {
+        switch (itemId) {
+            case R.id.nav_sites:
+                return WPMainPageAdapter.PAGE_MY_SITE;
+            case R.id.nav_reader:
+                return WPMainPageAdapter.PAGE_READER;
+            case R.id.nav_me:
+                return WPMainPageAdapter.PAGE_ME;
+            default:
+                return WPMainPageAdapter.PAGE_NOTIFS;
+        }
+    }
+
+    private @IdRes int getBottomNavItemIdForPosition(int position) {
+        switch (position) {
+            case WPMainPageAdapter.PAGE_MY_SITE:
+                return R.id.nav_sites;
+            case WPMainPageAdapter.PAGE_READER:
+                return R.id.nav_reader;
+            case WPMainPageAdapter.PAGE_ME:
+                return R.id.nav_me;
+            default:
+                return R.id.nav_notifications;
+        }
+    }
+
+    private int getBottomNavPosition() {
+        return getPositionForBottomNavItemId(mBottomNav.getSelectedItemId());
+    }
+
+    private void setBottomNavPosition(int position) {
+        mBottomNav.setSelectedItemId(getBottomNavItemIdForPosition(position));
+    }
+
+    private void setupBottomNav() {
+        // TODO: notif badge
+        mBottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int position = getPositionForBottomNavItemId(item.getItemId());
+                setCurrentPage(position);
+                return true;
+            }
+        });
+        mBottomNav.setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
+            @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
+                // scroll the active fragment's contents to the top when user retaps the current item
+                int position = getPositionForBottomNavItemId(item.getItemId());
+                Fragment fragment = mNavAdapter.getFragment(position);
+                if (fragment instanceof OnScrollToTopListener) {
+                    ((OnScrollToTopListener) fragment).onScrollToTop();
+                }
+            }
+        });
+    }
+
+    private void setCurrentPage(int position) {
+        if (isFinishing()) {
+            return;
+        }
+
+        Fragment fragment = mNavAdapter.getFragment(position);
+        if (fragment != null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .setTransition(TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        }
+
+        AppPrefs.setMainTabIndex(position);
+    }
+
     private void checkMagicLinkSignIn() {
         if (getIntent() != null) {
             if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
@@ -533,19 +568,6 @@ public class WPMainActivity extends AppCompatActivity {
 
     public void setReaderPageActive() {
         setCurrentPage(WPMainPageAdapter.PAGE_READER);
-    }
-
-    private void setCurrentPage(int position) {
-        if (!isFinishing()) {
-            Fragment fragment = mNavAdapter.getFragment(position);
-            if (fragment != null) {
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .setTransition(TRANSIT_FRAGMENT_FADE)
-                        .commit();
-            }
-        }
     }
 
     /*
