@@ -149,6 +149,48 @@ public class WPMainNavigationView extends BottomNavigationView {
         return mNavAdapter.getFragment(position);
     }
 
+    /*
+    void showNoteBadge(boolean showBadge) {
+        if (mNoteBadge == null) {
+            return;
+        }
+
+        boolean isBadged = (mNoteBadge.getVisibility() == View.VISIBLE);
+        if (showBadge == isBadged) {
+            return;
+        }
+
+        float start = showBadge ? 0f : 1f;
+        float end = showBadge ? 1f : 0f;
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, start, end);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, start, end);
+        ObjectAnimator animScale = ObjectAnimator.ofPropertyValuesHolder(mNoteBadge, scaleX, scaleY);
+
+        if (showBadge) {
+            animScale.setInterpolator(new BounceInterpolator());
+            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_longAnimTime));
+            animScale.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    mNoteBadge.setVisibility(View.VISIBLE);
+                }
+            });
+        } else {
+            animScale.setInterpolator(new AccelerateInterpolator());
+            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_shortAnimTime));
+            animScale.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mNoteBadge.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        animScale.start();
+    }
+     */
+
     private class NavAdapter extends FragmentStatePagerAdapter {
         private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_PAGES);
 
