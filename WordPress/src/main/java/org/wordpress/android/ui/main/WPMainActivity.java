@@ -8,17 +8,11 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
-import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,7 +57,6 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -83,7 +76,10 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
+import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_ME;
+import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_MY_SITE;
+import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_NOTIFS;
+import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -97,8 +93,7 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
-    private WPMainPageAdapter mNavAdapter;
-    private BottomNavigationView mBottomNav;
+    private WPMainNavigationView mBottomNav;
 
     private TextView mConnectionBar;
     private boolean mIsMagicLinkLogin;
@@ -142,9 +137,7 @@ public class WPMainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        setupBottomNav();
-
-        mNavAdapter = new WPMainPageAdapter(getFragmentManager());
+        mBottomNav.init(getFragmentManager());
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +177,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
-                    setBottomNavPosition(position);
+                    mBottomNav.setCurrentPosition(position);
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
@@ -290,7 +283,7 @@ public class WPMainActivity extends AppCompatActivity {
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
 
-        setCurrentPage(WPMainPageAdapter.PAGE_NOTIFS);
+        mBottomNav.setCurrentPage(PAGE_NOTIFS);
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
@@ -380,10 +373,10 @@ public class WPMainActivity extends AppCompatActivity {
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        int currentItem = getBottomNavPosition();
+        int currentItem = mBottomNav.getCurrentPosition();
         trackLastVisiblePage(currentItem, false);
 
-        if (currentItem == WPMainPageAdapter.PAGE_NOTIFS) {
+        if (currentItem == PAGE_NOTIFS) {
             // if we are presenting the notifications list, it's safe to clear any outstanding
             // notifications
             GCMMessageService.removeAllNotifications(this);
@@ -406,16 +399,16 @@ public class WPMainActivity extends AppCompatActivity {
     private void announceTitleForAccessibility(int position) {
         @StringRes int stringRes = -1;
         switch (position) {
-            case WPMainPageAdapter.PAGE_MY_SITE:
+            case PAGE_MY_SITE:
                 stringRes = R.string.my_site_section_screen_title;
                 break;
-            case WPMainPageAdapter.PAGE_READER:
+            case PAGE_READER:
                 stringRes = R.string.reader_screen_title;
                 break;
-            case WPMainPageAdapter.PAGE_ME:
+            case PAGE_ME:
                 stringRes = R.string.me_section_screen_title;
                 break;
-            case WPMainPageAdapter.PAGE_NOTIFS:
+            case PAGE_NOTIFS:
                 stringRes = R.string.notifications_screen_title;
                 break;
             default:
@@ -429,7 +422,7 @@ public class WPMainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // let the fragment handle the back button if it implements our OnParentBackPressedListener
-        Fragment fragment = getActiveFragment();
+        Fragment fragment = mBottomNav.getActiveFragment();
         if (fragment instanceof OnActivityBackPressedListener) {
             boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
             if (handled) {
@@ -437,82 +430,6 @@ public class WPMainActivity extends AppCompatActivity {
             }
         }
         super.onBackPressed();
-    }
-
-    private Fragment getActiveFragment() {
-        return mNavAdapter.getFragment(getBottomNavPosition());
-    }
-
-    private int getPositionForBottomNavItemId(int itemId) {
-        switch (itemId) {
-            case R.id.nav_sites:
-                return WPMainPageAdapter.PAGE_MY_SITE;
-            case R.id.nav_reader:
-                return WPMainPageAdapter.PAGE_READER;
-            case R.id.nav_me:
-                return WPMainPageAdapter.PAGE_ME;
-            default:
-                return WPMainPageAdapter.PAGE_NOTIFS;
-        }
-    }
-
-    private @IdRes int getBottomNavItemIdForPosition(int position) {
-        switch (position) {
-            case WPMainPageAdapter.PAGE_MY_SITE:
-                return R.id.nav_sites;
-            case WPMainPageAdapter.PAGE_READER:
-                return R.id.nav_reader;
-            case WPMainPageAdapter.PAGE_ME:
-                return R.id.nav_me;
-            default:
-                return R.id.nav_notifications;
-        }
-    }
-
-    private int getBottomNavPosition() {
-        return getPositionForBottomNavItemId(mBottomNav.getSelectedItemId());
-    }
-
-    private void setBottomNavPosition(int position) {
-        mBottomNav.setSelectedItemId(getBottomNavItemIdForPosition(position));
-    }
-
-    private void setupBottomNav() {
-        // TODO: notif badge
-        mBottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int position = getPositionForBottomNavItemId(item.getItemId());
-                setCurrentPage(position);
-                return true;
-            }
-        });
-        mBottomNav.setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
-            @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
-                // scroll the active fragment's contents to the top when user retaps the current item
-                int position = getPositionForBottomNavItemId(item.getItemId());
-                Fragment fragment = mNavAdapter.getFragment(position);
-                if (fragment instanceof OnScrollToTopListener) {
-                    ((OnScrollToTopListener) fragment).onScrollToTop();
-                }
-            }
-        });
-    }
-
-    private void setCurrentPage(int position) {
-        if (isFinishing()) {
-            return;
-        }
-
-        Fragment fragment = mNavAdapter.getFragment(position);
-        if (fragment != null) {
-            getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .setTransition(TRANSIT_FRAGMENT_FADE)
-                    .commit();
-        }
-
-        AppPrefs.setMainTabIndex(position);
     }
 
     private void checkMagicLinkSignIn() {
@@ -526,26 +443,26 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void trackLastVisiblePage(int position, boolean trackAnalytics) {
         switch (position) {
-            case WPMainPageAdapter.PAGE_MY_SITE:
+            case PAGE_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
                                                         getSelectedSite());
                 }
                 break;
-            case WPMainPageAdapter.PAGE_READER:
+            case PAGE_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 }
                 break;
-            case WPMainPageAdapter.PAGE_ME:
+            case PAGE_ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
                 }
                 break;
-            case WPMainPageAdapter.PAGE_NOTIFS:
+            case PAGE_NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
@@ -567,27 +484,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     public void setReaderPageActive() {
-        setCurrentPage(WPMainPageAdapter.PAGE_READER);
-    }
-
-    /*
-     * re-create the fragment adapter so all its fragments are also re-created - used when
-     * user signs in/out so the fragments reflect the active account
-     * TODO: test this with the new nav
-     */
-    private void resetFragments() {
-        AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
-
-        // reset the timestamp that determines when followed tags/blogs are updated so they're
-        // updated when the fragment is recreated (necessary after signin/disconnect)
-        ReaderPostListFragment.resetLastUpdateDate();
-
-        // remember the current position, then recreate the adapter so new fragments are created
-        int position = getBottomNavPosition();
-        mNavAdapter = new WPMainPageAdapter(getFragmentManager());
-
-        // restore previous position
-        setCurrentPage(position);
+        mBottomNav.setCurrentPage(PAGE_READER);
     }
 
     private void setSite(Intent data) {
@@ -673,42 +570,33 @@ public class WPMainActivity extends AppCompatActivity {
         // Recreate this activity (much like a configuration change)
         recreate();
 
-        resetFragments();
+        mBottomNav.resetFragments();
     }
 
     private void startWithNewAccount() {
         GCMRegistrationIntentService.enqueueWork(this,
                 new Intent(this, GCMRegistrationIntentService.class));
-        resetFragments();
+        mBottomNav.resetFragments();
     }
 
-    /*
-     * returns the my site fragment from the sites page
-     */
     private MySiteFragment getMySiteFragment() {
-        Fragment fragment = mNavAdapter.getFragment(WPMainPageAdapter.PAGE_MY_SITE);
+        Fragment fragment = mBottomNav.getFragment(PAGE_MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
         }
         return null;
     }
 
-    /*
-     * returns the "me" fragment from the sites page
-     */
     private MeFragment getMeFragment() {
-        Fragment fragment = mNavAdapter.getFragment(WPMainPageAdapter.PAGE_ME);
+        Fragment fragment = mBottomNav.getFragment(PAGE_ME);
         if (fragment instanceof MeFragment) {
             return (MeFragment) fragment;
         }
         return null;
     }
 
-    /*
-     * returns the my site fragment from the sites page
-     */
     private NotificationsListFragment getNotificationsListFragment() {
-        Fragment fragment = mNavAdapter.getFragment(WPMainPageAdapter.PAGE_NOTIFS);
+        Fragment fragment = mBottomNav.getFragment(PAGE_NOTIFS);
         if (fragment instanceof NotificationsListFragment) {
             return (NotificationsListFragment) fragment;
         }
@@ -785,7 +673,7 @@ public class WPMainActivity extends AppCompatActivity {
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed-out or removed the last self-hosted site
-            resetFragments();
+            mBottomNav.resetFragments();
             // Reset site selection
             setSelectedSite(null);
             // Show the sign in screen
