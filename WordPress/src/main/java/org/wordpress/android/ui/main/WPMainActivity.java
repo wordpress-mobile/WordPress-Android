@@ -15,11 +15,11 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.RemoteInput;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -70,20 +70,20 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
-import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -101,14 +101,12 @@ public class WPMainActivity extends AppCompatActivity {
     private static final int TAB_READER = 1;
     private static final int TAB_ME = 2;
     private static final int TAB_NOTIFS = 3;
-    private static final int NUM_TABS = 4;
 
-    private WPViewPager mViewPager;
     private WPMainTabAdapter mTabAdapter;
+    private BottomNavigationView mBottomNav;
     private TextView mConnectionBar;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
-    private boolean mWasSwiped;
 
     private SiteModel mSelectedSite;
 
@@ -147,13 +145,10 @@ public class WPMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mViewPager = findViewById(R.id.viewpager_main);
-        mViewPager.setOffscreenPageLimit(NUM_TABS - 1);
-
+        mBottomNav = findViewById(R.id.bottom_navigation);
         setupBottomNav();
 
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
-        mViewPager.setAdapter(mTabAdapter);
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
@@ -169,43 +164,6 @@ public class WPMainActivity extends AppCompatActivity {
                         }
                     }
                 }, 2000);
-            }
-        });
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                AppPrefs.setMainTabIndex(position);
-                trackLastVisibleTab(position, true);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (!mWasSwiped && state == ViewPager.SCROLL_STATE_DRAGGING) {
-                    mWasSwiped = true;
-                }
-
-                if (mWasSwiped && state == ViewPager.SCROLL_STATE_IDLE) {
-                    mWasSwiped = false;
-
-                    switch (AppPrefs.getMainTabIndex()) {
-                        case TAB_MY_SITE:
-                        case TAB_READER:
-                        case TAB_ME:
-                        case TAB_NOTIFS:
-                        default:
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.MAIN_TABS_SWIPED);
-                    }
-                }
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // fire event if the "My Site" page is being scrolled so the fragment can
-                // animate its fab to match
-                if (position == TAB_MY_SITE) {
-                    EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
-                }
             }
         });
 
@@ -285,8 +243,8 @@ public class WPMainActivity extends AppCompatActivity {
         return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
 
-    private int getPositionForBottomNavItem(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+    private int getPositionForBottomNavItem(int itemId) {
+        switch (itemId) {
             case R.id.nav_sites:
                 return TAB_MY_SITE;
             case R.id.nav_reader:
@@ -298,20 +256,23 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
+    private int getBottomNavPosition() {
+        return getPositionForBottomNavItem(mBottomNav.getSelectedItemId());
+    }
+
     private void setupBottomNav() {
         // TODO: notif badge
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+        mBottomNav.setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int position = getPositionForBottomNavItem(item);
+                int position = getPositionForBottomNavItem(item.getItemId());
                 setCurrentPage(position);
                 return true;
             }
         });
-        bottomNav.setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
+        mBottomNav.setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
             @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
                 // scroll the active fragment's contents to the top when user retaps the current item
-                int position = getPositionForBottomNavItem(item);
+                int position = getPositionForBottomNavItem(item.getItemId());
                 Fragment fragment = mTabAdapter.getFragment(position);
                 if (fragment instanceof OnScrollToTopListener) {
                     ((OnScrollToTopListener) fragment).onScrollToTop();
@@ -461,7 +422,7 @@ public class WPMainActivity extends AppCompatActivity {
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        int currentItem = mViewPager.getCurrentItem();
+        int currentItem = getBottomNavPosition();
         trackLastVisibleTab(currentItem, false);
 
         if (currentItem == TAB_NOTIFS) {
@@ -521,7 +482,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private Fragment getActiveFragment() {
-        return mTabAdapter.getFragment(mViewPager.getCurrentItem());
+        return mTabAdapter.getFragment(getBottomNavPosition());
     }
 
     private void checkMagicLinkSignIn() {
@@ -580,8 +541,16 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void setCurrentPage(int position) {
-        if (!isFinishing() && mViewPager != null && mTabAdapter.isValidPosition(position)) {
-            mViewPager.setCurrentItem(position, false);
+        if (!isFinishing()) {
+            Fragment fragment = mTabAdapter.getFragment(position);
+            if (fragment != null) {
+                // TODO: switch to support fragment
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .setTransition(TRANSIT_FRAGMENT_FADE)
+                        .commit();
+            }
         }
     }
 
@@ -596,10 +565,9 @@ public class WPMainActivity extends AppCompatActivity {
         // updated when the fragment is recreated (necessary after signin/disconnect)
         ReaderPostListFragment.resetLastUpdateDate();
 
-        // remember the current tab position, then recreate the adapter so new fragments are created
-        int position = mViewPager.getCurrentItem();
+        // TODO: remember the current tab position, then recreate the adapter so new fragments are created
+        int position = getBottomNavPosition();
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
-        mViewPager.setAdapter(mTabAdapter);
 
         // restore previous position
         setCurrentPage(position);

@@ -42,7 +42,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -518,14 +517,6 @@ public class MySiteFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-    }
-
-    /*
-     * animate the fab as the users scrolls the "My Site" page in the main activity's ViewPager
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
-        mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
     }
 
     @SuppressWarnings("unused")
