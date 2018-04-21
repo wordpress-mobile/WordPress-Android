@@ -85,7 +85,7 @@ import de.greenrobot.event.EventBus;
 import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
 /**
- * Main activity which hosts sites, reader, me and notifications tabs
+ * Main activity which hosts sites, reader, me and notifications pages
  */
 public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -96,13 +96,9 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
-    private static final int TAB_MY_SITE = 0;
-    private static final int TAB_READER = 1;
-    private static final int TAB_ME = 2;
-    private static final int TAB_NOTIFS = 3;
-
-    private WPMainTabAdapter mTabAdapter;
+    private WPMainPageAdapter mNavAdapter;
     private BottomNavigationView mBottomNav;
+
     private TextView mConnectionBar;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
@@ -116,7 +112,7 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     /*
-     * tab fragments implement this if their contents can be scrolled, called when user
+     * fragments implement this if their contents can be scrolled, called when user
      * requests to scroll to the top
      */
     public interface OnScrollToTopListener {
@@ -124,7 +120,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     /*
-     * tab fragments implement this and return true if the fragment handles the back button
+     * fragments implement this and return true if the fragment handles the back button
      * and doesn't want the activity to handle it as well
      */
     public interface OnActivityBackPressedListener {
@@ -147,7 +143,7 @@ public class WPMainActivity extends AppCompatActivity {
         mBottomNav = findViewById(R.id.bottom_navigation);
         setupBottomNav();
 
-        mTabAdapter = new WPMainTabAdapter(getFragmentManager());
+        mNavAdapter = new WPMainPageAdapter(getFragmentManager());
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +168,7 @@ public class WPMainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                // open note detail if activity called from a push, otherwise return to the tab
+                // open note detail if activity called from a push, otherwise return to the position
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
                                                                                              false));
@@ -245,13 +241,13 @@ public class WPMainActivity extends AppCompatActivity {
     private int getPositionForBottomNavItem(int itemId) {
         switch (itemId) {
             case R.id.nav_sites:
-                return TAB_MY_SITE;
+                return WPMainPageAdapter.PAGE_MY_SITE;
             case R.id.nav_reader:
-                return TAB_READER;
+                return WPMainPageAdapter.PAGE_READER;
             case R.id.nav_me:
-                return TAB_ME;
+                return WPMainPageAdapter.PAGE_ME;
             default:
-                return TAB_NOTIFS;
+                return WPMainPageAdapter.PAGE_NOTIFS;
         }
     }
 
@@ -272,7 +268,7 @@ public class WPMainActivity extends AppCompatActivity {
             @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
                 // scroll the active fragment's contents to the top when user retaps the current item
                 int position = getPositionForBottomNavItem(item.getItemId());
-                Fragment fragment = mTabAdapter.getFragment(position);
+                Fragment fragment = mNavAdapter.getFragment(position);
                 if (fragment instanceof OnScrollToTopListener) {
                     ((OnScrollToTopListener) fragment).onScrollToTop();
                 }
@@ -291,7 +287,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     /*
-     * called when app is launched from a push notification, switches to the notification tab
+     * called when app is launched from a push notification, switches to the notification page
      * and opens the desired note detail
      */
     private void launchWithNoteId() {
@@ -331,7 +327,7 @@ public class WPMainActivity extends AppCompatActivity {
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
 
-        setCurrentPage(TAB_NOTIFS);
+        setCurrentPage(WPMainPageAdapter.PAGE_NOTIFS);
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
@@ -422,9 +418,9 @@ public class WPMainActivity extends AppCompatActivity {
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
         int currentItem = getBottomNavPosition();
-        trackLastVisibleTab(currentItem, false);
+        trackLastVisiblePage(currentItem, false);
 
-        if (currentItem == TAB_NOTIFS) {
+        if (currentItem == WPMainPageAdapter.PAGE_NOTIFS) {
             // if we are presenting the notifications list, it's safe to clear any outstanding
             // notifications
             GCMMessageService.removeAllNotifications(this);
@@ -444,23 +440,23 @@ public class WPMainActivity extends AppCompatActivity {
         ProfilingUtils.stop();
     }
 
-    private void announceTitleForAccessibility(int currentTabIndex) {
+    private void announceTitleForAccessibility(int position) {
         @StringRes int stringRes = -1;
-        switch (currentTabIndex) {
-            case TAB_MY_SITE:
+        switch (position) {
+            case WPMainPageAdapter.PAGE_MY_SITE:
                 stringRes = R.string.my_site_section_screen_title;
                 break;
-            case TAB_READER:
+            case WPMainPageAdapter.PAGE_READER:
                 stringRes = R.string.reader_screen_title;
                 break;
-            case TAB_ME:
+            case WPMainPageAdapter.PAGE_ME:
                 stringRes = R.string.me_section_screen_title;
                 break;
-            case TAB_NOTIFS:
+            case WPMainPageAdapter.PAGE_NOTIFS:
                 stringRes = R.string.notifications_screen_title;
                 break;
             default:
-                AppLog.w(T.MAIN, "announceTitleForAccessibility unknown tab index.");
+                AppLog.w(T.MAIN, "announceTitleForAccessibility unknown page index.");
         }
         if (stringRes != -1) {
             getWindow().getDecorView().announceForAccessibility(getString(stringRes));
@@ -481,7 +477,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private Fragment getActiveFragment() {
-        return mTabAdapter.getFragment(getBottomNavPosition());
+        return mNavAdapter.getFragment(getBottomNavPosition());
     }
 
     private void checkMagicLinkSignIn() {
@@ -493,28 +489,28 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private void trackLastVisibleTab(int position, boolean trackAnalytics) {
+    private void trackLastVisiblePage(int position, boolean trackAnalytics) {
         switch (position) {
-            case TAB_MY_SITE:
+            case WPMainPageAdapter.PAGE_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
                                                         getSelectedSite());
                 }
                 break;
-            case TAB_READER:
+            case WPMainPageAdapter.PAGE_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 }
                 break;
-            case TAB_ME:
+            case WPMainPageAdapter.PAGE_ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
                 }
                 break;
-            case TAB_NOTIFS:
+            case WPMainPageAdapter.PAGE_NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
@@ -535,13 +531,13 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    public void setReaderTabActive() {
-        setCurrentPage(TAB_READER);
+    public void setReaderPageActive() {
+        setCurrentPage(WPMainPageAdapter.PAGE_READER);
     }
 
     private void setCurrentPage(int position) {
         if (!isFinishing()) {
-            Fragment fragment = mTabAdapter.getFragment(position);
+            Fragment fragment = mNavAdapter.getFragment(position);
             if (fragment != null) {
                 getFragmentManager()
                         .beginTransaction()
@@ -555,6 +551,7 @@ public class WPMainActivity extends AppCompatActivity {
     /*
      * re-create the fragment adapter so all its fragments are also re-created - used when
      * user signs in/out so the fragments reflect the active account
+     * TODO: test this with the new nav
      */
     private void resetFragments() {
         AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
@@ -563,9 +560,9 @@ public class WPMainActivity extends AppCompatActivity {
         // updated when the fragment is recreated (necessary after signin/disconnect)
         ReaderPostListFragment.resetLastUpdateDate();
 
-        // TODO: remember the current tab position, then recreate the adapter so new fragments are created
+        // remember the current position, then recreate the adapter so new fragments are created
         int position = getBottomNavPosition();
-        mTabAdapter = new WPMainTabAdapter(getFragmentManager());
+        mNavAdapter = new WPMainPageAdapter(getFragmentManager());
 
         // restore previous position
         setCurrentPage(position);
@@ -664,10 +661,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     /*
-     * returns the my site fragment from the sites tab
+     * returns the my site fragment from the sites page
      */
     private MySiteFragment getMySiteFragment() {
-        Fragment fragment = mTabAdapter.getFragment(TAB_MY_SITE);
+        Fragment fragment = mNavAdapter.getFragment(WPMainPageAdapter.PAGE_MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
         }
@@ -675,10 +672,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     /*
-     * returns the "me" fragment from the sites tab
+     * returns the "me" fragment from the sites page
      */
     private MeFragment getMeFragment() {
-        Fragment fragment = mTabAdapter.getFragment(TAB_ME);
+        Fragment fragment = mNavAdapter.getFragment(WPMainPageAdapter.PAGE_ME);
         if (fragment instanceof MeFragment) {
             return (MeFragment) fragment;
         }
@@ -686,10 +683,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     /*
-     * returns the my site fragment from the sites tab
+     * returns the my site fragment from the sites page
      */
     private NotificationsListFragment getNotificationsListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(TAB_NOTIFS);
+        Fragment fragment = mNavAdapter.getFragment(WPMainPageAdapter.PAGE_NOTIFS);
         if (fragment instanceof NotificationsListFragment) {
             return (NotificationsListFragment) fragment;
         }

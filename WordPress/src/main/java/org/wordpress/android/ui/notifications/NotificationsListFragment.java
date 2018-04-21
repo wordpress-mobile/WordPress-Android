@@ -457,7 +457,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
         } else { // Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
-                ((WPMainActivity) getActivity()).setReaderTabActive();
+                ((WPMainActivity) getActivity()).setReaderPageActive();
             }
         }
     }

@@ -11,19 +11,19 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 
 /**
- * pager adapter containing tab fragments used by WPMainActivity
+ * pager adapter containing fragments used by WPMainActivity
  */
-class WPMainTabAdapter extends FragmentStatePagerAdapter {
-    static final int NUM_TABS = 4;
+class WPMainPageAdapter extends FragmentStatePagerAdapter {
+    private static final int NUM_PAGES = 4;
 
-    static final int TAB_MY_SITE = 0;
-    static final int TAB_READER = 1;
-    static final int TAB_ME = 2;
-    static final int TAB_NOTIFS = 3;
+    static final int PAGE_MY_SITE = 0;
+    static final int PAGE_READER = 1;
+    static final int PAGE_ME = 2;
+    static final int PAGE_NOTIFS = 3;
 
-    private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
+    private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_PAGES);
 
-    WPMainTabAdapter(FragmentManager fm) {
+    WPMainPageAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -41,7 +41,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return NUM_TABS;
+        return NUM_PAGES;
     }
 
     public boolean isValidPosition(int position) {
@@ -52,16 +52,16 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment;
         switch (position) {
-            case TAB_MY_SITE:
+            case PAGE_MY_SITE:
                 fragment = MySiteFragment.newInstance();
                 break;
-            case TAB_READER:
+            case PAGE_READER:
                 fragment = ReaderPostListFragment.newInstance();
                 break;
-            case TAB_ME:
+            case PAGE_ME:
                 fragment = MeFragment.newInstance();
                 break;
-            case TAB_NOTIFS:
+            case PAGE_NOTIFS:
                 fragment = NotificationsListFragment.newInstance();
                 break;
             default:
