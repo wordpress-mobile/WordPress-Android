@@ -50,27 +50,26 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Fragment fragment;
         switch (position) {
             case TAB_MY_SITE:
-                return MySiteFragment.newInstance();
+                fragment = MySiteFragment.newInstance();
+                break;
             case TAB_READER:
-                return ReaderPostListFragment.newInstance();
+                fragment = ReaderPostListFragment.newInstance();
+                break;
             case TAB_ME:
-                return MeFragment.newInstance();
+                fragment = MeFragment.newInstance();
+                break;
             case TAB_NOTIFS:
-                return NotificationsListFragment.newInstance();
+                fragment = NotificationsListFragment.newInstance();
+                break;
             default:
                 return null;
         }
-    }
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Object item = super.instantiateItem(container, position);
-        if (item instanceof Fragment) {
-            mFragments.put(position, (Fragment) item);
-        }
-        return item;
+        mFragments.put(position, fragment);
+        return fragment;
     }
 
     @Override

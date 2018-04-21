@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -544,7 +543,6 @@ public class WPMainActivity extends AppCompatActivity {
         if (!isFinishing()) {
             Fragment fragment = mTabAdapter.getFragment(position);
             if (fragment != null) {
-                // TODO: switch to support fragment
                 getFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, fragment)
