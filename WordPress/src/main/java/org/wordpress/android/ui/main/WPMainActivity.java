@@ -290,7 +290,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
 
-        mBottomNav.setCurrentPage(PAGE_NOTIFS);
+        mBottomNav.setCurrentPosition(PAGE_NOTIFS);
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
@@ -509,7 +509,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     }
 
     public void setReaderPageActive() {
-        mBottomNav.setCurrentPage(PAGE_READER);
+        mBottomNav.setCurrentPosition(PAGE_READER);
     }
 
     private void setSite(Intent data) {

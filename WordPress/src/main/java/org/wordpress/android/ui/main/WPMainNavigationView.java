@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
+import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -31,7 +33,8 @@ import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
  * Bottom navigation view and related fragment adapter used by the main activity
  * for the four primary views
  */
-public class WPMainNavigationView extends BottomNavigationView {
+public class WPMainNavigationView extends BottomNavigationView
+        implements OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     private static final int NUM_PAGES = 4;
 
     static final int PAGE_MY_SITE = 0;
@@ -65,26 +68,7 @@ public class WPMainNavigationView extends BottomNavigationView {
         mListener = listener;
 
         mNavAdapter = new NavAdapter(mFragmentManager);
-
-        setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int position = getPositionForItemId(item.getItemId());
-                setCurrentPage(position);
-                mListener.onPageChanged(position);
-                return true;
-            }
-        });
-
-        setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
-            @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
-                // scroll the active fragment's contents to the top when user re-taps the current item
-                int position = getPositionForItemId(item.getItemId());
-                Fragment fragment = mNavAdapter.getFragment(position);
-                if (fragment instanceof OnScrollToTopListener) {
-                    ((OnScrollToTopListener) fragment).onScrollToTop();
-                }
-            }
-        });
+        assignNavigationListeners(true);
 
         // add the notification badge to the notification menu item
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
@@ -94,6 +78,29 @@ public class WPMainNavigationView extends BottomNavigationView {
         mBadgeView = inflater.inflate(R.layout.badge_layout, menuView, false);
         itemView.addView(mBadgeView);
         mBadgeView.setVisibility(View.GONE);
+    }
+
+    private void assignNavigationListeners(boolean assign) {
+        setOnNavigationItemSelectedListener(assign ? this : null);
+        setOnNavigationItemReselectedListener(assign ? this : null);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int position = getPositionForItemId(item.getItemId());
+        setCurrentPosition(position, false);
+        mListener.onPageChanged(position);
+        return true;
+    }
+
+    @Override
+    public void onNavigationItemReselected(@NonNull MenuItem item) {
+        // scroll the active fragment's contents to the top when user re-taps the current item
+        int position = getPositionForItemId(item.getItemId());
+        Fragment fragment = mNavAdapter.getFragment(position);
+        if (fragment instanceof OnScrollToTopListener) {
+            ((OnScrollToTopListener) fragment).onScrollToTop();
+        }
     }
 
     Fragment getActiveFragment() {
@@ -131,14 +138,20 @@ public class WPMainNavigationView extends BottomNavigationView {
     }
 
     void setCurrentPosition(int position) {
-        if (position == getCurrentPosition()) {
-            setCurrentPage(position);
-        } else {
-            setSelectedItemId(getItemIdForPosition(position));
-        }
+        setCurrentPosition(position, true);
     }
 
-    void setCurrentPage(int position) {
+    private void setCurrentPosition(int position, boolean ensureSelected) {
+        if (ensureSelected) {
+            // temporarily disable the nav listeners so they don't fire when we change the selected page
+            assignNavigationListeners(false);
+            try {
+                setSelectedItemId(getItemIdForPosition(position));
+            } finally {
+                assignNavigationListeners(true);
+            }
+        }
+
         Fragment fragment = mNavAdapter.getFragment(position);
         if (fragment != null) {
             mFragmentManager
@@ -172,7 +185,7 @@ public class WPMainNavigationView extends BottomNavigationView {
         mNavAdapter = new NavAdapter(mFragmentManager);
 
         // restore previous position
-        setCurrentPage(position);
+        setCurrentPosition(position);
     }
 
     Fragment getFragment(int position) {
