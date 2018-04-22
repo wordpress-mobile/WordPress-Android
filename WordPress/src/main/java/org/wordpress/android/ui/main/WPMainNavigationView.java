@@ -22,6 +22,8 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.AppLog;
 
 import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
@@ -40,6 +42,7 @@ public class WPMainNavigationView extends BottomNavigationView {
 
     private NavAdapter mNavAdapter;
     private FragmentManager mFragmentManager;
+    private View mBadgeView;
 
     public WPMainNavigationView(Context context) {
         super(context);
@@ -75,6 +78,16 @@ public class WPMainNavigationView extends BottomNavigationView {
                 }
             }
         });
+
+        // add the notification badge
+        BottomNavigationMenuView menuView =
+                (BottomNavigationMenuView) getChildAt(0);
+        View v = menuView.getChildAt(PAGE_NOTIFS);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+        mBadgeView = LayoutInflater.from(getContext())
+                                   .inflate(R.layout.badge_layout, menuView, false);
+        itemView.addView(mBadgeView);
+        mBadgeView.setVisibility(View.GONE);
     }
 
     Fragment getActiveFragment() {
@@ -153,65 +166,18 @@ public class WPMainNavigationView extends BottomNavigationView {
     }
 
     void showNoteBadge(boolean showBadge) {
-        BottomNavigationMenuView menuView =
-                (BottomNavigationMenuView) getChildAt(0);
-        View v = menuView.getChildAt(PAGE_NOTIFS);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
-
-        if (showBadge) {
-            View badge = LayoutInflater.from(getContext())
-                                       .inflate(R.layout.badge_layout, menuView, false);
-            itemView.addView(badge);
-        } else {
-            View badgeView = itemView.findViewById(R.id.badge);
-            if (badgeView != null) {
-                itemView.removeView(badgeView);
-            }
-            // TODO
-        }
-    }
-
-    /* TODO
-    void showNoteBadge(boolean showBadge) {
-        if (mNoteBadge == null) {
+        int currentVisibility = mBadgeView.getVisibility();
+        int newVisibility = showBadge ? View.VISIBLE : View.GONE;
+        if (currentVisibility == newVisibility) {
             return;
         }
 
-        boolean isBadged = (mNoteBadge.getVisibility() == View.VISIBLE);
-        if (showBadge == isBadged) {
-            return;
-        }
-
-        float start = showBadge ? 0f : 1f;
-        float end = showBadge ? 1f : 0f;
-
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, start, end);
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, start, end);
-        ObjectAnimator animScale = ObjectAnimator.ofPropertyValuesHolder(mNoteBadge, scaleX, scaleY);
-
         if (showBadge) {
-            animScale.setInterpolator(new BounceInterpolator());
-            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_longAnimTime));
-            animScale.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    mNoteBadge.setVisibility(View.VISIBLE);
-                }
-            });
+            AniUtils.fadeIn(mBadgeView, Duration.MEDIUM);
         } else {
-            animScale.setInterpolator(new AccelerateInterpolator());
-            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_shortAnimTime));
-            animScale.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mNoteBadge.setVisibility(View.GONE);
-                }
-            });
+            AniUtils.fadeOut(mBadgeView, Duration.MEDIUM);
         }
-
-        animScale.start();
     }
-     */
 
     private class NavAdapter extends FragmentStatePagerAdapter {
         private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_PAGES);
@@ -237,7 +203,7 @@ public class WPMainNavigationView extends BottomNavigationView {
             return NUM_PAGES;
         }
 
-        public boolean isValidPosition(int position) {
+        boolean isValidPosition(int position) {
             return (position >= 0 && position < getCount());
         }
 
@@ -271,7 +237,7 @@ public class WPMainNavigationView extends BottomNavigationView {
             super.destroyItem(container, position, object);
         }
 
-        public Fragment getFragment(int position) {
+        Fragment getFragment(int position) {
             if (isValidPosition(position)) {
                 if (mFragments.get(position) == null) {
                     return getItem(position);
