@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
@@ -43,6 +42,11 @@ public class WPMainNavigationView extends BottomNavigationView {
     private NavAdapter mNavAdapter;
     private FragmentManager mFragmentManager;
     private View mBadgeView;
+    private OnPageListener mListener;
+
+    interface OnPageListener {
+        void onPageChanged(int position);
+    }
 
     public WPMainNavigationView(Context context) {
         super(context);
@@ -56,14 +60,17 @@ public class WPMainNavigationView extends BottomNavigationView {
         super(context, attrs, defStyleAttr);
     }
 
-    void init(@NonNull FragmentManager fm) {
+    void init(@NonNull FragmentManager fm, @NonNull OnPageListener listener) {
         mFragmentManager = fm;
+        mListener = listener;
+
         mNavAdapter = new NavAdapter(mFragmentManager);
 
         setOnNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int position = getPositionForBottomNavItemId(item.getItemId());
+                int position = getPositionForItemId(item.getItemId());
                 setCurrentPage(position);
+                mListener.onPageChanged(position);
                 return true;
             }
         });
@@ -71,7 +78,7 @@ public class WPMainNavigationView extends BottomNavigationView {
         setOnNavigationItemReselectedListener(new OnNavigationItemReselectedListener() {
             @Override public void onNavigationItemReselected(@NonNull MenuItem item) {
                 // scroll the active fragment's contents to the top when user re-taps the current item
-                int position = getPositionForBottomNavItemId(item.getItemId());
+                int position = getPositionForItemId(item.getItemId());
                 Fragment fragment = mNavAdapter.getFragment(position);
                 if (fragment instanceof OnScrollToTopListener) {
                     ((OnScrollToTopListener) fragment).onScrollToTop();
@@ -93,7 +100,7 @@ public class WPMainNavigationView extends BottomNavigationView {
         return mNavAdapter.getFragment(getCurrentPosition());
     }
 
-    private int getPositionForBottomNavItemId(int itemId) {
+    private int getPositionForItemId(int itemId) {
         switch (itemId) {
             case R.id.nav_sites:
                 return PAGE_MY_SITE;
@@ -106,7 +113,7 @@ public class WPMainNavigationView extends BottomNavigationView {
         }
     }
 
-    private @IdRes int getBottomNavItemIdForPosition(int position) {
+    private @IdRes int getItemIdForPosition(int position) {
         switch (position) {
             case PAGE_MY_SITE:
                 return R.id.nav_sites;
@@ -120,11 +127,15 @@ public class WPMainNavigationView extends BottomNavigationView {
     }
 
     int getCurrentPosition() {
-        return getPositionForBottomNavItemId(getSelectedItemId());
+        return getPositionForItemId(getSelectedItemId());
     }
 
     void setCurrentPosition(int position) {
-        setSelectedItemId(getBottomNavItemIdForPosition(position));
+        if (position == getCurrentPosition()) {
+            setCurrentPage(position);
+        } else {
+            setSelectedItemId(getItemIdForPosition(position));
+        }
     }
 
     void setCurrentPage(int position) {
@@ -136,8 +147,12 @@ public class WPMainNavigationView extends BottomNavigationView {
                     .setTransition(TRANSIT_FRAGMENT_FADE)
                     .commit();
         }
+    }
 
-        AppPrefs.setMainTabIndex(position);
+    CharSequence getMenuTitleForPosition(int position) {
+        int itemId = getItemIdForPosition(position);
+        MenuItem item = getMenu().findItem(itemId);
+        return item.getTitle();
     }
 
     /*

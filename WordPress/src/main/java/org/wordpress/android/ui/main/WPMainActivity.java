@@ -48,6 +48,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
+import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -85,7 +86,7 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
-public class WPMainActivity extends AppCompatActivity {
+public class WPMainActivity extends AppCompatActivity implements OnPageListener {
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
     public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
@@ -143,7 +144,7 @@ public class WPMainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getFragmentManager());
+        mBottomNav.init(getFragmentManager(), this);
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
@@ -438,6 +439,24 @@ public class WPMainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    @Override
+    public void onPageChanged(int position) {
+        AppPrefs.setMainTabIndex(position);
+        updateTitle(position);
+    }
+
+    private void updateTitle() {
+        updateTitle(mBottomNav.getCurrentPosition());
+    }
+
+    private void updateTitle(int position) {
+        if (position == PAGE_MY_SITE && mSelectedSite != null) {
+            mToolbar.setTitle(mSelectedSite.getName());
+        } else {
+            mToolbar.setTitle(mBottomNav.getMenuTitleForPosition(position));
+        }
+    }
+
     private void checkMagicLinkSignIn() {
         if (getIntent() != null) {
             if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
@@ -716,6 +735,8 @@ public class WPMainActivity extends AppCompatActivity {
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
+
+        updateTitle();
     }
 
     /**
@@ -731,6 +752,7 @@ public class WPMainActivity extends AppCompatActivity {
             mSelectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
             // If saved site exist, then return, else (site has been removed?) try to select another site
             if (mSelectedSite != null) {
+                updateTitle();
                 return;
             }
         }
