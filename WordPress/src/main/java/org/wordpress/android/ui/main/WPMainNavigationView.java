@@ -6,11 +6,15 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.AttributeSet;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
@@ -25,7 +29,6 @@ import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 /*
  * Bottom navigation view and related fragment adapter used by the main activity
  * for the four primary views
- * TODO: notification badge
  */
 public class WPMainNavigationView extends BottomNavigationView {
     private static final int NUM_PAGES = 4;
@@ -72,6 +75,8 @@ public class WPMainNavigationView extends BottomNavigationView {
                 }
             }
         });
+
+        showNoteBadge(true); // TODO: remove
     }
 
     Fragment getActiveFragment() {
@@ -149,7 +154,19 @@ public class WPMainNavigationView extends BottomNavigationView {
         return mNavAdapter.getFragment(position);
     }
 
-    /*
+    void showNoteBadge(boolean showBadge) {
+        BottomNavigationMenuView menuView =
+                (BottomNavigationMenuView) getChildAt(0);
+        View v = menuView.getChildAt(PAGE_NOTIFS);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+
+        View badge = LayoutInflater.from(getContext())
+                                   .inflate(R.layout.badge_layout, menuView, false);
+
+        itemView.addView(badge);
+    }
+
+    /* TODO
     void showNoteBadge(boolean showBadge) {
         if (mNoteBadge == null) {
             return;

@@ -639,18 +639,18 @@ public class WPMainActivity extends AppCompatActivity {
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            // mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
         }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        // mTabLayout.showNoteBadge(event.hasUnseenNotes);
+        mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
-        // mTabLayout.showNoteBadge(event.hasUnseenNotes);
+        mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
