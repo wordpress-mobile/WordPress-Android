@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -94,6 +95,7 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
     private WPMainNavigationView mBottomNav;
+    private Toolbar mToolbar;
 
     private TextView mConnectionBar;
     private boolean mIsMagicLinkLogin;
@@ -135,6 +137,10 @@ public class WPMainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        mToolbar = findViewById(R.id.toolbar);
+        mToolbar.setTitle(R.string.app_title);
+        setSupportActionBar(mToolbar);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getFragmentManager());

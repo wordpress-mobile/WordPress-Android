@@ -79,13 +79,12 @@ public class WPMainNavigationView extends BottomNavigationView {
             }
         });
 
-        // add the notification badge
-        BottomNavigationMenuView menuView =
-                (BottomNavigationMenuView) getChildAt(0);
-        View v = menuView.getChildAt(PAGE_NOTIFS);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
-        mBadgeView = LayoutInflater.from(getContext())
-                                   .inflate(R.layout.badge_layout, menuView, false);
+        // add the notification badge to the notification menu item
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
+        View notifView = menuView.getChildAt(PAGE_NOTIFS);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) notifView;
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        mBadgeView = inflater.inflate(R.layout.badge_layout, menuView, false);
         itemView.addView(mBadgeView);
         mBadgeView.setVisibility(View.GONE);
     }
