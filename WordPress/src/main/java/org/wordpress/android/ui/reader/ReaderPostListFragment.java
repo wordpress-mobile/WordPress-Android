@@ -93,7 +93,6 @@ public class ReaderPostListFragment extends Fragment
 
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
-    private final ReaderTagList mTags = new ReaderTagList();
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -1626,13 +1625,9 @@ public class ReaderPostListFragment extends Fragment
 
         @Override
         protected void onPostExecute(ReaderTagList tagList) {
-            if (tagList != null && !tagList.isSameList(mTags)) {
-                mTags.clear();
-                mTags.addAll(tagList);
-                if (mFilterCriteriaLoaderListener != null) {
-                    //noinspection unchecked
-                    mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) mTags);
-                }
+            if (mFilterCriteriaLoaderListener != null) {
+                //noinspection unchecked
+                mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
             }
         }
     }
