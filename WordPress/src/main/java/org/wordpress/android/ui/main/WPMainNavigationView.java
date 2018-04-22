@@ -75,8 +75,6 @@ public class WPMainNavigationView extends BottomNavigationView {
                 }
             }
         });
-
-        showNoteBadge(true); // TODO: remove
     }
 
     Fragment getActiveFragment() {
@@ -160,10 +158,17 @@ public class WPMainNavigationView extends BottomNavigationView {
         View v = menuView.getChildAt(PAGE_NOTIFS);
         BottomNavigationItemView itemView = (BottomNavigationItemView) v;
 
-        View badge = LayoutInflater.from(getContext())
-                                   .inflate(R.layout.badge_layout, menuView, false);
-
-        itemView.addView(badge);
+        if (showBadge) {
+            View badge = LayoutInflater.from(getContext())
+                                       .inflate(R.layout.badge_layout, menuView, false);
+            itemView.addView(badge);
+        } else {
+            View badgeView = itemView.findViewById(R.id.badge);
+            if (badgeView != null) {
+                itemView.removeView(badgeView);
+            }
+            // TODO
+        }
     }
 
     /* TODO

@@ -5,11 +5,11 @@
 
     <View
         android:id="@+id/badge"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
         android:layout_gravity="center"
-        android:layout_marginLeft="-8dp"
-        android:layout_marginStart="-8dp"
-        android:layout_marginTop="-8dp"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginTop="-10dp"
         android:background="@drawable/notification_badge"/>
 </FrameLayout>
