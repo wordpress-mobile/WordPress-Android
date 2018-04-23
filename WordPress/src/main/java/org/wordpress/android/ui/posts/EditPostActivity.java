@@ -304,6 +304,11 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+
+            PromoDialogAdvanced fragment = (PromoDialogAdvanced) getSupportFragmentManager().findFragmentByTag(ASYNC_PROMO_DIALOG_TAG);
+            if (fragment != null) {
+                initializePromoDialog(fragment);
+            }
         }
 
         // Check whether to show the visual editor
@@ -3355,12 +3360,19 @@ public class EditPostActivity extends AppCompatActivity implements
                 .setLinkText(R.string.async_promo_link)
                 .build();
 
+        initializePromoDialog(asyncPromoDialog);
+
+        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+        AppPrefs.setAsyncPromoRequired(false);
+    }
+
+    private void initializePromoDialog(final PromoDialogAdvanced asyncPromoDialog) {
         asyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
                 intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
-                                "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/");
+                        "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/");
                 startActivity(intent);
             }
         });
@@ -3378,9 +3390,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 asyncPromoDialog.dismiss();
             }
         });
-
-        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
-        AppPrefs.setAsyncPromoRequired(false);
     }
 
     // EditPostActivityHook methods
