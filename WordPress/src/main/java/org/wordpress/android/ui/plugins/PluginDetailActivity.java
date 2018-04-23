@@ -1295,6 +1295,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                 // The flow is almost complete, we can show 99% complete to give us a second or so to fetch the site
                 // and its plugins
                 mAutomatedTransferProgressDialog.setProgress(99);
+                mAutomatedTransferProgressDialog.setMessage(
+                        getString(R.string.plugin_install_first_plugin_almost_finished_dialog_message));
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
             } else {
                 mAutomatedTransferProgressDialog.setProgress(event.currentStep * 100 / event.totalSteps);

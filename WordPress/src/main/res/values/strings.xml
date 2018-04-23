@@ -1700,6 +1700,7 @@
     <string name="plugin_see_all">See All</string>
     <string name="plugins_empty_search_list">No matches</string>
     <string name="plugin_install_first_plugin_progress_dialog_title">Install Plugin</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">The plugin is installed, we are setting it up&#8230;</string>
     <string name="plugin_install_site_ineligible_default_error">Plugins feature is not available for this site.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugins feature require a custom domain.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Plugins feature require a business plan.</string>
