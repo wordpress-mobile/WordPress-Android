@@ -113,7 +113,6 @@ class ActivityLogRestClientTest {
             with(this.payload.activityLogModels[0]) {
                 assertEquals(this.activityID, ACTIVITY_RESPONSE.activity_id)
                 assertEquals(this.gridicon, ACTIVITY_RESPONSE.gridicon)
-                assertEquals(this.discarded, ACTIVITY_RESPONSE.is_discarded)
                 assertEquals(this.name, ACTIVITY_RESPONSE.name)
                 assertEquals(this.published, ACTIVITY_RESPONSE.published)
                 assertEquals(this.rewindID, ACTIVITY_RESPONSE.rewind_id)
