@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-02 18:13:54+0000
+Translation-Revision-Date: 2018-04-10 18:27:57+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="media_preview_title">%1$d из %2$d</string>
+    <string name="stock_media_picker_empty_results">Нет совпадений</string>
+    <string name="stock_media_picker_initial_empty_subtext">Фотографии предоставлены %s</string>
+    <string name="stock_media_picker_initial_empty_text">Ищите бесплатные фото и добавьте их в вашу медиатеку</string>
+    <string name="stock_media_picker_search_hint">Поиск в свободной фототеке</string>
+    <string name="photo_picker_stock_media">Выберите из свободной фототеки</string>
+    <string name="error_save_empty_draft">Нельзя сохранить пустой черновик</string>
+    <string name="site_settings_quota_space_unlimited">%1$s / неограничено</string>
+    <string name="preview_count">Предпросмотр %d</string>
+    <string name="add_count">Добавить %d</string>
     <string name="site_creation_domain_selection_title">Создание нового сайта, Шаг 5</string>
     <string name="site_creation_site_details_title">Создание нового сайта, Шаг 3</string>
     <string name="site_creation_theme_selection_title">Создание нового сайта, Шаг 2</string>

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-04 09:54:10+0000
+Translation-Revision-Date: 2018-04-17 10:54:09+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="stock_media_picker_empty_results">Eşleşme yok</string>
+    <string name="stock_media_picker_initial_empty_text">Medya Kitaplığınıza eklemek için ücretsiz fotoğraflar arayın</string>
+    <string name="stock_media_picker_search_hint">Ücretsiz fotoğraf kitaplığı arayın</string>
+    <string name="photo_picker_stock_media">Ücretsiz Fotoğraf Kitaplığının içinden seçim yapın</string>
+    <string name="error_save_empty_draft">Boş taslak kaydedilemez</string>
     <string name="site_creation_domain_selection_title">Yeni Slayt Oluşturma – 4. Adım</string>
     <string name="site_creation_site_details_title">Yeni Slayt Oluşturma – 3. Adım</string>
     <string name="site_creation_theme_selection_title">Yeni Slayt Oluşturma – 2. Adım</string>
@@ -354,6 +359,7 @@ Language: tr
     <string name="image_size">Boyut</string>
     <string name="uploading_subtitle_media_only_one">1 dosya kaldı</string>
     <string name="uploading_subtitle_media_only">%2$d dosyadan %1$d kaldı</string>
+    <string name="uploading_subtitle_posts_only_one">1 gönderi kaldı</string>
     <string name="uploading_title">Yükleniyor…</string>
     <string name="media_files_uploaded_write_post">Yazı yaz</string>
     <string name="media_all_files_uploaded_successfully">%d dosya başarıyla yüklendi</string>
