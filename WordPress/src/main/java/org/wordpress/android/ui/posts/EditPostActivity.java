@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -1449,6 +1450,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
         boolean mIsFirstTimePublish;
         boolean mDoFinishActivity;
@@ -1493,6 +1495,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class SavePostLocallyAndFinishTask extends AsyncTask<Void, Void, Boolean> {
         boolean mDoFinishActivity;
 
@@ -1869,6 +1872,7 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
         @Override
         protected Spanned doInBackground(String... params) {
