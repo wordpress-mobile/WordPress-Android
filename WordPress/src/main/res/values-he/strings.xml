@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-03 15:54:08+0000
+Translation-Revision-Date: 2018-04-17 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="media_preview_title">%1$d מתוך %2$d</string>
+    <string name="stock_media_picker_empty_results">לא נמצאו התאמות</string>
+    <string name="stock_media_picker_initial_empty_subtext">התמונות מובאות בחסות %s</string>
+    <string name="stock_media_picker_initial_empty_text">חיפוש של תמונות להוספה לספריית המדיה שלך בחינם</string>
+    <string name="stock_media_picker_search_hint">חיפוש בספריית התמונות בחינם</string>
+    <string name="photo_picker_stock_media">בחירה מתוך ספריית התמונות בחינם</string>
+    <string name="error_save_empty_draft">אין אפשרות לשמור טיוטה ריקה</string>
+    <string name="site_settings_quota_space_unlimited">%1$s ללא הגבלה</string>
+    <string name="preview_count">תצוגה מקדימה של %d</string>
+    <string name="add_count">הוספה של %d</string>
     <string name="site_creation_domain_selection_title">יצירת אתר חדש – שלב 4</string>
     <string name="site_creation_site_details_title">יצירת אתר חדש – שלב 3</string>
     <string name="site_creation_theme_selection_title">יצירת אתר חדש – שלב 2</string>

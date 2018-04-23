@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-05 22:58:59+0000
+Translation-Revision-Date: 2018-04-13 18:39:22+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="stats_followers_one_desc">um seguidor</string>
+    <string name="stats_followers_zero_desc">zero seguidores</string>
+    <string name="stats_comments_many_desc">%d comentários</string>
+    <string name="stats_comments_one_desc">um comentário</string>
+    <string name="stats_views_one_desc">uma visualização</string>
+    <string name="media_preview_desc">Visualizar</string>
+    <string name="media_preview_audio_desc">áudio</string>
+    <string name="media_grid_item_trash_desc">lixeira</string>
+    <string name="menu_preview">Visualizar</string>
+    <string name="menu_publish_now">Publicar agora</string>
+    <string name="menu_save_as_draft">Salvar como rascunho</string>
+    <string name="file_size_in_terabytes">%s TB</string>
+    <string name="file_size_in_gigabytes">%s GB</string>
+    <string name="file_size_in_megabytes">%s MB</string>
+    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_bytes">%s B</string>
+    <string name="site_settings_quota_space_value">%1$s de %2$s</string>
+    <string name="site_settings_quota_space_title">Espaço usado</string>
+    <string name="site_settings_quota_header">Mídia</string>
+    <string name="publicize_buttons_screen_title">Botões de compartilhamento</string>
+    <string name="notifications_screen_title">Notificações</string>
+    <string name="help_screen_title">Ajuda e suporte</string>
     <string name="site_creation_creating_failed_extended">Esbarramos em um problema. Que tal tentar de novo?</string>
     <string name="signup_epilogue_error_avatar_view">Seu avatar foi enviado e estará disponível em breve.</string>
     <string name="email_not_registered_wpcom">Hmm, não foi possível encontrar uma conta do WordPress.com conectada a este endereço de e–mail. Tente o endereço abaixo para se acessar usando o endereço do seu site.</string>

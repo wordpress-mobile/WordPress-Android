@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-04 14:54:09+0000
+Translation-Revision-Date: 2018-04-18 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="media_preview_title">%1$d von %2$d</string>
+    <string name="stock_media_picker_empty_results">Keine Treffer</string>
+    <string name="stock_media_picker_initial_empty_subtext">Fotos bereitgestellt von %s</string>
+    <string name="stock_media_picker_initial_empty_text">Durchsuchen, um kostenlose Fotos zu finden, die du deiner Mediathek hinzufügen kannst</string>
+    <string name="stock_media_picker_search_hint">Durchsuche die kostenlose Fotobibliothek</string>
+    <string name="photo_picker_stock_media">Wähle aus der kostenlosen Fotobibliothek aus</string>
+    <string name="error_save_empty_draft">Ein leerer Entwurf kann nicht gespeichert werden</string>
+    <string name="site_settings_quota_space_unlimited">%1$s von unbegrenzt</string>
+    <string name="preview_count">%d in der Vorschau anzeigen</string>
+    <string name="add_count">%d hinzufügen</string>
     <string name="site_creation_domain_selection_title">Neue Website erstellen, Schritt 4</string>
     <string name="site_creation_site_details_title">Neue Website erstellen, Schritt 3</string>
     <string name="site_creation_theme_selection_title">Neue Website erstellen, Schritt 2</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-30 14:09:26+0000
+Translation-Revision-Date: 2018-04-19 17:35:21+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="media_preview_title">%1$d din %2$d</string>
+    <string name="stock_media_picker_empty_results">Nicio potrivire</string>
+    <string name="stock_media_picker_initial_empty_subtext">Fotografii oferite de %s</string>
+    <string name="stock_media_picker_initial_empty_text">Caută pentru a găsi fotografii gratuite pe care să le adaugi în Biblioteca ta Media</string>
+    <string name="stock_media_picker_search_hint">Caută biblioteca de fotografii gratuite</string>
+    <string name="photo_picker_stock_media">Alege din biblioteca de fotografii gratuite</string>
+    <string name="error_save_empty_draft">Nu pot salva o ciornă goală</string>
+    <string name="site_settings_quota_space_unlimited">%1$s din nelimitat</string>
+    <string name="preview_count">Previzualizează %d</string>
+    <string name="add_count">Adaugă %d</string>
     <string name="site_creation_domain_selection_title">Creează sit nou – pasul 4</string>
     <string name="site_creation_site_details_title">Creează sit nou – pasul 3</string>
     <string name="site_creation_theme_selection_title">Creează sit nou – pasul 2</string>
@@ -230,7 +240,7 @@ Language: ro
     <string name="signup_epilogue_hint_username">Nume utilizator</string>
     <string name="signup_epilogue_hint_password_detail">Poți să te autentifici mereu cu o legătură magică precum cea pe care tocmai ai folosit–o, dar poți, de asemenea, să inițializezi o parolă dacă preferi.</string>
     <string name="signup_epilogue_hint_password">Parolă (opțional)</string>
-    <string name="signup_epilogue_hint_display">Afișează numele</string>
+    <string name="signup_epilogue_hint_display">Nume afișat</string>
     <string name="signup_epilogue_heading">Cont nou</string>
     <string name="signup_epilogue_error_button_positive">Reîncearcă</string>
     <string name="signup_epilogue_error_button_negative">Revenire</string>
