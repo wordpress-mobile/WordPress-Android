@@ -306,7 +306,8 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
 
-            PromoDialogAdvanced fragment = (PromoDialogAdvanced) getSupportFragmentManager().findFragmentByTag(ASYNC_PROMO_DIALOG_TAG);
+            PromoDialogAdvanced fragment = (PromoDialogAdvanced) getSupportFragmentManager()
+                    .findFragmentByTag(ASYNC_PROMO_DIALOG_TAG);
             if (fragment != null) {
                 initializePromoDialog(fragment);
             }
