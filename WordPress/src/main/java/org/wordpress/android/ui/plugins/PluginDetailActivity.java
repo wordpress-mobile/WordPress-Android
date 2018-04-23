@@ -1303,10 +1303,10 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        // Let's wait a second before checking the status again
+                        // Wait 3 seconds before checking the status again
                         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
                     }
-                }, 3000); // Wait 3 seconds before checking the status again
+                }, 3000);
             }
         }
     }
@@ -1322,17 +1322,34 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        // We should be safe to ignore the errors
-        if (isFinishing() && event.isError()) {
+        if (isFinishing()) {
             return;
         }
-        mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
 
-        // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
-        // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
-        if (mIsShowingAutomatedTransferProgress && mSite.isAutomatedTransfer()) {
-            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
-                    .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+        if (!event.isError()) {
+            mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
+        }
+
+        if (mIsShowingAutomatedTransferProgress) {
+            // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
+            // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
+            if (mSite.isAutomatedTransfer()) {
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+            } else {
+                // Either an error occurred while fetching the site or Automated Transfer is not yet reflected in the
+                // API response. We need to keep fetching the site until we get the updated site. Otherwise, any changes
+                // the user will make after this point will not be done on the correct `SiteModel`. If we don't get the
+                // correct site information, it's actually safer if the user force quits the app, because they will
+                // start from the my site page and the site will be refreshed.
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Wait 3 seconds before fetching the site again
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+                    }
+                }, 3000);
+            }
         }
     }
 
