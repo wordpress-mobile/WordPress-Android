@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.wordpress.android.widgets.WPScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:paddingBottom="@dimen/site_settings_divider_height"
+    android:paddingTop="@dimen/site_settings_divider_height"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:animateLayoutChanges="true"
+        android:background="@color/white"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
+        android:paddingEnd="@dimen/related_posts_dialog_padding_right"
+        android:paddingLeft="@dimen/related_posts_dialog_padding_left"
+        android:paddingRight="@dimen/related_posts_dialog_padding_right"
+        android:paddingStart="@dimen/related_posts_dialog_padding_left"
+        android:paddingTop="@dimen/related_posts_dialog_padding_top"
+        android:orientation="vertical" >
+
+        <Switch
+            android:id="@+id/notification_new_posts_switch"
+            android:gravity="start"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:text="@string/notification_settings_followed_dialog_notification_posts_switch"
+            android:textAlignment="viewStart"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:checked="true"
+            style="@style/TextAppearance.AppCompat.Body2" >
+        </Switch>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/notifications_new_posts_description"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:text="@string/notification_settings_followed_dialog_notification_posts_description"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_medium" >
+        </org.wordpress.android.widgets.WPTextView>
+
+        <View
+            android:background="@drawable/related_posts_divider"
+            android:layout_height="@dimen/list_divider_height"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_width="match_parent" >
+        </View>
+
+        <Switch
+            android:id="@+id/email_new_posts_switch"
+            android:gravity="start"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:text="@string/notification_settings_followed_dialog_email_posts_switch"
+            android:textAlignment="viewStart"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:checked="true"
+            style="@style/TextAppearance.AppCompat.Body2" >
+        </Switch>
+
+        <RadioGroup
+            android:id="@+id/email_new_posts_radio_group"
+            android:layoutDirection="rtl"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:ignore="UnusedAttribute" >
+
+            <RadioButton
+                android:id="@+id/email_new_posts_radio_button_instantly"
+                android:checked="false"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_large"
+                android:text="@string/notification_settings_followed_dialog_email_posts_instantly"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:checked="true"
+                style="@style/TextAppearance.AppCompat.Body2" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/email_new_posts_radio_button_daily"
+                android:checked="false"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_large"
+                android:text="@string/notification_settings_followed_dialog_email_posts_daily"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                style="@style/TextAppearance.AppCompat.Body2" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/email_new_posts_radio_button_weekly"
+                android:checked="false"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_large"
+                android:text="@string/notification_settings_followed_dialog_email_posts_weekly"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                style="@style/TextAppearance.AppCompat.Body2" >
+            </RadioButton>
+
+        </RadioGroup>
+
+        <View
+            android:background="@drawable/related_posts_divider"
+            android:layout_height="@dimen/list_divider_height"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_width="match_parent" >
+        </View>
+
+        <Switch
+            android:id="@+id/email_new_comments_switch"
+            android:gravity="start"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:text="@string/notification_settings_followed_dialog_email_comments"
+            android:textAlignment="viewStart"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            style="@style/TextAppearance.AppCompat.Body2" >
+        </Switch>
+
+    </LinearLayout>
+
+</org.wordpress.android.widgets.WPScrollView>

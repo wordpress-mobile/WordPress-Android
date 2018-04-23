@@ -301,6 +301,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
     }
 
