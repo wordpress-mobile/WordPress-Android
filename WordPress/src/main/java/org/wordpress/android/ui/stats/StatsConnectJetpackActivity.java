@@ -38,6 +38,8 @@ import static org.wordpress.android.ui.JetpackConnectionSource.STATS;
 public class StatsConnectJetpackActivity extends AppCompatActivity {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
 
+    private boolean mIsJetpackConnectStarted;
+
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
 
@@ -109,6 +111,7 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
     }
 
     private void startJetpackConnectionFlow(SiteModel siteModel) {
+        mIsJetpackConnectStarted = true;
         JetpackConnectionWebViewActivity
                 .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken());
         finish();
@@ -120,7 +123,7 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
         if (event.isError()) {
             AppLog.e(T.API, "StatsConnectJetpackActivity.onAccountChanged error: "
                             + event.error.type + " - " + event.error.message);
-        } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT
+        } else if (!mIsJetpackConnectStarted && event.causeOfChange == AccountAction.FETCH_ACCOUNT
                    && !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())) {
             startJetpackConnectionFlow((SiteModel) getIntent().getSerializableExtra(SITE));
         }
