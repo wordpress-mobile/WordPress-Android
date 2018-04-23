@@ -61,7 +61,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
     implementation "org.jsoup:jsoup:1.10.3"
 
-    implementation 'com.google.code.gson:gson:2.6.+'
+    implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.0'
 }
