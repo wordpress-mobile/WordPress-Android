@@ -6,15 +6,24 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 
 import javax.inject.Inject;
@@ -30,6 +39,7 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
 
     @Inject AccountStore mAccountStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -58,7 +68,11 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
         // Continue Jetpack connect flow if coming from login/signup magic link.
         if (savedInstanceState == null && getIntent() != null && getIntent().getExtras() != null
             && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
-            startJetpackConnectionFlow((SiteModel) getIntent().getSerializableExtra(SITE));
+            if (TextUtils.isEmpty(mAccountStore.getAccount().getUserName())) {
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            } else {
+                startJetpackConnectionFlow((SiteModel) getIntent().getSerializableExtra(SITE));
+            }
         }
 
         Button setupButton = findViewById(R.id.jetpack_setup);
@@ -69,6 +83,18 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
                         (SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE));
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -86,5 +112,17 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
         JetpackConnectionWebViewActivity
                 .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken());
         finish();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.API, "StatsConnectJetpackActivity.onAccountChanged error: "
+                            + event.error.type + " - " + event.error.message);
+        } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT
+                   && !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())) {
+            startJetpackConnectionFlow((SiteModel) getIntent().getSerializableExtra(SITE));
+        }
     }
 }
