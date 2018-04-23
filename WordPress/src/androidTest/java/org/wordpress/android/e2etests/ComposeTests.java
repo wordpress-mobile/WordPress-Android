@@ -3,12 +3,12 @@ package org.wordpress.android.e2etests;
 
 
 import android.support.test.rule.ActivityTestRule;
-
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.TestUtils;
+import org.wordpress.android.e2etests.robots.BlogPostsRobot;
 import org.wordpress.android.e2etests.robots.ComposePostRobot;
 import org.wordpress.android.e2etests.robots.LoginRobot;
 import org.wordpress.android.e2etests.robots.MySitesMenuRobot;
@@ -41,14 +41,17 @@ public class ComposeTests {
         new NavigationRobot()
                 .selectMyWordpressSites();
 
-        new MySitesMenuRobot()
-                .tapToWriteNewPost();
+        MySitesMenuRobot mySitesMenu = new MySitesMenuRobot();
+        mySitesMenu.tapToWriteNewPost();
 
         new ComposePostRobot()
                 .writeTitle("Hello")
                 .writePost("World")
                 .tapToPublish();
 
-        new ComposePostRobot.ResultRobot().uploadedPostSucessfully();
+        mySitesMenu.tapBlogPosts();
+
+        new BlogPostsRobot.ResultRobot()
+                .hasTitleAndTextAtPosition("Hello", "World", 0);
     }
 }

@@ -19,4 +19,10 @@ public class MySitesMenuRobot {
         }
         return this;
     }
+
+    public MySitesMenuRobot tapBlogPosts() {
+        onView(withId(R.id.my_site_blog_posts_text_view))
+                .perform(click());
+        return this;
+    }
 }

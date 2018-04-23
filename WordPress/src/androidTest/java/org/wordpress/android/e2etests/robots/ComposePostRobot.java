@@ -2,13 +2,13 @@ package org.wordpress.android.e2etests.robots;
 
 
 import org.wordpress.android.R;
-import org.wordpress.android.e2etests.utils.ToastMatcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -45,12 +45,5 @@ public class ComposePostRobot {
             e.printStackTrace();
         }
         return this;
-    }
-
-    public static class ResultRobot {
-        public void uploadedPostSucessfully() {
-            onView(withText(R.string.uploading_post)).inRoot(new ToastMatcher())
-                                                     .check(matches(isDisplayed()));
-        }
     }
 }
