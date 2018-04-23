@@ -66,6 +66,7 @@ import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -950,8 +951,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin" + event.pluginSlug
-                                       + " with type: " + event.error.type);
+            AppLog.e(T.PLUGINS, "An error occurred while fetching wporg plugin" + event.pluginSlug
+                                + " with type: " + event.error.type);
         } else {
             refreshPluginFromStore();
             refreshViews();
@@ -971,8 +972,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mIsUpdatingPlugin = false;
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
-                                       + event.error.type + " and message: " + event.error.message);
+            AppLog.e(T.PLUGINS, "An error occurred while updating the plugin with type: "
+                                + event.error.type + " and message: " + event.error.message);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
             return;
@@ -999,8 +1000,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mIsInstallingPlugin = false;
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
-                                       + event.error.type + " and message: " + event.error.message);
+            AppLog.e(T.PLUGINS, "An error occurred while installing the plugin with type: "
+                                + event.error.type + " and message: " + event.error.message);
             refreshPluginVersionViews();
             showInstallFailedSnackbar();
             return;
@@ -1037,8 +1038,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while removing the plugin with type: "
-                                       + event.error.type + " and message: " + event.error.message);
+            AppLog.e(T.PLUGINS, "An error occurred while removing the plugin with type: "
+                                + event.error.type + " and message: " + event.error.message);
             String toastMessage = getString(R.string.plugin_updated_failed_detailed,
                     mPlugin.getDisplayName(), event.error.message);
             ToastUtils.showToast(this, toastMessage, Duration.LONG);
@@ -1148,6 +1149,8 @@ public class PluginDetailActivity extends AppCompatActivity {
      * Check out `OnAutomatedTransferEligibilityChecked` for its callback.
      */
     private void startAutomatedTransfer() {
+        AppLog.v(T.PLUGINS, "Starting the Automated Transfer for '" + mSite.getDisplayName()
+                            + "' by checking its eligibility");
         showAutomatedTransferProgressDialog();
 
         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
@@ -1188,6 +1191,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * close the progress dialog, get the new version of the plugin from Store and refresh the views
      */
     private void automatedTransferCompleted() {
+        AppLog.v(T.PLUGINS, "Automated Transfer successfully completed!");
         cancelAutomatedTransferDialog();
         refreshPluginFromStore();
         refreshViews();
@@ -1221,6 +1225,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         // Checking isEligible handles `event.isError()` implicitly. In this case we won't have access to the specific
         // error code, so we'll show the generic error message.
         if (!event.isEligible) {
+            AppLog.e(T.PLUGINS, "Automated Transfer has failed because the site is not eligible!");
+            AppLog.e(T.PLUGINS, "Eligibility error codes: " + event.eligibilityErrorCodes);
+            if (event.isError()) {
+                // This error shouldn't happen under normal circumstances. Instead the call will succeed and return
+                // error codes.
+                AppLog.e(T.PLUGINS, "Eligibility API error with type: " + event.error.type + " and message: "
+                                    + event.error.message);
+            }
+
             int errorMessageRes;
             String errorCode = event.eligibilityErrorCodes.isEmpty() ? "" : event.eligibilityErrorCodes.get(0);
             switch (errorCode) {
@@ -1240,6 +1253,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
             handleAutomatedTransferFailed(getString(errorMessageRes));
         } else {
+            AppLog.v(T.PLUGINS, "The site is eligible for Automated Transfer. Initiating the transfer...");
             mDispatcher.dispatch(SiteActionBuilder
                     .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
         }
@@ -1263,8 +1277,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         if (event.isError()) {
+            AppLog.e(T.PLUGINS, "Automated Transfer failed during initiation with error type " + event.error.type
+                                + " and message: " + event.error.message);
             handleAutomatedTransferFailed(event.error.message);
         } else {
+            AppLog.v(T.PLUGINS, "Automated Transfer is successfully initiated. Checking the status of it...");
             mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
         }
     }
@@ -1289,9 +1306,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         if (event.isError()) {
+            AppLog.e(T.PLUGINS, "Automated Transfer failed after initiation with error type " + event.error.type
+                                + " and message: " + event.error.message);
             handleAutomatedTransferFailed(event.error.message);
         } else {
             if (event.isCompleted) {
+                AppLog.v(T.PLUGINS, "Automated Transfer is successfully completed. Fetching the site...");
                 // The flow is almost complete, we can show 99% complete to give us a second or so to fetch the site
                 // and its plugins
                 mAutomatedTransferProgressDialog.setProgress(99);
@@ -1299,10 +1319,13 @@ public class PluginDetailActivity extends AppCompatActivity {
                         getString(R.string.plugin_install_first_plugin_almost_finished_dialog_message));
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
             } else {
+                AppLog.v(T.PLUGINS, "Automated Transfer is still in progress: " + event.currentStep + "/"
+                                    + event.totalSteps);
                 mAutomatedTransferProgressDialog.setProgress(event.currentStep * 100 / event.totalSteps);
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        AppLog.v(T.PLUGINS, "Checking the Automated Transfer status...");
                         // Wait 3 seconds before checking the status again
                         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
                     }
@@ -1328,12 +1351,17 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         if (!event.isError()) {
             mSite = mSiteStore.getSiteBySiteId(mSite.getSiteId());
+        } else if (mIsShowingAutomatedTransferProgress) {
+            AppLog.e(T.PLUGINS, "Fetching the site after Automated Transfer has failed with error type "
+                                + event.error.type + " and message: " + event.error.message);
         }
 
         if (mIsShowingAutomatedTransferProgress) {
             // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
             // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
             if (mSite.isAutomatedTransfer()) {
+                AppLog.v(T.PLUGINS, "Site is successfully fetched after Automated Transfer, fetching the site plugins "
+                                    + "to complete the process...");
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
                         .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
             } else {
@@ -1345,6 +1373,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        AppLog.v(T.PLUGINS, "Fetching the site again after Automated Transfer since the changes "
+                                            + "are not yet reflected");
                         // Wait 3 seconds before fetching the site again
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
                     }
@@ -1369,11 +1399,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         if (event.isError()) {
             if (mIsShowingAutomatedTransferProgress) {
+                AppLog.e(T.PLUGINS, "Fetching the plugin directory after Automated Transfer has failed with error type"
+                                    + event.error.type + " and message: " + event.error.message);
                 // Although unlikely, fetching the plugins after a successful Automated Transfer can result in an error.
                 // This should hopefully be an edge case and fetching the plugins again should
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        AppLog.v(T.PLUGINS, "Fetching the site plugins again after Automated Transfer since the"
+                                            + " changes are not yet reflected");
                         // Wait 3 seconds before fetching the site plugins again
                         mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
                                 .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
