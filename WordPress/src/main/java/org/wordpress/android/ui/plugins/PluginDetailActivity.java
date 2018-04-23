@@ -1364,10 +1364,24 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(OnPluginDirectoryFetched event) {
-        // We should be safe to ignore any errors related to plugin directory fetches since the only time we trigger it
-        // from this view is during AT progress and it should hopefully always succeed and we can't really do much about
-        // it anyway.
-        if (isFinishing() || event.isError()) {
+        if (isFinishing()) {
+            return;
+        }
+        if (event.isError()) {
+            if (mIsShowingAutomatedTransferProgress) {
+                // Although unlikely, fetching the plugins after a successful Automated Transfer can result in an error.
+                // This should hopefully be an edge case and fetching the plugins again should
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Wait 3 seconds before fetching the site plugins again
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                                .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+                    }
+                }, 3000);
+            }
+            // We are safe to ignore the errors for this event unless it's for Automated Transfer since that's the only
+            // one triggered in this page and only one we care about.
             return;
         }
         if (event.type == PluginDirectoryType.SITE && mIsShowingAutomatedTransferProgress) {
