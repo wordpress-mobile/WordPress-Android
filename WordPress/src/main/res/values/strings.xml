@@ -1700,7 +1700,10 @@
     <string name="plugin_see_all">See All</string>
     <string name="plugins_empty_search_list">No matches</string>
     <string name="plugin_install_first_plugin_progress_dialog_title">Install Plugin</string>
-    <string name="plugin_install_error_site_ineligible">Plugins feature is not available on this site.</string>
+    <string name="plugin_install_site_ineligible_default_error">Plugins feature is not available for this site.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugins feature require a custom domain.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Plugins feature require a business plan.</string>
+    <string name="plugin_install_site_ineligible_site_private">Plugins feature require the site to be public.</string>
 
     <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
     <string name="plugin_caption_featured">Featured</string>

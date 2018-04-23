@@ -1206,8 +1206,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     /**
      * This is the first Automated Transfer FluxC event. It returns whether the site is eligible or not with a set of
-     * errors for why it's not eligible. We are handling a single error at a time right now, but the only likely error
-     * is the custom domain being missing from the business plan site which will be handled as a separate project soon.
+     * errors for why it's not eligible. We are handling a single error at a time, but all the likely errors should be
+     * pre-handled by preventing the access of plugins page.
      *
      * If the site is eligible, we'll initiate the Automated Transfer. Check out `onAutomatedTransferInitiated` for next
      * step.
@@ -1218,11 +1218,27 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (isFinishing()) {
             return;
         }
+        // Checking isEligible handles `event.isError()` implicitly. In this case we won't have access to the specific
+        // error code, so we'll show the generic error message.
         if (!event.isEligible) {
-            String message =
-                    event.eligibilityErrors.isEmpty() ? getString(R.string.plugin_install_error_site_ineligible)
-                            : event.eligibilityErrors.get(0);
-            handleAutomatedTransferFailed(message);
+            int errorMessageRes;
+            String errorCode = event.eligibilityErrorCodes.isEmpty() ? "" : event.eligibilityErrorCodes.get(0);
+            switch (errorCode) {
+                case "no_business_plan":
+                    errorMessageRes = R.string.plugin_install_site_ineligible_no_business_plan;
+                    break;
+                case "not_using_custom_domain":
+                    errorMessageRes = R.string.plugin_install_site_ineligible_not_using_custom_domain;
+                    break;
+                case "site_private":
+                    errorMessageRes = R.string.plugin_install_site_ineligible_site_private;
+                    break;
+                default:
+                    // "no_jetpack_sites", "not_resolving_to_wpcom" or unknown error code
+                    errorMessageRes = R.string.plugin_install_site_ineligible_default_error;
+                    break;
+            }
+            handleAutomatedTransferFailed(getString(errorMessageRes));
         } else {
             mDispatcher.dispatch(SiteActionBuilder
                     .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
