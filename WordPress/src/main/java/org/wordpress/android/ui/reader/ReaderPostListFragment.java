@@ -1607,6 +1607,10 @@ public class ReaderPostListFragment extends Fragment
                 .show();
     }
 
+    @Override
+    public void onFollowingTapped() {
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSubscriptionUpdated(AccountStore.OnSubscriptionUpdated event) {

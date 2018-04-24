@@ -39,5 +39,6 @@ public class ReaderInterfaces {
      */
     public interface OnFollowListener {
         void onFollowTapped(View view, String blogName, long blogId);
+        void onFollowingTapped();
     }
 }
