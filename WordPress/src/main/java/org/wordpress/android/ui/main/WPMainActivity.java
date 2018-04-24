@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -87,6 +88,8 @@ import de.greenrobot.event.EventBus;
  */
 public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
+    public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
+    public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
@@ -96,6 +99,8 @@ public class WPMainActivity extends AppCompatActivity {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private boolean mIsMagicLinkLogin;
+    private boolean mIsMagicLinkSignup;
     private boolean mWasSwiped;
     private int mAppBarElevation;
 
@@ -242,6 +247,8 @@ public class WPMainActivity extends AppCompatActivity {
             }
         });
 
+        mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
+        mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         String authTokenToSet = null;
 
         if (savedInstanceState == null) {
@@ -265,7 +272,7 @@ public class WPMainActivity extends AppCompatActivity {
                         mViewPager.setCurrentItem(position);
                     }
 
-                    if (hasMagicLinkLoginIntent()) {
+                    if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
                         } else {
@@ -274,7 +281,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                if (hasMagicLinkLoginIntent()) {
+                if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
                     ActivityLauncher.showSignInForResult(this);
@@ -295,7 +302,7 @@ public class WPMainActivity extends AppCompatActivity {
 
         if (authTokenToSet != null) {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
-            AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
+            UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
@@ -311,28 +318,6 @@ public class WPMainActivity extends AppCompatActivity {
                                                 getIntent()
                                                         .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
                                                 false);
-        }
-    }
-
-    private boolean hasMagicLinkLoginIntent() {
-        String action = getIntent().getAction();
-        Uri uri = getIntent().getData();
-        String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
-        return Intent.ACTION_VIEW.equals(action) && host.contains(LoginActivity.MAGIC_LOGIN);
-    }
-
-    private boolean hasMagicLinkSignupIntent() {
-        String action = getIntent().getAction();
-        Uri uri = getIntent().getData();
-
-        if (uri != null) {
-            String parameter = SignupEpilogueActivity.MAGIC_SIGNUP_PARAMETER;
-            String value = (uri.getQueryParameterNames() != null && uri.getQueryParameter(parameter) != null)
-                    ? uri.getQueryParameter(parameter) : "";
-            return Intent.ACTION_VIEW.equals(action) && uri.getQueryParameterNames().contains(parameter)
-                   && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
-        } else {
-            return false;
         }
     }
 
@@ -685,7 +670,8 @@ public class WPMainActivity extends AppCompatActivity {
             case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
-                    startService(new Intent(this, GCMRegistrationIntentService.class));
+                    GCMRegistrationIntentService.enqueueWork(this,
+                            new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -727,7 +713,8 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void startWithNewAccount() {
-        startService(new Intent(this, GCMRegistrationIntentService.class));
+        GCMRegistrationIntentService.enqueueWork(this,
+                new Intent(this, GCMRegistrationIntentService.class));
         resetFragments();
     }
 
@@ -780,8 +767,8 @@ public class WPMainActivity extends AppCompatActivity {
         if (mAccountStore.hasAccessToken()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
 
-            if (hasMagicLinkLoginIntent()) {
-                if (hasMagicLinkSignupIntent()) {
+            if (mIsMagicLinkLogin) {
+                if (mIsMagicLinkSignup) {
                     mLoginAnalyticsListener.trackCreatedAccount();
                     mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
                     Intent intent = getIntent();

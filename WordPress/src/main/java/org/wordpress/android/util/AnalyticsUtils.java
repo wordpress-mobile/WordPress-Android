@@ -1,7 +1,9 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
@@ -9,13 +11,17 @@ import android.webkit.MimeTypeMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 
@@ -45,6 +51,29 @@ public class AnalyticsUtils {
     private static final String INTENT_DATA = "intent_data";
     private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
+
+    public static void updateAnalyticsPreference(Context ctx,
+                                                 Dispatcher mDispatcher,
+                                                 AccountStore mAccountStore,
+                                                 boolean optOut) {
+        AnalyticsTracker.setHasUserOptedOut(optOut);
+        if (optOut) {
+            AnalyticsTracker.clearAllData();
+        }
+        // Sync with wpcom if a token is available
+        if (mAccountStore.hasAccessToken()) {
+            mAccountStore.getAccount().setTracksOptOut(optOut);
+            PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+            payload.params = new HashMap<>();
+            payload.params.put("tracks_opt_out", optOut);
+            mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+        }
+        // Store the preference locally
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(ctx.getString(R.string.pref_key_send_usage), !optOut);
+        editor.apply();
+    }
 
     /**
      * Utility methods to refresh metadata.

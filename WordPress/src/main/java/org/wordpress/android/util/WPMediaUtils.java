@@ -24,6 +24,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
@@ -168,8 +169,7 @@ public class WPMediaUtils {
      * @return String The associated error message.
      */
     public static @Nullable
-    String getErrorMessage(final Context context, final MediaModel media,
-                           final org.wordpress.android.fluxc.store.MediaStore.MediaError error) {
+    String getErrorMessage(final Context context, final MediaModel media, final MediaError error) {
         if (context == null || error == null) {
             return null;
         }

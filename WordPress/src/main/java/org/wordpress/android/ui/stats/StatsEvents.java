@@ -19,14 +19,22 @@ import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
-import org.wordpress.android.ui.stats.service.StatsService.StatsEndpointsEnum;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic.StatsEndpointsEnum;
 
 public class StatsEvents {
-    public static class UpdateStatusChanged {
-        public final boolean mUpdating;
+    public static class UpdateStatusStarted {
+        public final int mTaskId;
 
-        public UpdateStatusChanged(boolean updating) {
-            mUpdating = updating;
+        public UpdateStatusStarted(int taskId) {
+            mTaskId = taskId;
+        }
+    }
+
+    public static class UpdateStatusFinished {
+        public final int mTaskId;
+
+        public UpdateStatusFinished(int taskId) {
+            mTaskId = taskId;
         }
     }
 

@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.reader.utils;
 
-import android.text.TextUtils;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,8 +7,8 @@ public class ReaderIframeScanner {
     private final String mContent;
 
     private static final Pattern IFRAME_TAG_PATTERN = Pattern.compile(
-            "<iframe(\\s+.*?) (?:src\\s*=\\s*(?:'|\") (.*?) (?:'|\")) (.*?)>",
-            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+            "<iframe[^>]* src=\\\'([^\\\']*)\\\'[^>]*>",
+            Pattern.CASE_INSENSITIVE);
 
     public ReaderIframeScanner(String contentOfPost) {
         mContent = contentOfPost;
@@ -23,11 +21,9 @@ public class ReaderIframeScanner {
 
         Matcher matcher = IFRAME_TAG_PATTERN.matcher(mContent);
         while (matcher.find()) {
-            String tag = mContent.substring(matcher.start(), matcher.end());
-            String src = ReaderHtmlUtils.getSrcAttrValue(tag);
-            if (!TextUtils.isEmpty(src)) {
-                listener.onTagFound(tag, src);
-            }
+            String tag = matcher.group(0);
+            String src = matcher.group(1);
+            listener.onTagFound(tag, src);
         }
     }
 
@@ -37,9 +33,8 @@ public class ReaderIframeScanner {
     public String getFirstUsableVideo() {
         Matcher matcher = IFRAME_TAG_PATTERN.matcher(mContent);
         while (matcher.find()) {
-            String tag = mContent.substring(matcher.start(), matcher.end());
-            String src = ReaderHtmlUtils.getSrcAttrValue(tag);
-            if (!TextUtils.isEmpty(src) && ReaderVideoUtils.canShowVideoThumbnail(src)) {
+            String src = matcher.group(1);
+            if (ReaderVideoUtils.canShowVideoThumbnail(src)) {
                 return src;
             }
         }

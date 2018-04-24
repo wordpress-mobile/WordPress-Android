@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'com.google.gms:google-services:3.2.0'
     }
 }
 
@@ -38,10 +38,10 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "9.8-rc-1"
-        versionCode 549
+        versionName "9.9-rc-1"
+        versionCode 554
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -102,7 +102,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Provided by maven central
-    implementation 'com.google.code.gson:gson:2.6.+'
+    implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
     implementation 'com.android.support:support-compat:27.1.0'
@@ -121,9 +121,9 @@ dependencies {
     // ViewModel and LiveData
     implementation 'android.arch.lifecycle:extensions:1.1.0'
 
-    implementation 'com.google.android.gms:play-services-gcm:10.0.1'
-    implementation 'com.google.android.gms:play-services-auth:10.0.1'
-    implementation 'com.google.android.gms:play-services-places:10.0.1'
+    implementation 'com.google.android.gms:play-services-gcm:12.0.1'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
+    implementation 'com.google.android.gms:play-services-places:12.0.1'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'com.helpshift:android-helpshift-aar:6.4.1'
     implementation 'de.greenrobot:eventbus:2.4.0'

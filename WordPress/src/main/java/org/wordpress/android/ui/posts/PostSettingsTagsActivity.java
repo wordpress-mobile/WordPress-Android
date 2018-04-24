@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
@@ -209,7 +210,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
         switch (event.causeOfChange) {
             case FETCH_TAGS:
                 mAdapter.setAllTags(mTaxonomyStore.getTagsForSite(mSite));

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -85,12 +86,30 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
+        removeSightAndSoundsForAPI26();
 
         // Bump Analytics
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_LIST_OPENED);
         }
     }
+
+    private void removeSightAndSoundsForAPI26() {
+        // on API26 we removed the Sight & Sounds category altogether, as it can always be
+        // overriden by the user in the Device settings, and the settings here
+        // wouldn't either reflect nor have any effect anyway.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PreferenceScreen preferenceScreen =
+                    (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
+
+            PreferenceCategory categorySightsAndSounds =
+                    (PreferenceCategory) preferenceScreen.findPreference(getActivity()
+                    .getString(
+                            R.string.pref_notification_sights_sounds));
+            preferenceScreen.removePreference(categorySightsAndSounds);
+        }
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

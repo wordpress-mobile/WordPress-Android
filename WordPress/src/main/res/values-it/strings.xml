@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-05 15:54:09+0000
+Translation-Revision-Date: 2018-04-17 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="media_preview_title">%1$d di %2$d</string>
+    <string name="stock_media_picker_empty_results">Nessuna corrispondenza</string>
+    <string name="stock_media_picker_initial_empty_subtext">Foto fornite da %s</string>
+    <string name="stock_media_picker_initial_empty_text">Cerca per trovare foto gratuite da aggiungere alla tua Libreria multimediale</string>
+    <string name="stock_media_picker_search_hint">Cerca nella Libreria di foto gratuita</string>
+    <string name="photo_picker_stock_media">Scegli dalla Libreria di foto gratuita</string>
+    <string name="error_save_empty_draft">Impossibile salvare una bozza vuota</string>
+    <string name="site_settings_quota_space_unlimited">%1$s di illimitato</string>
+    <string name="preview_count">Anteprima di %d</string>
+    <string name="add_count">Aggiungi %d</string>
     <string name="site_creation_domain_selection_title">Crea un nuovo sito Passaggio 4</string>
     <string name="site_creation_site_details_title">Crea un nuovo sito Passaggio 3</string>
     <string name="site_creation_theme_selection_title">Crea un nuovo sito Passaggio 2</string>
@@ -42,7 +52,6 @@ Language: it
     <string name="show_more_desc">mostra altro</string>
     <string name="stats_list_cell_chevron_expand_desc">espandi</string>
     <string name="reader_photo_view_desc">foto</string>
-    <string name="reader_list_item_suggestion_remove_desc">Cancellare</string>
     <string name="photo_picker_thumbnail_desc">Riproduci video</string>
     <string name="reader_cardview_post_play_video_desc">riproduci video in primo piano</string>
     <string name="post_cardview_featured_desc">in primo piano</string>
@@ -83,7 +92,7 @@ Language: it
     <string name="site_settings_quota_space_value">%1$s di %2$s</string>
     <string name="site_settings_quota_space_hint">Se hai bisogno di più spazio valuta la possibilità di aggiornare il tuo piano di WordPress.</string>
     <string name="site_settings_quota_space_title">Spazio utilizzato</string>
-    <string name="site_settings_quota_header">File multimediali</string>
+    <string name="site_settings_quota_header">Media</string>
     <string name="comment_unspam_talkback">Commento contrassegnato come non spam</string>
     <string name="comment_spam_talkback">Commento contrassegnato come spam</string>
     <string name="comment_delete_talkback">Commento eliminato</string>
@@ -327,6 +336,7 @@ Language: it
     <string name="size_medium">Media</string>
     <string name="size_thumbnail">Miniatura</string>
     <string name="uploading_subtitle_media_only">%1$d di %2$d file rimanenti</string>
+    <string name="uploading_subtitle_posts_only_one">1 post rimanente</string>
     <string name="uploading_title">Caricamento in corso…</string>
     <string name="media_files_uploaded_write_post">Scrivi articolo</string>
     <string name="media_all_files_uploaded_successfully">%d file caricati correttamente</string>
@@ -525,7 +535,7 @@ Language: it
     <string name="media_all">Tutto</string>
     <string name="photo_picker_soft_ask_permissions_denied">A %1$s è stato negato l\'accesso alle tue foto. Per risolvere questo problema, modifica le tue autorizzazioni e attiva %2$s.</string>
     <string name="format_bar_description_link">Link</string>
-    <string name="format_bar_description_media">File multimediali</string>
+    <string name="format_bar_description_media">Media</string>
     <string name="reader_view_comments">Visualizza commenti</string>
     <string name="site_settings_video_quality_hint">Qualità dei video. Valori più alti comportano una migliore qualità dei video.</string>
     <string name="site_settings_video_width_hint">Ridimensiona i video negli articoli secondo queste dimensioni</string>

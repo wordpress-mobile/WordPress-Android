@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
@@ -35,9 +35,9 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        versionName "1.20.1"
+        versionName "1.20.2"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
     }
 }
 

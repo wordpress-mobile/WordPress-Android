@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -60,6 +61,8 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
+
+    // note that the site isn't required and may be null
     private SiteModel mSite;
 
     private ProgressDialog mProgressDialog;
@@ -71,7 +74,8 @@ public class PhotoPickerActivity extends AppCompatActivity
         ANDROID_CAMERA,
         ANDROID_PICKER,
         APP_PICKER,
-        WP_MEDIA_PICKER;
+        WP_MEDIA_PICKER,
+        STOCK_MEDIA_PICKER;
 
         public static PhotoPickerMediaSource fromString(String strSource) {
             if (strSource != null) {
@@ -96,7 +100,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.photo_picker_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -214,8 +218,15 @@ public class PhotoPickerActivity extends AppCompatActivity
                     ArrayList<Long> ids =
                             ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
                     if (ids != null && ids.size() == 1) {
-                        doMediaIdSelected(ids.get(0));
+                        doMediaIdSelected(ids.get(0), PhotoPickerMediaSource.WP_MEDIA_PICKER);
                     }
+                }
+                break;
+            // user selected a stock photo
+            case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
+                    long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
+                    doMediaIdSelected(mediaId, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
                 }
                 break;
         }
@@ -240,6 +251,17 @@ public class PhotoPickerActivity extends AppCompatActivity
     private void launchWPMediaLibrary() {
         if (mSite != null) {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, mBrowserType);
+        } else {
+            ToastUtils.showToast(this, R.string.blog_not_found);
+        }
+    }
+
+    private void launchStockMediaPicker() {
+        if (mSite != null) {
+            ActivityLauncher.showStockMediaPickerForResult(this,
+                    mSite, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT);
+        } else {
+            ToastUtils.showToast(this, R.string.blog_not_found);
         }
     }
 
@@ -262,10 +284,10 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
     }
 
-    private void doMediaIdSelected(long mediaId) {
+    private void doMediaIdSelected(long mediaId, @NonNull PhotoPickerMediaSource source) {
         Intent data = new Intent()
                 .putExtra(EXTRA_MEDIA_ID, mediaId)
-                .putExtra(EXTRA_MEDIA_SOURCE, PhotoPickerMediaSource.WP_MEDIA_PICKER.name());
+                .putExtra(EXTRA_MEDIA_SOURCE, source.name());
         setResult(RESULT_OK, data);
         finish();
     }
@@ -288,6 +310,9 @@ public class PhotoPickerActivity extends AppCompatActivity
                 break;
             case WP_MEDIA:
                 launchWPMediaLibrary();
+                break;
+            case STOCK_MEDIA:
+                launchStockMediaPicker();
                 break;
         }
     }
@@ -325,7 +350,7 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+    public void onMediaUploaded(OnMediaUploaded event) {
         if (event.isError()) {
             hideUploadProgressDialog();
             String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
@@ -336,7 +361,7 @@ public class PhotoPickerActivity extends AppCompatActivity
             }
         } else if (event.completed && event.media != null) {
             hideUploadProgressDialog();
-            doMediaIdSelected(event.media.getMediaId());
+            doMediaIdSelected(event.media.getMediaId(), PhotoPickerMediaSource.WP_MEDIA_PICKER);
         }
     }
 }

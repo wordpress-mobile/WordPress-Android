@@ -157,9 +157,11 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
     private void buildNotificationWithIntent(Context context, PendingIntent intent, String message, int postId,
                                              boolean isPage) {
-        NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(context);
+        NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(context,
+                context.getString(R.string.notification_channel_important_id));
         builder.setContentText(message)
-               .setPriority(NotificationCompat.PRIORITY_MAX);
+               .setPriority(NotificationCompat.PRIORITY_MAX)
+               .setOnlyAlertOnce(true);
         builder.setContentIntent(intent);
 
         if (postId != 0) {

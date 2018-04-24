@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
@@ -413,7 +414,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     reloadMediaGrid();
                 }
                 break;
-            case RequestCodes.STOCK_MEDIA_PICKER:
+            case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK) {
                     reloadMediaGrid();
                 }
@@ -695,7 +696,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
             // if uploading, first issue a cancel upload command
             if (UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
-                MediaStore.CancelMediaPayload payload = new MediaStore.CancelMediaPayload(mSite, mediaModel, false);
+                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, false);
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
             }
 
@@ -872,7 +873,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 WPMediaUtils.launchVideoLibrary(this, true);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                ActivityLauncher.showStockMediaPickerForResult(this,
+                        mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
         }
     }
