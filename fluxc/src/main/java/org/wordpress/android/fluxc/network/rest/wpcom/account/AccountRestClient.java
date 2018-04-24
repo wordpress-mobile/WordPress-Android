@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionRestRe
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsError;
-import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
@@ -272,7 +271,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountFetchUsernameSuggestionsResponsePayload payload =
-                                volleyErrorToFetchUsernameSuggestionsResponsePayload(error.volleyError);
+                                new AccountFetchUsernameSuggestionsResponsePayload();
+                        payload.error = new AccountFetchUsernameSuggestionsError(
+                                ((WPComGsonNetworkError) error).apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedUsernameSuggestionsAction(payload));
                     }
                 }
@@ -1024,28 +1025,6 @@ public class AccountRestClient extends BaseWPComRestClient {
                 payload.error.message = errors.getJSONObject(0).getString("message");
             } catch (UnsupportedEncodingException | JSONException exception) {
                 AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
-            }
-        }
-
-        return payload;
-    }
-
-    private AccountFetchUsernameSuggestionsResponsePayload volleyErrorToFetchUsernameSuggestionsResponsePayload(
-            VolleyError error) {
-        AccountFetchUsernameSuggestionsResponsePayload payload = new AccountFetchUsernameSuggestionsResponsePayload();
-        payload.error = new AccountFetchUsernameSuggestionsError(
-                AccountFetchUsernameSuggestionsErrorType.GENERIC_ERROR, "");
-
-        if (error.networkResponse != null && error.networkResponse.data != null) {
-            AppLog.e(T.API, new String(error.networkResponse.data));
-
-            try {
-                String responseBody = new String(error.networkResponse.data, "UTF-8");
-                JSONObject object = new JSONObject(responseBody);
-                payload.error.type = AccountFetchUsernameSuggestionsErrorType.fromString(object.optString("code"));
-                payload.error.message = object.optString("message");
-            } catch (UnsupportedEncodingException | JSONException exception) {
-                AppLog.e(T.API, "Unable to parse username suggestions error response: " + exception.getMessage());
             }
         }
 
