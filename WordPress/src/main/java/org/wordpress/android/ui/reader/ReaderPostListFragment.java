@@ -1591,6 +1591,8 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public void onFollowTapped(View view, String blogName, final long blogId) {
+        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
+
         Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
                         "<b>", blogName, "</b><br>")), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
