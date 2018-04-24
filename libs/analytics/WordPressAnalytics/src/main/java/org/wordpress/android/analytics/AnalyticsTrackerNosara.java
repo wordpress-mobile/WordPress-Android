@@ -973,6 +973,26 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
+            case AUTOMATED_TRANSFER_CONFIRM_DIALOG_SHOWN:
+                return "automated_transfer_confirm_dialog_shown";
+            case AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED:
+                return "automated_transfer_confirm_dialog_cancelled";
+            case AUTOMATED_TRANSFER_CHECK_ELIGIBILITY:
+                return "automated_transfer_check_eligibility";
+            case AUTOMATED_TRANSFER_NOT_ELIGIBLE:
+                return "automated_transfer_not_eligible";
+            case AUTOMATED_TRANSFER_INITIATE:
+                return "automated_transfer_initiate";
+            case AUTOMATED_TRANSFER_INITIATED:
+                return "automated_transfer_initiated";
+            case AUTOMATED_TRANSFER_INITIATION_FAILED:
+                return "automated_transfer_initiation_failed";
+            case AUTOMATED_TRANSFER_STATUS_COMPLETE:
+                return "automated_transfer_status_complete";
+            case AUTOMATED_TRANSFER_STATUS_FAILED:
+                return "automated_transfer_status_failed";
+            case AUTOMATED_TRANSFER_FLOW_COMPLETE:
+                return "automated_transfer_flow_complete";
             default:
                 return null;
         }
