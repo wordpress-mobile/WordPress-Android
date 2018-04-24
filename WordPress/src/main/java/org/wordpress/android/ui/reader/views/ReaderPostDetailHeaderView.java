@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AppLog;
@@ -24,6 +25,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * topmost view in post detail - shows blavatar + avatar, author name, blog name, and follow button
  */
 public class ReaderPostDetailHeaderView extends LinearLayout {
+    private OnFollowListener mFollowListener;
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
     private boolean mEnableBlogPreview = true;
@@ -46,6 +48,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_post_detail_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
+    }
+
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
     }
 
     public void setPost(@NonNull ReaderPost post, boolean isSignedInWPCom) {
@@ -97,7 +103,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollowStatus();
+                    toggleFollowStatus(v);
                 }
             });
         } else {
@@ -184,7 +190,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         }
     };
 
-    private void toggleFollowStatus() {
+    private void toggleFollowStatus(final View followButton) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
@@ -201,6 +207,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 mFollowButton.setEnabled(true);
                 if (succeeded) {
                     mPost.isFollowedByCurrentUser = isAskingToFollow;
+
+                    if (isAskingToFollow && mFollowListener != null) {
+                        mFollowListener.onFollowTapped(followButton, mPost.getBlogName(), mPost.blogId);
+                    }
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
                             : R.string.reader_toast_err_unfollow_blog;

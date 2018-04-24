@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -18,6 +19,8 @@ import org.wordpress.android.util.AnalyticsUtils;
  * from the same site as the source post) or global (related posts from across wp.com)
  */
 public class ReaderSimplePostContainerView extends LinearLayout {
+    private OnFollowListener mFollowListener;
+
     private final ReaderSimplePostList mSimplePostList = new ReaderSimplePostList();
 
     public ReaderSimplePostContainerView(Context context) {
@@ -64,6 +67,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         for (int index = 0; index < mSimplePostList.size(); index++) {
             ReaderSimplePost relatedPost = mSimplePostList.get(index);
             ReaderSimplePostView postView = new ReaderSimplePostView(getContext());
+            postView.setOnFollowListener(mFollowListener);
             postView.showPost(relatedPost, container, isGlobal, listener);
         }
 
@@ -74,6 +78,10 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         } else {
             label.setText(String.format(getContext().getString(R.string.reader_label_local_related_posts), siteName));
         }
+    }
+
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
     }
 
     /*

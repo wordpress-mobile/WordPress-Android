@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -71,6 +72,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final ReaderPostList mPosts = new ReaderPostList();
     private final HashSet<String> mRenderedIds = new HashSet<>();
 
+    private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
@@ -289,7 +291,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context context = parent.getContext();
         switch (viewType) {
             case VIEW_TYPE_SITE_HEADER:
-                return new SiteHeaderViewHolder(new ReaderSiteHeaderView(context));
+                ReaderSiteHeaderView readerSiteHeaderView = new ReaderSiteHeaderView(context);
+                readerSiteHeaderView.setOnFollowListener(mFollowListener);
+                return new SiteHeaderViewHolder(readerSiteHeaderView);
 
             case VIEW_TYPE_TAG_HEADER:
                 return new TagHeaderViewHolder(new ReaderTagHeaderView(context));
@@ -627,6 +631,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mCurrentTag != null && mCurrentTag.isDiscover();
     }
 
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
+    }
+
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
         mPostSelectedListener = listener;
     }
@@ -871,6 +879,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
                     setFollowStatusForBlog(post.blogId, !isAskingToFollow);
+                } else if (isAskingToFollow && mFollowListener != null) {
+                    mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
                 }
             }
         };

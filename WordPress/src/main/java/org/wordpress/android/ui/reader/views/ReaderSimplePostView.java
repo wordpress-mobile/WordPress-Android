@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
@@ -30,6 +31,7 @@ public class ReaderSimplePostView extends LinearLayout {
         void onSimplePostClick(View v, long siteId, long postId);
     }
 
+    private OnFollowListener mFollowListener;
     private ReaderSimplePost mSimplePost;
 
     public ReaderSimplePostView(Context context) {
@@ -55,6 +57,10 @@ public class ReaderSimplePostView extends LinearLayout {
 
     private void initView(Context context) {
         inflate(context, R.layout.reader_simple_post_view, this);
+    }
+
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
     }
 
     public void showPost(ReaderSimplePost simplePost,
@@ -143,6 +149,10 @@ public class ReaderSimplePostView extends LinearLayout {
                 btnFollow.setEnabled(true);
                 if (succeeded) {
                     mSimplePost.setIsFollowing(isAskingToFollow);
+
+                    if (isAskingToFollow && mFollowListener != null) {
+                        mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(), mSimplePost.getSiteId());
+                    }
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
                             : R.string.reader_toast_err_unfollow_blog;

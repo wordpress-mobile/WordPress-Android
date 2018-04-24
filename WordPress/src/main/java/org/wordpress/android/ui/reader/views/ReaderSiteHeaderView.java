@@ -12,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.LocaleManager;
@@ -35,6 +36,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private ReaderFollowButton mFollowButton;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
+    private OnFollowListener mFollowListener;
 
     @Inject AccountStore mAccountStore;
 
@@ -55,6 +57,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
+    }
+
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
     }
 
     public void setOnBlogInfoLoadedListener(OnBlogInfoLoadedListener listener) {
@@ -142,7 +148,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollowStatus();
+                    toggleFollowStatus(v);
                 }
             });
         }
@@ -156,7 +162,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
     }
 
-    private void toggleFollowStatus() {
+    private void toggleFollowStatus(final View followButton) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
@@ -180,6 +186,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
                             : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
+                } else if (isAskingToFollow && mFollowListener != null) {
+                    mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
                 }
             }
         };
