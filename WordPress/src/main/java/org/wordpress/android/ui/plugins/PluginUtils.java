@@ -18,6 +18,7 @@ public class PluginUtils {
         // If the site has business plan we can do an Automated Transfer
         return site.isWPCom()
                && SiteUtils.hasNonJetpackBusinessPlan(site)
+               && site.getHasCapabilityManageOptions() // Automated Transfer require admin capabilities
                && !site.getUrl().contains(".wordpress.com") // Automated Transfers require custom domains
                && !site.isPrivate(); // Private sites are not eligible for Automated Transfer
     }
