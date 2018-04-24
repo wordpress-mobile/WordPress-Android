@@ -1703,13 +1703,13 @@
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">The plugin is installed, we are setting it up&#8230;</string>
 
     <!-- Automated Transfer Eligibility Errors -->
-    <string name="plugin_install_site_ineligible_default_error">Plugins feature is not available for this site.</string>
-    <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugins feature require a custom domain.</string>
-    <string name="plugin_install_site_ineligible_no_business_plan">Plugins feature require a business plan.</string>
-    <string name="plugin_install_site_ineligible_site_private">Plugins feature require the site to be public.</string>
-    <string name="plugin_install_site_ineligible_email_unverified">Plugins feature require a verified email address.</string>
+    <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
+    <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Plugin feature requires a verified email address.</string>
     <string name="plugin_install_site_ineligible_excessive_disk_space">Plugin cannot be installed due to disk space limitations.</string>
-    <string name="plugin_install_site_ineligible_no_vip_sites">Plugins cannot be installed on VIP sites.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Plugin cannot be installed on VIP sites.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Plugin feature requires admin privileges.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Plugin feature requires primary domain subscription to be associated with this user.</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Plugin feature requires the site to be in good standing.</string>
