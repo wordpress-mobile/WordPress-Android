@@ -2,6 +2,7 @@ package org.wordpress.android.ui;
 
 import android.app.Activity;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 
@@ -25,12 +26,15 @@ public class ShortcutsNavigator {
     public void showTargetScreen(String action, Activity activity, SiteModel currentSite) {
         switch (action) {
             case OPEN_STATS:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_STATS_CLICKED);
                 ActivityLauncher.viewBlogStats(activity, currentSite);
                 break;
             case CREATE_NEW_POST:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NEW_POST_CLICKED);
                 ActivityLauncher.addNewPostOrPageForResult(activity, currentSite, false, false);
                 break;
             case OPEN_NOTIFICATIONS:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NOTIFICATIONS_CLICKED);
                 ActivityLauncher.viewNotifications(activity);
                 break;
             default:

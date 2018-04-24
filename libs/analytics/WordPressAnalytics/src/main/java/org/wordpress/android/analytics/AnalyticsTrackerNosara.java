@@ -973,6 +973,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
+            case SHORTCUT_STATS_CLICKED:
+                return "shortcut_stats_clicked";
+            case SHORTCUT_NOTIFICATIONS_CLICKED:
+                return "shortcut_notifications_clicked";
+            case SHORTCUT_NEW_POST_CLICKED:
+                return "shortcut_new_post_clicked";
             default:
                 return null;
         }
