@@ -46,7 +46,8 @@ class ActivityLogRestClient
                 url, params, ActivitiesResponse::class.java,
                 { response ->
                     val activities = response.current?.orderedItems ?: listOf()
-                    val payload = buildActivityPayload(activities, site, number, offset)
+                    val totalItems = response.totalItems ?: 0
+                    val payload = buildActivityPayload(activities, site, totalItems, number, offset)
                     dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
                 },
                 { networkError ->
@@ -57,7 +58,7 @@ class ActivityLogRestClient
                             ActivityLogErrorType.AUTHORIZATION_REQUIRED
                     )
                     val error = ActivityError(errorType, networkError.message)
-                    val payload = FetchedActivityLogPayload(error, site, number, offset)
+                    val payload = FetchedActivityLogPayload(error, site, number = number, offset = offset)
                     dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
                 })
         add(request)
@@ -106,6 +107,7 @@ class ActivityLogRestClient
     private fun buildActivityPayload(
         activityResponses: List<ActivitiesResponse.ActivityResponse>,
         site: SiteModel,
+        totalItems: Int,
         number: Int,
         offset: Int
     ): FetchedActivityLogPayload {
@@ -141,7 +143,6 @@ class ActivityLogRestClient
                             rewindable = it.is_rewindable,
                             rewindID = it.rewind_id,
                             published = it.published,
-                            discarded = it.is_discarded,
                             actor = it.actor?.let {
                                 ActivityLogModel.ActivityActor(
                                         it.name,
@@ -156,9 +157,9 @@ class ActivityLogRestClient
             }
         }
         error?.let {
-            return FetchedActivityLogPayload(ActivityError(it), site, number, offset)
+            return FetchedActivityLogPayload(ActivityError(it), site, totalItems, number, offset)
         }
-        return FetchedActivityLogPayload(activities, site, number, offset)
+        return FetchedActivityLogPayload(activities, site, totalItems, number, offset)
     }
 
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
@@ -230,8 +231,7 @@ class ActivityLogRestClient
             val rewind_id: String?,
             val gridicon: String?,
             val status: String?,
-            val activity_id: String?,
-            val is_discarded: Boolean?
+            val activity_id: String?
         )
 
         class Content(val text: String?)

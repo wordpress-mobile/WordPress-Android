@@ -51,6 +51,10 @@ class ActivityLogSqlUtils
                 .map { it.build() }
     }
 
+    fun deleteActivityLog(): Int {
+        return WellSql.delete(ActivityLogBuilder::class.java).execute()
+    }
+
     fun insertOrUpdateRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
         val existingRewindStatus = getRewindStatusBuilder(site)
         val rewindStatusBuilder = rewindStatusModel.toBuilder(site)
@@ -93,7 +97,6 @@ class ActivityLogSqlUtils
                 rewindable = this.rewindable,
                 rewindID = this.rewindID,
                 published = this.published.time,
-                discarded = this.discarded,
                 displayName = this.actor?.displayName,
                 actorType = this.actor?.type,
                 wpcomUserID = this.actor?.wpcomUserID,
@@ -149,10 +152,13 @@ class ActivityLogSqlUtils
         override fun getId() = mId
 
         fun build(): ActivityLogModel {
-            var actor: ActivityLogModel.ActivityActor? = null
-            if (actorType != null || displayName != null || wpcomUserID != null || avatarURL != null || role != null) {
-                actor = ActivityLogModel.ActivityActor(displayName, type, wpcomUserID, avatarURL, role)
-            }
+            val actor = if (actorType != null ||
+                    displayName != null ||
+                    wpcomUserID != null ||
+                    avatarURL != null ||
+                    role != null) {
+                ActivityLogModel.ActivityActor(displayName, type, wpcomUserID, avatarURL, role)
+            } else null
             return ActivityLogModel(activityID,
                     summary,
                     text,
@@ -163,7 +169,6 @@ class ActivityLogSqlUtils
                     rewindable,
                     rewindID,
                     Date(published),
-                    discarded,
                     actor)
         }
     }

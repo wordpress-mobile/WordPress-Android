@@ -13,7 +13,6 @@ data class ActivityLogModel(
     val rewindable: Boolean?,
     val rewindID: String?,
     val published: Date,
-    val discarded: Boolean?,
     val actor: ActivityActor? = null
 ) {
     enum class Status(value: String) {
