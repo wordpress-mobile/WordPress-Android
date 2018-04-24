@@ -657,7 +657,7 @@ public class ReaderPostListFragment extends Fragment
         hideSearchMessage();
 
         // remember this query for future suggestions
-        String trimQuery = query != null ? query.trim() : "";
+        String trimQuery = query.trim();
         ReaderSearchTable.addOrUpdateQueryString(trimQuery);
 
         // remove cached results for this search - search results are ephemeral so each search
