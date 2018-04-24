@@ -1576,8 +1576,10 @@ public class ReaderPostListFragment extends Fragment
                 switch ((int) id) {
                     case ReaderMenuAdapter.ITEM_FOLLOW:
                         onFollowTapped(getView(), post.getBlogName(), post.blogId);
-                    // noinspection fallthrough
+                        toggleFollowStatusForPost(post);
+                        break;
                     case ReaderMenuAdapter.ITEM_UNFOLLOW:
+                        onFollowingTapped();
                         toggleFollowStatusForPost(post);
                         break;
                     case ReaderMenuAdapter.ITEM_BLOCK:

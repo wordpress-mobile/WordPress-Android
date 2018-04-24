@@ -208,8 +208,12 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 if (succeeded) {
                     mPost.isFollowedByCurrentUser = isAskingToFollow;
 
-                    if (isAskingToFollow && mFollowListener != null) {
-                        mFollowListener.onFollowTapped(followButton, mPost.getBlogName(), mPost.blogId);
+                    if (mFollowListener != null) {
+                        if (isAskingToFollow) {
+                            mFollowListener.onFollowTapped(followButton, mPost.getBlogName(), mPost.blogId);
+                        } else {
+                            mFollowListener.onFollowingTapped();
+                        }
                     }
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog

@@ -186,8 +186,12 @@ public class ReaderSiteHeaderView extends LinearLayout {
                             : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
-                } else if (isAskingToFollow && mFollowListener != null) {
-                    mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
+                } else if (mFollowListener != null) {
+                    if (isAskingToFollow) {
+                        mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
+                    } else {
+                        mFollowListener.onFollowingTapped();
+                    }
                 }
             }
         };

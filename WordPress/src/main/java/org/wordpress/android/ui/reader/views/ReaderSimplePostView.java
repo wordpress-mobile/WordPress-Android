@@ -150,8 +150,12 @@ public class ReaderSimplePostView extends LinearLayout {
                 if (succeeded) {
                     mSimplePost.setIsFollowing(isAskingToFollow);
 
-                    if (isAskingToFollow && mFollowListener != null) {
-                        mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(), mSimplePost.getSiteId());
+                    if (mFollowListener != null) {
+                        if (isAskingToFollow) {
+                            mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(), mSimplePost.getSiteId());
+                        } else {
+                            mFollowListener.onFollowingTapped();
+                        }
                     }
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog

@@ -879,8 +879,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
                     setFollowStatusForBlog(post.blogId, !isAskingToFollow);
-                } else if (isAskingToFollow && mFollowListener != null) {
-                    mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
+                } else if (mFollowListener != null) {
+                    if (isAskingToFollow) {
+                        mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
+                    } else {
+                        mFollowListener.onFollowingTapped();
+                    }
                 }
             }
         };
