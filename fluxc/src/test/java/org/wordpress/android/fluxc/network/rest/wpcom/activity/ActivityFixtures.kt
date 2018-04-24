@@ -22,8 +22,7 @@ val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse.ActivityRespons
         "10.0",
         "gridicon.jpg",
         "OK",
-        "activity123",
-        false)
+        "activity123")
 val ACTIVITY_RESPONSE_PAGE = ActivityLogRestClient.ActivitiesResponse.Page(listOf(ACTIVITY_RESPONSE))
 val RESTORE_RESPONSE = ActivityLogRestClient.RewindStatusResponse.RestoreStatusResponse(rewind_id = "123",
         status = RewindStatusModel.RestoreStatus.Status.RUNNING.value,
