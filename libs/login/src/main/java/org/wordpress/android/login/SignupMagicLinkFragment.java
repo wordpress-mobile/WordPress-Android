@@ -180,7 +180,7 @@ public class SignupMagicLinkFragment extends Fragment {
     protected void sendMagicLinkEmail() {
         if (NetworkUtils.checkConnection(getActivity())) {
             startProgress(getString(R.string.signup_magic_link_progress));
-            AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, true);
+            AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, true, null, null);
             mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(authEmailPayload));
         }
     }
