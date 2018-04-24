@@ -107,8 +107,8 @@ public class ReaderMenuAdapter extends BaseAdapter {
         private final ImageView mIcon;
 
         ReaderMenuHolder(View view) {
-            mText = (TextView) view.findViewById(R.id.text);
-            mIcon = (ImageView) view.findViewById(R.id.image);
+            mText = view.findViewById(R.id.text);
+            mIcon = view.findViewById(R.id.image);
         }
     }
 }

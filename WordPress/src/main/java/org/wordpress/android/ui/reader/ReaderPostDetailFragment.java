@@ -214,8 +214,7 @@ public class ReaderPostDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
-        CustomSwipeRefreshLayout swipeRefreshLayout =
-                (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_to_refresh);
+        CustomSwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh);
 
         // this fragment hides/shows toolbar with scrolling, which messes up ptr animation position
         // so we have to set it manually
@@ -236,16 +235,16 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                                                          );
 
-        mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
+        mScrollView = view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
 
-        mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
-        mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
+        mLayoutFooter = view.findViewById(R.id.layout_post_detail_footer);
+        mLikingUsersView = view.findViewById(R.id.layout_liking_users_view);
         mLikingUsersDivider = view.findViewById(R.id.layout_liking_users_divider);
         mLikingUsersLabel = view.findViewById(R.id.text_liking_users_label);
 
         // setup the ReaderWebView
-        mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
+        mReaderWebView = view.findViewById(R.id.reader_webview);
         mReaderWebView.setCustomViewListener(this);
         mReaderWebView.setUrlClickListener(this);
         mReaderWebView.setPageFinishedListener(this);
@@ -255,17 +254,15 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView.setVisibility(View.INVISIBLE);
 
         View relatedPostsContainer = view.findViewById(R.id.container_related_posts);
-        mGlobalRelatedPostsView =
-                (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
+        mGlobalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_global);
         mGlobalRelatedPostsView.setOnFollowListener(this);
-        mLocalRelatedPostsView =
-                (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
+        mLocalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_local);
         mLocalRelatedPostsView.setOnFollowListener(this);
 
-        mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
+        mSignInButton = view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
 
-        final ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress_loading);
+        final ProgressBar progress = view.findViewById(R.id.progress_loading);
         if (mPostSlugsResolutionUnderway) {
             progress.setVisibility(View.VISIBLE);
         }
@@ -473,7 +470,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (isAskingToLike != ReaderPostTable.isPostLikedByCurrentUser(mPost)) {
-            ReaderIconCountView likeCount = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
+            ReaderIconCountView likeCount = getView().findViewById(R.id.count_likes);
             likeCount.setSelected(isAskingToLike);
             ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
@@ -725,8 +722,8 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final ReaderIconCountView countLikes = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
-        final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
+        final ReaderIconCountView countLikes = getView().findViewById(R.id.count_likes);
+        final ReaderIconCountView countComments = getView().findViewById(R.id.count_comments);
 
         if (canShowCommentCount()) {
             countComments.setCount(mPost.numReplies);
@@ -854,7 +851,7 @@ public class ReaderPostDetailFragment extends Fragment
      * called when the post doesn't exist in local db, need to get it from server
      */
     private void requestPost() {
-        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_loading);
+        final ProgressBar progress = getView().findViewById(R.id.progress_loading);
         progress.setVisibility(View.VISIBLE);
         progress.bringToFront();
 
@@ -897,7 +894,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_loading);
+        final ProgressBar progress = getView().findViewById(R.id.progress_loading);
         progress.setVisibility(View.GONE);
 
         if (event.getStatusCode() == 200) {
@@ -952,7 +949,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        TextView txtError = (TextView) getView().findViewById(R.id.text_error);
+        TextView txtError = getView().findViewById(R.id.text_error);
         txtError.setText(errorMessage);
         if (errorMessage == null) {
             txtError.setVisibility(View.GONE);
@@ -1074,12 +1071,11 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);
             mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
 
-            TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
-            TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
+            TextView txtTitle = getView().findViewById(R.id.text_title);
+            TextView txtDateline = getView().findViewById(R.id.text_dateline);
 
-            ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
-            ReaderPostDetailHeaderView headerView =
-                    (ReaderPostDetailHeaderView) getView().findViewById(R.id.header_view);
+            ReaderTagStrip tagStrip = getView().findViewById(R.id.tag_strip);
+            ReaderPostDetailHeaderView headerView = getView().findViewById(R.id.header_view);
             headerView.setOnFollowListener(ReaderPostDetailFragment.this);
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
@@ -1100,7 +1096,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             // if we're showing just the excerpt, also show a footer which links to the full post
             if (mPost.shouldShowExcerpt()) {
-                ViewGroup excerptFooter = (ViewGroup) getView().findViewById(R.id.excerpt_footer);
+                ViewGroup excerptFooter = getView().findViewById(R.id.excerpt_footer);
                 excerptFooter.setVisibility(View.VISIBLE);
 
                 String blogName = "<font color='" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color
@@ -1108,7 +1104,7 @@ public class ReaderPostDetailFragment extends Fragment
                 String linkText = String.format(WordPress.getContext().
                         getString(R.string.reader_excerpt_link), blogName);
 
-                TextView txtExcerptFooter = (TextView) excerptFooter.findViewById(R.id.text_excerpt_footer);
+                TextView txtExcerptFooter = excerptFooter.findViewById(R.id.text_excerpt_footer);
                 txtExcerptFooter.setText(Html.fromHtml(linkText));
 
                 // we can't set the vector drawable in the layout because it will crash pre-API21

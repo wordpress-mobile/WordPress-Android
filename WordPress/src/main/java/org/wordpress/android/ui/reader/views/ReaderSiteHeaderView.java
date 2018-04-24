@@ -56,7 +56,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_site_header_view, this);
-        mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
+        mFollowButton = view.findViewById(R.id.follow_button);
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
@@ -109,11 +109,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         mBlogInfo = blogInfo;
 
-        ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
-        TextView txtBlogName = (TextView) layoutInfo.findViewById(R.id.text_blog_name);
-        TextView txtDomain = (TextView) layoutInfo.findViewById(R.id.text_domain);
-        TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
-        TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
+        ViewGroup layoutInfo = findViewById(R.id.layout_blog_info);
+        TextView txtBlogName = layoutInfo.findViewById(R.id.text_blog_name);
+        TextView txtDomain = layoutInfo.findViewById(R.id.text_domain);
+        TextView txtDescription = layoutInfo.findViewById(R.id.text_blog_description);
+        TextView txtFollowCount = layoutInfo.findViewById(R.id.text_blog_follow_count);
 
         if (blogInfo.hasName()) {
             txtBlogName.setText(blogInfo.getName());

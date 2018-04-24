@@ -435,7 +435,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
-        mRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.reader_recycler_view);
+        mRecyclerView = rootView.findViewById(R.id.reader_recycler_view);
 
         Context context = container.getContext();
 
@@ -553,7 +553,7 @@ public class ReaderPostListFragment extends Fragment
         });
 
         // progress bar that appears when loading more posts
-        mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
+        mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
         return rootView;
@@ -857,9 +857,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        ImageView page1 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page1);
-        ImageView page2 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page2);
-        ImageView page3 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page3);
+        ImageView page1 = mEmptyView.findViewById(R.id.empty_tags_box_page1);
+        ImageView page2 = mEmptyView.findViewById(R.id.empty_tags_box_page2);
+        ImageView page3 = mEmptyView.findViewById(R.id.empty_tags_box_page3);
 
         page1.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page1));
         page2.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page2));
@@ -931,10 +931,10 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
+        TextView titleView = mEmptyView.findViewById(R.id.title_empty);
         titleView.setText(title);
 
-        TextView descriptionView = (TextView) mEmptyView.findViewById(R.id.description_empty);
+        TextView descriptionView = mEmptyView.findViewById(R.id.description_empty);
         if (description == null) {
             descriptionView.setVisibility(View.INVISIBLE);
         } else {

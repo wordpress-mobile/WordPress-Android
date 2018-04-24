@@ -72,7 +72,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         }
 
         // make sure the label for these posts has the correct caption
-        TextView label = (TextView) findViewById(R.id.text_related_posts_label);
+        TextView label = findViewById(R.id.text_related_posts_label);
         if (isGlobal) {
             label.setText(getContext().getString(R.string.reader_label_global_related_posts));
         } else {
