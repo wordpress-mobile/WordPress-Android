@@ -1541,6 +1541,12 @@ public class ReaderPostListFragment extends Fragment
         boolean isFollowed = ReaderPostTable.isPostFollowed(post);
         if (isFollowed) {
             menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
+
+            if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
+                menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
+            } else {
+                menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
+            }
         } else {
             menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
         }
