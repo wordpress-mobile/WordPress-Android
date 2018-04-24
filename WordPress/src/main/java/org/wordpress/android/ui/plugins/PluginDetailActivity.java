@@ -705,6 +705,12 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mIsShowingRemovePluginConfirmationDialog = false;
             }
         });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                mIsShowingRemovePluginConfirmationDialog = false;
+            }
+        });
         builder.setCancelable(true);
         builder.create();
         mIsShowingRemovePluginConfirmationDialog = true;
@@ -1135,6 +1141,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
                 mIsShowingInstallFirstPluginConfirmationDialog = false;
             }
         });
