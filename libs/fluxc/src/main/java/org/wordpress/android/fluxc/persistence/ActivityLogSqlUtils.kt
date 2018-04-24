@@ -188,13 +188,13 @@ class ActivityLogSqlUtils
         @Column var restoreErrorCode: String? = null,
         @Column var restoreFailureReason: String? = null
     ) : Identifiable {
+        constructor() : this(-1, 0, 0)
+
         override fun setId(id: Int) {
             this.mId = id
         }
 
         override fun getId() = mId
-
-        constructor() : this(-1, 0, 0)
 
         fun build(): RewindStatusModel {
             val restoreStatus = RewindStatusModel.RestoreStatus.build(
