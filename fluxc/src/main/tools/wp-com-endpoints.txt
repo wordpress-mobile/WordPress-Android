@@ -19,6 +19,10 @@
 /me/username/
 
 /read/feed/$feed_url_or_id#long,String
+/read/following/mine
+/read/site/$site#String/comment_email_subscriptions/$action#String
+/read/site/$site#String/post_email_subscriptions/$action#String
+/read/site/$site#String/post_email_subscriptions/update
 
 /domains/suggestions
 
