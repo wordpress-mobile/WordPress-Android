@@ -1609,6 +1609,7 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public void onFollowingTapped() {
+        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
     }
 
     @SuppressWarnings("unused")

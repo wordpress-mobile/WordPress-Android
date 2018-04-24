@@ -445,6 +445,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onFollowingTapped() {
+        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
     }
 
     @SuppressWarnings("unused")
