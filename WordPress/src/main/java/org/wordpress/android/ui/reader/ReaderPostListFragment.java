@@ -34,7 +34,9 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -83,9 +85,12 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
+
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
         ReaderInterfaces.OnPostPopupListener,
+        ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener {
     private ReaderPostAdapter mPostAdapter;
@@ -123,6 +128,7 @@ public class ReaderPostListFragment extends Fragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     @Inject AccountStore mAccountStore;
+    @Inject Dispatcher mDispatcher;
 
     private static class HistoryStack extends Stack<String> {
         private final String mKeyName;
@@ -319,6 +325,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+        mDispatcher.register(this);
         EventBus.getDefault().register(this);
 
         reloadTags();
@@ -334,6 +341,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
 
@@ -1031,6 +1039,7 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
+            mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
@@ -1564,6 +1573,8 @@ public class ReaderPostListFragment extends Fragment
                 listPopup.dismiss();
                 switch ((int) id) {
                     case ReaderMenuAdapter.ITEM_FOLLOW:
+                        onFollowTapped(getView(), post.getBlogName(), post.blogId);
+                    // noinspection fallthrough
                     case ReaderMenuAdapter.ITEM_UNFOLLOW:
                         toggleFollowStatusForPost(post);
                         break;
@@ -1574,6 +1585,22 @@ public class ReaderPostListFragment extends Fragment
             }
         });
         listPopup.show();
+    }
+
+    @Override
+    public void onFollowTapped(View view, String blogName, final long blogId) {
+        Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                        "<b>", blogName, "</b><br>")), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                    new View.OnClickListener() {
+                        @Override public void onClick(View view) {
+                            AccountStore.AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                    String.valueOf(blogId), AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW);
+                            mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                        }
+                    })
+                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .show();
     }
 
     /*

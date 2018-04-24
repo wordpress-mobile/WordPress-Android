@@ -29,7 +29,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -78,12 +80,14 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPMainActivity.OnActivityBackPressedListener,
         ScrollDirectionListener,
         ReaderCustomViewListener,
+        ReaderInterfaces.OnFollowListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener {
     private long mPostId;
@@ -130,6 +134,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(false, blogId, postId, null, 0, false, null, null, false);
@@ -249,8 +254,10 @@ public class ReaderPostDetailFragment extends Fragment
         View relatedPostsContainer = view.findViewById(R.id.container_related_posts);
         mGlobalRelatedPostsView =
                 (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
+        mGlobalRelatedPostsView.setOnFollowListener(this);
         mLocalRelatedPostsView =
                 (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
+        mLocalRelatedPostsView.setOnFollowListener(this);
 
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -398,12 +405,14 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+        mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
 
@@ -414,6 +423,22 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public boolean onActivityBackPressed() {
         return goBackInPostHistory();
+    }
+
+    @Override
+    public void onFollowTapped(View view, String blogName, final long blogId) {
+        Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                        "<b>", blogName, "</b><br>")), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                    new View.OnClickListener() {
+                        @Override public void onClick(View view) {
+                            AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                    String.valueOf(blogId), AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW);
+                            mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                        }
+                    })
+                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .show();
     }
 
     /*
@@ -1041,6 +1066,7 @@ public class ReaderPostDetailFragment extends Fragment
             ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
             ReaderPostDetailHeaderView headerView =
                     (ReaderPostDetailHeaderView) getView().findViewById(R.id.header_view);
+            headerView.setOnFollowListener(ReaderPostDetailFragment.this);
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
             }
