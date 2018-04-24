@@ -251,7 +251,6 @@ public class WPMainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                // open note detail if activity called from a push
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
                         false));
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
@@ -259,6 +258,7 @@ public class WPMainActivity extends AppCompatActivity {
                 boolean openRequestedTab = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_TAB));
 
                 if (openedFromPush) {
+                    // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
                         launchWithPostId(getIntent().getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
