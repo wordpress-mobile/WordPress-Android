@@ -38,7 +38,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -914,14 +914,13 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         // Before refreshing the plugin from store, check the changes and track them
         if (mPlugin.isActive() != configuredPlugin.isActive()) {
-            AnalyticsTracker.Stat stat = configuredPlugin.isActive()
-                    ? AnalyticsTracker.Stat.PLUGIN_ACTIVATED : AnalyticsTracker.Stat.PLUGIN_DEACTIVATED;
+            Stat stat = configuredPlugin.isActive() ? Stat.PLUGIN_ACTIVATED : Stat.PLUGIN_DEACTIVATED;
             AnalyticsUtils.trackWithSiteDetails(stat, mSite);
         }
         if (mPlugin.isAutoUpdateEnabled() != configuredPlugin.isAutoUpdateEnabled()) {
-            AnalyticsTracker.Stat stat = configuredPlugin.isAutoUpdateEnabled()
-                    ? AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_ENABLED
-                    : AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_DISABLED;
+            Stat stat = configuredPlugin.isAutoUpdateEnabled()
+                    ? Stat.PLUGIN_AUTOUPDATE_ENABLED
+                    : Stat.PLUGIN_AUTOUPDATE_DISABLED;
             AnalyticsUtils.trackWithSiteDetails(stat, mSite);
         }
         // Now we can update the plugin with the new one from store
@@ -989,7 +988,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         refreshViews();
         showSuccessfulUpdateSnackbar();
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_UPDATED, mSite);
+        AnalyticsUtils.trackWithSiteDetails(Stat.PLUGIN_UPDATED, mSite);
     }
 
     @SuppressWarnings("unused")
@@ -1027,7 +1026,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         showSuccessfulInstallSnackbar();
         invalidateOptionsMenu();
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);
+        AnalyticsUtils.trackWithSiteDetails(Stat.PLUGIN_INSTALLED, mSite);
     }
 
     @SuppressWarnings("unused")
@@ -1051,7 +1050,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             ToastUtils.showToast(this, toastMessage, Duration.LONG);
             return;
         }
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_REMOVED, mSite);
+        AnalyticsUtils.trackWithSiteDetails(Stat.PLUGIN_REMOVED, mSite);
 
         refreshPluginFromStore();
         if (mPlugin == null) {
@@ -1141,17 +1140,21 @@ public class PluginDetailActivity extends AppCompatActivity {
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED, mSite);
                 mIsShowingInstallFirstPluginConfirmationDialog = false;
             }
         });
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED, mSite);
                 mIsShowingInstallFirstPluginConfirmationDialog = false;
             }
         });
         builder.setCancelable(true);
         builder.create();
+
+        AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CONFIRM_DIALOG_SHOWN, mSite);
         mIsShowingInstallFirstPluginConfirmationDialog = true;
         builder.show();
     }
@@ -1165,6 +1168,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                             + "' by checking its eligibility");
         showAutomatedTransferProgressDialog();
 
+        AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CHECK_ELIGIBILITY, mSite);
         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferEligibilityAction(mSite));
     }
 
@@ -1204,6 +1208,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      */
     private void automatedTransferCompleted() {
         AppLog.v(T.PLUGINS, "Automated Transfer successfully completed!");
+        AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_FLOW_COMPLETE, mSite);
         cancelAutomatedTransferDialog();
         refreshPluginFromStore();
         refreshViews();
@@ -1251,10 +1256,12 @@ public class PluginDetailActivity extends AppCompatActivity {
                                     + "error, checking its status...");
                 mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
             } else {
+                AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_NOT_ELIGIBLE, mSite);
                 handleAutomatedTransferFailed(getEligibilityErrorMessage(errorCode));
             }
         } else {
             AppLog.v(T.PLUGINS, "The site is eligible for Automated Transfer. Initiating the transfer...");
+            AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_INITIATE, mSite);
             mDispatcher.dispatch(SiteActionBuilder
                     .newInitiateAutomatedTransferAction(new InitiateAutomatedTransferPayload(mSite, mSlug)));
         }
@@ -1280,9 +1287,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (event.isError()) {
             AppLog.e(T.PLUGINS, "Automated Transfer failed during initiation with error type " + event.error.type
                                 + " and message: " + event.error.message);
+            AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_INITIATION_FAILED, mSite);
             handleAutomatedTransferFailed(event.error.message);
         } else {
             AppLog.v(T.PLUGINS, "Automated Transfer is successfully initiated. Checking the status of it...");
+            AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_INITIATED, mSite);
             mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
         }
     }
@@ -1309,6 +1318,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (event.isError()) {
             AppLog.e(T.PLUGINS, "Automated Transfer failed after initiation with error type " + event.error.type
                                 + " and message: " + event.error.message);
+            AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_STATUS_FAILED, mSite);
             handleAutomatedTransferFailed(event.error.message);
         } else {
             if (event.isCompleted) {
@@ -1318,6 +1328,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mAutomatedTransferProgressDialog.setProgress(99);
                 mAutomatedTransferProgressDialog.setMessage(
                         getString(R.string.plugin_install_first_plugin_almost_finished_dialog_message));
+                AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_STATUS_COMPLETE, mSite);
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
             } else {
                 AppLog.v(T.PLUGINS, "Automated Transfer is still in progress: " + event.currentStep + "/"
