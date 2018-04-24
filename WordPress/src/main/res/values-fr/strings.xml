@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-04 15:54:08+0000
+Translation-Revision-Date: 2018-04-17 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="media_preview_title">%1$d sur %2$d</string>
+    <string name="stock_media_picker_empty_results">Aucun résultat</string>
+    <string name="stock_media_picker_initial_empty_subtext">Photos fournies par %s</string>
+    <string name="stock_media_picker_initial_empty_text">Rechercher des photos gratuites à ajouter à votre bibliothèque de médias</string>
+    <string name="stock_media_picker_search_hint">Rechercher une bibliothèque gratuite de photos</string>
+    <string name="photo_picker_stock_media">Choisir une photo dans une bibliothèque gratuite de photos</string>
+    <string name="error_save_empty_draft">Impossible d\'enregistrer un brouillon vide</string>
+    <string name="site_settings_quota_space_unlimited">%1$s (illimité)</string>
+    <string name="preview_count">Prévisualiser %d</string>
+    <string name="add_count">Ajouter %d</string>
     <string name="site_creation_domain_selection_title">Créer un site – étape 4</string>
     <string name="site_creation_site_details_title">Créer un site – étape 3</string>
     <string name="site_creation_theme_selection_title">Créer un site – étape 2</string>
@@ -115,7 +125,7 @@ Language: fr
     <string name="signup_epilogue_error_avatar_view">Votre avatar a été chargé et sera bientôt disponible.</string>
     <string name="email_not_registered_wpcom">Hmm, nous ne trouvons pas de compte WordPress.com associé à cette adresse e-mail. Essayez de vous connecter avec le lien ci-après à l\'aide de votre adresse e–mail.</string>
     <string name="permissions_denied_message">Il semblerait que vous ayez désactivé les autorisations obligatoires pour cette fonctionnalité.&lt;br/>&lt;br/>Pour modifier cela, changez vos autorisations et veillez à ce que &lt;strong>%s&lt;/strong> soit activé.</string>
-    <string name="permissions_denied_title">Autorisations</string>
+    <string name="permissions_denied_title">Droits</string>
     <string name="plugin_caption_featured">À la Une</string>
     <string name="sharing_disabled_description">Votre module Jetpack de partage étant désactivé, vos options de partage sont inaccessibles.</string>
     <string name="sharing_disabled">Module de partage désactivé</string>
