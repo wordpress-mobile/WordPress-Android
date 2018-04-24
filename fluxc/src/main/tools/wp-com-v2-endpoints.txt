@@ -1,2 +1,5 @@
 /users/username/suggestions/
 /plugins/featured
+
+/sites/$site/activity
+/sites/$site/rewind

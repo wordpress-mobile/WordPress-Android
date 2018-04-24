@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 28;
+        return 29;
     }
 
     @Override
@@ -227,6 +227,20 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 27:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table AccountModel add TRACKS_OPT_OUT boolean;");
+                oldVersion++;
+            case 28:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE ActivityLogModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,ACTIVITY_ID TEXT NOT NULL,SUMMARY TEXT NOT NULL,TEXT TEXT NOT NULL,"
+                        + "NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID TEXT,PUBLISHED "
+                        + "TEXT NOT NULL,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID INTEGER,"
+                        + "AVATAR_URL TEXT,ROLE TEXT)");
+                db.execSQL(
+                        "CREATE TABLE RewindStatus (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,REWIND_STATE TEXT,REASON TEXT,RESTORE_ID TEXT,RESTORE_STATE TEXT,"
+                        + "RESTORE_PROGRESS INTEGER,RESTORE_MESSAGE TEXT,RESTORE_ERROR_CODE TEXT,"
+                        + "RESTORE_FAILURE_REASON TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
