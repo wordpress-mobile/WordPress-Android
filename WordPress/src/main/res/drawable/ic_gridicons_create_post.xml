@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="108dp"
+        android:height="108dp"
+        android:viewportWidth="78.21411"
+        android:viewportHeight="78.21411">
+    <group android:translateX="1.9553528"
+            android:translateY="1.9553528">
+        <group android:translateX="1.8575851"
+                android:translateY="1.8575851">
+            <group android:translateX="23.294117"
+                    android:translateY="23.294117">
+              <path
+                  android:fillColor="@color/blue_wordpress"
+                  android:pathData="M21,14v5c0,1.105 -0.895,2 -2,2H5c-1.105,0 -2,-0.895 -2,-2V5c0,-1.105 0.895,-2 2,-2h5v2H5v14h14v-5h2z"/>
+              <path
+                  android:fillColor="@color/blue_wordpress"
+                  android:pathData="M21,7h-4V3h-2v4h-4v2h4v4h2V9h4"/>
+            </group>
+        </group>
+    </group>
+</vector>
