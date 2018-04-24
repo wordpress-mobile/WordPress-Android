@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -35,6 +37,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.models.FilterCriteria;
@@ -1601,6 +1604,17 @@ public class ReaderPostListFragment extends Fragment
                     })
                 .setActionTextColor(getResources().getColor(R.color.color_accent))
                 .show();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSubscriptionUpdated(AccountStore.OnSubscriptionUpdated event) {
+        if (event.isError()) {
+            AppLog.e(T.API, ReaderPostListFragment.class.getSimpleName() + ".onSubscriptionUpdated: "
+                          + event.error.type + " - " + event.error.message);
+        } else {
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
+        }
     }
 
     /*
