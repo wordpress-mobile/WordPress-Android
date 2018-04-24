@@ -37,6 +37,8 @@ class ActivityLogStore
             ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
             ActivityLogAction.FETCHED_REWIND_STATE ->
                 storeRewindState(action.payload as FetchedRewindStatePayload, actionType)
+            ActivityLogAction.REWIND -> rewind(action.payload as RewindPayload)
+            ActivityLogAction.REWIND_RESULT -> emitRewindResult(action.payload as RewindResultPayload, actionType)
         }
     }
 
@@ -66,6 +68,10 @@ class ActivityLogStore
         activityLogRestClient.fetchActivity(fetchActivityLogPayload.site, ACTIVITY_LOG_PAGE_SIZE, offset)
     }
 
+    private fun rewind(rewindPayload: RewindPayload) {
+        activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId)
+    }
+
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
         if (payload.error != null) {
             emitChange(OnActivityLogFetched(payload.error, action))
@@ -87,6 +93,14 @@ class ActivityLogStore
                 activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
             }
             emitChange(OnRewindStatusFetched(action))
+        }
+    }
+
+    private fun emitRewindResult(payload: RewindResultPayload, action: ActivityLogAction) {
+        if (payload.error != null) {
+            emitChange(OnRewind(payload.error, action))
+        } else {
+            emitChange(OnRewind(restoreId = payload.restoreId, causeOfChange = action))
         }
     }
 
@@ -113,6 +127,16 @@ class ActivityLogStore
         }
     }
 
+    data class OnRewind(
+        val restoreId: String? = null,
+        var causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<RewindError>() {
+        constructor(error: RewindError, causeOfChange: ActivityLogAction) :
+                this(restoreId = null, causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
     // Payloads
     class FetchActivityLogPayload(
         val site: SiteModel,
@@ -120,6 +144,8 @@ class ActivityLogStore
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
+
+    class RewindPayload(val site: SiteModel, val rewindId: String) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchedActivityLogPayload(
         val activityLogModels: List<ActivityLogModel> = listOf(),
@@ -144,6 +170,12 @@ class ActivityLogStore
         val site: SiteModel
     ) : Payload<RewindStatusError>() {
         constructor(error: RewindStatusError, site: SiteModel) : this(site = site) {
+            this.error = error
+        }
+    }
+
+    class RewindResultPayload(val restoreId: String? = null, val site: SiteModel) : Payload<RewindError>() {
+        constructor(error: RewindError, site: SiteModel) : this(site = site) {
             this.error = error
         }
     }
@@ -173,4 +205,12 @@ class ActivityLogStore
     }
 
     class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError
+
+    enum class RewindErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE,
+        MISSING_STATE
+    }
+    class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
 }
