@@ -1233,25 +1233,14 @@ public class PluginDetailActivity extends AppCompatActivity {
                 AppLog.e(T.PLUGINS, "Eligibility API error with type: " + event.error.type + " and message: "
                                     + event.error.message);
             }
-
-            int errorMessageRes;
             String errorCode = event.eligibilityErrorCodes.isEmpty() ? "" : event.eligibilityErrorCodes.get(0);
-            switch (errorCode) {
-                case "no_business_plan":
-                    errorMessageRes = R.string.plugin_install_site_ineligible_no_business_plan;
-                    break;
-                case "not_using_custom_domain":
-                    errorMessageRes = R.string.plugin_install_site_ineligible_not_using_custom_domain;
-                    break;
-                case "site_private":
-                    errorMessageRes = R.string.plugin_install_site_ineligible_site_private;
-                    break;
-                default:
-                    // "no_jetpack_sites", "not_resolving_to_wpcom" or unknown error code
-                    errorMessageRes = R.string.plugin_install_site_ineligible_default_error;
-                    break;
+            if (errorCode.equalsIgnoreCase("transfer_already_exists")) {
+                AppLog.v(T.PLUGINS, "Automated Transfer eligibility check resulted in `transfer_already_exists` "
+                                    + "error, checking its status...");
+                mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+            } else {
+                handleAutomatedTransferFailed(getEligibilityErrorMessage(errorCode));
             }
-            handleAutomatedTransferFailed(getString(errorMessageRes));
         } else {
             AppLog.v(T.PLUGINS, "The site is eligible for Automated Transfer. Initiating the transfer...");
             mDispatcher.dispatch(SiteActionBuilder
@@ -1429,5 +1418,43 @@ public class PluginDetailActivity extends AppCompatActivity {
             refreshPluginFromStore();
             refreshViews();
         }
+    }
+
+    private String getEligibilityErrorMessage(String errorCode) {
+        int errorMessageRes;
+        switch (errorCode) {
+            case "email_unverified":
+                errorMessageRes = R.string.plugin_install_site_ineligible_email_unverified;
+                break;
+            case "excessive_disk_space":
+                errorMessageRes = R.string.plugin_install_site_ineligible_excessive_disk_space;
+                break;
+            case "no_business_plan":
+                errorMessageRes = R.string.plugin_install_site_ineligible_no_business_plan;
+                break;
+            case "no_vip_sites":
+                errorMessageRes = R.string.plugin_install_site_ineligible_no_vip_sites;
+                break;
+            case "non_admin_user":
+                errorMessageRes = R.string.plugin_install_site_ineligible_non_admin_user;
+                break;
+            case "not_domain_owner":
+                errorMessageRes = R.string.plugin_install_site_ineligible_not_domain_owner;
+                break;
+            case "not_using_custom_domain":
+                errorMessageRes = R.string.plugin_install_site_ineligible_not_using_custom_domain;
+                break;
+            case "site_graylisted":
+                errorMessageRes = R.string.plugin_install_site_ineligible_site_graylisted;
+                break;
+            case "site_private":
+                errorMessageRes = R.string.plugin_install_site_ineligible_site_private;
+                break;
+            default:
+                // no_jetpack_sites, no_ssl_certificate, no_wpcom_nameservers, not_resolving_to_wpcom
+                errorMessageRes = R.string.plugin_install_site_ineligible_default_error;
+                break;
+        }
+        return getString(errorMessageRes);
     }
 }
