@@ -21,6 +21,7 @@ public class RequestCodes {
     public static final int SHOW_SIGNUP_EPILOGUE_AND_RETURN = 1301;
     public static final int SMART_LOCK_SAVE = 1400;
     public static final int SMART_LOCK_READ = 1500;
+    public static final int NOTIFICATION_SETTINGS = 1600;
 
     // Media
     public static final int PICTURE_LIBRARY = 2000;
