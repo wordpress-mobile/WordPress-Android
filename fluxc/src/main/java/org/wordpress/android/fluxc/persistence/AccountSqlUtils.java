@@ -1,12 +1,15 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 
 import com.wellsql.generated.AccountModelTable;
+import com.wellsql.generated.SubscriptionModelTable;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.SubscriptionModel;
 
 import java.util.List;
 
@@ -105,5 +108,29 @@ public class AccountSqlUtils {
                 .where().equals(AccountModelTable.ID, localId)
                 .endWhere().getAsModel();
         return accountResult.isEmpty() ? null : accountResult.get(0);
+    }
+
+    /**
+     * Get list of {@link SubscriptionModel} matching {@param searchString} by blog name or URL.
+     *
+     * @param searchString      Text to filter subscriptions by
+     *
+     * @return {@link List} of {@link SubscriptionModel}
+     */
+    public static List<SubscriptionModel> getSubscriptionsByNameOrUrlMatching(String searchString) {
+        return WellSql.select(SubscriptionModel.class)
+                      .where().contains(SubscriptionModelTable.BLOG_NAME, searchString)
+                      .or().contains(SubscriptionModelTable.URL, searchString)
+                      .endWhere().getAsModel();
+    }
+
+    /**
+     * Update list of {@link SubscriptionModel} by deleting existing subscriptions and inserting {@param subscriptions}.
+     *
+     * @param subscriptions     {@link List} of {@link SubscriptionModel} to insert into database
+     */
+    public static void updateSubscriptions(@NonNull List<SubscriptionModel> subscriptions) {
+        WellSql.delete(SubscriptionModel.class).execute();
+        WellSql.insert(subscriptions).execute();
     }
 }

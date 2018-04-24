@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 29;
+        return 30;
     }
 
     @Override
@@ -241,6 +241,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "REMOTE_SITE_ID INTEGER,REWIND_STATE TEXT,REASON TEXT,RESTORE_ID TEXT,RESTORE_STATE TEXT,"
                         + "RESTORE_PROGRESS INTEGER,RESTORE_MESSAGE TEXT,RESTORE_ERROR_CODE TEXT,"
                         + "RESTORE_FAILURE_REASON TEXT)");
+                oldVersion++;
+            case 29:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE SubscriptionModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "SUBSCRIPTION_ID TEXT,BLOG_ID TEXT,BLOG_NAME TEXT,FEED_ID TEXT,URL TEXT,"
+                           + "SHOULD_NOTIFY_POSTS INTEGER,SHOULD_EMAIL_POSTS INTEGER,EMAIL_POSTS_FREQUENCY TEXT,"
+                           + "SHOULD_EMAIL_COMMENTS INTEGER)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
