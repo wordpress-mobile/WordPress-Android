@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -594,7 +593,7 @@ public class ReaderPostListFragment extends Fragment
             ((AutoCompleteTextView) view).setThreshold(1);
         }
 
-        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+        mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
