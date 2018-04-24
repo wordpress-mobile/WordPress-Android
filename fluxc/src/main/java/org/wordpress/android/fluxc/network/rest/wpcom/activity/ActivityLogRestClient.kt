@@ -24,12 +24,11 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import java.util.Date
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ActivityLogRestClient
-@Inject constructor(
+constructor(
     private val dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
