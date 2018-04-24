@@ -184,6 +184,7 @@ class ActivityLogSqlUtils
         @Column var restoreFailureReason: String? = null
     ) : Identifiable {
         constructor() : this(-1, 0, 0)
+
         override fun setId(id: Int) {
             this.mId = id
         }
