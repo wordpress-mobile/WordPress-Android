@@ -10,9 +10,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
@@ -47,6 +51,12 @@ public enum SiteAction implements IAction {
     FETCH_CONNECT_SITE_INFO,
     @Action(payloadType = String.class)
     FETCH_WPCOM_SITE_BY_URL,
+    @Action(payloadType = SiteModel.class)
+    CHECK_AUTOMATED_TRANSFER_ELIGIBILITY,
+    @Action(payloadType = InitiateAutomatedTransferPayload.class)
+    INITIATE_AUTOMATED_TRANSFER,
+    @Action(payloadType = SiteModel.class)
+    CHECK_AUTOMATED_TRANSFER_STATUS,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)
@@ -69,6 +79,12 @@ public enum SiteAction implements IAction {
     FETCHED_CONNECT_SITE_INFO,
     @Action(payloadType = FetchWPComSiteResponsePayload.class)
     FETCHED_WPCOM_SITE_BY_URL,
+    @Action(payloadType = AutomatedTransferEligibilityResponsePayload.class)
+    CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY,
+    @Action(payloadType = InitiateAutomatedTransferResponsePayload.class)
+    INITIATED_AUTOMATED_TRANSFER,
+    @Action(payloadType = AutomatedTransferStatusResponsePayload.class)
+    CHECKED_AUTOMATED_TRANSFER_STATUS,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
