@@ -590,9 +590,8 @@ public class AccountStore extends Store {
         public AccountFetchUsernameSuggestionsErrorType type;
         public String message;
 
-        public AccountFetchUsernameSuggestionsError(@NonNull AccountFetchUsernameSuggestionsErrorType type,
-                                                    @NonNull String message) {
-            this.type = type;
+        public AccountFetchUsernameSuggestionsError(@NonNull String type, @NonNull String message) {
+            this.type = AccountFetchUsernameSuggestionsErrorType.fromString(type);
             this.message = message;
         }
     }
