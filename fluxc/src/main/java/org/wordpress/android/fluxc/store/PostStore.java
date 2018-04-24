@@ -349,6 +349,13 @@ public class PostStore extends Store {
         }
     }
 
+    /**
+     * returns the total number of posts with local changes across all sites
+     */
+    public static int getNumLocalChanges() {
+        return PostSqlUtils.getNumLocalChanges();
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
