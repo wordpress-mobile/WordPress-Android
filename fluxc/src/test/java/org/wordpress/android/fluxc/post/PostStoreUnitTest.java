@@ -339,4 +339,20 @@ public class PostStoreUnitTest {
 
         assertEquals(0, PostTestUtils.getPostsCount());
     }
+
+    @Test
+    public void testNumLocalChanges() {
+        // first make sure there aren't any local changes
+        assertEquals(PostStore.getNumLocalChanges(), 0);
+
+        // then add a post with local changes and ensure we get the correct count
+        PostModel testPost = PostTestUtils.generateSampleLocalDraftPost();
+        testPost.setIsLocallyChanged(true);
+        PostSqlUtils.insertOrUpdatePost(testPost, true);
+        assertEquals(PostStore.getNumLocalChanges(), 1);
+
+        // delete the post and again check the count
+        PostSqlUtils.deletePost(testPost);
+        assertEquals(PostStore.getNumLocalChanges(), 0);
+    }
 }
