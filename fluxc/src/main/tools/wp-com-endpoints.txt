@@ -75,3 +75,5 @@
 
 /users/new/
 /users/social/new
+
+/activity-log/$site/rewind/to/$rewind_ID#String
