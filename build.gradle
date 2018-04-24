@@ -4,7 +4,6 @@ buildscript {
     repositories {
         jcenter()
         google()
-        maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
     }
 
     dependencies {
@@ -25,6 +24,7 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
     }
 
     task checkstyle(type: Checkstyle) {
