@@ -31,37 +31,39 @@
                 android:layout_marginRight="12dp"
                 tools:src="@drawable/badge"/>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/activity_actor_name"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="2dp"
                 android:layout_toEndOf="@+id/activity_actor_icon"
                 android:layout_toLeftOf="@+id/activity_created_date"
                 android:layout_toRightOf="@+id/activity_actor_icon"
                 android:layout_toStartOf="@+id/activity_created_date"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/grey_dark"
-                android:textStyle="bold"
-                tools:text="John Smith"/>
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginTop="2dp">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/activity_actor_role"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/activity_actor_name"
-                android:layout_toEndOf="@+id/activity_actor_icon"
-                android:layout_toLeftOf="@+id/activity_created_time"
-                android:layout_toRightOf="@+id/activity_actor_icon"
-                android:layout_toStartOf="@+id/activity_created_time"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/grey_dark"
-                tools:text="Administrator"/>
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/activity_actor_name"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textColor="@color/grey_dark"
+                    android:textStyle="bold"
+                    tools:text="John Smith"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/activity_actor_role"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textColor="@color/grey_dark"
+                    tools:text="Administrator"/>
+
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/activity_created_date"

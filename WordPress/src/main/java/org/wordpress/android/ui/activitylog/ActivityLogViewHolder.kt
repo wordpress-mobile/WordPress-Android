@@ -13,18 +13,18 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import java.text.DateFormat
 import java.util.Locale
 
-class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context)
+class ActivityLogViewHolder(parent: ViewGroup, val click: (ActivityLogModel) -> Unit) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context)
         .inflate(R.layout.activity_log_list_item, parent, false)) {
 
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
     private val text: TextView = itemView.findViewById(R.id.action_text)
-    private val thumbnail : ImageView = itemView.findViewById(R.id.action_icon)
-    private val progressBar : ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
+    private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
+    private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
 
     val header: TextView = itemView.findViewById(R.id.activity_header_text)
-    val button : ImageButton = itemView.findViewById(R.id.rewind_button)
+    val button: ImageButton = itemView.findViewById(R.id.rewind_button)
 
-    private var activity : ActivityLogModel? = null
+    private var activity: ActivityLogModel? = null
 
     private val timeFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
 
@@ -33,19 +33,22 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutI
         }
     }
 
-    fun bind(activity: ActivityLogModel?) {
+    fun bind(activity: ActivityLogModel) {
         this.activity = activity
 
-        summary.text = activity?.summary
-        text.text = activity?.text
+        summary.text = activity.summary
+        text.text = activity.text
 
-        val thumb = when (activity?.gridicon) {
+        val thumb = when (activity.gridicon) {
             "comment" -> R.drawable.ic_comment_white_24dp
             else -> R.drawable.ic_checkmark_white_24dp
         }
-        
+
         thumbnail.setImageResource(thumb)
-        header.text = timeFormatter.format(activity?.published)
+        header.text = timeFormatter.format(activity.published)
+        text.setOnClickListener {
+            click(activity)
+        }
     }
 
     fun updateProgress(progress: Int) {

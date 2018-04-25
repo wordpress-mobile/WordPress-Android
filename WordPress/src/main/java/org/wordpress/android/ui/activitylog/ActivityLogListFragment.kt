@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -23,7 +24,8 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 
 class ActivityLogListFragment : Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ActivityLogViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -117,7 +119,6 @@ class ActivityLogListFragment : Fragment() {
         private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
         override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
-
             val item = getItem(position)
             holder.bind(item)
 
@@ -163,7 +164,7 @@ class ActivityLogListFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
             val view = layoutInflater.inflate(R.layout.activity_log_list_item, parent, false) as ViewGroup
-            return ActivityLogViewHolder(view)
+            return ActivityLogViewHolder(view, { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityID) })
         }
     }
 }

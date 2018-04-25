@@ -515,6 +515,10 @@
             android:name=".ui.activitylog.ActivityLogActivity"
             android:label="@string/activity_log"
             android:theme="@style/Calypso.NoActionBar"/>
+        <activity
+            android:name=".ui.activitylog.ActivityLogDetailActivity"
+            android:label="@string/activity_log"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->
         <activity
