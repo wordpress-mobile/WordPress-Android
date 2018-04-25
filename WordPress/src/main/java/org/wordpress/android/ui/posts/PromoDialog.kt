@@ -65,7 +65,7 @@ class PromoDialog : BaseYesNoFragmentDialog() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.promo_dialog_advanced, container, false)
+        val view = inflater.inflate(R.layout.promo_dialog, container, false)
         initializeView(view)
         return view
     }
