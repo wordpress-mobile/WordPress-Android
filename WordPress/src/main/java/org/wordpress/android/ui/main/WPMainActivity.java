@@ -272,14 +272,12 @@ public class WPMainActivity extends AppCompatActivity {
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedTab = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_TAB));
-
                 if (openedFromPush) {
                     // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
                         launchWithPostId(getIntent().getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
-                                         getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA,
-                                                                     false));
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
                     } else {
                         launchWithNoteId();
                     }
@@ -295,7 +293,6 @@ public class WPMainActivity extends AppCompatActivity {
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
-
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
@@ -303,7 +300,6 @@ public class WPMainActivity extends AppCompatActivity {
                             authTokenToSet = getAuthToken();
                         }
                     }
-
                     // Continue Jetpack connect flow if coming from login/signup magic link.
                     if (getIntent() != null && getIntent().getExtras() != null
                         && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
