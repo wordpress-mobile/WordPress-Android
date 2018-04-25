@@ -38,7 +38,7 @@ class PromoDialog : BaseYesNoFragmentDialog() {
         title: String,
         message: String,
         positiveButtonLabel: String,
-        @DrawableRes drawableResId: Int = -1,
+        @DrawableRes drawableResId: Int,
         negativeButtonLabel: String = "",
         linkLabel: String = ""
     ) {
