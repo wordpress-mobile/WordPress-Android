@@ -152,7 +152,8 @@ public class ReaderSimplePostView extends LinearLayout {
 
                     if (mFollowListener != null) {
                         if (isAskingToFollow) {
-                            mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(), mSimplePost.getSiteId());
+                            mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(),
+                                    mSimplePost.getSiteId());
                         } else {
                             mFollowListener.onFollowingTapped();
                         }
