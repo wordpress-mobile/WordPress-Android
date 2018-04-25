@@ -16,19 +16,6 @@
         </intent>
     </shortcut>
     <shortcut
-        android:icon="@mipmap/ic_shortcut_create_post"
-        android:shortcutId="new_post"
-        android:shortcutShortLabel="@string/new_post">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetClass="org.wordpress.android.ui.main.WPMainActivity"
-            android:targetPackage="org.wordpress.android">
-            <extra
-                android:name="org.wordpress.android.ui.ShortcutsNavigator.ACTION_OPEN_SHORTCUT"
-                android:value="org.wordpress.android.ui.ShortcutsNavigator.CREATE_NEW_POST"/>
-        </intent>
-    </shortcut>
-    <shortcut
         android:icon="@mipmap/ic_shortcut_notifications"
         android:shortcutId="notifications"
         android:shortcutShortLabel="@string/notifications_screen_title">
@@ -39,6 +26,19 @@
             <extra
                 android:name="org.wordpress.android.ui.ShortcutsNavigator.ACTION_OPEN_SHORTCUT"
                 android:value="org.wordpress.android.ui.ShortcutsNavigator.OPEN_NOTIFICATIONS"/>
+        </intent>
+    </shortcut>
+    <shortcut
+        android:icon="@mipmap/ic_shortcut_create_post"
+        android:shortcutId="new_post"
+        android:shortcutShortLabel="@string/new_post">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="org.wordpress.android.ui.main.WPMainActivity"
+            android:targetPackage="org.wordpress.android">
+            <extra
+                android:name="org.wordpress.android.ui.ShortcutsNavigator.ACTION_OPEN_SHORTCUT"
+                android:value="org.wordpress.android.ui.ShortcutsNavigator.CREATE_NEW_POST"/>
         </intent>
     </shortcut>
 </shortcuts>
