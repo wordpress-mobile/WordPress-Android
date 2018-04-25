@@ -191,7 +191,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
                         launchWithNoteId();
                     }
                 } else {
-                    int position = AppPrefs.getMainTabIndex();
+                    int position = AppPrefs.getMainPageIndex();
                     mBottomNav.setCurrentPosition(position);
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -456,7 +456,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
 
     @Override
     public void onPageChanged(int position) {
-        AppPrefs.setMainTabIndex(position);
+        AppPrefs.setMainPageIndex(position);
         updateTitle(position);
     }
 

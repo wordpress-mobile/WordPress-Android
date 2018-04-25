@@ -178,6 +178,11 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     private void setCurrentPosition(int position, boolean ensureSelected) {
+        // new post page can't be selected, only tapped
+        if (position == PAGE_NEW_POST) {
+            return;
+        }
+
         if (ensureSelected) {
             // temporarily disable the nav listeners so they don't fire when we change the selected page
             assignNavigationListeners(false);
