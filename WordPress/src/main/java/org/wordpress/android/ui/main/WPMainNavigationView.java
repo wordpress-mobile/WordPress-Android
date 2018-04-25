@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
@@ -39,7 +40,7 @@ public class WPMainNavigationView extends BottomNavigationView
 
     static final int PAGE_MY_SITE = 0;
     static final int PAGE_READER = 1;
-    static final int PAGE_WRITE = 2;
+    static final int PAGE_NEW_POST = 2;
     static final int PAGE_ME = 3;
     static final int PAGE_NOTIFS = 4;
 
@@ -90,8 +91,8 @@ public class WPMainNavigationView extends BottomNavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int position = getPositionForItemId(item.getItemId());
-        if (position == PAGE_WRITE) {
-            mListener.onNewPostButtonClicked();
+        if (position == PAGE_NEW_POST) {
+            handlePostButtonClicked();
             return false;
         } else {
             setCurrentPosition(position, false);
@@ -100,11 +101,33 @@ public class WPMainNavigationView extends BottomNavigationView
         }
     }
 
+    private void handlePostButtonClicked() {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
+        View postView = menuView.getChildAt(PAGE_NEW_POST);
+
+        // animate the button before telling the listener the post button was clicked - this way
+        // the user sees the animation before the editor appears
+        AniUtils.startAnimation(postView, R.anim.notifications_button_scale, new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // noop
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mListener.onNewPostButtonClicked();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // noop
+            }
+        });
+    }
+
     @Override
     public void onNavigationItemReselected(@NonNull MenuItem item) {
         // scroll the active fragment's contents to the top when user re-taps the current item
         int position = getPositionForItemId(item.getItemId());
-        if (position != PAGE_WRITE) {
+        if (position != PAGE_NEW_POST) {
             Fragment fragment = mNavAdapter.getFragment(position);
             if (fragment instanceof OnScrollToTopListener) {
                 ((OnScrollToTopListener) fragment).onScrollToTop();
@@ -123,7 +146,7 @@ public class WPMainNavigationView extends BottomNavigationView
             case R.id.nav_reader:
                 return PAGE_READER;
             case R.id.nav_write:
-                return PAGE_WRITE;
+                return PAGE_NEW_POST;
             case R.id.nav_me:
                 return PAGE_ME;
             default:
@@ -137,7 +160,7 @@ public class WPMainNavigationView extends BottomNavigationView
                 return R.id.nav_sites;
             case PAGE_READER:
                 return R.id.nav_reader;
-            case PAGE_WRITE:
+            case PAGE_NEW_POST:
                 return R.id.nav_write;
             case PAGE_ME:
                 return R.id.nav_me;
