@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        app:itemTextColor="@color/blue_wordpress"
+        app:itemTextColor="@color/blue_medium"
         app:menu="@menu/bottom_nav_main"/>
 
 </RelativeLayout>
