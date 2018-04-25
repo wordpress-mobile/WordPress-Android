@@ -41,7 +41,6 @@ import static org.wordpress.android.e2etests.utils.RecyclerViewMatchers.waitUnti
  * </p>
  */
 public class RecyclerViewInteraction {
-
     private Matcher<View> mRecyclerViewMatcher = allOf(isDisplayed(), isAssignableFrom(RecyclerView.class));
     private Matcher<View> mChildViewMatcher;
     private int mAtPosition;
@@ -134,5 +133,4 @@ public class RecyclerViewInteraction {
             }
         };
     }
-
 }

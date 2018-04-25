@@ -36,12 +36,12 @@ public class NavigationRobot {
     }
 
     public static class ResultRobot {
-        public void displaysPostsPageSucessfully(){
+        public void displaysPostsPageSucessfully() {
             onView(withId(R.id.title_empty))
                     .check(matches(isDisplayed()));
         }
 
-        public void displaysSiteMenuPageSucessfully(){
+        public void displaysSiteMenuPageSucessfully() {
             onView(withId(R.id.row_stats))
                     .check(matches(isDisplayed()));
 
@@ -49,12 +49,12 @@ public class NavigationRobot {
                     .check(matches(isDisplayed()));
         }
 
-        public void displaysProfilePageSucessfully(){
+        public void displaysProfilePageSucessfully() {
             onView(withId(R.id.row_my_profile))
                     .check(matches(isDisplayed()));
         }
 
-        public void displaysNotificationsPageSucessfully(){
+        public void displaysNotificationsPageSucessfully() {
             onView(withId(R.id.notifications_filter))
                     .check(matches(isDisplayed()));
         }

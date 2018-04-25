@@ -66,10 +66,9 @@ public class LoginRobot {
     }
 
     public static class ResultRobot {
-        public void isSucessfullyLoggedIn(){
+        public void isSucessfullyLoggedIn() {
             onView(withId(R.id.logged_in_as_heading))
                     .check(matches(isDisplayed()));
         }
     }
-
 }

@@ -3,6 +3,7 @@ package org.wordpress.android.e2etests;
 
 
 import android.support.test.rule.ActivityTestRule;
+
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
