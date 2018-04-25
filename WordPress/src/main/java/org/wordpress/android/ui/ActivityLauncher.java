@@ -127,6 +127,31 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    public static void continueJetpackConnect(Context context, JetpackConnectionSource source, SiteModel site) {
+        switch (source) {
+            case NOTIFICATIONS:
+                continueJetpackConnectForNotifications(context, site);
+                break;
+            case STATS:
+                continueJetpackConnectForStats(context, site);
+                break;
+        }
+    }
+
+    private static void continueJetpackConnectForNotifications(Context context, SiteModel site) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(WPMainActivity.ARG_CONTINUE_JETPACK_CONNECT, true);
+        context.startActivity(intent);
+    }
+
+    private static void continueJetpackConnectForStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(StatsConnectJetpackActivity.ARG_CONTINUE_JETPACK_CONNECT, true);
+        context.startActivity(intent);
+    }
+
     public static void viewBlogStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -371,8 +396,9 @@ public class ActivityLauncher {
     }
 
     public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn,
-                                                  ArrayList<Integer> oldSitesIds) {
+                                                  ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
+        intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
@@ -387,6 +413,17 @@ public class ActivityLauncher {
         intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
         intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_IS_EMAIL, isEmail);
         activity.startActivity(intent);
+    }
+
+    public static void showSignupEpilogueForResult(Activity activity, String name, String email, String photoUrl,
+                                                   String username, boolean isEmail) {
+        Intent intent = new Intent(activity, SignupEpilogueActivity.class);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_IS_EMAIL, isEmail);
+        activity.startActivityForResult(intent, RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN);
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
