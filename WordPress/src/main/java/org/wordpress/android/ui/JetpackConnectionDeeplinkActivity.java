@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.login.LoginMode;
-import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -39,8 +38,8 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     private static final String REASON_PARAM = "reason";
     private static final String SOURCE_PARAM = "source";
 
+    private JetpackConnectionSource mSource;
     private String mReason;
-    private Source mSource;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -74,7 +73,7 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
             // Non-empty reason does not mean we're not connected to Jetpack
             // - one of the errors is "already-connected"
             mReason = uri.getQueryParameter(REASON_PARAM);
-            mSource = Source.fromString(uri.getQueryParameter(SOURCE_PARAM));
+            mSource = JetpackConnectionSource.fromString(uri.getQueryParameter(SOURCE_PARAM));
             if (mAccountStore.hasAccessToken()) {
                 // if user is signed in wpcom show the stats or notifications right away
                 trackResult();
@@ -124,7 +123,7 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     }
 
     private void finishAndGoBackToSource() {
-        if (mSource == Source.STATS) {
+        if (mSource == JetpackConnectionSource.STATS) {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
             ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site);

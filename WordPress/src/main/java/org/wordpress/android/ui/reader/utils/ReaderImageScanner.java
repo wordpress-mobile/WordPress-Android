@@ -13,8 +13,8 @@ public class ReaderImageScanner {
     private final boolean mContentContainsImages;
 
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
-            ".*(<img\\s+.*src\\s*=\\s*\"([^\"]+)\".*>).*",
-            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+            "<img[^>]* src=\\\"([^\\\"]*)\\\"[^>]*>",
+            Pattern.CASE_INSENSITIVE);
 
     public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
         mContent = contentOfPost;
@@ -36,8 +36,8 @@ public class ReaderImageScanner {
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
-            String imageTag = imgMatcher.group(1);
-            String imageUrl = imgMatcher.group(2);
+            String imageTag = imgMatcher.group(0);
+            String imageUrl = imgMatcher.group(1);
             listener.onTagFound(imageTag, imageUrl);
         }
     }
@@ -55,8 +55,8 @@ public class ReaderImageScanner {
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
-            String imageTag = imgMatcher.group(1);
-            String imageUrl = imgMatcher.group(2);
+            String imageTag = imgMatcher.group(0);
+            String imageUrl = imgMatcher.group(1);
 
             if (minImageWidth == 0) {
                 imageList.addImageUrl(imageUrl);
@@ -97,8 +97,8 @@ public class ReaderImageScanner {
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
-            String imageTag = imgMatcher.group(1);
-            String imageUrl = imgMatcher.group(2);
+            String imageTag = imgMatcher.group(0);
+            String imageUrl = imgMatcher.group(1);
 
             int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imageTag),
                                  ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));

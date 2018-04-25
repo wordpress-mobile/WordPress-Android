@@ -34,7 +34,7 @@ public interface LoginListener {
     void helpMagicLinkRequest(String email);
 
     // Login Magic Link Sent callbacks
-    void openEmailClient();
+    void openEmailClient(boolean isLogin);
     void helpMagicLinkSent(String email);
 
     // Login email password callbacks
@@ -68,6 +68,7 @@ public interface LoginListener {
     void setHelpContext(String faqId, String faqSection);
 
     // Signup
+    void doStartSignup();
     void helpSignupEmailScreen(String email);
     void helpSignupMagicLinkScreen(String email);
     void showSignupMagicLink(String email);

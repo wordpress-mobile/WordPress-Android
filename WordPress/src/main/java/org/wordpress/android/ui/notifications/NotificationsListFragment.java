@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
-import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.NOTIFICATIONS;
+import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
@@ -69,7 +69,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private ViewGroup mConnectJetpackView;
     private View mFilterView;
     private RadioGroup mFilterRadioGroup;
-    private View mFilterDivider;
+    private View mFilterContainer;
     private View mNewNotificationsBar;
 
     private long mRestoredScrollNoteID;
@@ -102,7 +102,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         mFilterRadioGroup = (RadioGroup) view.findViewById(R.id.notifications_radio_group);
         mFilterRadioGroup.setOnCheckedChangeListener(this);
-        mFilterDivider = view.findViewById(R.id.notifications_filter_divider);
+        mFilterContainer = view.findViewById(R.id.notifications_filter_container);
         mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
         mFilterView = view.findViewById(R.id.notifications_filter);
@@ -309,7 +309,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private void showEmptyView(@StringRes int titleResId, @StringRes int descriptionResId, @StringRes int buttonResId) {
         if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.VISIBLE);
-            mFilterDivider.setVisibility(View.GONE);
+            mFilterContainer.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
@@ -343,7 +343,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         if (isAdded() && mConnectJetpackView != null) {
             mConnectJetpackView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
-            mFilterDivider.setVisibility(View.GONE);
+            mFilterContainer.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
 
@@ -378,7 +378,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             setFilterViewScrollable(true);
             mEmptyView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
-            mFilterDivider.setVisibility(View.VISIBLE);
+            mFilterContainer.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
