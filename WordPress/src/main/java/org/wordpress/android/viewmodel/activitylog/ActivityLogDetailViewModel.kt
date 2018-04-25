@@ -26,13 +26,6 @@ class ActivityLogDetailViewModel
     val activityLogItem: LiveData<ActivityLogModel>
         get() = _item
 
-    enum class ActivityLogDetailStatus {
-        DONE,
-        ERROR,
-        FETCHING
-    }
-
-
     fun writeToBundle(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, site)
         outState.putString(ACTIVITY_LOG_ID_KEY, activityLogId)

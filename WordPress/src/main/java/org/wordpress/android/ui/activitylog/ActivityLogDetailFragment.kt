@@ -72,11 +72,12 @@ class ActivityLogDetailFragment : Fragment() {
         viewModel.writeToBundle(outState)
     }
 
-    private fun setActorIcon(actorIcon: String? = null, gridicon: String?) {
-        if (actorIcon != null) {
+    private fun setActorIcon(actorIcon: String?, gridicon: String?) {
+        if (actorIcon != null && gridicon == null) {
             activity_actor_icon.setImageUrl(actorIcon, WPNetworkImageView.ImageType.AVATAR)
         } else {
             activity_actor_icon.resetImage()
+            activity_actor_icon.visibility = View.GONE
         }
     }
 

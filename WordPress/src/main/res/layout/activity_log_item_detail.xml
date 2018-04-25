@@ -16,7 +16,8 @@
         android:layout_margin="16dp"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -24,20 +25,14 @@
                 android:id="@+id/activity_actor_icon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_marginEnd="12dp"
                 android:layout_marginRight="12dp"
                 tools:src="@drawable/badge"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/activity_actor_icon"
-                android:layout_toLeftOf="@+id/activity_created_date"
-                android:layout_toRightOf="@+id/activity_actor_icon"
-                android:layout_toStartOf="@+id/activity_created_date"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:layout_marginTop="2dp">
@@ -64,16 +59,17 @@
                     tools:text="Administrator"/>
 
             </LinearLayout>
-
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginTop="2dp"
+                android:orientation="vertical">
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/activity_created_date"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="2dp"
                 android:textColor="@color/grey_dark"
                 tools:ignore="RelativeOverlap"
                 tools:text="January 8, 2018"/>
@@ -83,13 +79,11 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/activity_created_date"
                 android:textColor="@color/grey_dark"
                 tools:ignore="RelativeOverlap"
                 tools:text="11:32 PM"/>
-        </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/activity_message"
@@ -130,6 +124,7 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text="@string/rewind"
                 android:textAllCaps="true"
                 android:textColor="@color/blue_medium"/>
