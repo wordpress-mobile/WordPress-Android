@@ -16,6 +16,7 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
 apply plugin: 'com.android.application'
@@ -177,6 +178,8 @@ dependencies {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
     }
+
+    compile group: 'com.zendesk', name: 'sdk', version: '1.11.0.1'
 
     lintChecks 'org.wordpress:lint:1.0.0'
 
