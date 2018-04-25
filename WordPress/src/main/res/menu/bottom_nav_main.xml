@@ -11,6 +11,11 @@
         android:icon="@drawable/main_tab_reader"
         android:title="@string/reader_screen_title"/>
     <item
+        android:id="@+id/nav_write"
+        android:contentDescription="@string/tabbar_accessibility_label_write"
+        android:icon="@drawable/ic_create_white_24dp"
+        android:title=""/>
+    <item
         android:id="@+id/nav_me"
         android:contentDescription="@string/tabbar_accessibility_label_me"
         android:icon="@drawable/main_tab_me"

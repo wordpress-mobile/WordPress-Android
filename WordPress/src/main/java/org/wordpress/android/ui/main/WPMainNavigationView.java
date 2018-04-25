@@ -35,12 +35,13 @@ import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
  */
 public class WPMainNavigationView extends BottomNavigationView
         implements OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
-    private static final int NUM_PAGES = 4;
+    private static final int NUM_PAGES = 5;
 
     static final int PAGE_MY_SITE = 0;
     static final int PAGE_READER = 1;
-    static final int PAGE_ME = 2;
-    static final int PAGE_NOTIFS = 3;
+    static final int PAGE_WRITE = 2;
+    static final int PAGE_ME = 3;
+    static final int PAGE_NOTIFS = 4;
 
     private NavAdapter mNavAdapter;
     private FragmentManager mFragmentManager;
@@ -113,6 +114,8 @@ public class WPMainNavigationView extends BottomNavigationView
                 return PAGE_MY_SITE;
             case R.id.nav_reader:
                 return PAGE_READER;
+            case R.id.nav_write:
+                return PAGE_WRITE;
             case R.id.nav_me:
                 return PAGE_ME;
             default:
@@ -126,6 +129,8 @@ public class WPMainNavigationView extends BottomNavigationView
                 return R.id.nav_sites;
             case PAGE_READER:
                 return R.id.nav_reader;
+            case PAGE_WRITE:
+                return R.id.nav_write;
             case PAGE_ME:
                 return R.id.nav_me;
             default:
