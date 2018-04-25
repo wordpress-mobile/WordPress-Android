@@ -50,6 +50,7 @@ public class WPMainNavigationView extends BottomNavigationView
 
     interface OnPageListener {
         void onPageChanged(int position);
+        void onNewPostButtonClicked();
     }
 
     public WPMainNavigationView(Context context) {
@@ -89,18 +90,25 @@ public class WPMainNavigationView extends BottomNavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int position = getPositionForItemId(item.getItemId());
-        setCurrentPosition(position, false);
-        mListener.onPageChanged(position);
-        return true;
+        if (position == PAGE_WRITE) {
+            mListener.onNewPostButtonClicked();
+            return false;
+        } else {
+            setCurrentPosition(position, false);
+            mListener.onPageChanged(position);
+            return true;
+        }
     }
 
     @Override
     public void onNavigationItemReselected(@NonNull MenuItem item) {
         // scroll the active fragment's contents to the top when user re-taps the current item
         int position = getPositionForItemId(item.getItemId());
-        Fragment fragment = mNavAdapter.getFragment(position);
-        if (fragment instanceof OnScrollToTopListener) {
-            ((OnScrollToTopListener) fragment).onScrollToTop();
+        if (position != PAGE_WRITE) {
+            Fragment fragment = mNavAdapter.getFragment(position);
+            if (fragment instanceof OnScrollToTopListener) {
+                ((OnScrollToTopListener) fragment).onScrollToTop();
+            }
         }
     }
 

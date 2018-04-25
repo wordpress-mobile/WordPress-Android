@@ -460,6 +460,11 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
         updateTitle(position);
     }
 
+    @Override
+    public void onNewPostButtonClicked() {
+        ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
+    }
+
     private void updateTitle() {
         updateTitle(mBottomNav.getCurrentPosition());
     }
