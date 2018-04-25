@@ -42,6 +42,7 @@ import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
@@ -73,6 +74,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
         HasSupportFragmentInjector {
+    public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 
@@ -90,6 +92,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private SignupBottomSheetDialog mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
+    private JetpackConnectionSource mJetpackConnectSource;
+    private boolean mIsJetpackConnect;
     private boolean mSignupSheetDisplayed;
 
     private LoginMode mLoginMode;
@@ -110,6 +114,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
+            if (getIntent() != null) {
+                mJetpackConnectSource =
+                        (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
+            }
+
             mLoginAnalyticsListener.trackLoginAccessed();
 
             switch (getLoginMode()) {
@@ -226,13 +235,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 finish();
                 break;
             case JETPACK_STATS:
+                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
+                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
-                // skip the epilogue when only added a selfhosted site or sharing to WordPress
+                // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
@@ -245,6 +256,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
         switch (requestCode) {
             case RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN:
+            case RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN:
                 // we showed the epilogue screen as informational and sites got loaded so, just
                 // return to login caller now
                 setResult(RESULT_OK);
@@ -307,6 +319,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
+
+            if (getLoginMode() == LoginMode.JETPACK_STATS) {
+                mIsJetpackConnect = true;
+            }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
             slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
@@ -393,8 +409,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void gotWpcomEmail(String email) {
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
-            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment =
-                    LoginMagicLinkRequestFragment.newInstance(email);
+            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
+                    email, mIsJetpackConnect, mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment =
@@ -436,7 +452,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void showSignupMagicLink(String email) {
-        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email);
+        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
+                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 
@@ -741,7 +758,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_SUCCESS);
-        ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+
+        if (mIsJetpackConnect) {
+            ActivityLauncher.showSignupEpilogueForResult(this, name, email, photoUrl, username, false);
+        } else {
+            ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+        }
+
         setResult(Activity.RESULT_OK);
         finish();
     }

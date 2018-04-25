@@ -26,7 +26,10 @@ public interface LoginAnalyticsListener {
     void trackMagicLinkRequested();
     void trackMagicLinkRequestFormViewed();
     void trackPasswordFormViewed();
+    void trackSignupCanceled();
+    void trackSignupEmailButtonTapped();
     void trackSignupEmailToLogin();
+    void trackSignupGoogleButtonTapped();
     void trackSignupMagicLinkFailed();
     void trackSignupMagicLinkOpened();
     void trackSignupMagicLinkOpenEmailClientClicked();
@@ -35,6 +38,7 @@ public interface LoginAnalyticsListener {
     void trackSignupSocialAccountsNeedConnecting();
     void trackSignupSocialButtonFailure();
     void trackSignupSocialToLogin();
+    void trackSignupTermsOfServiceTapped();
     void trackSocialAccountsNeedConnecting();
     void trackSocialButtonClick();
     void trackSocialButtonFailure();

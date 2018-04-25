@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent">
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_notifications"
@@ -59,17 +61,19 @@
             android:text="@string/notifications_label_new_notifications_subtitle"
             android:textColor="@color/grey_lighten_30"
             android:textSize="@dimen/text_sz_small" />
+
     </LinearLayout>
 
     <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+        android:id="@+id/notifications_filter_container"
+        android:background="@color/white"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/notifications_content_margin"
         android:layout_marginLeft="@dimen/notifications_content_margin"
         android:layout_marginRight="@dimen/notifications_content_margin"
-        android:background="@color/white"
-        app:elevation="0dp"
         android:layout_marginStart="@dimen/notifications_content_margin"
-        android:layout_marginEnd="@dimen/notifications_content_margin">
+        android:layout_width="match_parent"
+        app:elevation="0dp">
 
         <LinearLayout
             android:id="@+id/notifications_filter"
@@ -136,15 +140,16 @@
                         android:background="@drawable/calypso_segmented_control_button_end"
                         android:text="@string/notifications_tab_title_likes" />
                 </RadioGroup>
+
             </HorizontalScrollView>
 
             <View
-                android:id="@+id/notifications_filter_divider"
-                android:layout_width="match_parent"
+                android:background="@drawable/notifications_list_divider"
                 android:layout_height="1dp"
-                android:background="@drawable/notifications_list_divider" />
+                android:layout_width="match_parent"/>
 
         </LinearLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
@@ -205,41 +210,52 @@
 
     </LinearLayout>
 
-
-    <org.wordpress.android.widgets.WPNestedScrollView
+    <LinearLayout
         android:id="@+id/connect_jetpack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            tools:ignore="UselessParent">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:contentDescription="@null"
-                app:srcCompat="@drawable/jetpack_connection_notifications"/>
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                style="@style/JetpackConnectionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="290dp"
-                android:text="@string/notifications_jetpack_connection_setup_info"
-                android:textAlignment="center"/>
+                <ImageView
+                    android:contentDescription="@string/content_description_person_reading_device_notification"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/jetpack_connection_notifications"/>
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/jetpack_setup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_extra_large"
-                android:text="@string/stats_jetpack_connection_setup"
-                android:theme="@style/JetpackConnectionButton"/>
-        </LinearLayout>
-    </org.wordpress.android.widgets.WPNestedScrollView>
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/JetpackConnectionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="290dp"
+                    android:text="@string/notifications_jetpack_connection_setup_info"
+                    android:textAlignment="center"
+                    app:fixWidowWords="true"/>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/jetpack_setup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_extra_large"
+                    android:text="@string/stats_jetpack_connection_setup"
+                    android:theme="@style/JetpackConnectionButton"/>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>
