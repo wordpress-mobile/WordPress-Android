@@ -243,6 +243,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
 
         mDisplayName = getArguments().getString(ARG_DISPLAY_NAME);
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
@@ -428,9 +429,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             + event.error.type + " - " + event.error.message);
             endProgress();
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
-            // Wait to populate epilogue for email interface until account is fetched and email address
-            // is available since flow is coming from magic link with no instance argument values.
-        } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT
+        // Wait to populate epilogue for email interface until account is fetched and email address
+        // is available since flow is coming from magic link with no instance argument values.
+        } else if (mIsEmailSignup && event.causeOfChange == AccountAction.FETCH_ACCOUNT
                    && !TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
             endProgress();
             populateViews();

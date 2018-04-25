@@ -113,8 +113,23 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackSignupCanceled() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_CANCELED);
+    }
+
+    @Override
+    public void trackSignupEmailButtonTapped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
+    }
+
+    @Override
     public void trackSignupEmailToLogin() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
+    }
+
+    @Override
+    public void trackSignupGoogleButtonTapped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
     }
 
     @Override
@@ -155,6 +170,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupSocialToLogin() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
+    }
+
+    @Override
+    public void trackSignupTermsOfServiceTapped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
     }
 
     @Override
