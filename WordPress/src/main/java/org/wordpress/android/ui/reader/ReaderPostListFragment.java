@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -1554,9 +1555,9 @@ public class ReaderPostListFragment extends Fragment
             menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
 
             if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
-            } else {
                 menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
+            } else {
+                menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
             }
         } else {
             menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
@@ -1585,6 +1586,12 @@ public class ReaderPostListFragment extends Fragment
                     case ReaderMenuAdapter.ITEM_BLOCK:
                         blockBlogForPost(post);
                         break;
+                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
+                        updateSubscription(SubscriptionAction.DELETE, post.blogId);
+                        break;
+                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
+                        updateSubscription(SubscriptionAction.NEW, post.blogId);
+                        break;
                 }
             }
         });
@@ -1600,8 +1607,8 @@ public class ReaderPostListFragment extends Fragment
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                     new View.OnClickListener() {
                         @Override public void onClick(View view) {
-                            AccountStore.AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                    String.valueOf(blogId), AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW);
+                            AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                    String.valueOf(blogId), SubscriptionAction.NEW);
                             mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
                         }
                     })
@@ -1623,6 +1630,11 @@ public class ReaderPostListFragment extends Fragment
         } else {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
+    }
+
+    private void updateSubscription(SubscriptionAction action, long blogId) {
+        AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(String.valueOf(blogId), action);
+        mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
     }
 
     /*
