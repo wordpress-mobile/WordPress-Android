@@ -1694,7 +1694,7 @@
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
-    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
     <string name="plugin_search_error">Unable to search plugins</string>
