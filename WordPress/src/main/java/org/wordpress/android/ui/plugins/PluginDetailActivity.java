@@ -1128,15 +1128,16 @@ public class PluginDetailActivity extends AppCompatActivity {
      */
     private void confirmInstallPluginForAutomatedTransfer() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
-        builder.setTitle(getResources().getText(R.string.plugin_install));
+        builder.setTitle(getResources().getText(R.string.plugin_install_first_plugin_confirmation_dialog_title));
         builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mIsShowingInstallFirstPluginConfirmationDialog = false;
-                startAutomatedTransfer();
-            }
-        });
+        builder.setPositiveButton(R.string.plugin_install_first_plugin_confirmation_dialog_install_btn,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mIsShowingInstallFirstPluginConfirmationDialog = false;
+                        startAutomatedTransfer();
+                    }
+                });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -1183,7 +1184,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             mAutomatedTransferProgressDialog.setCancelable(false);
             mAutomatedTransferProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mAutomatedTransferProgressDialog.setIndeterminate(false);
-            String message = getString(R.string.plugin_install_first_plugin_progress_dialog_title);
+            String message = getString(R.string.plugin_install_first_plugin_progress_dialog_message);
             mAutomatedTransferProgressDialog.setMessage(message);
         }
         if (!mAutomatedTransferProgressDialog.isShowing()) {
