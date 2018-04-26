@@ -542,7 +542,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mAztecReady = true;
     }
 
-    private boolean contentContainsGutenbergBlocks(String postContent){
+    private boolean contentContainsGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
 
