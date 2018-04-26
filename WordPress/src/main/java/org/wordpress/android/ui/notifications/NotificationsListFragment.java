@@ -98,12 +98,12 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
+        mRecyclerView = view.findViewById(R.id.recycler_view_notes);
 
-        mFilterRadioGroup = (RadioGroup) view.findViewById(R.id.notifications_radio_group);
+        mFilterRadioGroup = view.findViewById(R.id.notifications_radio_group);
         mFilterRadioGroup.setOnCheckedChangeListener(this);
         mFilterContainer = view.findViewById(R.id.notifications_filter_container);
-        mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
+        mEmptyView = view.findViewById(R.id.empty_view);
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
         mFilterView = view.findViewById(R.id.notifications_filter);
 
@@ -119,7 +119,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                         fetchNotesFromRemote();
                     }
                 }
-                                                         );
+            );
 
         // bar that appears at bottom after new notes are received and the user is on this screen
         mNewNotificationsBar = view.findViewById(R.id.layout_new_notificatons);
@@ -314,14 +314,14 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             setFilterViewScrollable(false);
             ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(titleResId);
 
-            TextView descriptionTextView = (TextView) mEmptyView.findViewById(R.id.text_empty_description);
+            TextView descriptionTextView = mEmptyView.findViewById(R.id.text_empty_description);
             if (descriptionResId != 0) {
                 descriptionTextView.setText(descriptionResId);
             } else {
                 descriptionTextView.setVisibility(View.GONE);
             }
 
-            TextView btnAction = (TextView) mEmptyView.findViewById(R.id.button_empty_action);
+            TextView btnAction = mEmptyView.findViewById(R.id.button_empty_action);
             if (buttonResId != 0) {
                 btnAction.setText(buttonResId);
                 btnAction.setVisibility(View.VISIBLE);
