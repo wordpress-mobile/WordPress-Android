@@ -26,7 +26,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:duplicateParentState="true"
             android:tint="@color/bottom_nav_item_selector"
             tools:srcCompat="@drawable/ic_create_white_24dp"/>
 

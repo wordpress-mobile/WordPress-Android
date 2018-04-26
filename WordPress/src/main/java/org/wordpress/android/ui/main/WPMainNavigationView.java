@@ -217,11 +217,15 @@ public class WPMainNavigationView extends BottomNavigationView
             return;
         }
 
-        // remove the title from the previous position then set it for the new one
+        // remove the title and selected state from the previously selected item
         if (mPrevPosition > -1) {
             showTitleForPosition(mPrevPosition, false);
+            getImageViewForPosition(mPrevPosition).setSelected(false);
         }
+
+        // set the title and selected state from the newly selected item
         showTitleForPosition(position, true);
+        getImageViewForPosition(position).setSelected(true);
         mPrevPosition = position;
 
         if (ensureSelected) {
@@ -281,9 +285,18 @@ public class WPMainNavigationView extends BottomNavigationView
         return getContext().getString(idRes);
     }
 
-    private void showTitleForPosition(int position, boolean show) {
+    private TextView getTitleViewForPosition(int position) {
         BottomNavigationItemView itemView = getItemView(position);
-        itemView.findViewById(R.id.nav_label).setVisibility(show ? View.VISIBLE : View.GONE);
+        return itemView.findViewById(R.id.nav_label);
+    }
+
+    private ImageView getImageViewForPosition(int position) {
+        BottomNavigationItemView itemView = getItemView(position);
+        return itemView.findViewById(R.id.nav_icon);
+    }
+
+    private void showTitleForPosition(int position, boolean show) {
+        getTitleViewForPosition(position).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     /*
