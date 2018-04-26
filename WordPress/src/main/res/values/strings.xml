@@ -1693,14 +1693,16 @@
     <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
-    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute and until it\'s complete you won\'t be able to use your site or make any changes to it. Would you like to proceed?</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
     <string name="plugin_search_error">Unable to search plugins</string>
     <string name="plugin_manage">Manage</string>
     <string name="plugin_see_all">See All</string>
     <string name="plugins_empty_search_list">No matches</string>
-    <string name="plugin_install_first_plugin_progress_dialog_title">Install Plugin</string>
-    <string name="plugin_install_first_plugin_almost_finished_dialog_message">The plugin is installed, we are setting it up&#8230;</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installing plugin…</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
