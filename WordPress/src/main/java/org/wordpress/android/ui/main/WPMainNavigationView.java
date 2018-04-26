@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.main;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
@@ -15,6 +17,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
@@ -23,6 +26,9 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+
+import java.lang.reflect.Field;
 
 import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
@@ -32,20 +38,23 @@ import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
  */
 public class WPMainNavigationView extends BottomNavigationView
         implements OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
-    private static final int NUM_PAGES = 4;
+    private static final int NUM_PAGES = 5;
 
     static final int PAGE_MY_SITE = 0;
     static final int PAGE_READER = 1;
-    static final int PAGE_ME = 2;
-    static final int PAGE_NOTIFS = 3;
+    static final int PAGE_NEW_POST = 2;
+    static final int PAGE_ME = 3;
+    static final int PAGE_NOTIFS = 4;
 
     private NavAdapter mNavAdapter;
     private FragmentManager mFragmentManager;
     private View mBadgeView;
     private OnPageListener mListener;
+    private int mPrevPosition = -1;
 
     interface OnPageListener {
         void onPageChanged(int position);
+        void onNewPostButtonClicked();
     }
 
     public WPMainNavigationView(Context context) {
@@ -66,15 +75,51 @@ public class WPMainNavigationView extends BottomNavigationView
 
         mNavAdapter = new NavAdapter();
         assignNavigationListeners(true);
+        disableShiftMode();
+
+        // we only show a title for the selected item so remove all the titles (note we can't do this in
+        // xml because it results in a warning)
+        for (int i = 0; i < getMenu().size(); i++) {
+            getMenu().getItem(i).setTitle(null);
+        }
+
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        // add a larger icon to the post button
+        BottomNavigationItemView postView = (BottomNavigationItemView) menuView.getChildAt(PAGE_NEW_POST);
+        View postIcon = inflater.inflate(R.layout.new_post_navigation_item, menuView, false);
+        postView.addView(postIcon);
 
         // add the notification badge to the notification menu item
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
-        View notifView = menuView.getChildAt(PAGE_NOTIFS);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) notifView;
-        LayoutInflater inflater = LayoutInflater.from(getContext());
+        BottomNavigationItemView notifView = (BottomNavigationItemView) menuView.getChildAt(PAGE_NOTIFS);
         mBadgeView = inflater.inflate(R.layout.badge_layout, menuView, false);
-        itemView.addView(mBadgeView);
+        notifView.addView(mBadgeView);
         mBadgeView.setVisibility(View.GONE);
+    }
+
+    /*
+     * uses reflection to disable "shift mode" so the item are equal width
+     */
+    @SuppressLint("RestrictedApi")
+    private void disableShiftMode() {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
+        try {
+            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                item.setShiftingMode(false);
+                // force the view to update
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            AppLog.e(T.MAIN, "Unable to disable shift mode", e);
+        } catch (IllegalAccessException e) {
+            AppLog.e(T.MAIN, "Unable to disable shift mode", e);
+        }
     }
 
     private void assignNavigationListeners(boolean assign) {
@@ -85,18 +130,47 @@ public class WPMainNavigationView extends BottomNavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int position = getPositionForItemId(item.getItemId());
-        setCurrentPosition(position, false);
-        mListener.onPageChanged(position);
-        return true;
+        if (position == PAGE_NEW_POST) {
+            handlePostButtonClicked();
+            return false;
+        } else {
+            setCurrentPosition(position, false);
+            mListener.onPageChanged(position);
+            return true;
+        }
+    }
+
+    private void handlePostButtonClicked() {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
+        View postView = menuView.getChildAt(PAGE_NEW_POST);
+
+        // animate the button before telling the listener the post button was clicked - this way
+        // the user sees the animation before the editor appears
+        AniUtils.startAnimation(postView, R.anim.notifications_button_scale, new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // noop
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mListener.onNewPostButtonClicked();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // noop
+            }
+        });
     }
 
     @Override
     public void onNavigationItemReselected(@NonNull MenuItem item) {
         // scroll the active fragment's contents to the top when user re-taps the current item
         int position = getPositionForItemId(item.getItemId());
-        Fragment fragment = mNavAdapter.getFragment(position);
-        if (fragment instanceof OnScrollToTopListener) {
-            ((OnScrollToTopListener) fragment).onScrollToTop();
+        if (position != PAGE_NEW_POST) {
+            Fragment fragment = mNavAdapter.getFragment(position);
+            if (fragment instanceof OnScrollToTopListener) {
+                ((OnScrollToTopListener) fragment).onScrollToTop();
+            }
         }
     }
 
@@ -104,12 +178,14 @@ public class WPMainNavigationView extends BottomNavigationView
         return mNavAdapter.getFragment(getCurrentPosition());
     }
 
-    private int getPositionForItemId(int itemId) {
+    private int getPositionForItemId(@IdRes int itemId) {
         switch (itemId) {
             case R.id.nav_sites:
                 return PAGE_MY_SITE;
             case R.id.nav_reader:
                 return PAGE_READER;
+            case R.id.nav_write:
+                return PAGE_NEW_POST;
             case R.id.nav_me:
                 return PAGE_ME;
             default:
@@ -123,6 +199,8 @@ public class WPMainNavigationView extends BottomNavigationView
                 return R.id.nav_sites;
             case PAGE_READER:
                 return R.id.nav_reader;
+            case PAGE_NEW_POST:
+                return R.id.nav_write;
             case PAGE_ME:
                 return R.id.nav_me;
             default:
@@ -139,6 +217,18 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     private void setCurrentPosition(int position, boolean ensureSelected) {
+        // new post page can't be selected, only tapped
+        if (position == PAGE_NEW_POST) {
+            return;
+        }
+
+        // remove the title from the previous position then set it for the new one
+        if (mPrevPosition > -1) {
+            getMenu().getItem(mPrevPosition).setTitle(null);
+        }
+        getMenu().getItem(position).setTitle(getMenuTitleForPosition(position));
+        mPrevPosition = position;
+
         if (ensureSelected) {
             // temporarily disable the nav listeners so they don't fire when we change the selected page
             assignNavigationListeners(false);
@@ -160,9 +250,25 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     CharSequence getMenuTitleForPosition(int position) {
-        int itemId = getItemIdForPosition(position);
-        MenuItem item = getMenu().findItem(itemId);
-        return item.getTitle();
+        @StringRes int idRes;
+        switch (position) {
+            case PAGE_MY_SITE:
+                idRes = R.string.my_site_section_screen_title;
+                break;
+            case PAGE_READER:
+                idRes = R.string.reader_screen_title;
+                break;
+            case PAGE_NEW_POST:
+                idRes = R.string.write_post;
+                break;
+            case PAGE_ME:
+                idRes = R.string.me_section_screen_title;
+                break;
+            default:
+                idRes = R.string.notifications_screen_title;
+                break;
+        }
+        return getContext().getString(idRes);
     }
 
     /*
