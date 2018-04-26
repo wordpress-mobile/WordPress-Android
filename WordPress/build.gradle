@@ -181,7 +181,8 @@ dependencies {
     lintChecks 'org.wordpress:lint:1.0.0'
 
     // Debug
-    debugImplementation 'com.facebook.stetho:stetho:1.4.2'
+    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
+    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }
 
 configurations.all {

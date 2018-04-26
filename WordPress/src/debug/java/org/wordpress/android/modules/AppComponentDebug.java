@@ -2,9 +2,9 @@ package org.wordpress.android.modules;
 
 import android.app.Application;
 
+import org.wordpress.android.fluxc.module.DebugOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
-import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.login.di.LoginFragmentModule;
 import org.wordpress.android.login.di.LoginServiceModule;
@@ -20,7 +20,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ApplicationModule.class,
         AppSecretsModule.class,
         ReleaseBaseModule.class,
-        ReleaseOkHttpClientModule.class,
+        DebugOkHttpClientModule.class,
+        InterceptorModule.class,
         ReleaseNetworkModule.class,
         LegacyModule.class,
         ReleaseToolsModule.class,
