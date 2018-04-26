@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated
 import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
@@ -38,9 +39,11 @@ private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
 private const val KEY_TITLE = "KEY_TITLE"
 
 @WorkerThread
-class PluginBrowserViewModel @Inject constructor(private val mDispatcher: Dispatcher,
-                                                 private val mPluginStore: PluginStore,
-                                                 private val mSiteStore: SiteStore) : ViewModel() {
+class PluginBrowserViewModel @Inject constructor(
+    private val mDispatcher: Dispatcher,
+    private val mPluginStore: PluginStore,
+    private val mSiteStore: SiteStore
+) : ViewModel() {
     enum class PluginListType {
         SITE,
         FEATURED,
@@ -356,7 +359,7 @@ class PluginBrowserViewModel @Inject constructor(private val mDispatcher: Dispat
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
-    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+    fun onSiteChanged(event: OnSiteChanged) {
         if (event.isError) {
             // The error should be safe to ignore since we are not triggering the action and there is nothing we need
             // to do about it
