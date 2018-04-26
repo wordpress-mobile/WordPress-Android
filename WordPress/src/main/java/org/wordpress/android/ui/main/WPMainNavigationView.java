@@ -79,16 +79,16 @@ public class WPMainNavigationView extends BottomNavigationView
         assignNavigationListeners(true);
         disableShiftMode();
 
+        // overlay each item with our custom view
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (int i = 0; i < getMenu().size(); i++) {
-            getMenu().getItem(i).setTitle(null);
-            BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(i);
+        for (int position = 0; position < getMenu().size(); position++) {
+            BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(position);
             View customView = inflater.inflate(R.layout.bottomn_navigation_item, menuView, false);
             TextView txtLabel = customView.findViewById(R.id.nav_label);
             ImageView imgIcon = customView.findViewById(R.id.nav_icon);
-            txtLabel.setText(getTitleForPosition(i));
-            imgIcon.setImageResource(getDrawableResForPosition(i));
+            txtLabel.setText(getTitleForPosition(position));
+            imgIcon.setImageResource(getDrawableResForPosition(position));
             itemView.addView(customView);
         }
     }
@@ -219,9 +219,9 @@ public class WPMainNavigationView extends BottomNavigationView
 
         // remove the title from the previous position then set it for the new one
         if (mPrevPosition > -1) {
-            getMenu().getItem(mPrevPosition).setTitle(null);
+            showTitleForPosition(mPrevPosition, false);
         }
-        getMenu().getItem(position).setTitle(getTitleForPosition(position));
+        showTitleForPosition(position, true);
         mPrevPosition = position;
 
         if (ensureSelected) {
@@ -283,8 +283,7 @@ public class WPMainNavigationView extends BottomNavigationView
 
     private void showTitleForPosition(int position, boolean show) {
         BottomNavigationItemView itemView = getItemView(position);
-        TextView txtLabel = itemView.findViewById(R.id.nav_label);
-        txtLabel.setText(show ? getTitleForPosition(position) : null);
+        itemView.findViewById(R.id.nav_label).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     /*
