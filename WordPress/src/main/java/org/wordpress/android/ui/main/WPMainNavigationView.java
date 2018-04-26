@@ -91,7 +91,7 @@ public class WPMainNavigationView extends BottomNavigationView
 
         // add a larger icon to the post button
         BottomNavigationItemView postView = (BottomNavigationItemView) menuView.getChildAt(PAGE_NEW_POST);
-        View postIcon = inflater.inflate(R.layout.new_post_item, menuView, false);
+        View postIcon = inflater.inflate(R.layout.new_post_navigation_item, menuView, false);
         postView.addView(postIcon);
 
         // add the notification badge to the notification menu item
@@ -102,8 +102,7 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     /*
-     * uses reflection to disable "shift mode" so the item are equal width and all show captions
-     * https://readyandroid.wordpress.com/disable-bottomnavigationview-shift-mode/
+     * uses reflection to disable "shift mode" so the item are equal width
      */
     @SuppressLint("RestrictedApi")
     private void disableShiftMode() {
@@ -116,7 +115,7 @@ public class WPMainNavigationView extends BottomNavigationView
             for (int i = 0; i < menuView.getChildCount(); i++) {
                 BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
                 item.setShiftingMode(false);
-                // set once again checked value, so view will be updated
+                // force the view to update
                 item.setChecked(item.getItemData().isChecked());
             }
         } catch (NoSuchFieldException e) {
@@ -182,7 +181,7 @@ public class WPMainNavigationView extends BottomNavigationView
         return mNavAdapter.getFragment(getCurrentPosition());
     }
 
-    private int getPositionForItemId(int itemId) {
+    private int getPositionForItemId(@IdRes int itemId) {
         switch (itemId) {
             case R.id.nav_sites:
                 return PAGE_MY_SITE;
