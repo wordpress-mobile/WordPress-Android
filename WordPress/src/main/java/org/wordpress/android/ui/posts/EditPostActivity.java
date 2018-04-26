@@ -1383,18 +1383,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
-                PromoDialog promoDialog = (PromoDialog) getSupportFragmentManager().findFragmentByTag(instanceTag);
-                if (promoDialog != null) {
-                    promoDialog.dismiss();
-                }
-                break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
-                BasicYesNoFragmentDialog basicDialog = (BasicYesNoFragmentDialog) getSupportFragmentManager()
-                        .findFragmentByTag(instanceTag);
-                if (basicDialog != null) {
-                    basicDialog.dismiss();
-                }
+                // the dialog is automatically dismissed
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
