@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
@@ -52,6 +53,7 @@ public class WPMainNavigationView extends BottomNavigationView
     private FragmentManager mFragmentManager;
     private View mBadgeView;
     private OnPageListener mListener;
+    private int mPrevPosition = -1;
 
     interface OnPageListener {
         void onPageChanged(int position);
@@ -78,13 +80,24 @@ public class WPMainNavigationView extends BottomNavigationView
         assignNavigationListeners(true);
         disableShiftMode();
 
-        // add the notification badge to the notification menu item
+        // we only show a title for the selected item so remove all the titles (note we can't do this in
+        // xml because it results in a warning)
+        for (int i = 0; i < getMenu().size(); i++) {
+            getMenu().getItem(i).setTitle(null);
+        }
+
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
-        View notifView = menuView.getChildAt(PAGE_NOTIFS);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) notifView;
         LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        // add a larger icon to the post button
+        BottomNavigationItemView postView = (BottomNavigationItemView) menuView.getChildAt(PAGE_NEW_POST);
+        View postIcon = inflater.inflate(R.layout.new_post_item, menuView, false);
+        postView.addView(postIcon);
+
+        // add the notification badge to the notification menu item
+        BottomNavigationItemView notifView = (BottomNavigationItemView) menuView.getChildAt(PAGE_NOTIFS);
         mBadgeView = inflater.inflate(R.layout.badge_layout, menuView, false);
-        itemView.addView(mBadgeView);
+        notifView.addView(mBadgeView);
         mBadgeView.setVisibility(View.GONE);
     }
 
@@ -213,6 +226,13 @@ public class WPMainNavigationView extends BottomNavigationView
             return;
         }
 
+        // remove the title from the previous position then set it for the new one
+        if (mPrevPosition > -1) {
+            getMenu().getItem(mPrevPosition).setTitle(null);
+        }
+        getMenu().getItem(position).setTitle(getMenuTitleForPosition(position));
+        mPrevPosition = position;
+
         if (ensureSelected) {
             // temporarily disable the nav listeners so they don't fire when we change the selected page
             assignNavigationListeners(false);
@@ -234,9 +254,25 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     CharSequence getMenuTitleForPosition(int position) {
-        int itemId = getItemIdForPosition(position);
-        MenuItem item = getMenu().findItem(itemId);
-        return item.getTitle();
+        @StringRes int idRes;
+        switch (position) {
+            case PAGE_MY_SITE:
+                idRes = R.string.my_site_section_screen_title;
+                break;
+            case PAGE_READER:
+                idRes = R.string.reader_screen_title;
+                break;
+            case PAGE_NEW_POST:
+                idRes = R.string.write_post;
+                break;
+            case PAGE_ME:
+                idRes = R.string.me_section_screen_title;
+                break;
+            default:
+                idRes = R.string.notifications_screen_title;
+                break;
+        }
+        return getContext().getString(idRes);
     }
 
     /*

@@ -13,7 +13,6 @@
     <item
         android:id="@+id/nav_write"
         android:contentDescription="@string/tabbar_accessibility_label_write"
-        android:icon="@drawable/ic_create_white_24dp"
         android:title="@string/write_post"/>
     <item
         android:id="@+id/nav_me"
