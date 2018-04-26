@@ -288,7 +288,6 @@
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
     <string name="width">Width</string>
-    <string name="featured">Use as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="delete_post">Delete post?</string>
@@ -534,6 +533,7 @@
     <string name="site_settings_quota_space_title">Space Used</string>
     <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
     <string name="site_settings_quota_space_value">%1$s of %2$s</string>
+    <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
@@ -735,8 +735,9 @@
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
     <string name="stats_default_number_zero" translatable="false">0</string>
-    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to setup Jetpack?</string>
+    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+    <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -927,6 +928,7 @@
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">View Reader</string>
+    <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
@@ -950,7 +952,9 @@
     <string name="notification_settings_master_hint_off">Enable notifications</string>
     <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
     <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
+    <string name="notification_settings_category_followed_sites">Followed Sites</string>
     <string name="notification_settings_category_your_sites">Your Sites</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">All My Followed Sites</string>
     <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
     <string name="notification_settings_category_other">Other</string>
     <string name="notification_settings_item_other_comments_other_blogs">Comments on other sites</string>
@@ -976,6 +980,15 @@
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
     <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
+
+    <string name="notification_settings_followed_dialog_email_posts_switch">Email me new posts</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Receive notifications for new posts from this site</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">New posts</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Daily</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Instantly</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Weekly</string>
+    <string name="notification_settings_followed_dialog_email_comments">Email me new comments</string>
+    <string name="notification_settings_followed_dialog_title">Notifications</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
@@ -1236,6 +1249,7 @@
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
+    <string name="error_save_empty_draft">Can\'t save an empty draft</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
@@ -1865,7 +1879,7 @@
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
-
+    <string name="photo_picker_use_photo">Use this photo</string>
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
@@ -1941,6 +1955,7 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>
@@ -1990,6 +2005,13 @@
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
+    <!-- Android O notification channels, these show in the Android app settings -->
+    <string name="notification_channel_general_title">General</string>
+    <string name="notification_channel_important_title">Important</string>
+
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
@@ -1997,7 +2019,7 @@
     <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
     <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
     <string name="notification_site_creation_step_theme">Step 4 of 4</string>
-    <string name="notification_site_creation_title_in_progress">Creating site…</string>
+    <string name="notification_site_creation_title_in_progress">Creating site… This might take a couple of minutes.</string>
     <string name="notification_site_creation_title_stopped">Site creation stopped</string>
     <string name="notification_site_creation_failed">An error has occurred.</string>
 
@@ -2031,7 +2053,7 @@
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
-    <string name="post_cardview_featured_desc">featured</string>
+    <string name="post_cardview_featured_desc">featured image</string>
     <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>

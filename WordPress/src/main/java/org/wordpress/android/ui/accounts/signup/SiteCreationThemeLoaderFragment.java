@@ -11,6 +11,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.fluxc.store.ThemeStore.OnWpComThemesChanged;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent;
 import org.wordpress.android.util.AppLog;
@@ -90,7 +91,7 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemesChanged(ThemeStore.OnWpComThemesChanged event) {
+    public void onThemesChanged(OnWpComThemesChanged event) {
         if (event.isError()) {
             if (NetworkUtils.isNetworkAvailable(getContext())) {
                 mDispatcher.unregister(this);

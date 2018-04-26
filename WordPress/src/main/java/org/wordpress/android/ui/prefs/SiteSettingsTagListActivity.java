@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -248,7 +249,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.SETTINGS, event.error.message);
         }

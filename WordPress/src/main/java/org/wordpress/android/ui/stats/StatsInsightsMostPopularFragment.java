@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -141,9 +141,9 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.INSIGHTS_POPULAR
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.INSIGHTS_POPULAR
         };
     }
 

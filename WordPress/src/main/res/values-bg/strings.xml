@@ -24,7 +24,6 @@ Language: bg
     <string name="error_upload_post_media_param">Възникна грешка при качване на медиата в тази публикация %s.</string>
     <string name="error_upload_post_param">Възникна грешка при качването на тази публикация: %s.</string>
     <string name="add_media_progress">Добавяне на файл</string>
-    <string name="login_site_address_help_image">Адресът на сайта може да бъде намерен в навигационната лента на вашия браузър.</string>
     <string name="error_unknown_page">Не можахме да открием страницата на сървъра</string>
     <string name="error_publish_empty_page">Не можете да публикувате празна страница</string>
     <string name="error_please_choose_browser">Грешка при отваряне на браузера по подразбиране. Моля изберете друг.</string>
@@ -113,7 +112,6 @@ Language: bg
     <string name="share_btn_disconnect">Изключване на връзката</string>
     <string name="share_btn_connect">Свързване</string>
     <string name="sharing">Споделяне</string>
-    <string name="fab_content_description_write">Пишете</string>
     <string name="my_site_btn_sharing">Споделяне</string>
     <string name="button_not_now">Не сега</string>
     <string name="media_downloading">Запазване на медийни файлове на това устройство</string>
@@ -279,6 +277,7 @@ Language: bg
     <string name="invite_message_title">Съобщение</string>
     <string name="invite">Покана</string>
     <string name="invite_names_title">Имена или имейл адреси</string>
+    <string name="invite_people">Покана</string>
     <string name="my_site_header_external">Външна</string>
     <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
@@ -916,10 +915,8 @@ Language: bg
     <string name="reader_toast_err_get_post">Извличането на тази публикация е неуспешно</string>
     <string name="pick_video">Избор на видео</string>
     <string name="pick_photo">Избор на снимка</string>
-    <string name="select_date">Избор на дата</string>
     <string name="reader_empty_followed_blogs_description">Без притеснения! Просто натиснете върху иконата горе вдясно, за да започнете да разглеждате.</string>
     <string name="reader_likes_you_and_one">Вие и още някой харесвате това.</string>
-    <string name="select_time">Избор на време</string>
     <string name="nux_tutorial_get_started_title">Начало!</string>
     <string name="reader_empty_followed_tags">Вие не следвате етикети</string>
     <string name="reader_toast_err_url_intent">%s не може да се отвори</string>

@@ -25,6 +25,11 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.fluxc.store.ThemeStore.OnCurrentThemeFetched;
+import org.wordpress.android.fluxc.store.ThemeStore.OnSiteThemesChanged;
+import org.wordpress.android.fluxc.store.ThemeStore.OnThemeActivated;
+import org.wordpress.android.fluxc.store.ThemeStore.OnThemeInstalled;
+import org.wordpress.android.fluxc.store.ThemeStore.OnWpComThemesChanged;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -187,7 +192,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWpComThemesChanged(ThemeStore.OnWpComThemesChanged event) {
+    public void onWpComThemesChanged(OnWpComThemesChanged event) {
         // always unset refreshing status to remove progress indicator
         if (mThemeBrowserFragment != null) {
             mThemeBrowserFragment.setRefreshing(false);
@@ -206,7 +211,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteThemesChanged(ThemeStore.OnSiteThemesChanged event) {
+    public void onSiteThemesChanged(OnSiteThemesChanged event) {
         if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
             // always unset refreshing status to remove progress indicator
             if (mThemeBrowserFragment != null) {
@@ -230,7 +235,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCurrentThemeFetched(ThemeStore.OnCurrentThemeFetched event) {
+    public void onCurrentThemeFetched(OnCurrentThemeFetched event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching current theme: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
@@ -252,7 +257,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemeInstalled(ThemeStore.OnThemeInstalled event) {
+    public void onThemeInstalled(OnThemeInstalled event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error installing theme: " + event.error.message);
         } else {
@@ -263,7 +268,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemeActivated(ThemeStore.OnThemeActivated event) {
+    public void onThemeActivated(OnThemeActivated event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error activating theme: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_activation_error, ToastUtils.Duration.SHORT);

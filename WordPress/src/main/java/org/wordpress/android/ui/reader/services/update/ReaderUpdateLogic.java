@@ -1,10 +1,6 @@
-package org.wordpress.android.ui.reader.services;
+package org.wordpress.android.ui.reader.services.update;
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.IBinder;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -23,6 +19,7 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
@@ -33,9 +30,11 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class ReaderUpdateService extends Service {
+public class ReaderUpdateLogic {
     /***
-     * service which updates followed/recommended tags and blogs for the Reader, relies
+     * This class holds the business logic for Reader Updates, serving both ReaderUpdateService (<API26)
+     * and ReaderUpdateJobService (API26+).
+     * Updates followed/recommended tags and blogs for the Reader, relies
      * on EventBus to notify of changes
      */
 
@@ -46,50 +45,19 @@ public class ReaderUpdateService extends Service {
     }
 
     private EnumSet<UpdateTask> mCurrentTasks;
-    private static final String ARG_UPDATE_TASKS = "update_tasks";
+    private ServiceCompletionListener mCompletionListener;
+    private Object mListenerCompanion;
 
     @Inject AccountStore mAccountStore;
 
-    public static void startService(Context context, EnumSet<UpdateTask> tasks) {
-        if (context == null || tasks == null || tasks.size() == 0) {
-            return;
-        }
-        Intent intent = new Intent(context, ReaderUpdateService.class);
-        intent.putExtra(ARG_UPDATE_TASKS, tasks);
-        context.startService(intent);
+    public ReaderUpdateLogic(WordPress app, ServiceCompletionListener listener) {
+        mCompletionListener = listener;
+        app.component().inject(this);
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
-        AppLog.i(AppLog.T.READER, "reader service > created");
-    }
-
-    @Override
-    public void onDestroy() {
-        AppLog.i(AppLog.T.READER, "reader service > destroyed");
-        super.onDestroy();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.hasExtra(ARG_UPDATE_TASKS)) {
-            //noinspection unchecked
-            EnumSet<UpdateTask> tasks = (EnumSet<UpdateTask>) intent.getSerializableExtra(ARG_UPDATE_TASKS);
-            performTasks(tasks);
-        }
-
-        return START_NOT_STICKY;
-    }
-
-    private void performTasks(EnumSet<UpdateTask> tasks) {
+    public void performTasks(EnumSet<UpdateTask> tasks, Object companion) {
         mCurrentTasks = EnumSet.copyOf(tasks);
+        mListenerCompanion = companion;
 
         // perform in priority order - we want to update tags first since without them
         // the Reader can't show anything
@@ -113,7 +81,7 @@ public class ReaderUpdateService extends Service {
 
     private void allTasksCompleted() {
         AppLog.i(AppLog.T.READER, "reader service > all tasks completed");
-        stopSelf();
+        mCompletionListener.onCompleted(mListenerCompanion);
     }
 
     /***

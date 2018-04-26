@@ -113,13 +113,38 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackSignupCanceled() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_CANCELED);
+    }
+
+    @Override
+    public void trackSignupEmailButtonTapped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
+    }
+
+    @Override
     public void trackSignupEmailToLogin() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
     }
 
     @Override
+    public void trackSignupGoogleButtonTapped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
+    }
+
+    @Override
     public void trackSignupMagicLinkFailed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_FAILED);
+    }
+
+    @Override
+    public void trackSignupMagicLinkOpened() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_OPENED);
+    }
+
+    @Override
+    public void trackSignupMagicLinkOpenEmailClientClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
     }
 
     @Override
@@ -130,11 +155,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupMagicLinkSucceeded() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
-    }
-
-    @Override
-    public void trackSignupSocial2faNeeded() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
     }
 
     @Override
@@ -150,6 +170,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupSocialToLogin() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
+    }
+
+    @Override
+    public void trackSignupTermsOfServiceTapped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
     }
 
     @Override

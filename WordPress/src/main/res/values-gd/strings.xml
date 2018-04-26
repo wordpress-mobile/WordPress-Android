@@ -327,9 +327,7 @@ Language: gd_GB
     <string name="video">Video</string>
     <string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
     <string name="cant_share_no_visible_blog">Chan urrainn dhut co–roinneadh gu WordPress as aonais bloga a tha ri fhaicinn</string>
-    <string name="select_time">Tagh àm</string>
     <string name="reader_likes_you_and_one">Thuirt thusa agus aonan eile gur toigh leibh seo</string>
-    <string name="select_date">Tagh ceann–là</string>
     <string name="pick_photo">Tagh dealbh</string>
     <string name="pick_video">Tagh video</string>
     <string name="reader_toast_err_get_post">Chan urrainn dhuinn am post seo fhaighinn dhut</string>
