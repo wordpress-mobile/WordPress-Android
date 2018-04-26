@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -11,13 +10,11 @@ import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
-import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
@@ -67,7 +64,7 @@ public class WPMainNavigationView extends BottomNavigationView
         mFragmentManager = fm;
         mListener = listener;
 
-        mNavAdapter = new NavAdapter(mFragmentManager);
+        mNavAdapter = new NavAdapter();
         assignNavigationListeners(true);
 
         // add the notification badge to the notification menu item
@@ -203,40 +200,18 @@ public class WPMainNavigationView extends BottomNavigationView
         }
     }
 
-    private class NavAdapter extends FragmentStatePagerAdapter {
+    private class NavAdapter {
         private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_PAGES);
 
-        NavAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
-            // work around "Fragement no longer exists for key" Android bug
-            // by catching the IllegalStateException
-            // https://code.google.com/p/android/issues/detail?id=42601
-            try {
-                super.restoreState(state, loader);
-            } catch (IllegalStateException e) {
-                // nop
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
-
         boolean isValidPosition(int position) {
-            return (position >= 0 && position < getCount());
+            return (position >= 0 && position < NUM_PAGES);
         }
 
         void reset() {
             mFragments.clear();
         }
 
-        @Override
-        public Fragment getItem(int position) {
+        private Fragment createFragment(int position) {
             Fragment fragment;
             switch (position) {
                 case PAGE_MY_SITE:
@@ -259,20 +234,11 @@ public class WPMainNavigationView extends BottomNavigationView
             return fragment;
         }
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            mFragments.remove(position);
-            super.destroyItem(container, position, object);
-        }
-
         Fragment getFragment(int position) {
-            if (isValidPosition(position)) {
-                if (mFragments.get(position) == null) {
-                    return getItem(position);
-                }
-                return mFragments.get(position);
+            if (isValidPosition(position) && mFragments.get(position) != null) {
+              return mFragments.get(position);
             } else {
-                return null;
+                return createFragment(position);
             }
         }
     }
