@@ -3,25 +3,21 @@
     <item
         android:id="@+id/nav_sites"
         android:contentDescription="@string/tabbar_accessibility_label_my_site"
-        android:icon="@drawable/ic_my_sites_white_32dp"
-        android:title="@string/my_site_section_screen_title"/>
+        android:title=""/>
     <item
         android:id="@+id/nav_reader"
         android:contentDescription="@string/tabbar_accessibility_label_reader"
-        android:icon="@drawable/ic_reader_white_32dp"
-        android:title="@string/reader_screen_title"/>
+        android:title=""/>
     <item
         android:id="@+id/nav_write"
         android:contentDescription="@string/tabbar_accessibility_label_write"
-        android:title="@string/write_post"/>
+        android:title=""/>
     <item
         android:id="@+id/nav_me"
         android:contentDescription="@string/tabbar_accessibility_label_me"
-        android:icon="@drawable/ic_user_circle_white_32dp"
-        android:title="@string/me_section_screen_title"/>
+        android:title=""/>
     <item
         android:id="@+id/nav_notifications"
         android:contentDescription="@string/tabbar_accessibility_label_notifications"
-        android:icon="@drawable/ic_bell_white_32dp"
-        android:title="@string/notifications_screen_title"/>
+        android:title=""/>
 </menu>

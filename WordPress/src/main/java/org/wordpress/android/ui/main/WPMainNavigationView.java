@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -18,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
@@ -48,7 +51,6 @@ public class WPMainNavigationView extends BottomNavigationView
 
     private NavAdapter mNavAdapter;
     private FragmentManager mFragmentManager;
-    private View mBadgeView;
     private OnPageListener mListener;
     private int mPrevPosition = -1;
 
@@ -77,25 +79,18 @@ public class WPMainNavigationView extends BottomNavigationView
         assignNavigationListeners(true);
         disableShiftMode();
 
-        // we only show a title for the selected item so remove all the titles (note we can't do this in
-        // xml because it results in a warning)
-        for (int i = 0; i < getMenu().size(); i++) {
-            getMenu().getItem(i).setTitle(null);
-        }
-
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-
-        // add a larger icon to the post button
-        BottomNavigationItemView postView = (BottomNavigationItemView) menuView.getChildAt(PAGE_NEW_POST);
-        View postIcon = inflater.inflate(R.layout.new_post_navigation_item, menuView, false);
-        postView.addView(postIcon);
-
-        // add the notification badge to the notification menu item
-        BottomNavigationItemView notifView = (BottomNavigationItemView) menuView.getChildAt(PAGE_NOTIFS);
-        mBadgeView = inflater.inflate(R.layout.badge_layout, menuView, false);
-        notifView.addView(mBadgeView);
-        mBadgeView.setVisibility(View.GONE);
+        for (int i = 0; i < getMenu().size(); i++) {
+            getMenu().getItem(i).setTitle(null);
+            BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(i);
+            View customView = inflater.inflate(R.layout.bottomn_navigation_item, menuView, false);
+            TextView txtLabel = customView.findViewById(R.id.nav_label);
+            ImageView imgIcon = customView.findViewById(R.id.nav_icon);
+            txtLabel.setText(getTitleForPosition(i));
+            imgIcon.setImageResource(getDrawableResForPosition(i));
+            itemView.addView(customView);
+        }
     }
 
     /*
@@ -226,7 +221,7 @@ public class WPMainNavigationView extends BottomNavigationView
         if (mPrevPosition > -1) {
             getMenu().getItem(mPrevPosition).setTitle(null);
         }
-        getMenu().getItem(position).setTitle(getMenuTitleForPosition(position));
+        getMenu().getItem(position).setTitle(getTitleForPosition(position));
         mPrevPosition = position;
 
         if (ensureSelected) {
@@ -249,7 +244,22 @@ public class WPMainNavigationView extends BottomNavigationView
         }
     }
 
-    CharSequence getMenuTitleForPosition(int position) {
+    @DrawableRes int getDrawableResForPosition(int position) {
+        switch (position) {
+            case PAGE_MY_SITE:
+                return R.drawable.ic_my_sites_white_32dp;
+            case PAGE_READER:
+                return R.drawable.ic_reader_white_32dp;
+            case PAGE_NEW_POST:
+                return R.drawable.ic_create_white_24dp;
+            case PAGE_ME:
+                return R.drawable.ic_user_circle_white_32dp;
+            default:
+                return R.drawable.ic_bell_white_32dp;
+        }
+    }
+
+    CharSequence getTitleForPosition(int position) {
         @StringRes int idRes;
         switch (position) {
             case PAGE_MY_SITE:
@@ -269,6 +279,12 @@ public class WPMainNavigationView extends BottomNavigationView
                 break;
         }
         return getContext().getString(idRes);
+    }
+
+    private void showTitleForPosition(int position, boolean show) {
+        BottomNavigationItemView itemView = getItemView(position);
+        TextView txtLabel = itemView.findViewById(R.id.nav_label);
+        txtLabel.setText(show ? getTitleForPosition(position) : null);
     }
 
     /*
@@ -292,26 +308,37 @@ public class WPMainNavigationView extends BottomNavigationView
         return mNavAdapter.getFragment(position);
     }
 
+    private BottomNavigationItemView getItemView(int position) {
+        if (isValidPosition(position)) {
+            BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
+            return (BottomNavigationItemView) menuView.getChildAt(position);
+        }
+        return null;
+    }
+
     void showNoteBadge(boolean showBadge) {
-        int currentVisibility = mBadgeView.getVisibility();
+        BottomNavigationItemView notifView = getItemView(PAGE_NOTIFS);
+        View badgeView = notifView.findViewById(R.id.badge);
+
+        int currentVisibility = badgeView.getVisibility();
         int newVisibility = showBadge ? View.VISIBLE : View.GONE;
         if (currentVisibility == newVisibility) {
             return;
         }
 
         if (showBadge) {
-            AniUtils.fadeIn(mBadgeView, Duration.MEDIUM);
+            AniUtils.fadeIn(badgeView, Duration.MEDIUM);
         } else {
-            AniUtils.fadeOut(mBadgeView, Duration.MEDIUM);
+            AniUtils.fadeOut(badgeView, Duration.MEDIUM);
         }
+    }
+
+    boolean isValidPosition(int position) {
+        return (position >= 0 && position < NUM_PAGES);
     }
 
     private class NavAdapter {
         private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_PAGES);
-
-        boolean isValidPosition(int position) {
-            return (position >= 0 && position < NUM_PAGES);
-        }
 
         void reset() {
             mFragments.clear();

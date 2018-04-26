@@ -473,7 +473,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
         if (position == PAGE_MY_SITE && mSelectedSite != null) {
             mToolbar.setTitle(mSelectedSite.getName());
         } else {
-            mToolbar.setTitle(mBottomNav.getMenuTitleForPosition(position));
+            mToolbar.setTitle(mBottomNav.getTitleForPosition(position));
         }
     }
 
