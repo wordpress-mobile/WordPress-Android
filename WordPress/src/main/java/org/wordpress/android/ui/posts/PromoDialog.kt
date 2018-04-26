@@ -128,9 +128,8 @@ class PromoDialog : AppCompatDialogFragment() {
         buttonPositive.setOnClickListener({
             if (activity is PromoDialogClickInterface) {
                 (activity as PromoDialogClickInterface).onPositiveClicked(fragmentTag)
-            } else {
-                this.dismiss()
             }
+            this.dismiss()
         })
 
         val buttonNegative = view.findViewById<Button>(R.id.promo_dialog_button_negative)
@@ -141,9 +140,8 @@ class PromoDialog : AppCompatDialogFragment() {
             buttonNegative.setOnClickListener({
                 if (activity is PromoDialogClickInterface) {
                     (activity as PromoDialogClickInterface).onNegativeClicked(fragmentTag)
-                } else {
-                    this.dismiss()
                 }
+                this.dismiss()
             })
         }
     }
