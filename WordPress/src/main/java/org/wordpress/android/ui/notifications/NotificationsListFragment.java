@@ -309,7 +309,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private void showEmptyView(@StringRes int titleResId, @StringRes int descriptionResId, @StringRes int buttonResId) {
         if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.VISIBLE);
-            mFilterContainer.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
@@ -378,7 +377,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             setFilterViewScrollable(true);
             mEmptyView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
-            mFilterContainer.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
