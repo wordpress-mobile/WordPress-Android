@@ -632,7 +632,7 @@ public class StatsActivity extends AppCompatActivity
 
         if (shouldShowWidgetPromo()) {
             PromoDialog newFragment = new PromoDialog();
-            newFragment.setArgs(
+            newFragment.initialize(
                     TAG_PROMO_DIALOG,
                     getString(R.string.stats_widget_promo_title),
                     getString(R.string.stats_widget_promo_desc),
