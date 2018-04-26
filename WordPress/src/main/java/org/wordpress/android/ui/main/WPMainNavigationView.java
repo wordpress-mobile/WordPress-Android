@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -27,6 +28,9 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+
+import java.lang.reflect.Field;
 
 import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
@@ -72,6 +76,7 @@ public class WPMainNavigationView extends BottomNavigationView
 
         mNavAdapter = new NavAdapter(mFragmentManager);
         assignNavigationListeners(true);
+        disableShiftMode();
 
         // add the notification badge to the notification menu item
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
@@ -81,6 +86,31 @@ public class WPMainNavigationView extends BottomNavigationView
         mBadgeView = inflater.inflate(R.layout.badge_layout, menuView, false);
         itemView.addView(mBadgeView);
         mBadgeView.setVisibility(View.GONE);
+    }
+
+    /*
+     * uses reflection to disable "shift mode" so the item are equal width and all show captions
+     * https://readyandroid.wordpress.com/disable-bottomnavigationview-shift-mode/
+     */
+    @SuppressLint("RestrictedApi")
+    private void disableShiftMode() {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
+        try {
+            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                item.setShiftingMode(false);
+                // set once again checked value, so view will be updated
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            AppLog.e(T.MAIN, "Unable to disable shift mode", e);
+        } catch (IllegalAccessException e) {
+            AppLog.e(T.MAIN, "Unable to disable shift mode", e);
+        }
     }
 
     private void assignNavigationListeners(boolean assign) {
@@ -247,6 +277,9 @@ public class WPMainNavigationView extends BottomNavigationView
         }
     }
 
+    /*
+     * TODO: at a later stage we should convert this to android.support.v4.app.FragmentStatePagerAdapter
+     */
     private class NavAdapter extends FragmentStatePagerAdapter {
         private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_PAGES);
 
