@@ -12,11 +12,10 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import org.wordpress.android.widgets.WPNetworkImageView
-import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 class ActivityLogDetailFragment : Fragment() {
@@ -36,31 +35,37 @@ class ActivityLogDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        // Use the same view model as the ActivityLogActivity
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
 
         val intent = activity?.intent
-        when {
-            savedInstanceState != null -> viewModel.readFromBundle(savedInstanceState)
-            intent != null -> viewModel.readFromIntent(intent)
-            else -> throw IllegalArgumentException("Couldn't initialize Activity Log view model")
+        val (site, activityLogId) = when {
+            savedInstanceState != null -> {
+                val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+                val activityLogId = savedInstanceState.getString(ACTIVITY_LOG_ID_KEY)
+                site to activityLogId
+            }
+            intent != null -> {
+                val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+                val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY)
+                site to activityLogId
+            }
+            else -> throw Throwable("Couldn't initialize Activity Log view model")
         }
         viewModel.activityLogItem.observe(this, Observer { activityLogModel ->
-            val actor = activityLogModel?.actor
-            setActorIcon(actor?.avatarURL, activityLogModel?.gridicon)
-            activity_actor_name.setTextOrHide(actor?.displayName)
-            activity_actor_role.setTextOrHide(actor?.role)
+            setActorIcon(activityLogModel?.actorIconUrl)
+            activity_actor_name.setTextOrHide(activityLogModel?.actorName)
+            activity_actor_role.setTextOrHide(activityLogModel?.actorRole)
 
             activity_message.setTextOrHide(activityLogModel?.text)
             activity_type.setTextOrHide(activityLogModel?.summary)
 
-            activity_created_date.text = activityLogModel?.published?.printDate() ?: ""
-            activity_created_time.text = activityLogModel?.published?.printTime() ?: ""
+            activity_created_date.text = activityLogModel?.createdDate
+            activity_created_time.text = activityLogModel?.createdTime
 
-            activity_rewind_button.visibility = View.GONE
+            activity_rewind_button.setClickListenerOrHide(activityLogModel?.rewindAction)
         })
-        viewModel.start()
+        viewModel.start(site, activityLogId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,30 +74,37 @@ class ActivityLogDetailFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.writeToBundle(outState)
+        outState.putSerializable(WordPress.SITE, viewModel.site)
+        outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
     }
 
-    private fun setActorIcon(actorIcon: String?, gridicon: String?) {
-        if (actorIcon != null && gridicon == null) {
+    private fun setActorIcon(actorIcon: String?) {
+        if (actorIcon != null) {
             activity_actor_icon.setImageUrl(actorIcon, WPNetworkImageView.ImageType.AVATAR)
+            activity_actor_icon.visibility = View.VISIBLE
         } else {
             activity_actor_icon.resetImage()
             activity_actor_icon.visibility = View.GONE
         }
     }
 
-    private fun Date.printDate(): String {
-        return DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(this)
-    }
-
-    private fun Date.printTime(): String {
-        return DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(this)
-    }
-
     private fun TextView.setTextOrHide(text: String?) {
         if (text != null) {
             this.text = text
+            this.visibility = View.VISIBLE
         } else {
+            this.visibility = View.GONE
+        }
+    }
+
+    private fun View.setClickListenerOrHide(function: (() -> Unit)?) {
+        if (function != null) {
+            this.setOnClickListener {
+                function()
+            }
+            this.visibility = View.VISIBLE
+        } else {
+            this.setOnClickListener(null)
             this.visibility = View.GONE
         }
     }

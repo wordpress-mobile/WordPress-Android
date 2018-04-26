@@ -27,6 +27,7 @@
                 android:layout_height="36dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginRight="12dp"
+                app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
                 tools:src="@drawable/badge"/>
 
             <LinearLayout

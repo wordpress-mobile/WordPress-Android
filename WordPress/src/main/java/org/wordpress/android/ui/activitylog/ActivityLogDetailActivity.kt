@@ -7,6 +7,8 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 
+private const val ACTIVITY_LOG_DETAIL_FRAGMENT_TAG = "activity_log_detail_fragment_tag"
+
 class ActivityLogDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +33,15 @@ class ActivityLogDetailActivity : AppCompatActivity() {
     }
 
     private fun showDetailFragment() {
-        val listFragment = ActivityLogDetailFragment.newInstance()
-        supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, listFragment, ActivityLogListFragment.TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
+        if (fragmentManager.findFragmentByTag(ACTIVITY_LOG_DETAIL_FRAGMENT_TAG) == null) {
+            supportFragmentManager.beginTransaction()
+                    .add(
+                            R.id.fragment_container,
+                            ActivityLogDetailFragment.newInstance(),
+                            ACTIVITY_LOG_DETAIL_FRAGMENT_TAG
+                    )
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit()
+        }
     }
 }
