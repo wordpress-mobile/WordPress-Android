@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -72,6 +71,7 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
     private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
     private static final String APP_RUNTIME_ON_CHROME_FLAG = "org.chromium.arc.device_management";
+    private static final String TAG_PROMO_DIALOG = "promote_widget_dialog";
 
     private Spinner mSpinner;
     private NestedScrollViewExt mOuterScrollView;
@@ -631,13 +631,14 @@ public class StatsActivity extends AppCompatActivity
         // Should we display the widget promo?
 
         if (shouldShowWidgetPromo()) {
-            AppCompatDialogFragment newFragment = new PromoDialog.Builder(
-                    R.drawable.stats_widget_promo_header,
-                    R.string.stats_widget_promo_title,
-                    R.string.stats_widget_promo_desc,
-                    R.string.stats_widget_promo_ok_btn_label)
-                    .build();
-            newFragment.show(getSupportFragmentManager(), "promote_widget_dialog");
+            PromoDialog newFragment = new PromoDialog();
+            newFragment.initialize(
+                    TAG_PROMO_DIALOG,
+                    getString(R.string.stats_widget_promo_title),
+                    getString(R.string.stats_widget_promo_desc),
+                    getString(R.string.stats_widget_promo_ok_btn_label),
+                    R.drawable.stats_widget_promo_header);
+            newFragment.show(getSupportFragmentManager(), TAG_PROMO_DIALOG);
         }
     }
 
