@@ -42,7 +42,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -86,7 +85,6 @@ public class MySiteFragment extends Fragment
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
 
-    private int mFabTargetYTranslation;
     private int mBlavatarSz;
 
     @Inject AccountStore mAccountStore;
@@ -147,9 +145,6 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        int fabHeight = getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);
-        int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
-        mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
 
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
@@ -518,14 +513,6 @@ public class MySiteFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-    }
-
-    /*
-     * animate the fab as the users scrolls the "My Site" page in the main activity's ViewPager
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
-        mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
     }
 
     @SuppressWarnings("unused")
