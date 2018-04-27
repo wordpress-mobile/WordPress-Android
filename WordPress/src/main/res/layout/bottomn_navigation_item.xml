@@ -8,10 +8,11 @@
 
     <View
         android:id="@+id/layout_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="56dp"
+        android:layout_height="40dp"
         android:layout_margin="6dp"
-        android:background="@color/grey_lighten_10"
+        android:layout_centerInParent="true"
+        android:background="@drawable/nav_bar_button_background"
         android:visibility="gone"
         tools:visibility="visible"/>
 
