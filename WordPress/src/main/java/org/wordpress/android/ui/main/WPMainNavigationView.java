@@ -145,11 +145,11 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     private void handlePostButtonClicked() {
-        ImageView imgPost = getImageViewForPosition(PAGE_NEW_POST);
+        View postView = getItemView(PAGE_NEW_POST);
 
         // animate the button icon before telling the listener the post button was clicked - this way
         // the user sees the animation before the editor appears
-        AniUtils.startAnimation(imgPost, R.anim.notifications_button_scale, new Animation.AnimationListener() {
+        AniUtils.startAnimation(postView, R.anim.notifications_button_scale, new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 // noop
