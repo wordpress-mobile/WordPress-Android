@@ -714,8 +714,9 @@ public class WPMainActivity extends AppCompatActivity {
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
-                if (getMeFragment() != null) {
-                    getMeFragment().onActivityResult(requestCode, resultCode, data);
+                Fragment fragment = getActiveFragment();
+                if (fragment instanceof MeFragment || fragment instanceof MySiteFragment) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
         }
