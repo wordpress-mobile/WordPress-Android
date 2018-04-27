@@ -37,8 +37,9 @@ import java.lang.reflect.Field;
 import static android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
 /*
- * Bottom navigation view and related fragment adapter used by the main activity
- * for the four primary views
+ * Bottom navigation view and related adapter used by the main activity for the
+ * four primary views - note that we ignore the built-in icons and labels and
+ * insert our own custom views so we have more control over their appearance
  */
 public class WPMainNavigationView extends BottomNavigationView
         implements OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {

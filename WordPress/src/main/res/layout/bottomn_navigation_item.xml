@@ -10,8 +10,8 @@
         android:id="@+id/layout_background"
         android:layout_width="56dp"
         android:layout_height="40dp"
-        android:layout_margin="6dp"
         android:layout_centerInParent="true"
+        android:layout_margin="6dp"
         android:background="@drawable/nav_bar_button_background"
         android:visibility="gone"
         tools:visibility="visible"/>
@@ -49,6 +49,7 @@
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="14dp"
         android:background="@drawable/notification_badge"
         android:visibility="gone"
