@@ -86,8 +86,9 @@ public class WPMainNavigationView extends BottomNavigationView
         for (int position = 0; position < getMenu().size(); position++) {
             BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(position);
             View customView;
-            // different layout for the post button
+            // remove the background ripple and use a different layout for the post button
             if (position == PAGE_NEW_POST) {
+                itemView.setBackground(null);
                 customView = inflater.inflate(R.layout.navbar_post_item, menuView, false);
             } else {
                 customView = inflater.inflate(R.layout.navbar_item, menuView, false);
