@@ -13,7 +13,6 @@ import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -86,17 +85,16 @@ public class WPMainNavigationView extends BottomNavigationView
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (int position = 0; position < getMenu().size(); position++) {
             BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(position);
-            View customView = inflater.inflate(R.layout.bottomn_navigation_item, menuView, false);
-            TextView txtLabel = customView.findViewById(R.id.nav_label);
-            ImageView imgIcon = customView.findViewById(R.id.nav_icon);
-            txtLabel.setText(getTitleForPosition(position));
-            imgIcon.setImageResource(getDrawableResForPosition(position));
-
-            // if this is the new post page, show the gray background and tint the icon white
+            View customView;
+            // different layout for the post button
             if (position == PAGE_NEW_POST) {
-                customView.findViewById(R.id.layout_background).setVisibility(View.VISIBLE);
-                int color = ContextCompat.getColor(getContext(), R.color.white);
-                imgIcon.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY);
+                customView = inflater.inflate(R.layout.navbar_post_item, menuView, false);
+            } else {
+                customView = inflater.inflate(R.layout.navbar_item, menuView, false);
+                TextView txtLabel = customView.findViewById(R.id.nav_label);
+                ImageView imgIcon = customView.findViewById(R.id.nav_icon);
+                txtLabel.setText(getTitleForPosition(position));
+                imgIcon.setImageResource(getDrawableResForPosition(position));
             }
 
             itemView.addView(customView);
