@@ -338,7 +338,6 @@ public class WPMainNavigationView extends BottomNavigationView
 
     /*
      * show or hide the badge on the notification page
-     * TODO: badge isn't correctly aligned
      */
     void showNoteBadge(boolean showBadge) {
         BottomNavigationItemView notifView = getItemView(PAGE_NOTIFS);
