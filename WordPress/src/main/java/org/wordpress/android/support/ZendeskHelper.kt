@@ -7,8 +7,10 @@ import com.zendesk.sdk.model.access.AnonymousIdentity
 import com.zendesk.sdk.model.access.Identity
 import com.zendesk.sdk.model.request.CustomField
 import com.zendesk.sdk.network.impl.ZendeskConfig
-import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.SupportActivity
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.logInformation
 import java.util.Locale
 
 private val zendeskInstance: ZendeskConfig
@@ -61,9 +63,9 @@ fun createAndShowRequest(
     context: Context,
     zendeskFeedbackConfiguration: BaseZendeskFeedbackConfiguration,
     appVersion: String,
-    blogInformation: String,
+    allSites: List<SiteModel>,
+    username: String?,
     deviceFreeSpace: String,
-    logFile: String,
     networkInformation: String
 ) {
     require(isZendeskEnabled) {
@@ -73,22 +75,20 @@ fun createAndShowRequest(
     // TODO("Use correct custom field values")
     zendeskInstance.customFields = listOf(
             CustomField(0L, appVersion),
-            CustomField(0L, blogInformation),
+            CustomField(0L, blogInformation(allSites, username)),
             CustomField(0L, deviceFreeSpace),
-            CustomField(0L, logFile),
+            CustomField(0L, AppLog.toPlainText(context)),
             CustomField(0L, networkInformation)
     )
     ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration)
-}
-
-fun showTicketList(context: Context, zendeskFeedbackConfiguration: BaseZendeskFeedbackConfiguration) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
-    }
-    RequestActivity.startActivity(context, zendeskFeedbackConfiguration)
 }
 
 // Helpers
 
 private fun zendeskIdentity(email: String, name: String): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
+
+private fun blogInformation(allSites: List<SiteModel>, username: String?): String {
+    // TODO("use blog separator constant")
+    return allSites.joinToString(separator = ",") { it.logInformation(username) }
+}
