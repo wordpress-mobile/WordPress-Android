@@ -4,6 +4,7 @@ import android.os.StrictMode;
 
 import com.facebook.stetho.Stetho;
 
+import org.wordpress.android.modules.DaggerAppComponentDebug;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -13,6 +14,13 @@ public class WordPressDebug extends WordPress {
         super.onCreate();
         // enableStrictMode()
         Stetho.initializeWithDefaults(this);
+    }
+
+    @Override
+    protected void initDaggerComponent() {
+        mAppComponent = DaggerAppComponentDebug.builder()
+                                               .application(this)
+                                               .build();
     }
 
     /**
