@@ -8,9 +8,22 @@
     android:background="@color/white">
 
     <View
+        android:id="@+id/layout_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="6dp"
+        android:background="@color/grey_lighten_10"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <View
         android:id="@+id/badge"
         android:layout_width="12dp"
         android:layout_height="12dp"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="-12dp"
+        android:layout_marginStart="-12dp"
+        android:layout_marginTop="-12dp"
         android:background="@drawable/notification_badge"
         android:visibility="gone"
         tools:visibility="visible"/>
@@ -25,7 +38,7 @@
             android:id="@+id/nav_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:tint="@color/bottom_nav_item_selector"
             tools:srcCompat="@drawable/ic_create_white_24dp"/>
 
@@ -33,11 +46,11 @@
             android:id="@+id/nav_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:duplicateParentState="true"
-            android:gravity="center"
             android:singleLine="true"
             android:textColor="@color/blue_medium"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:visibility="gone"
             tools:text="label"
             tools:visibility="visible"/>

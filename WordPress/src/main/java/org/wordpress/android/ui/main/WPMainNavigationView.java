@@ -13,6 +13,7 @@ import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -89,6 +90,14 @@ public class WPMainNavigationView extends BottomNavigationView
             ImageView imgIcon = customView.findViewById(R.id.nav_icon);
             txtLabel.setText(getTitleForPosition(position));
             imgIcon.setImageResource(getDrawableResForPosition(position));
+
+            // if this is the new post page, show the gray background and tint the icon white
+            if (position == PAGE_NEW_POST) {
+                customView.findViewById(R.id.layout_background).setVisibility(View.VISIBLE);
+                int color = ContextCompat.getColor(getContext(), R.color.white);
+                imgIcon.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY);
+            }
+
             itemView.addView(customView);
         }
     }
@@ -136,12 +145,11 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     private void handlePostButtonClicked() {
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
-        View postView = menuView.getChildAt(PAGE_NEW_POST);
+        ImageView imgPost = getImageViewForPosition(PAGE_NEW_POST);
 
-        // animate the button before telling the listener the post button was clicked - this way
+        // animate the button icon before telling the listener the post button was clicked - this way
         // the user sees the animation before the editor appears
-        AniUtils.startAnimation(postView, R.anim.notifications_button_scale, new Animation.AnimationListener() {
+        AniUtils.startAnimation(imgPost, R.anim.notifications_button_scale, new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 // noop
@@ -248,7 +256,7 @@ public class WPMainNavigationView extends BottomNavigationView
         }
     }
 
-    @DrawableRes int getDrawableResForPosition(int position) {
+    @DrawableRes private int getDrawableResForPosition(int position) {
         switch (position) {
             case PAGE_MY_SITE:
                 return R.drawable.ic_my_sites_white_32dp;
@@ -328,6 +336,10 @@ public class WPMainNavigationView extends BottomNavigationView
         return null;
     }
 
+    /*
+     * show or hide the badge on the notification page
+     * TODO: badge isn't correctly aligned
+     */
     void showNoteBadge(boolean showBadge) {
         BottomNavigationItemView notifView = getItemView(PAGE_NOTIFS);
         View badgeView = notifView.findViewById(R.id.badge);
@@ -345,7 +357,7 @@ public class WPMainNavigationView extends BottomNavigationView
         }
     }
 
-    boolean isValidPosition(int position) {
+    private boolean isValidPosition(int position) {
         return (position >= 0 && position < NUM_PAGES);
     }
 
