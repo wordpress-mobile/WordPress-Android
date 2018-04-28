@@ -433,11 +433,13 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
         super.onBackPressed();
     }
 
+    // user switched pages in the bottom navbar
     @Override
     public void onPageChanged(int position) {
         updateTitle(position);
     }
 
+    // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
