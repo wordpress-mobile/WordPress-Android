@@ -257,8 +257,9 @@ public class WPMainNavigationView extends BottomNavigationView
     }
 
     /*
-     * ideally we'd use a selector to tint the icon based on its selected state, but color selectors
-     * will crash prior to API 21 so we tint the icon manually
+     * ideally we'd use a color selector to tint the icon based on its selected state, but prior to
+     * API 21 setting a color selector via XML will crash the app, and setting it programmatically
+     * will have no effect
      */
     private void setImageViewSelected(int position, boolean isSelected) {
         int color = getResources().getColor(isSelected ? R.color.blue_medium : R.color.grey_lighten_10);
