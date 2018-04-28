@@ -325,8 +325,7 @@ public class WPMainNavigationView extends BottomNavigationView
 
     /*
      * re-create the fragment adapter so all its fragments are also re-created - used when
-     * user signs in/out so the fragments reflect the active account, or when the app's
-     * language setting is changed
+     * user signs in/out so the fragments reflect the active account
      */
     void resetFragments() {
         AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
@@ -339,14 +338,6 @@ public class WPMainNavigationView extends BottomNavigationView
         int position = getCurrentPosition();
         mNavAdapter.reset();
         setCurrentPosition(position, true);
-
-        // reset the titles in case the language was changed
-        for (int i = 0; i < getMenu().size(); i++) {
-            TextView txtTitle = getTitleViewForPosition(position);
-            if (txtTitle != null) {
-                txtTitle.setText(getTitleForPosition(i));
-            }
-        }
     }
 
     Fragment getFragment(int position) {

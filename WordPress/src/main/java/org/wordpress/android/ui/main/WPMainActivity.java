@@ -594,8 +594,6 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     private void appLanguageChanged() {
         // Recreate this activity (much like a configuration change)
         recreate();
-
-        mBottomNav.resetFragments();
     }
 
     private void startWithNewAccount() {
