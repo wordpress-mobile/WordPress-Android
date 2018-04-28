@@ -60,6 +60,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
+import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -599,7 +600,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     private void startWithNewAccount() {
         GCMRegistrationIntentService.enqueueWork(this,
                 new Intent(this, GCMRegistrationIntentService.class));
-        mBottomNav.resetFragments();
+        ReaderPostListFragment.resetLastUpdateDate();
     }
 
     private MySiteFragment getMySiteFragment() {
@@ -705,7 +706,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed-out or removed the last self-hosted site
-            mBottomNav.resetFragments();
+            ReaderPostListFragment.resetLastUpdateDate();
             // Reset site selection
             setSelectedSite(null);
             // Show the sign in screen

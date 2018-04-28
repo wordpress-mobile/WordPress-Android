@@ -1604,6 +1604,8 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    // reset the timestamp that determines when followed tags/blogs are updated so they're
+    // updated when the fragment is recreated (necessary after signin/disconnect)
     public static void resetLastUpdateDate() {
         mLastAutoUpdateDt = null;
     }

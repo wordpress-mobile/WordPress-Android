@@ -323,23 +323,6 @@ public class WPMainNavigationView extends BottomNavigationView
         }
     }
 
-    /*
-     * re-create the fragment adapter so all its fragments are also re-created - used when
-     * user signs in/out so the fragments reflect the active account
-     */
-    void resetFragments() {
-        AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
-
-        // reset the timestamp that determines when followed tags/blogs are updated so they're
-        // updated when the fragment is recreated (necessary after signin/disconnect)
-        ReaderPostListFragment.resetLastUpdateDate();
-
-        // remember the current position, reset the adapter so new fragments are created, then restore position
-        int position = getCurrentPosition();
-        mNavAdapter.reset();
-        setCurrentPosition(position, true);
-    }
-
     Fragment getFragment(int position) {
         return mNavAdapter.getFragment(position);
     }
@@ -378,10 +361,6 @@ public class WPMainNavigationView extends BottomNavigationView
 
     private class NavAdapter {
         private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_PAGES);
-
-        void reset() {
-            mFragments.clear();
-        }
 
         private Fragment createFragment(int position) {
             Fragment fragment;
