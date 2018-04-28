@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -419,26 +418,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     }
 
     private void announceTitleForAccessibility(int position) {
-        @StringRes int stringRes = -1;
-        switch (position) {
-            case PAGE_MY_SITE:
-                stringRes = R.string.my_site_section_screen_title;
-                break;
-            case PAGE_READER:
-                stringRes = R.string.reader_screen_title;
-                break;
-            case PAGE_ME:
-                stringRes = R.string.me_section_screen_title;
-                break;
-            case PAGE_NOTIFS:
-                stringRes = R.string.notifications_screen_title;
-                break;
-            default:
-                AppLog.w(T.MAIN, "announceTitleForAccessibility unknown page index.");
-        }
-        if (stringRes != -1) {
-            getWindow().getDecorView().announceForAccessibility(getString(stringRes));
-        }
+        getWindow().getDecorView().announceForAccessibility(mBottomNav.getTitleForPosition(position));
     }
 
     @Override
