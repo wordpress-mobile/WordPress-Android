@@ -771,6 +771,14 @@ public abstract class SiteSettingsInterface {
         }
     }
 
+    public void setSiteIconMediaId(int siteIconMediaId) {
+        // want to prevent O(n) language code lookup if there is no change
+        if (mSettings.siteIconMediaId != siteIconMediaId) {
+            mSettings.siteIconMediaId = siteIconMediaId;
+        }
+    }
+
+
     public void setUsername(String username) {
         mSettings.username = username;
     }
@@ -1036,6 +1044,7 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
+            mRemoteSettings.siteIconMediaId = mSettings.siteIconMediaId;
         } else {
             mSettings.isInLocalTable = false;
             mSettings.localTableId = mSite.getId();

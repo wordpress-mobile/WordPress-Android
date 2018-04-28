@@ -30,6 +30,7 @@ import java.util.Map;
 class WPComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
     private static final String LANGUAGE_ID_KEY = "lang_id";
+    private static final String SITE_ICON_KEY = "site_icon";
     private static final String PRIVACY_KEY = "blog_public";
     private static final String URL_KEY = "URL";
     private static final String DEF_CATEGORY_KEY = "default_category";
@@ -558,6 +559,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.title = response.optString(GET_TITLE_KEY, "");
         mRemoteSettings.tagline = response.optString(GET_DESC_KEY, "");
         mRemoteSettings.languageId = settingsObject.optInt(LANGUAGE_ID_KEY, -1);
+        mRemoteSettings.siteIconMediaId = settingsObject.optInt(SITE_ICON_KEY, -1);
         mRemoteSettings.privacy = settingsObject.optInt(PRIVACY_KEY, -2);
         mRemoteSettings.defaultCategory = settingsObject.optInt(DEF_CATEGORY_KEY, 1);
         mRemoteSettings.defaultPostFormat = settingsObject.optString(DEF_POST_FORMAT_KEY, STANDARD_POST_FORMAT_KEY);
@@ -648,6 +650,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.languageId != mRemoteSettings.languageId) {
             params.put(LANGUAGE_ID_KEY, String.valueOf((mSettings.languageId)));
+        }
+        if (mSettings.siteIconMediaId != mRemoteSettings.siteIconMediaId) {
+            params.put(SITE_ICON_KEY, String.valueOf((mSettings.siteIconMediaId)));
         }
         if (mSettings.privacy != mRemoteSettings.privacy) {
             params.put(PRIVACY_KEY, String.valueOf((mSettings.privacy)));

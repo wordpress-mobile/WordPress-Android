@@ -28,6 +28,7 @@ public class SiteSettingsModel {
     private static final String TITLE_COLUMN_NAME = "title";
     private static final String TAGLINE_COLUMN_NAME = "tagline";
     private static final String LANGUAGE_COLUMN_NAME = "language";
+    private static final String SITE_ICON_COLUMN_NAME = "siteIcon";
     private static final String PRIVACY_COLUMN_NAME = "privacy";
     private static final String LOCATION_COLUMN_NAME = "location";
     private static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
@@ -106,6 +107,7 @@ public class SiteSettingsModel {
             + TITLE_COLUMN_NAME + " TEXT, "
             + TAGLINE_COLUMN_NAME + " TEXT, "
             + LANGUAGE_COLUMN_NAME + " INTEGER, "
+            + SITE_ICON_COLUMN_NAME + " INTEGER, "
             + PRIVACY_COLUMN_NAME + " INTEGER, "
             + LOCATION_COLUMN_NAME + " BOOLEAN, "
             + DEF_CATEGORY_COLUMN_NAME + " TEXT, "
@@ -141,6 +143,7 @@ public class SiteSettingsModel {
     public String title;
     public String tagline;
     public String language;
+    public int siteIconMediaId;
     public int languageId;
     public int privacy;
     public boolean location;
@@ -202,6 +205,7 @@ public class SiteSettingsModel {
                && equals(timeFormat, otherModel.timeFormat)
                && equals(timezone, otherModel.timezone)
                && languageId == otherModel.languageId
+               && siteIconMediaId == otherModel.siteIconMediaId
                && privacy == otherModel.privacy
                && location == otherModel.location
                && defaultCategory == otherModel.defaultCategory
@@ -253,6 +257,7 @@ public class SiteSettingsModel {
         tagline = other.tagline;
         language = other.language;
         languageId = other.languageId;
+        siteIconMediaId = other.siteIconMediaId;
         privacy = other.privacy;
         location = other.location;
         defaultCategory = other.defaultCategory;
@@ -319,6 +324,7 @@ public class SiteSettingsModel {
         title = getStringFromCursor(cursor, TITLE_COLUMN_NAME);
         tagline = getStringFromCursor(cursor, TAGLINE_COLUMN_NAME);
         languageId = getIntFromCursor(cursor, LANGUAGE_COLUMN_NAME);
+        siteIconMediaId = getIntFromCursor(cursor, SITE_ICON_COLUMN_NAME);
         privacy = getIntFromCursor(cursor, PRIVACY_COLUMN_NAME);
         defaultCategory = getIntFromCursor(cursor, DEF_CATEGORY_COLUMN_NAME);
         defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
@@ -406,6 +412,7 @@ public class SiteSettingsModel {
         values.put(TAGLINE_COLUMN_NAME, tagline);
         values.put(PRIVACY_COLUMN_NAME, privacy);
         values.put(LANGUAGE_COLUMN_NAME, languageId);
+        values.put(SITE_ICON_COLUMN_NAME, siteIconMediaId);
         values.put(LOCATION_COLUMN_NAME, location);
         values.put(DEF_CATEGORY_COLUMN_NAME, defaultCategory);
         values.put(CATEGORIES_COLUMN_NAME, categoryIdList(categories));
