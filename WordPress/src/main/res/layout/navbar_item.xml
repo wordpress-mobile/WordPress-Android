@@ -17,7 +17,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center_horizontal"
-            android:tint="@color/bottom_nav_item_selector"
+            android:tint="@color/grey_lighten_10"
             tools:srcCompat="@drawable/ic_create_white_24dp"/>
 
         <TextView

@@ -228,12 +228,12 @@ public class WPMainNavigationView extends BottomNavigationView
         // remove the title and selected state from the previously selected item
         if (mPrevPosition > -1) {
             showTitleForPosition(mPrevPosition, false);
-            getImageViewForPosition(mPrevPosition).setSelected(false);
+            setImageViewSelected(mPrevPosition, false);
         }
 
         // set the title and selected state from the newly selected item
         showTitleForPosition(position, true);
-        getImageViewForPosition(position).setSelected(true);
+        setImageViewSelected(position, true);
         mPrevPosition = position;
 
         if (ensureSelected) {
@@ -254,6 +254,15 @@ public class WPMainNavigationView extends BottomNavigationView
                     .setTransition(TRANSIT_FRAGMENT_FADE)
                     .commit();
         }
+    }
+
+    /*
+     * ideally we'd use a selector to tint the icon based on its selected state, but color selectors
+     * will crash prior to API 21 so we tint the icon manually
+     */
+    private void setImageViewSelected(int position, boolean isSelected) {
+        int color = getResources().getColor(isSelected ? R.color.blue_medium : R.color.grey_lighten_10);
+        getImageViewForPosition(position).setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY);
     }
 
     @DrawableRes private int getDrawableResForPosition(int position) {
