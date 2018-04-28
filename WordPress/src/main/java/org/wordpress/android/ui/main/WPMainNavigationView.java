@@ -25,6 +25,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
@@ -83,23 +84,26 @@ public class WPMainNavigationView extends BottomNavigationView
         // overlay each item with our custom view
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (int position = 0; position < getMenu().size(); position++) {
-            BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(position);
+        for (int i = 0; i < getMenu().size(); i++) {
+            BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(i);
             View customView;
             // remove the background ripple and use a different layout for the post button
-            if (position == PAGE_NEW_POST) {
+            if (i == PAGE_NEW_POST) {
                 itemView.setBackground(null);
                 customView = inflater.inflate(R.layout.navbar_post_item, menuView, false);
             } else {
                 customView = inflater.inflate(R.layout.navbar_item, menuView, false);
                 TextView txtLabel = customView.findViewById(R.id.nav_label);
                 ImageView imgIcon = customView.findViewById(R.id.nav_icon);
-                txtLabel.setText(getTitleForPosition(position));
-                imgIcon.setImageResource(getDrawableResForPosition(position));
+                txtLabel.setText(getTitleForPosition(i));
+                imgIcon.setImageResource(getDrawableResForPosition(i));
             }
 
             itemView.addView(customView);
         }
+
+        int position = AppPrefs.getMainPageIndex();
+        setCurrentPosition(position);
     }
 
     /*
@@ -234,6 +238,8 @@ public class WPMainNavigationView extends BottomNavigationView
         // set the title and selected state from the newly selected item
         showTitleForPosition(position, true);
         setImageViewSelected(position, true);
+
+        AppPrefs.setMainPageIndex(position);
         mPrevPosition = position;
 
         if (ensureSelected) {

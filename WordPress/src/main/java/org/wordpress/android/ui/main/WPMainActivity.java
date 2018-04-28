@@ -152,8 +152,6 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getFragmentManager(), this);
-        int position = AppPrefs.getMainPageIndex();
-        mBottomNav.setCurrentPosition(position);
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
@@ -437,7 +435,6 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
 
     @Override
     public void onPageChanged(int position) {
-        AppPrefs.setMainPageIndex(position);
         updateTitle(position);
     }
 
