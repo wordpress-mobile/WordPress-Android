@@ -437,6 +437,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     @Override
     public void onPageChanged(int position) {
         updateTitle(position);
+        trackLastVisiblePage(position, true);
     }
 
     // user tapped the new post button in the bottom navbar
