@@ -144,7 +144,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject OAuthAuthenticator mOAuthAuthenticator;
     public static OAuthAuthenticator sOAuthAuthenticator;
 
-    private AppComponent mAppComponent;
+    protected AppComponent mAppComponent;
 
     public AppComponent component() {
         return mAppComponent;
@@ -220,9 +220,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         WellSql.init(new WellSqlConfig(getApplicationContext()));
 
         // Init Dagger
-        mAppComponent = DaggerAppComponent.builder()
-                                          .application(this)
-                                          .build();
+        initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
 
@@ -309,6 +307,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    protected void initDaggerComponent() {
+        mAppComponent = DaggerAppComponent.builder()
+                                          .application(this)
+                                          .build();
     }
 
     private void disableRtlLayoutDirectionOnSdk17() {
