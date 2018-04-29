@@ -95,6 +95,8 @@ public class SiteSettingsModel {
                                                  + " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME
                                                    + " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_SITE_ICON = "alter table " + SETTINGS_TABLE_NAME
+                                               + " add " + SITE_ICON_COLUMN_NAME + " INTEGER;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS "

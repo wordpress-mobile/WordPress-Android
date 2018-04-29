@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 64;
+    private static final int DATABASE_VERSION = 65;
 
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
@@ -224,6 +224,10 @@ public class WordPressDB {
                 // add AMP site setting as part of #betterjetpackxp
                 mDb.execSQL(SiteSettingsModel.ADD_AMP_SUPPORTED);
                 mDb.execSQL(SiteSettingsModel.ADD_AMP_ENABLED);
+                currentVersion++;
+            case 64:
+                // add site icon
+                mDb.execSQL(SiteSettingsModel.ADD_SITE_ICON);
                 currentVersion++;
         }
         mDb.setVersion(DATABASE_VERSION);
