@@ -17,8 +17,8 @@ public class NavigationTests {
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
-    String mUsername = BuildConfig.ESPRESSO_USERNAME;
-    String mPassword = BuildConfig.ESPRESSO_PASSWORD;
+    private static final String USERNAME = BuildConfig.ESPRESSO_USERNAME;
+    private static final String PASSWORD = BuildConfig.ESPRESSO_PASSWORD;
 
     @After
     public void tearDown() {
@@ -29,10 +29,10 @@ public class NavigationTests {
     public void testNavigation() {
         new LoginRobot()
                 .selectLoginOption()
-                .typeUsername(mUsername)
+                .typeUsername(USERNAME)
                 .tapNextButton()
                 .tapToEnterPasswordInstead()
-                .typePassword(mPassword)
+                .typePassword(PASSWORD)
                 .tapNextButton()
                 .tapToContinueOnSiteSelection();
 
