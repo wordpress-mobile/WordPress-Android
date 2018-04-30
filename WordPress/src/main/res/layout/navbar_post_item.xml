@@ -18,6 +18,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_centerInParent="true"
+        android:contentDescription="@string/tabbar_accessibility_label_write"
         android:tint="@color/white"
         app:srcCompat="@drawable/ic_create_white_24dp"/>
 

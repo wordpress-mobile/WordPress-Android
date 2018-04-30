@@ -96,6 +96,7 @@ public class WPMainNavigationView extends BottomNavigationView
                 TextView txtLabel = customView.findViewById(R.id.nav_label);
                 ImageView imgIcon = customView.findViewById(R.id.nav_icon);
                 txtLabel.setText(getTitleForPosition(i));
+                txtLabel.setContentDescription(getContentDescriptionForPosition(i));
                 imgIcon.setImageResource(getDrawableResForPosition(i));
             }
 
@@ -304,6 +305,28 @@ public class WPMainNavigationView extends BottomNavigationView
                 break;
             default:
                 idRes = R.string.notifications_screen_title;
+                break;
+        }
+        return getContext().getString(idRes);
+    }
+
+    CharSequence getContentDescriptionForPosition(int position) {
+        @StringRes int idRes;
+        switch (position) {
+            case PAGE_MY_SITE:
+                idRes = R.string.tabbar_accessibility_label_my_site;
+                break;
+            case PAGE_READER:
+                idRes = R.string.tabbar_accessibility_label_reader;
+                break;
+            case PAGE_NEW_POST:
+                idRes = R.string.tabbar_accessibility_label_write;
+                break;
+            case PAGE_ME:
+                idRes = R.string.tabbar_accessibility_label_me;
+                break;
+            default:
+                idRes = R.string.tabbar_accessibility_label_notifications;
                 break;
         }
         return getContext().getString(idRes);

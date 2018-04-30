@@ -417,7 +417,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     }
 
     private void announceTitleForAccessibility(int position) {
-        getWindow().getDecorView().announceForAccessibility(mBottomNav.getTitleForPosition(position));
+        getWindow().getDecorView().announceForAccessibility(mBottomNav.getContentDescriptionForPosition(position));
     }
 
     @Override
