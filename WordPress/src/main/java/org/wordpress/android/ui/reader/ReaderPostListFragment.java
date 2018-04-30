@@ -1543,15 +1543,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        Context context = view.getContext();
-        final ListPopupWindow listPopup = new ListPopupWindow(context);
-        listPopup.setAnchorView(view);
-        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-        listPopup.setModal(true);
-
         List<Integer> menuItems = new ArrayList<>();
-        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
-        if (isFollowed) {
+
+        if (ReaderPostTable.isPostFollowed(post)) {
             menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
 
             if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
@@ -1562,10 +1556,17 @@ public class ReaderPostListFragment extends Fragment
         } else {
             menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
         }
+
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
         }
+
+        Context context = view.getContext();
+        final ListPopupWindow listPopup = new ListPopupWindow(context);
+        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
         listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
+        listPopup.setAnchorView(view);
+        listPopup.setModal(true);
         listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
