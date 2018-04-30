@@ -1588,9 +1588,11 @@ public class ReaderPostListFragment extends Fragment
                         blockBlogForPost(post);
                         break;
                     case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
+                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
                         updateSubscription(SubscriptionAction.DELETE, post.blogId);
                         break;
                     case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
+                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
                         updateSubscription(SubscriptionAction.NEW, post.blogId);
                         break;
                 }
