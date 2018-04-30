@@ -7,24 +7,25 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Screen navigator used when the app is opened from an Android Shortcut.
  */
-@Singleton
 public class ShortcutsNavigator {
     public static final String ACTION_OPEN_SHORTCUT =
             "org.wordpress.android.ui.ShortcutsNavigator.ACTION_OPEN_SHORTCUT";
-    private static final String OPEN_STATS = "org.wordpress.android.ui.ShortcutsNavigator.OPEN_STATS";
-    private static final String CREATE_NEW_POST = "org.wordpress.android.ui.ShortcutsNavigator.CREATE_NEW_POST";
-    private static final String OPEN_NOTIFICATIONS = "org.wordpress.android.ui.ShortcutsNavigator.OPEN_NOTIFICATIONS";
 
     @Inject ShortcutsNavigator() {
     }
 
     public void showTargetScreen(String action, Activity activity, SiteModel currentSite) {
-        switch (action) {
+        Shortcut shortcut = Shortcut.fromActionString(action);
+        if (shortcut == null) {
+            AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut action[%s]", action));
+            return;
+        }
+
+        switch (shortcut) {
             case OPEN_STATS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_STATS_CLICKED);
                 ActivityLauncher.viewBlogStats(activity, currentSite);
@@ -38,7 +39,7 @@ public class ShortcutsNavigator {
                 ActivityLauncher.viewNotifications(activity);
                 break;
             default:
-                AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut action[%s]", action));
+                AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut[%s]", shortcut));
         }
     }
 }

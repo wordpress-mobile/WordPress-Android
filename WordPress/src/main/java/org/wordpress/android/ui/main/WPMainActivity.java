@@ -50,6 +50,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
@@ -76,6 +77,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -123,6 +125,7 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
+    @Inject ShortcutUtils mShortcutUtils;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -206,7 +209,6 @@ public class WPMainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 AppPrefs.setMainTabIndex(position);
-
                 switch (position) {
                     case WPMainTabAdapter.TAB_MY_SITE:
                         setTabLayoutElevation(mAppBarElevation);
@@ -223,9 +225,9 @@ public class WPMainActivity extends AppCompatActivity {
                         if (fragment instanceof OnScrollToTopListener) {
                             ((OnScrollToTopListener) fragment).onScrollToTop();
                         }
+                        mShortcutUtils.reportShortcutUsed(Shortcut.OPEN_NOTIFICATIONS);
                         break;
                 }
-
                 trackLastVisibleTab(position, true);
             }
 
