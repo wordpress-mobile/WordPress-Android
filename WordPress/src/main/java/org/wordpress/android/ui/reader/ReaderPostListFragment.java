@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -1597,6 +1598,9 @@ public class ReaderPostListFragment extends Fragment
                         ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
                         updateSubscription(SubscriptionAction.NEW, post.blogId);
                         break;
+                    case ReaderMenuAdapter.ITEM_SHARE:
+                        sharePost(post);
+                        break;
                 }
             }
         });
@@ -1634,6 +1638,21 @@ public class ReaderPostListFragment extends Fragment
                           + event.error.type + " - " + event.error.message);
         } else {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
+        }
+    }
+
+    private void sharePost(ReaderPost post) {
+        String url = (post.hasShortUrl() ? post.getShortUrl() : post.getUrl());
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_share_intent);
         }
     }
 
