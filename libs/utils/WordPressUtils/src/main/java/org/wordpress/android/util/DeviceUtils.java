@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class DeviceUtils {
+    private static final String APP_RUNTIME_ON_CHROME_FLAG = "org.chromium.arc.device_management";
+
     private static DeviceUtils instance;
     private boolean mIsKindleFire = false;
 
@@ -88,6 +90,16 @@ public class DeviceUtils {
     public boolean isDeviceLocked(Context context) {
         KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         return myKM.inKeyguardRestrictedInputMode();
+    }
+
+    /**
+     * Checks if the current device runtime is ARC which effectively means it is a chromebook.
+     *
+     * @param context The context.
+     * @return Whether the device is a chromebook.
+     */
+    public boolean isAppRuntimeForChrome(Context context) {
+        return context.getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
     }
 
     private String capitalize(String s) {
