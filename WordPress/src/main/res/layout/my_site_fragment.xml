@@ -327,7 +327,6 @@
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/plugins"
-                    android:tint="@color/grey"
                     app:srcCompat="@drawable/ic_gridicons_plugin"/>
 
                 <org.wordpress.android.widgets.WPTextView
