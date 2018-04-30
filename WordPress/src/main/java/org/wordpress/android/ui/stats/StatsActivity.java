@@ -38,6 +38,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
@@ -645,7 +646,7 @@ public class StatsActivity extends AppCompatActivity
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         boolean isCountAPromoMilestone = counter == 3 || counter == 1000 || counter == 10000;
 
-        return isCountAPromoMilestone && !isAppRuntimeForChrome();
+        return isCountAPromoMilestone && !DeviceUtils.getInstance().isAppRuntimeForChrome(this);
     }
 
     @SuppressWarnings("unused")
