@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
     }
 }
 
@@ -31,12 +31,12 @@ android {
 }
 
 dependencies {
-    implementation ('org.wordpress:utils:1.20.2') {
+    implementation ('org.wordpress:utils:1.20.3') {
         exclude group: "com.mcxiaoke.volley"
     }
 
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 
     implementation 'com.google.android.gms:play-services-auth:12.0.1'
 
@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig
