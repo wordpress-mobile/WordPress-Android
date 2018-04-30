@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
+import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -450,7 +451,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSubscriptionUpdated(AccountStore.OnSubscriptionUpdated event) {
+    public void onSubscriptionUpdated(OnSubscriptionUpdated event) {
         if (event.isError()) {
             AppLog.e(T.API, ReaderPostDetailFragment.class.getSimpleName() + ".onSubscriptionUpdated: "
                           + event.error.type + " - " + event.error.message);
