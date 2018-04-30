@@ -43,7 +43,7 @@
     <View
         android:id="@+id/navbar_separator"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="1dp"
         android:layout_above="@+id/bottom_navigation"
         android:background="@color/grey_lighten_20"/>
 
