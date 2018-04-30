@@ -46,7 +46,8 @@
             android:layout_height="wrap_content"
             android:text="@string/width"
             android:textStyle="bold"
-            android:textColor="@color/image_options_label"/>
+            android:textColor="@color/image_options_label"
+            android:labelFor="@+id/imageWidthText"/>
 
         <SeekBar
             android:layout_height="wrap_content"
