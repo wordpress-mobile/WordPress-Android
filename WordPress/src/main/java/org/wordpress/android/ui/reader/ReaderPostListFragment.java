@@ -1557,6 +1557,8 @@ public class ReaderPostListFragment extends Fragment
             menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
         }
 
+        menuItems.add(ReaderMenuAdapter.ITEM_SHARE);
+
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
         }

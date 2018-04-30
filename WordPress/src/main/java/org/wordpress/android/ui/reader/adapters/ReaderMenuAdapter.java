@@ -26,6 +26,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
     public static final int ITEM_BLOCK = 2;
     public static final int ITEM_NOTIFICATIONS_OFF = 3;
     public static final int ITEM_NOTIFICATIONS_ON = 4;
+    public static final int ITEM_SHARE = 5;
 
     public ReaderMenuAdapter(Context context, @NonNull List<Integer> menuItems) {
         super();
@@ -87,6 +88,11 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 textRes = R.string.reader_btn_notifications_on;
                 textColorRes = R.color.reader_notifications_on;
                 iconRes = R.drawable.ic_bell_grey_dark_24dp;
+                break;
+            case ITEM_SHARE:
+                textRes = R.string.reader_btn_share;
+                textColorRes = R.color.grey_dark;
+                iconRes = R.drawable.ic_share_grey_dark_24dp;
                 break;
             default:
                 return convertView;
