@@ -20,7 +20,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -383,7 +382,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void handleOpenTabIntent(Intent intent) {
         String tabIdentifier = intent.getStringExtra(ARG_OPEN_TAB);
-        if (StringUtils.isNotBlank(tabIdentifier)) {
+        if (!TextUtils.isEmpty(tabIdentifier)) {
             switch (tabIdentifier) {
                 case ARG_NOTIFICATIONS:
                     mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
