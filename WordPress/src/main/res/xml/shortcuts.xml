@@ -3,7 +3,7 @@
            xmlns:tools="http://schemas.android.com/tools"
            tools:targetApi="n_mr1">
     <shortcut
-        android:icon="@mipmap/ic_shortcut_stats"
+        android:icon="@drawable/ic_shortcut_stats"
         android:shortcutId="stats"
         android:shortcutShortLabel="@string/stats">
         <intent
@@ -16,7 +16,7 @@
         </intent>
     </shortcut>
     <shortcut
-        android:icon="@mipmap/ic_shortcut_notifications"
+        android:icon="@drawable/ic_shortcut_notifications"
         android:shortcutId="notifications"
         android:shortcutShortLabel="@string/notifications_screen_title">
         <intent
@@ -29,7 +29,7 @@
         </intent>
     </shortcut>
     <shortcut
-        android:icon="@mipmap/ic_shortcut_create_post"
+        android:icon="@drawable/ic_shortcut_create_post"
         android:shortcutId="new_post"
         android:shortcutShortLabel="@string/new_post">
         <intent
