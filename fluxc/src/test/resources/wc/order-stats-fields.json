@@ -1,0 +1,20 @@
+[
+  "period",
+  "orders",
+  "products",
+  "coupons",
+  "coupon_discount",
+  "total_sales",
+  "total_tax",
+  "total_shipping",
+  "total_shipping_tax",
+  "total_refund",
+  "total_tax_refund",
+  "total_shipping_refund",
+  "total_shipping_tax_refund",
+  "currency",
+  "gross_sales",
+  "net_sales",
+  "avg_order_value",
+  "avg_products_per_order"
+]
