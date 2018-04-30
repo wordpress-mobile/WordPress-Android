@@ -11,6 +11,10 @@
 
     <PreferenceCategory
         android:layout="@layout/wp_preference_category"
+        android:key="@string/pref_notification_blogs_followed"
+        android:title="@string/notification_settings_category_followed_sites" />
+
+    <PreferenceCategory
         android:key="@string/pref_notification_other_category"
         android:title="@string/notification_settings_category_other" >
 

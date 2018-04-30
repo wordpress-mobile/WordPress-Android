@@ -61,6 +61,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -1759,7 +1760,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSite = null;
     }
 
-    public void handleDeleteSiteError(SiteStore.DeleteSiteError error) {
+    public void handleDeleteSiteError(DeleteSiteError error) {
         AppLog.e(AppLog.T.SETTINGS, "SiteDeleted error: " + error.type);
 
         HashMap<String, Object> errorProperty = new HashMap<>();

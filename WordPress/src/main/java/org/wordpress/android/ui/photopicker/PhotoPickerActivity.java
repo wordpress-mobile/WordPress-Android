@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -99,7 +100,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.photo_picker_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -349,7 +350,7 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+    public void onMediaUploaded(OnMediaUploaded event) {
         if (event.isError()) {
             hideUploadProgressDialog();
             String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);

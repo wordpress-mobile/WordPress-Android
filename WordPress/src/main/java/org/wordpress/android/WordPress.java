@@ -10,12 +10,14 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
@@ -43,6 +45,7 @@ import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
@@ -141,7 +144,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject OAuthAuthenticator mOAuthAuthenticator;
     public static OAuthAuthenticator sOAuthAuthenticator;
 
-    private AppComponent mAppComponent;
+    protected AppComponent mAppComponent;
 
     public AppComponent component() {
         return mAppComponent;
@@ -154,6 +157,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
             }
             return true;
         }
@@ -216,9 +220,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         WellSql.init(new WellSqlConfig(getApplicationContext()));
 
         // Init Dagger
-        mAppComponent = DaggerAppComponent.builder()
-                                          .application(this)
-                                          .build();
+        initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
 
@@ -305,6 +307,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    protected void initDaggerComponent() {
+        mAppComponent = DaggerAppComponent.builder()
+                                          .application(this)
+                                          .build();
     }
 
     private void disableRtlLayoutDirectionOnSdk17() {
@@ -513,6 +521,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
             if (appLock != null) {
                 appLock.setPassword(null);
+            }
+        }
+        if (!event.isError() && event.causeOfChange == AccountAction.FETCH_SETTINGS && mAccountStore.hasAccessToken()) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+            boolean hasUserOptedOut = !prefs.getBoolean(getString(R.string.pref_key_send_usage), true);
+            AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut);
+            // When local and remote prefs are different, force opt out to TRUE
+            if (hasUserOptedOut != mAccountStore.getAccount().getTracksOptOut()) {
+                AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
             }
         }
     }

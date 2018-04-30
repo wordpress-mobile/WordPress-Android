@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-06 14:53:43+0000
+Translation-Revision-Date: 2018-04-11 16:28:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="media_preview_title">%1$d de %2$d</string>
+    <string name="stock_media_picker_empty_results">Ninguna coincidencia</string>
+    <string name="stock_media_picker_initial_empty_subtext">Fotografías facilitadas por %s</string>
+    <string name="stock_media_picker_initial_empty_text">Busca para encontrar fotografías gratuitas para añadir a tu biblioteca de medios</string>
+    <string name="stock_media_picker_search_hint">Búsqueda gratuita en la biblioteca de fotos</string>
+    <string name="photo_picker_stock_media">Selecciona de la biblioteca gratuita de fotos</string>
+    <string name="error_save_empty_draft">No se puede guardar un borrador vacío</string>
+    <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
+    <string name="preview_count">Vista previa %d</string>
+    <string name="add_count">Añadir %d</string>
     <string name="site_creation_domain_selection_title">Crea un nuevo sitio paso 4</string>
     <string name="site_creation_site_details_title">Crea un nuevo sitio paso 3</string>
     <string name="site_creation_theme_selection_title">Crea un nuevo sitio paso 2</string>

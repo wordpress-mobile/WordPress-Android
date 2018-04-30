@@ -44,6 +44,7 @@ import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -86,12 +87,17 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
+import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -104,6 +110,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
+import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -175,7 +182,8 @@ public class EditPostActivity extends AppCompatActivity implements
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
-        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface,
+        BasicYesNoFragmentDialog.BasicYesNoDialogClickInterface,
+        PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
@@ -206,6 +214,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
+
+    private static final String WHAT_IS_NEW_IN_MOBILE_URL =
+            "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
 
     enum AddExistingdMediaSource {
         WP_MEDIA_LIBRARY,
@@ -247,7 +258,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean mIsNewPost;
     private boolean mIsPage;
-    private boolean mIsPromo;
     private boolean mHasSetPostContent;
 
     private View mPhotoPickerContainer;
@@ -339,7 +349,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (extras != null) {
                     mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
-                    mIsPromo = extras.getBoolean(EXTRA_IS_PROMO);
                 }
                 mIsNewPost = true;
 
@@ -505,8 +514,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!mediaToDeleteAssociationFor.isEmpty()) {
                 // also remove the association of Media-to-Post for this post
-                UploadStore.ClearMediaPayload clearMediaPayload =
-                        new UploadStore.ClearMediaPayload(mPost, mediaToDeleteAssociationFor);
+                ClearMediaPayload clearMediaPayload = new ClearMediaPayload(mPost, mediaToDeleteAssociationFor);
                 mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
             }
         }
@@ -679,12 +687,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (orientation != mPhotoPickerOrientation) {
             resizePhotoPicker();
         }
-
-        // If we're showing the Async promo dialog, we need to notify it to take the new orientation into account
-        PromoDialog fragment = (PromoDialog) getSupportFragmentManager().findFragmentByTag(ASYNC_PROMO_DIALOG_TAG);
-        if (fragment != null) {
-            fragment.redrawForOrientationChange();
-        }
     }
 
     private String getSaveButtonText() {
@@ -785,15 +787,16 @@ public class EditPostActivity extends AppCompatActivity implements
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        MediaBrowserType mediaBrowserType =
-                mShowAztecEditor ? MediaBrowserType.AZTEC_EDITOR_PICKER : MediaBrowserType.EDITOR_PICKER;
-
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, mediaBrowserType, getSite());
-
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.photo_fragment_container, mPhotoPickerFragment, PHOTO_PICKER_TAG)
-                .commit();
+        mPhotoPickerFragment = (PhotoPickerFragment) getFragmentManager().findFragmentByTag(PHOTO_PICKER_TAG);
+        if (mPhotoPickerFragment == null) {
+            MediaBrowserType mediaBrowserType =
+                    mShowAztecEditor ? MediaBrowserType.AZTEC_EDITOR_PICKER : MediaBrowserType.EDITOR_PICKER;
+            mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, mediaBrowserType, getSite());
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.photo_fragment_container, mPhotoPickerFragment, PHOTO_PICKER_TAG)
+                    .commit();
+        }
     }
 
     /*
@@ -1033,6 +1036,8 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
+        } else if (isPhotoPickerShowing()) {
+            hidePhotoPicker();
         } else {
             savePostAndOptionallyFinish(true);
         }
@@ -1042,13 +1047,13 @@ public class EditPostActivity extends AppCompatActivity implements
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        hidePhotoPicker();
-
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
             return handleBackPressed();
         }
+
+        hidePhotoPicker();
 
         if (itemId == R.id.menu_save_post) {
             if (!AppPrefs.isAsyncPromoRequired()) {
@@ -1132,15 +1137,15 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showPublishConfirmationDialog() {
-        BaseYesNoFragmentDialog publishConfirmationDialog = new BaseYesNoFragmentDialog();
-        publishConfirmationDialog.setArgs(
+        BasicYesNoFragmentDialog publishConfirmationDialog = new BasicYesNoFragmentDialog();
+        publishConfirmationDialog.initialize(
                 TAG_PUBLISH_CONFIRMATION_DIALOG,
                 getString(R.string.dialog_confirm_publish_title),
                 mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                         : getString(R.string.dialog_confirm_publish_message_post),
                 getString(R.string.dialog_confirm_publish_yes),
                 getString(R.string.keep_editing)
-            );
+                                            );
         publishConfirmationDialog.show(getSupportFragmentManager(), TAG_PUBLISH_CONFIRMATION_DIALOG);
     }
 
@@ -1168,7 +1173,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void onUploadError(MediaModel media, MediaStore.MediaError error) {
+    private void onUploadError(MediaModel media, MediaError error) {
         String localMediaId = String.valueOf(media.getId());
 
         Map<String, Object> properties = null;
@@ -1356,25 +1361,48 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
     }
 
-    @Override public void onPositiveClicked(String instanceTag) {
-        if (instanceTag != null) {
-            if (instanceTag == TAG_PUBLISH_CONFIRMATION_DIALOG) {
+    @Override public void onPositiveClicked(@NonNull String instanceTag) {
+        switch (instanceTag) {
+            case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 publishPost();
-            } else if (instanceTag == TAG_REMOVE_FAILED_UPLOADS_DIALOG) {
+                break;
+            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 // Clear failed uploads
                 mEditorFragment.removeAllFailedMediaUploads();
-            }
-        } else {
-            ToastUtils.showToast(EditPostActivity.this,
-                    getString(R.string.editor_toast_no_action_taken));
-            AppLog.e(T.EDITOR, "Dialog instanceTag is null - positive button clicked, but no action taken");
+                break;
+            case ASYNC_PROMO_DIALOG_TAG:
+                publishPost();
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
     }
 
-    @Override public void onNegativeClicked(String instanceTag) {
-        if (instanceTag != null && instanceTag == TAG_PUBLISH_CONFIRMATION_DIALOG) {
-            // no op
+    @Override public void onNegativeClicked(@NonNull String instanceTag) {
+        switch (instanceTag) {
+            case ASYNC_PROMO_DIALOG_TAG:
+            case TAG_PUBLISH_CONFIRMATION_DIALOG:
+            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
+                // the dialog is automatically dismissed
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        }
+    }
+
+    @Override public void onLinkClicked(@NotNull String instanceTag) {
+        switch (instanceTag) {
+            case ASYNC_PROMO_DIALOG_TAG:
+                Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
+                intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL, WHAT_IS_NEW_IN_MOBILE_URL);
+                startActivity(intent);
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
     }
 
@@ -1418,11 +1446,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (isPhotoPickerShowing()) {
-            hidePhotoPicker();
-            return;
-        }
-
         handleBackPressed();
     }
 
@@ -1628,8 +1651,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showRemoveFailedUploadsDialog() {
-        BaseYesNoFragmentDialog removeFailedUploadsDialog = new BaseYesNoFragmentDialog();
-        removeFailedUploadsDialog.setArgs(
+        BasicYesNoFragmentDialog removeFailedUploadsDialog = new BasicYesNoFragmentDialog();
+        removeFailedUploadsDialog.initialize(
                 TAG_REMOVE_FAILED_UPLOADS_DIALOG,
                 null,
                 getString(R.string.editor_toast_failed_uploads),
@@ -3237,7 +3260,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+    public void onMediaUploaded(OnMediaUploaded event) {
         if (isFinishing()) {
             return;
         }
@@ -3253,7 +3276,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (event.media.getUrl() == null) {
-                MediaStore.MediaError error = new MediaStore.MediaError(MediaErrorType.GENERIC_ERROR);
+                MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 onUploadError(event.media, error);
             } else {
                 onUploadSuccess(event.media);
@@ -3267,7 +3290,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostChanged(PostStore.OnPostChanged event) {
+    public void onPostChanged(OnPostChanged event) {
         if (event.causeOfChange == PostAction.UPDATE_POST) {
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
@@ -3278,7 +3301,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostUploaded(PostStore.OnPostUploaded event) {
+    public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
         if (post != null && post.getId() == mPost.getId()) {
             if (event.isError()) {
@@ -3344,40 +3367,17 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showAsyncPromoDialog() {
-        final PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
+        final PromoDialog asyncPromoDialog = new PromoDialog();
+        asyncPromoDialog.initialize(ASYNC_PROMO_DIALOG_TAG,
+                getString(R.string.async_promo_title),
+                getString(R.string.async_promo_description),
+                getString(R.string.async_promo_publish_now),
                 R.drawable.img_promo_async,
-                R.string.async_promo_title,
-                R.string.async_promo_description,
-                R.string.async_promo_publish_now)
-                .setNegativeButtonText(R.string.keep_editing)
-                .setLinkText(R.string.async_promo_link)
-                .build();
-
-        asyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
-                intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
-                                "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/");
-                startActivity(intent);
-            }
-        });
-
-        asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                publishPost();
-            }
-        });
-
-        asyncPromoDialog.setNegativeButtonOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                asyncPromoDialog.dismiss();
-            }
-        });
+                getString(R.string.keep_editing),
+                getString(R.string.async_promo_link));
 
         asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+
         AppPrefs.setAsyncPromoRequired(false);
     }
 

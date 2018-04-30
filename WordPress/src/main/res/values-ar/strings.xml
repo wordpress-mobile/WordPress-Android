@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-03 11:54:09+0000
+Translation-Revision-Date: 2018-04-17 11:54:07+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="media_preview_title">%1$d من %2$d</string>
+    <string name="stock_media_picker_empty_results">لا توجد تطابقات</string>
+    <string name="stock_media_picker_initial_empty_subtext">الصور التي وفّرها %s</string>
+    <string name="stock_media_picker_initial_empty_text">البحث للعثور على صور مجانية لإضافتها إلى مكتبة الوسائط الخاصة بك</string>
+    <string name="stock_media_picker_search_hint">البحث عن مكتبة الصور المجانية</string>
+    <string name="photo_picker_stock_media">اختيار من مكتبة الصور المجانية</string>
+    <string name="error_save_empty_draft">لا يمكن حفظ مسودة فارغة</string>
+    <string name="site_settings_quota_space_unlimited">%1$s من غير المحدود</string>
+    <string name="preview_count">معاينة %d</string>
+    <string name="add_count">إضافة %d</string>
     <string name="site_creation_domain_selection_title">الخطوة 4 من خطوات إنشاء موقع جديد</string>
     <string name="site_creation_site_details_title">الخطوة 3 من خطوات إنشاء موقع جديد</string>
     <string name="site_creation_theme_selection_title">الخطوة 2 من خطوات إنشاء موقع جديد</string>
@@ -470,6 +480,7 @@ Language: ar
     <string name="login_site_address">عنوان الموقع</string>
     <string name="enter_site_address">أدخل عنوان موقع وردبرس الذي تود الاتصال به.</string>
     <string name="login_already_logged_in_wpcom">تم التسجيل بالفعل في موقع وردبرس.كوم</string>
+    <string name="login_username_at">\@%s</string>
     <string name="login_continue">المتابعة</string>
     <string name="connect_more">الاتصال بموقع آخر</string>
     <string name="enter_wpcom_password">أدخل كلمة مرور وردبرس.كوم.</string>

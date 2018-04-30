@@ -17,8 +17,18 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated
+import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
@@ -29,8 +39,11 @@ private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
 private const val KEY_TITLE = "KEY_TITLE"
 
 @WorkerThread
-class PluginBrowserViewModel @Inject
-constructor(private val mDispatcher: Dispatcher, private val mPluginStore: PluginStore) : ViewModel() {
+class PluginBrowserViewModel @Inject constructor(
+    private val mDispatcher: Dispatcher,
+    private val mPluginStore: PluginStore,
+    private val mSiteStore: SiteStore
+) : ViewModel() {
     enum class PluginListType {
         SITE,
         FEATURED,
@@ -210,6 +223,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
+        if (listType == PluginListType.SITE && SiteUtils.isNonAtomicBusinessPlanSite(site)) {
+            return false
+        }
         val currentStatus = when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> sitePluginsListStatus.value
             PluginBrowserViewModel.PluginListType.FEATURED -> featuredPluginsListStatus.value
@@ -235,8 +251,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     // Network Callbacks
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onWPOrgPluginFetched(event: PluginStore.OnWPOrgPluginFetched) {
+    @Suppress("unused")
+    fun onWPOrgPluginFetched(event: OnWPOrgPluginFetched) {
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
             return
@@ -249,11 +265,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onPluginDirectoryFetched(event: PluginStore.OnPluginDirectoryFetched) {
+    @Suppress("unused")
+    fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         val listStatus = if (event.isError) {
-            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
-                    + event.error.type)
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
+                    event.error.type)
             PluginListStatus.ERROR
         } else {
             if (event.canLoadMore) PluginListStatus.CAN_LOAD_MORE else PluginListStatus.DONE
@@ -271,8 +287,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onPluginDirectorySearched(event: PluginStore.OnPluginDirectorySearched) {
+    @Suppress("unused")
+    fun onPluginDirectorySearched(event: OnPluginDirectorySearched) {
         if (searchQuery != event.searchTerm) {
             return
         }
@@ -286,8 +302,50 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onSitePluginConfigured(event: PluginStore.OnSitePluginConfigured) {
+    @Suppress("unused")
+    fun onSitePluginConfigured(event: OnSitePluginConfigured) {
+        if (event.isError) {
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            return
+        }
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onSitePluginDeleted(event: OnSitePluginDeleted) {
+        if (event.isError) {
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            return
+        }
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onSitePluginInstalled(event: OnSitePluginInstalled) {
+        if (event.isError) {
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            return
+        }
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onSitePluginUpdated(event: OnSitePluginUpdated) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -301,43 +359,16 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
-    fun onSitePluginDeleted(event: PluginStore.OnSitePluginDeleted) {
+    fun onSiteChanged(event: OnSiteChanged) {
         if (event.isError) {
-            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            // The error should be safe to ignore since we are not triggering the action and there is nothing we need
+            // to do about it
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
-    }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onSitePluginInstalled(event: PluginStore.OnSitePluginInstalled) {
-        if (event.isError) {
-            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
-            return
-        }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onSitePluginUpdated(event: PluginStore.OnSitePluginUpdated) {
-        if (event.isError) {
-            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
-            return
-        }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
+        val siteId = site?.siteId
+        siteId?.let {
+            site = mSiteStore.getSiteBySiteId(siteId)
         }
     }
 
@@ -378,8 +409,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         reloadPluginDirectory(PluginDirectoryType.SITE)
     }
 
-    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
-                                              newPluginMap: Map<String, ImmutablePluginModel>) {
+    private fun updatePluginListWithNewPlugin(
+        mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
+        newPluginMap: Map<String, ImmutablePluginModel>
+    ) {
         val pluginList = mutableLiveData.value
         if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
             // Nothing to update
@@ -442,8 +475,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldSearch) {
             return false
         }
-        return if (searchPluginsListStatus.value != PluginListStatus.DONE
-                && searchPluginsListStatus.value != PluginListStatus.ERROR) {
+        return if (searchPluginsListStatus.value != PluginListStatus.DONE &&
+                searchPluginsListStatus.value != PluginListStatus.ERROR) {
             false
         } else searchResults.value == null || searchResults.value!!.isEmpty()
     }

@@ -23,7 +23,11 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.fluxc.store.ThemeStore.OnThemeActivated;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
@@ -377,7 +381,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     private void createNewSite(String siteTitle, String siteSlug) {
         final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
 
-        SiteStore.NewSitePayload newSitePayload = new SiteStore.NewSitePayload(
+        NewSitePayload newSitePayload = new NewSitePayload(
                 siteSlug,
                 siteTitle,
                 language,
@@ -466,7 +470,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewSiteCreated(SiteStore.OnNewSiteCreated event) {
+    public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             if (mIsRetry && event.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
@@ -487,7 +491,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(SiteStore.OnSiteChanged event) {
+    public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             // Site has been created but there was a error while fetching the sites. Can happen if we get
@@ -507,7 +511,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemeActivated(ThemeStore.OnThemeActivated event) {
+    public void onThemeActivated(OnThemeActivated event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error setting new site's theme: " + event.error.message);
             notifyFailure();
