@@ -645,9 +645,6 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
             params.put(SET_DESC_KEY, mSettings.tagline);
         }
-        if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
-            params.put(SET_DESC_KEY, mSettings.tagline);
-        }
         if (mSettings.languageId != mRemoteSettings.languageId) {
             params.put(LANGUAGE_ID_KEY, String.valueOf((mSettings.languageId)));
         }
