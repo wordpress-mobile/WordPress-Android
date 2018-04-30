@@ -37,6 +37,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -59,7 +60,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment
-        implements WPMainActivity.OnScrollToTopListener {
+        implements SiteSettingsListener, WPMainActivity.OnScrollToTopListener {
     private static final long ALERT_ANIM_OFFSET_MS = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
@@ -581,5 +582,25 @@ public class MySiteFragment extends Fragment
                 }
             }
         }
+    }
+
+    @Override public void onSaveError(Exception error) {
+    }
+
+    @Override public void onFetchError(Exception error) {
+    }
+
+    @Override public void onSettingsUpdated() {
+    }
+
+    @Override public void onSettingsSaved() {
+        // refresh the site after site icon change
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
+        }
+    }
+
+    @Override public void onCredentialsValidated(Exception error) {
     }
 }
