@@ -281,6 +281,14 @@ public class ReaderBlogTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
+    public static void setNotificationsEnabledByBlogId(long blogId, boolean isEnabled) {
+        ReaderDatabase.getWritableDb().execSQL(
+                "UPDATE tbl_blog_info SET is_notifications_enabled="
+                + SqlUtils.boolToSql(isEnabled)
+                + " WHERE blog_id=?",
+                new String[]{Long.toString(blogId)});
+    }
+
     public static String getBlogName(long blogId) {
         String[] args = {Long.toString(blogId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
