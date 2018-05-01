@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
@@ -60,6 +61,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.BasicYesNoFragmentDialog.BasicYesNoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -91,7 +93,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends AppCompatActivity {
+public class WPMainActivity extends AppCompatActivity implements BasicYesNoDialogClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
@@ -950,5 +952,19 @@ public class WPMainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
         handleSiteRemoved();
+    }
+
+    @Override public void onPositiveClicked(@NonNull String instanceTag) {
+        Fragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            getMySiteFragment().onPositiveClicked(instanceTag);
+        }
+    }
+
+    @Override public void onNegativeClicked(@NonNull String instanceTag) {
+        Fragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            getMySiteFragment().onNegativeClicked(instanceTag);
+        }
     }
 }
