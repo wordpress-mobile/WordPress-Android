@@ -37,6 +37,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -86,6 +87,7 @@ public class MySiteFragment extends Fragment
     private ImageView mNoSiteDrakeImageView;
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
+    private SiteSettingsInterface mSiteSettings;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -111,6 +113,8 @@ public class MySiteFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
+
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSelectedSite(), this);
     }
 
     @Override
@@ -584,13 +588,8 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    @Override public void onSaveError(Exception error) {
     }
 
-    @Override public void onFetchError(Exception error) {
-    }
-
-    @Override public void onSettingsUpdated() {
     }
 
     @Override public void onSettingsSaved() {
@@ -599,6 +598,17 @@ public class MySiteFragment extends Fragment
         if (site != null) {
             mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
         }
+    }
+
+    @Override public void onSaveError(Exception error) {
+        showSiteIconProgressBar(false);
+    }
+
+    @Override public void onFetchError(Exception error) {
+        showSiteIconProgressBar(false);
+    }
+
+    @Override public void onSettingsUpdated() {
     }
 
     @Override public void onCredentialsValidated(Exception error) {
