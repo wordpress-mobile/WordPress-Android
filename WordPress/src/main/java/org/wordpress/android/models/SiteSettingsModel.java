@@ -109,7 +109,6 @@ public class SiteSettingsModel {
             + TITLE_COLUMN_NAME + " TEXT, "
             + TAGLINE_COLUMN_NAME + " TEXT, "
             + LANGUAGE_COLUMN_NAME + " INTEGER, "
-            + SITE_ICON_COLUMN_NAME + " INTEGER, "
             + PRIVACY_COLUMN_NAME + " INTEGER, "
             + LOCATION_COLUMN_NAME + " BOOLEAN, "
             + DEF_CATEGORY_COLUMN_NAME + " TEXT, "
