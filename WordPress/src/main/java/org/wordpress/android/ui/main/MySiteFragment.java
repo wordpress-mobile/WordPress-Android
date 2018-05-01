@@ -123,6 +123,7 @@ public class MySiteFragment extends Fragment
     @Inject AccountStore mAccountStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -428,6 +429,25 @@ public class MySiteFragment extends Fragment
                                                               });
                 }
                 break;
+
+    private void startSiteIconUpload(final String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            ToastUtils.showToast(getActivity(), R.string.error_locating_image, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            ToastUtils.showToast(getActivity(), R.string.error_locating_image, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            showSiteIconProgressBar(true);
+
+            MediaModel media = buildMediaModel(file, site);
+            UploadService.uploadMedia(getActivity(), media);
         }
     }
 
@@ -439,6 +459,36 @@ public class MySiteFragment extends Fragment
             mBlavatarProgressBar.setVisibility(View.GONE);
             mBlavatarImageView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private boolean isMediaUploadInProgress() {
+        return mBlavatarProgressBar.getVisibility() == View.VISIBLE;
+    }
+
+    private MediaModel buildMediaModel(File file, SiteModel site) {
+        Uri uri = new Uri.Builder().path(file.getPath()).build();
+        String mimeType = getActivity().getContentResolver().getType(uri);
+        return FluxCUtils.mediaModelFromLocalUri(getActivity(), uri, mimeType, mMediaStore, site.getId());
+    }
+
+    private void startCropActivity(Uri uri) {
+        final Context context = getActivity();
+
+        if (context == null) {
+            return;
+        }
+
+        UCrop.Options options = new UCrop.Options();
+        options.setShowCropGrid(false);
+        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
+        options.setToolbarColor(ContextCompat.getColor(context, R.color.color_primary));
+        options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
+        options.setHideBottomControls(true);
+
+        UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))
+             .withAspectRatio(1, 1)
+             .withOptions(options)
+             .start(getActivity(), this);
     }
 
     private void showAlert(View view) {
