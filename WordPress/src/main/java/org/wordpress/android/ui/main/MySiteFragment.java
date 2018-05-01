@@ -431,24 +431,33 @@ public class MySiteFragment extends Fragment
                 break;
             case RequestCodes.PHOTO_PICKER:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
-                    if (strMediaUri == null) {
-                        AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
-                        return;
-                    }
+                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        int mediaId = (int) data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
 
-                    Uri imageUri = Uri.parse(strMediaUri);
-                    if (imageUri != null) {
-                        boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
-                                new WPMediaUtils.MediaFetchDoNext() {
-                                    @Override
-                                    public void doNext(Uri uri) {
-                                        startCropActivity(uri);
-                                    }
-                                });
+                        showSiteIconProgressBar(true);
+                        mSiteSettings.setSiteIconMediaId(mediaId);
+                        mSiteSettings.saveSettings();
+                    } else {
+                        String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
+                        if (strMediaUri == null) {
+                            AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
+                            return;
+                        }
 
-                        if (!didGoWell) {
-                            AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
+                        Uri imageUri = Uri.parse(strMediaUri);
+                        if (imageUri != null) {
+                            boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
+                                    new WPMediaUtils.MediaFetchDoNext() {
+                                        @Override
+                                        public void doNext(Uri uri) {
+                                            showSiteIconProgressBar(true);
+                                            startCropActivity(uri);
+                                        }
+                                    });
+
+                            if (!didGoWell) {
+                                AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
+                            }
                         }
                     }
                 }
@@ -485,8 +494,6 @@ public class MySiteFragment extends Fragment
 
         SiteModel site = getSelectedSite();
         if (site != null) {
-            showSiteIconProgressBar(true);
-
             MediaModel media = buildMediaModel(file, site);
             UploadService.uploadMedia(getActivity(), media);
         }
