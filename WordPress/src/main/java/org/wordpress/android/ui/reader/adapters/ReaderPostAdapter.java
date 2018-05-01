@@ -839,7 +839,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // from folks who ask 'why do I have more likes than page views?'.
             ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
         } else {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, post);
         }
 
         // update post in array and on screen
