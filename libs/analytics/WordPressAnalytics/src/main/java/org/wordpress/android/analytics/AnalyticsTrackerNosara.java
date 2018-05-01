@@ -279,8 +279,10 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         if (propertiesToJSON.length() > 0) {
             mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            AppLog.i(AppLog.T.STATS, "\uD83D\uDD35 Tracked : " + eventName + ", Properties: " + propertiesToJSON.toString());
         } else {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            AppLog.i(AppLog.T.STATS, "\uD83D\uDD35 Tracked : " + eventName);
         }
     }
 
