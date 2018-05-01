@@ -429,6 +429,47 @@ public class MySiteFragment extends Fragment
                                                               });
                 }
                 break;
+            case RequestCodes.PHOTO_PICKER:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
+                    if (strMediaUri == null) {
+                        AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
+                        return;
+                    }
+
+                    Uri imageUri = Uri.parse(strMediaUri);
+                    if (imageUri != null) {
+                        boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
+                                new WPMediaUtils.MediaFetchDoNext() {
+                                    @Override
+                                    public void doNext(Uri uri) {
+                                        startCropActivity(uri);
+                                    }
+                                });
+
+                        if (!didGoWell) {
+                            AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
+                        }
+                    }
+                }
+                break;
+            case UCrop.REQUEST_CROP:
+                if (resultCode == Activity.RESULT_OK) {
+                    WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
+                            new WPMediaUtils.MediaFetchDoNext() {
+                                @Override
+                                public void doNext(Uri uri) {
+                                    startSiteIconUpload(
+                                            MediaUtils.getRealPathFromURI(getActivity(), uri));
+                                }
+                            });
+                } else if (resultCode == UCrop.RESULT_ERROR) {
+                    AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
+                    ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
+                }
+                break;
+        }
+    }
 
     private void startSiteIconUpload(final String filePath) {
         if (TextUtils.isEmpty(filePath)) {
