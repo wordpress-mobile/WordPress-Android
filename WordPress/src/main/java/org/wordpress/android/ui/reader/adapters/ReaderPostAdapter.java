@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -194,6 +195,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     int position = getAdapterPosition();
                     ReaderPost post = getItem(position);
                     if (post != null) {
+                        AnalyticsTracker.track(Stat.READER_ARTICLE_VIEWED);
                         ReaderActivityLauncher.openUrl(view.getContext(), post.getUrl());
                     }
                 }
