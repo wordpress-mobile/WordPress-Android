@@ -541,6 +541,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED:
+                return "followed_blog_notifications_reader_enabled";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF:
+                return "followed_blog_notifications_reader_menu_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON:
+                return "followed_blog_notifications_reader_menu_on";
             case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_OFF:
                 return "followed_blog_notifications_settings_off";
             case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_ON:
@@ -644,6 +650,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_created";
             case SHARED_ITEM:
                 return "item_shared";
+            case SHARED_ITEM_READER:
+                return "item_shared_reader";
             case ADDED_SELF_HOSTED_SITE:
                 return "self_hosted_blog_added";
             case SIGNED_IN:

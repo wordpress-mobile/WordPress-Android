@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -1592,14 +1593,17 @@ public class ReaderPostListFragment extends Fragment
                         blockBlogForPost(post);
                         break;
                     case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
+                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
                         ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
                         updateSubscription(SubscriptionAction.DELETE, post.blogId);
                         break;
                     case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
+                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
                         ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
                         updateSubscription(SubscriptionAction.NEW, post.blogId);
                         break;
                     case ReaderMenuAdapter.ITEM_SHARE:
+                        AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
                         sharePost(post);
                         break;
                 }
@@ -1617,6 +1621,7 @@ public class ReaderPostListFragment extends Fragment
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                     new View.OnClickListener() {
                         @Override public void onClick(View view) {
+                            AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
                             AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                     String.valueOf(blogId), SubscriptionAction.NEW);
                             mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
