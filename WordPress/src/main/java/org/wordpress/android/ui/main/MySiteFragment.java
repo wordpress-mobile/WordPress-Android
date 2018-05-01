@@ -651,6 +651,11 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
+
+        if (isMediaUploadInProgress()) {
+            showSiteIconProgressBar(false);
+        }
+
         SiteModel site = getSelectedSite();
         if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
@@ -669,13 +674,25 @@ public class MySiteFragment extends Fragment
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         SiteModel site = getSelectedSite();
-        if (site != null && event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), false,
-                    event.mediaModelList, site, event.successMessage);
+
+        if (site != null) {
+            if (isMediaUploadInProgress()) {
+                if (event.mediaModelList.size() > 0) {
+                    MediaModel media = event.mediaModelList.get(0);
+                    mBlavatarImageView.setImageUrl(media.getUrl(), ImageType.BLAVATAR);
+
+                    mSiteSettings.setSiteIconMediaId((int) media.getMediaId());
+                    mSiteSettings.saveSettings();
+                }
+            } else {
+                if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+                    UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                            getActivity().findViewById(R.id.coordinator), false,
+                            event.mediaModelList, site, event.successMessage);
+                }
+            }
         }
     }
-
 
     // FluxC events
     @SuppressWarnings("unused")
