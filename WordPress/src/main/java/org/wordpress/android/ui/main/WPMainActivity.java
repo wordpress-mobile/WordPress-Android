@@ -102,7 +102,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
-    public static final String ARG_OPEN_TAB = "open_tab";
+    public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
 
     private WPMainNavigationView mBottomNav;
@@ -188,7 +188,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
                         false));
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
-                boolean openRequestedTab = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_TAB));
+                boolean openRequestedPage = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_PAGE));
                 if (openedFromPush) {
                     // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
@@ -202,8 +202,8 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
                     initSelectedSite();
                     mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
-                } else if (openRequestedTab) {
-                    handleOpenTabIntent(getIntent());
+                } else if (openRequestedPage) {
+                    handleOpenPageIntent(getIntent());
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -273,15 +273,15 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
-        if (intent.hasExtra(ARG_OPEN_TAB)) {
-            handleOpenTabIntent(intent);
+        if (intent.hasExtra(ARG_OPEN_PAGE)) {
+            handleOpenPageIntent(intent);
         }
     }
 
-    private void handleOpenTabIntent(Intent intent) {
-        String tabIdentifier = intent.getStringExtra(ARG_OPEN_TAB);
-        if (!TextUtils.isEmpty(tabIdentifier)) {
-            switch (tabIdentifier) {
+    private void handleOpenPageIntent(Intent intent) {
+        String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
+        if (!TextUtils.isEmpty(pagePosition)) {
+            switch (pagePosition) {
                 case ARG_NOTIFICATIONS:
                     mBottomNav.setCurrentPosition(PAGE_NOTIFS);
                     break;
