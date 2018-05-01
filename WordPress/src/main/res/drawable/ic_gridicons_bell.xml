@@ -1,15 +1,12 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="108dp"
-        android:height="108dp"
-        android:viewportWidth="71.30125"
-        android:viewportHeight="71.30125">
-    <group android:translateX="0.35650623"
-            android:translateY="0.35650623">
-        <group android:translateX="23.294117"
-                android:translateY="23.294117">
-          <path
-              android:fillColor="@color/blue_wordpress"
-              android:pathData="M6.14,14.97l2.828,2.827c-0.362,0.362 -0.862,0.586 -1.414,0.586 -1.105,0 -2,-0.895 -2,-2 0,-0.552 0.224,-1.052 0.586,-1.414zM15.007,20.294L14.3,21 3,9.7l0.706,-0.707 1.102,0.157c0.754,0.108 1.69,-0.122 2.077,-0.51l3.885,-3.884c2.34,-2.34 6.135,-2.34 8.475,0s2.34,6.135 0,8.475l-3.885,3.886c-0.388,0.388 -0.618,1.323 -0.51,2.077l0.157,1.1z"/>
-        </group>
-    </group>
+        android:width="48dp"
+        android:height="48dp"
+        android:viewportWidth="48"
+        android:viewportHeight="48">
+  <path
+      android:pathData="M18.14,26.9697L20.968,29.7968C20.606,30.1588 20.106,30.3829 19.554,30.3829C18.449,30.3829 17.554,29.4878 17.554,28.3827C17.554,27.8307 17.778,27.3307 18.14,26.9687L18.14,26.9697ZM27.007,32.294L26.3,33L15,21.6994L15.706,20.9923L16.808,21.1493C17.562,21.2573 18.498,21.0273 18.885,20.6393L22.77,16.7551C25.11,14.415 28.905,14.415 31.245,16.7551C33.585,19.0952 33.585,22.8904 31.245,25.2306L27.36,29.1168C26.972,29.5048 26.742,30.4399 26.85,31.1939L27.007,32.294Z"
+      android:strokeWidth="1"
+      android:fillColor="@color/blue_wordpress"
+      android:fillType="nonZero"
+      android:strokeColor="#00000000"/>
 </vector>
