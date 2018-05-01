@@ -8,6 +8,7 @@ import com.automattic.android.tracks.TracksClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -279,10 +280,11 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         if (propertiesToJSON.length() > 0) {
             mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
-            AppLog.i(AppLog.T.STATS, "\uD83D\uDD35 Tracked : " + eventName + ", Properties: " + propertiesToJSON.toString());
+            String jsonString = propertiesToJSON.toString();
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
-            AppLog.i(AppLog.T.STATS, "\uD83D\uDD35 Tracked : " + eventName);
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
 
