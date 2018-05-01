@@ -2,10 +2,15 @@ package org.wordpress.android.ui.main;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +21,23 @@ import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
+
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -34,7 +46,10 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
+import org.wordpress.android.ui.posts.BasicYesNoFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -44,14 +59,23 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.io.File;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -61,15 +85,19 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment
-        implements SiteSettingsListener, WPMainActivity.OnScrollToTopListener {
+        implements SiteSettingsListener, WPMainActivity.OnScrollToTopListener,
+        BasicYesNoFragmentDialog.BasicYesNoDialogClickInterface {
     private static final long ALERT_ANIM_OFFSET_MS = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
     public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
+    public static final String TAG_ADD_SITE_ICON_DIGALOG = "TAG_ADD_SITE_ICON_DIGALOG";
+    public static final String TAG_CHANGE_SITE_ICON_DIGALOG = "TAG_CHANGE_SITE_ICON_DIGALOG";
 
     private WPNetworkImageView mBlavatarImageView;
+    private ProgressBar mBlavatarProgressBar;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
@@ -228,6 +256,32 @@ public class MySiteFragment extends Fragment
             }
         });
 
+        mBlavatarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SiteModel site = getSelectedSite();
+                if (site != null && site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
+                    BasicYesNoFragmentDialog dialog = new BasicYesNoFragmentDialog();
+                    boolean hasIcon = site.getIconUrl() != null;
+                    String tag;
+                    if (hasIcon) {
+                        tag = TAG_CHANGE_SITE_ICON_DIGALOG;
+                        dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
+                                getString(R.string.my_site_icon_dialog_change_message),
+                                getString(R.string.my_site_icon_dialog_change_button),
+                                getString(R.string.my_site_icon_dialog_remove_button));
+                    } else {
+                        tag = TAG_ADD_SITE_ICON_DIGALOG;
+                        dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
+                                getString(R.string.my_site_icon_dialog_add_message),
+                                getString(R.string.yes),
+                                getString(R.string.no));
+                    }
+                    dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+                }
+            }
+        });
+
         mPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -374,6 +428,16 @@ public class MySiteFragment extends Fragment
                                                               });
                 }
                 break;
+        }
+    }
+
+    private void showSiteIconProgressBar(boolean isVisible) {
+        if (isVisible) {
+            mBlavatarProgressBar.setVisibility(View.VISIBLE);
+            mBlavatarImageView.setVisibility(View.INVISIBLE);
+        } else {
+            mBlavatarProgressBar.setVisibility(View.GONE);
+            mBlavatarImageView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -571,6 +635,7 @@ public class MySiteFragment extends Fragment
             return;
         }
         refreshSelectedSiteDetails();
+        showSiteIconProgressBar(false);
     }
 
     @SuppressWarnings("unused")
@@ -588,8 +653,35 @@ public class MySiteFragment extends Fragment
         }
     }
 
+    @Override public void onPositiveClicked(@NonNull String instanceTag) {
+        switch (instanceTag) {
+            case TAG_ADD_SITE_ICON_DIGALOG:
+                ActivityLauncher.showPhotoPickerForResult(getActivity(),
+                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
+                break;
+            case TAG_CHANGE_SITE_ICON_DIGALOG:
+                ActivityLauncher.showPhotoPickerForResult(getActivity(),
+                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        }
     }
 
+    @Override public void onNegativeClicked(@NonNull String instanceTag) {
+        switch (instanceTag) {
+            case TAG_ADD_SITE_ICON_DIGALOG:
+                break;
+            case TAG_CHANGE_SITE_ICON_DIGALOG:
+                showSiteIconProgressBar(true);
+                mSiteSettings.setSiteIconMediaId(0);
+                mSiteSettings.saveSettings();
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        }
     }
 
     @Override public void onSettingsSaved() {
