@@ -70,7 +70,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_five_stars"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -99,7 +99,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_four_stars"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -127,7 +127,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_three_stars"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -155,7 +155,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_two_stars"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -183,7 +183,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_one_stars"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -211,7 +211,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/grey"
+                android:textColor="@color/grey_text_min"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_num_ratings" />
 
@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/grey"
+                android:textColor="@color/grey_text_min"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_num_downloads"
                 android:layout_alignParentEnd="true"/>

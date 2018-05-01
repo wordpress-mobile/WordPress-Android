@@ -44,7 +44,7 @@ public class WPPreference extends Preference implements PreferenceHint {
         }
         if (summaryView != null) {
             summaryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_medium));
-            summaryView.setTextColor(res.getColor(isEnabled() ? R.color.grey_darken_10 : R.color.grey_lighten_10));
+            summaryView.setTextColor(res.getColor(isEnabled() ? R.color.grey_text_min : R.color.grey_lighten_10));
         }
     }
 

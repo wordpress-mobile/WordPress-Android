@@ -42,7 +42,7 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_star_outline_grey_24dp"/>
+                app:srcCompat="@drawable/ic_star_outline_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_like_text"
@@ -79,7 +79,7 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_checkmark_grey_24dp"/>
+                app:srcCompat="@drawable/ic_checkmark_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_moderate_text"
@@ -117,7 +117,7 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_pencil_grey_24dp"/>
+                app:srcCompat="@drawable/ic_pencil_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_edit_text"
@@ -155,7 +155,7 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_trash_grey_24dp"/>
+                app:srcCompat="@drawable/ic_trash_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_trash_text"
@@ -193,7 +193,7 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_spam_grey_24dp"/>
+                app:srcCompat="@drawable/ic_spam_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_spam_text"
