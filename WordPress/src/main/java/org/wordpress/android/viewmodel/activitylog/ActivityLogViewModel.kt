@@ -74,7 +74,7 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
     }
 
     private fun reloadEvents() {
-        val eventList = activityLogStore.getActivityLogForSite(site)
+        val eventList = activityLogStore.getActivityLogForSite(site, false)
         _events.postValue(eventList)
     }
 
