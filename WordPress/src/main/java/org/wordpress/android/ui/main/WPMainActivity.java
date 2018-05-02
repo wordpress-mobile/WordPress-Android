@@ -92,7 +92,7 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
-public class WPMainActivity extends AppCompatActivity implements OnPageListener {
+public class WPMainActivity extends AppCompatActivity implements OnPageListener, BottomNavController {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
@@ -105,6 +105,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
 
+    private View mBottomNavContainer;
     private WPMainNavigationView mBottomNav;
     private Toolbar mToolbar;
 
@@ -155,6 +156,8 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(R.string.app_title);
         setSupportActionBar(mToolbar);
+
+        mBottomNavContainer = findViewById(R.id.navbar_container);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getFragmentManager(), this);
@@ -460,6 +463,16 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener 
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public void showBottomNavigation() {
+        mBottomNavContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideBottomNavigation() {
+        mBottomNavContainer.setVisibility(View.GONE);
     }
 
     // user switched pages in the bottom navbar

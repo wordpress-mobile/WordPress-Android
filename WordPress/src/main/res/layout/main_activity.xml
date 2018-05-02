@@ -28,7 +28,8 @@
         android:id="@+id/connection_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/navbar_separator"
+        android:layout_above="@+id/navbar_container"
+        android:layout_alignParentBottom="true"
         android:background="@color/alert_yellow"
         android:gravity="center"
         android:paddingBottom="@dimen/margin_medium"
@@ -40,21 +41,27 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <View
-        android:id="@+id/navbar_separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/bottom_navigation"
-        android:background="@color/grey_lighten_20"/>
-
-    <org.wordpress.android.ui.main.WPMainNavigationView
-        android:id="@+id/bottom_navigation"
+    <RelativeLayout
+        android:id="@+id/navbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        app:elevation="0dp"
-        app:menu="@menu/bottom_nav_main"/>
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:id="@+id/navbar_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_lighten_20"/>
+
+        <org.wordpress.android.ui.main.WPMainNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_below="@+id/navbar_separator"
+            app:elevation="0dp"
+            app:menu="@menu/bottom_nav_main"/>
+    </RelativeLayout>
 
     <!-- this coordinator exists only for snackbars -->
     <android.support.design.widget.CoordinatorLayout
