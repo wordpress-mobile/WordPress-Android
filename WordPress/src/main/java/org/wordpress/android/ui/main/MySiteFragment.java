@@ -144,6 +144,7 @@ public class MySiteFragment extends Fragment
         mDispatcher.register(this);
 
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSelectedSite(), this);
+        mSiteSettings.init(true);
     }
 
     @Override
