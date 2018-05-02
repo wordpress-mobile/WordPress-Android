@@ -47,19 +47,6 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
         super.onCleared()
     }
 
-    fun writeToBundle(outState: Bundle) {
-        outState.putSerializable(WordPress.SITE, site)
-    }
-
-    fun readFromBundle(savedInstanceState: Bundle) {
-        if (isStarted) {
-            // This was called due to a config change where the data survived, we don't need to
-            // read from the bundle
-            return
-        }
-        site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-    }
-
     fun start() {
         if (isStarted) {
             return
