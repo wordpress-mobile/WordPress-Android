@@ -559,7 +559,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.title = response.optString(GET_TITLE_KEY, "");
         mRemoteSettings.tagline = response.optString(GET_DESC_KEY, "");
         mRemoteSettings.languageId = settingsObject.optInt(LANGUAGE_ID_KEY, -1);
-        mRemoteSettings.siteIconMediaId = settingsObject.optInt(SITE_ICON_KEY, -1);
+        mRemoteSettings.siteIconMediaId = settingsObject.optInt(SITE_ICON_KEY, 0);
         mRemoteSettings.privacy = settingsObject.optInt(PRIVACY_KEY, -2);
         mRemoteSettings.defaultCategory = settingsObject.optInt(DEF_CATEGORY_KEY, 1);
         mRemoteSettings.defaultPostFormat = settingsObject.optString(DEF_POST_FORMAT_KEY, STANDARD_POST_FORMAT_KEY);
