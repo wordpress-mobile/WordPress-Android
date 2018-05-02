@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -108,7 +109,7 @@ class ActivityLogListFragment : Fragment() {
             } else {
                 adapter = activityLogList.adapter as ActivityLogAdapter
             }
-            adapter.setEvents(events)
+            adapter.updateList(events)
         }
     }
 
@@ -117,7 +118,6 @@ class ActivityLogListFragment : Fragment() {
         private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
         override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
-
             val item = getItem(position)
             holder.bind(item)
 
@@ -133,10 +133,11 @@ class ActivityLogListFragment : Fragment() {
             setHasStableIds(true)
         }
 
-        internal fun setEvents(items: List<ActivityLogModel>) {
+        internal fun updateList(items: List<ActivityLogModel>) {
+            val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list, items))
             list.clear()
-            list.addAll(items.toTypedArray())
-            notifyDataSetChanged()
+            list.addAll(items)
+            diffResult.dispatchUpdatesTo(this)
         }
 
         private fun shouldDisplayHeader(position: Int): Boolean {
