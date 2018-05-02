@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
+import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -13,6 +15,8 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.SubscriptionModel;
+import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
@@ -189,6 +193,128 @@ public class AccountStore extends Store {
         public String token;
     }
 
+    public static class AddOrDeleteSubscriptionPayload extends Payload<BaseNetworkError> {
+        public String site;
+        public SubscriptionAction action;
+        public AddOrDeleteSubscriptionPayload(@NonNull String site, @NonNull SubscriptionAction action) {
+            this.site = site;
+            this.action = action;
+        }
+        public enum SubscriptionAction {
+            DELETE("delete"),
+            NEW("new");
+
+            private final String mString;
+
+            SubscriptionAction(final String s) {
+                mString = s;
+            }
+
+            @Override
+            public String toString() {
+                return mString;
+            }
+        }
+    }
+
+    public static class UpdateSubscriptionPayload extends Payload<BaseNetworkError> {
+        public String site;
+        public SubscriptionFrequency frequency;
+        public UpdateSubscriptionPayload(@NonNull String site, @NonNull SubscriptionFrequency frequency) {
+            this.site = site;
+            this.frequency = frequency;
+        }
+        public enum SubscriptionFrequency {
+            DAILY("daily"),
+            INSTANTLY("instantly"),
+            WEEKLY("weekly");
+
+            private final String mString;
+
+            SubscriptionFrequency(final String s) {
+                mString = s;
+            }
+
+            @Override
+            public String toString() {
+                return mString;
+            }
+        }
+    }
+
+    public static class SubscriptionResponsePayload extends Payload<SubscriptionError> {
+        public SubscriptionType type;
+        public boolean isSubscribed;
+        public SubscriptionResponsePayload() {
+        }
+        public SubscriptionResponsePayload(boolean isSubscribed) {
+            this.isSubscribed = isSubscribed;
+        }
+    }
+
+    public enum SubscriptionType {
+        EMAIL_COMMENT,
+        EMAIL_POST,
+        EMAIL_POST_FREQUENCY,
+        NOTIFICATION_POST
+    }
+
+    /**
+     * Error for any of these methods:
+     * {@link AccountRestClient#updateSubscriptionEmailComment(String,
+     *      AddOrDeleteSubscriptionPayload.SubscriptionAction)}
+     * {@link AccountRestClient#updateSubscriptionEmailPost(String,
+     *      AddOrDeleteSubscriptionPayload.SubscriptionAction)}
+     * {@link AccountRestClient#updateSubscriptionEmailPostFrequency(String,
+     *      UpdateSubscriptionPayload.SubscriptionFrequency)}
+     * {@link AccountRestClient#updateSubscriptionNotificationPost(String,
+     *      AddOrDeleteSubscriptionPayload.SubscriptionAction)}
+     */
+    public static class SubscriptionError implements OnChangedError {
+        public SubscriptionErrorType type;
+        public String message;
+
+        public SubscriptionError(@NonNull String type, @NonNull String message) {
+            this(SubscriptionErrorType.fromString(type), message);
+        }
+
+        public SubscriptionError(SubscriptionErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum SubscriptionErrorType {
+        ALREADY_SUBSCRIBED,
+        AUTHORIZATION_REQUIRED,
+        EMAIL_ADDRESS_MISSING,
+        REST_CANNOT_VIEW,
+        GENERIC_ERROR;
+
+        public static SubscriptionErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (SubscriptionErrorType type : SubscriptionErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
+    /**
+     * Error for {@link AccountRestClient#fetchSubscriptions()} method.
+     */
+    public static class SubscriptionsError implements OnChangedError {
+        public String message;
+
+        public SubscriptionsError(BaseNetworkError error) {
+            this.message = error.message;
+        }
+    }
+
     // OnChanged Events
     public static class OnAccountChanged extends OnChanged<AccountError> {
         public boolean accountInfosChanged;
@@ -272,6 +398,16 @@ public class AccountStore extends Store {
         public AuthenticationError(AuthenticationErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
+        }
+    }
+
+    public static class OnSubscriptionsChanged extends OnChanged<SubscriptionsError> {
+    }
+
+    public static class OnSubscriptionUpdated extends OnChanged<SubscriptionError> {
+        public SubscriptionType type;
+        public boolean subscribed;
+        public OnSubscriptionUpdated() {
         }
     }
 
@@ -454,9 +590,8 @@ public class AccountStore extends Store {
         public AccountFetchUsernameSuggestionsErrorType type;
         public String message;
 
-        public AccountFetchUsernameSuggestionsError(@NonNull AccountFetchUsernameSuggestionsErrorType type,
-                                                    @NonNull String message) {
-            this.type = type;
+        public AccountFetchUsernameSuggestionsError(@NonNull String type, @NonNull String message) {
+            this.type = AccountFetchUsernameSuggestionsErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -673,6 +808,27 @@ public class AccountStore extends Store {
                 break;
             case CHECKED_IS_AVAILABLE:
                 handleCheckedIsAvailable((IsAvailableResponsePayload) payload);
+                break;
+            case FETCH_SUBSCRIPTIONS:
+                mAccountRestClient.fetchSubscriptions();
+                break;
+            case FETCHED_SUBSCRIPTIONS:
+                updateSubscriptions((SubscriptionsModel) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_EMAIL_COMMENT:
+                createAddOrDeleteSubscriptionEmailComment((AddOrDeleteSubscriptionPayload) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_EMAIL_POST:
+                createAddOrDeleteSubscriptionEmailPost((AddOrDeleteSubscriptionPayload) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_EMAIL_POST_FREQUENCY:
+                createUpdateSubscriptionEmailPostFrequency((UpdateSubscriptionPayload) payload);
+                break;
+            case UPDATE_SUBSCRIPTION_NOTIFICATION_POST:
+                createAddOrDeleteSubscriptionNotificationPost((AddOrDeleteSubscriptionPayload) payload);
+                break;
+            case UPDATED_SUBSCRIPTION:
+                handleUpdatedSubscription((SubscriptionResponsePayload) payload);
                 break;
         }
     }
@@ -984,5 +1140,62 @@ public class AccountStore extends Store {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get all subscriptions in store as a {@link SubscriptionModel} list.
+     *
+     * @return {@link List} of {@link SubscriptionModel}
+     */
+    public List<SubscriptionModel> getSubscriptions() {
+        return WellSql.select(SubscriptionModel.class).getAsModel();
+    }
+
+    /**
+     * Get all subscriptions in store matching {@param searchString} as a {@link SubscriptionModel} list.
+     *
+     * @param searchString      Text to filter subscriptions by
+     *
+     * @return {@link List} of {@link SubscriptionModel}
+     */
+    public List<SubscriptionModel> getSubscriptionsByNameOrUrlMatching(@NonNull String searchString) {
+        return AccountSqlUtils.getSubscriptionsByNameOrUrlMatching(searchString);
+    }
+
+    private void updateSubscriptions(SubscriptionsModel subscriptions) {
+        OnSubscriptionsChanged event = new OnSubscriptionsChanged();
+        if (subscriptions.isError()) {
+            event.error = new SubscriptionsError(subscriptions.error);
+        } else {
+            AccountSqlUtils.updateSubscriptions(subscriptions.getSubscriptions());
+        }
+        emitChange(event);
+    }
+
+    private void createAddOrDeleteSubscriptionEmailComment(AddOrDeleteSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionEmailComment(payload.site, payload.action);
+    }
+
+    private void createAddOrDeleteSubscriptionEmailPost(AddOrDeleteSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionEmailPost(payload.site, payload.action);
+    }
+
+    private void createUpdateSubscriptionEmailPostFrequency(UpdateSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionEmailPostFrequency(payload.site, payload.frequency);
+    }
+
+    private void createAddOrDeleteSubscriptionNotificationPost(AddOrDeleteSubscriptionPayload payload) {
+        mAccountRestClient.updateSubscriptionNotificationPost(payload.site, payload.action);
+    }
+
+    private void handleUpdatedSubscription(SubscriptionResponsePayload payload) {
+        OnSubscriptionUpdated event = new OnSubscriptionUpdated();
+        if (payload.isError()) {
+            event.error = new SubscriptionError(event.error.toString(), event.error.message);
+        } else {
+            event.subscribed = payload.isSubscribed;
+            event.type = payload.type;
+        }
+        emitChange(event);
     }
 }
