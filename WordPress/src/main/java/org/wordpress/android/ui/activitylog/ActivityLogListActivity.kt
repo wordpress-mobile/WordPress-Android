@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 
-class   ActivityLogActivity : AppCompatActivity() {
+class   ActivityLogListActivity : AppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ActivityLogViewModel
 

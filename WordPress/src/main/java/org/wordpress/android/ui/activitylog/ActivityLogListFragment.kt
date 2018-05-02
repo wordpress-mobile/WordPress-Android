@@ -48,7 +48,7 @@ class ActivityLogListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // Use the same view model as the ActivityLogActivity
+        // Use the same view model as the ActivityLogListActivity
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<ActivityLogViewModel>(ActivityLogViewModel::class.java)
 
