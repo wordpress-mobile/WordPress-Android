@@ -3,6 +3,7 @@ package org.wordpress.android.ui.activitylog
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -41,6 +42,11 @@ class   ActivityLogActivity : AppCompatActivity() {
         showListFragment()
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putSerializable(WordPress.SITE, viewModel.site)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
@@ -50,9 +56,12 @@ class   ActivityLogActivity : AppCompatActivity() {
     }
 
     private fun showListFragment() {
-        val listFragment = ActivityLogListFragment.newInstance(viewModel.site)
+        var listFragment = supportFragmentManager.findFragmentByTag(ActivityLogListFragment.TAG)
+        if (listFragment == null) {
+            listFragment = ActivityLogListFragment.newInstance(viewModel.site)
+        }
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, listFragment, ActivityLogListFragment.TAG)
+                .replace(R.id.fragment_container, listFragment, ActivityLogListFragment.TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit()
     }
