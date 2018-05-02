@@ -345,7 +345,7 @@
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/plugins"
-                    app:srcCompat="@drawable/ic_gridicons_plugin"/>
+                    app:srcCompat="@drawable/ic_plugins_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plugins_text_view"

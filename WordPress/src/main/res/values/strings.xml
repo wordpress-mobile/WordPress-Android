@@ -745,6 +745,7 @@
     <!-- activity log -->
     <string name="activity">Activity</string>
     <string name="activity_log">Activity Log</string>
+    <string name="activity_log_icon">Activity icon</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
