@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -445,6 +446,15 @@ public class MySiteFragment extends Fragment
                             return;
                         }
 
+                        // TODO: stats
+                        //                    PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
+                        //                            data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
+                        //
+                        //                    AnalyticsTracker.Stat stat =
+                        //                            source == PhotoPickerMediaSource.ANDROID_CAMERA
+                        //                                    ? AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW
+                        //                                    : AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED;
+                        //                    AnalyticsTracker.track(stat);
                         Uri imageUri = Uri.parse(strMediaUri);
                         if (imageUri != null) {
                             boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
@@ -464,6 +474,9 @@ public class MySiteFragment extends Fragment
                 }
                 break;
             case UCrop.REQUEST_CROP:
+                // TODO: Stats
+//                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_CROPPED);
+
                 if (resultCode == Activity.RESULT_OK) {
                     WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
                             new WPMediaUtils.MediaFetchDoNext() {

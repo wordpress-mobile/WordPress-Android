@@ -48,6 +48,7 @@ import javax.inject.Inject;
  * - Address
  * - Privacy
  * - Language
+ * - Site icon
  * - Username (.org only)
  * - Password (.org only)
  * - Default Category
