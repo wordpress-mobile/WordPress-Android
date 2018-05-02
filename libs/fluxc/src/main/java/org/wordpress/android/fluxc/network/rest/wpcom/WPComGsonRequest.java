@@ -105,6 +105,10 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                 jsonObject = new JSONObject();
             }
             String apiError = jsonObject.optString("error", "");
+            if (TextUtils.isEmpty(apiError)) {
+                // WP V2 endpoints use "code" instead of "error"
+                apiError = jsonObject.optString("code", "");
+            }
             String apiMessage = jsonObject.optString("message", "");
             if (TextUtils.isEmpty(apiMessage)) {
                 // Auth endpoints use "error_description" instead of "message"
