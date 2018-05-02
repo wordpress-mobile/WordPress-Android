@@ -42,8 +42,8 @@ public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
 
     @Override
     public void onCreate(SQLiteDatabase db, WellTableManager helper) {
-        for (int i = 0; i < mStoreClassList.size(); i++) {
-            helper.createTable(mStoreClassList.get(i));
+        for (Class<? extends Identifiable> clazz : mStoreClassList) {
+            helper.createTable(clazz);
         }
     }
 
@@ -52,8 +52,8 @@ public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
      */
     public void reset() {
         SQLiteDatabase db = WellSql.giveMeWritableDb();
-        for (int i = 0; i < mStoreClassList.size(); i++) {
-            TableClass table = getTable(mStoreClassList.get(i));
+        for (Class<? extends Identifiable> clazz : mStoreClassList) {
+            TableClass table = getTable(clazz);
             db.execSQL("DROP TABLE " + table.getTableName());
             db.execSQL(table.createStatement());
         }
