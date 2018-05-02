@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 
@@ -62,7 +63,7 @@ public class AnalyticsUtils {
         // Sync with wpcom if a token is available
         if (mAccountStore.hasAccessToken()) {
             mAccountStore.getAccount().setTracksOptOut(optOut);
-            AccountStore.PushAccountSettingsPayload payload = new AccountStore.PushAccountSettingsPayload();
+            PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
             payload.params = new HashMap<>();
             payload.params.put("tracks_opt_out", optOut);
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));

@@ -67,6 +67,12 @@
         <property name="severity" value="error"/>
     </module>
 
+    <module name="RegexpSingleline">
+        <property name="format" value="^(?!.*\bimport\b).*Store\.[A-Z][A-Za-z0-9]*[ );]"/>
+        <property name="message" value="Specific imports should be used for FluxC Store inner classes"/>
+        <property name="severity" value="error"/>
+    </module>
+
     <module name="RegexpMultiline">
         <property name="format" value="@Inject(\n|\r\n).*[^{,(]$"/>
         <property name="message" value="Inject annotation should be in-line with the annotated field or property"/>

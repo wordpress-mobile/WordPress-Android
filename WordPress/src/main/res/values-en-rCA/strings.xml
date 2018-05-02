@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-29 16:37:40+0000
+Translation-Revision-Date: 2018-04-11 20:00:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+    <string name="media_preview_title">%1$d of %2$d</string>
+    <string name="stock_media_picker_empty_results">No matches</string>
+    <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+    <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
+    <string name="stock_media_picker_search_hint">Search free photo library</string>
+    <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="error_save_empty_draft">Can\'t save an empty draft</string>
+    <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
+    <string name="preview_count">Preview %d</string>
+    <string name="add_count">Add %d</string>
     <string name="site_creation_domain_selection_title">Create New Site Step 4</string>
     <string name="site_creation_site_details_title">Create New Site Step 3</string>
     <string name="site_creation_theme_selection_title">Create New Site Step 2</string>

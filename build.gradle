@@ -8,7 +8,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.1'
-        classpath 'com.automattic.android:fetchstyle:1.0'
+        classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
 
@@ -24,6 +24,7 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
     }
 
     task checkstyle(type: Checkstyle) {
@@ -52,7 +53,7 @@ subprojects {
     }
 
     dependencies {
-        ktlint 'com.github.shyiko:ktlint:0.14.0'
+        ktlint 'com.github.shyiko:ktlint:0.21.0'
     }
 
     task ktlint(type: JavaExec) {
@@ -69,5 +70,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = 'e111acd69bc92c65c5f8389549f9524d101e93b7'
+    fluxCVersion = '75ef27c8245eb60f3a4574d4d7ead766bce3d59b'
 }

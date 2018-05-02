@@ -12,7 +12,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.util.AppLog;
@@ -161,7 +162,7 @@ public class SignupGoogleFragment extends GoogleFragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError()) {
             AppLog.e(T.API,
                     "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
@@ -178,7 +179,7 @@ public class SignupGoogleFragment extends GoogleFragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSocialChanged(AccountStore.OnSocialChanged event) {
+    public void onSocialChanged(OnSocialChanged event) {
         if (event.isError()) {
             AppLog.e(T.API, "SignupGoogleFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
 

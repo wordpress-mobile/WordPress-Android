@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
@@ -25,6 +24,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -175,7 +175,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccountChanged(AccountStore.OnAccountChanged event) {
+    public void onAccountChanged(OnAccountChanged event) {
         if (!isAdded()) {
             return;
         }
@@ -286,8 +286,8 @@ public class AppSettingsFragment extends PreferenceFragment
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final ListPreference editorTypePreference =
-                    (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+            final DetailListPreference editorTypePreference =
+                    (DetailListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
 
             editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -296,6 +296,8 @@ public class AppSettingsFragment extends PreferenceFragment
                         int index = Integer.parseInt(value.toString());
                         CharSequence[] entries = editorTypePreference.getEntries();
                         editorTypePreference.setSummary(entries[index]);
+                        // we need to set value manually for DetailListPreference
+                        editorTypePreference.setValue(value.toString());
 
                         switch (index) {
                             case IDX_VISUAL_EDITOR:

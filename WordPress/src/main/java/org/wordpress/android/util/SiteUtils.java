@@ -1,9 +1,11 @@
 package org.wordpress.android.util;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
@@ -86,5 +88,13 @@ public class SiteUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
+        return site != null && !site.isAutomatedTransfer() && SiteUtils.hasNonJetpackBusinessPlan(site);
+    }
+
+    public static boolean hasNonJetpackBusinessPlan(SiteModel site) {
+        return site.getPlanId() == PlansConstants.BUSINESS_PLAN_ID;
     }
 }

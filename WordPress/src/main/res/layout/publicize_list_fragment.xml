@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
                     android:text="@string/connections_description"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_medium" />
 
                 <org.wordpress.android.ui.reader.views.ReaderRecyclerView

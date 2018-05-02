@@ -35,7 +35,7 @@
                 android:layout_marginLeft="-3dp"
                 android:layout_marginStart="-3dp"
                 android:layout_marginBottom="-1dp"
-                android:textColor="@color/grey_lighten_10"
+                android:textColor="@color/grey_darken_10"
                 android:textSize="18sp"
                 android:text="@string/noticon_clock" />
 
@@ -121,7 +121,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_extra_small"
-                        android:textColor="@color/grey_lighten_10"
+                        android:textColor="@color/grey_darken_10"
                         android:textAlignment="viewStart"
                         android:gravity="start"
                         android:textSize="18sp" />
@@ -148,7 +148,7 @@
                     android:layout_marginTop="-1dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_large"
                     android:visibility="gone"
                     tools:text="What an amazing post!"

@@ -301,6 +301,8 @@
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
+    <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+    <string name="dialog_confirm_delete_permanently_page">Are you sure you\'d like to permanently delete this page?</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -333,6 +335,7 @@
     <string name="comment_delete_talkback">Comment deleted</string>
     <string name="comment_spam_talkback">Comment marked as spam</string>
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
+    <string name="comment_title">%s on %s</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -735,8 +738,9 @@
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
     <string name="stats_default_number_zero" translatable="false">0</string>
-    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to setup Jetpack?</string>
+    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+    <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -927,6 +931,7 @@
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">View Reader</string>
+    <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
@@ -950,7 +955,9 @@
     <string name="notification_settings_master_hint_off">Enable notifications</string>
     <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
     <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
+    <string name="notification_settings_category_followed_sites">Followed Sites</string>
     <string name="notification_settings_category_your_sites">Your Sites</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">All My Followed Sites</string>
     <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
     <string name="notification_settings_category_other">Other</string>
     <string name="notification_settings_item_other_comments_other_blogs">Comments on other sites</string>
@@ -976,6 +983,15 @@
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
     <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
+
+    <string name="notification_settings_followed_dialog_email_posts_switch">Email me new posts</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Receive notifications for new posts from this site</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">New posts</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Daily</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Instantly</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Weekly</string>
+    <string name="notification_settings_followed_dialog_email_comments">Email me new comments</string>
+    <string name="notification_settings_followed_dialog_title">Notifications</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
@@ -1694,11 +1710,28 @@
     <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
     <string name="plugin_search_error">Unable to search plugins</string>
     <string name="plugin_manage">Manage</string>
     <string name="plugin_see_all">See All</string>
     <string name="plugins_empty_search_list">No matches</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installing plugin…</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
+
+    <!-- Automated Transfer Eligibility Errors -->
+    <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
+    <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Plugin feature requires a verified email address.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Plugin cannot be installed due to disk space limitations.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Plugin cannot be installed on VIP sites.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Plugin feature requires admin privileges.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Plugin feature requires primary domain subscription to be associated with this user.</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Plugin feature requires the site to be in good standing.</string>
 
     <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
     <string name="plugin_caption_featured">Featured</string>
@@ -1836,7 +1869,6 @@
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
-    <string name="editor_toast_no_action_taken">An error occurred. No action taken.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
@@ -1925,6 +1957,7 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>

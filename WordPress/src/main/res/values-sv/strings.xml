@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-29 15:55:52+0000
+Translation-Revision-Date: 2018-04-10 17:10:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="media_preview_title">%1$d av %2$d</string>
+    <string name="stock_media_picker_empty_results">Inga träffar</string>
+    <string name="stock_media_picker_initial_empty_subtext">Fotografrier från %s</string>
+    <string name="stock_media_picker_initial_empty_text">Sök efter fria fotografier som du kan lägga till i ditt mediabibliotek</string>
+    <string name="stock_media_picker_search_hint">Sök i bibliotek med fria fotografier</string>
+    <string name="photo_picker_stock_media">Välj från bibliotek med fria fotografier</string>
+    <string name="error_save_empty_draft">Kan inte spara ett tomt utkast</string>
+    <string name="site_settings_quota_space_unlimited">%1$s av obegränsat</string>
+    <string name="preview_count">Förhandsgranska %d</string>
+    <string name="add_count">Lägg till %d</string>
     <string name="site_creation_domain_selection_title">Skapa ny webbplats, steg 4</string>
     <string name="site_creation_site_details_title">Skapa ny webbplats, steg 3</string>
     <string name="site_creation_theme_selection_title">Skapa ny webbplats, steg 2</string>

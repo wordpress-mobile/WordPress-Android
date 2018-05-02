@@ -33,7 +33,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
@@ -551,11 +551,18 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
+                    String message = post.isPage() ? getString(R.string.dialog_confirm_delete_page)
+                            : getString(R.string.dialog_confirm_delete_post);
+
+                    if (post.isLocalDraft()) {
+                        message = post.isPage() ? getString(R.string.dialog_confirm_delete_permanently_page)
+                                : getString(R.string.dialog_confirm_delete_permanently_post);
+                    }
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                     builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
-                            .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page)
-                                                : getString(R.string.dialog_confirm_delete_post))
+                            .setMessage(message)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -755,7 +762,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+    public void onMediaChanged(OnMediaChanged event) {
         if (isAdded() && !event.isError() && mPostsListAdapter != null) {
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);

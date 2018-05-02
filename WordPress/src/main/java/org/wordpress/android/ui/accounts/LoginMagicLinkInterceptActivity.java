@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.main.WPMainActivity;
 
 import javax.inject.Inject;
@@ -16,6 +17,10 @@ import javax.inject.Inject;
  * or signup based on deep link scheme, host, and parameters.
  */
 public class LoginMagicLinkInterceptActivity extends Activity {
+    private static final String PARAMETER_FLOW = "flow";
+    private static final String PARAMETER_FLOW_JETPACK = "jetpack";
+    private static final String PARAMETER_SOURCE = "source";
+
     private String mAction;
     private Uri mUri;
 
@@ -45,6 +50,10 @@ public class LoginMagicLinkInterceptActivity extends Activity {
             }
         }
 
+        if (isJetpackConnectFlow()) {
+            intent.putExtra(WPMainActivity.ARG_JETPACK_CONNECT_SOURCE, getJetpackConnectSource());
+        }
+
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -66,5 +75,23 @@ public class LoginMagicLinkInterceptActivity extends Activity {
         } else {
             return false;
         }
+    }
+
+    private boolean isJetpackConnectFlow() {
+        if (mUri != null) {
+            String value = (mUri.getQueryParameterNames() != null && mUri.getQueryParameter(PARAMETER_FLOW) != null)
+                    ? mUri.getQueryParameter(PARAMETER_FLOW) : "";
+            return Intent.ACTION_VIEW.equals(mAction) && value.equalsIgnoreCase(PARAMETER_FLOW_JETPACK);
+        } else {
+            return false;
+        }
+    }
+
+    private JetpackConnectionSource getJetpackConnectSource() {
+        String value = (mUri != null && mUri.getQueryParameterNames() != null
+                        && mUri.getQueryParameter(PARAMETER_SOURCE) != null)
+                ? mUri.getQueryParameter(PARAMETER_SOURCE) : "";
+
+        return JetpackConnectionSource.fromString(value);
     }
 }

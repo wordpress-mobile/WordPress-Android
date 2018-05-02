@@ -8,6 +8,7 @@ import com.automattic.android.tracks.TracksClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -279,8 +280,11 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         if (propertiesToJSON.length() > 0) {
             mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            String jsonString = propertiesToJSON.toString();
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
 
@@ -541,6 +545,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_OFF:
+                return "followed_blog_notifications_settings_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_ON:
+                return "followed_blog_notifications_settings_on";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_OFF:
+                return "followed_blog_notifications_settings_email_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_ON:
+                return "followed_blog_notifications_settings_email_on";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_INSTANTLY:
+                return "followed_blog_notifications_settings_email_instantly";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_DAILY:
+                return "followed_blog_notifications_settings_email_daily";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_EMAIL_WEEKLY:
+                return "followed_blog_notifications_settings_email_weekly";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_OFF:
+                return "followed_blog_notifications_settings_comments_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_ON:
+                return "followed_blog_notifications_settings_comments_on";
             case NOTIFICATIONS_ACCESSED:
                 return "notifications_accessed";
             case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
@@ -1012,6 +1034,32 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
+            case SHORTCUT_STATS_CLICKED:
+                return "shortcut_stats_clicked";
+            case SHORTCUT_NOTIFICATIONS_CLICKED:
+                return "shortcut_notifications_clicked";
+            case SHORTCUT_NEW_POST_CLICKED:
+                return "shortcut_new_post_clicked";
+            case AUTOMATED_TRANSFER_CONFIRM_DIALOG_SHOWN:
+                return "automated_transfer_confirm_dialog_shown";
+            case AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED:
+                return "automated_transfer_confirm_dialog_cancelled";
+            case AUTOMATED_TRANSFER_CHECK_ELIGIBILITY:
+                return "automated_transfer_check_eligibility";
+            case AUTOMATED_TRANSFER_NOT_ELIGIBLE:
+                return "automated_transfer_not_eligible";
+            case AUTOMATED_TRANSFER_INITIATE:
+                return "automated_transfer_initiate";
+            case AUTOMATED_TRANSFER_INITIATED:
+                return "automated_transfer_initiated";
+            case AUTOMATED_TRANSFER_INITIATION_FAILED:
+                return "automated_transfer_initiation_failed";
+            case AUTOMATED_TRANSFER_STATUS_COMPLETE:
+                return "automated_transfer_status_complete";
+            case AUTOMATED_TRANSFER_STATUS_FAILED:
+                return "automated_transfer_status_failed";
+            case AUTOMATED_TRANSFER_FLOW_COMPLETE:
+                return "automated_transfer_flow_complete";
             default:
                 return null;
         }

@@ -68,6 +68,7 @@ public interface LoginListener {
     void setHelpContext(String faqId, String faqSection);
 
     // Signup
+    void doStartSignup();
     void helpSignupEmailScreen(String email);
     void helpSignupMagicLinkScreen(String email);
     void showSignupMagicLink(String email);
