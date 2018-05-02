@@ -210,7 +210,7 @@
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_bestever_date"
                 style="@style/StatsInsightsLabel"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/grey_text_min"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"

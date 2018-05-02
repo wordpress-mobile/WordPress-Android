@@ -89,7 +89,7 @@ public class WPNumberPicker extends NumberPicker {
         Paint paint = mInputView.getPaint();
         paint.setTextAlign(Paint.Align.CENTER);
         //noinspection deprecation
-        paint.setColor(getResources().getColor(R.color.blue_medium));
+        paint.setColor(getResources().getColor(R.color.blue_wordpress));
         int alpha = isEnabled() ? 255 : 96;
         paint.setAlpha(alpha);
         mPaint.setAlpha(alpha);

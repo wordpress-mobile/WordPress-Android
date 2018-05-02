@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -42,6 +43,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -91,6 +93,7 @@ public class StatsActivity extends AppCompatActivity
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ShortcutUtils mShortcutUtils;
 
     private int mResultCode = -1;
     private SiteModel mSite;
@@ -136,7 +139,7 @@ public class StatsActivity extends AppCompatActivity
 
         setContentView(R.layout.stats_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -164,7 +167,7 @@ public class StatsActivity extends AppCompatActivity
 
         setTitle(R.string.stats);
 
-        mOuterScrollView = (NestedScrollViewExt) findViewById(R.id.scroll_view_stats);
+        mOuterScrollView = findViewById(R.id.scroll_view_stats);
         mOuterScrollView.setScrollViewListener(this);
 
         if (savedInstanceState != null) {
@@ -209,7 +212,7 @@ public class StatsActivity extends AppCompatActivity
         createFragments(false);
 
         if (mSpinner == null) {
-            mSpinner = (Spinner) findViewById(R.id.filter_spinner);
+            mSpinner = findViewById(R.id.filter_spinner);
 
             mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, mTimeframes);
 
@@ -251,13 +254,13 @@ public class StatsActivity extends AppCompatActivity
                 }
             });
 
-            Toolbar spinnerToolbar = (Toolbar) findViewById(R.id.toolbar_filter);
+            Toolbar spinnerToolbar = findViewById(R.id.toolbar_filter);
             spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.blue_medium));
         }
 
         selectCurrentTimeframeInActionBar();
 
-        TextView otherRecentStatsMovedLabel = (TextView) findViewById(R.id.stats_other_recent_stats_moved);
+        TextView otherRecentStatsMovedLabel = findViewById(R.id.stats_other_recent_stats_moved);
         otherRecentStatsMovedLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,6 +286,7 @@ public class StatsActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_ACCESSED, mSite);
             trackStatsAnalytics();
+            mShortcutUtils.reportShortcutUsed(Shortcut.OPEN_STATS);
         }
     }
 
@@ -754,7 +758,7 @@ public class StatsActivity extends AppCompatActivity
                 view = convertView;
             }
 
-            final TextView text = (TextView) view.findViewById(R.id.text);
+            final TextView text = view.findViewById(R.id.text);
             StatsTimeframe selectedTimeframe = (StatsTimeframe) getItem(position);
             text.setText(selectedTimeframe.getLabel());
             return view;
@@ -781,7 +785,7 @@ public class StatsActivity extends AppCompatActivity
             private final TextView mTextView;
 
             TagViewHolder(View view) {
-                mTextView = (TextView) view.findViewById(R.id.text);
+                mTextView = view.findViewById(R.id.text);
             }
         }
 

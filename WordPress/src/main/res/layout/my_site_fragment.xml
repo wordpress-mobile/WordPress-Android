@@ -74,7 +74,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center_vertical"
                                 android:maxLines="1"
-                                android:textColor="@color/grey"
+                                android:textColor="@color/grey_text_min"
                                 android:textSize="@dimen/text_sz_medium"/>
                         </LinearLayout>
 
@@ -98,6 +98,7 @@
                                 android:drawableLeft="@drawable/ic_arrow_left_grey"
                                 android:drawablePadding="@dimen/margin_small"
                                 android:drawableStart="@drawable/ic_arrow_left_grey"
+                                android:drawableTint="@color/grey_dark"
                                 android:gravity="center_vertical|start"
                                 android:minHeight="0dp"
                                 android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
@@ -326,7 +327,6 @@
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/plugins"
-                    android:tint="@color/grey"
                     app:srcCompat="@drawable/ic_gridicons_plugin"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -405,7 +405,6 @@
                     android:id="@+id/my_site_view_site_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:tint="@color/grey_darken_10"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
@@ -431,7 +430,6 @@
                     android:id="@+id/my_site_admin_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:tint="@color/grey_darken_10"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
