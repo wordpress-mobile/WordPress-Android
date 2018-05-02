@@ -28,7 +28,7 @@
         <item name="colorPrimaryDark">@color/grey_darken_10</item>
 
         <item name="android:windowContentOverlay">@color/grey_lighten_30</item>
-        <item name="alertDialogTheme">@style/Calypso.Dialog</item>
+        <item name="android:alertDialogTheme">@style/Calypso.Dialog</item>
         <item name="dialogTheme">@style/Calypso.Dialog</item>
         <item name="colorControlActivated">@color/blue_medium</item>
         <item name="colorControlNormal">@color/grey_lighten_20</item>
@@ -83,6 +83,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Calypso.NoActionBar.Preferences" parent="Calypso.SiteSettingsTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="Calypso.PopupMenu" parent="@android:style/Widget.Holo.Light.PopupMenu">
         <item name="android:textAppearance">@style/Calypso.TextAppearance</item>
     </style>
@@ -93,7 +98,7 @@
 
     <style name="Calypso.Text.Header" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/grey_lighten_10</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:textStyle">bold</item>
     </style>
 

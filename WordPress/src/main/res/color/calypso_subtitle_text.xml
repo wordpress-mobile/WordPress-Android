@@ -7,6 +7,6 @@
         android:color="@color/grey_lighten_10"
         android:state_enabled="false" />
 
-    <item android:color="@color/grey_darken_10" />
+    <item android:color="@color/grey_text_min" />
 
 </selector>

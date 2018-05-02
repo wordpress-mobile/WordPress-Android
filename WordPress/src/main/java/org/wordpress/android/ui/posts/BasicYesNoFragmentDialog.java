@@ -4,13 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.ContextThemeWrapper;
 
 import org.wordpress.android.R;
 
-public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
+public class BasicYesNoFragmentDialog extends AppCompatDialogFragment {
     private static final String STATE_KEY_TAG = "state_key_tag";
     private static final String STATE_KEY_TITLE = "state_key_title";
     private static final String STATE_KEY_MESSAGE = "state_key_message";
@@ -24,15 +25,15 @@ public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
     String mNegativeButtonLabel;
 
     public interface BasicYesNoDialogClickInterface {
-        void onPositiveClicked(String instanceTag);
-        void onNegativeClicked(String instanceTag);
+        void onPositiveClicked(@NonNull String instanceTag);
+        void onNegativeClicked(@NonNull String instanceTag);
     }
 
-    public void setArgs(String tag,
-                        String title,
-                        String message,
-                        String positiveButtonLabel,
-                        String negativeButtonLabel) {
+    public void initialize(String tag,
+                           String title,
+                           String message,
+                           String positiveButtonLabel,
+                           String negativeButtonLabel) {
         mTag = tag;
         mTitle = title;
         mMessage = message;
@@ -44,8 +45,8 @@ public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setCancelable(true);
-        int style = AppCompatDialogFragment.STYLE_NORMAL, theme = 0;
-        setStyle(style, theme);
+        int theme = 0;
+        setStyle(AppCompatDialogFragment.STYLE_NORMAL, theme);
 
         if (savedInstanceState != null) {
             mTag = savedInstanceState.getString(STATE_KEY_TAG);
@@ -53,13 +54,6 @@ public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
             mMessage = savedInstanceState.getString(STATE_KEY_MESSAGE);
             mPositiveButtonLabel = savedInstanceState.getString(STATE_KEY_POSITIVE_BUTTON_LABEL);
             mNegativeButtonLabel = savedInstanceState.getString(STATE_KEY_NEGATIVE_BUTTON_LABEL);
-        }
-    }
-
-    @Override public void onAttach(Context context) {
-        super.onAttach(context);
-        if (!(getActivity() instanceof BasicYesNoDialogClickInterface)) {
-            throw new RuntimeException("Hosting activity must implement BasicYesNoDialogClickInterface");
         }
     }
 
@@ -72,6 +66,7 @@ public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
         super.onSaveInstanceState(outState);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -90,5 +85,12 @@ public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
                })
                .setCancelable(true);
         return builder.create();
+    }
+
+    @Override public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(getActivity() instanceof BasicYesNoDialogClickInterface)) {
+            throw new RuntimeException("Hosting activity must implement BasicYesNoDialogClickInterface");
+        }
     }
 }

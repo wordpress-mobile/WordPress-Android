@@ -31,7 +31,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/content_margin"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_reply_grey_24dp"
+            app:srcCompat="@drawable/ic_reply_grey_min_24dp"
             android:layout_marginStart="@dimen/content_margin"/>
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
@@ -52,7 +52,7 @@
             android:paddingBottom="@dimen/margin_extra_small"
             android:paddingLeft="@dimen/margin_small"
             android:paddingTop="@dimen/margin_extra_small"
-            android:textColorHint="@color/grey_lighten_10"
+            android:textColorHint="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_large"
             android:paddingStart="@dimen/margin_small"/>
 
@@ -65,7 +65,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:text="@string/reader_label_submit_comment"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/grey_darken_30"
             android:textSize="@dimen/text_sz_medium"
             android:layout_marginEnd="@dimen/content_margin"/>
     </LinearLayout>

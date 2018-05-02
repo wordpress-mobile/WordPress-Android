@@ -28,10 +28,10 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:contentDescription="@string/content_description_people_looking_charts"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
-                    android:contentDescription="@null"
+                    android:layout_width="wrap_content"
                     app:srcCompat="@drawable/jetpack_connection_stats" />
 
                 <TextView

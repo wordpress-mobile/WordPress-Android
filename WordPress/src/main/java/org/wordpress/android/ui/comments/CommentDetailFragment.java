@@ -1028,9 +1028,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnModerateTextView.setText(R.string.comment_status_approved);
             mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_jazzy));
         } else {
-            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_grey_24dp);
+            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_grey_min_24dp);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
-            mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
+            mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey_text_min));
         }
     }
 
@@ -1163,9 +1163,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnLikeComment.setActivated(true);
         } else {
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
-            mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
-            mBtnLikeIcon
-                    .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_outline_grey_24dp));
+            mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey_text_min));
+            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                    R.drawable.ic_star_outline_grey_min_24dp));
             mBtnLikeComment.setActivated(false);
         }
     }

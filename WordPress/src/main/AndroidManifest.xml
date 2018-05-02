@@ -88,6 +88,8 @@
                 <!-- Samsung multiwindow support -->
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <!-- Main tab activity -->
@@ -177,7 +179,7 @@
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/Calypso.NoActionBar.Preferences"
             android:label="@string/notif_settings_screen_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -643,7 +645,7 @@
         <receiver android:name=".ui.notifications.receivers.NotificationsPendingDraftsReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
