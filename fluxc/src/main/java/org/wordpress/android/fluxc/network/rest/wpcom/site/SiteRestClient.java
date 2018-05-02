@@ -378,13 +378,12 @@ public class SiteRestClient extends BaseWPComRestClient {
             return;
         }
 
-        // Sanitize and encode the Url for the API call.
-        String sanitizedURL = UrlUtils.removeScheme(siteUrl);
-        sanitizedURL = sanitizedURL.replace("/", "::");
+        Map<String, String> params = new HashMap<>(1);
+        params.put("url", uri.toString());
 
         // Make the call.
-        String url = WPCOMREST.connect.site_info.protocol(uri.getScheme()).address(sanitizedURL).getUrlV1_1();
-        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+        String url = WPCOMREST.connect.site_info.getUrlV1_1();
+        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 ConnectSiteInfoResponse.class,
                 new Listener<ConnectSiteInfoResponse>() {
                     @Override
