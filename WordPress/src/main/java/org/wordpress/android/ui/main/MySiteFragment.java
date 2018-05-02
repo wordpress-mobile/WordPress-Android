@@ -129,7 +129,9 @@ public class MySiteFragment extends Fragment
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
-        if (getSelectedSite() != null) {
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
             // redisplay hidden fab after a short delay
             long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
             new Handler().postDelayed(new Runnable() {
@@ -140,6 +142,12 @@ public class MySiteFragment extends Fragment
                     }
                 }
             }, delayMs);
+
+            if (site.getHasFreePlan() && !site.isJetpackConnected()) {
+                mActivityLogContainer.setVisibility(View.GONE);
+            } else {
+                mActivityLogContainer.setVisibility(View.VISIBLE);
+            }
         }
     }
 
