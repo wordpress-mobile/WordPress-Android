@@ -50,7 +50,7 @@ class   ActivityLogActivity : AppCompatActivity() {
     }
 
     private fun showListFragment() {
-        val listFragment = ActivityLogListFragment.newInstance(viewModel.site!!)
+        val listFragment = ActivityLogListFragment.newInstance(viewModel.site)
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, listFragment, ActivityLogListFragment.TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
