@@ -20,6 +20,7 @@ class ActivityLogViewHolder(parent: ViewGroup, val click: (ActivityLogModel) -> 
     private val text: TextView = itemView.findViewById(R.id.action_text)
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
+    private val container: View = itemView.findViewById(R.id.activity_content_container)
 
     val header: TextView = itemView.findViewById(R.id.activity_header_text)
     val button: ImageButton = itemView.findViewById(R.id.rewind_button)
@@ -46,7 +47,7 @@ class ActivityLogViewHolder(parent: ViewGroup, val click: (ActivityLogModel) -> 
 
         thumbnail.setImageResource(thumb)
         header.text = timeFormatter.format(activity.published)
-        text.setOnClickListener {
+        container.setOnClickListener {
             click(activity)
         }
     }
