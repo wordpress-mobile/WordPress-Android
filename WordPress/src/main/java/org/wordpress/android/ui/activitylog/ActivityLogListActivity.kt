@@ -12,7 +12,7 @@ class ActivityLogListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.activity_log_activity)
+        setContentView(R.layout.activity_log_list_activity)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
