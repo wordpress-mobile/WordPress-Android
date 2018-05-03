@@ -18,13 +18,13 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
     private val text: TextView = itemView.findViewById(R.id.action_text)
-    private val thumbnail : ImageView = itemView.findViewById(R.id.action_icon)
-    private val progressBar : ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
+    private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
+    private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
 
     val header: TextView = itemView.findViewById(R.id.activity_header_text)
-    val button : ImageButton = itemView.findViewById(R.id.rewind_button)
+    val button: ImageButton = itemView.findViewById(R.id.rewind_button)
 
-    private var activity : ActivityLogModel? = null
+    private var activity: ActivityLogModel? = null
 
     private val timeFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
 
@@ -41,7 +41,6 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
         val thumbIcon = convertGridiconToDrawable(activity?.gridicon)
         val thumbBackground = convertStatusToBackground(activity?.status)
-        
         thumbnail.setImageResource(thumbIcon)
         thumbnail.setBackgroundResource(thumbBackground)
 
