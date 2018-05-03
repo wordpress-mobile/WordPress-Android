@@ -120,7 +120,6 @@ dependencies {
 
     // ViewModel and LiveData
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    implementation 'android.arch.paging:runtime:1.0.0-alpha7'
 
     testCompile("android.arch.core:core-testing:1.1.0", {
         exclude group: 'com.android.support', module: 'support-compat'
