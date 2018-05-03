@@ -26,8 +26,7 @@ import java.util.Calendar
 import javax.inject.Inject
 
 class ActivityLogListFragment : Fragment() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ActivityLogViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
