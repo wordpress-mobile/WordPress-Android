@@ -28,54 +28,6 @@ class ActivityLogListFragment : Fragment() {
     private lateinit var viewModel: ActivityLogViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    companion object {
-        val TAG = ActivityLogListFragment::class.java.name
-
-        fun newInstance(site: SiteModel): ActivityLogListFragment {
-            val fragment = ActivityLogListFragment()
-            val bundle = Bundle()
-            bundle.putSerializable(WordPress.SITE, site)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity?.application as WordPress).component()?.inject(this)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        // Use the same view model as the ActivityLogListActivity
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<ActivityLogViewModel>(ActivityLogViewModel::class.java)
-
-        setupObservers()
-    }
-
-    private fun setupObservers() {
-        viewModel.events.observe(this, Observer<List<ActivityLogModel>> {
-            reloadEvents()
-        })
-
-        viewModel.eventListStatus.observe(this, Observer<ActivityLogViewModel.ActivityLogListStatus> { listStatus ->
-            refreshProgressBars(listStatus)
-        })
-    }
-
-    protected fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
-        if (!isAdded || view == null) {
-            return
-        }
-        // We want to show the swipe refresher for the initial fetch but not while loading more
-        swipeToRefreshHelper.isRefreshing = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.FETCHING
-        // We want to show the progress bar at the bottom while loading more but not for initial fetch
-        val showLoadMore = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
-        activityLogListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_log_list_fragment, container, false)
     }
@@ -94,6 +46,45 @@ class ActivityLogListFragment : Fragment() {
                         swipeToRefreshHelper.isRefreshing = false
                     }
                 })
+
+        (activity?.application as WordPress).component()?.inject(this)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
+        viewModel.site = if (savedInstanceState == null) {
+            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
+
+        setupObservers()
+
+        viewModel.start()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(WordPress.SITE, viewModel.site)
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun setupObservers() {
+        viewModel.events.observe(this, Observer<List<ActivityLogModel>> {
+            reloadEvents()
+        })
+
+        viewModel.eventListStatus.observe(this, Observer<ActivityLogViewModel.ActivityLogListStatus> { listStatus ->
+            refreshProgressBars(listStatus)
+        })
+    }
+
+    private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
+        if (!isAdded || view == null) {
+            return
+        }
+        // We want to show the swipe refresher for the initial fetch but not while loading more
+        swipeToRefreshHelper.isRefreshing = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.FETCHING
+        // We want to show the progress bar at the bottom while loading more but not for initial fetch
+        val showLoadMore = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+        activityLogListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
     }
 
     private fun reloadEvents() {
