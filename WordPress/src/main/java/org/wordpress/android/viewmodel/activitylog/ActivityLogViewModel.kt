@@ -3,11 +3,9 @@ package org.wordpress.android.viewmodel.activitylog
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.os.Bundle
 import android.os.Handler
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -27,8 +25,6 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
 
     private var isStarted = false
 
-    private val handler = Handler()
-
     private val _events = MutableLiveData<List<ActivityLogModel>>()
     val events: LiveData<List<ActivityLogModel>>
         get() = _events
@@ -47,19 +43,6 @@ class ActivityLogViewModel @Inject constructor(val dispatcher: Dispatcher, priva
     override fun onCleared() {
         dispatcher.unregister(this)
         super.onCleared()
-    }
-
-    fun writeToBundle(outState: Bundle) {
-        outState.putSerializable(WordPress.SITE, site)
-    }
-
-    fun readFromBundle(savedInstanceState: Bundle) {
-        if (isStarted) {
-            // This was called due to a config change where the data survived, we don't need to
-            // read from the bundle
-            return
-        }
-        site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
     }
 
     fun start() {
