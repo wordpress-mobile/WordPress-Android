@@ -16,8 +16,8 @@ const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 
 class ActivityLogDetailViewModel
 @Inject constructor(
-        val dispatcher: Dispatcher,
-        private val activityLogStore: ActivityLogStore
+    val dispatcher: Dispatcher,
+    private val activityLogStore: ActivityLogStore
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String

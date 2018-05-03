@@ -21,7 +21,6 @@ class ActivityLogViewHolder(parent: ViewGroup, val click: (ActivityLogModel) -> 
     private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
 
-
     val header: TextView = itemView.findViewById(R.id.activity_header_text)
     val button: ImageButton = itemView.findViewById(R.id.rewind_button)
 

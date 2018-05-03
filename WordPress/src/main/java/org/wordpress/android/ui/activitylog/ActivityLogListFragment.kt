@@ -161,7 +161,10 @@ class ActivityLogListFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
             val view = layoutInflater.inflate(R.layout.activity_log_list_item, parent, false) as ViewGroup
-            return ActivityLogViewHolder(view, { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityID) })
+            return ActivityLogViewHolder(
+                    view,
+                    { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityID) }
+            )
         }
     }
 }
