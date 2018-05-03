@@ -82,13 +82,6 @@ class ActivityLogViewModelTest {
         verify(dispatcher, never()).dispatch(any())
     }
 
-    @Test(expected = NoSuchFieldError::class)
-    fun onFetchingErrorPostsErrorState() {
-        viewModel.onActivityLogFetched(OnActivityLogFetched(ActivityError(GENERIC_ERROR), FETCH_ACTIVITIES))
-
-        assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.ERROR)
-    }
-
     @Test
     fun onDataFetchedPostsDataAndChangesStatusIfCanLoadMore() {
         val canLoadMore = true
