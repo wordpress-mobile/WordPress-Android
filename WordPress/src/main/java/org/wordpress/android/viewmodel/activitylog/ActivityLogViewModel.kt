@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
@@ -94,7 +95,7 @@ class ActivityLogViewModel @Inject constructor(
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
-    fun onActivityLogFetched(event: ActivityLogStore.OnActivityLogFetched) {
+    fun onActivityLogFetched(event: OnActivityLogFetched) {
         if (event.isError) {
             _eventListStatus.postValue(ActivityLogListStatus.ERROR)
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the Activity log events")
