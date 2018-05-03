@@ -512,7 +512,7 @@
 
         <!--Plugins-->
         <activity
-            android:name=".ui.activitylog.ActivityLogActivity"
+            android:name=".ui.activitylog.ActivityLogListActivity"
             android:label="@string/activity_log"
             android:theme="@style/Calypso.NoActionBar"/>
         <activity

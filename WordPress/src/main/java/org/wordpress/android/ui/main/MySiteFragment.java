@@ -129,7 +129,9 @@ public class MySiteFragment extends Fragment
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
-        if (getSelectedSite() != null) {
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
             // redisplay hidden fab after a short delay
             long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
             new Handler().postDelayed(new Runnable() {
@@ -140,6 +142,12 @@ public class MySiteFragment extends Fragment
                     }
                 }
             }, delayMs);
+
+            if (site.getHasFreePlan() && !site.isJetpackConnected()) {
+                mActivityLogContainer.setVisibility(View.GONE);
+            } else {
+                mActivityLogContainer.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -153,25 +161,25 @@ public class MySiteFragment extends Fragment
         mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
 
-        mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
-        mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
-        mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
-        mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
-        mThemesContainer = (LinearLayout) rootView.findViewById(R.id.row_themes);
-        mPeopleView = (LinearLayout) rootView.findViewById(R.id.row_people);
-        mPlanContainer = (LinearLayout) rootView.findViewById(R.id.row_plan);
-        mPluginsContainer = (LinearLayout) rootView.findViewById(R.id.row_plugins);
+        mBlavatarImageView = rootView.findViewById(R.id.my_site_blavatar);
+        mBlogTitleTextView = rootView.findViewById(R.id.my_site_title_label);
+        mBlogSubtitleTextView = rootView.findViewById(R.id.my_site_subtitle_label);
+        mLookAndFeelHeader = rootView.findViewById(R.id.my_site_look_and_feel_header);
+        mThemesContainer = rootView.findViewById(R.id.row_themes);
+        mPeopleView = rootView.findViewById(R.id.row_people);
+        mPlanContainer = rootView.findViewById(R.id.row_plan);
+        mPluginsContainer = rootView.findViewById(R.id.row_plugins);
         mActivityLogContainer = rootView.findViewById(R.id.row_activity_log);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
-        mAdminView = (LinearLayout) rootView.findViewById(R.id.row_admin);
-        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
-        mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
+        mAdminView = rootView.findViewById(R.id.row_admin);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
+        mNoSiteView = rootView.findViewById(R.id.no_site_view);
+        mNoSiteDrakeImageView = rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
-        mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
-        mPageView = (LinearLayout) rootView.findViewById(R.id.row_pages);
+        mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
+        mPageView = rootView.findViewById(R.id.row_pages);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {

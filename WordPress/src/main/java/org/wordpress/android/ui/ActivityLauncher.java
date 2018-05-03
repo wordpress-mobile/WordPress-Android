@@ -24,8 +24,8 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
-import org.wordpress.android.ui.activitylog.ActivityLogActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogDetailActivity;
+import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -254,7 +254,7 @@ public class ActivityLauncher {
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_LIST, site);
-        Intent intent = new Intent(activity, ActivityLogActivity.class);
+        Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
     }

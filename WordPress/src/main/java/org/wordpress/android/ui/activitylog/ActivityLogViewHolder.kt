@@ -15,12 +15,12 @@ import java.util.Locale
 
 class ActivityLogViewHolder(parent: ViewGroup, val click: (ActivityLogModel) -> Unit) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.activity_log_list_item, parent, false)) {
-
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
     private val text: TextView = itemView.findViewById(R.id.action_text)
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
+
 
     val header: TextView = itemView.findViewById(R.id.activity_header_text)
     val button: ImageButton = itemView.findViewById(R.id.rewind_button)
@@ -42,7 +42,6 @@ class ActivityLogViewHolder(parent: ViewGroup, val click: (ActivityLogModel) -> 
 
         val thumbIcon = convertGridiconToDrawable(activity?.gridicon)
         val thumbBackground = convertStatusToBackground(activity?.status)
-
         thumbnail.setImageResource(thumbIcon)
         thumbnail.setBackgroundResource(thumbBackground)
 

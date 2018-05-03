@@ -38,8 +38,8 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeAdapter;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
-import org.wordpress.android.ui.activitylog.ActivityLogActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogDetailFragment;
+import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogListFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -378,7 +378,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PluginBrowserActivity object);
 
-    void inject(ActivityLogActivity object);
+    void inject(ActivityLogListActivity object);
 
     void inject(ActivityLogListFragment object);
 
