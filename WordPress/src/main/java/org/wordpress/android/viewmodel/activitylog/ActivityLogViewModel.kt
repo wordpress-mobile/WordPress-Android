@@ -98,7 +98,7 @@ class ActivityLogViewModel @Inject constructor(
     fun onActivityLogFetched(event: OnActivityLogFetched) {
         if (event.isError) {
             _eventListStatus.postValue(ActivityLogListStatus.ERROR)
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the Activity log events")
+            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
             return
         }
 
