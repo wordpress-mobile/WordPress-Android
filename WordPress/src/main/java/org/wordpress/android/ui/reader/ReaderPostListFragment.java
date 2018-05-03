@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -1570,6 +1571,7 @@ public class ReaderPostListFragment extends Fragment
         final ListPopupWindow listPopup = new ListPopupWindow(context);
         listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
         listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
+        listPopup.setDropDownGravity(Gravity.END);
         listPopup.setAnchorView(view);
         listPopup.setModal(true);
         listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
