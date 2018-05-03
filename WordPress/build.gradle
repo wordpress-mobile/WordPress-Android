@@ -2,7 +2,6 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -201,7 +200,6 @@ configurations.all {
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
     exclude group: 'org.wordpress', module: 'utils'
     exclude group: 'org.wordpress', module: 'analytics'
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 task copyGoogleServicesExampleFile(type: Copy) {
