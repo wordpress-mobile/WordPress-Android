@@ -32,7 +32,7 @@ class ActivityLogDetailViewModel
         if (activityLogId != _item.value?.activityID) {
             _item.postValue(
                     activityLogStore
-                            .getActivityLogForSite(site, true)
+                            .getActivityLogForSite(site)
                             .find { it.activityID == activityLogId }
                             ?.let {
                                 ActivityLogDetailModel(
