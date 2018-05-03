@@ -142,7 +142,7 @@ class ActivityLogListFragment : Fragment() {
 
         private fun shouldDisplayHeader(position: Int): Boolean {
             return if (position > 0) {
-                val date1 = list[position - 1].published.date
+                val date1 = list[position].published.date
                 val date2 = list[position - 1].published.date
                 date1.compareTo(date2) != 0
             } else {
