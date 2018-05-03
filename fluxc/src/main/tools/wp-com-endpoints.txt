@@ -1,7 +1,7 @@
 /auth/send-login-email/
 /auth/send-signup-email/
 
-/connect/site-info/$protocol#String/$address#String
+/connect/site-info/
 
 /is-available/blog/
 /is-available/domain/
