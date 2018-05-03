@@ -91,9 +91,9 @@
                 android:layout_marginRight="@dimen/activity_log_icon_margin"
                 android:layout_marginEnd="@dimen/activity_log_icon_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/rewind"
                 tools:visibility="visible"
-                app:srcCompat="@drawable/ic_history_blue_24dp"
-                />
+                app:srcCompat="@drawable/ic_history_blue_24dp" />
 
         </LinearLayout>
 
