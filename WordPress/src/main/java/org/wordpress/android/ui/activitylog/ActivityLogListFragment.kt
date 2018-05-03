@@ -21,6 +21,7 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
+import java.util.Calendar
 import javax.inject.Inject
 
 class ActivityLogListFragment : Fragment() {
@@ -133,8 +134,12 @@ class ActivityLogListFragment : Fragment() {
 
         private fun shouldDisplayHeader(position: Int): Boolean {
             return if (position > 0) {
-                val date1 = list[position].published.date
-                val date2 = list[position - 1].published.date
+                val date1 = Calendar.getInstance()
+                date1.time = list[position].published
+
+                val date2 = Calendar.getInstance()
+                date2.time = list[position - 1].published
+
                 date1.compareTo(date2) != 0
             } else {
                 true
