@@ -928,7 +928,7 @@ public class ReaderPostTable {
             return new ReaderBlogIdPostIdList();
         }
 
-        String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_name=? AND tag_type=?";
+        String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_type=?";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
