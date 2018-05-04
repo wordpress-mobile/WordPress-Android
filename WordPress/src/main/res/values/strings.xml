@@ -1308,6 +1308,7 @@
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
     <string name="passcodelock_prompt_message">Enter your PIN</string>
+    <!--suppress CheckTagEmptyBody -->
     <string name="passcodelock_hint"></string>
 
     <!--
@@ -1324,6 +1325,7 @@
     <!--
       reader strings
     -->
+    <string name="reader_save_for_later_title">Saved posts</string>
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now">now</string>
 
@@ -1448,6 +1450,7 @@
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+    <string name="reader_empty_posts_bookmarked">You haven\'t saved any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
     <string name="reader_empty_posts_in_search_title">No posts found</string>
