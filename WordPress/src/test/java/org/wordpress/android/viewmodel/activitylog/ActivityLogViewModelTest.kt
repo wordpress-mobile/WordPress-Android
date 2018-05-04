@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
+import java.util.Calendar
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -35,9 +37,9 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var site: SiteModel
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
-    private var events: MutableList<List<ActivityLogModel>?> = mutableListOf()
+    private var events: MutableList<List<ActivityLogListItemViewModel>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
-    private val activityLog = listOf<ActivityLogModel>(mock())
+    private val activityLogList = mutableListOf<ActivityLogModel>()
     private lateinit var viewModel: ActivityLogViewModel
 
     @Before
@@ -46,7 +48,8 @@ class ActivityLogViewModelTest {
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
-        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLog)
+
+        initializeActivityList()
     }
 
     @Test
@@ -56,7 +59,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start()
 
-        assertEquals(viewModel.events.value, activityLog)
+        assertEquals(viewModel.events.value, activityLogList)
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.FETCHING)
 
         assertFetchEvents()
@@ -85,7 +88,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        assertEquals(viewModel.events.value, activityLog)
+        assertEquals(viewModel.events.value, activityLogList)
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
     }
@@ -105,7 +108,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        assertEquals(viewModel.events.value, activityLog)
+        assertEquals(viewModel.events.value, activityLogList)
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
@@ -128,6 +131,16 @@ class ActivityLogViewModelTest {
         verify(store, never()).getActivityLogForSite(site, false)
     }
 
+    @Test
+    fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() {
+        val canLoadMore = true
+        viewModel.onActivityLogFetched(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
+
+        Assert.assertTrue(events.last()?.get(0)?.isHeaderVisible(null) ?: false)
+        Assert.assertFalse(events.last()?.get(1)?.isHeaderVisible(events.last()?.get(0)) ?: true)
+        Assert.assertTrue(events.last()?.get(2)?.isHeaderVisible(events.last()?.get(1)) ?: false)
+    }
+
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -138,5 +151,19 @@ class ActivityLogViewModelTest {
             assertEquals(this.loadMore, canLoadMore)
             assertEquals(this.site, site)
         }
+    }
+
+    private fun initializeActivityList() {
+        val birthday = Calendar.getInstance()
+        birthday.set(1985, 8, 27)
+        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
+                "", true, "",  birthday.time))
+        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
+                "", true, "",  birthday.time))
+        birthday.set(1987, 5, 26)
+        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
+                "", true, "",  birthday.time))
+
+        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
     }
 }
