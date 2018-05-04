@@ -58,7 +58,10 @@ class ActivityLogViewModelTest {
 
         viewModel.start()
 
-        assertEquals(viewModel.events.value, activityLogList)
+        assertEquals(
+                viewModel.events.value,
+                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        )
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.FETCHING)
 
         assertFetchEvents()
@@ -87,7 +90,10 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        assertEquals(viewModel.events.value, activityLogList)
+        assertEquals(
+                viewModel.events.value,
+                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
     }
@@ -107,7 +113,10 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        assertEquals(viewModel.events.value, activityLogList)
+        assertEquals(
+                viewModel.events.value,
+                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
