@@ -100,5 +100,4 @@ class ActivityLogListFragment : Fragment() {
             adapter.updateList(events)
         }
     }
-
 }

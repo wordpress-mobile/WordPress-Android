@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R.layout
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
-import java.util.Calendar
 
 class ActivityLogAdapter(context: Context, private val viewModel: ActivityLogViewModel) : Adapter<ActivityLogViewHolder>() {
-    private val list = mutableListOf<ActivityLogModel>()
+    private val list = mutableListOf<ActivityLogListItemViewModel>()
     private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
@@ -32,27 +32,23 @@ class ActivityLogAdapter(context: Context, private val viewModel: ActivityLogVie
     }
 
     internal fun updateList(items: List<ActivityLogModel>) {
-        val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list, items))
+        val itemViewModels = items.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list, itemViewModels))
         list.clear()
-        list.addAll(items)
+        list.addAll(itemViewModels)
+
         diffResult.dispatchUpdatesTo(this)
     }
 
     private fun shouldDisplayHeader(position: Int): Boolean {
         return if (position > 0) {
-            val date1 = Calendar.getInstance()
-            date1.time = list[position].published
-
-            val date2 = Calendar.getInstance()
-            date2.time = list[position - 1].published
-
-            date1.compareTo(date2) != 0
+            list[position].header != list[position - 1].header
         } else {
             true
         }
     }
 
-    private fun getItem(position: Int): ActivityLogModel {
+    private fun getItem(position: Int): ActivityLogListItemViewModel {
         return list[position]
     }
 
