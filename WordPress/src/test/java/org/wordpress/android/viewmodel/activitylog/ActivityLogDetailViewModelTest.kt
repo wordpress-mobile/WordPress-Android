@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.activitylog
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -59,7 +60,12 @@ class ActivityLogDetailViewModelTest {
     @Before
     fun setUp() {
         viewModel = ActivityLogDetailViewModel(dispatcher, activityLogStore)
-        viewModel.activityLogItem.observeForever {lastEmittedItem = it}
+        viewModel.activityLogItem.observeForever { lastEmittedItem = it }
+    }
+
+    @After
+    fun tearDown() {
+        lastEmittedItem = null
     }
 
     @Test
