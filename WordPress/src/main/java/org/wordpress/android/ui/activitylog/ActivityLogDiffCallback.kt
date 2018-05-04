@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.activitylog
 
 import android.support.v7.util.DiffUtil
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 
 class ActivityLogDiffCallback(
-    private val oldList: List<ActivityLogModel>,
-    private val newList: List<ActivityLogModel>
+    private val oldList: List<ActivityLogListItemViewModel>,
+    private val newList: List<ActivityLogListItemViewModel>
 ) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].activityID == newList[newItemPosition].activityID
@@ -20,7 +20,6 @@ class ActivityLogDiffCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].summary == newList[newItemPosition].summary &&
-                oldList[oldItemPosition].text == newList[newItemPosition].text
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
