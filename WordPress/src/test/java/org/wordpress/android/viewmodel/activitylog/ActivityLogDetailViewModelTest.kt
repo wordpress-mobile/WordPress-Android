@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.activitylog
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
@@ -69,7 +70,7 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.start(site, activityID)
 
-        verify(observer).onChanged(ActivityLogDetailModel(
+        verify(observer).onChanged(eq(ActivityLogDetailModel(
                 activityID = activityID,
                 summary = summary,
                 text = text,
@@ -79,7 +80,7 @@ class ActivityLogDetailViewModelTest {
                 actorIconUrl = actorIcon,
                 createdDate = "January 1, 1970",
                 createdTime = "1:00 AM"
-        ))
+        )))
     }
 
     @Test
@@ -108,7 +109,7 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.start(site, activityID2)
 
-        verify(observer).onChanged(ActivityLogDetailModel(
+        verify(observer).onChanged(eq(ActivityLogDetailModel(
                 activityID = activityID2,
                 summary = summary,
                 text = changedText,
@@ -118,7 +119,7 @@ class ActivityLogDetailViewModelTest {
                 actorIconUrl = actorIcon,
                 createdDate = "January 1, 1970",
                 createdTime = "1:00 AM"
-        ))
+        )))
     }
 
     @Test
