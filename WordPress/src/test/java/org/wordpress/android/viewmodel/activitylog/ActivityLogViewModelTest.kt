@@ -120,6 +120,14 @@ class ActivityLogViewModelTest {
         verify(dispatcher, never()).dispatch(any())
     }
 
+    @Test
+    fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() {
+        val canLoadMore = true
+        viewModel.onActivityLogFetched(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
+
+        verify(store, never()).getActivityLogForSite(site, false)
+    }
+
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
         verify(dispatcher).dispatch(actionCaptor.capture())
 
