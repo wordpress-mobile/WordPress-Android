@@ -13,13 +13,18 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.networking.RestClientUtils;
@@ -30,6 +35,7 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePost;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -411,5 +417,42 @@ public class ReaderPostActions {
                 }
             }
         }.start();
+    }
+
+    public static void addToBookmarked(@NonNull final ReaderPost post) {
+        if (!post.isBookmarked) {
+            ReaderPostList readerPosts = new ReaderPostList();
+            readerPosts.add(post);
+            ReaderTagList bookmarkTags = ReaderTagTable.getBookmarkTags();
+
+            for (ReaderTag tag : bookmarkTags) {
+                post.setDateTagged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+                ReaderPostTable.addOrUpdatePosts(tag, readerPosts);
+            }
+            ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, true);
+        } else {
+            String msg = "addToBookmarked called on an already bookmarked post.";
+            AppLog.w(T.READER, msg);
+            if (BuildConfig.DEBUG) {
+                throw new RuntimeException(msg);
+            }
+        }
+    }
+
+    public static void removeFromBookmarked(@NonNull final ReaderPost post) {
+        if (post.isBookmarked) {
+            ReaderTagList bookmarkTags = ReaderTagTable.getBookmarkTags();
+
+            for (ReaderTag tag : bookmarkTags) {
+                ReaderPostTable.removeTagsFromPost(post.blogId, post.postId, tag.tagType);
+            }
+            ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, false);
+        } else {
+            String msg = "removeFromBookmarked called on a post which wasn't bookmarked.";
+            AppLog.w(T.READER, msg);
+            if (BuildConfig.DEBUG) {
+                throw new RuntimeException(msg);
+            }
+        }
     }
 }
