@@ -1,13 +1,10 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.reset
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +25,6 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var observer: Observer<ActivityLogDetailModel>
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val activityID = "id1"
@@ -58,10 +54,12 @@ class ActivityLogDetailViewModelTest {
             status = null
     )
 
+    private var lastEmittedItem: ActivityLogDetailModel? = null
+
     @Before
     fun setUp() {
         viewModel = ActivityLogDetailViewModel(dispatcher, activityLogStore)
-        viewModel.activityLogItem.observeForever(observer)
+        viewModel.activityLogItem.observeForever {lastEmittedItem = it}
     }
 
     @Test
@@ -70,7 +68,7 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.start(site, activityID)
 
-        verify(observer).onChanged(eq(ActivityLogDetailModel(
+        assertEquals(lastEmittedItem, ActivityLogDetailModel(
                 activityID = activityID,
                 summary = summary,
                 text = text,
@@ -80,7 +78,7 @@ class ActivityLogDetailViewModelTest {
                 actorIconUrl = actorIcon,
                 createdDate = "January 1, 1970",
                 createdTime = "1:00 AM"
-        )))
+        ))
     }
 
     @Test
@@ -89,11 +87,11 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.start(site, activityID)
 
-        reset(observer)
+        lastEmittedItem = null
 
         viewModel.start(site, activityID)
 
-        verify(observer, never()).onChanged(any())
+        assertNull(lastEmittedItem)
     }
 
     @Test
@@ -105,11 +103,11 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.start(site, activityID)
 
-        reset(observer)
+        lastEmittedItem = null
 
         viewModel.start(site, activityID2)
 
-        verify(observer).onChanged(eq(ActivityLogDetailModel(
+        assertEquals(lastEmittedItem, ActivityLogDetailModel(
                 activityID = activityID2,
                 summary = summary,
                 text = changedText,
@@ -119,15 +117,17 @@ class ActivityLogDetailViewModelTest {
                 actorIconUrl = actorIcon,
                 createdDate = "January 1, 1970",
                 createdTime = "1:00 AM"
-        )))
+        ))
     }
 
     @Test
     fun emitsNullWhenActivityNotFound() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf())
 
+        lastEmittedItem = mock()
+
         viewModel.start(site, activityID)
 
-        verify(observer).onChanged(null)
+        assertNull(lastEmittedItem)
     }
 }
