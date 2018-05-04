@@ -7,28 +7,26 @@ import java.util.Date
 import java.util.Locale
 
 data class ActivityLogListItemViewModel(
-    val activityID: String,
+    val activityId: String,
     val summary: String,
     val text: String,
-    val type: String?,
-    private val gridicon: String?,
-    val status: String?,
-    val rewindable: Boolean,
-    val rewindID: String?,
-    private val published: Date) {
-
+    private val gridIcon: String?,
+    private val status: String?,
+    val isRewindable: Boolean,
+    val rewindId: String?,
+    private val datePublished: Date) {
     private val timeFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
 
     companion object {
         @JvmStatic
         fun fromDomainModel(model: ActivityLogModel): ActivityLogListItemViewModel {
-            return ActivityLogListItemViewModel(model.activityID, model.summary, model.text, model.type, model.gridicon,
+            return ActivityLogListItemViewModel(model.activityID, model.summary, model.text, model.gridicon,
                     model.status, model.rewindable ?: false, model.rewindID, model.published)
         }
     }
 
     val header: String by lazy {
-        timeFormatter.format(published)
+        timeFormatter.format(datePublished)
     }
 
     val background by lazy {
@@ -36,7 +34,15 @@ data class ActivityLogListItemViewModel(
     }
 
     val icon by lazy {
-        convertGridiconToDrawable(gridicon)
+        convertGridIconToDrawable(gridIcon)
+    }
+
+    fun isHeaderVisible(previous: ActivityLogListItemViewModel?): Boolean {
+        return if (previous != null) {
+            header != previous.header
+        } else {
+            true
+        }
     }
 
     private fun convertStatusToBackground(status: String?): Int {
@@ -48,8 +54,8 @@ data class ActivityLogListItemViewModel(
         }
     }
 
-    private fun convertGridiconToDrawable(gridicon: String?): Int {
-        return when (gridicon) {
+    private fun convertGridIconToDrawable(gridIcon: String?): Int {
+        return when (gridIcon) {
             "checkmark" -> R.drawable.ic_checkmark_white_24dp
             "cloud" -> R.drawable.ic_cloud_white_24dp
             "cog" -> R.drawable.ic_cog_white_24dp

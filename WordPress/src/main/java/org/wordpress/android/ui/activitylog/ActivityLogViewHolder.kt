@@ -17,9 +17,8 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val text: TextView = itemView.findViewById(R.id.action_text)
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
-
-    val header: TextView = itemView.findViewById(R.id.activity_header_text)
-    val button: ImageButton = itemView.findViewById(R.id.rewind_button)
+    private val button: ImageButton = itemView.findViewById(R.id.rewind_button)
+    private val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
     private lateinit var activity: ActivityLogListItemViewModel
 
@@ -28,18 +27,18 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         }
     }
 
-    fun bind(activity: ActivityLogListItemViewModel) {
+    fun bind(activity: ActivityLogListItemViewModel, previous: ActivityLogListItemViewModel?) {
         this.activity = activity
 
         summary.text = activity.summary
         text.text = activity.text
-
-        val thumbIcon = activity.icon
-        val thumbBackground = activity.background
-        thumbnail.setImageResource(thumbIcon)
-        thumbnail.setBackgroundResource(thumbBackground)
-
         header.text = activity.header
+
+        button.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
+        header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
+
+        thumbnail.setImageResource(activity.icon)
+        thumbnail.setBackgroundResource(activity.background)
     }
 
     fun updateProgress(progress: Int) {
