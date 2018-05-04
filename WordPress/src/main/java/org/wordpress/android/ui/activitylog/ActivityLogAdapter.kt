@@ -9,7 +9,10 @@ import org.wordpress.android.R.layout
 import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 
-class ActivityLogAdapter(context: Context, private val viewModel: ActivityLogViewModel) : Adapter<ActivityLogViewHolder>() {
+class ActivityLogAdapter(
+    context: Context,
+    private val viewModel: ActivityLogViewModel
+) : Adapter<ActivityLogViewHolder>() {
     private val list = mutableListOf<ActivityLogListItemViewModel>()
     private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
 

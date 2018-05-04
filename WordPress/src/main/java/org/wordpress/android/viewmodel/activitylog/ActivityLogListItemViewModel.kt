@@ -14,7 +14,8 @@ data class ActivityLogListItemViewModel(
     private val status: String?,
     val isRewindable: Boolean,
     val rewindId: String?,
-    private val datePublished: Date) {
+    private val datePublished: Date
+) {
     private val timeFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
 
     companion object {

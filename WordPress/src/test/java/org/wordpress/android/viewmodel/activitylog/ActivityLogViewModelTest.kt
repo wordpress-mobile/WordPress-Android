@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.activitylog
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
@@ -157,12 +156,12 @@ class ActivityLogViewModelTest {
         val birthday = Calendar.getInstance()
         birthday.set(1985, 8, 27)
         activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "",  birthday.time))
+                "", true, "", birthday.time))
         activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "",  birthday.time))
+                "", true, "", birthday.time))
         birthday.set(1987, 5, 26)
         activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "",  birthday.time))
+                "", true, "", birthday.time))
 
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
     }
