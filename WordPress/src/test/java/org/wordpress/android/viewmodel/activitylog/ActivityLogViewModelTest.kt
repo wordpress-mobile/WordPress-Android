@@ -7,7 +7,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -145,9 +144,9 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onActivityLogFetched(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
-        Assert.assertTrue(events.last()?.get(0)?.isHeaderVisible(null) ?: false)
-        Assert.assertFalse(events.last()?.get(1)?.isHeaderVisible(events.last()?.get(0)) ?: true)
-        Assert.assertTrue(events.last()?.get(2)?.isHeaderVisible(events.last()?.get(1)) ?: false)
+        assertTrue(events.last()?.get(0)?.isHeaderVisible(null) == true)
+        assertTrue(events.last()?.get(1)?.isHeaderVisible(events.last()?.get(0)) == false)
+        assertTrue(events.last()?.get(2)?.isHeaderVisible(events.last()?.get(1)) == true)
     }
 
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
