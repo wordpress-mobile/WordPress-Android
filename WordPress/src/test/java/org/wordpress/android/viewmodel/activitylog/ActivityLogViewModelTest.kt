@@ -38,7 +38,7 @@ class ActivityLogViewModelTest {
 
     private var events: MutableList<List<ActivityLogListItemViewModel>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
-    private val activityLogList = mutableListOf<ActivityLogModel>()
+    private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
 
     @Before
@@ -48,7 +48,8 @@ class ActivityLogViewModelTest {
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
 
-        initializeActivityList()
+        activityLogList = initializeActivityList()
+        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
     }
 
     @Test
@@ -161,17 +162,19 @@ class ActivityLogViewModelTest {
         }
     }
 
-    private fun initializeActivityList() {
+    private fun initializeActivityList(): List<ActivityLogModel> {
         val birthday = Calendar.getInstance()
         birthday.set(1985, 8, 27)
-        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "", birthday.time))
-        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "", birthday.time))
-        birthday.set(1987, 5, 26)
-        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "", birthday.time))
 
-        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
+        val list = mutableListOf<ActivityLogModel>()
+        val activity = ActivityLogModel("", "", "", "", "", "",
+                "", true, "", birthday.time)
+        list.add(activity)
+        list.add(activity.copy())
+
+        birthday.set(1987, 5, 26)
+        list.add(activity.copy(published = birthday.time))
+
+        return list
     }
 }
