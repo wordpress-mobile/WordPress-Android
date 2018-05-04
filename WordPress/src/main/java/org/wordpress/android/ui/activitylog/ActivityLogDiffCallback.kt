@@ -8,7 +8,7 @@ class ActivityLogDiffCallback(
     private val newList: List<ActivityLogListItemViewModel>
 ) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].activityID == newList[newItemPosition].activityID
+        return oldList[oldItemPosition].activityId == newList[newItemPosition].activityId
     }
 
     override fun getOldListSize(): Int {

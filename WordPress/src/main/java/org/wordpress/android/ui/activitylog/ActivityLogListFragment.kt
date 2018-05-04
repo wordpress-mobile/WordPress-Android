@@ -13,11 +13,11 @@ import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 
@@ -65,7 +65,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(this, Observer<List<ActivityLogModel>> {
+        viewModel.events.observe(this, Observer<List<ActivityLogListItemViewModel>> {
             reloadEvents()
         })
 
@@ -89,14 +89,14 @@ class ActivityLogListFragment : Fragment() {
         setEvents(viewModel.events.value ?: emptyList())
     }
 
-    private fun setEvents(events: List<ActivityLogModel>) {
+    private fun setEvents(events: List<ActivityLogListItemViewModel>) {
         context?.let {
             val adapter: ActivityLogAdapter
             if (activityLogList.adapter == null) {
                 adapter = ActivityLogAdapter(
                         it,
                         viewModel,
-                        { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityID) }
+                        { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityId) }
                 )
                 activityLogList.adapter = adapter
             } else {
