@@ -125,7 +125,7 @@
                     android:layout_marginEnd="6dp"
                     android:layout_marginRight="6dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="null"
+                    android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     app:srcCompat="@drawable/ic_history_blue_24dp"
                     tools:src="@drawable/ic_history_blue_24dp"/>
