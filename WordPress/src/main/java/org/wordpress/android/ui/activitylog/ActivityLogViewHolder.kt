@@ -34,7 +34,9 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         text.text = activity.text
         header.text = activity.header
 
-        button.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
+        // TODO: Do this instead after rewind is implemented
+//        button.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
+        button.visibility = View.GONE
         header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
 
         thumbnail.setImageResource(activity.icon)
