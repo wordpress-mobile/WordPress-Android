@@ -47,7 +47,8 @@ class ActivityLogListFragment : Fragment() {
         (activity?.application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
-        viewModel.site = if (savedInstanceState == null) {
+
+        val site = if (savedInstanceState == null) {
             activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
@@ -55,7 +56,7 @@ class ActivityLogListFragment : Fragment() {
 
         setupObservers()
 
-        viewModel.start()
+        viewModel.start(site)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

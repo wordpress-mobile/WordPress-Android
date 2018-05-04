@@ -56,7 +56,7 @@ class ActivityLogViewModelTest {
         assertNull(viewModel.events.value)
         assertNull(viewModel.eventListStatus.value)
 
-        viewModel.start()
+        viewModel.start(site)
 
         assertEquals(
                 viewModel.events.value,
