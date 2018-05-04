@@ -115,15 +115,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:contentDescription="@string/rewind"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_marginEnd="6dp"
                     android:layout_marginRight="6dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="null"
+                    android:importantForAccessibility="no"
                     app:srcCompat="@drawable/ic_history_blue_24dp"
                     tools:src="@drawable/ic_history_blue_24dp"/>
 
