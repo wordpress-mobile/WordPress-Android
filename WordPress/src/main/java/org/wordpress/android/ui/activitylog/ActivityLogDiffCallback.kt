@@ -20,7 +20,6 @@ class ActivityLogDiffCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].summary == newList[newItemPosition].summary &&
-                oldList[oldItemPosition].text == newList[newItemPosition].text
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
