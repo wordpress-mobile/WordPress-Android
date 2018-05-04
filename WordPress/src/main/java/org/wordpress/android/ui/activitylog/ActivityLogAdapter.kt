@@ -12,7 +12,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import java.util.Calendar
 
 class ActivityLogAdapter(context: Context, private val viewModel: ActivityLogViewModel) : Adapter<ActivityLogViewHolder>() {
-    private val list = ArrayList<ActivityLogModel>()
+    private val list = mutableListOf<ActivityLogModel>()
     private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
