@@ -32,18 +32,18 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         }
     }
 
-    fun bind(activity: ActivityLogModel?) {
+    fun bind(activity: ActivityLogModel) {
         this.activity = activity
 
-        summary.text = activity?.summary
-        text.text = activity?.text
+        summary.text = activity.summary
+        text.text = activity.text
 
-        val thumbIcon = convertGridiconToDrawable(activity?.gridicon)
-        val thumbBackground = convertStatusToBackground(activity?.status)
+        val thumbIcon = convertGridiconToDrawable(activity.gridicon)
+        val thumbBackground = convertStatusToBackground(activity.status)
         thumbnail.setImageResource(thumbIcon)
         thumbnail.setBackgroundResource(thumbBackground)
 
-        header.text = timeFormatter.format(activity?.published)
+        header.text = timeFormatter.format(activity.published)
     }
 
     fun updateProgress(progress: Int) {
