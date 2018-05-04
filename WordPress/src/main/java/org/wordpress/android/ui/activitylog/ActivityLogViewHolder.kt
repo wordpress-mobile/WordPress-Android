@@ -39,12 +39,12 @@ class ActivityLogViewHolder(parent: ViewGroup, val click: (ActivityLogModel) -> 
         summary.text = activity.summary
         text.text = activity.text
 
-        val thumbIcon = convertGridiconToDrawable(activity?.gridicon)
-        val thumbBackground = convertStatusToBackground(activity?.status)
+        val thumbIcon = convertGridiconToDrawable(activity.gridicon)
+        val thumbBackground = convertStatusToBackground(activity.status)
         thumbnail.setImageResource(thumbIcon)
         thumbnail.setBackgroundResource(thumbBackground)
 
-        header.text = timeFormatter.format(activity?.published)
+        header.text = timeFormatter.format(activity.published)
         container.setOnClickListener {
             click(activity)
         }
