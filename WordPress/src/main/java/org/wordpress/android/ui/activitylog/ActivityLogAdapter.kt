@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.wordpress.android.R.layout
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 
@@ -26,11 +25,10 @@ class ActivityLogAdapter(context: Context, private val viewModel: ActivityLogVie
         setHasStableIds(true)
     }
 
-    internal fun updateList(items: List<ActivityLogModel>) {
-        val itemViewModels = items.map { ActivityLogListItemViewModel.fromDomainModel(it) }
-        val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list, itemViewModels))
+    internal fun updateList(items: List<ActivityLogListItemViewModel>) {
+        val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list, items))
         list.clear()
-        list.addAll(itemViewModels)
+        list.addAll(items)
 
         diffResult.dispatchUpdatesTo(this)
     }

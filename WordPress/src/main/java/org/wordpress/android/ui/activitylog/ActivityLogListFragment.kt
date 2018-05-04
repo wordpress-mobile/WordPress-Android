@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 
@@ -64,7 +65,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(this, Observer<List<ActivityLogModel>> {
+        viewModel.events.observe(this, Observer<List<ActivityLogListItemViewModel>> {
             reloadEvents()
         })
 
@@ -88,7 +89,7 @@ class ActivityLogListFragment : Fragment() {
         setEvents(viewModel.events.value ?: emptyList())
     }
 
-    private fun setEvents(events: List<ActivityLogModel>) {
+    private fun setEvents(events: List<ActivityLogListItemViewModel>) {
         context?.let {
             val adapter: ActivityLogAdapter
             if (activityLogList.adapter == null) {
