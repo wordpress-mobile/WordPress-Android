@@ -6,6 +6,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -121,10 +122,16 @@ public class ReaderUpdateLogic {
                     serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
                 }
 
+                // manually insert Bookmark tag, as server doesn't support bookmarking yet
+                serverTopics.add(new ReaderTag("", "",
+                        WordPress.getContext().getString(R.string.reader_save_for_later_title), "",
+                        ReaderTagType.BOOKMARKED));
+
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
+                localTopics.addAll(ReaderTagTable.getBookmarkTags());
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
 
                 if (!localTopics.isSameList(serverTopics)) {
