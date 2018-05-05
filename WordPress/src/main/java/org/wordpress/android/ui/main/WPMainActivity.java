@@ -584,7 +584,7 @@ public class WPMainActivity extends AppCompatActivity {
             }
         }
 
-        if (isTaskRoot() && DeviceUtils.getInstance().isAppRuntimeForChrome(this)) {
+        if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(this)) {
             return; // don't close app in Main Activity
         }
         super.onBackPressed();

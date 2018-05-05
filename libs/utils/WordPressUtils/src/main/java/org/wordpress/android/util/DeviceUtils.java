@@ -98,7 +98,7 @@ public class DeviceUtils {
      * @param context The context.
      * @return Whether the device is a chromebook.
      */
-    public boolean isAppRuntimeForChrome(Context context) {
+    public boolean isChromebook(Context context) {
         return context.getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
     }
 
