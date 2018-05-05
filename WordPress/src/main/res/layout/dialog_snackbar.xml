@@ -70,4 +70,21 @@
         style="?android:attr/borderlessButtonStyle" >
     </android.support.v7.widget.AppCompatButton>
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_neutral"
+        android:fontFamily="sans-serif-medium"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/message"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_width="wrap_content"
+        android:minHeight="@dimen/dialog_snackbar_button_height"
+        android:textColor="@color/color_accent"
+        android:visibility="gone"
+        tools:text="Never"
+        tools:visibility="visible"
+        style="?android:attr/borderlessButtonStyle" >
+    </android.support.v7.widget.AppCompatButton>
+
 </RelativeLayout>

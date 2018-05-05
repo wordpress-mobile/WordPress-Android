@@ -93,6 +93,28 @@ public class WPDialogSnackbar {
         return this;
     }
 
+    public WPDialogSnackbar setNeutralButton(CharSequence text, final View.OnClickListener listener) {
+        TextView button = mContentView.findViewById(R.id.button_neutral);
+
+        // Hide neutral button when text is empty or listener is null.
+        if (TextUtils.isEmpty(text) || listener == null) {
+            button.setVisibility(View.GONE);
+            button.setOnClickListener(null);
+        } else {
+            button.setVisibility(View.VISIBLE);
+            button.setText(text);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onClick(view);
+                    dismiss();
+                }
+            });
+        }
+
+        return this;
+    }
+
     public WPDialogSnackbar setPositiveButton(CharSequence text, final View.OnClickListener listener) {
         TextView button = mContentView.findViewById(R.id.button_positive);
 
