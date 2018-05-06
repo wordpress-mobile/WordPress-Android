@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderPostRenderer;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -42,6 +46,7 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
+import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -552,7 +557,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (discoverData.hasAvatarUrl()) {
                     postHolder.mImgDiscoverAvatar
                             .setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
-                                         WPNetworkImageView.ImageType.AVATAR);
+                                    WPNetworkImageView.ImageType.AVATAR);
                 } else {
                     postHolder.mImgDiscoverAvatar.showDefaultGravatarImageAndNullifyUrl();
                 }
@@ -781,8 +786,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
             holder.mLikeCount.setVisibility(View.VISIBLE);
             holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mCardView.getContext(),
-                                                                                     post.numLikes,
-                                                                                     post.isLikedByCurrentUser));
+                    post.numLikes,
+                    post.isLikedByCurrentUser));
             // can't like when logged out
             if (!mIsLoggedOutReader) {
                 holder.mLikeCount.setOnClickListener(new View.OnClickListener() {
@@ -890,11 +895,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the bookmark post button
      */
-    private void toggleBookmark(View bookmarkButton, long blogId, long postId) {
+    private void toggleBookmark(final View bookmarkButton, long blogId, long postId) {
         ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
         if (post.isBookmarked) {
             ReaderPostActions.removeFromBookmarked(post);
         } else {
+            //do not perform caching operations when we are at the Saved Posts list or when network is unavailable
+            if (NetworkUtils.isNetworkAvailable(bookmarkButton.getContext()) && bookmarkButton.getTag() == null
+                && getPostListType() != ReaderPostListType.TAG_PREVIEW && !mCurrentTag.isBookmarked()) {
+                final ReaderWebView detachedWebView = new ReaderWebView(bookmarkButton.getContext());
+                ReaderPostRenderer rendered = new ReaderPostRenderer(detachedWebView, post);
+                rendered.beginRender(); //rendering will cache post content using native WebView implementation.
+
+                bookmarkButton.setTag("bookmarking"); //mark the start of caching progress
+
+                detachedWebView.setWebViewClient(new WebViewClient() {
+                    public void onPageFinished(WebView view, String url) {
+                        bookmarkButton.setTag(null);
+                    }
+                });
+            }
+
             ReaderPostActions.addToBookmarked(post);
         }
 
