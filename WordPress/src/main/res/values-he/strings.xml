@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 08:54:08+0000
+Translation-Revision-Date: 2018-05-01 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">יוצר את האתר… הפעולה תימשך מספר דקות.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">חשוב</string>
+    <string name="notification_channel_general_title">כללי</string>
+    <string name="photo_picker_use_photo">שימוש בתמונה זו</string>
     <string name="media_preview_title">%1$d מתוך %2$d</string>
     <string name="stock_media_picker_empty_results">לא נמצאו התאמות</string>
     <string name="stock_media_picker_initial_empty_subtext">התמונות מובאות בחסות %s</string>
@@ -55,7 +61,6 @@ Language: he_IL
     <string name="reader_list_item_suggestion_remove_desc">מחיקה</string>
     <string name="photo_picker_thumbnail_desc">הפעלת וידאו</string>
     <string name="reader_cardview_post_play_video_desc">הפעלת הווידאו המרכזי</string>
-    <string name="post_cardview_featured_desc">מרכזיים</string>
     <string name="plugin_detail_logo_desc">סמל הלוגו של התוסף</string>
     <string name="plugin_detail_banner_desc">הבאנר של התוסף</string>
     <string name="photo_picker_wpmedia_desc">בחירה מתוך קובצי המדיה של WordPress</string>
@@ -1526,7 +1531,6 @@ Language: he_IL
     <string name="width">רוחב</string>
     <string name="posts">פוסטים</string>
     <string name="anonymous">אנונימי</string>
-    <string name="featured">תמונה מובחרת</string>
     <string name="no_network_title">הרשת אינה זמינה</string>
     <string name="caption">כיתוב תמונה (אופציונלי)</string>
     <string name="featured_in_post">הוספת תמונה לתוכן</string>

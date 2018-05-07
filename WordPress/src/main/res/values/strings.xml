@@ -301,6 +301,8 @@
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
+    <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+    <string name="dialog_confirm_delete_permanently_page">Are you sure you\'d like to permanently delete this page?</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -333,6 +335,7 @@
     <string name="comment_delete_talkback">Comment deleted</string>
     <string name="comment_spam_talkback">Comment marked as spam</string>
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
+    <string name="comment_title">%s on %s</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -1707,11 +1710,28 @@
     <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
     <string name="plugin_search_error">Unable to search plugins</string>
     <string name="plugin_manage">Manage</string>
     <string name="plugin_see_all">See All</string>
     <string name="plugins_empty_search_list">No matches</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installing plugin…</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
+
+    <!-- Automated Transfer Eligibility Errors -->
+    <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
+    <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Plugin feature requires a verified email address.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Plugin cannot be installed due to disk space limitations.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Plugin cannot be installed on VIP sites.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Plugin feature requires admin privileges.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Plugin feature requires primary domain subscription to be associated with this user.</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Plugin feature requires the site to be in good standing.</string>
 
     <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
     <string name="plugin_caption_featured">Featured</string>
@@ -1849,7 +1869,6 @@
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
-    <string name="editor_toast_no_action_taken">An error occurred. No action taken.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 

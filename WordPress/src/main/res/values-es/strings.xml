@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-11 16:28:30+0000
+Translation-Revision-Date: 2018-04-24 21:46:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Creando sitio… Puede tardar unos minutos.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Importante</string>
+    <string name="notification_channel_general_title">General</string>
+    <string name="photo_picker_use_photo">Utilizar esta foto</string>
     <string name="media_preview_title">%1$d de %2$d</string>
     <string name="stock_media_picker_empty_results">Ninguna coincidencia</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografías facilitadas por %s</string>
@@ -55,7 +61,7 @@ Language: es
     <string name="reader_list_item_suggestion_remove_desc">borrar</string>
     <string name="photo_picker_thumbnail_desc">Reproducir video</string>
     <string name="reader_cardview_post_play_video_desc">reproducir video destacado</string>
-    <string name="post_cardview_featured_desc">destacados</string>
+    <string name="post_cardview_featured_desc">imagen destacada</string>
     <string name="plugin_detail_logo_desc">logo del plugin</string>
     <string name="plugin_detail_banner_desc">banner del plugin</string>
     <string name="photo_picker_wpmedia_desc">elige desde medios de WordPress</string>
@@ -214,7 +220,6 @@ Language: es
     <string name="notification_site_creation_step_tagline">Paso 3 de 4</string>
     <string name="notification_site_creation_step_fetching">Paso 2 de 4</string>
     <string name="notification_site_creation_step_creating">Paso 1 de 4</string>
-    <string name="notification_site_creation_title_in_progress">Creando sitio…</string>
     <string name="notification_site_creation_created">Toca para continuar.</string>
     <string name="notification_site_creation_title_success">¡Sitio creado!</string>
     <string name="google_error_timeout">A Google le llevó demasiado tiempo responder. Puede que tengas que esperar hasta que tengas una conexión a internet más rápida.</string>
@@ -1545,7 +1550,6 @@ Language: es
     <string name="caption">Leyenda (opcional)</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
-    <string name="featured">Usar como imagen destacada</string>
     <string name="blogusername">Usuario del blog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>

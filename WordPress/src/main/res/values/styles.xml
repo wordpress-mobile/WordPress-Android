@@ -22,6 +22,7 @@
         <item name="colorButtonNormal">@color/light_gray</item>
 
         <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
+        <item name="android:alertDialogTheme">@style/Calypso.Dialog</item>
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
 
@@ -151,9 +152,9 @@
     </style>
     <style name="MediaSettings.TextInputTheme" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/grey_500</item>
+        <item name="android:textColorHint">@color/grey_darken_10</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/grey_500</item>
+        <item name="colorControlNormal">@color/grey_text_min</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
@@ -180,7 +181,7 @@
         <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
         <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -290,6 +291,7 @@
     </style>
 
     <style name="MySiteListRowIcon">
+        <item name="android:tint">@color/grey_darken_30</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
@@ -347,6 +349,7 @@
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
+        <item name="android:tint">@color/grey_darken_30</item>
     </style>
 
     <style name="MySiteListHeaderLayout">
@@ -362,7 +365,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -386,6 +389,7 @@
     </style>
 
     <style name="MeListRowIcon">
+        <item name="android:tint">@color/grey_darken_30</item>
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -440,7 +444,7 @@
     <style name="MyProfileText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -469,6 +473,10 @@
 
     <style name="WPPrefSwitch">
         <item name="colorControlActivated">@color/blue_wordpress</item>
+    </style>
+
+    <style name="WPToolbarSwitch">
+        <item name="colorControlActivated">@color/blue_light</item>
     </style>
 
     <!--Post Settings Styles-->
@@ -516,8 +524,8 @@
     <style name="PostSettingsSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
-        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColorHint">@color/grey_text_min</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -669,7 +677,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 

@@ -39,8 +39,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-108"
-        versionCode 555
+        versionName "alpha-109"
+        versionCode 558
         minSdkVersion 16
         targetSdkVersion 26
 
@@ -122,6 +122,12 @@ dependencies {
     // ViewModel and LiveData
     implementation 'android.arch.lifecycle:extensions:1.1.0'
 
+    testCompile("android.arch.core:core-testing:1.1.0", {
+        exclude group: 'com.android.support', module: 'support-compat'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-core-utils'
+    })
+
     implementation 'com.google.android.gms:play-services-gcm:12.0.1'
     implementation 'com.google.android.gms:play-services-auth:12.0.1'
     implementation 'com.google.android.gms:play-services-places:12.0.1'
@@ -147,6 +153,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
     testImplementation 'org.robolectric:shadows-multidex:3.6.1'
+    testImplementation 'org.mockito:mockito-core:2.8.9'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestImplementation 'org.objenesis:objenesis:2.1'
@@ -181,10 +189,11 @@ dependencies {
 
     compile group: 'com.zendesk', name: 'sdk', version: '1.11.0.1'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 
     // Debug
-    debugImplementation 'com.facebook.stetho:stetho:1.4.2'
+    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
+    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }
 
 configurations.all {

@@ -105,7 +105,7 @@
             android:layout_toRightOf="@+id/frame_avatar"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/grey_text_min"
             android:importantForAccessibility="no"
             android:textSize="@dimen/text_sz_medium"
             tools:text="comment"
