@@ -9,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,7 +28,6 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
-import org.wordpress.android.ui.reader.ReaderPostRenderer;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -46,7 +42,6 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
-import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -82,6 +77,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
+    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
@@ -646,6 +642,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mDataLoadedListener = listener;
     }
 
+    public void setOnPostBookmarkedListener(ReaderInterfaces.OnPostBookmarkedListener listener) {
+        mOnPostBookmarkedListener = listener;
+    }
+
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
         mDataRequestedListener = listener;
     }
@@ -900,22 +900,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post.isBookmarked) {
             ReaderPostActions.removeFromBookmarked(post);
         } else {
-            //do not perform caching operations when we are at the Saved Posts list or when network is unavailable
-            if (NetworkUtils.isNetworkAvailable(bookmarkButton.getContext()) && bookmarkButton.getTag() == null
-                && getPostListType() != ReaderPostListType.TAG_PREVIEW && !mCurrentTag.isBookmarked()) {
-                final ReaderWebView detachedWebView = new ReaderWebView(bookmarkButton.getContext());
-                ReaderPostRenderer rendered = new ReaderPostRenderer(detachedWebView, post);
-                rendered.beginRender(); //rendering will cache post content using native WebView implementation.
-
-                bookmarkButton.setTag("bookmarking"); //mark the start of caching progress
-
-                detachedWebView.setWebViewClient(new WebViewClient() {
-                    public void onPageFinished(WebView view, String url) {
-                        bookmarkButton.setTag(null);
-                    }
-                });
-            }
-
             ReaderPostActions.addToBookmarked(post);
         }
 
@@ -925,6 +909,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post != null && position > -1) {
             mPosts.set(position, post);
             updateBookmarkView(bookmarkButton, post);
+
+            if (mOnPostBookmarkedListener != null) {
+                mOnPostBookmarkedListener.onBookmarkedStateChanged(post.isBookmarked, blogId, postId,
+                        getPostListType() != ReaderPostListType.TAG_PREVIEW && !mCurrentTag.isBookmarked());
+            }
         }
     }
 
