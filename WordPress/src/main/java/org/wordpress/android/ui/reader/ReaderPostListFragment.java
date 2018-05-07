@@ -988,7 +988,7 @@ public class ReaderPostListFragment extends Fragment
                     if (!isAdded()) {
                         return;
                     }
-                    
+
                     String tag = Long.toString(blogId) + Long.toString(postId);
 
                     if (NetworkUtils.isNetworkAvailable(getActivity())
