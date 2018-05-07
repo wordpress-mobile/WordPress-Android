@@ -52,6 +52,7 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // check network again to detect disconnects during loading + configuration change
         if (NetworkUtils.isNetworkAvailable(view.getContext())) {
             ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
 

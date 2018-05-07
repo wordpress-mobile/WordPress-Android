@@ -985,9 +985,14 @@ public class ReaderPostListFragment extends Fragment
             new ReaderInterfaces.OnPostBookmarkedListener() {
                 @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
                                                                boolean isCachingActionRequired) {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    
                     String tag = Long.toString(blogId) + Long.toString(postId);
 
-                    if (isCachingActionRequired && isBookmarked
+                    if (NetworkUtils.isNetworkAvailable(getActivity())
+                        && isCachingActionRequired && isBookmarked
                         && getFragmentManager().findFragmentByTag(tag) == null) {
                         getFragmentManager().beginTransaction()
                                             .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
