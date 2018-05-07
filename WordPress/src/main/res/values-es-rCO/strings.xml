@@ -1151,7 +1151,6 @@ Language: es_CO
     <string name="caption">Leyenda (opcional)</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
-    <string name="featured">Usar como imagen destacada</string>
     <string name="blogusername">Usuario del blog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>

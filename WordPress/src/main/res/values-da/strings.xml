@@ -420,7 +420,6 @@ Language: da_DK
     <string name="username">Brugernavn</string>
     <string name="reader">Læser</string>
     <string name="featured_in_post">Inkluder billede i indhold</string>
-    <string name="featured">Brug som fremhævet billede</string>
     <string name="caption">Billedtekst (valgfri)</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
     <string name="anonymous">Anonym</string>

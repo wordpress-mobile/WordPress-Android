@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-16 05:10:59+0000
+Translation-Revision-Date: 2018-05-06 11:56:38+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Tworzenie witryny… To może zająć kilka minut.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Ważne</string>
+    <string name="notification_channel_general_title">Ogólne</string>
+    <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
     <string name="media_preview_title">%1$d z %2$d</string>
     <string name="stock_media_picker_empty_results">Brak wyników</string>
     <string name="stock_media_picker_initial_empty_subtext">Zdjęcia dostarczone przez %s</string>
@@ -55,7 +61,7 @@ Language: pl
     <string name="reader_list_item_suggestion_remove_desc">usuń</string>
     <string name="photo_picker_thumbnail_desc">Odtwórz film</string>
     <string name="reader_cardview_post_play_video_desc">odtwórz film wyróżniający</string>
-    <string name="post_cardview_featured_desc">wyróżniający</string>
+    <string name="post_cardview_featured_desc">obrazek wyróżniający</string>
     <string name="plugin_detail_logo_desc">logo wtyczki</string>
     <string name="plugin_detail_banner_desc">baner wtyczki</string>
     <string name="photo_picker_wpmedia_desc">wybierz z mediów WordPressa</string>
@@ -197,7 +203,7 @@ Language: pl
     <string name="site_creation_label_site_details">Powiedz nam więcej o tym co tworzysz. Jaki jest tytuł i opis?</string>
     <string name="site_creation_label_site_details_title">Krok 3 z 4</string>
     <string name="site_creation_label_theme_loading">Proszę czekać, ładowanie motywów</string>
-    <string name="site_creation_label_theme_selection">Rozpocznij szybko z jednym z naszych popularnych motywów. Zaraz po utworzeniu witryny, możesz przeszukiwać i wybrać z setek więcej.</string>
+    <string name="site_creation_label_theme_selection">Rozpocznij bez zbędnego namysłu z jednym z naszych popularnych motywów. Zaraz po utworzeniu witryny, możesz przeszukiwać i wybierać spośród setek innych motywów.</string>
     <string name="site_creation_label_theme_selection_title">Krok 2 z 4</string>
     <string name="site_creation_subtitle_portfolio">Aby zaprezentować swoje kreatywne projektu w wizualnej prezentacji.</string>
     <string name="site_creation_title_portfolio">Zacznij od portfolio</string>
@@ -205,7 +211,7 @@ Language: pl
     <string name="site_creation_title_website">Zacznij od witryny</string>
     <string name="site_creation_subtitle_blog">Aby dzielić się swoimi pomysłami, historiami i fotografiami ze swoimi obserwującymi.</string>
     <string name="site_creation_title_blog">Zacznij od Blogu</string>
-    <string name="site_creation_label_category">Jakiego rodzaju witrynę potrzebujesz?\nWybierz poniższą opcję:</string>
+    <string name="site_creation_label_category">Jakiego rodzaju witrynę potrzebujesz?\nWybierz jedną z poniższych opcji:</string>
     <string name="site_creation_label_category_title">Krok 1 z 4</string>
     <string name="site_creation_title">Stwórz nową witrynę</string>
     <string name="notification_site_creation_failed">Wystąpił błąd.</string>
@@ -214,7 +220,6 @@ Language: pl
     <string name="notification_site_creation_step_tagline">Krok 3 z 4</string>
     <string name="notification_site_creation_step_fetching">Krok 2 z 4</string>
     <string name="notification_site_creation_step_creating">Krok 1 z 4</string>
-    <string name="notification_site_creation_title_in_progress">Tworzenie witryny…</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
     <string name="notification_site_creation_title_success">Utworzono witrynę!</string>
     <string name="google_error_timeout">Odpowiedź zajęła Google zbyt dużo czasu. Możliwe, że będziesz musiał poczekać na lepsze połączenie z internetem.</string>
@@ -1545,7 +1550,6 @@ Language: pl
     <string name="caption">Podpis pod obrazkiem (opcjonalnie)</string>
     <string name="no_network_title">Brak dostępnej sieci</string>
     <string name="featured_in_post">Załącz obraz w treści wpisu</string>
-    <string name="featured">Ustaw jako obrazek wyróżniający</string>
     <string name="blogusername">nazwa użytkownika blogu</string>
     <string name="link_enter_url">Adres URL</string>
     <string name="uploading">Przesyłanie…</string>
