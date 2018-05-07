@@ -1060,10 +1060,10 @@ public class EditPostActivity extends AppCompatActivity implements
         hidePhotoPicker();
 
         if (itemId == R.id.menu_save_post) {
-            if (!AppPrefs.isAsyncPromoRequired()) {
-                showPublishConfirmationOrUpdateIfNotLocalDraft();
-            } else {
+            if (AppPrefs.isAsyncPromoRequired() && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
                 showAsyncPromoDialog();
+            } else {
+                showPublishConfirmationOrUpdateIfNotLocalDraft();
             }
         } else {
             // Disable other action bar buttons while a media upload is in progress
