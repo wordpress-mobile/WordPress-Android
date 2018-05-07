@@ -301,6 +301,8 @@
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
+    <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+    <string name="dialog_confirm_delete_permanently_page">Are you sure you\'d like to permanently delete this page?</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -333,6 +335,7 @@
     <string name="comment_delete_talkback">Comment deleted</string>
     <string name="comment_spam_talkback">Comment marked as spam</string>
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
+    <string name="comment_title">%s on %s</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
