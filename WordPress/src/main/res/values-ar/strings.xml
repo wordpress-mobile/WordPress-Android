@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 11:54:07+0000
+Translation-Revision-Date: 2018-05-01 11:54:07+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">جارٍ إنشاء الموقع… قد يستغرق هذا الأمر بضع دقائق.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">مهم</string>
+    <string name="notification_channel_general_title">عام</string>
+    <string name="photo_picker_use_photo">استخدام هذه الصورة</string>
     <string name="media_preview_title">%1$d من %2$d</string>
     <string name="stock_media_picker_empty_results">لا توجد تطابقات</string>
     <string name="stock_media_picker_initial_empty_subtext">الصور التي وفّرها %s</string>
@@ -55,7 +61,6 @@ Language: ar
     <string name="reader_list_item_suggestion_remove_desc">حذف</string>
     <string name="photo_picker_thumbnail_desc">تشغيل الفيديو</string>
     <string name="reader_cardview_post_play_video_desc">تشغيل الفيديو المتميز</string>
-    <string name="post_cardview_featured_desc">متميز</string>
     <string name="plugin_detail_logo_desc">شعار المكون الإضافي</string>
     <string name="plugin_detail_banner_desc">لافتة المكون الإضافي</string>
     <string name="photo_picker_wpmedia_desc">اختر من وسائط وردبرس</string>
@@ -1480,7 +1485,6 @@ Language: ar
     <string name="no_network_title">لا توجد شبكة متاحة</string>
     <string name="caption">الكلمات التوضيحية (اختياري)</string>
     <string name="posts">المقالات</string>
-    <string name="featured">استخدام كصورة بارزة</string>
     <string name="featured_in_post">إدراج الصورة في محتوى المقالة</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>

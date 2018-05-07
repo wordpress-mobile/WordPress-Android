@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-13 18:39:22+0000
+Translation-Revision-Date: 2018-04-25 14:16:29+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Criando site… Isto pode levar alguns minutos.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Importante</string>
+    <string name="notification_channel_general_title">Geral</string>
+    <string name="photo_picker_use_photo">Usar esta foto</string>
+    <string name="media_preview_title">%1$d de %2$d</string>
+    <string name="stock_media_picker_empty_results">Nada foi encontrado</string>
+    <string name="stock_media_picker_initial_empty_subtext">Fotos fornecidas por %s</string>
+    <string name="stock_media_picker_initial_empty_text">Pesquisar por fotos grátis para adicionar em sua biblioteca de mídia</string>
+    <string name="stock_media_picker_search_hint">Pesquisar biblioteca de fotos grátis</string>
+    <string name="photo_picker_stock_media">Escolher da biblioteca de fotos grátis</string>
+    <string name="error_save_empty_draft">Não é possível salvar um rascunho em branco</string>
+    <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
+    <string name="preview_count">Visualizar %d</string>
+    <string name="add_count">Adicionar %d</string>
+    <string name="site_creation_domain_selection_title">Criar novo site – Passo 4</string>
+    <string name="site_creation_site_details_title">Criar novo site – Passo 3</string>
+    <string name="site_creation_theme_selection_title">Criar novo site – Passo 2</string>
+    <string name="site_creation_category_title">Criar novo site – Passo 1</string>
+    <string name="stats_followers_many_desc">%d seguidores</string>
     <string name="stats_followers_one_desc">um seguidor</string>
     <string name="stats_followers_zero_desc">zero seguidores</string>
     <string name="stats_comments_many_desc">%d comentários</string>
     <string name="stats_comments_one_desc">um comentário</string>
+    <string name="stats_comments_zero_desc">nenhum comentário</string>
     <string name="stats_views_one_desc">uma visualização</string>
     <string name="media_preview_desc">Visualizar</string>
     <string name="media_preview_audio_desc">áudio</string>
@@ -121,7 +143,6 @@ Language: pt_BR
     <string name="notification_site_creation_step_tagline">Passo 3 de 4</string>
     <string name="notification_site_creation_step_fetching">Passo 2 de 4</string>
     <string name="notification_site_creation_step_creating">Passo 1 de 4</string>
-    <string name="notification_site_creation_title_in_progress">Criando site…</string>
     <string name="notification_site_creation_created">Toque para continuar.</string>
     <string name="notification_site_creation_title_success">Site criado!</string>
     <string name="google_error_timeout">O Google demorou muito tempo para responder. Pode ser preciso esperar até que você tenha uma conexão melhor com a internet.</string>
@@ -1452,7 +1473,6 @@ Language: pt_BR
     <string name="caption">Legenda (opcional)</string>
     <string name="no_network_title">Não há rede disponível </string>
     <string name="featured_in_post">Incluir imagem no conteúdo do post</string>
-    <string name="featured">Usar uma Imagem Destacada</string>
     <string name="blogusername">usrenamedoblog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Enviando…</string>
