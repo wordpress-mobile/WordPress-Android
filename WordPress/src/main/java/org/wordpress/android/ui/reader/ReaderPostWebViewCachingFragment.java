@@ -66,8 +66,6 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
             });
 
             rendered.beginRender(); // rendering will cache post content using native WebView implementation.
-
-
         } else {
             // abort mission if no network is available
             selfRemoveFragment();
