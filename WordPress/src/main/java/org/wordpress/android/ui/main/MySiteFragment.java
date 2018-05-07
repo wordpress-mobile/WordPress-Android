@@ -40,7 +40,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
-import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -159,7 +158,7 @@ public class MySiteFragment extends Fragment
         }
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
-        refreshSelectedSiteDetails();
+        refreshSelectedSiteDetails(getSelectedSite());
 
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
@@ -587,12 +586,10 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void refreshSelectedSiteDetails() {
+    private void refreshSelectedSiteDetails(SiteModel site) {
         if (!isAdded()) {
             return;
         }
-
-        SiteModel site = getSelectedSite();
 
         if (site == null) {
             mScrollView.setVisibility(View.GONE);
@@ -616,12 +613,12 @@ public class MySiteFragment extends Fragment
 
         toggleAdminVisibility(site);
 
-        int themesVisibility = ThemeBrowserActivity.isAccessible(getSelectedSite()) ? View.VISIBLE : View.GONE;
+        int themesVisibility = ThemeBrowserActivity.isAccessible(site) ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
-        int sharingVisibility = SiteUtils.isAccessedViaWPComRest(getSelectedSite()) ? View.VISIBLE : View.GONE;
+        int sharingVisibility = SiteUtils.isAccessedViaWPComRest(site) ? View.VISIBLE : View.GONE;
         mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site
@@ -707,6 +704,18 @@ public class MySiteFragment extends Fragment
         EventBus.getDefault().register(this);
     }
 
+
+    /**
+     * We can't just use fluxc OnSiteChanged event, as the order of events is not guaranteed -> getSelectedSite()
+     * method might return an out of date SiteModel, if the OnSiteChanged event handler in the WPMainActivity wasn't
+     * called yet.
+     *
+     */
+    public void onSiteChanged() {
+        refreshSelectedSiteDetails(getSelectedSite());
+        showSiteIconProgressBar(false);
+    }
+
     /*
      * animate the fab as the users scrolls the "My Site" page in the main activity's ViewPager
      */
@@ -762,16 +771,6 @@ public class MySiteFragment extends Fragment
     }
 
     // FluxC events
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(OnSiteChanged event) {
-        if (!isAdded()) {
-            return;
-        }
-        refreshSelectedSiteDetails();
-        showSiteIconProgressBar(false);
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {

@@ -946,6 +946,9 @@ public class WPMainActivity extends AppCompatActivity implements BasicYesNoDialo
         if (site != null) {
             mSelectedSite = site;
         }
+        if (getMySiteFragment() != null) {
+            getMySiteFragment().onSiteChanged();
+        }
     }
 
     @SuppressWarnings("unused")
