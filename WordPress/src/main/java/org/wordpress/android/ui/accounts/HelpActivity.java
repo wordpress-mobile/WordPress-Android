@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -106,20 +107,17 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
 
-        WPTextView faqbutton = findViewById(R.id.faq_button);
-        faqbutton.setOnClickListener(new OnClickListener() {
+        WPTextView faqButton = findViewById(R.id.faq_button);
+        faqButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle extras = getIntent().getExtras();
-                Tag origin = Tag.ORIGIN_UNKNOWN;
-                Tag[] extraTags = null;
-                if (extras != null) {
-                    origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
-                    extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
-                }
-                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, mSiteStore, origin,
-                                                      mAccountStore.getAccount().getUserName(), extraTags);
+                showZendeskFaq();
             }
         });
+    }
+
+    private void showZendeskFaq() {
+        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore.getAccount().getEmail(),
+                mAccountStore.getAccount().getDisplayName());
     }
 }

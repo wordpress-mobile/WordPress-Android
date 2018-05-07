@@ -1,3 +1,5 @@
+@file:JvmName("ZendeskHelper")
+
 package org.wordpress.android.support
 
 import android.content.Context
@@ -26,8 +28,6 @@ fun setupZendesk(
     zendeskUrl: String,
     applicationId: String,
     oauthClientId: String,
-    email: String,
-    name: String,
     deviceLocale: Locale
 ) {
     require(!isZendeskEnabled) {
@@ -37,7 +37,6 @@ fun setupZendesk(
         return
     }
     zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
-    zendeskInstance.setIdentity(zendeskIdentity(email, name))
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
@@ -49,13 +48,13 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
-fun showZendeskHelpCenter(context: Context, categoryId: Long, articleLabelName: String) {
+fun showZendeskHelpCenter(context: Context, email: String, name: String) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
+    zendeskInstance.setIdentity(zendeskIdentity(email, name))
+    // TODO("pass the mobile category and label to faq")
     SupportActivity.Builder()
-            .withArticlesForCategoryIds(categoryId)
-            .withLabelNames(articleLabelName)
             .show(context)
 }
 
