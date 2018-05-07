@@ -281,6 +281,7 @@
                 android:contentDescription="@string/show_more_desc"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
+                android:tint="@color/grey_text_min"
                 app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"
                 android:layout_alignParentEnd="true"/>
 
