@@ -130,6 +130,7 @@ public class SiteStore extends Store {
         public boolean isJetpackActive;
         public boolean isJetpackConnected;
         public boolean isWPCom;
+        public String urlAfterRedirects;
 
         public ConnectSiteInfoPayload(@NonNull String url, SiteError error) {
             this.url = url;
@@ -137,8 +138,8 @@ public class SiteStore extends Store {
         }
 
         public String description() {
-            return String.format("url: %s, e: %b, wp: %b, jp: %b, wpcom: %b",
-                    url, exists, isWordPress, hasJetpack, isWPCom);
+            return String.format("url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
+                    url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects);
         }
     }
 
