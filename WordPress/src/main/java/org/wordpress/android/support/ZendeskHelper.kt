@@ -10,8 +10,10 @@ import com.zendesk.sdk.model.access.Identity
 import com.zendesk.sdk.model.request.CustomField
 import com.zendesk.sdk.network.impl.ZendeskConfig
 import com.zendesk.sdk.support.SupportActivity
+import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.logInformation
 import java.util.Locale
 
@@ -37,7 +39,7 @@ fun setupZendesk(
         return
     }
     zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
-    zendeskInstance.setDeviceLocale(deviceLocale)
+    updateZendeskDeviceLocale(deviceLocale)
 }
 
 // TODO("Make sure changing the language of the app updates the locale for Zendesk")
@@ -53,33 +55,38 @@ fun showZendeskHelpCenter(context: Context, email: String, name: String) {
         zendeskNeedsToBeEnabledError
     }
     zendeskInstance.setIdentity(zendeskIdentity(email, name))
-    // TODO("pass the mobile category and label to faq")
     SupportActivity.Builder()
+            .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
+            .withLabelNames(ZendeskConstants.articleLabel)
             .show(context)
 }
 
 fun createAndShowRequest(
     context: Context,
-    zendeskFeedbackConfiguration: BaseZendeskFeedbackConfiguration,
-    appVersion: String,
+    email: String,
+    name: String,
     allSites: List<SiteModel>,
-    username: String?,
-    deviceFreeSpace: String,
-    networkInformation: String
+    username: String?
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    zendeskInstance.ticketFormId = 0
-    // TODO("Use correct custom field values")
+    zendeskInstance.setIdentity(zendeskIdentity(email, name))
+    zendeskInstance.ticketFormId = TicketFieldIds.form
     zendeskInstance.customFields = listOf(
-            CustomField(0L, appVersion),
-            CustomField(0L, blogInformation(allSites, username)),
-            CustomField(0L, deviceFreeSpace),
-            CustomField(0L, AppLog.toPlainText(context)),
-            CustomField(0L, networkInformation)
+            CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionCode(context).toString()),
+            CustomField(TicketFieldIds.blogList, blogInformation(allSites, username)),
+            CustomField(TicketFieldIds.networkInformation, NetworkUtils.getActiveNetworkInfo(context).toString()),
+            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
     )
-    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration)
+    val configuration = object : BaseZendeskFeedbackConfiguration() {
+        override fun getRequestSubject(): String {
+            return ZendeskConstants.ticketSubject
+        }
+
+        // TODO("implement tags")
+    }
+    ContactZendeskActivity.startActivity(context, configuration)
 }
 
 // Helpers
@@ -88,6 +95,21 @@ private fun zendeskIdentity(email: String, name: String): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
 private fun blogInformation(allSites: List<SiteModel>, username: String?): String {
-    // TODO("use blog separator constant")
-    return allSites.joinToString(separator = ",") { it.logInformation(username) }
+    return allSites.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(username) }
+}
+
+private object ZendeskConstants {
+    const val mobileCategoryId = 360000041586
+    const val articleLabel = "Android"
+    const val ticketSubject = "WordPress for Android Support"
+    const val blogSeparator = "\n----------\n"
+}
+
+private object TicketFieldIds {
+    const val form = 360000010286L
+    const val appVersion = 360000086866L
+    const val blogList = 360000087183L
+    const val deviceFreeSpace = 360000089123L // TODO("implement free space")
+    const val networkInformation = 360000086966L
+    const val logs = 22871957L
 }
