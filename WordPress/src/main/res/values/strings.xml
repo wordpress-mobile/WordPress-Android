@@ -1360,6 +1360,8 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_add_bookmark">Add to saved posts</string>
+    <string name="reader_remove_bookmark">Remove from saved posts</string>
 
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
