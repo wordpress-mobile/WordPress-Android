@@ -40,5 +40,4 @@ public class ReaderInterfaces {
     public interface OnPostBookmarkedListener {
         void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId, boolean isCachingActionRequired);
     }
-
 }

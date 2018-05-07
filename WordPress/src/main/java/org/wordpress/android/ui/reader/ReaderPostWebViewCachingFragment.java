@@ -75,7 +75,7 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
             getActivity().getFragmentManager()
                          .beginTransaction()
                          .remove(ReaderPostWebViewCachingFragment.this)
-                         .commitAllowingStateLoss();
+                         .commitAllowingStateLoss(); // we don't care about state here
         }
     }
 }

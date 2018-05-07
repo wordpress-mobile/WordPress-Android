@@ -20,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -61,7 +59,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -990,7 +987,8 @@ public class ReaderPostListFragment extends Fragment
                                                                boolean isCachingActionRequired) {
                     String tag = Long.toString(blogId) + Long.toString(postId);
 
-                    if (isCachingActionRequired && isBookmarked && getFragmentManager().findFragmentByTag(tag) == null) {
+                    if (isCachingActionRequired && isBookmarked
+                        && getFragmentManager().findFragmentByTag(tag) == null) {
                         getFragmentManager().beginTransaction()
                                             .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
                                             .commit();

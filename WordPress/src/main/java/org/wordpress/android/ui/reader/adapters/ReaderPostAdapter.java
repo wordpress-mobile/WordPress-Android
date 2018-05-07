@@ -895,7 +895,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the bookmark post button
      */
-    private void toggleBookmark(final View bookmarkButton, long blogId, long postId) {
+    private void toggleBookmark(View bookmarkButton, long blogId, long postId) {
         ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
         if (post.isBookmarked) {
             ReaderPostActions.removeFromBookmarked(post);
