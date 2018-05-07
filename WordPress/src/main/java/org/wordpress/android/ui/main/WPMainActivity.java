@@ -73,6 +73,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -581,6 +582,10 @@ public class WPMainActivity extends AppCompatActivity {
             if (handled) {
                 return;
             }
+        }
+
+        if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(this)) {
+            return; // don't close app in Main Activity
         }
         super.onBackPressed();
     }
