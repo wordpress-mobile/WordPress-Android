@@ -27,6 +27,7 @@
         android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_small"
-        tools:text="5" />
+        tools:text="5"
+        tools:ignore="UnusedAttribute"/>
 
 </FrameLayout>

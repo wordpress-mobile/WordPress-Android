@@ -151,7 +151,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
-            value.setTextColor(getResources().getColor(R.color.grey));
+            value.setTextColor(getResources().getColor(R.color.grey_text_min));
         } else {
             value.setTextColor(getResources().getColor(R.color.blue_wordpress));
         }

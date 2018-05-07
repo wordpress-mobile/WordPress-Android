@@ -217,7 +217,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
-            value.setTextColor(getResources().getColor(R.color.grey));
+            value.setTextColor(getResources().getColor(R.color.grey_text_min));
         } else {
             // Only Views is clickable here.
             // Likes and Comments shouldn't link anywhere because they don't have summaries

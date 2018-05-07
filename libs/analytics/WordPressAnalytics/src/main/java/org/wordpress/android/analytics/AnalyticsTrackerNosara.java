@@ -8,6 +8,7 @@ import com.automattic.android.tracks.TracksClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -279,8 +280,11 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         if (propertiesToJSON.length() > 0) {
             mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            String jsonString = propertiesToJSON.toString();
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
 
@@ -1030,6 +1034,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
+            case SHORTCUT_STATS_CLICKED:
+                return "shortcut_stats_clicked";
+            case SHORTCUT_NOTIFICATIONS_CLICKED:
+                return "shortcut_notifications_clicked";
+            case SHORTCUT_NEW_POST_CLICKED:
+                return "shortcut_new_post_clicked";
             case AUTOMATED_TRANSFER_CONFIRM_DIALOG_SHOWN:
                 return "automated_transfer_confirm_dialog_shown";
             case AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED:
