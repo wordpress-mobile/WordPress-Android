@@ -41,7 +41,6 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
-import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -143,9 +142,6 @@ public class MySiteFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
-
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSelectedSite(), this);
-        mSiteSettings.init(true);
     }
 
     @Override
@@ -157,6 +153,10 @@ public class MySiteFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
+        if (mSiteSettings == null) {
+            initSiteSettings();
+        }
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails();
@@ -176,6 +176,11 @@ public class MySiteFragment extends Fragment
                 }
             }, delayMs);
         }
+    }
+
+    private void initSiteSettings() {
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSelectedSite(), this);
+        mSiteSettings.init(true);
     }
 
     @Override
