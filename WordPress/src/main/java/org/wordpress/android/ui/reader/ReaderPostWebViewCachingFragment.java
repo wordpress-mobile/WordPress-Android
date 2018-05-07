@@ -57,7 +57,6 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
             ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
 
             ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post);
-            rendered.beginRender(); // rendering will cache post content using native WebView implementation.
 
             ((ReaderWebView) view).setWebViewClient(new WebViewClient() {
                 // onPageFinished will be called either when page is done loading or resources loading timed out
@@ -65,6 +64,10 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
                     selfRemoveFragment();
                 }
             });
+
+            rendered.beginRender(); // rendering will cache post content using native WebView implementation.
+
+
         } else {
             // abort mission if no network is available
             selfRemoveFragment();
