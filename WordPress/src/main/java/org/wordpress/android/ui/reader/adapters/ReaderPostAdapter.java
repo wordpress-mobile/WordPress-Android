@@ -756,6 +756,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (mPosts == null || mPosts.size() == 0);
     }
 
+    private boolean isSavedPostsList() {
+        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                && (mCurrentTag != null && mCurrentTag.isBookmarked()));
+    }
+
     @Override
     public long getItemId(int position) {
         switch (getItemViewType(position)) {
@@ -772,8 +777,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void showLikes(final ReaderPostViewHolder holder, final ReaderPost post) {
         boolean canShowLikes;
-        if (post.isDiscoverPost()
-            || (getPostListType() == ReaderPostListType.TAG_FOLLOWED && mCurrentTag.isBookmarked())) {
+        if (post.isDiscoverPost() || isSavedPostsList()) {
             canShowLikes = false;
         } else if (mIsLoggedOutReader) {
             canShowLikes = post.numLikes > 0;
@@ -833,8 +837,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void showComments(final ReaderPostViewHolder holder, final ReaderPost post) {
         boolean canShowComments;
-        if (post.isDiscoverPost()
-            || (getPostListType() == ReaderPostListType.TAG_FOLLOWED && mCurrentTag.isBookmarked())) {
+        if (post.isDiscoverPost() || isSavedPostsList()) {
             canShowComments = false;
         } else if (mIsLoggedOutReader) {
             canShowComments = post.numReplies > 0;
@@ -911,8 +914,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             updateBookmarkView(bookmarkButton, post);
 
             if (mOnPostBookmarkedListener != null) {
-                mOnPostBookmarkedListener.onBookmarkedStateChanged(post.isBookmarked, blogId, postId,
-                        getPostListType() != ReaderPostListType.TAG_PREVIEW && !mCurrentTag.isBookmarked());
+                mOnPostBookmarkedListener
+                        .onBookmarkedStateChanged(post.isBookmarked, blogId, postId, !isSavedPostsList());
             }
         }
     }
