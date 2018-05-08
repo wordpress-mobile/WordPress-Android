@@ -31,6 +31,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -47,6 +49,7 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.BasicYesNoFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -92,8 +95,8 @@ public class MySiteFragment extends Fragment
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
     public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
-    public static final String TAG_ADD_SITE_ICON_DIGALOG = "TAG_ADD_SITE_ICON_DIGALOG";
-    public static final String TAG_CHANGE_SITE_ICON_DIGALOG = "TAG_CHANGE_SITE_ICON_DIGALOG";
+    public static final String TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG";
+    public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
 
     private WPNetworkImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -266,19 +269,20 @@ public class MySiteFragment extends Fragment
         mBlavatarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsTracker.track(Stat.MY_SITE_ICON_TAPPED);
                 SiteModel site = getSelectedSite();
                 if (site != null && site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
                     BasicYesNoFragmentDialog dialog = new BasicYesNoFragmentDialog();
                     boolean hasIcon = site.getIconUrl() != null;
                     String tag;
                     if (hasIcon) {
-                        tag = TAG_CHANGE_SITE_ICON_DIGALOG;
+                        tag = TAG_CHANGE_SITE_ICON_DIALOG;
                         dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
                                 getString(R.string.my_site_icon_dialog_change_message),
                                 getString(R.string.my_site_icon_dialog_change_button),
                                 getString(R.string.my_site_icon_dialog_remove_button));
                     } else {
-                        tag = TAG_ADD_SITE_ICON_DIGALOG;
+                        tag = TAG_ADD_SITE_ICON_DIALOG;
                         dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
                                 getString(R.string.my_site_icon_dialog_add_message),
                                 getString(R.string.yes),
@@ -450,15 +454,15 @@ public class MySiteFragment extends Fragment
                             return;
                         }
 
-                        // TODO: stats
-                        //                    PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
-                        //                            data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
-                        //
-                        //                    AnalyticsTracker.Stat stat =
-                        //                            source == PhotoPickerMediaSource.ANDROID_CAMERA
-                        //                                    ? AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW
-                        //                                    : AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED;
-                        //                    AnalyticsTracker.track(stat);
+                        PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
+                                data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
+
+                        AnalyticsTracker.Stat stat =
+                                source == PhotoPickerMediaSource.ANDROID_CAMERA
+                                        ? AnalyticsTracker.Stat.MY_SITE_ICON_SHOT_NEW
+                                        : AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED;
+                        AnalyticsTracker.track(stat);
+
                         Uri imageUri = Uri.parse(strMediaUri);
                         if (imageUri != null) {
                             boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
@@ -478,10 +482,8 @@ public class MySiteFragment extends Fragment
                 }
                 break;
             case UCrop.REQUEST_CROP:
-                // TODO: Stats
-//                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_CROPPED);
-
                 if (resultCode == Activity.RESULT_OK) {
+                    AnalyticsTracker.track(Stat.MY_SITE_ICON_CROPPED);
                     WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
                             new WPMediaUtils.MediaFetchDoNext() {
                                 @Override
@@ -726,6 +728,7 @@ public class MySiteFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
         EventBus.getDefault().removeStickyEvent(event);
 
         if (isMediaUploadInProgress()) {
@@ -748,6 +751,7 @@ public class MySiteFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOADED);
         EventBus.getDefault().removeStickyEvent(event);
         SiteModel site = getSelectedSite();
 
@@ -788,11 +792,11 @@ public class MySiteFragment extends Fragment
 
     @Override public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
-            case TAG_ADD_SITE_ICON_DIGALOG:
+            case TAG_ADD_SITE_ICON_DIALOG:
                 ActivityLauncher.showPhotoPickerForResult(getActivity(),
                         MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
                 break;
-            case TAG_CHANGE_SITE_ICON_DIGALOG:
+            case TAG_CHANGE_SITE_ICON_DIALOG:
                 ActivityLauncher.showPhotoPickerForResult(getActivity(),
                         MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
                 break;
@@ -804,9 +808,10 @@ public class MySiteFragment extends Fragment
 
     @Override public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
-            case TAG_ADD_SITE_ICON_DIGALOG:
+            case TAG_ADD_SITE_ICON_DIALOG:
                 break;
-            case TAG_CHANGE_SITE_ICON_DIGALOG:
+            case TAG_CHANGE_SITE_ICON_DIALOG:
+                AnalyticsTracker.track(Stat.MY_SITE_ICON_REMOVED);
                 showSiteIconProgressBar(true);
                 mSiteSettings.setSiteIconMediaId(0);
                 mSiteSettings.saveSettings();
