@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * Fragment responsible for caching post content into WebView.
@@ -38,8 +38,6 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
-
         mBlogId = getArguments().getLong(ARG_BLOG_ID);
         mPostId = getArguments().getLong(ARG_POST_ID);
     }
@@ -56,15 +54,15 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
         if (NetworkUtils.isNetworkAvailable(view.getContext())) {
             ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
 
-            ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post);
-
-            ((ReaderWebView) view).setWebViewClient(new WebViewClient() {
-                // onPageFinished will be called either when page is done loading or resources loading timed out
-                public void onPageFinished(WebView view, String url) {
+            ((ReaderWebView) view).setIsPrivatePost(post.isPrivate);
+            ((ReaderWebView) view).setBlogSchemeIsHttps(UrlUtils.isHttps(post.getBlogUrl()));
+            ((ReaderWebView) view).setPageFinishedListener(new ReaderWebView.ReaderWebViewPageFinishedListener() {
+                @Override public void onPageFinished(WebView view, String url) {
                     selfRemoveFragment();
                 }
             });
 
+            ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post);
             rendered.beginRender(); // rendering will cache post content using native WebView implementation.
         } else {
             // abort mission if no network is available
