@@ -4,11 +4,11 @@ package org.wordpress.android.support
 
 import android.content.Context
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
-import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
 import com.zendesk.sdk.model.access.AnonymousIdentity
 import com.zendesk.sdk.model.access.Identity
 import com.zendesk.sdk.model.request.CustomField
 import com.zendesk.sdk.network.impl.ZendeskConfig
+import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.SiteModel
@@ -63,7 +63,7 @@ fun showZendeskHelpCenter(context: Context, email: String, name: String) {
             .show(context)
 }
 
-fun createAndShowRequest(
+fun configureAndShowTickets(
     context: Context,
     email: String,
     name: String,
@@ -79,6 +79,7 @@ fun createAndShowRequest(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, blogInformation(allSites, username)),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
+            // TODO("improve the network information string")
             CustomField(TicketFieldIds.networkInformation, NetworkUtils.getActiveNetworkInfo(context).toString()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
     )
@@ -91,7 +92,7 @@ fun createAndShowRequest(
             return getZendeskTags(allSites) as MutableList<String>
         }
     }
-    ContactZendeskActivity.startActivity(context, configuration)
+    RequestActivity.startActivity(context, configuration)
 }
 
 // Helpers

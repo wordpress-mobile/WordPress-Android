@@ -83,7 +83,7 @@ public class HelpActivity extends AppCompatActivity {
         WPTextView contactUsButton = findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                createNewZendeskTicket();
+                contactUs();
             }
         });
         // TODO: Cleanup previous implementation
@@ -120,10 +120,10 @@ public class HelpActivity extends AppCompatActivity {
         });
     }
 
-    private void createNewZendeskTicket() {
+    private void contactUs() {
         AccountModel account = mAccountStore.getAccount();
         if (account != null) {
-            ZendeskHelper.createAndShowRequest(this, account.getEmail(), account.getDisplayName(),
+            ZendeskHelper.configureAndShowTickets(this, account.getEmail(), account.getDisplayName(),
                     mSiteStore.getSites(), account.getUserName());
         }
         // TODO: Implement for self-hosted sites
