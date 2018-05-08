@@ -13,6 +13,7 @@ import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.logInformation
 import java.util.Locale
@@ -77,6 +78,7 @@ fun createAndShowRequest(
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, blogInformation(allSites, username)),
+            CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.networkInformation, NetworkUtils.getActiveNetworkInfo(context).toString()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
     )
@@ -133,7 +135,7 @@ private object ZendeskConstants {
 private object TicketFieldIds {
     const val appVersion = 360000086866L
     const val blogList = 360000087183L
-    const val deviceFreeSpace = 360000089123L // TODO("implement")
+    const val deviceFreeSpace = 360000089123L
     const val form = 360000010286L
     const val logs = 22871957L
     const val networkInformation = 360000086966L
