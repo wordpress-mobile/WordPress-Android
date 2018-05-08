@@ -47,6 +47,7 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
+    // TODO ("find out if this is actually necessary")
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
@@ -106,10 +107,11 @@ private object ZendeskConstants {
 }
 
 private object TicketFieldIds {
-    const val form = 360000010286L
     const val appVersion = 360000086866L
     const val blogList = 360000087183L
-    const val deviceFreeSpace = 360000089123L // TODO("implement free space")
-    const val networkInformation = 360000086966L
+    const val deviceFreeSpace = 360000089123L // TODO("implement")
+    const val form = 360000010286L
     const val logs = 22871957L
+    const val networkInformation = 360000086966L
+    const val siteState = 360000103103L // TODO("implement")
 }

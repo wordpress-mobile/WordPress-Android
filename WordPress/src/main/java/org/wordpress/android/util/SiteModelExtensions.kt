@@ -9,7 +9,7 @@ fun SiteModel.logInformation(username: String?): String {
     } else {
         " jetpack: ${jetpackLogInformation(username)}"
     }
-    return "<Blog Name: $displayName URL: $url XML-RPC: $xmlRpcUrl$extraStr>"
+    return "<Blog Name: ${SiteUtils.getSiteNameOrHomeURL(this)} URL: $url XML-RPC: $xmlRpcUrl$extraStr>"
 }
 
 fun SiteModel.jetpackLogInformation(username: String?): String? {
