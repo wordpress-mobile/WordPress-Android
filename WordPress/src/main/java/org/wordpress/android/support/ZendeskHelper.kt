@@ -74,7 +74,7 @@ fun createAndShowRequest(
     zendeskInstance.setIdentity(zendeskIdentity(email, name))
     zendeskInstance.ticketFormId = TicketFieldIds.form
     zendeskInstance.customFields = listOf(
-            CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionCode(context).toString()),
+            CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, blogInformation(allSites, username)),
             CustomField(TicketFieldIds.networkInformation, NetworkUtils.getActiveNetworkInfo(context).toString()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
