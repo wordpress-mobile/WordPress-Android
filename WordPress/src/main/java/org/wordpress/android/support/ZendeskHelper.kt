@@ -85,7 +85,9 @@ fun createAndShowRequest(
             return ZendeskConstants.ticketSubject
         }
 
-        // TODO("implement tags")
+        override fun getTags(): MutableList<String> {
+            return getZendeskTags(allSites) as MutableList<String>
+        }
     }
     ContactZendeskActivity.startActivity(context, configuration)
 }
@@ -99,11 +101,33 @@ private fun blogInformation(allSites: List<SiteModel>, username: String?): Strin
     return allSites.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(username) }
 }
 
+private fun getZendeskTags(allSites: List<SiteModel>): List<String> {
+    val tags = ArrayList<String>()
+
+    // Add wpcom tag if at least one site is WordPress.com site
+    if (allSites.any { it.isWPCom }) {
+        tags.add(ZendeskConstants.wpComTag)
+    }
+
+    // Add Jetpack tag if at least one site is Jetpack connected. Even if a site is Jetpack connected,
+    // it does not necessarily mean that user is connected with the REST API, but we don't care about that here
+    if (allSites.any { it.isJetpackConnected }) {
+        tags.add(ZendeskConstants.jetpackTag)
+    }
+
+    // Find distinct plans and add them
+    val plans = allSites.mapNotNull { it.planShortName }.distinct()
+    tags.addAll(plans)
+    return tags
+}
+
 private object ZendeskConstants {
-    const val mobileCategoryId = 360000041586
     const val articleLabel = "Android"
-    const val ticketSubject = "WordPress for Android Support"
     const val blogSeparator = "\n----------\n"
+    const val jetpackTag = "jetpack"
+    const val mobileCategoryId = 360000041586
+    const val ticketSubject = "WordPress for Android Support"
+    const val wpComTag = "wpcom"
 }
 
 private object TicketFieldIds {
