@@ -29,7 +29,6 @@
         android:layout_marginEnd="@dimen/reader_detail_margin"
         android:layout_marginStart="@dimen/reader_detail_margin">
 
-
         <org.wordpress.android.ui.reader.views.ReaderBookmarkButton
             android:id="@+id/bookmark_button"
             android:layout_alignLeft="@+id/layout_icons"

@@ -442,8 +442,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
 
-        ReaderBookmarkButton bookmarkButton = getView().findViewById(R.id.bookmark_button);
-        bookmarkButton.setIsBookmarked(mPost.isBookmarked);
+        initBookmarkButton();
     }
 
 
@@ -467,7 +466,6 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
     }
-
 
     /*
      * changes the like on the passed post

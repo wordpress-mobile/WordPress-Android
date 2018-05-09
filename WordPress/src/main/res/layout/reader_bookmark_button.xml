@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/frame_follow_button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="horizontal">
@@ -21,6 +20,7 @@
         android:layout_gravity="bottom"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
+        android:importantForAccessibility="no"
         android:text="@string/reader_btn_bookmark"
         android:textColor="@color/reader_bookmark_button_text"
         android:textSize="@dimen/text_sz_medium"/>
