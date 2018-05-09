@@ -86,7 +86,9 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         return new BaseErrorListener() {
             @Override
             public void onErrorResponse(@NonNull BaseNetworkError error) {
-                wpComErrorListener.onErrorResponse((WPComGsonNetworkError) error);
+                if (wpComErrorListener != null) {
+                    wpComErrorListener.onErrorResponse((WPComGsonNetworkError) error);
+                }
             }
         };
     }
