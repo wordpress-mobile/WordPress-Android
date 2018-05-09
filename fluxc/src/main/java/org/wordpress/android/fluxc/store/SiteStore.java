@@ -21,8 +21,6 @@ import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
@@ -107,10 +105,10 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class SuggestDomainsResponsePayload extends Payload<BaseNetworkError> {
+    public static class SuggestDomainsResponsePayload extends Payload<SuggestDomainError> {
         public String query;
         public List<DomainSuggestionResponse> suggestions;
-        public SuggestDomainsResponsePayload(@NonNull String query, BaseNetworkError error) {
+        public SuggestDomainsResponsePayload(@NonNull String query, SuggestDomainError error) {
             this.query = query;
             this.error = error;
             this.suggestions = new ArrayList<>();
@@ -1235,12 +1233,7 @@ public class SiteStore extends Store {
     private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
         OnSuggestedDomains event = new OnSuggestedDomains(payload.query, payload.suggestions);
         if (payload.isError()) {
-            if (payload.error instanceof WPComGsonRequest.WPComGsonNetworkError) {
-                event.error = new SuggestDomainError(((WPComGsonNetworkError) payload.error).apiError,
-                        payload.error.message);
-            } else {
-                event.error = new SuggestDomainError("", payload.error.message);
-            }
+            event.error = payload.error;
         }
         emitChange(event);
     }

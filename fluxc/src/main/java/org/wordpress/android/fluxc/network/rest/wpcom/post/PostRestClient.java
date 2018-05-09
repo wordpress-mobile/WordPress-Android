@@ -16,11 +16,10 @@ import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
@@ -69,12 +68,12 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
-                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new PostError(error.apiError, error.message);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 }
@@ -123,11 +122,11 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post_type (invalid post type, shouldn't happen)
-                        PostError postError = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        PostError postError = new PostError(error.apiError, error.message);
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
@@ -163,14 +162,14 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         // Note: Unlike XML-RPC, if an invalid term (category or tag) ID is specified, the server just
                         // ignores it and creates/updates the post normally
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new PostError(error.apiError, error.message);
                         mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 }
@@ -198,12 +197,12 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new PostError(error.apiError, error.message);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 }
@@ -250,10 +249,10 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        PostError postError = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        PostError postError = new PostError(error.apiError, error.message);
                         SearchPostsResponsePayload payload =
                                 new SearchPostsResponsePayload(site, searchTerm, pages, postError);
                         mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));

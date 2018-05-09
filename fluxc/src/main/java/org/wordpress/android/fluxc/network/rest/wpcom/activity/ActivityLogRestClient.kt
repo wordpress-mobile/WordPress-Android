@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -195,7 +195,7 @@ constructor(
             FetchedRewindStatePayload(RewindStatusError(errorType), site)
 
     private fun <T> genericToError(
-        error: BaseRequest.BaseNetworkError,
+        error: WPComGsonNetworkError,
         genericError: T,
         invalidResponse: T,
         authorizationRequired: T
@@ -204,10 +204,8 @@ constructor(
         if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
             errorType = invalidResponse
         }
-        if (error is WPComGsonRequest.WPComGsonNetworkError) {
-            if ("unauthorized" == error.apiError) {
-                errorType = authorizationRequired
-            }
+        if ("unauthorized" == error.apiError) {
+            errorType = authorizationRequired
         }
         return errorType
     }

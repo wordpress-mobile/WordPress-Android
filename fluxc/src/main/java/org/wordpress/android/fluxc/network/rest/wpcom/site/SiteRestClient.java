@@ -20,12 +20,12 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
@@ -47,6 +47,7 @@ import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
@@ -127,9 +128,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                         }
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SitesModel payload = new SitesModel(Collections.<SiteModel>emptyList());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
@@ -157,9 +158,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                         }
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SiteModel payload = new SiteModel();
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload));
@@ -200,9 +201,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         NewSiteResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
                         payload.dryRun = dryRun;
                         mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
@@ -235,9 +236,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
                                 Collections.<PostFormatModel>emptyList());
                         // TODO: what other kind of error could we get here?
@@ -267,9 +268,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 FetchedUserRolesPayload(site, roleArray)));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         FetchedUserRolesPayload payload = new FetchedUserRolesPayload(site,
                                 Collections.<RoleModel>emptyList());
                         // TODO: what other kind of error could we get here?
@@ -293,12 +294,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
-                        WPComGsonNetworkError networkError = ((WPComGsonNetworkError) error);
-                        payload.error = new DeleteSiteError(networkError.apiError, networkError.message);
+                        payload.error = new DeleteSiteError(error.apiError, error.message);
                         payload.site = site;
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
@@ -318,9 +318,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
@@ -351,10 +351,13 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
                             }
                         },
-                        new BaseErrorListener() {
+                        new WPComErrorListener() {
                             @Override
-                            public void onErrorResponse(@NonNull BaseNetworkError error) {
-                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                SuggestDomainError suggestDomainError =
+                                        new SuggestDomainError(error.apiError, error.message);
+                                SuggestDomainsResponsePayload payload =
+                                        new SuggestDomainsResponsePayload(query, suggestDomainError);
                                 mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
                             }
                         }
@@ -393,9 +396,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
                         ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(siteUrl, siteError);
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
@@ -434,22 +437,20 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
                         payload.checkedUrl = siteUrl;
 
                         SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
-                        if (error instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) error).apiError) {
-                                case "unauthorized":
-                                    siteErrorType = SiteErrorType.UNAUTHORIZED;
-                                    break;
-                                case "unknown_blog":
-                                    siteErrorType = SiteErrorType.UNKNOWN_SITE;
-                                    break;
-                            }
+                        switch (error.apiError) {
+                            case "unauthorized":
+                                siteErrorType = SiteErrorType.UNAUTHORIZED;
+                                break;
+                            case "unknown_blog":
+                                siteErrorType = SiteErrorType.UNKNOWN_SITE;
+                                break;
                         }
                         payload.error = new SiteError(siteErrorType);
 
@@ -473,16 +474,14 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         IsWPComResponsePayload payload = new IsWPComResponsePayload();
                         payload.url = testedUrl;
                         // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
                         // the WPCom REST API.
-                        if (error instanceof WPComGsonNetworkError
-                                && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError)
-                                || "unknown_blog".equals(((WPComGsonNetworkError) error).apiError))) {
+                        if ("unauthorized".equals(error.apiError) || "unknown_blog".equals(error.apiError)) {
                             payload.isWPCom = false;
                         } else {
                             payload.error = error;
@@ -514,11 +513,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                                         strErrorCodes)));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        AutomatedTransferError payloadError = new AutomatedTransferError(((WPComGsonNetworkError)
-                                networkError).apiError, networkError.message);
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                        AutomatedTransferError payloadError = new AutomatedTransferError(
+                                networkError.apiError, networkError.message);
                         mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
                                 new AutomatedTransferEligibilityResponsePayload(site, payloadError)));
                     }
@@ -541,13 +540,12 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
                             }
                         },
-                        new BaseErrorListener() {
+                        new WPComErrorListener() {
                             @Override
-                            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
                                 InitiateAutomatedTransferResponsePayload payload =
                                         new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
-                                payload.error = new AutomatedTransferError(((WPComGsonNetworkError)
-                                        error).apiError, error.message);
+                                payload.error = new AutomatedTransferError(networkError.apiError, networkError.message);
                                 mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
                             }
                         });
@@ -566,11 +564,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                                                 response.currentStep, response.totalSteps)));
                             }
                         },
-                        new BaseErrorListener() {
+                        new WPComErrorListener() {
                             @Override
-                            public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                                AutomatedTransferError error = new AutomatedTransferError(((WPComGsonNetworkError)
-                                        networkError).apiError, networkError.message);
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                                AutomatedTransferError error = new AutomatedTransferError(
+                                        networkError.apiError, networkError.message);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
                                         new AutomatedTransferStatusResponsePayload(site, error)));
                             }
