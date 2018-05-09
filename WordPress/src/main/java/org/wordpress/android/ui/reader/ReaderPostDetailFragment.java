@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
@@ -432,23 +433,25 @@ public class ReaderPostDetailFragment extends Fragment
     public void onFollowTapped(View view, String blogName, final long blogId) {
         mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
 
-        String blog = TextUtils.isEmpty(blogName)
-                ? getString(R.string.reader_followed_blog_notifications_this)
-                : blogName;
+        if (isAdded()) {
+            String blog = TextUtils.isEmpty(blogName)
+                    ? getString(R.string.reader_followed_blog_notifications_this)
+                    : blogName;
 
-        Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                        "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
-                .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                    new View.OnClickListener() {
-                        @Override public void onClick(View view) {
-                            AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                            AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                    String.valueOf(blogId), AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW);
-                            mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                        }
-                    })
-                .setActionTextColor(getResources().getColor(R.color.color_accent))
-                .show();
+            Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                    "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
+                    .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                        new View.OnClickListener() {
+                            @Override public void onClick(View view) {
+                                AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                        String.valueOf(blogId), SubscriptionAction.NEW);
+                                mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                            }
+                        })
+                    .setActionTextColor(getResources().getColor(R.color.color_accent))
+                    .show();
+        }
     }
 
     @Override
