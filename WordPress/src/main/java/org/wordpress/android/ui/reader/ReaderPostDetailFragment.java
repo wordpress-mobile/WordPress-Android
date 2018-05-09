@@ -62,6 +62,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -432,7 +433,7 @@ public class ReaderPostDetailFragment extends Fragment
         mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
 
         Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                        "<b>", blogName, "</b>")), Snackbar.LENGTH_LONG)
+                        "<b>", blogName, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                     new View.OnClickListener() {
                         @Override public void onClick(View view) {
