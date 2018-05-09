@@ -69,10 +69,8 @@ public class WPDialogSnackbar {
         return new WPDialogSnackbar(view, text, duration);
     }
 
-    public WPDialogSnackbar setNegativeButton(CharSequence text, final View.OnClickListener listener) {
-        TextView button = mContentView.findViewById(R.id.button_negative);
-
-        // Hide negative button when text is empty or listener is null.
+    private void setButtonTextAndVisibility(TextView button, CharSequence text, final View.OnClickListener listener) {
+        // Hide button when text is empty or listener is null.
         if (TextUtils.isEmpty(text) || listener == null) {
             button.setVisibility(View.GONE);
             button.setOnClickListener(null);
@@ -87,51 +85,20 @@ public class WPDialogSnackbar {
                 }
             });
         }
+    }
 
+    public WPDialogSnackbar setNegativeButton(CharSequence text, View.OnClickListener listener) {
+        setButtonTextAndVisibility((TextView) mContentView.findViewById(R.id.button_negative), text, listener);
         return this;
     }
 
-    public WPDialogSnackbar setNeutralButton(CharSequence text, final View.OnClickListener listener) {
-        TextView button = mContentView.findViewById(R.id.button_neutral);
-
-        // Hide neutral button when text is empty or listener is null.
-        if (TextUtils.isEmpty(text) || listener == null) {
-            button.setVisibility(View.GONE);
-            button.setOnClickListener(null);
-        } else {
-            button.setVisibility(View.VISIBLE);
-            button.setText(text);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onClick(view);
-                    dismiss();
-                }
-            });
-        }
-
+    public WPDialogSnackbar setNeutralButton(CharSequence text, View.OnClickListener listener) {
+        setButtonTextAndVisibility((TextView) mContentView.findViewById(R.id.button_neutral), text, listener);
         return this;
     }
 
-    public WPDialogSnackbar setPositiveButton(CharSequence text, final View.OnClickListener listener) {
-        TextView button = mContentView.findViewById(R.id.button_positive);
-
-        // Hide positive button when text is empty or listener is null.
-        if (TextUtils.isEmpty(text) || listener == null) {
-            button.setVisibility(View.GONE);
-            button.setOnClickListener(null);
-        } else {
-            button.setVisibility(View.VISIBLE);
-            button.setText(text);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onClick(view);
-                    dismiss();
-                }
-            });
-        }
-
+    public WPDialogSnackbar setPositiveButton(CharSequence text, View.OnClickListener listener) {
+        setButtonTextAndVisibility((TextView) mContentView.findViewById(R.id.button_positive), text, listener);
         return this;
     }
 
