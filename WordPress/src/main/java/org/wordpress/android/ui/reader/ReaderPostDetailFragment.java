@@ -427,6 +427,49 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
+     * triggered when user taps the bookmark post button
+     */
+    private void toggleBookmark() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
+
+        if (mPost.isBookmarked) {
+            ReaderPostActions.removeFromBookmarked(mPost);
+        } else {
+            ReaderPostActions.addToBookmarked(mPost);
+        }
+
+        mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
+
+        ReaderBookmarkButton bookmarkButton = getView().findViewById(R.id.bookmark_button);
+        bookmarkButton.setIsBookmarked(mPost.isBookmarked);
+    }
+
+
+    private void initBookmarkButton() {
+        if (!isAdded() || !hasPost() || !canShowFooter()) {
+            return;
+        }
+
+        ReaderBookmarkButton bookmarkButton = getView().findViewById(R.id.bookmark_button);
+        if (!canShowBookmarkButton()) {
+            bookmarkButton.setVisibility(View.GONE);
+        } else {
+            bookmarkButton.setVisibility(View.VISIBLE);
+        }
+
+        bookmarkButton.setIsBookmarked(mPost.isBookmarked);
+
+        bookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                toggleBookmark();
+            }
+        });
+    }
+
+
+    /*
      * changes the like on the passed post
      */
     private void setPostLike(boolean isAskingToLike) {
@@ -1102,48 +1145,6 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-
-    private void initBookmarkButton() {
-        if (!isAdded() || !hasPost() || !canShowFooter()) {
-            return;
-        }
-
-        ReaderBookmarkButton bookmarkButton = getView().findViewById(R.id.bookmark_button);
-        if (!canShowLikeCount()) {
-            bookmarkButton.setVisibility(View.GONE);
-        }
-
-        bookmarkButton.setIsBookmarked(mPost.isBookmarked);
-
-        bookmarkButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                toggleBookmark();
-            }
-        });
-    }
-
-    /*
-    * triggered when user taps the bookmark post button
-    */
-    private void toggleBookmark() {
-        ReaderBookmarkButton bookmarkButton = getView().findViewById(R.id.bookmark_button);
-
-        if (mPost.isBookmarked) {
-            ReaderPostActions.removeFromBookmarked(mPost);
-        } else {
-            ReaderPostActions.addToBookmarked(mPost);
-        }
-
-        mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
-
-        bookmarkButton.setIsBookmarked(mPost.isBookmarked);
-
-//        if (mOnPostBookmarkedListener != null) {
-//            mOnPostBookmarkedListener
-//                    .onBookmarkedStateChanged(post.isBookmarked, blogId, postId, !isSavedPostsList());
-//        }
-    }
-
     /*
      * called by the web view when the content finishes loading - likes aren't displayed
      * until this is triggered, to avoid having them appear before the webView content
@@ -1362,6 +1363,10 @@ public class ReaderPostDetailFragment extends Fragment
         return mPost.isWP()
                && !mPost.isDiscoverPost()
                && (mPost.isCommentsOpen || mPost.numReplies > 0);
+    }
+
+    private boolean canShowBookmarkButton() {
+        return hasPost() && (mPost.isWP() || mPost.isJetpack) && !mPost.isDiscoverPost();
     }
 
     private boolean canShowLikeCount() {
