@@ -59,7 +59,7 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 
