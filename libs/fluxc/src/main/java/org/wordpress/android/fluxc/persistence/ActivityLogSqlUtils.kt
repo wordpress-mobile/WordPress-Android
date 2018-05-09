@@ -157,7 +157,7 @@ class ActivityLogSqlUtils
                     wpcomUserID != null ||
                     avatarURL != null ||
                     role != null) {
-                ActivityLogModel.ActivityActor(displayName, type, wpcomUserID, avatarURL, role)
+                ActivityLogModel.ActivityActor(displayName, actorType, wpcomUserID, avatarURL, role)
             } else null
             return ActivityLogModel(activityID,
                     summary,
