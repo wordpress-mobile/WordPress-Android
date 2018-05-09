@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
-import org.wordpress.android.models.networkresource.ListNetworkResource
-import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
@@ -26,12 +24,12 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated
 import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
+import org.wordpress.android.models.networkresource.ListNetworkResource
+import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
-import java.util.HashMap
-import java.util.HashSet
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -170,16 +168,16 @@ class PluginBrowserViewModel @Inject constructor(
             var same = false
             old?.let {
                 new?.let {
-                    same = old.slug == new.slug
-                            && old.displayName == new.displayName
-                            && old.authorName == new.authorName
-                            && old.icon == new.icon
-                            && old.isInstalled == new.isInstalled
-                            && old.isActive == new.isActive
-                            && old.isAutoUpdateEnabled == new.isAutoUpdateEnabled
-                            && old.installedVersion == new.installedVersion
-                            && old.wpOrgPluginVersion == new.wpOrgPluginVersion
-                            && old.averageStarRating == new.averageStarRating
+                    same = old.slug == new.slug &&
+                            old.displayName == new.displayName &&
+                            old.authorName == new.authorName &&
+                            old.icon == new.icon &&
+                            old.isInstalled == new.isInstalled &&
+                            old.isActive == new.isActive &&
+                            old.isAutoUpdateEnabled == new.isAutoUpdateEnabled &&
+                            old.installedVersion == new.installedVersion &&
+                            old.wpOrgPluginVersion == new.wpOrgPluginVersion &&
+                            old.averageStarRating == new.averageStarRating
                 }
             }
             same
@@ -262,8 +260,8 @@ class PluginBrowserViewModel @Inject constructor(
     @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         if (event.isError) {
-            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
-                    + event.error.type)
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
+                    event.error.type)
             errorListNetworkResource(event.type, event.error.message)
         } else {
             successListNetworkResource(event.type, event.canLoadMore)
