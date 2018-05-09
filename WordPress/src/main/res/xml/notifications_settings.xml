@@ -5,17 +5,18 @@
     android:key="@string/wp_pref_notifications_root" >
 
     <PreferenceCategory
-        android:layout="@layout/wp_preference_category"
         android:key="@string/pref_notification_blogs"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_your_sites" />
 
     <PreferenceCategory
-        android:layout="@layout/wp_preference_category"
         android:key="@string/pref_notification_blogs_followed"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_followed_sites" />
 
     <PreferenceCategory
         android:key="@string/pref_notification_other_category"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_other" >
 
         <PreferenceScreen
@@ -30,8 +31,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:layout="@layout/wp_preference_category"
         android:key="@string/pref_notification_sights_sounds"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_sights_and_sounds" >
 
         <RingtonePreference

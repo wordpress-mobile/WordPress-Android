@@ -926,7 +926,6 @@ Language: el_GR
     <string name="username">Ψευδώνυμο</string>
     <string name="password">Κωδικός</string>
     <string name="reader">Αναγνώστης</string>
-    <string name="featured">Ορίστε ως χαρακτηριστική εικόνα</string>
     <string name="featured_in_post">Συμπεριλάβετε την εικόνα στο περιεχόμενο του άρθρου</string>
     <string name="no_network_title">Το διαδίκτυο δεν είναι διαθέσιμο</string>
     <string name="caption">Λεζάντα (προαιρετική)</string>

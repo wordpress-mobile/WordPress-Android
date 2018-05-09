@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
@@ -24,7 +24,6 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
-        maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
     }
 
     task checkstyle(type: Checkstyle) {

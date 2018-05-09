@@ -451,7 +451,6 @@ Language: hi_IN
     <string name="posts">पोस्ट</string>
     <string name="width">चौडाई</string>
     <string name="caption">शीर्षक (वैकल्पिक)</string>
-    <string name="featured">विशेष छवि के रुप में उपयोग करें</string>
     <string name="featured_in_post">पोस्ट सामग्री में छवि को शामिल करे</string>
     <string name="blogusername">ब्लॉग उपयोगकर्ता नाम</string>
     <string name="link_enter_url">यूआरएल</string>
