@@ -107,6 +107,7 @@ public class ReaderPostDetailFragment extends Fragment
     private View mLikingUsersDivider;
     private View mLikingUsersLabel;
     private WPTextView mSignInButton;
+    private ReaderBookmarkButton mReaderBookmarkButton;
 
     private ReaderSimplePostContainerView mGlobalRelatedPostsView;
     private ReaderSimplePostContainerView mLocalRelatedPostsView;
@@ -255,6 +256,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
+
+        mReaderBookmarkButton = view.findViewById(R.id.bookmark_button);
 
         final ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress_loading);
         if (mPostSlugsResolutionUnderway) {
@@ -426,6 +429,15 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    private void initBookmarkButton() {
+        updateBookmarkView();
+        mReaderBookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                toggleBookmark();
+            }
+        });
+    }
+
     /*
      * triggered when user taps the bookmark post button
      */
@@ -442,29 +454,21 @@ public class ReaderPostDetailFragment extends Fragment
 
         mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
 
-        initBookmarkButton();
+        updateBookmarkView();
     }
 
-
-    private void initBookmarkButton() {
+    private void updateBookmarkView() {
         if (!isAdded() || !hasPost() || !canShowFooter()) {
             return;
         }
 
-        ReaderBookmarkButton bookmarkButton = getView().findViewById(R.id.bookmark_button);
         if (!canShowBookmarkButton()) {
-            bookmarkButton.setVisibility(View.GONE);
+            mReaderBookmarkButton.setVisibility(View.GONE);
         } else {
-            bookmarkButton.setVisibility(View.VISIBLE);
+            mReaderBookmarkButton.setVisibility(View.VISIBLE);
         }
 
-        bookmarkButton.setIsBookmarked(mPost.isBookmarked);
-
-        bookmarkButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                toggleBookmark();
-            }
-        });
+        mReaderBookmarkButton.setIsBookmarked(mPost.isBookmarked);
     }
 
     /*
