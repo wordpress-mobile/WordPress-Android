@@ -452,9 +452,9 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (isAskingToLike) {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED_DETAIL, mPost);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED, mPost);
         } else {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED_DETAIL, mPost);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED, mPost);
         }
     }
 
