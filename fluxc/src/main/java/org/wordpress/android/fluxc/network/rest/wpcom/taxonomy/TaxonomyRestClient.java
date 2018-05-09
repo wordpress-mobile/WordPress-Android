@@ -14,11 +14,10 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST.SitesEndpoint.Si
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse.TermsResponse;
@@ -61,12 +60,11 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 400 invalid_taxonomy
-                        TaxonomyError taxonomyError = new TaxonomyError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
+                        TaxonomyError taxonomyError = new TaxonomyError(error.apiError, error.message);
                         FetchTermResponsePayload payload = new FetchTermResponsePayload(term, site);
                         payload.error = taxonomyError;
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
@@ -101,12 +99,11 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 400 invalid_taxonomy
-                        TaxonomyError taxonomyError = new TaxonomyError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
+                        TaxonomyError taxonomyError = new TaxonomyError(error.apiError, error.message);
                         FetchTermsResponsePayload payload = new FetchTermsResponsePayload(taxonomyError, taxonomyName);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
                     }
@@ -139,12 +136,12 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 400 invalid_taxonomy, 409 duplicate
                         RemoteTermPayload payload = new RemoteTermPayload(term, site);
-                        payload.error = new TaxonomyError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new TaxonomyError(error.apiError, error.message);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
                     }
                 }
@@ -170,12 +167,12 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 400 invalid_taxonomy, 409 duplicate
                         RemoteTermPayload payload = new RemoteTermPayload(term, site);
-                        payload.error = new TaxonomyError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new TaxonomyError(error.apiError, error.message);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
                 }

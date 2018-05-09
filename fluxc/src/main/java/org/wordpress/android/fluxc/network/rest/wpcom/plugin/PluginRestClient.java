@@ -13,11 +13,10 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
@@ -66,11 +65,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        PluginDirectoryError directoryError = new PluginDirectoryError(((WPComGsonNetworkError)
-                                networkError).apiError, networkError.message);
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                        PluginDirectoryError directoryError = new PluginDirectoryError(
+                                networkError.apiError, networkError.message);
                         FetchedPluginDirectoryPayload payload =
                                 new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false, directoryError);
                         mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
@@ -96,11 +95,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 new ConfiguredSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(((
-                                WPComGsonNetworkError) networkError).apiError, networkError.message);
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                        ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(
+                                networkError.apiError, networkError.message);
                         ConfiguredSitePluginPayload payload =
                                 new ConfiguredSitePluginPayload(site, pluginName, slug, configurePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
@@ -123,13 +122,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 new DeletedSitePluginPayload(site, slug, pluginName)));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        DeletedSitePluginPayload payload =
-                                new DeletedSitePluginPayload(site, slug, pluginName);
-                        payload.error = new DeleteSitePluginError(((WPComGsonNetworkError)
-                                networkError).apiError, networkError.message);
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                        DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, slug, pluginName);
+                        payload.error = new DeleteSitePluginError(networkError.apiError, networkError.message);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
                     }
                 }
@@ -149,11 +146,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 new InstalledSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        InstallSitePluginError installPluginError = new InstallSitePluginError(((WPComGsonNetworkError)
-                                networkError).apiError, networkError.message);
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                        InstallSitePluginError installPluginError = new InstallSitePluginError(
+                                networkError.apiError, networkError.message);
                         InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, pluginSlug,
                                 installPluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload));
@@ -177,12 +174,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
                         UpdateSitePluginError updatePluginError
-                                = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
-                                networkError.message);
+                                = new UpdateSitePluginError(networkError.apiError, networkError.message);
                         UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, pluginName, slug,
                                 updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
