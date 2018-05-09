@@ -18,9 +18,8 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
@@ -231,12 +230,11 @@ public class Authenticator {
                         }
                         mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
                     }
-                }, new BaseErrorListener() {
+                }, new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AuthEmailResponsePayload responsePayload = new AuthEmailResponsePayload(payload.isSignup);
-                        responsePayload.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
+                        responsePayload.error = new AuthEmailError(error.apiError, error.message);
                         mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
                     }
                 }
@@ -277,13 +275,18 @@ public class Authenticator {
         if (jsonObject != null) {
             String errorType = jsonObject.optString("error", "");
             String errorMessage = jsonObject.optString("error_description", "");
-            error = AuthenticationErrorType.fromString(errorType);
-            // Special cases for vague error types
-            if (error == AuthenticationErrorType.INVALID_REQUEST) {
-                // Try to parse the error message to specify the error
-                if (errorMessage.contains("Incorrect username or password.")) {
-                    return AuthenticationErrorType.INCORRECT_USERNAME_OR_PASSWORD;
-                }
+            error = wpComApiErrorToAuthenticationError(errorType, errorMessage);
+        }
+        return error;
+    }
+
+    public static AuthenticationErrorType wpComApiErrorToAuthenticationError(String errorType, String errorMessage) {
+        AuthenticationErrorType error = AuthenticationErrorType.fromString(errorType);
+        // Special cases for vague error types
+        if (error == AuthenticationErrorType.INVALID_REQUEST) {
+            // Try to parse the error message to specify the error
+            if (errorMessage.contains("Incorrect username or password.")) {
+                return AuthenticationErrorType.INCORRECT_USERNAME_OR_PASSWORD;
             }
         }
         return error;

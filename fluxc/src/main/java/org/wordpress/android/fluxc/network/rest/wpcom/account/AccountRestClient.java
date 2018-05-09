@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionRestResponse.SubscriptionsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -204,9 +205,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedAccountAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccountRestPayload payload = new AccountRestPayload(null, error);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedAccountAction(payload));
                     }
@@ -231,9 +232,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedSettingsAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccountRestPayload payload = new AccountRestPayload(null, error);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedSettingsAction(payload));
                     }
@@ -267,13 +268,12 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedUsernameSuggestionsAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccountFetchUsernameSuggestionsResponsePayload payload =
                                 new AccountFetchUsernameSuggestionsResponsePayload();
-                        payload.error = new AccountFetchUsernameSuggestionsError(
-                                ((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new AccountFetchUsernameSuggestionsError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedUsernameSuggestionsAction(payload));
                     }
                 }
@@ -290,9 +290,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newSentVerificationEmailAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         NewAccountResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
                         mDispatcher.dispatch(AccountActionBuilder.newSentVerificationEmailAction(payload));
                     }
@@ -322,9 +322,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccountPushSettingsResponsePayload payload = new AccountPushSettingsResponsePayload(error);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));
                     }
@@ -429,11 +429,11 @@ public class AccountRestClient extends BaseWPComRestClient {
                         }
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
-                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new AccountSocialError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
@@ -532,11 +532,11 @@ public class AccountRestClient extends BaseWPComRestClient {
                         }
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
-                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new AccountSocialError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
@@ -625,13 +625,12 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload(username,
                                 actionType);
-                        payload.error = new AccountUsernameError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
+                        payload.error = new AccountUsernameError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
                     }
                 }
@@ -663,9 +662,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newCreatedNewAccountAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         NewAccountResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
                         payload.dryRun = dryRun;
                         mDispatcher.dispatch(AccountActionBuilder.newCreatedNewAccountAction(payload));
@@ -710,9 +709,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                         }
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SubscriptionsModel payload = new SubscriptionsModel();
                         payload.error = error;
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedSubscriptionsAction(payload));
@@ -745,12 +744,11 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
-                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
+                        payload.error = new SubscriptionError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 }
@@ -781,12 +779,11 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
-                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
+                        payload.error = new SubscriptionError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 }
@@ -819,12 +816,11 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
-                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
+                        payload.error = new SubscriptionError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 }
@@ -856,14 +852,12 @@ public class AccountRestClient extends BaseWPComRestClient {
                                 payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         SubscriptionResponsePayload payload = new SubscriptionResponsePayload();
-                        payload.error = new SubscriptionError(((WPComGsonNetworkError) error).apiError,
-                                error.message);
-                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(
-                                payload));
+                        payload.error = new SubscriptionError(error.apiError, error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newUpdatedSubscriptionAction(payload));
                     }
                 }
         );
@@ -973,16 +967,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newCheckedIsAvailableAction(payload));
                     }
                 },
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // We don't expect anything but server errors here - the API itself returns errors with a
                         // 200 status code, which will appear under Listener.onResponse instead
                         IsAvailableResponsePayload payload = new IsAvailableResponsePayload();
                         payload.value = value;
                         payload.type = type;
 
-                        payload.error = new IsAvailableError(((WPComGsonNetworkError) error).apiError, error.message);
+                        payload.error = new IsAvailableError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newCheckedIsAvailableAction(payload));
                     }
                 }

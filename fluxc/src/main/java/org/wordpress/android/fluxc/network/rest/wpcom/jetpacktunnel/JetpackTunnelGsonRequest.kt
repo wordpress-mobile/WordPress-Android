@@ -4,8 +4,8 @@ import com.android.volley.Response
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
 import java.lang.reflect.Type
 import java.net.URLEncoder
 
@@ -107,7 +107,7 @@ object JetpackTunnelGsonRequest {
         params: Map<String, String>,
         type: Type,
         listener: (T?) -> Unit,
-        errorListener: BaseErrorListener
+        errorListener: WPComErrorListener
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val wrappedParams = createTunnelParams(params, wpApiEndpoint)
 
@@ -137,7 +137,7 @@ object JetpackTunnelGsonRequest {
         body: Map<String, Any>,
         type: Type,
         listener: (T?) -> Unit,
-        errorListener: BaseErrorListener
+        errorListener: WPComErrorListener
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val wrappedBody = createTunnelBody(method = "post", body = body, path = wpApiEndpoint)
         return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
@@ -161,7 +161,7 @@ object JetpackTunnelGsonRequest {
         body: Map<String, Any>,
         type: Type,
         listener: (T?) -> Unit,
-        errorListener: BaseErrorListener
+        errorListener: WPComErrorListener
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val wrappedBody = createTunnelBody(method = "patch", body = body, path = wpApiEndpoint)
         return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
@@ -185,7 +185,7 @@ object JetpackTunnelGsonRequest {
         body: Map<String, Any>,
         type: Type,
         listener: (T?) -> Unit,
-        errorListener: BaseErrorListener
+        errorListener: WPComErrorListener
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val wrappedBody = createTunnelBody(method = "put", body = body, path = wpApiEndpoint)
         return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
@@ -209,7 +209,7 @@ object JetpackTunnelGsonRequest {
         params: Map<String, String>,
         type: Type,
         listener: (T?) -> Unit,
-        errorListener: BaseErrorListener
+        errorListener: WPComErrorListener
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val wrappedBody = createTunnelBody(method = "delete", params = params, path = wpApiEndpoint)
         return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
@@ -220,7 +220,7 @@ object JetpackTunnelGsonRequest {
         wrappedBody: Map<String, Any>,
         type: Type,
         listener: (T?) -> Unit,
-        errorListener: BaseErrorListener
+        errorListener: WPComErrorListener
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val tunnelRequestUrl = getTunnelApiUrl(siteId)
         val wrappedType = TypeToken.getParameterized(JetpackTunnelResponse::class.java, type).type

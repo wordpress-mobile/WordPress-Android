@@ -15,11 +15,11 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
@@ -59,9 +59,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                     }
                 },
 
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
                                 CommentErrorUtils.commentErrorToFetchCommentsPayload(error, site)));
                     }
@@ -88,9 +88,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                     }
                 },
 
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
                                 CommentErrorUtils.commentErrorToPushCommentPayload(error, comment)));
                     }
@@ -117,9 +117,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                     }
                 },
 
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
@@ -150,9 +150,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                     }
                 },
 
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
@@ -178,9 +178,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                     }
                 },
 
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, reply)));
                     }
@@ -206,9 +206,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                     }
                 },
 
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
@@ -245,9 +245,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                     }
                 },
 
-                new BaseErrorListener() {
+                new WPComErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
