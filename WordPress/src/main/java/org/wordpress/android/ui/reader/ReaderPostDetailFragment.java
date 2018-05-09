@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -435,6 +436,7 @@ public class ReaderPostDetailFragment extends Fragment
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                     new View.OnClickListener() {
                         @Override public void onClick(View view) {
+                            AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
                             AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                     String.valueOf(blogId), AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW);
                             mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
