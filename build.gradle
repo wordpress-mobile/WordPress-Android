@@ -21,10 +21,8 @@ allprojects {
     apply plugin: 'checkstyle'
 
     repositories {
+        google()
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
     }
 

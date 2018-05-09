@@ -510,6 +510,12 @@
             android:label="@string/plugins"
             android:theme="@style/Calypso.NoActionBar"/>
 
+        <!--Plugins-->
+        <activity
+            android:name=".ui.activitylog.ActivityLogListActivity"
+            android:label="@string/activity_log"
+            android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"

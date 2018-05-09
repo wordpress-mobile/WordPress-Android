@@ -313,4 +313,8 @@
     <dimen name="add_avatar_button_size">24dp</dimen>
 
     <dimen name="padding_input_row_start">60dp</dimen>
+
+    <!-- activity log -->
+    <dimen name="activity_log_icon_size">40dp</dimen>
+    <dimen name="activity_log_icon_margin">16dp</dimen>
 </resources>

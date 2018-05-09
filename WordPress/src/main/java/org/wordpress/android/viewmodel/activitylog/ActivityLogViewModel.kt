@@ -8,7 +8,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.util.AppLog
@@ -28,8 +27,8 @@ class ActivityLogViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private val _events = MutableLiveData<List<ActivityLogModel>>()
-    val events: LiveData<List<ActivityLogModel>>
+    private val _events = MutableLiveData<List<ActivityLogListItemViewModel>>()
+    val events: LiveData<List<ActivityLogListItemViewModel>>
         get() = _events
 
     private val _eventListStatus = MutableLiveData<ActivityLogListStatus>()
@@ -47,10 +46,12 @@ class ActivityLogViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun start() {
+    fun start(site: SiteModel) {
         if (isStarted) {
             return
         }
+
+        this.site = site
 
         reloadEvents()
         fetchEvents(false)
@@ -60,7 +61,8 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun reloadEvents() {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
-        _events.postValue(eventList)
+        val items = eventList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        _events.postValue(items)
     }
 
     fun pullToRefresh() {
@@ -102,7 +104,11 @@ class ActivityLogViewModel @Inject constructor(
             return
         }
 
-        _events.postValue(activityLogStore.getActivityLogForSite(site, false))
+        if (event.rowsAffected > 0) {
+            val eventList = activityLogStore.getActivityLogForSite(site, false)
+            val items = eventList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+            _events.postValue(items)
+        }
 
         if (event.canLoadMore) {
             _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)

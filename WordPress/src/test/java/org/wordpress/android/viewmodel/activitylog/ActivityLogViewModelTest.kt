@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.activitylog
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
@@ -26,6 +25,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
+import java.util.Calendar
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -35,9 +35,9 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var site: SiteModel
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
-    private var events: MutableList<List<ActivityLogModel>?> = mutableListOf()
+    private var events: MutableList<List<ActivityLogListItemViewModel>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
-    private val activityLog = listOf<ActivityLogModel>(mock())
+    private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
 
     @Before
@@ -46,7 +46,9 @@ class ActivityLogViewModelTest {
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
-        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLog)
+
+        activityLogList = initializeActivityList()
+        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
     }
 
     @Test
@@ -54,9 +56,12 @@ class ActivityLogViewModelTest {
         assertNull(viewModel.events.value)
         assertNull(viewModel.eventListStatus.value)
 
-        viewModel.start()
+        viewModel.start(site)
 
-        assertEquals(viewModel.events.value, activityLog)
+        assertEquals(
+                viewModel.events.value,
+                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        )
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.FETCHING)
 
         assertFetchEvents()
@@ -85,7 +90,10 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        assertEquals(viewModel.events.value, activityLog)
+        assertEquals(
+                viewModel.events.value,
+                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
     }
@@ -105,7 +113,10 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        assertEquals(viewModel.events.value, activityLog)
+        assertEquals(
+                viewModel.events.value,
+                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
@@ -120,6 +131,24 @@ class ActivityLogViewModelTest {
         verify(dispatcher, never()).dispatch(any())
     }
 
+    @Test
+    fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() {
+        val canLoadMore = true
+        viewModel.onActivityLogFetched(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
+
+        verify(store, never()).getActivityLogForSite(site, false)
+    }
+
+    @Test
+    fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() {
+        val canLoadMore = true
+        viewModel.onActivityLogFetched(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
+
+        assertTrue(events.last()?.get(0)?.isHeaderVisible(null) == true)
+        assertTrue(events.last()?.get(1)?.isHeaderVisible(events.last()?.get(0)) == false)
+        assertTrue(events.last()?.get(2)?.isHeaderVisible(events.last()?.get(1)) == true)
+    }
+
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -130,5 +159,21 @@ class ActivityLogViewModelTest {
             assertEquals(this.loadMore, canLoadMore)
             assertEquals(this.site, site)
         }
+    }
+
+    private fun initializeActivityList(): List<ActivityLogModel> {
+        val birthday = Calendar.getInstance()
+        birthday.set(1985, 8, 27)
+
+        val list = mutableListOf<ActivityLogModel>()
+        val activity = ActivityLogModel("", "", "", "", "", "",
+                "", true, "", birthday.time)
+        list.add(activity)
+        list.add(activity.copy())
+
+        birthday.set(1987, 5, 26)
+        list.add(activity.copy(published = birthday.time))
+
+        return list
     }
 }
