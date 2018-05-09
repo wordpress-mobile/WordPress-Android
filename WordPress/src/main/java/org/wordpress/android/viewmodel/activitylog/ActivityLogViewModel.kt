@@ -46,10 +46,12 @@ class ActivityLogViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun start() {
+    fun start(site: SiteModel) {
         if (isStarted) {
             return
         }
+
+        this.site = site
 
         reloadEvents()
         fetchEvents(false)

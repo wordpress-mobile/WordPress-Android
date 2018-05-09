@@ -7,7 +7,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -38,7 +37,7 @@ class ActivityLogViewModelTest {
 
     private var events: MutableList<List<ActivityLogListItemViewModel>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
-    private val activityLogList = mutableListOf<ActivityLogModel>()
+    private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
 
     @Before
@@ -48,7 +47,8 @@ class ActivityLogViewModelTest {
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
 
-        initializeActivityList()
+        activityLogList = initializeActivityList()
+        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
     }
 
     @Test
@@ -56,7 +56,7 @@ class ActivityLogViewModelTest {
         assertNull(viewModel.events.value)
         assertNull(viewModel.eventListStatus.value)
 
-        viewModel.start()
+        viewModel.start(site)
 
         assertEquals(
                 viewModel.events.value,
@@ -144,9 +144,9 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onActivityLogFetched(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
-        Assert.assertTrue(events.last()?.get(0)?.isHeaderVisible(null) ?: false)
-        Assert.assertFalse(events.last()?.get(1)?.isHeaderVisible(events.last()?.get(0)) ?: true)
-        Assert.assertTrue(events.last()?.get(2)?.isHeaderVisible(events.last()?.get(1)) ?: false)
+        assertTrue(events.last()?.get(0)?.isHeaderVisible(null) == true)
+        assertTrue(events.last()?.get(1)?.isHeaderVisible(events.last()?.get(0)) == false)
+        assertTrue(events.last()?.get(2)?.isHeaderVisible(events.last()?.get(1)) == true)
     }
 
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
@@ -161,17 +161,19 @@ class ActivityLogViewModelTest {
         }
     }
 
-    private fun initializeActivityList() {
+    private fun initializeActivityList(): List<ActivityLogModel> {
         val birthday = Calendar.getInstance()
         birthday.set(1985, 8, 27)
-        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "", birthday.time))
-        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "", birthday.time))
-        birthday.set(1987, 5, 26)
-        activityLogList.add(ActivityLogModel("", "", "", "", "", "",
-                "", true, "", birthday.time))
 
-        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
+        val list = mutableListOf<ActivityLogModel>()
+        val activity = ActivityLogModel("", "", "", "", "", "",
+                "", true, "", birthday.time)
+        list.add(activity)
+        list.add(activity.copy())
+
+        birthday.set(1987, 5, 26)
+        list.add(activity.copy(published = birthday.time))
+
+        return list
     }
 }
