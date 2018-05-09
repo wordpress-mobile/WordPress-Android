@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,14 +33,17 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -52,6 +54,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.stats.service.StatsService.TASK_ID_GROUP_ALL;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
@@ -70,7 +73,7 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
     private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
-    private static final String APP_RUNTIME_ON_CHROME_FLAG = "org.chromium.arc.device_management";
+    private static final String TAG_PROMO_DIALOG = "promote_widget_dialog";
 
     private Spinner mSpinner;
     private NestedScrollViewExt mOuterScrollView;
@@ -79,6 +82,8 @@ public class StatsActivity extends AppCompatActivity
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
     public static final String LOGGED_INTO_JETPACK = "LOGGED_INTO_JETPACK";
+    private static final int TOTAL_FRAGMENT_QUANTITY = 8;
+    private int mCallsToWaitFor = TOTAL_FRAGMENT_QUANTITY;
 
     public enum StatsLaunchedFrom {
         STATS_WIDGET,
@@ -88,6 +93,7 @@ public class StatsActivity extends AppCompatActivity
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ShortcutUtils mShortcutUtils;
 
     private int mResultCode = -1;
     private SiteModel mSite;
@@ -133,7 +139,7 @@ public class StatsActivity extends AppCompatActivity
 
         setContentView(R.layout.stats_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -161,7 +167,7 @@ public class StatsActivity extends AppCompatActivity
 
         setTitle(R.string.stats);
 
-        mOuterScrollView = (NestedScrollViewExt) findViewById(R.id.scroll_view_stats);
+        mOuterScrollView = findViewById(R.id.scroll_view_stats);
         mOuterScrollView.setScrollViewListener(this);
 
         if (savedInstanceState != null) {
@@ -206,7 +212,7 @@ public class StatsActivity extends AppCompatActivity
         createFragments(false);
 
         if (mSpinner == null) {
-            mSpinner = (Spinner) findViewById(R.id.filter_spinner);
+            mSpinner = findViewById(R.id.filter_spinner);
 
             mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, mTimeframes);
 
@@ -248,13 +254,13 @@ public class StatsActivity extends AppCompatActivity
                 }
             });
 
-            Toolbar spinnerToolbar = (Toolbar) findViewById(R.id.toolbar_filter);
+            Toolbar spinnerToolbar = findViewById(R.id.toolbar_filter);
             spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.blue_medium));
         }
 
         selectCurrentTimeframeInActionBar();
 
-        TextView otherRecentStatsMovedLabel = (TextView) findViewById(R.id.stats_other_recent_stats_moved);
+        TextView otherRecentStatsMovedLabel = findViewById(R.id.stats_other_recent_stats_moved);
         otherRecentStatsMovedLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -280,6 +286,7 @@ public class StatsActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_ACCESSED, mSite);
             trackStatsAnalytics();
+            mShortcutUtils.reportShortcutUsed(Shortcut.OPEN_STATS);
         }
     }
 
@@ -507,6 +514,7 @@ public class StatsActivity extends AppCompatActivity
         FragmentManager fm = getFragmentManager();
 
         if (mCurrentTimeframe != StatsTimeframe.INSIGHTS) {
+            mCallsToWaitFor = TOTAL_FRAGMENT_QUANTITY;
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
@@ -516,8 +524,11 @@ public class StatsActivity extends AppCompatActivity
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
             if (includeGraph) {
                 updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+            } else {
+                mCallsToWaitFor--;
             }
         } else {
+            mCallsToWaitFor = TOTAL_FRAGMENT_QUANTITY;
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsTodayFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsAllTimeFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsMostPopularFragment.TAG);
@@ -624,13 +635,14 @@ public class StatsActivity extends AppCompatActivity
         // Should we display the widget promo?
 
         if (shouldShowWidgetPromo()) {
-            AppCompatDialogFragment newFragment = new PromoDialog.Builder(
-                    R.drawable.stats_widget_promo_header,
-                    R.string.stats_widget_promo_title,
-                    R.string.stats_widget_promo_desc,
-                    R.string.stats_widget_promo_ok_btn_label)
-                    .build();
-            newFragment.show(getSupportFragmentManager(), "promote_widget_dialog");
+            PromoDialog newFragment = new PromoDialog();
+            newFragment.initialize(
+                    TAG_PROMO_DIALOG,
+                    getString(R.string.stats_widget_promo_title),
+                    getString(R.string.stats_widget_promo_desc),
+                    getString(R.string.stats_widget_promo_ok_btn_label),
+                    R.drawable.stats_widget_promo_header);
+            newFragment.show(getSupportFragmentManager(), TAG_PROMO_DIALOG);
         }
     }
 
@@ -638,21 +650,37 @@ public class StatsActivity extends AppCompatActivity
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         boolean isCountAPromoMilestone = counter == 3 || counter == 1000 || counter == 10000;
 
-        return isCountAPromoMilestone && !isAppRuntimeForChrome();
-    }
-
-    // does not support widgets
-    private boolean isAppRuntimeForChrome() {
-        return getApplicationContext().getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
+        return isCountAPromoMilestone && !DeviceUtils.getInstance().isChromebook(this);
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
+    public void onEventMainThread(StatsEvents.UpdateStatusStarted event) {
         if (isFinishing() || !mIsInFront) {
             return;
         }
-        mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
-        mIsUpdatingStats = event.mUpdating;
+        mSwipeToRefreshHelper.setRefreshing(true);
+        mIsUpdatingStats = true;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.UpdateStatusFinished event) {
+        if (isFinishing()) {
+            return;
+        }
+
+        // in legacy StatsService we just need this signal to know one taskID grouped all concurrent requests
+        if (event.mTaskId == TASK_ID_GROUP_ALL) {
+            mCallsToWaitFor = 0;
+        } else {
+            if (mCallsToWaitFor > 0) {
+                mCallsToWaitFor--;
+            }
+        }
+
+        if (mCallsToWaitFor == 0) {
+            mSwipeToRefreshHelper.setRefreshing(false);
+        }
+        mIsUpdatingStats = false;
 
         if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
             // Do not bump promo analytics or show the dialog in case of errors or when it's still loading
@@ -730,7 +758,7 @@ public class StatsActivity extends AppCompatActivity
                 view = convertView;
             }
 
-            final TextView text = (TextView) view.findViewById(R.id.text);
+            final TextView text = view.findViewById(R.id.text);
             StatsTimeframe selectedTimeframe = (StatsTimeframe) getItem(position);
             text.setText(selectedTimeframe.getLabel());
             return view;
@@ -757,7 +785,7 @@ public class StatsActivity extends AppCompatActivity
             private final TextView mTextView;
 
             TagViewHolder(View view) {
-                mTextView = (TextView) view.findViewById(R.id.text);
+                mTextView = view.findViewById(R.id.text);
             }
         }
 

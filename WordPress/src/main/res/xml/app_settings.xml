@@ -2,134 +2,138 @@
 
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:key="@string/pref_key_app_settings_root" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:key="@string/pref_key_app_settings_root">
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
-        android:layout="@layout/preference_layout"
-        android:title="@string/interface_language" />
+        android:layout="@layout/wp_preference_layout"
+        android:title="@string/interface_language"/>
 
     <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_key_send_usage"
-        android:layout="@layout/preference_layout"
+        android:layout="@layout/wp_preference_layout"
         android:summary="@string/preference_send_usage_stats_summary"
-        android:title="@string/preference_send_usage_stats" />
+        android:title="@string/preference_send_usage_stats"
+        android:widgetLayout="@layout/wp_preference_switch"/>
 
     <Preference
         android:key="@string/pref_key_device_settings"
-        android:layout="@layout/preference_layout"
-        android:title="@string/preference_open_device_settings" />
+        android:layout="@layout/wp_preference_layout"
+        android:title="@string/preference_open_device_settings"/>
 
     <PreferenceCategory
         android:key="@string/pref_key_editor"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/preference_editor">
 
-        <ListPreference
-            android:key="@string/pref_key_editor_type"
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:defaultValue="1"
             android:entries="@array/editor_entries"
             android:entryValues="@array/editor_values"
-            android:defaultValue="1"
-            android:layout="@layout/preference_layout"
+            android:key="@string/pref_key_editor_type"
+            android:layout="@layout/wp_preference_layout"
             android:title="@string/preference_editor_type"
-            tools:summary="Visual" />
+            tools:summary="Visual"/>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_key_optimize_media"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/media">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
-            android:layout="@layout/preference_layout"
             android:key="@string/pref_key_optimize_image"
+            android:layout="@layout/wp_preference_layout"
+            android:summary="@string/site_settings_optimize_images_summary"
             android:title="@string/site_settings_optimize_images"
-            android:summary="@string/site_settings_optimize_images_summary"/>
+            android:widgetLayout="@layout/wp_preference_switch"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_image_width"
-            android:key="@string/pref_key_site_image_width"
-            android:title="@string/site_settings_default_image_width_title"
+            android:dependency="@string/pref_key_optimize_image"
             android:entries="@array/site_settings_image_max_size_entries"
             android:entryValues="@array/site_settings_image_max_size_values"
-            android:dependency="@string/pref_key_optimize_image"
-            app:longClickHint="@string/site_settings_image_width_hint" />
+            android:key="@string/pref_key_site_image_width"
+            android:title="@string/site_settings_default_image_width_title"
+            app:longClickHint="@string/site_settings_image_width_hint"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_image_quality"
-            android:key="@string/pref_key_site_image_quality"
-            android:title="@string/site_settings_default_image_quality_title"
+            android:dependency="@string/pref_key_optimize_image"
             android:entries="@array/site_settings_image_quality_entries"
             android:entryValues="@array/site_settings_image_quality_values"
-            android:dependency="@string/pref_key_optimize_image"
-            app:longClickHint="@string/site_settings_image_quality_hint" />
+            android:key="@string/pref_key_site_image_quality"
+            android:title="@string/site_settings_default_image_quality_title"
+            app:longClickHint="@string/site_settings_image_quality_hint"/>
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_video"
-            android:layout="@layout/preference_layout"
             android:key="@string/pref_key_optimize_video"
+            android:layout="@layout/wp_preference_layout"
+            android:summary="@string/site_settings_optimize_video_summary"
             android:title="@string/site_settings_optimize_videos"
-            android:summary="@string/site_settings_optimize_video_summary"/>
+            android:widgetLayout="@layout/wp_preference_switch"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_video_size"
-            android:key="@string/pref_key_site_video_width"
-            android:title="@string/site_settings_default_video_width_title"
+            android:dependency="@string/pref_key_optimize_video"
             android:entries="@array/site_settings_video_width_entries"
             android:entryValues="@array/site_settings_video_width_values"
-            android:dependency="@string/pref_key_optimize_video"
-            app:longClickHint="@string/site_settings_video_width_hint" />
+            android:key="@string/pref_key_site_video_width"
+            android:title="@string/site_settings_default_video_width_title"
+            app:longClickHint="@string/site_settings_video_width_hint"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_video_quality"
-            android:key="@string/pref_key_site_video_encoder_bitrate"
-            android:title="@string/site_settings_default_video_quality_title"
+            android:dependency="@string/pref_key_optimize_video"
             android:entries="@array/site_settings_video_bitrate_entries"
             android:entryValues="@array/site_settings_video_bitrate_values"
-            android:dependency="@string/pref_key_optimize_video"
-            app:longClickHint="@string/site_settings_video_quality_hint" />
+            android:key="@string/pref_key_site_video_encoder_bitrate"
+            android:title="@string/site_settings_default_video_quality_title"
+            app:longClickHint="@string/site_settings_video_quality_hint"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
         android:key="@string/pref_key_passlock_section"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:persistent="false"
         android:title="@string/passcode_preference_title">
 
-        <SwitchPreference
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/pref_key_passcode_toggle"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:persistent="false"
-            android:title="@string/passcode_turn_on" />
+            android:title="@string/passcode_turn_on"
+            android:widgetLayout="@layout/wp_preference_switch"/>
 
         <Preference
             android:key="@string/pref_key_change_passcode"
-            android:layout="@layout/preference_layout"
+            android:layout="@layout/wp_preference_layout"
             android:persistent="false"
-            android:title="@string/passcode_change_passcode" />
+            android:title="@string/passcode_change_passcode"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_key_about_section"
-        android:layout="@layout/preference_category"
+        android:layout="@layout/wp_preference_category"
         android:title="@string/about_the_app">
 
         <Preference
             android:key="@string/pref_key_app_about"
-            android:layout="@layout/preference_layout"
-            android:title="@string/app_title" />
+            android:layout="@layout/wp_preference_layout"
+            android:title="@string/app_title"/>
 
         <Preference
             android:key="@string/pref_key_oss_licenses"
-            android:layout="@layout/preference_layout"
-            android:title="@string/open_source_licenses" />
+            android:layout="@layout/wp_preference_layout"
+            android:title="@string/open_source_licenses"/>
 
     </PreferenceCategory>
 

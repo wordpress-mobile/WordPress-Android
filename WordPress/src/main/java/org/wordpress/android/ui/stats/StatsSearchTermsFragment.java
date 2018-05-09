@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.SearchTermModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -237,9 +237,9 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.SEARCH_TERMS
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.SEARCH_TERMS
         };
     }
 

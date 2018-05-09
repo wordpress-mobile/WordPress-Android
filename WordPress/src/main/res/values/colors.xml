@@ -120,7 +120,7 @@
     <!-- Stats -->
     <color name="stats_text_color">@color/grey_dark</color>
     <color name="stats_link_text_color">@color/blue_wordpress</color>
-    <color name="stats_module_content_list_header">@color/grey</color>
+    <color name="stats_module_content_list_header">@color/grey_text_min</color>
     <color name="stats_blue_labels">@color/grey_darken_20</color>
     <color name="stats_bar_graph_main_series">@color/blue_wordpress</color>
     <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>

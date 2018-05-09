@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -27,6 +28,8 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
+import org.wordpress.android.ui.stats.service.StatsServiceStarter;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -293,12 +296,12 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
     public static void enqueueStatsRequestForBlog(Context context, long remoteBlogID, String date) {
         // start service to get stats
-        Intent intent = new Intent(context, StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, remoteBlogID);
-        intent.putExtra(StatsService.ARG_PERIOD, StatsTimeframe.DAY);
-        intent.putExtra(StatsService.ARG_DATE, date);
-        intent.putExtra(StatsService.ARG_SECTION, new int[]{StatsService.StatsEndpointsEnum.VISITS.ordinal()});
-        context.startService(intent);
+        Bundle extras = new Bundle();
+        extras.putLong(StatsService.ARG_BLOG_ID, remoteBlogID);
+        extras.putInt(StatsService.ARG_PERIOD, StatsTimeframe.DAY.ordinal());
+        extras.putString(StatsService.ARG_DATE, date);
+        extras.putIntArray(StatsService.ARG_SECTION, new int[]{StatsServiceLogic.StatsEndpointsEnum.VISITS.ordinal()});
+        StatsServiceStarter.startService(context, extras);
     }
 
     private static synchronized JSONObject getCacheDataForBlog(long remoteBlogID, String date) {

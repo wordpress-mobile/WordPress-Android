@@ -4,25 +4,33 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -52,6 +60,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,13 +77,16 @@ public class AppSettingsFragment extends PreferenceFragment
                         if (newValue == null) {
                             return false;
                         }
-                        // flush gathered events (if any)
-                        AnalyticsTracker.flush();
-                        AnalyticsTracker.setHasUserOptedOut(!(boolean) newValue);
+                        AnalyticsUtils.updateAnalyticsPreference(
+                                getActivity(),
+                                mDispatcher,
+                                mAccountStore,
+                                !(boolean) newValue);
                         return true;
                     }
                 }
                                                                                              );
+        updateAnalyticsSyncUI();
 
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
@@ -133,12 +145,67 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         updateLanguagePreference(getResources().getConfiguration().locale.toString());
         // flush gathered events (if any)
         AnalyticsTracker.flush();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (event.isError()) {
+            switch (event.error.type) {
+                case SETTINGS_FETCH_ERROR:
+                    ToastUtils
+                            .showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+                    break;
+                case SETTINGS_POST_ERROR:
+                    ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
+                    break;
+            }
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            // no need to sync with remote here, or do anything else here, since the logic is already in WordPress.java
+            updateAnalyticsSyncUI();
+        }
+    }
+
+    /* Make sure the UI is synced with the backend value */
+    private void updateAnalyticsSyncUI() {
+        if (!isAdded()) {
+            return;
+        }
+        if (mAccountStore.hasAccessToken()) {
+        SwitchPreference tracksOptOutPreference =
+                (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
+            tracksOptOutPreference.setChecked(!mAccountStore.getAccount().getTracksOptOut());
+        }
     }
 
     @Override
@@ -219,8 +286,8 @@ public class AppSettingsFragment extends PreferenceFragment
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final ListPreference editorTypePreference =
-                    (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+            final DetailListPreference editorTypePreference =
+                    (DetailListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
 
             editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -229,6 +296,8 @@ public class AppSettingsFragment extends PreferenceFragment
                         int index = Integer.parseInt(value.toString());
                         CharSequence[] entries = editorTypePreference.getEntries();
                         editorTypePreference.setSummary(entries[index]);
+                        // we need to set value manually for DetailListPreference
+                        editorTypePreference.setValue(value.toString());
 
                         switch (index) {
                             case IDX_VISUAL_EDITOR:

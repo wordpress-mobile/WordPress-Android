@@ -107,6 +107,7 @@ Language: gl_ES
     <string name="invite_names_title">Nomes de usuario ou enderezos de correo</string>
     <string name="send_link">Enviar o enlace</string>
     <string name="my_site_header_external">Externo</string>
+    <string name="invite_people">Invitar xente</string>
     <string name="label_clear_search_history">Limpar o historial de busca</string>
     <string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
     <string name="reader_empty_posts_in_search_description">Non se atoparon artigos para %s na túa lingua</string>
@@ -741,8 +742,6 @@ Language: gl_ES
     <string name="reader_likes_multi">A %,d persoas gustoulles isto</string>
     <string name="pick_photo">Escoller foto</string>
     <string name="pick_video">Escoller vídeo</string>
-    <string name="select_time">Escoller a hora</string>
-    <string name="select_date">Escoller a data</string>
     <string name="reader_empty_followed_blogs_description">Non hai problema, pulsa na icona enriba á dereita para comezar a exploración!</string>
     <string name="reader_likes_you_and_one">A ti e a un máis gustoulles isto</string>
     <string name="reader_toast_err_get_post">Non foi posible acceder a este artigo</string>
@@ -821,7 +820,6 @@ Language: gl_ES
     <string name="width">Largo</string>
     <string name="posts">Artigos</string>
     <string name="anonymous">Anónimo</string>
-    <string name="featured">Usar como imaxe destacada</string>
     <string name="featured_in_post">Incluír una imaxe no contido do artigo</string>
     <string name="no_network_title">Non hai rede dispoñible</string>
     <string name="blogusername">usuario</string>

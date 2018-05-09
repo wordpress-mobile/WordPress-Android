@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_title"
             android:layout_toLeftOf="@+id/switch_view"
-            android:textColor="@color/grey"
+            android:textColor="@color/grey_text_min"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_summary"
             android:textAlignment="viewStart"

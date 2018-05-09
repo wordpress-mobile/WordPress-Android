@@ -7,7 +7,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,9 +118,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.TOP_POSTS
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.TOP_POSTS
         };
     }
 

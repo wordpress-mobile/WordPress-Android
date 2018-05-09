@@ -165,6 +165,7 @@ Language: is
     <string name="invite_message_title">Sérsniðin skilaboð</string>
     <string name="invite">Bjóða</string>
     <string name="invite_names_title">Notendanöfn eða netföng</string>
+    <string name="invite_people">Bjóða fólki</string>
     <string name="send_link">Senda tengil</string>
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
@@ -794,8 +795,6 @@ Language: is
     <string name="reader_likes_you_and_multi">Þú og %,d öðrum líkar þetta</string>
     <string name="reader_likes_you_and_one">Þú og einum öðrum líkar þetta</string>
     <string name="reader_toast_err_get_post">Gat ekki sótt þessa færslu</string>
-    <string name="select_date">Veldu dagsetningu</string>
-    <string name="select_time">Veldu tíma</string>
     <string name="pick_photo">Velja mynd</string>
     <string name="pick_video">Velja myndband</string>
     <string name="reader_empty_followed_blogs_description">Engar áhyggjur, ýttu bara á smámyndina fyrir efnisorð til þess að byrja að skoða!</string>
@@ -877,7 +876,6 @@ Language: is
     <string name="caption">Myndatexti (valkvæmt)</string>
     <string name="no_network_title">Ekkert net tiltækt</string>
     <string name="featured_in_post">Hafa mynd með í efni færslu</string>
-    <string name="featured">Nota sem einkennismynd</string>
     <string name="blogusername">bloggnotandanafn</string>
     <string name="link_enter_url">Slóð</string>
     <string name="uploading">Hleð upp…</string>

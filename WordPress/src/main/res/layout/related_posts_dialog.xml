@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_summary"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/grey_text_min"
             android:textSize="@dimen/text_sz_small"/>
 
         <CheckBox

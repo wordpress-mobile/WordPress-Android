@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <Switch
+        android:buttonTint="@color/blue_wordpress"
         android:id="@+id/number_picker_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

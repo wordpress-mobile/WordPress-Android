@@ -13,7 +13,7 @@ class JetpackConnectionUtils {
      * @param stat to be tracked
      * @param source of tracking
      */
-    static void trackWithSource(AnalyticsTracker.Stat stat, JetpackConnectionWebViewActivity.Source source) {
+    static void trackWithSource(AnalyticsTracker.Stat stat, JetpackConnectionSource source) {
         HashMap<String, String> sourceMap = new HashMap<>();
         sourceMap.put("source", source.toString());
         AnalyticsTracker.track(stat, sourceMap);
@@ -23,7 +23,7 @@ class JetpackConnectionUtils {
      * Adds source and reason as a parameter to the tracked Stat
      * @param source of tracking
      */
-    static void trackFailureWithSource(JetpackConnectionWebViewActivity.Source source,
+    static void trackFailureWithSource(JetpackConnectionSource source,
                                        String failureReason) {
         HashMap<String, String> paramMap = new HashMap<>();
         paramMap.put("source", source.toString());

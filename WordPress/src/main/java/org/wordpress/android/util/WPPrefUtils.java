@@ -84,7 +84,7 @@ public class WPPrefUtils {
      * Styles a {@link TextView} to display smaller text.
      */
     public static void layoutAsBody1(TextView view) {
-        int color = view.isEnabled() ? R.color.grey_darken_10 : R.color.grey_lighten_10;
+        int color = view.isEnabled() ? R.color.grey_text_min : R.color.grey_lighten_10;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
         setTextViewAttributes(view, size, color);
     }
@@ -94,7 +94,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsBody2(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.grey_darken_10);
+        setTextViewAttributes(view, size, R.color.grey_text_min);
     }
 
     /**
@@ -153,7 +153,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsDialogMessage(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.grey_darken_10);
+        setTextViewAttributes(view, size, R.color.grey_text_min);
     }
 
     public static void setTextViewAttributes(TextView textView, int size, int colorRes) {

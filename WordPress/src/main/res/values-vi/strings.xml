@@ -41,6 +41,7 @@ Language: vi_VN
     <string name="invite">Mời</string>
     <string name="invite_names_title">Tên người dùng hoặc Email</string>
     <string name="send_link">Gửi liên kết</string>
+    <string name="invite_people">Mời mọi người</string>
     <string name="my_site_header_external">Mở rộng</string>
     <string name="label_clear_search_history">Xóa lịch sử tìm kiếm</string>
     <string name="dlg_confirm_clear_search_history">Xóa lịch sử tìm kiếm?</string>
@@ -666,9 +667,7 @@ Language: vi_VN
     <string name="comment_spammed">Bình luận được đánh dấu như spam</string>
     <string name="cant_share_no_visible_blog">Bạn không thể chia sẻ cho WordPress mà không có một blog hiện hữu</string>
     <string name="pick_video">Chọn video</string>
-    <string name="select_time">Chọn thời gian</string>
     <string name="reader_likes_you_and_one">Bạn và 1 người khác thích điều này</string>
-    <string name="select_date">Chọn ngày</string>
     <string name="pick_photo">Chọn ảnh</string>
     <string name="reader_empty_followed_blogs_description">Nhưng đừng lo lắng, chỉ cần nhấp vào biểu tượng ở phía trên bên phải để bắt đầu khám phá!</string>
     <string name="reader_toast_err_get_post">Không thể lấy bài viết này</string>
@@ -748,7 +747,6 @@ Language: vi_VN
     <string name="no_network_title">Không có mạng</string>
     <string name="width">Chiều rộng</string>
     <string name="posts">Bài viết</string>
-    <string name="featured">Sử dụng như là hình ảnh đặc trưng</string>
     <string name="anonymous">Ẩn danh</string>
     <string name="blogusername">tên người dùng blog</string>
     <string name="link_enter_url">URL</string>

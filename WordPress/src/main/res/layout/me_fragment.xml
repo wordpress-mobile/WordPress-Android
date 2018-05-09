@@ -103,7 +103,7 @@
                     android:layout_centerHorizontal="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/grey_darken_20"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="username" />
             </RelativeLayout>
@@ -155,7 +155,7 @@
             <ImageView
                 android:id="@+id/me_app_settings_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_phone_grey_24dp"
+                app:srcCompat="@drawable/ic_phone_grey_darken_24dp"
                 android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView
@@ -174,7 +174,7 @@
             <ImageView
                 android:id="@+id/me_notifications_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_bell_grey_24dp"
+                app:srcCompat="@drawable/ic_bell_grey_darken_24dp"
                 android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView

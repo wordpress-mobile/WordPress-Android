@@ -6,5 +6,6 @@
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
     android:layout_width="wrap_content"
+    android:theme="@style/WPToolbarSwitch"
     tools:ignore="RtlSymmetry" >
 </android.support.v7.widget.SwitchCompat>

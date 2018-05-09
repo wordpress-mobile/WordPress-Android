@@ -6,7 +6,6 @@ Generator: GlotPress/2.4.0-alpha
 Language: da_DK
 -->
 <resources>
-    <string name="site_creation_content_description_confetti">Websted oprettet uden problemer!</string>
     <string name="site_creation_epilogue_write">Skriv første indlæg</string>
     <string name="site_creation_epilogue_configure">Konfigurer</string>
     <string name="site_creation_epilogue_congrats">Tillykke!\nDit websted er færdigt.</string>
@@ -350,8 +349,6 @@ Language: da_DK
     <string name="reader_likes_you_and_one">Du og en anden synes godt om dette</string>
     <string name="pick_video">Vælg video</string>
     <string name="pick_photo">Vælg foto</string>
-    <string name="select_time">Vælg tidspunkt</string>
-    <string name="select_date">Vælg dato</string>
     <string name="reader_toast_err_tag_exists">Du følger allerede dette tag</string>
     <string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
     <string name="reader_toast_err_view_image">Kunne ikke vise billede</string>
@@ -423,7 +420,6 @@ Language: da_DK
     <string name="username">Brugernavn</string>
     <string name="reader">Læser</string>
     <string name="featured_in_post">Inkluder billede i indhold</string>
-    <string name="featured">Brug som fremhævet billede</string>
     <string name="caption">Billedtekst (valgfri)</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
     <string name="anonymous">Anonym</string>
