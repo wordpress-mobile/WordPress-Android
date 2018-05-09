@@ -1,6 +1,5 @@
 package org.wordpress.android.widgets;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.Snackbar.SnackbarLayout;
@@ -41,8 +40,7 @@ public class WPDialogSnackbar {
         TextView snackbarAction = snackbarLayout.findViewById(android.support.design.R.id.snackbar_action);
         snackbarAction.setVisibility(View.INVISIBLE);
 
-        mContentView = ((LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.dialog_snackbar, null);
+        mContentView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_snackbar, null);
 
         TextView message = mContentView.findViewById(R.id.message);
 
