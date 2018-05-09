@@ -22,9 +22,11 @@ import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
-import org.wordpress.android.fluxc.network.BaseRequest
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse.Page
@@ -50,7 +52,7 @@ class ActivityLogRestClientTest {
     private lateinit var activitySuccessMethodCaptor: KArgumentCaptor<(ActivitiesResponse) -> Unit>
     private lateinit var rewindStatusSuccessMethodCaptor: KArgumentCaptor<(RewindStatusResponse) -> Unit>
     private lateinit var rewindSuccessMethodCaptor: KArgumentCaptor<(RewindResponse) -> Unit>
-    private lateinit var errorMethodCaptor: KArgumentCaptor<(BaseRequest.BaseNetworkError) -> Unit>
+    private lateinit var errorMethodCaptor: KArgumentCaptor<(WPComGsonNetworkError) -> Unit>
     private lateinit var activityActionCaptor: KArgumentCaptor<Action<FetchedActivityLogPayload>>
     private lateinit var rewindStatusActionCaptor: KArgumentCaptor<Action<FetchedRewindStatePayload>>
     private lateinit var mRewindActionCaptor: KArgumentCaptor<Action<ActivityLogStore.RewindResultPayload>>
@@ -196,7 +198,7 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<ActivitiesResponse>>())
 
-        errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
+        errorMethodCaptor.firstValue(WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
         assertEmittedActivityError(ActivityLogErrorType.GENERIC_ERROR)
     }
@@ -243,7 +245,7 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
-        errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
+        errorMethodCaptor.firstValue(WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
         assertEmittedRewindStatusError(RewindStatusErrorType.GENERIC_ERROR)
     }
@@ -341,7 +343,7 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindResponse>>())
 
-        errorMethodCaptor.firstValue.invoke(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
+        errorMethodCaptor.firstValue.invoke(WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
         verify(dispatcher).dispatch(mRewindActionCaptor.capture())
         assertTrue(mRewindActionCaptor.firstValue.payload.isError)
