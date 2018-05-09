@@ -77,6 +77,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
+    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
@@ -552,7 +553,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (discoverData.hasAvatarUrl()) {
                     postHolder.mImgDiscoverAvatar
                             .setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
-                                         WPNetworkImageView.ImageType.AVATAR);
+                                    WPNetworkImageView.ImageType.AVATAR);
                 } else {
                     postHolder.mImgDiscoverAvatar.showDefaultGravatarImageAndNullifyUrl();
                 }
@@ -639,6 +640,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
         mDataLoadedListener = listener;
+    }
+
+    public void setOnPostBookmarkedListener(ReaderInterfaces.OnPostBookmarkedListener listener) {
+        mOnPostBookmarkedListener = listener;
     }
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
@@ -751,6 +756,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (mPosts == null || mPosts.size() == 0);
     }
 
+    private boolean isSavedPostsList() {
+        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                && (mCurrentTag != null && mCurrentTag.isBookmarked()));
+    }
+
     @Override
     public long getItemId(int position) {
         switch (getItemViewType(position)) {
@@ -767,8 +777,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void showLikes(final ReaderPostViewHolder holder, final ReaderPost post) {
         boolean canShowLikes;
-        if (post.isDiscoverPost()
-            || (getPostListType() == ReaderPostListType.TAG_FOLLOWED && mCurrentTag.isBookmarked())) {
+        if (post.isDiscoverPost() || isSavedPostsList()) {
             canShowLikes = false;
         } else if (mIsLoggedOutReader) {
             canShowLikes = post.numLikes > 0;
@@ -781,8 +790,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
             holder.mLikeCount.setVisibility(View.VISIBLE);
             holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mCardView.getContext(),
-                                                                                     post.numLikes,
-                                                                                     post.isLikedByCurrentUser));
+                    post.numLikes,
+                    post.isLikedByCurrentUser));
             // can't like when logged out
             if (!mIsLoggedOutReader) {
                 holder.mLikeCount.setOnClickListener(new View.OnClickListener() {
@@ -828,8 +837,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void showComments(final ReaderPostViewHolder holder, final ReaderPost post) {
         boolean canShowComments;
-        if (post.isDiscoverPost()
-            || (getPostListType() == ReaderPostListType.TAG_FOLLOWED && mCurrentTag.isBookmarked())) {
+        if (post.isDiscoverPost() || isSavedPostsList()) {
             canShowComments = false;
         } else if (mIsLoggedOutReader) {
             canShowComments = post.numReplies > 0;
@@ -904,6 +912,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post != null && position > -1) {
             mPosts.set(position, post);
             updateBookmarkView(bookmarkButton, post);
+
+            if (mOnPostBookmarkedListener != null) {
+                mOnPostBookmarkedListener
+                        .onBookmarkedStateChanged(post.isBookmarked, blogId, postId, !isSavedPostsList());
+            }
         }
     }
 

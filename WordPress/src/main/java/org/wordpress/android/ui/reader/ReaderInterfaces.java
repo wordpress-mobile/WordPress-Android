@@ -33,4 +33,11 @@ public class ReaderInterfaces {
     public interface DataLoadedListener {
         void onDataLoaded(boolean isEmpty);
     }
+
+    /*
+     * used by adapters to notify when post bookmarked state has changed
+     */
+    public interface OnPostBookmarkedListener {
+        void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId, boolean isCachingActionRequired);
+    }
 }

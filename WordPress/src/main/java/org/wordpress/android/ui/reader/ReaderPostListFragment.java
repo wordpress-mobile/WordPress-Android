@@ -906,7 +906,7 @@ public class ReaderPostListFragment extends Fragment
                         title = getString(R.string.reader_empty_posts_in_search_title);
                         String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
                         description = String.format(getString(R.string.reader_empty_posts_in_search_description),
-                                                    formattedQuery);
+                                formattedQuery);
                     }
                     break;
                 case TAG_PREVIEW:
@@ -981,6 +981,26 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
+    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
+            new ReaderInterfaces.OnPostBookmarkedListener() {
+                @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
+                                                               boolean isCachingActionRequired) {
+                    if (!isAdded()) {
+                        return;
+                    }
+
+                    String tag = Long.toString(blogId) + Long.toString(postId);
+
+                    if (NetworkUtils.isNetworkAvailable(getActivity())
+                        && isCachingActionRequired && isBookmarked
+                        && getFragmentManager().findFragmentByTag(tag) == null) {
+                        getFragmentManager().beginTransaction()
+                                            .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                                            .commit();
+                    }
+                }
+            };
+
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
@@ -1039,6 +1059,7 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
+            mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
@@ -1122,7 +1143,9 @@ public class ReaderPostListFragment extends Fragment
         if (isSearchViewExpanded()) {
             mSearchMenuItem.collapseActionView();
             return true;
-        } else return goBackInTagHistory();
+        } else {
+            return goBackInTagHistory();
+        }
     }
 
     /*
@@ -1269,7 +1292,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         AppLog.d(T.READER,
-                 "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
+                "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
         ReaderPostServiceStarter.startServiceForTag(getActivity(), tag, updateAction);
     }
 
