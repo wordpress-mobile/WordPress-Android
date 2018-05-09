@@ -116,7 +116,6 @@ import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
-import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -367,13 +366,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
                 String postFormat = "";
-                if (mSite.isUsingWpComRestApi()) {
-                    // TODO: replace SiteSettingsInterface.getX by calls to mSite.getDefaultCategory
-                    // and mSite.getDefaultFormat. We can get these from /me/sites endpoint for .com/jetpack sites.
-                    // There might be a way to get that information from a XMLRPC request as well.
-                    categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
-                    postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
-                }
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 EventBus.getDefault().postSticky(
