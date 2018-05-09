@@ -149,7 +149,6 @@ Language: hu
     <string name="username">Felhasználó név</string>
     <string name="log_in">Bejelentkezés</string>
     <string name="reader">Olvasó</string>
-    <string name="featured">Használat kiemelt képként</string>
     <string name="no_network_title">Nincs elérhető hálózat</string>
     <string name="width">Szélesség</string>
     <string name="anonymous">Névtelen</string>

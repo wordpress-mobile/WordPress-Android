@@ -513,9 +513,7 @@ Language: hr
     <string name="video">Video</string>
     <string name="comment_spammed">Komentar označen kao spam</string>
     <string name="cant_share_no_visible_blog">Ne možete dijeliti na WordPressu bez vidljivog bloga</string>
-    <string name="select_date">Odaberi datum</string>
     <string name="pick_photo">Odaberi sliku</string>
-    <string name="select_time">Odaberi vrijeme</string>
     <string name="pick_video">Odaberi video</string>
     <string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>
     <string name="reader_likes_you_and_one">Vama i još jednoj osobi ovo se sviđa</string>
@@ -594,7 +592,6 @@ Language: hr
     <string name="width">Širina</string>
     <string name="anonymous">Anonimno</string>
     <string name="caption">Opis (opcionalan)</string>
-    <string name="featured">Upotrijebi kao istaknutu sliku</string>
     <string name="posts">Objave</string>
     <string name="featured_in_post">Uključi sliku u sadržaj objave</string>
     <string name="blogusername">blogusername</string>

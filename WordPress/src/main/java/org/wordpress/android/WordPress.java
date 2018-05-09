@@ -3,17 +3,21 @@ package org.wordpress.android;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
@@ -41,6 +45,7 @@ import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
@@ -60,7 +65,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -139,7 +144,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject OAuthAuthenticator mOAuthAuthenticator;
     public static OAuthAuthenticator sOAuthAuthenticator;
 
-    private AppComponent mAppComponent;
+    protected AppComponent mAppComponent;
 
     public AppComponent component() {
         return mAppComponent;
@@ -152,6 +157,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
             }
             return true;
         }
@@ -214,9 +220,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         WellSql.init(new WellSqlConfig(getApplicationContext()));
 
         // Init Dagger
-        mAppComponent = DaggerAppComponent.builder()
-                                          .application(this)
-                                          .build();
+        initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
 
@@ -277,6 +281,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
+        createNotificationChannelsOnSdk26();
+
         disableRtlLayoutDirectionOnSdk17();
 
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
@@ -303,6 +309,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mCredentialsClient.connect();
     }
 
+    protected void initDaggerComponent() {
+        mAppComponent = DaggerAppComponent.builder()
+                                          .application(this)
+                                          .build();
+    }
+
     private void disableRtlLayoutDirectionOnSdk17() {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getResources().getConfiguration().setLayoutDirection(null);
@@ -319,6 +331,30 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
                 }
             }).start();
+        }
+    }
+
+    private void createNotificationChannelsOnSdk26() {
+        // create Notification channels introduced in Android Oreo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NORMAL channel (used for likes, comments, replies, etc.)
+            NotificationChannel normalChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_normal_id),
+                    getString(R.string.notification_channel_general_title), NotificationManager.IMPORTANCE_DEFAULT);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(normalChannel);
+
+
+            // Create the IMPORTANT channel (used for 2fa auth, for example)
+            NotificationChannel importantChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_important_id),
+                    getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(importantChannel);
         }
     }
 
@@ -358,14 +394,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
-            startService(new Intent(this, GCMRegistrationIntentService.class));
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
         }
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-            NotificationsUpdateService.startService(getContext());
+            NotificationsUpdateServiceStarter.startService(getContext());
         }
     }
 
@@ -484,6 +521,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
             if (appLock != null) {
                 appLock.setPassword(null);
+            }
+        }
+        if (!event.isError() && event.causeOfChange == AccountAction.FETCH_SETTINGS && mAccountStore.hasAccessToken()) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+            boolean hasUserOptedOut = !prefs.getBoolean(getString(R.string.pref_key_send_usage), true);
+            AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut);
+            // When local and remote prefs are different, force opt out to TRUE
+            if (hasUserOptedOut != mAccountStore.getAccount().getTracksOptOut()) {
+                AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
             }
         }
     }
@@ -729,7 +775,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Synch Push Notifications settings
             if (isPushNotificationPingNeeded() && mAccountStore.hasAccessToken()) {
                 // Register for Cloud messaging
-                startService(new Intent(getContext(), GCMRegistrationIntentService.class));
+                GCMRegistrationIntentService.enqueueWork(getContext(),
+                        new Intent(getContext(), GCMRegistrationIntentService.class));
             }
         }
 
@@ -828,11 +875,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 if (mAccountStore.hasAccessToken()) {
                     Intent intent = activity.getIntent();
                     if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-                        NotificationsUpdateService.startService(getContext(),
+                        NotificationsUpdateServiceStarter.startService(getContext(),
                                                                 getNoteIdFromNoteDetailActivityIntent(
                                                                         activity.getIntent()));
                     } else {
-                        NotificationsUpdateService.startService(getContext());
+                        NotificationsUpdateServiceStarter.startService(getContext());
                     }
                 }
 

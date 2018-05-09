@@ -17,8 +17,21 @@ import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.models.networkresource.ListNetworkResource
 import org.wordpress.android.ui.ListDiffCallback
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated
+import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.SiteUtils
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.HashSet
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -27,8 +40,11 @@ private const val KEY_TITLE = "KEY_TITLE"
 
 typealias PluginListNetworkResource = ListNetworkResource<ImmutablePluginModel>
 
-class PluginBrowserViewModel @Inject
-constructor(private val mDispatcher: Dispatcher, private val mPluginStore: PluginStore) : ViewModel() {
+class PluginBrowserViewModel @Inject constructor(
+    private val mDispatcher: Dispatcher,
+    private val mPluginStore: PluginStore,
+    private val mSiteStore: SiteStore
+) : ViewModel() {
     enum class PluginListType {
         SITE,
         FEATURED,
@@ -215,6 +231,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
+        if (listType == PluginListType.SITE && SiteUtils.isNonAtomicBusinessPlanSite(site)) {
+            return false
+        }
         return when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> sitePlugins.shouldFetch(loadMore)
             PluginBrowserViewModel.PluginListType.FEATURED -> featuredPlugins.shouldFetch(loadMore)
@@ -231,7 +250,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
-    fun onWPOrgPluginFetched(event: PluginStore.OnWPOrgPluginFetched) {
+    fun onWPOrgPluginFetched(event: OnWPOrgPluginFetched) {
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
             return
@@ -241,7 +260,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
-    fun onPluginDirectoryFetched(event: PluginStore.OnPluginDirectoryFetched) {
+    fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
@@ -253,7 +272,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
-    fun onPluginDirectorySearched(event: PluginStore.OnPluginDirectorySearched) {
+    fun onPluginDirectorySearched(event: OnPluginDirectorySearched) {
         if (searchQuery != event.searchTerm) {
             return
         }
@@ -267,7 +286,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
-    fun onSitePluginConfigured(event: PluginStore.OnSitePluginConfigured) {
+    fun onSitePluginConfigured(event: OnSitePluginConfigured) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -277,7 +296,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
-    fun onSitePluginDeleted(event: PluginStore.OnSitePluginDeleted) {
+    fun onSitePluginDeleted(event: OnSitePluginDeleted) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -287,7 +306,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
-    fun onSitePluginInstalled(event: PluginStore.OnSitePluginInstalled) {
+    fun onSitePluginInstalled(event: OnSitePluginInstalled) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
@@ -297,12 +316,27 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
-    fun onSitePluginUpdated(event: PluginStore.OnSitePluginUpdated) {
+    fun onSitePluginUpdated(event: OnSitePluginUpdated) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
         updateAllPluginListsForSlug(event.slug)
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
+    fun onSiteChanged(event: OnSiteChanged) {
+        if (event.isError) {
+            // The error should be safe to ignore since we are not triggering the action and there is nothing we need
+            // to do about it
+            return
+        }
+
+        val siteId = site?.siteId
+        siteId?.let {
+            site = mSiteStore.getSiteBySiteId(siteId)
+        }
     }
 
     // Keeping the data up to date

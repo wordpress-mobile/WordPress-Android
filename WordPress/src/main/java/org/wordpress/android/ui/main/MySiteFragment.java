@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -534,13 +535,13 @@ public class MySiteFragment extends Fragment
         if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
                 UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                                                          getActivity().findViewById(R.id.coordinator), true,
-                                                          event.post, event.errorMessage, site, mDispatcher);
+                        getActivity().findViewById(R.id.coordinator), true,
+                        event.post, event.errorMessage, site, mDispatcher);
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                                                       getActivity().findViewById(R.id.coordinator), true,
-                                                       event.mediaModelList, site, event.errorMessage);
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, site, event.errorMessage);
         }
     }
 
@@ -550,8 +551,8 @@ public class MySiteFragment extends Fragment
         SiteModel site = getSelectedSite();
         if (site != null && event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                                                       getActivity().findViewById(R.id.coordinator), false,
-                                                       event.mediaModelList, site, event.successMessage);
+                    getActivity().findViewById(R.id.coordinator), false,
+                    event.mediaModelList, site, event.successMessage);
         }
     }
 
@@ -568,14 +569,14 @@ public class MySiteFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostUploaded(PostStore.OnPostUploaded event) {
+    public void onPostUploaded(OnPostUploaded event) {
         if (isAdded() && event.post != null) {
             SiteModel site = getSelectedSite();
             if (site != null) {
                 if (event.post.getLocalSiteId() == site.getId()) {
                     UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                                                              getActivity().findViewById(R.id.coordinator),
-                                                              event.isError(), event.post, null, site, mDispatcher);
+                            getActivity().findViewById(R.id.coordinator),
+                            event.isError(), event.post, null, site, mDispatcher);
                 }
             }
         }

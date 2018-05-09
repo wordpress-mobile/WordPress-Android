@@ -101,6 +101,7 @@ Language: es_VE
     <string name="invite_message_title">Mensaje personalizado</string>
     <string name="invite">Invitar</string>
     <string name="invite_names_title">Nombres de usuario o correos electrónicos</string>
+    <string name="invite_people">Invitar gente</string>
     <string name="my_site_header_external">Externo</string>
     <string name="send_link">Enviar enlace</string>
     <string name="label_clear_search_history">Borrar historial de búsqueda</string>
@@ -727,9 +728,7 @@ Language: es_VE
     <string name="video">Vídeo</string>
     <string name="cant_share_no_visible_blog">No se puede compartir en WordPress si no tienes un blog visible</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
-    <string name="select_time">Elige tiempo</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
-    <string name="select_date">Elegir fecha</string>
     <string name="pick_photo">Elige una foto</string>
     <string name="pick_video">Elige un vídeo</string>
     <string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
@@ -806,7 +805,6 @@ Language: es_VE
     <string name="password">Contraseña</string>
     <string name="username">Nombre de usuario</string>
     <string name="reader">Lector</string>
-    <string name="featured">Usar como imagen destacada</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="caption">Leyenda (opcional)</string>

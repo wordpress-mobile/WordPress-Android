@@ -42,12 +42,14 @@ import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -72,6 +74,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
         HasSupportFragmentInjector {
+    public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 
@@ -89,6 +92,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private SignupBottomSheetDialog mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
+    private JetpackConnectionSource mJetpackConnectSource;
+    private boolean mIsJetpackConnect;
     private boolean mSignupSheetDisplayed;
 
     private LoginMode mLoginMode;
@@ -109,6 +114,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
+            if (getIntent() != null) {
+                mJetpackConnectSource =
+                        (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
+            }
+
             mLoginAnalyticsListener.trackLoginAccessed();
 
             switch (getLoginMode()) {
@@ -225,13 +235,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 finish();
                 break;
             case JETPACK_STATS:
+                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
+                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
-                // skip the epilogue when only added a selfhosted site or sharing to WordPress
+                // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
@@ -244,6 +256,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
         switch (requestCode) {
             case RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN:
+            case RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN:
                 // we showed the epilogue screen as informational and sites got loaded so, just
                 // return to login caller now
                 setResult(RESULT_OK);
@@ -306,6 +319,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
+
+            if (getLoginMode() == LoginMode.JETPACK_STATS) {
+                mIsJetpackConnect = true;
+            }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
             slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
@@ -335,6 +352,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSignupSheetEmailClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
         dismissSignupSheet();
         slideInFragment(new SignupEmailFragment(), true, SignupEmailFragment.TAG);
@@ -342,6 +360,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSignupSheetGoogleClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
 
         if (NetworkUtils.checkConnection(this)) {
@@ -366,7 +385,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
         // Get device locale and remove region to pass only language.
         String locale = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
-        locale = locale.substring(0, locale.indexOf("_"));
+        int pos = locale.indexOf("_");
+        if (pos > -1) {
+            locale = locale.substring(0, pos);
+        }
         ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url, locale));
     }
 
@@ -387,8 +409,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void gotWpcomEmail(String email) {
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
-            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment =
-                    LoginMagicLinkRequestFragment.newInstance(email);
+            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
+                    email, mIsJetpackConnect, mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment =
@@ -430,14 +452,20 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void showSignupMagicLink(String email) {
-        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email);
+        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
+                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 
     @Override
-    public void openEmailClient() {
+    public void openEmailClient(boolean isLogin) {
         if (WPActivityUtils.isEmailClientAvailable(this)) {
-            mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
+            if (isLogin) {
+                mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
+            } else {
+                mLoginAnalyticsListener.trackSignupMagicLinkOpenEmailClientClicked();
+            }
+
             WPActivityUtils.openEmailClient(this);
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
@@ -608,10 +636,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // Get reader tags so they're available as soon as the Reader is accessed - done for
         // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
         // uses the application context since the activity is finished immediately below
-        ReaderUpdateService.startService(getApplicationContext(), EnumSet.of(ReaderUpdateService.UpdateTask.TAGS));
+        ReaderUpdateServiceStarter.startService(getApplicationContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
         // Start Notification service
-        NotificationsUpdateService.startService(getApplicationContext());
+        NotificationsUpdateServiceStarter.startService(getApplicationContext());
     }
 
     @Override
@@ -730,7 +758,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_SUCCESS);
-        ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+
+        if (mIsJetpackConnect) {
+            ActivityLauncher.showSignupEpilogueForResult(this, name, email, photoUrl, username, false);
+        } else {
+            ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+        }
+
         setResult(Activity.RESULT_OK);
         finish();
     }

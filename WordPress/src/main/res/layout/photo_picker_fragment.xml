@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_bar"
         android:fadeScrollbars="true"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -26,7 +27,7 @@
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/container_soft_ask"
@@ -43,22 +44,22 @@
             android:layout_height="140dp"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_soft_ask_media" />
+            app:srcCompat="@drawable/ic_soft_ask_media"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_soft_ask_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="@dimen/margin_extra_extra_large"
             android:layout_marginLeft="@dimen/margin_extra_extra_large"
             android:layout_marginRight="@dimen/margin_extra_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_extra_large"
             android:layout_marginTop="@dimen/margin_large"
             android:gravity="center"
             android:text="@string/photo_picker_soft_ask_label"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            android:layout_marginEnd="@dimen/margin_extra_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_extra_large"/>
+            android:textSize="@dimen/text_sz_large"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_soft_ask_allow"
@@ -71,7 +72,7 @@
             android:textAllCaps="true"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <LinearLayout
@@ -79,41 +80,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#A0000000"
-        android:orientation="horizontal">
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/icon_picker"
-            android:layout_width="@dimen/photo_picker_icon"
-            android:layout_height="@dimen/photo_picker_icon"
-            android:layout_weight="1"
-            android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_medium"
-            android:tint="@color/white"
-            android:contentDescription="@string/photo_picker_device_desc"
-            app:srcCompat="@drawable/ic_image_white_48dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_divider_height"
+            android:background="@color/divider_grey"/>
 
-        <ImageView
-            android:id="@+id/icon_camera"
-            android:layout_width="@dimen/photo_picker_icon"
-            android:layout_height="@dimen/photo_picker_icon"
-            android:layout_weight="1"
-            android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_medium"
-            android:tint="@color/white"
-            android:contentDescription="@string/photo_picker_camera_desc"
-            app:srcCompat="@drawable/ic_camera_white_48dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/icon_wpmedia"
-            android:layout_width="@dimen/photo_picker_icon"
-            android:layout_height="@dimen/photo_picker_icon"
-            android:layout_weight="1"
-            android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_medium"
-            android:tint="@color/white"
-            android:contentDescription="@string/photo_picker_wpmedia_desc"
-            app:srcCompat="@drawable/ic_my_sites_white_50dp" />
+            <ImageView
+                android:id="@+id/icon_picker"
+                android:layout_width="@dimen/photo_picker_icon"
+                android:layout_height="@dimen/photo_picker_icon"
+                android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                android:contentDescription="@string/photo_picker_device_desc"
+                app:srcCompat="@drawable/media_bar_button_image_multiple"/>
+
+            <ImageView
+                android:id="@+id/icon_camera"
+                android:layout_width="@dimen/photo_picker_icon"
+                android:layout_height="@dimen/photo_picker_icon"
+                android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                android:contentDescription="@string/photo_picker_camera_desc"
+                app:srcCompat="@drawable/media_bar_button_camera"/>
+
+            <ImageView
+                android:id="@+id/icon_wpmedia"
+                android:layout_width="@dimen/photo_picker_icon"
+                android:layout_height="@dimen/photo_picker_icon"
+                android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                android:contentDescription="@string/photo_picker_wpmedia_desc"
+                app:srcCompat="@drawable/media_bar_button_library"/>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

@@ -35,7 +35,7 @@ import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -310,7 +310,8 @@ public class StatsUtils {
         }
     }
 
-    public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, long siteId,
+    public static synchronized BaseStatsModel parseResponse(StatsServiceLogic.StatsEndpointsEnum endpointName,
+                                                            long siteId,
                                                             JSONObject response) throws JSONException {
         BaseStatsModel model = null;
         switch (endpointName) {

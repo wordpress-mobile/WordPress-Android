@@ -50,12 +50,12 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -408,12 +408,6 @@ public class EditPostSettingsFragment extends Fragment {
                     if (resultCode == RESULT_OK && extras != null) {
                         String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
                         updateTags(selectedTags);
-                    }
-                    break;
-                case RequestCodes.PHOTO_PICKER:
-                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
-                        updateFeaturedImage(mediaId);
                     }
                     break;
             }
@@ -824,10 +818,6 @@ public class EditPostSettingsFragment extends Fragment {
 
     public void updateFeaturedImage(long featuredImageId) {
         PostModel postModel = getPost();
-        if (postModel.getFeaturedImageId() == featuredImageId) {
-            return;
-        }
-
         postModel.setFeaturedImageId(featuredImageId);
         updateFeaturedImageView();
     }
@@ -918,7 +908,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
+    public void onPostFormatsChanged(OnPostFormatsChanged event) {
         if (event.isError()) {
             AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
             return;

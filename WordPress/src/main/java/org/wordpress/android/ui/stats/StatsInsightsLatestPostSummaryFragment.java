@@ -18,7 +18,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.Locale;
@@ -83,8 +83,8 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         if (mInsightsLatestPostModel.getPostViewsCount() == Integer.MIN_VALUE) {
             // we don't have the views count. Need to call the service again here
             refreshStats(mInsightsLatestPostModel.getPostID(),
-                         new StatsService.StatsEndpointsEnum[]{
-                                 StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS});
+                         new StatsServiceLogic.StatsEndpointsEnum[]{
+                                 StatsServiceLogic.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS});
             showPlaceholderUI();
         } else {
             updateUI();
@@ -110,7 +110,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
         if (!shouldUpdateFragmentOnErrorEvent(event)
-            && event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {
+            && event.mEndPointName != StatsServiceLogic.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {
             return;
         }
 
@@ -217,7 +217,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
-            value.setTextColor(getResources().getColor(R.color.grey));
+            value.setTextColor(getResources().getColor(R.color.grey_text_min));
         } else {
             // Only Views is clickable here.
             // Likes and Comments shouldn't link anywhere because they don't have summaries
@@ -276,9 +276,9 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY,
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY,
         };
     }
 

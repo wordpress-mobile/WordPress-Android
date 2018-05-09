@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -46,7 +47,11 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.JetpackConnectionSource;
+import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
@@ -68,10 +73,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -82,20 +89,32 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
+
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends AppCompatActivity {
+    public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
+    public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
+    public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
+    public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
+    public static final String ARG_OPEN_TAB = "open_tab";
+    public static final String ARG_NOTIFICATIONS = "show_notifications";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private JetpackConnectionSource mJetpackConnectSource;
+    private boolean mIsMagicLinkLogin;
+    private boolean mIsMagicLinkSignup;
     private boolean mWasSwiped;
     private int mAppBarElevation;
 
@@ -106,6 +125,8 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject ShortcutsNavigator mShortcutsNavigator;
+    @Inject ShortcutUtils mShortcutUtils;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -189,7 +210,6 @@ public class WPMainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 AppPrefs.setMainTabIndex(position);
-
                 switch (position) {
                     case WPMainTabAdapter.TAB_MY_SITE:
                         setTabLayoutElevation(mAppBarElevation);
@@ -206,9 +226,9 @@ public class WPMainActivity extends AppCompatActivity {
                         if (fragment instanceof OnScrollToTopListener) {
                             ((OnScrollToTopListener) fragment).onScrollToTop();
                         }
+                        mShortcutUtils.reportShortcutUsed(Shortcut.OPEN_NOTIFICATIONS);
                         break;
                 }
-
                 trackLastVisibleTab(position, true);
             }
 
@@ -242,39 +262,55 @@ public class WPMainActivity extends AppCompatActivity {
             }
         });
 
+        mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
+        mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
+        mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
 
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                // open note detail if activity called from a push, otherwise return to the tab
-                // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
-                                                                                             false));
+                        false));
+                boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
+                        ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
+                boolean openRequestedTab = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_TAB));
                 if (openedFromPush) {
+                    // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
                         launchWithPostId(getIntent().getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
-                                         getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA,
-                                                                     false));
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
                     } else {
                         launchWithNoteId();
                     }
+                } else if (openedFromShortcut) {
+                    initSelectedSite();
+                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                } else if (openRequestedTab) {
+                    handleOpenTabIntent(getIntent());
                 } else {
+                    // return to the tab that was showing last time
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
-
-                    if (hasMagicLinkLoginIntent()) {
+                    if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
                         } else {
                             authTokenToSet = getAuthToken();
                         }
                     }
+                    // Continue Jetpack connect flow if coming from login/signup magic link.
+                    if (getIntent() != null && getIntent().getExtras() != null
+                        && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
+                        JetpackConnectionWebViewActivity.startJetpackConnectionFlow(this, NOTIFICATIONS,
+                                (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
+                    }
                 }
             } else {
-                if (hasMagicLinkLoginIntent()) {
+                if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
                     ActivityLauncher.showSignInForResult(this);
@@ -295,13 +331,12 @@ public class WPMainActivity extends AppCompatActivity {
 
         if (authTokenToSet != null) {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
-            AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
+            UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            mLoginAnalyticsListener.trackCreatedAccount();
             ActivityLauncher.showSignupEpilogue(this,
                                                 getIntent().getStringExtra(
                                                         SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
@@ -312,28 +347,6 @@ public class WPMainActivity extends AppCompatActivity {
                                                 getIntent()
                                                         .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
                                                 false);
-        }
-    }
-
-    private boolean hasMagicLinkLoginIntent() {
-        String action = getIntent().getAction();
-        Uri uri = getIntent().getData();
-        String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
-        return Intent.ACTION_VIEW.equals(action) && host.contains(LoginActivity.MAGIC_LOGIN);
-    }
-
-    private boolean hasMagicLinkSignupIntent() {
-        String action = getIntent().getAction();
-        Uri uri = getIntent().getData();
-
-        if (uri != null) {
-            String parameter = SignupEpilogueActivity.MAGIC_SIGNUP_PARAMETER;
-            String value = (uri.getQueryParameterNames() != null && uri.getQueryParameter(parameter) != null)
-                    ? uri.getQueryParameter(parameter) : "";
-            return Intent.ACTION_VIEW.equals(action) && uri.getQueryParameterNames().contains(parameter)
-                   && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
-        } else {
-            return false;
         }
     }
 
@@ -364,6 +377,22 @@ public class WPMainActivity extends AppCompatActivity {
         AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
+        }
+        if (intent.hasExtra(ARG_OPEN_TAB)) {
+            handleOpenTabIntent(intent);
+        }
+    }
+
+    private void handleOpenTabIntent(Intent intent) {
+        String tabIdentifier = intent.getStringExtra(ARG_OPEN_TAB);
+        if (!TextUtils.isEmpty(tabIdentifier)) {
+            switch (tabIdentifier) {
+                case ARG_NOTIFICATIONS:
+                    mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
+                    break;
+            }
+        } else {
+            AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
         }
     }
 
@@ -554,6 +583,10 @@ public class WPMainActivity extends AppCompatActivity {
                 return;
             }
         }
+
+        if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(this)) {
+            return; // don't close app in Main Activity
+        }
         super.onBackPressed();
     }
 
@@ -686,7 +719,8 @@ public class WPMainActivity extends AppCompatActivity {
             case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
-                    startService(new Intent(this, GCMRegistrationIntentService.class));
+                    GCMRegistrationIntentService.enqueueWork(this,
+                            new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -728,7 +762,8 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void startWithNewAccount() {
-        startService(new Intent(this, GCMRegistrationIntentService.class));
+        GCMRegistrationIntentService.enqueueWork(this,
+                new Intent(this, GCMRegistrationIntentService.class));
         resetFragments();
     }
 
@@ -781,16 +816,25 @@ public class WPMainActivity extends AppCompatActivity {
         if (mAccountStore.hasAccessToken()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
 
-            if (hasMagicLinkLoginIntent()) {
-                if (hasMagicLinkSignupIntent()) {
+            if (mIsMagicLinkLogin) {
+                if (mIsMagicLinkSignup) {
                     mLoginAnalyticsListener.trackCreatedAccount();
                     mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
-                    Intent intent = getIntent();
-                    ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
+
+                    if (mJetpackConnectSource != null) {
+                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
+                    } else {
+                        ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
+                    }
                 } else {
                     mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
-                    ActivityLauncher
-                            .showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+
+                    if (mJetpackConnectSource != null) {
+                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
+                    } else {
+                        ActivityLauncher.showLoginEpilogue(this, true,
+                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                    }
                 }
             }
         }

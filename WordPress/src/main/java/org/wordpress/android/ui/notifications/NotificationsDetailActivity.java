@@ -33,7 +33,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -132,7 +132,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (doRefresh) {
             setProgressVisible(true);
             // here start the service and wait for it
-            NotificationsUpdateService.startService(this, mNoteId);
+            NotificationsUpdateServiceStarter.startService(this, mNoteId);
             return;
         }
 

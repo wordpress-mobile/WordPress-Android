@@ -52,6 +52,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/margin_large"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_stock_media"/>
 
             <org.wordpress.android.widgets.WPTextView

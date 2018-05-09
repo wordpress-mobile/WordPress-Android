@@ -13,7 +13,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
-import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
@@ -151,7 +151,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
-            value.setTextColor(getResources().getColor(R.color.grey));
+            value.setTextColor(getResources().getColor(R.color.grey_text_min));
         } else {
             value.setTextColor(getResources().getColor(R.color.blue_wordpress));
         }
@@ -194,9 +194,9 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
-        return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.VISITS
+    protected StatsServiceLogic.StatsEndpointsEnum[] sectionsToUpdate() {
+        return new StatsServiceLogic.StatsEndpointsEnum[]{
+                StatsServiceLogic.StatsEndpointsEnum.VISITS
         };
     }
 

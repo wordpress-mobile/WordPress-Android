@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.2'
     }
 }
 
@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionName "1.0.0"
     }
 }
@@ -32,7 +32,7 @@ dependencies {
     implementation 'org.wordpress:utils:1.18.1'
     implementation 'com.automattic:rest:1.0.7'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 uploadArchives {

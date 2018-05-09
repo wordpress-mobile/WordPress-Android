@@ -474,9 +474,7 @@ Language: th
     <string name="pick_photo">เลือกรูปภาพ</string>
     <string name="pick_video">เลือกวีดีโอ</string>
     <string name="reader_toast_err_get_post">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
-    <string name="select_time">เลือกเวลา</string>
     <string name="reader_likes_you_and_one">คุณและอีกหนึ่งคนชอบสิ่งนี้</string>
-    <string name="select_date">เลือกวันที่</string>
     <string name="reader_empty_followed_blogs_description">ไม่ต้องเป็นห่วง เพียงแตะที่ไอคอนที่ด้านบนขวาเพื่อเริ่มการค้นหา</string>
     <string name="nux_tutorial_get_started_title">เริ่มใช้งาน</string>
     <string name="reader_toast_err_view_image">ไม่สามารถดูรูปได้</string>
@@ -555,7 +553,6 @@ Language: th
     <string name="width">ความกว้าง</string>
     <string name="posts">เรื่อง</string>
     <string name="anonymous">นิรนาม</string>
-    <string name="featured">ใช้เป็นรูปเด่น</string>
     <string name="featured_in_post">รวมรูปภาพในเนื้อหาเรื่อง</string>
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="blogusername">บล็อกชื่อผู้ใช้</string>

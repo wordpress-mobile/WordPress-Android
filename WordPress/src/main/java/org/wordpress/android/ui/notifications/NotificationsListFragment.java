@@ -35,7 +35,7 @@ import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
-import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.NOTIFICATIONS;
+import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
@@ -69,7 +69,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private ViewGroup mConnectJetpackView;
     private View mFilterView;
     private RadioGroup mFilterRadioGroup;
-    private View mFilterDivider;
+    private View mFilterContainer;
     private View mNewNotificationsBar;
 
     private long mRestoredScrollNoteID;
@@ -98,12 +98,12 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
+        mRecyclerView = view.findViewById(R.id.recycler_view_notes);
 
-        mFilterRadioGroup = (RadioGroup) view.findViewById(R.id.notifications_radio_group);
+        mFilterRadioGroup = view.findViewById(R.id.notifications_radio_group);
         mFilterRadioGroup.setOnCheckedChangeListener(this);
-        mFilterDivider = view.findViewById(R.id.notifications_filter_divider);
-        mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
+        mFilterContainer = view.findViewById(R.id.notifications_filter_container);
+        mEmptyView = view.findViewById(R.id.empty_view);
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
         mFilterView = view.findViewById(R.id.notifications_filter);
 
@@ -119,7 +119,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                         fetchNotesFromRemote();
                     }
                 }
-                                                         );
+            );
 
         // bar that appears at bottom after new notes are received and the user is on this screen
         mNewNotificationsBar = view.findViewById(R.id.layout_new_notificatons);
@@ -309,20 +309,19 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private void showEmptyView(@StringRes int titleResId, @StringRes int descriptionResId, @StringRes int buttonResId) {
         if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.VISIBLE);
-            mFilterDivider.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
             ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(titleResId);
 
-            TextView descriptionTextView = (TextView) mEmptyView.findViewById(R.id.text_empty_description);
+            TextView descriptionTextView = mEmptyView.findViewById(R.id.text_empty_description);
             if (descriptionResId != 0) {
                 descriptionTextView.setText(descriptionResId);
             } else {
                 descriptionTextView.setVisibility(View.GONE);
             }
 
-            TextView btnAction = (TextView) mEmptyView.findViewById(R.id.button_empty_action);
+            TextView btnAction = mEmptyView.findViewById(R.id.button_empty_action);
             if (buttonResId != 0) {
                 btnAction.setText(buttonResId);
                 btnAction.setVisibility(View.VISIBLE);
@@ -343,7 +342,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         if (isAdded() && mConnectJetpackView != null) {
             mConnectJetpackView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
-            mFilterDivider.setVisibility(View.GONE);
+            mFilterContainer.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
 
@@ -378,7 +377,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             setFilterViewScrollable(true);
             mEmptyView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
-            mFilterDivider.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
@@ -393,7 +391,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             return;
         }
 
-        NotificationsUpdateService.startService(getActivity());
+        NotificationsUpdateServiceStarter.startService(getActivity());
     }
 
     // Show different empty list message and action button based on the active filter
