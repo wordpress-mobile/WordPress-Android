@@ -9,21 +9,21 @@ package org.wordpress.android.models.networkresource
  * @property data is initialized depending on each state and once initialized it can not be altered. In [Ready] and
  * [Success] states, it'll be passed as a parameter. In [Loading] and [Error] states, it'll be initialized from the
  * previous state to make sure the access to the data is not lost. In [Init], an empty list will be passed.
- * In situations where the data needs to be changed outside of a fetch [getTransformedListState] can be used
+ * In situations where the data needs to be changed outside of a fetch, [transform] can be used
  * to get a new instance by using a transform function.
  */
 sealed class ListState<T>(val data: List<T>) {
     /**
      * In some situations the underlying data might change outside of a fetch. Adding a new item, removing one,
      * a single item getting updated would be some typical examples. Since the [data] property can not be altered
-     * directly, by design, we need a different way to update it.
+     * directly, which is by design, we need a different way to update it.
      *
      * This method can be used to handle any transformation easily while preserving the current state. Any function
      * that takes a [List] and returns a new one can be used as the transformation.
      *
      * @return a new ListState instance that has the transformed data while preserving the state
      */
-    abstract fun getTransformedListState(transform: (List<T>) -> List<T>): ListState<T>
+    abstract fun transform(transformFunc: (List<T>) -> List<T>): ListState<T>
 
     /**
      * Helper function for checking whether the first page is being loaded. It can be used to either show or hide a
@@ -58,7 +58,7 @@ sealed class ListState<T>(val data: List<T>) {
      * getting the `SiteModel` from a `Store`.
      */
     class Init<T> : ListState<T>(ArrayList()) {
-        override fun getTransformedListState(transform: (List<T>) -> List<T>) = this
+        override fun transform(transformFunc: (List<T>) -> List<T>) = this
     }
 
     /**
@@ -68,7 +68,7 @@ sealed class ListState<T>(val data: List<T>) {
      * using the cached version of the data, for example from its `Store`.
      */
     class Ready<T>(data: List<T>) : ListState<T>(data) {
-        override fun getTransformedListState(transform: (List<T>) -> List<T>) = Ready(transform(data))
+        override fun transform(transformFunc: (List<T>) -> List<T>) = Ready(transformFunc(data))
     }
 
     /**
@@ -76,7 +76,7 @@ sealed class ListState<T>(val data: List<T>) {
      *
      * @param data can not be passed directly to [Loading] state as it's prevented by a private constructor.
      * It's initialized either from the previous state or from the transformed data using
-     * [ListState.getTransformedListState].
+     * [ListState.transform].
      *
      * @param loadingMore flag is used to indicate whether the first page or more data is being fetched. It's default
      * value is `false` which should be useful in situations where pagination is not available.
@@ -86,8 +86,8 @@ sealed class ListState<T>(val data: List<T>) {
         constructor(previous: ListState<T>, loadingMore: Boolean = false)
                 : this(previous.data, loadingMore)
 
-        override fun getTransformedListState(transform: (List<T>) -> List<T>) =
-                Loading(transform(data), loadingMore)
+        override fun transform(transformFunc: (List<T>) -> List<T>) =
+                Loading(transformFunc(data), loadingMore)
     }
 
     /** This state means that at least one fetch has successfully completed.
@@ -100,8 +100,8 @@ sealed class ListState<T>(val data: List<T>) {
      */
     class Success<T>(data: List<T>, val canLoadMore: Boolean = false)
         : ListState<T>(data) {
-        override fun getTransformedListState(transform: (List<T>) -> List<T>) =
-                Success(transform(data), canLoadMore)
+        override fun transform(transformFunc: (List<T>) -> List<T>) =
+                Success(transformFunc(data), canLoadMore)
     }
 
     /**
@@ -109,7 +109,7 @@ sealed class ListState<T>(val data: List<T>) {
      *
      * @param data can not be passed directly to [Error] state as it's prevented by a private constructor.
      * It's initialized either from the previous state or from the transformed data using
-     * [ListState.getTransformedListState].
+     * [ListState.transform].
      *
      * @param errorMessage will be the error string received from the API. It can also be used to show connection errors
      * where the network is not available.
@@ -119,7 +119,7 @@ sealed class ListState<T>(val data: List<T>) {
         constructor(previous: ListState<T>, errorMessage: String?)
                 : this(previous.data, errorMessage)
 
-        override fun getTransformedListState(transform: (List<T>) -> List<T>) =
-                Error(transform(data), errorMessage)
+        override fun transform(transformFunc: (List<T>) -> List<T>) =
+                Error(transformFunc(data), errorMessage)
     }
 }

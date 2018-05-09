@@ -96,7 +96,7 @@ class ListStateTest {
         val toUpperCase: (List<String>) -> List<String> = { list ->
             list.map { it.toUpperCase() }
         }
-        val transformedReadyState = readyState.getTransformedListState(toUpperCase)
+        val transformedReadyState = readyState.transform(toUpperCase)
         assertThat(transformedReadyState.data, `is`(equalTo(toUpperCase(testData))))
         assertThat(transformedReadyState.data.size, `is`(3))
         assertThat(transformedReadyState is ListState.Ready, `is`(true))
@@ -110,7 +110,7 @@ class ListStateTest {
         val filterNotItem: (List<String>) -> List<String> = { list ->
             list.filter { it != "not-item" }
         }
-        val transformedLoadingState = loadingState.getTransformedListState(filterNotItem)
+        val transformedLoadingState = loadingState.transform(filterNotItem)
         assertThat(transformedLoadingState.data, `is`(equalTo(filterNotItem(testData))))
         assertThat(transformedLoadingState.data.size, `is`(2))
         assertThat(transformedLoadingState is ListState.Loading, `is`(true))

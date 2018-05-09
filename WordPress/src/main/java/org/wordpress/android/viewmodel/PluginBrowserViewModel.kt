@@ -310,17 +310,17 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private fun updateAllPluginListsForSlug(slug: String?) {
         site?.let { site ->
             mPluginStore.getImmutablePluginBySlug(site, slug)?.let { updatedPlugin ->
-                val transform: (List<ImmutablePluginModel>) -> List<ImmutablePluginModel> = { list ->
+                val transformFunc: (List<ImmutablePluginModel>) -> List<ImmutablePluginModel> = { list ->
                     list.map { currentPlugin ->
                         if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
                     }
                 }
-                featuredPlugins = featuredPlugins.getTransformedListState(transform)
-                newPlugins = newPlugins.getTransformedListState(transform)
-                searchResults = searchResults.getTransformedListState(transform)
-                popularPlugins = popularPlugins.getTransformedListState(transform)
+                featuredPlugins = featuredPlugins.transform(transformFunc)
+                newPlugins = newPlugins.transform(transformFunc)
+                searchResults = searchResults.transform(transformFunc)
+                popularPlugins = popularPlugins.transform(transformFunc)
 
-                sitePlugins = sitePlugins.getTransformedListState { list ->
+                sitePlugins = sitePlugins.transform { list ->
                     if (!updatedPlugin.isInstalled) {
                         list.filter { it.slug != slug }
                     } else if (list.none { it.slug == slug }) {
