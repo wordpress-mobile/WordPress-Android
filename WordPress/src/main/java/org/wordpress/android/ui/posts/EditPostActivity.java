@@ -364,9 +364,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 // Create a new post
-                List<Long> categories = new ArrayList<>();
-                String postFormat = "";
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
+                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 EventBus.getDefault().postSticky(
                         new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
