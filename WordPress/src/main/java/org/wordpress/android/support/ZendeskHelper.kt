@@ -3,6 +3,8 @@
 package org.wordpress.android.support
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.telephony.TelephonyManager
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
 import com.zendesk.sdk.model.access.AnonymousIdentity
 import com.zendesk.sdk.model.access.Identity
@@ -67,7 +69,7 @@ fun configureAndShowTickets(
     context: Context,
     email: String,
     name: String,
-    allSites: List<SiteModel>,
+    allSites: List<SiteModel>?,
     username: String?
 ) {
     require(isZendeskEnabled) {
@@ -79,8 +81,7 @@ fun configureAndShowTickets(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, blogInformation(allSites, username)),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
-            // TODO("improve the network information string")
-            CustomField(TicketFieldIds.networkInformation, NetworkUtils.getActiveNetworkInfo(context).toString()),
+            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
     )
     val configuration = object : BaseZendeskFeedbackConfiguration() {
@@ -89,7 +90,7 @@ fun configureAndShowTickets(
         }
 
         override fun getTags(): MutableList<String> {
-            return getZendeskTags(allSites) as MutableList<String>
+            return zendeskTags(allSites) as MutableList<String>
         }
     }
     RequestActivity.startActivity(context, configuration)
@@ -100,28 +101,48 @@ fun configureAndShowTickets(
 private fun zendeskIdentity(email: String, name: String): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
-private fun blogInformation(allSites: List<SiteModel>, username: String?): String {
-    return allSites.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(username) }
+private fun blogInformation(allSites: List<SiteModel>?, username: String?): String {
+    allSites?.let {
+        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(username) }
+    }
+    return ZendeskConstants.noneValue
 }
 
-private fun getZendeskTags(allSites: List<SiteModel>): List<String> {
+private fun zendeskTags(allSites: List<SiteModel>?): List<String> {
     val tags = ArrayList<String>()
+    allSites?.let {
+        // Add wpcom tag if at least one site is WordPress.com site
+        if (it.any { it.isWPCom }) {
+            tags.add(ZendeskConstants.wpComTag)
+        }
 
-    // Add wpcom tag if at least one site is WordPress.com site
-    if (allSites.any { it.isWPCom }) {
-        tags.add(ZendeskConstants.wpComTag)
+        // Add Jetpack tag if at least one site is Jetpack connected. Even if a site is Jetpack connected,
+        // it does not necessarily mean that user is connected with the REST API, but we don't care about that here
+        if (it.any { it.isJetpackConnected }) {
+            tags.add(ZendeskConstants.jetpackTag)
+        }
+
+        // Find distinct plans and add them
+        val plans = it.mapNotNull { it.planShortName }.distinct()
+        tags.addAll(plans)
     }
-
-    // Add Jetpack tag if at least one site is Jetpack connected. Even if a site is Jetpack connected,
-    // it does not necessarily mean that user is connected with the REST API, but we don't care about that here
-    if (allSites.any { it.isJetpackConnected }) {
-        tags.add(ZendeskConstants.jetpackTag)
-    }
-
-    // Find distinct plans and add them
-    val plans = allSites.mapNotNull { it.planShortName }.distinct()
-    tags.addAll(plans)
     return tags
+}
+
+private fun zendeskNetworkInformation(context: Context): String {
+    val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
+        ConnectivityManager.TYPE_WIFI -> ZendeskConstants.networkWifi
+        ConnectivityManager.TYPE_MOBILE -> ZendeskConstants.networkWWAN
+        else -> ZendeskConstants.unknownValue
+    }
+    val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager?
+    val carrierName = telephonyManager?.networkOperatorName ?: ZendeskConstants.unknownValue
+    val countryCodeLabel = telephonyManager?.networkCountryIso ?: ZendeskConstants.unknownValue
+    return listOf(
+            "${ZendeskConstants.networkTypeLabel} $networkType",
+            "${ZendeskConstants.networkCarrierLabel} $carrierName",
+            "${ZendeskConstants.networkCountryCodeLabel} $countryCodeLabel"
+    ).joinToString(separator = "\n")
 }
 
 private object ZendeskConstants {
@@ -129,8 +150,15 @@ private object ZendeskConstants {
     const val blogSeparator = "\n----------\n"
     const val jetpackTag = "jetpack"
     const val mobileCategoryId = 360000041586
+    const val networkWifi = "WiFi"
+    const val networkWWAN = "Mobile"
+    const val networkTypeLabel = "Network Type:"
+    const val networkCarrierLabel = "Carrier:"
+    const val networkCountryCodeLabel = "Country Code:"
+    const val noneValue = "none"
     const val ticketSubject = "WordPress for Android Support"
     const val wpComTag = "wpcom"
+    const val unknownValue = "unknown"
 }
 
 private object TicketFieldIds {
