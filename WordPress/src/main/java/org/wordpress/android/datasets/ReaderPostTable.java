@@ -746,11 +746,12 @@ public class ReaderPostTable {
             String tagName = (tag != null ? tag.getTagSlug() : "");
             int tagType = (tag != null ? tag.tagType.toInt() : 0);
 
-            // we can safely assume there's no gap marker because any existing gap marker is
-            // already removed before posts are updated
-            boolean hasGapMarker = false;
+            ReaderBlogIdPostId postWithGapMarker = getGapMarkerIdsForTag(tag);
 
             for (ReaderPost post : posts) {
+                // keep the gapMarker flag
+                boolean hasGapMarker = postWithGapMarker != null && postWithGapMarker.getPostId() == post.postId
+                                       && postWithGapMarker.getBlogId() == post.blogId;
                 stmtPosts.bindLong(1, post.postId);
                 stmtPosts.bindLong(2, post.blogId);
                 stmtPosts.bindLong(3, post.feedId);
