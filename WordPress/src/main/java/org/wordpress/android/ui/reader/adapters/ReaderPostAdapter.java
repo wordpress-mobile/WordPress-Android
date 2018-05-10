@@ -676,6 +676,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void clear() {
+        mGapMarkerPosition = -1;
         if (!mPosts.isEmpty()) {
             mPosts.clear();
             notifyDataSetChanged();
