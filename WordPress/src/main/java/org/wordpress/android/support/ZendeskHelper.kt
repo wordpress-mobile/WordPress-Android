@@ -16,6 +16,7 @@ import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
+import org.wordpress.android.util.HelpshiftHelper.Tag
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.logInformation
 import java.util.Locale
@@ -70,7 +71,8 @@ fun configureAndShowTickets(
     email: String,
     name: String,
     allSites: List<SiteModel>?,
-    username: String?
+    username: String?,
+    origin: Tag?
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
@@ -90,7 +92,7 @@ fun configureAndShowTickets(
         }
 
         override fun getTags(): MutableList<String> {
-            return zendeskTags(allSites) as MutableList<String>
+            return zendeskTags(allSites, origin) as MutableList<String>
         }
     }
     RequestActivity.startActivity(context, configuration)
@@ -108,7 +110,7 @@ private fun blogInformation(allSites: List<SiteModel>?, username: String?): Stri
     return ZendeskConstants.noneValue
 }
 
-private fun zendeskTags(allSites: List<SiteModel>?): List<String> {
+private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag?): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -126,6 +128,7 @@ private fun zendeskTags(allSites: List<SiteModel>?): List<String> {
         val plans = it.mapNotNull { it.planShortName }.distinct()
         tags.addAll(plans)
     }
+    tags.add((origin ?: Tag.ORIGIN_UNKNOWN).toString())
     return tags
 }
 
@@ -141,7 +144,7 @@ private fun zendeskNetworkInformation(context: Context): String {
     return listOf(
             "${ZendeskConstants.networkTypeLabel} $networkType",
             "${ZendeskConstants.networkCarrierLabel} $carrierName",
-            "${ZendeskConstants.networkCountryCodeLabel} $countryCodeLabel"
+            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase()}"
     ).joinToString(separator = "\n")
 }
 
