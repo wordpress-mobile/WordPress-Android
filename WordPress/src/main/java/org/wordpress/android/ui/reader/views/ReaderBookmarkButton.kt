@@ -18,32 +18,36 @@ class ReaderBookmarkButton : LinearLayout {
     private var mIsBookmarked: Boolean = false
 
     constructor(context: Context) : super(context) {
-        initView(context, null)
+        initView(context)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initView(context, attrs)
+        initView(context)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        initView(context, attrs)
+        initView(context)
     }
 
-    private fun initView(context: Context, attrs: AttributeSet?) {
+    private fun initView(context: Context) {
         View.inflate(context, R.layout.reader_bookmark_button, this)
+
         mBookmarkLabel = findViewById<View>(R.id.text_bookmark_button) as TextView
         mBookmarkIcon = findViewById<View>(R.id.icon_bookmark_button) as ImageView
+
         ReaderUtils.setBackgroundToRoundRipple(mBookmarkIcon)
     }
 
-    private fun updateBookmarkText() {
+    private fun updateButtonLabel() {
         mBookmarkLabel!!.setText(if (mIsBookmarked) R.string.reader_btn_bookmarked else R.string.reader_btn_bookmark)
+
         mBookmarkLabel!!.isSelected = mIsBookmarked
         mBookmarkIcon!!.isSelected = mIsBookmarked
     }
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
+
         mBookmarkLabel!!.isEnabled = enabled
         mBookmarkIcon!!.isEnabled = enabled
     }
@@ -57,6 +61,6 @@ class ReaderBookmarkButton : LinearLayout {
             context.getString(R.string.reader_add_bookmark)
         }
 
-        updateBookmarkText()
+        updateButtonLabel()
     }
 }

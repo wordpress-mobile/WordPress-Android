@@ -451,9 +451,8 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderBookmarkButton.setVisibility(View.GONE);
         } else {
             mReaderBookmarkButton.setVisibility(View.VISIBLE);
+            mReaderBookmarkButton.setIsBookmarked(mPost.isBookmarked);
         }
-
-        mReaderBookmarkButton.setIsBookmarked(mPost.isBookmarked);
     }
 
     /*
