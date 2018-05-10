@@ -39,6 +39,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
@@ -72,7 +73,6 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
     private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
-    private static final String APP_RUNTIME_ON_CHROME_FLAG = "org.chromium.arc.device_management";
     private static final String TAG_PROMO_DIALOG = "promote_widget_dialog";
 
     private Spinner mSpinner;
@@ -650,12 +650,7 @@ public class StatsActivity extends AppCompatActivity
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         boolean isCountAPromoMilestone = counter == 3 || counter == 1000 || counter == 10000;
 
-        return isCountAPromoMilestone && !isAppRuntimeForChrome();
-    }
-
-    // does not support widgets
-    private boolean isAppRuntimeForChrome() {
-        return getApplicationContext().getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
+        return isCountAPromoMilestone && !DeviceUtils.getInstance().isChromebook(this);
     }
 
     @SuppressWarnings("unused")

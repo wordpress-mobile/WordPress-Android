@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 12:54:07+0000
+Translation-Revision-Date: 2018-05-02 18:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Creazione del sito… Questa operazione potrebbe richiedere qualche minuto.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Importante</string>
+    <string name="notification_channel_general_title">Generale</string>
+    <string name="photo_picker_use_photo">Usa questa foto</string>
     <string name="media_preview_title">%1$d di %2$d</string>
     <string name="stock_media_picker_empty_results">Nessuna corrispondenza</string>
     <string name="stock_media_picker_initial_empty_subtext">Foto fornite da %s</string>
@@ -54,7 +60,6 @@ Language: it
     <string name="reader_photo_view_desc">foto</string>
     <string name="photo_picker_thumbnail_desc">Riproduci video</string>
     <string name="reader_cardview_post_play_video_desc">riproduci video in primo piano</string>
-    <string name="post_cardview_featured_desc">in primo piano</string>
     <string name="plugin_detail_logo_desc">logo plugin</string>
     <string name="plugin_detail_banner_desc">banner plugin</string>
     <string name="photo_picker_wpmedia_desc">scegli tra i contenuti multimediali WordPress</string>
@@ -1245,7 +1250,7 @@ Language: it
     <string name="stats_followers_years">%1$d anni</string>
     <string name="stats_followers_a_year">Un anno</string>
     <string name="stats_followers_months">%1$d mesi</string>
-    <string name="stats_view">Vista</string>
+    <string name="stats_view">Visualizza</string>
     <string name="stats_view_all">Visualizza tutte</string>
     <string name="stats_other_recent_stats_label">Altre statistiche recenti</string>
     <string name="stats_for">Statistiche per %s</string>
@@ -1495,7 +1500,6 @@ Language: it
     <string name="caption">Didascalia (facoltativa)</string>
     <string name="no_network_title">Nessuna rete disponibile</string>
     <string name="featured_in_post">Includi immagine nel contenuto dell\'articolo</string>
-    <string name="featured">Usa come immagine in evidenza</string>
     <string name="blogusername">nomeutenteblog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Caricamento…</string>

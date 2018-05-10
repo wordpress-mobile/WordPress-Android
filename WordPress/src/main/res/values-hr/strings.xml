@@ -592,7 +592,6 @@ Language: hr
     <string name="width">Širina</string>
     <string name="anonymous">Anonimno</string>
     <string name="caption">Opis (opcionalan)</string>
-    <string name="featured">Upotrijebi kao istaknutu sliku</string>
     <string name="posts">Objave</string>
     <string name="featured_in_post">Uključi sliku u sadržaj objave</string>
     <string name="blogusername">blogusername</string>

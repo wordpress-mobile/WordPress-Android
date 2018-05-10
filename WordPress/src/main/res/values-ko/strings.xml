@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 10:54:08+0000
+Translation-Revision-Date: 2018-05-03 09:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">사이트를 만드는 중… 수 분이 걸릴 수 있습니다.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">중요</string>
+    <string name="notification_channel_general_title">일반</string>
+    <string name="photo_picker_use_photo">이 사진 사용</string>
     <string name="media_preview_title">%1$d/%2$d</string>
     <string name="stock_media_picker_empty_results">일치사항 없음</string>
     <string name="stock_media_picker_initial_empty_subtext">사진 제공: %s</string>
@@ -55,7 +61,6 @@ Language: ko_KR
     <string name="reader_list_item_suggestion_remove_desc">삭제</string>
     <string name="photo_picker_thumbnail_desc">비디오 재생</string>
     <string name="reader_cardview_post_play_video_desc">추천 비디오 재생</string>
-    <string name="post_cardview_featured_desc">추천</string>
     <string name="plugin_detail_logo_desc">플러그인 로고</string>
     <string name="plugin_detail_banner_desc">플러그인 배너</string>
     <string name="photo_picker_wpmedia_desc">워드프레스 미디어에서 선택</string>
@@ -211,7 +216,6 @@ Language: ko_KR
     <string name="notification_site_creation_step_tagline">3/4단계</string>
     <string name="notification_site_creation_step_fetching">2/4단계</string>
     <string name="notification_site_creation_step_creating">1/4단계</string>
-    <string name="notification_site_creation_title_in_progress">사이트 생성중…</string>
     <string name="notification_site_creation_created">계속하려면 누르세요.</string>
     <string name="notification_site_creation_title_success">사이트를 생성했습니다!</string>
     <string name="google_error_timeout">Google에서 응답하는 데 너무 오래 걸립니다. 더 강한 인터넷 연결이 있을 때까지 기다려야 할 수 있습니다.</string>
@@ -1520,7 +1524,6 @@ Language: ko_KR
     <string name="caption">캡션(옵션)</string>
     <string name="no_network_title">사용 가능한 네트워크가 없습니다</string>
     <string name="featured_in_post">게시물 본문에 이미지를 포함</string>
-    <string name="featured">같은 기능을 갖춘 이미지를 사용</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">업로드 중…</string>

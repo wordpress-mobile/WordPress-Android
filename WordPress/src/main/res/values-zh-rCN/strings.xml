@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 10:54:08+0000
+Translation-Revision-Date: 2018-05-02 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">正在创建站点…这可能需要几分钟的时间。</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">重要提示</string>
+    <string name="notification_channel_general_title">常规</string>
+    <string name="photo_picker_use_photo">使用此照片</string>
     <string name="media_preview_title">%1$d/%2$d</string>
     <string name="stock_media_picker_empty_results">无匹配项</string>
     <string name="stock_media_picker_initial_empty_subtext">%s 提供的照片</string>
@@ -55,7 +61,6 @@ Language: zh_CN
     <string name="reader_list_item_suggestion_remove_desc">删除</string>
     <string name="photo_picker_thumbnail_desc">播放视频</string>
     <string name="reader_cardview_post_play_video_desc">播放推荐视频</string>
-    <string name="post_cardview_featured_desc">推荐</string>
     <string name="plugin_detail_logo_desc">插件徽标</string>
     <string name="plugin_detail_banner_desc">插件横幅</string>
     <string name="photo_picker_wpmedia_desc">选择 WordPress 媒体</string>
@@ -1528,7 +1533,6 @@ Language: zh_CN
     <string name="caption">说明 (可选)</string>
     <string name="no_network_title">无网络可用</string>
     <string name="featured_in_post">在文章内容中包含图片</string>
-    <string name="featured">用作精选图片</string>
     <string name="blogusername">博客用户名</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">正在上传…</string>
