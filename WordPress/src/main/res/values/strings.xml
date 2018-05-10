@@ -748,6 +748,7 @@
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="rewind">Rewind</string>
+    <string name="activity_log_jetpack_icon">Jetpack icon</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>

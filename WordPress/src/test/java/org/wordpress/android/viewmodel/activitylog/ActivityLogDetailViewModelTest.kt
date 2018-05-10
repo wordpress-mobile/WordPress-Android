@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
@@ -74,17 +75,48 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.start(site, activityID)
 
-        assertEquals(lastEmittedItem, ActivityLogDetailModel(
-                activityID = activityID,
-                summary = summary,
-                text = text,
-                rewindAction = null,
-                actorRole = actorRole,
-                actorName = actorName,
-                actorIconUrl = actorIcon,
-                createdDate = "January 1, 1970",
-                createdTime = "1:00 AM"
+        assertNotNull(lastEmittedItem)
+        lastEmittedItem?.let {
+            assertEquals(it.activityID, activityID)
+            assertEquals(it.createdDate, "January 1, 1970")
+            assertEquals(it.createdTime, "1:00 AM")
+        }
+    }
+
+    @Test
+    fun showsJetpackIconWhenActorIconEmptyAndNameIsJetpackAndTypeIsApplication() {
+        val updatedActivity = activityLogModel.copy(actor = activityLogModel.actor?.copy(
+                avatarURL = null,
+                displayName = "Jetpack",
+                type = "Application"
         ))
+        whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
+
+        viewModel.start(site, activityID)
+
+        assertNotNull(lastEmittedItem)
+        lastEmittedItem?.let {
+            assertEquals(it.activityID, activityID)
+            assertEquals(it.showJetpackIcon, true)
+        }
+    }
+
+    @Test
+    fun showsJetpackIconWhenActorIconEmptyAndNameAndTypeIsHappinessEngineer() {
+        val updatedActivity = activityLogModel.copy(actor = activityLogModel.actor?.copy(
+                avatarURL = null,
+                displayName = "Happiness Engineer",
+                type = "Happiness Engineer"
+        ))
+        whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
+
+        viewModel.start(site, activityID)
+
+        assertNotNull(lastEmittedItem)
+        lastEmittedItem?.let {
+            assertEquals(it.activityID, activityID)
+            assertEquals(it.showJetpackIcon, true)
+        }
     }
 
     @Test
@@ -113,17 +145,11 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.start(site, activityID2)
 
-        assertEquals(lastEmittedItem, ActivityLogDetailModel(
-                activityID = activityID2,
-                summary = summary,
-                text = changedText,
-                rewindAction = null,
-                actorRole = actorRole,
-                actorName = actorName,
-                actorIconUrl = actorIcon,
-                createdDate = "January 1, 1970",
-                createdTime = "1:00 AM"
-        ))
+        assertNotNull(lastEmittedItem)
+        lastEmittedItem?.let {
+            assertEquals(it.activityID, activityID2)
+            assertEquals(it.text, changedText)
+        }
     }
 
     @Test

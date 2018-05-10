@@ -34,6 +34,17 @@
                     app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
                     tools:src="@drawable/badge"/>
 
+                <ImageView
+                    android:id="@+id/activity_jetpack_actor"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginRight="12dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_jetpack_icon_36dp"
+                    android:contentDescription="@string/activity_log_jetpack_icon"
+                    tools:src="@drawable/ic_jetpack_icon_36dp"/>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

@@ -53,7 +53,7 @@ class ActivityLogDetailFragment : Fragment() {
             else -> throw Throwable("Couldn't initialize Activity Log view model")
         }
         viewModel.activityLogItem.observe(this, Observer { activityLogModel ->
-            setActorIcon(activityLogModel?.actorIconUrl)
+            setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
             activity_actor_name.setTextOrHide(activityLogModel?.actorName)
             activity_actor_role.setTextOrHide(activityLogModel?.actorRole)
 
@@ -78,13 +78,22 @@ class ActivityLogDetailFragment : Fragment() {
         outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
     }
 
-    private fun setActorIcon(actorIcon: String?) {
-        if (actorIcon != null) {
-            activity_actor_icon.setImageUrl(actorIcon, WPNetworkImageView.ImageType.AVATAR)
-            activity_actor_icon.visibility = View.VISIBLE
-        } else {
-            activity_actor_icon.resetImage()
-            activity_actor_icon.visibility = View.GONE
+    private fun setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
+        when {
+            actorIcon != null && actorIcon != "" -> {
+                activity_actor_icon.setImageUrl(actorIcon, WPNetworkImageView.ImageType.AVATAR)
+                activity_actor_icon.visibility = View.VISIBLE
+                activity_jetpack_actor.visibility = View.GONE
+            }
+            showJetpackIcon == true -> {
+                activity_jetpack_actor.visibility = View.VISIBLE
+                activity_actor_icon.visibility = View.GONE
+            }
+            else -> {
+                activity_actor_icon.resetImage()
+                activity_actor_icon.visibility = View.GONE
+                activity_jetpack_actor.visibility = View.GONE
+            }
         }
     }
 

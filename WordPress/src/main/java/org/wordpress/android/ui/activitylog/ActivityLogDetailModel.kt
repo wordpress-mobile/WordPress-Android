@@ -3,6 +3,7 @@ package org.wordpress.android.ui.activitylog
 data class ActivityLogDetailModel(
     val activityID: String,
     val actorIconUrl: String? = null,
+    val showJetpackIcon: Boolean? = null,
     val actorName: String? = null,
     val actorRole: String? = null,
     val text: String? = null,

@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
 import java.text.DateFormat
@@ -38,6 +39,7 @@ class ActivityLogDetailViewModel
                                 ActivityLogDetailModel(
                                         activityID = it.activityID,
                                         actorIconUrl = it.actor?.avatarURL,
+                                        showJetpackIcon = it.actor?.showJetpackIcon(),
                                         actorName = it.actor?.displayName,
                                         actorRole = it.actor?.role,
                                         text = it.text,
@@ -48,6 +50,11 @@ class ActivityLogDetailViewModel
                             }
             )
         }
+    }
+
+    private fun ActivityActor.showJetpackIcon(): Boolean {
+        return displayName == "Jetpack" && type == "Application"
+                || displayName == "Happiness Engineer" && type == "Happiness Engineer"
     }
 
     private fun Date.printDate(): String {
