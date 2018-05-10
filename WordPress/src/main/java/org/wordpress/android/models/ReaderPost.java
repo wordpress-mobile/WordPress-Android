@@ -665,6 +665,7 @@ public class ReaderPost {
                && post.isLikedByCurrentUser == this.isLikedByCurrentUser
                && post.isCommentsOpen == this.isCommentsOpen
                && post.useExcerpt == this.useExcerpt
+               && post.isBookmarked == this.isBookmarked
                && post.getTitle().equals(this.getTitle())
                && post.getExcerpt().equals(this.getExcerpt())
                && post.getText().equals(this.getText());
