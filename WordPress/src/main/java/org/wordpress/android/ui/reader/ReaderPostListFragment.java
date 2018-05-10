@@ -610,6 +610,7 @@ public class ReaderPostListFragment extends Fragment
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
 
+                // hide the bottom navigation when search is active
                 if (mBottonNavController != null) {
                     mBottonNavController.onRequestHideBottomNavigation();
                 }

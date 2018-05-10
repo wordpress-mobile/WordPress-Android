@@ -477,7 +477,10 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener,
 
     @Override
     public void onRequestHideBottomNavigation() {
-        mBottomNavContainer.setVisibility(View.GONE);
+        // we only hide the bottom navigation when there's not a hardware keyboard present
+        if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
+            mBottomNavContainer.setVisibility(View.GONE);
+        }
     }
 
     // user switched pages in the bottom navbar

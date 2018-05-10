@@ -104,6 +104,9 @@ public class DeviceUtils {
         return context.getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
     }
 
+    /**
+     * Checks if the device has a hardware keyboard - note this will return true for emulators
+     */
     public boolean hasHardwareKeyboard(@NonNull Context context) {
         return context.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
     }
