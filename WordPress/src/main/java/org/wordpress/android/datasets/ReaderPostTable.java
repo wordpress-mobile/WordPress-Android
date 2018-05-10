@@ -649,7 +649,7 @@ public class ReaderPostTable {
         }
 
         String dateColumn = getSortColumnForTag(tag);
-        String[] args = {gapMarkerDate, tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), gapMarkerDate};
         String where = "tag_name=? AND tag_type=? AND " + dateColumn + " < ?";
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", where, args);
         if (numDeleted > 0) {
