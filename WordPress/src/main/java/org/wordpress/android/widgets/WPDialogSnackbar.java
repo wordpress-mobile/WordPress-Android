@@ -1,6 +1,7 @@
 package org.wordpress.android.widgets;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar.Duration;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.Snackbar.SnackbarLayout;
 import android.text.TextUtils;
@@ -18,17 +19,8 @@ public class WPDialogSnackbar {
     private Snackbar mSnackbar;
     private View mContentView;
 
-    private WPDialogSnackbar(@NonNull View view, @NonNull CharSequence text, int duration) {
-        switch (duration) {
-            case Snackbar.LENGTH_INDEFINITE:
-                mSnackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE);
-                break;
-            case Snackbar.LENGTH_LONG:
-                mSnackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG);
-                break;
-            default:
-                mSnackbar = Snackbar.make(view, "", Snackbar.LENGTH_SHORT);
-        }
+    private WPDialogSnackbar(@NonNull View view, @NonNull CharSequence text, @Duration int duration) {
+        mSnackbar = Snackbar.make(view, "", duration);
 
         // Set underlying snackbar layout.
         SnackbarLayout snackbarLayout = (SnackbarLayout) mSnackbar.getView();
@@ -65,7 +57,7 @@ public class WPDialogSnackbar {
         return mSnackbar != null && mSnackbar.isShown();
     }
 
-    public static WPDialogSnackbar make(@NonNull View view, @NonNull CharSequence text, int duration) {
+    public static WPDialogSnackbar make(@NonNull View view, @NonNull CharSequence text, @Duration int duration) {
         return new WPDialogSnackbar(view, text, duration);
     }
 
