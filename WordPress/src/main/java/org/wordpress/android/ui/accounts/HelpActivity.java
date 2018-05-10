@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.support.ZendeskHelper;
@@ -99,17 +98,12 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void contactUs() {
-        AccountModel account = mAccountStore.getAccount();
         Bundle extras = getIntent().getExtras();
         Tag origin = Tag.ORIGIN_UNKNOWN;
         if (extras != null) {
             origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
         }
-        if (account != null) {
-            ZendeskHelper.configureAndShowTickets(this, account.getEmail(), account.getDisplayName(),
-                    mSiteStore.getSites(), account.getUserName(), origin);
-        }
-        // TODO: Implement for self-hosted sites
+        ZendeskHelper.showZendeskTickets(this, mAccountStore, mSiteStore, origin);
     }
 
     private void showZendeskFaq() {

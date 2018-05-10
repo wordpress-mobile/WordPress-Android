@@ -14,6 +14,8 @@ import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.HelpshiftHelper.Tag
@@ -66,13 +68,23 @@ fun showZendeskHelpCenter(context: Context, email: String, name: String) {
             .show(context)
 }
 
-fun configureAndShowTickets(
+fun showZendeskTickets(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
+    val allSites = siteStore.sites
+    if (accountStore.account != null) {
+        configureAndShowTickets(context, accountStore.account.email, accountStore.account.displayName,
+                allSites, accountStore.account.userName, origin ?: Tag.ORIGIN_UNKNOWN)
+    } else {
+        // TODO: Implement for self-hosted sites
+    }
+}
+
+private fun configureAndShowTickets(
     context: Context,
     email: String,
     name: String,
     allSites: List<SiteModel>?,
     username: String?,
-    origin: Tag?
+    origin: Tag
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
@@ -110,7 +122,7 @@ private fun blogInformation(allSites: List<SiteModel>?, username: String?): Stri
     return ZendeskConstants.noneValue
 }
 
-private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag?): List<String> {
+private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -128,7 +140,7 @@ private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag?): List<String> 
         val plans = it.mapNotNull { it.planShortName }.distinct()
         tags.addAll(plans)
     }
-    tags.add((origin ?: Tag.ORIGIN_UNKNOWN).toString())
+    tags.add(origin.toString())
     return tags
 }
 
