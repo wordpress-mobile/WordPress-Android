@@ -195,34 +195,37 @@
 
             <LinearLayout
                 android:id="@+id/visit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:contentDescription="@string/view_in_browser"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:orientation="horizontal"
-                android:contentDescription="@string/view_in_browser">
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal" >
 
                 <ImageView
-                    android:layout_gravity="center_vertical"
                     android:id="@+id/image_visit_icon"
-                    android:layout_width="@dimen/reader_count_icon"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:contentDescription="@null"
+                    android:layout_gravity="center_vertical"
                     android:layout_height="@dimen/reader_count_icon"
+                    android:layout_marginEnd="@dimen/margin_extra_small"
                     android:layout_marginLeft="-2dp"
                     android:layout_marginRight="@dimen/margin_extra_small"
-                    android:background="?android:selectableItemBackground"
-                    android:contentDescription="@null"
-                    app:srcCompat="@drawable/reader_visit"
-                    android:layout_marginEnd="@dimen/margin_extra_small"
-                    android:layout_marginStart="-2dp"/>
+                    android:layout_marginStart="-2dp"
+                    android:layout_width="@dimen/reader_count_icon"
+                    app:srcCompat="@drawable/reader_button_visit" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_visit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:selectableItemBackground"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
                     android:text="@string/reader_label_visit"
                     android:textColor="@color/reader_count_text"
                     android:textSize="@dimen/text_sz_medium" />
+
             </LinearLayout>
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -250,17 +253,17 @@
 
             <ImageView
                 android:id="@+id/image_more"
-                android:layout_width="@dimen/reader_more_icon"
-                android:layout_height="@dimen/reader_more_icon"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@string/show_more_desc"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/show_more_desc"
+                android:layout_height="@dimen/reader_more_icon"
+                android:layout_width="@dimen/reader_more_icon"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
                 android:tint="@color/grey_text_min"
-                app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"
-                android:layout_alignParentEnd="true"/>
+                app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
 
         </RelativeLayout>
 
