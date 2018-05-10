@@ -59,5 +59,4 @@ class ReaderBookmarkButton : LinearLayout {
 
         updateBookmarkText()
     }
-
 }
