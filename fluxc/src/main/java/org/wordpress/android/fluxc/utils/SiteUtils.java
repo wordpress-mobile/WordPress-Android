@@ -44,8 +44,19 @@ public class SiteUtils {
         } else {
             String[] timezoneSplit = split(wpTimeZone, ".");
             timezoneNormalized = timezoneSplit[0];
-            if (timezoneSplit.length > 1 && timezoneSplit[1].equals("5")) {
-                timezoneNormalized += ":30";
+            if (timezoneSplit.length > 1) {
+                switch (timezoneSplit[1]) {
+                    case "5":
+                        timezoneNormalized += ":30";
+                        break;
+                    case "75":
+                        timezoneNormalized += ":45";
+                        break;
+                    case "25":
+                        // Not used by any timezones as of current writing, but you never know
+                        timezoneNormalized += ":15";
+                        break;
+                }
             }
             if (timezoneNormalized.startsWith("-")) {
                 timezoneNormalized = "GMT" + timezoneNormalized;

@@ -59,5 +59,23 @@ class SiteUtilsTest {
             val currentHour = hourFormat.format(DateTimeUtils.nowUTC())
             assertNotEquals(currentHour, SiteUtils.getCurrentDateTimeForSite(this, hourFormat))
         }
+
+        val nptSite = SiteModel().apply { timezone = "5.75" }
+        with (nptSite) {
+            val formattedDate = SiteUtils.getCurrentDateTimeForSite(this, UTC8601_FORMAT)
+            assertEquals("+05:45", formattedDate.takeLast(6))
+
+            val currentHour = hourFormat.format(DateTimeUtils.nowUTC())
+            assertNotEquals(currentHour, SiteUtils.getCurrentDateTimeForSite(this, hourFormat))
+        }
+
+        val imaginaryQuarterTimeZoneSite = SiteModel().apply { timezone = "-2.25" }
+        with (imaginaryQuarterTimeZoneSite) {
+            val formattedDate = SiteUtils.getCurrentDateTimeForSite(this, UTC8601_FORMAT)
+            assertEquals("-02:15", formattedDate.takeLast(6))
+
+            val currentHour = hourFormat.format(DateTimeUtils.nowUTC())
+            assertNotEquals(currentHour, SiteUtils.getCurrentDateTimeForSite(this, hourFormat))
+        }
     }
 }
