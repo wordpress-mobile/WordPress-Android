@@ -83,6 +83,7 @@ import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.extensions.CaptionExtensionsKt;
 import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
+import org.wordpress.aztec.plugins.wpcomments.HiddenGutenbergPlugin;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.Format;
@@ -134,6 +135,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
+    private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
     public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
@@ -331,6 +333,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new CaptionShortcodePlugin(mContent))
                 .addPlugin(new VideoShortcodePlugin())
                 .addPlugin(new AudioShortcodePlugin())
+                .addPlugin(new HiddenGutenbergPlugin())
                 .addPlugin(mediaToolbarGalleryButton)
                 .addPlugin(mediaToolbarCameraButton)
                 .addPlugin(mediaToolbarLibraryButton);
@@ -519,15 +522,47 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             text = "";
         }
 
-        if (mContent == null) {
+        if (mContent == null || mSource == null) {
             return;
         }
 
-        mContent.fromHtml(removeVisualEditorProgressTag(text.toString()));
+        String postContent = removeVisualEditorProgressTag(text.toString());
+        if (contentContainsGutenbergBlocks(postContent)) {
+            mContent.setCalypsoMode(false);
+            mSource.setCalypsoMode(false);
+        } else {
+            mContent.setCalypsoMode(true);
+            mSource.setCalypsoMode(true);
+        }
+
+        mContent.fromHtml(postContent);
 
         updateFailedAndUploadingMedia();
 
         mAztecReady = true;
+    }
+
+    /*
+        Note the way we detect we're in presence of Gutenberg blocks logic is taken from
+        https://github.com/WordPress/gutenberg/blob/5a6693589285363341bebad15bd56d9371cf8ecc/lib/register.php#L331-L345
+
+        * Determine whether a content string contains blocks. This test optimizes for
+        * performance rather than strict accuracy, detecting the pattern of a block
+        * but not validating its structure. For strict accuracy, you should use the
+        * block parser on post content.
+        *
+        * @since 1.6.0
+        * @see gutenberg_parse_blocks()
+        *
+        * @param string $content Content to test.
+        * @return bool Whether the content contains blocks.
+
+        function gutenberg_content_has_blocks( $content ) {
+            return false !== strpos( $content, '<!-- wp:' );
+        }
+     */
+    private boolean contentContainsGutenbergBlocks(String postContent) {
+        return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
 
     /*

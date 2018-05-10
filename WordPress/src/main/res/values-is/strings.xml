@@ -876,7 +876,6 @@ Language: is
     <string name="caption">Myndatexti (valkvæmt)</string>
     <string name="no_network_title">Ekkert net tiltækt</string>
     <string name="featured_in_post">Hafa mynd með í efni færslu</string>
-    <string name="featured">Nota sem einkennismynd</string>
     <string name="blogusername">bloggnotandanafn</string>
     <string name="link_enter_url">Slóð</string>
     <string name="uploading">Hleð upp…</string>

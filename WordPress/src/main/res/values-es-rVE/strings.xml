@@ -805,7 +805,6 @@ Language: es_VE
     <string name="password">Contraseña</string>
     <string name="username">Nombre de usuario</string>
     <string name="reader">Lector</string>
-    <string name="featured">Usar como imagen destacada</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="caption">Leyenda (opcional)</string>

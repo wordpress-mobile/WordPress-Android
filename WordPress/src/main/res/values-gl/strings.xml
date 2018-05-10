@@ -820,7 +820,6 @@ Language: gl_ES
     <string name="width">Largo</string>
     <string name="posts">Artigos</string>
     <string name="anonymous">Anónimo</string>
-    <string name="featured">Usar como imaxe destacada</string>
     <string name="featured_in_post">Incluír una imaxe no contido do artigo</string>
     <string name="no_network_title">Non hai rede dispoñible</string>
     <string name="blogusername">usuario</string>

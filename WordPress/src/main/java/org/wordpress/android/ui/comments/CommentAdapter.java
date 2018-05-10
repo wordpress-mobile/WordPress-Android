@@ -25,7 +25,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -179,11 +178,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         if (!TextUtils.isEmpty(comment.getPostTitle())) {
-            formattedTitle = author
-                             + "<font color=" + HtmlUtils.colorResToHtmlColor(context, R.color.grey_darken_10) + ">"
-                             + " " + context.getString(R.string.on) + " "
-                             + "</font>"
-                             + comment.getPostTitle().trim();
+            formattedTitle = context.getString(R.string.comment_title, author, comment.getPostTitle().trim());
         } else {
             formattedTitle = author;
         }
@@ -429,7 +424,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
                 comments = mCommentStore.getCommentsForSite(mSite, false,
-                                                            CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
             } else {
                 comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
             }
