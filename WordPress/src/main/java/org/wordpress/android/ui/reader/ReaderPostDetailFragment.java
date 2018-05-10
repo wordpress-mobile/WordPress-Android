@@ -430,12 +430,30 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void initBookmarkButton() {
+        if (!canShowFooter()) {
+            return;
+        }
+
         updateBookmarkView();
         mReaderBookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 toggleBookmark();
             }
         });
+    }
+
+    private void updateBookmarkView() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
+
+        if (!canShowBookmarkButton()) {
+            mReaderBookmarkButton.setVisibility(View.GONE);
+        } else {
+            mReaderBookmarkButton.setVisibility(View.VISIBLE);
+        }
+
+        mReaderBookmarkButton.setIsBookmarked(mPost.isBookmarked);
     }
 
     /*
@@ -455,20 +473,6 @@ public class ReaderPostDetailFragment extends Fragment
         mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
 
         updateBookmarkView();
-    }
-
-    private void updateBookmarkView() {
-        if (!isAdded() || !hasPost() || !canShowFooter()) {
-            return;
-        }
-
-        if (!canShowBookmarkButton()) {
-            mReaderBookmarkButton.setVisibility(View.GONE);
-        } else {
-            mReaderBookmarkButton.setVisibility(View.VISIBLE);
-        }
-
-        mReaderBookmarkButton.setIsBookmarked(mPost.isBookmarked);
     }
 
     /*
