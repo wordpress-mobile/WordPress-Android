@@ -13,6 +13,7 @@ import com.zendesk.sdk.network.impl.ZendeskConfig
 import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -70,20 +71,26 @@ fun showZendeskHelpCenter(context: Context, email: String, name: String) {
 
 fun showZendeskTickets(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
     val allSites = siteStore.sites
-    if (accountStore.account != null) {
-        configureAndShowTickets(context, accountStore.account.email, accountStore.account.displayName,
-                allSites, accountStore.account.userName, origin ?: Tag.ORIGIN_UNKNOWN)
+    val currentAccount = accountStore.account
+    var email: String? = null
+    var name: String? = null
+    if (currentAccount != null) {
+        email = currentAccount.email
+        name = currentAccount.displayName
     } else {
         // TODO: Implement for self-hosted sites
+        // We can get the selected site and figure out the email/username from there. We can save the details
+        // in preferences so that the Zendesk tickets will remain after a site change
     }
+    configureAndShowTickets(context, email, name, allSites, currentAccount, origin ?: Tag.ORIGIN_UNKNOWN)
 }
 
 private fun configureAndShowTickets(
     context: Context,
-    email: String,
-    name: String,
+    email: String?,
+    name: String?,
     allSites: List<SiteModel>?,
-    username: String?,
+    account: AccountModel?,
     origin: Tag
 ) {
     require(isZendeskEnabled) {
@@ -93,7 +100,7 @@ private fun configureAndShowTickets(
     zendeskInstance.ticketFormId = TicketFieldIds.form
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(allSites, username)),
+            CustomField(TicketFieldIds.blogList, blogInformation(allSites, account)),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
@@ -112,12 +119,12 @@ private fun configureAndShowTickets(
 
 // Helpers
 
-private fun zendeskIdentity(email: String, name: String): Identity =
+private fun zendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
-private fun blogInformation(allSites: List<SiteModel>?, username: String?): String {
+private fun blogInformation(allSites: List<SiteModel>?, account: AccountModel?): String {
     allSites?.let {
-        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(username) }
+        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(account) }
     }
     return ZendeskConstants.noneValue
 }
