@@ -977,26 +977,25 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return -1;
             }
 
-            // find the position of the gap marker post
-            int gapPosition = mAllPosts.indexOfIds(gapMarkerIds);
-            if (gapPosition > -1) {
-                // increment it because we want the gap marker to appear *below* this post
-                gapPosition++;
-                // increment it again if there's a custom first item
-                if (hasCustomFirstItem()) {
-                    gapPosition++;
-                }
+            int gapMarkerPostPosition = mAllPosts.indexOfIds(gapMarkerIds);
+            int gapMarkerPosition = -1;
+            if (gapMarkerPostPosition > -1) {
                 // remove the gap marker if it's on the last post (edge case but
                 // it can happen following a purge)
-                if (gapPosition >= mAllPosts.size() - 1) {
-                    gapPosition = -1;
+                if (gapMarkerPostPosition == mAllPosts.size() - 1) {
                     AppLog.w(AppLog.T.READER, "gap marker at/after last post, removed");
                     ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
                 } else {
-                    AppLog.d(AppLog.T.READER, "gap marker at position " + gapPosition);
+                    // we want the gap marker to appear *below* this post
+                    gapMarkerPosition = gapMarkerPostPosition + 1;
+                    // increment it if there's a custom first item
+                    if (hasCustomFirstItem()) {
+                        gapMarkerPosition++;
+                    }
+                    AppLog.d(AppLog.T.READER, "gap marker at position " + gapMarkerPostPosition);
                 }
             }
-            return gapPosition;
+            return gapMarkerPosition;
         }
 
         @Override
