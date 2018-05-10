@@ -1631,6 +1631,7 @@ public class ReaderPostListFragment extends Fragment
                             AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                     String.valueOf(blogId), SubscriptionAction.NEW);
                             mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                         }
                     })
                 .setActionTextColor(getResources().getColor(R.color.color_accent))

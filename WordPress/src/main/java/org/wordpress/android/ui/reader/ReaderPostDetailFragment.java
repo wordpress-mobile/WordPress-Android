@@ -30,6 +30,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -447,6 +448,7 @@ public class ReaderPostDetailFragment extends Fragment
                                 AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                         String.valueOf(blogId), SubscriptionAction.NEW);
                                 mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                             }
                         })
                     .setActionTextColor(getResources().getColor(R.color.color_accent))
