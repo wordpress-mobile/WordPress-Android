@@ -584,6 +584,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
                 break;
 
+            case OTHER:
             default:
                 // something else, so hide discover section
                 postHolder.mLayoutDiscover.setVisibility(View.GONE);
@@ -735,7 +736,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        if (hasCustomFirstItem()) {
+        if (hasCustomFirstItem() || mGapMarkerPosition != -1) {
             return mPosts.size() + 1;
         }
         return mPosts.size();
@@ -916,6 +917,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderPostList mAllPosts;
 
+        private boolean mCanRequestMorePostsTemp;
+        private int mGapMarkerPositionTemp;
+
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -955,10 +959,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
-            mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+            mCanRequestMorePostsTemp = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
             // determine whether a gap marker exists - only applies to tagged posts
-            mGapMarkerPosition = getGapMarkerPosition();
+            mGapMarkerPositionTemp = getGapMarkerPosition();
 
             return true;
         }
@@ -998,6 +1002,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                ReaderPostAdapter.this.mGapMarkerPosition = mGapMarkerPositionTemp;
+                ReaderPostAdapter.this.mCanRequestMorePosts = mCanRequestMorePostsTemp;
                 mPosts.clear();
                 mPosts.addAll(mAllPosts);
                 notifyDataSetChanged();
