@@ -310,4 +310,5 @@
     <dimen name="padding_input_row_start">60dp</dimen>
 
     <dimen name="dialog_snackbar_button_height">36dp</dimen>
+    <dimen name="dialog_snackbar_content_padding">20dp</dimen>
 </resources>

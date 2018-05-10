@@ -11,10 +11,10 @@
         android:id="@+id/text"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/dialog_snackbar_content_padding"
+        android:paddingLeft="@dimen/dialog_snackbar_content_padding"
+        android:paddingRight="@dimen/dialog_snackbar_content_padding"
+        android:paddingStart="@dimen/dialog_snackbar_content_padding"
         android:paddingTop="@dimen/margin_extra_large" >
 
         <TextView
