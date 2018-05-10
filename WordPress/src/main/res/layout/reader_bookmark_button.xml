@@ -14,7 +14,7 @@
         app:srcCompat="@drawable/ic_bookmark_selector_18dp"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_bookmark_button"
+        android:id="@+id/label_bookmark_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
