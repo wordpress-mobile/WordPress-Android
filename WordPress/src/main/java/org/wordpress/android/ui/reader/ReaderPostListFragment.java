@@ -611,7 +611,7 @@ public class ReaderPostListFragment extends Fragment
                 mSettingsMenuItem.setVisible(false);
 
                 if (mBottonNavController != null) {
-                    mBottonNavController.hideBottomNavigation();
+                    mBottonNavController.onRequestHideBottomNavigation();
                 }
 
                 return true;
@@ -625,7 +625,7 @@ public class ReaderPostListFragment extends Fragment
                 mCurrentSearchQuery = null;
 
                 if (mBottonNavController != null) {
-                    mBottonNavController.showBottomNavigation();
+                    mBottonNavController.onRequestShowBottomNavigation();
                 }
 
                 // return to the followed tag that was showing prior to searching

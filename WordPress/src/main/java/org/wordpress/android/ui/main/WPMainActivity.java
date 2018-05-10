@@ -471,12 +471,12 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener,
     }
 
     @Override
-    public void showBottomNavigation() {
+    public void onRequestShowBottomNavigation() {
         mBottomNavContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideBottomNavigation() {
+    public void onRequestHideBottomNavigation() {
         mBottomNavContainer.setVisibility(View.GONE);
     }
 
