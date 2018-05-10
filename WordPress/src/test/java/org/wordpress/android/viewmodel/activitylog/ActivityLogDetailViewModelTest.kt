@@ -78,8 +78,6 @@ class ActivityLogDetailViewModelTest {
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
             assertEquals(it.activityID, activityID)
-            assertEquals(it.createdDate, "January 1, 1970")
-            assertEquals(it.createdTime, "1:00 AM")
         }
     }
 
