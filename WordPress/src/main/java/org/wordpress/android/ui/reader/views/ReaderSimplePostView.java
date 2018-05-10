@@ -139,6 +139,14 @@ public class ReaderSimplePostView extends LinearLayout {
 
         final boolean isAskingToFollow = !mSimplePost.isFollowing();
 
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(), mSimplePost.getSiteId());
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
+
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -149,15 +157,6 @@ public class ReaderSimplePostView extends LinearLayout {
                 btnFollow.setEnabled(true);
                 if (succeeded) {
                     mSimplePost.setIsFollowing(isAskingToFollow);
-
-                    if (mFollowListener != null) {
-                        if (isAskingToFollow) {
-                            mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(),
-                                    mSimplePost.getSiteId());
-                        } else {
-                            mFollowListener.onFollowingTapped();
-                        }
-                    }
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
                             : R.string.reader_toast_err_unfollow_blog;

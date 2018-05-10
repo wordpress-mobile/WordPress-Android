@@ -870,6 +870,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean isCurrentlyFollowed = ReaderPostTable.isPostFollowed(post);
         final boolean isAskingToFollow = !isCurrentlyFollowed;
 
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
+
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -879,12 +887,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
                     setFollowStatusForBlog(post.blogId, !isAskingToFollow);
-                } else if (mFollowListener != null) {
-                    if (isAskingToFollow) {
-                        mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
-                    } else {
-                        mFollowListener.onFollowingTapped();
-                    }
                 }
             }
         };

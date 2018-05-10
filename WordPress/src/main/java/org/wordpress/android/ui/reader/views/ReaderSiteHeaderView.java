@@ -174,6 +174,14 @@ public class ReaderSiteHeaderView extends LinearLayout {
             isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mBlogId);
         }
 
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
+
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -186,12 +194,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
                             : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
-                } else if (mFollowListener != null) {
-                    if (isAskingToFollow) {
-                        mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
-                    } else {
-                        mFollowListener.onFollowingTapped();
-                    }
                 }
             }
         };

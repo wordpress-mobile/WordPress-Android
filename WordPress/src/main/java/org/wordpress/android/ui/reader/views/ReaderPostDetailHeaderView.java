@@ -197,6 +197,14 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
 
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(followButton, mPost.getBlogName(), mPost.blogId);
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
+
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -207,14 +215,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 mFollowButton.setEnabled(true);
                 if (succeeded) {
                     mPost.isFollowedByCurrentUser = isAskingToFollow;
-
-                    if (mFollowListener != null) {
-                        if (isAskingToFollow) {
-                            mFollowListener.onFollowTapped(followButton, mPost.getBlogName(), mPost.blogId);
-                        } else {
-                            mFollowListener.onFollowingTapped();
-                        }
-                    }
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
                             : R.string.reader_toast_err_unfollow_blog;
