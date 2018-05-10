@@ -60,8 +60,4 @@ class ReaderBookmarkButton : LinearLayout {
         updateBookmarkText()
     }
 
-    override fun setSelected(selected: Boolean) {
-        super.setSelected(selected)
-    }
-
 }
