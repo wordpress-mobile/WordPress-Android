@@ -53,8 +53,8 @@ class ActivityLogDetailViewModel
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {
-        return displayName == "Jetpack" && type == "Application"
-                || displayName == "Happiness Engineer" && type == "Happiness Engineer"
+        return displayName == "Jetpack" && type == "Application" ||
+                displayName == "Happiness Engineer" && type == "Happiness Engineer"
     }
 
     private fun Date.printDate(): String {
