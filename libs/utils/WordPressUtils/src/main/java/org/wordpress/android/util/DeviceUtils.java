@@ -3,7 +3,9 @@ package org.wordpress.android.util;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 import org.wordpress.android.util.AppLog.T;
 
@@ -100,6 +102,10 @@ public class DeviceUtils {
      */
     public boolean isChromebook(Context context) {
         return context.getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
+    }
+
+    public boolean hasHardwareKeyboard(@NonNull Context context) {
+        return context.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
     }
 
     private String capitalize(String s) {
