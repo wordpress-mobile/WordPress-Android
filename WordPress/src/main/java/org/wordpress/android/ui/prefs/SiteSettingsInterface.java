@@ -773,10 +773,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setSiteIconMediaId(int siteIconMediaId) {
-        // want to prevent O(n) language code lookup if there is no change
-        if (mSettings.siteIconMediaId != siteIconMediaId) {
-            mSettings.siteIconMediaId = siteIconMediaId;
-        }
+        mSettings.siteIconMediaId = siteIconMediaId;
     }
 
 

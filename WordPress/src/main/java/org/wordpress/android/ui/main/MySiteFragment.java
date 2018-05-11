@@ -182,7 +182,9 @@ public class MySiteFragment extends Fragment
 
     private void initSiteSettings() {
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSelectedSite(), this);
-        mSiteSettings.init(true);
+        if (mSiteSettings != null) {
+            mSiteSettings.init(true);
+        }
     }
 
     @Override
@@ -508,7 +510,7 @@ public class MySiteFragment extends Fragment
 
         File file = new File(filePath);
         if (!file.exists()) {
-            ToastUtils.showToast(getActivity(), R.string.error_locating_image, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(getActivity(), R.string.file_error_create, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -516,6 +518,9 @@ public class MySiteFragment extends Fragment
         if (site != null) {
             MediaModel media = buildMediaModel(file, site);
             UploadService.uploadMedia(getActivity(), media);
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_generic, ToastUtils.Duration.SHORT);
+            AppLog.e(T.MAIN, "Unexpected error - Site icon upload failed, because there wasn't any site selected.");
         }
     }
 
@@ -553,7 +558,7 @@ public class MySiteFragment extends Fragment
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
         options.setHideBottomControls(true);
 
-        UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))
+        UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_site_icon.jpg")))
              .withAspectRatio(1, 1)
              .withOptions(options)
              .start(getActivity(), this);
@@ -713,8 +718,8 @@ public class MySiteFragment extends Fragment
      * called yet.
      *
      */
-    public void onSiteChanged() {
-        refreshSelectedSiteDetails(getSelectedSite());
+    public void onSiteChanged(SiteModel site) {
+        refreshSelectedSiteDetails(site);
         showSiteIconProgressBar(false);
     }
 
@@ -763,6 +768,7 @@ public class MySiteFragment extends Fragment
 
                     mSiteSettings.setSiteIconMediaId((int) media.getMediaId());
                     mSiteSettings.saveSettings();
+                    showSiteIconProgressBar(false);
                 }
             } else {
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
@@ -790,12 +796,10 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    @Override public void onPositiveClicked(@NonNull String instanceTag) {
+    @Override
+    public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_ADD_SITE_ICON_DIALOG:
-                ActivityLauncher.showPhotoPickerForResult(getActivity(),
-                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
-                break;
             case TAG_CHANGE_SITE_ICON_DIALOG:
                 ActivityLauncher.showPhotoPickerForResult(getActivity(),
                         MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
@@ -806,7 +810,8 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    @Override public void onNegativeClicked(@NonNull String instanceTag) {
+    @Override
+    public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_ADD_SITE_ICON_DIALOG:
                 break;
@@ -822,7 +827,8 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    @Override public void onSettingsSaved() {
+    @Override
+    public void onSettingsSaved() {
         // refresh the site after site icon change
         SiteModel site = getSelectedSite();
         if (site != null) {
@@ -830,17 +836,21 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    @Override public void onSaveError(Exception error) {
+    @Override
+    public void onSaveError(Exception error) {
         showSiteIconProgressBar(false);
     }
 
-    @Override public void onFetchError(Exception error) {
+    @Override
+    public void onFetchError(Exception error) {
         showSiteIconProgressBar(false);
     }
 
-    @Override public void onSettingsUpdated() {
+    @Override
+    public void onSettingsUpdated() {
     }
 
-    @Override public void onCredentialsValidated(Exception error) {
+    @Override
+    public void onCredentialsValidated(Exception error) {
     }
 }

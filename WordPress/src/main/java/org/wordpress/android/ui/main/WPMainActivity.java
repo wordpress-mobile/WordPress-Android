@@ -947,7 +947,7 @@ public class WPMainActivity extends AppCompatActivity implements BasicYesNoDialo
             mSelectedSite = site;
         }
         if (getMySiteFragment() != null) {
-            getMySiteFragment().onSiteChanged();
+            getMySiteFragment().onSiteChanged(site);
         }
     }
 
@@ -958,16 +958,16 @@ public class WPMainActivity extends AppCompatActivity implements BasicYesNoDialo
     }
 
     @Override public void onPositiveClicked(@NonNull String instanceTag) {
-        Fragment fragment = getMySiteFragment();
+        MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
             getMySiteFragment().onPositiveClicked(instanceTag);
         }
     }
 
     @Override public void onNegativeClicked(@NonNull String instanceTag) {
-        Fragment fragment = getMySiteFragment();
+        MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
-            getMySiteFragment().onNegativeClicked(instanceTag);
+            fragment.onNegativeClicked(instanceTag);
         }
     }
 }
