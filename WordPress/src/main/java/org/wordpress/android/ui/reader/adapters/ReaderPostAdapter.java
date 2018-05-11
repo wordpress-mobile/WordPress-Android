@@ -1018,7 +1018,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return false;
             }
 
-            if (mPosts.isSameList(mAllPosts)) {
+            if (mPosts.isSameListWithBookmark(mAllPosts)) {
                 return false;
             }
 
