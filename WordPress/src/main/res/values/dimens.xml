@@ -311,4 +311,6 @@
 
     <dimen name="dialog_snackbar_button_height">36dp</dimen>
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
+
+    <dimen name="whats_next_dot_size">8dp</dimen>
 </resources>

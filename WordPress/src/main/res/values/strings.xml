@@ -2140,4 +2140,8 @@
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
+
+    <string name="whats_next_sites">What\'s Next</string>
+    <string name="whats_next_sites_progress" translatable="false">%1$d/8</string>
+
 </resources>
