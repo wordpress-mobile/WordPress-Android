@@ -1,6 +1,7 @@
 package org.wordpress.android.editor;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -106,6 +107,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     private float mLastYPos = 0;
 
+    private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
+
     @Override
     public boolean onBackPressed() {
         // leave full screen mode back button is pressed
@@ -130,6 +133,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             return mContentEditText.getText().toString();
         }
         return mContent;
+    }
+
+    @Override
+    public LiveData<Editable> getTitleOrContentChanged() {
+        return mTextWatcher.getAfterTextChanged();
     }
 
     @Override
@@ -166,8 +174,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_edit_post_content, container, false);
 
-        mFormatBar = (LinearLayout) rootView.findViewById(R.id.format_bar);
-        mTitleEditText = (EditText) rootView.findViewById(R.id.post_title);
+        mFormatBar = rootView.findViewById(R.id.format_bar);
+        mTitleEditText = rootView.findViewById(R.id.post_title);
         mTitleEditText.setText(mTitle);
         mTitleEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -181,8 +189,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             }
         });
 
-        mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
+        mContentEditText = rootView.findViewById(R.id.post_content);
         mContentEditText.setText(mContent);
+
+        mTitleEditText.addTextChangedListener(mTextWatcher);
+        mContentEditText.addTextChangedListener(mTextWatcher);
 
         mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);

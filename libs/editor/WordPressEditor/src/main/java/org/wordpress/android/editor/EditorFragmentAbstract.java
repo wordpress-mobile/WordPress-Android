@@ -2,8 +2,10 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.arch.lifecycle.LiveData;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spanned;
 import android.view.DragEvent;
 
@@ -21,6 +23,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setContent(CharSequence text);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
     public abstract CharSequence getContent() throws EditorFragmentNotAddedException;
+    public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);

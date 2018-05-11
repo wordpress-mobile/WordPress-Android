@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +29,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -548,13 +551,7 @@ public class EditPostActivity extends AppCompatActivity implements
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        updatePostObject(true);
-                    } catch (EditorFragmentNotAddedException e) {
-                        AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                        return;
-                    }
-                    savePostToDb();
+                    updatePostAndSaveToDb();
                     if (mHandler != null) {
                         mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
                     }
@@ -562,6 +559,28 @@ public class EditPostActivity extends AppCompatActivity implements
             }).start();
         }
     };
+
+    private Runnable mSave = new Runnable() {
+        @Override
+        public void run() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    updatePostAndSaveToDb();
+                }
+            }).start();
+        }
+    };
+
+    private void updatePostAndSaveToDb() {
+        try {
+            updatePostObject(true);
+        } catch (EditorFragmentNotAddedException e) {
+            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+            return;
+        }
+        savePostToDb();
+    }
 
     @Override
     protected void onResume() {
@@ -1826,6 +1845,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
 
+                    mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, new Observer<Editable>() {
+                        @Override public void onChanged(@Nullable Editable editable) {
+                            mHandler.removeCallbacks(mSave);
+                            mHandler.postDelayed(mSave, 500);
+                        }
+                    });
+
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
 
@@ -2936,7 +2962,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                                                                  FluxCUtils.mediaFileFromMediaModel(media));
+                        FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
             UploadService.cancelFinalNotification(this, mPost);

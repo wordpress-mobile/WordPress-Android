@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.arch.lifecycle.LiveData;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
@@ -132,6 +133,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
     private long mActionStartedAt = -1;
+    private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
     private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
         private long mLastSetCoordsTimestamp;
@@ -340,8 +342,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // -- HTML mode configuration
 
         mSourceView = view.findViewById(R.id.sourceview);
-        mSourceViewTitle = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_title);
-        mSourceViewContent = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_content);
+        mSourceViewTitle = view.findViewById(R.id.sourceview_title);
+        mSourceViewContent = view.findViewById(R.id.sourceview_content);
+
+        mSourceViewTitle.addTextChangedListener(mTextWatcher);
+        mSourceViewContent.addTextChangedListener(mTextWatcher);
 
         // Toggle format bar on/off as user changes focus between title and content in HTML mode
         mSourceViewTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -998,6 +1003,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         return StringUtils.notNullStr(mContentHtml);
+    }
+
+    @Override
+    public LiveData<Editable> getTitleOrContentChanged() {
+        return mTextWatcher.getAfterTextChanged();
     }
 
     @Override
