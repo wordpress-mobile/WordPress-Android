@@ -84,7 +84,7 @@ public class HelpActivity extends AppCompatActivity {
         WPTextView contactUsButton = findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                contactUs();
+                createNewZendeskTicket();
             }
         });
 
@@ -95,19 +95,35 @@ public class HelpActivity extends AppCompatActivity {
                 showZendeskFaq();
             }
         });
+
+        WPTextView myTicketsButton = findViewById(R.id.my_tickets_button);
+        myTicketsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showZendeskTickets();
+            }
+        });
     }
 
-    private void contactUs() {
+    private void createNewZendeskTicket() {
+        ZendeskHelper.createNewTicket(this, mAccountStore, mSiteStore, getOriginTagFromExtras());
+    }
+
+    private void showZendeskTickets() {
+
+        ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginTagFromExtras());
+    }
+
+    private void showZendeskFaq() {
+        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore);
+    }
+
+    private Tag getOriginTagFromExtras() {
         Bundle extras = getIntent().getExtras();
         Tag origin = Tag.ORIGIN_UNKNOWN;
         if (extras != null) {
             origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
         }
-        ZendeskHelper.showZendeskTickets(this, mAccountStore, mSiteStore, origin);
-    }
-
-    private void showZendeskFaq() {
-        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore.getAccount().getEmail(),
-                mAccountStore.getAccount().getDisplayName());
+        return origin;
     }
 }

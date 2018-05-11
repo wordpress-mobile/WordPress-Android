@@ -64,6 +64,13 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
+                    android:text="@string/my_tickets"
+                    android:id="@+id/my_tickets_button"
+                    android:layout_width="match_parent"
+                    android:gravity="center"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/WordPress.NUXPrimaryButton"
                     android:text="@string/reader_title_applog"
                     android:id="@+id/applog_button"
                     android:layout_width="match_parent"

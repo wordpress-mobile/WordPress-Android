@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
+import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
 import com.zendesk.sdk.model.access.AnonymousIdentity
 import com.zendesk.sdk.model.access.Identity
 import com.zendesk.sdk.model.request.CustomField
@@ -58,19 +59,59 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
-fun showZendeskHelpCenter(context: Context, email: String, name: String) {
+fun showZendeskHelpCenter(context: Context, accountStore: AccountStore) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    zendeskInstance.setIdentity(zendeskIdentity(email, name))
+    zendeskInstance.setIdentity(zendeskIdentity(accountStore))
     SupportActivity.Builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
             .withLabelNames(ZendeskConstants.articleLabel)
             .show(context)
 }
 
-fun showZendeskTickets(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
-    val allSites = siteStore.sites
+fun createNewTicket(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
+    require(isZendeskEnabled) {
+        zendeskNeedsToBeEnabledError
+    }
+    configureZendesk(context, accountStore, siteStore)
+    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin))
+}
+
+fun showAllTickets(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
+    require(isZendeskEnabled) {
+        zendeskNeedsToBeEnabledError
+    }
+    configureZendesk(context, accountStore, siteStore)
+    RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin))
+}
+
+// Helpers
+
+private fun configureZendesk(context: Context, accountStore: AccountStore, siteStore: SiteStore) {
+    zendeskInstance.setIdentity(zendeskIdentity(accountStore))
+    zendeskInstance.ticketFormId = TicketFieldIds.form
+    zendeskInstance.customFields = listOf(
+            CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
+            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore.account)),
+            CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
+            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
+            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
+    )
+}
+
+private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Tag?) =
+        object : BaseZendeskFeedbackConfiguration() {
+            override fun getRequestSubject(): String {
+                return ZendeskConstants.ticketSubject
+            }
+
+            override fun getTags(): MutableList<String> {
+                return zendeskTags(allSites, origin ?: Tag.ORIGIN_UNKNOWN) as MutableList<String>
+            }
+        }
+
+private fun zendeskIdentity(accountStore: AccountStore): Identity {
     val currentAccount = accountStore.account
     var email: String? = null
     var name: String? = null
@@ -82,42 +123,8 @@ fun showZendeskTickets(context: Context, accountStore: AccountStore, siteStore: 
         // We can get the selected site and figure out the email/username from there. We can save the details
         // in preferences so that the Zendesk tickets will remain after a site change
     }
-    configureAndShowTickets(context, email, name, allSites, currentAccount, origin ?: Tag.ORIGIN_UNKNOWN)
+    return zendeskIdentity(email, name)
 }
-
-private fun configureAndShowTickets(
-    context: Context,
-    email: String?,
-    name: String?,
-    allSites: List<SiteModel>?,
-    account: AccountModel?,
-    origin: Tag
-) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
-    }
-    zendeskInstance.setIdentity(zendeskIdentity(email, name))
-    zendeskInstance.ticketFormId = TicketFieldIds.form
-    zendeskInstance.customFields = listOf(
-            CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(allSites, account)),
-            CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
-            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
-            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
-    )
-    val configuration = object : BaseZendeskFeedbackConfiguration() {
-        override fun getRequestSubject(): String {
-            return ZendeskConstants.ticketSubject
-        }
-
-        override fun getTags(): MutableList<String> {
-            return zendeskTags(allSites, origin) as MutableList<String>
-        }
-    }
-    RequestActivity.startActivity(context, configuration)
-}
-
-// Helpers
 
 private fun zendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
