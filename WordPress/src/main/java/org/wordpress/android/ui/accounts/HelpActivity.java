@@ -110,7 +110,6 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void showZendeskTickets() {
-
         ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginTagFromExtras());
     }
 
