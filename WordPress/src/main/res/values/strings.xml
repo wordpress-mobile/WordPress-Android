@@ -1358,6 +1358,12 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_btn_notifications_off">Turn off site notifications</string>
+    <string name="reader_btn_notifications_on">Turn on site notifications</string>
+
+    <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
+    <string name="reader_followed_blog_notifications_action">Enable</string>
+    <string name="reader_followed_blog_notifications_this">this site</string>
 
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>

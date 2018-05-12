@@ -43,6 +43,7 @@ public class ReaderBlogTable {
                    + " is_jetpack INTEGER DEFAULT 0,"
                    + " is_following INTEGER DEFAULT 0,"
                    + " num_followers INTEGER DEFAULT 0,"
+                   + " is_notifications_enabled INTEGER DEFAULT 0,"
                    + " date_updated TEXT,"
                    + " PRIMARY KEY (blog_id)"
                    + ")");
@@ -122,6 +123,7 @@ public class ReaderBlogTable {
         blogInfo.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
         blogInfo.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
         blogInfo.isFollowing = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_following")));
+        blogInfo.isNotificationsEnabled = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_notifications_enabled")));
         blogInfo.numSubscribers = c.getInt(c.getColumnIndex("num_followers"));
 
         return blogInfo;
@@ -133,8 +135,8 @@ public class ReaderBlogTable {
         }
         String sql = "INSERT OR REPLACE INTO tbl_blog_info"
                      + " (blog_id, feed_id, blog_url, image_url, feed_url, name, description, is_private, is_jetpack, "
-                     + "  is_following, num_followers, date_updated)"
-                     + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)";
+                     + "  is_following, is_notifications_enabled, num_followers, date_updated)"
+                     + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
             stmt.bindLong(1, blogInfo.blogId);
@@ -147,8 +149,9 @@ public class ReaderBlogTable {
             stmt.bindLong(8, SqlUtils.boolToSql(blogInfo.isPrivate));
             stmt.bindLong(9, SqlUtils.boolToSql(blogInfo.isJetpack));
             stmt.bindLong(10, SqlUtils.boolToSql(blogInfo.isFollowing));
-            stmt.bindLong(11, blogInfo.numSubscribers);
-            stmt.bindString(12, DateTimeUtils.iso8601FromDate(new Date()));
+            stmt.bindLong(11, SqlUtils.boolToSql(blogInfo.isNotificationsEnabled));
+            stmt.bindLong(12, blogInfo.numSubscribers);
+            stmt.bindString(13, DateTimeUtils.iso8601FromDate(new Date()));
             stmt.execute();
         } finally {
             SqlUtils.closeStatement(stmt);
@@ -270,6 +273,20 @@ public class ReaderBlogTable {
         String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND feed_id=?";
         String[] args = {Long.toString(feedId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    public static boolean isNotificationsEnabled(long blogId) {
+        String sql = "SELECT 1 FROM tbl_blog_info WHERE is_notifications_enabled!=0 AND blog_id=?";
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    public static void setNotificationsEnabledByBlogId(long blogId, boolean isEnabled) {
+        ReaderDatabase.getWritableDb().execSQL(
+                "UPDATE tbl_blog_info SET is_notifications_enabled="
+                + SqlUtils.boolToSql(isEnabled)
+                + " WHERE blog_id=?",
+                new String[]{Long.toString(blogId)});
     }
 
     public static String getBlogName(long blogId) {

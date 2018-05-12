@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -72,6 +73,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final ReaderPostList mPosts = new ReaderPostList();
     private final HashSet<String> mRenderedIds = new HashSet<>();
 
+    private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
@@ -106,11 +108,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderXPostViewHolder(View itemView) {
             super(itemView);
-            mCardView = (CardView) itemView.findViewById(R.id.card_view);
-            mImgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
-            mImgBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_blavatar);
-            mTxtTitle = (TextView) itemView.findViewById(R.id.text_title);
-            mTxtSubtitle = (TextView) itemView.findViewById(R.id.text_subtitle);
+            mCardView = itemView.findViewById(R.id.card_view);
+            mImgAvatar = itemView.findViewById(R.id.image_avatar);
+            mImgBlavatar = itemView.findViewById(R.id.image_blavatar);
+            mTxtTitle = itemView.findViewById(R.id.text_title);
+            mTxtSubtitle = itemView.findViewById(R.id.text_subtitle);
 
             mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -160,33 +162,33 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPostViewHolder(View itemView) {
             super(itemView);
 
-            mCardView = (CardView) itemView.findViewById(R.id.card_view);
+            mCardView = itemView.findViewById(R.id.card_view);
 
-            mTxtTitle = (TextView) itemView.findViewById(R.id.text_title);
-            mTxtText = (TextView) itemView.findViewById(R.id.text_excerpt);
-            mTxtAuthorAndBlogName = (TextView) itemView.findViewById(R.id.text_author_and_blog_name);
-            mTxtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
+            mTxtTitle = itemView.findViewById(R.id.text_title);
+            mTxtText = itemView.findViewById(R.id.text_excerpt);
+            mTxtAuthorAndBlogName = itemView.findViewById(R.id.text_author_and_blog_name);
+            mTxtDateline = itemView.findViewById(R.id.text_dateline);
 
-            mCommentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
-            mLikeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
+            mCommentCount = itemView.findViewById(R.id.count_comments);
+            mLikeCount = itemView.findViewById(R.id.count_likes);
 
-            mFramePhoto = (ViewGroup) itemView.findViewById(R.id.frame_photo);
-            mTxtPhotoTitle = (TextView) mFramePhoto.findViewById(R.id.text_photo_title);
-            mImgFeatured = (WPNetworkImageView) mFramePhoto.findViewById(R.id.image_featured);
-            mImgVideoOverlay = (ImageView) mFramePhoto.findViewById(R.id.image_video_overlay);
+            mFramePhoto = itemView.findViewById(R.id.frame_photo);
+            mTxtPhotoTitle = mFramePhoto.findViewById(R.id.text_photo_title);
+            mImgFeatured = mFramePhoto.findViewById(R.id.image_featured);
+            mImgVideoOverlay = mFramePhoto.findViewById(R.id.image_video_overlay);
 
-            mImgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
-            mImgMore = (ImageView) itemView.findViewById(R.id.image_more);
-            mVisit = (LinearLayout) itemView.findViewById(R.id.visit);
+            mImgAvatarOrBlavatar = itemView.findViewById(R.id.image_avatar_or_blavatar);
+            mImgMore = itemView.findViewById(R.id.image_more);
+            mVisit = itemView.findViewById(R.id.visit);
 
-            mLayoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
-            mImgDiscoverAvatar = (WPNetworkImageView) mLayoutDiscover.findViewById(R.id.image_discover_avatar);
-            mTxtDiscover = (TextView) mLayoutDiscover.findViewById(R.id.text_discover);
+            mLayoutDiscover = itemView.findViewById(R.id.layout_discover);
+            mImgDiscoverAvatar = mLayoutDiscover.findViewById(R.id.image_discover_avatar);
+            mTxtDiscover = mLayoutDiscover.findViewById(R.id.text_discover);
 
-            mThumbnailStrip = (ReaderThumbnailStrip) itemView.findViewById(R.id.thumbnail_strip);
+            mThumbnailStrip = itemView.findViewById(R.id.thumbnail_strip);
 
-            ViewGroup postHeaderView = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
-            mFollowButton = (ReaderFollowButton) postHeaderView.findViewById(R.id.follow_button);
+            ViewGroup postHeaderView = itemView.findViewById(R.id.layout_post_header);
+            mFollowButton = postHeaderView.findViewById(R.id.follow_button);
 
             // show post in internal browser when "visit" is clicked
             View.OnClickListener visitListener = new View.OnClickListener() {
@@ -291,7 +293,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context context = parent.getContext();
         switch (viewType) {
             case VIEW_TYPE_SITE_HEADER:
-                return new SiteHeaderViewHolder(new ReaderSiteHeaderView(context));
+                ReaderSiteHeaderView readerSiteHeaderView = new ReaderSiteHeaderView(context);
+                readerSiteHeaderView.setOnFollowListener(mFollowListener);
+                return new SiteHeaderViewHolder(readerSiteHeaderView);
 
             case VIEW_TYPE_TAG_HEADER:
                 return new TagHeaderViewHolder(new ReaderTagHeaderView(context));
@@ -629,6 +633,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mCurrentTag != null && mCurrentTag.isDiscover();
     }
 
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
+    }
+
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
         mPostSelectedListener = listener;
     }
@@ -863,6 +871,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         boolean isCurrentlyFollowed = ReaderPostTable.isPostFollowed(post);
         final boolean isAskingToFollow = !isCurrentlyFollowed;
+
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
