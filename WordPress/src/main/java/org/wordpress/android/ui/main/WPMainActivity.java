@@ -957,14 +957,16 @@ public class WPMainActivity extends AppCompatActivity implements BasicYesNoDialo
         handleSiteRemoved();
     }
 
-    @Override public void onPositiveClicked(@NonNull String instanceTag) {
+    @Override
+    public void onPositiveClicked(@NonNull String instanceTag) {
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
-            getMySiteFragment().onPositiveClicked(instanceTag);
+            fragment.onPositiveClicked(instanceTag);
         }
     }
 
-    @Override public void onNegativeClicked(@NonNull String instanceTag) {
+    @Override
+    public void onNegativeClicked(@NonNull String instanceTag) {
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
             fragment.onNegativeClicked(instanceTag);
