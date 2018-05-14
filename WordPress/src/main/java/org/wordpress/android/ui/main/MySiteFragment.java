@@ -69,6 +69,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -776,8 +777,8 @@ public class MySiteFragment extends Fragment
             if (isMediaUploadInProgress()) {
                 if (event.mediaModelList.size() > 0) {
                     MediaModel media = event.mediaModelList.get(0);
-                    mBlavatarImageView.setImageUrl(media.getUrl(), ImageType.BLAVATAR);
-
+                    mBlavatarImageView.setImageUrl(PhotonUtils.getPhotonImageUrl(
+                            media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH), ImageType.BLAVATAR);
                     mSiteSettings.setSiteIconMediaId((int) media.getMediaId());
                     mSiteSettings.saveSettings();
                 } else {
