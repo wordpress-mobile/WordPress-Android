@@ -282,7 +282,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private SiteModel mSite;
 
-    //Autosync
+    // Autosync
     private boolean mIsFinishing;
     private boolean mIsActive;
 
@@ -1676,11 +1676,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void savePostAndOptionallyFinish(final boolean doFinish) {
         if (mSyncHandler != null) {
-            //Stop autosync on pause
+            // Stop autosync on pause
             mSyncHandler.removeCallbacks(null);
         }
         if (mIsFinishing) {
-            //Do not call save twice while the activity is already finishing
+            // Do not call save twice while the activity is already finishing
             return;
         } else {
             mIsFinishing = doFinish;
