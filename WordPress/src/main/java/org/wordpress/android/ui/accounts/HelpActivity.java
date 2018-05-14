@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.AppLogViewerActivity;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPTextView;
@@ -24,6 +23,9 @@ import org.wordpress.android.widgets.WPTextView;
 import javax.inject.Inject;
 
 public class HelpActivity extends AppCompatActivity {
+    public static final String ORIGIN_KEY = "ORIGIN_KEY";
+    public static final String EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY";
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
@@ -121,7 +123,7 @@ public class HelpActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         Tag origin = Tag.ORIGIN_UNKNOWN;
         if (extras != null) {
-            origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
+            origin = (Tag) extras.get(HelpActivity.ORIGIN_KEY);
         }
         return origin;
     }

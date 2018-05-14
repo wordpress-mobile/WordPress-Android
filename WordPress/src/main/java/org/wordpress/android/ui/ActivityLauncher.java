@@ -375,7 +375,7 @@ public class ActivityLauncher {
 
     public static void viewHelpAndSupport(Context context, Tag origin) {
         Intent intent = new Intent(context, HelpActivity.class);
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
+        intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
         context.startActivity(intent);
     }
 

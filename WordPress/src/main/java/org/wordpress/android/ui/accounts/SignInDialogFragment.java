@@ -177,7 +177,7 @@ public class SignInDialogFragment extends DialogFragment {
                 ActivityLauncher.openUrlExternal(getContext(), url);
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
-                Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
+                Tag origin = (Tag) arguments.getSerializable(HelpActivity.ORIGIN_KEY);
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
                                                                origin, mAccountStore.getAccount().getUserName());
                 dismissAllowingStateLoss();

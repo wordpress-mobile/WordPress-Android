@@ -25,14 +25,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 public class HelpshiftHelper {
-    public static final String ORIGIN_KEY = "ORIGIN_KEY";
-    public static final String EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY";
-    private static final String HELPSHIFT_SCREEN_KEY = "helpshift_screen";
-    private static final String HELPSHIFT_ORIGIN_KEY = "origin";
     private static final HashMap<String, Object> METADATA = new HashMap<String, Object>();
 
     private static HelpshiftHelper mInstance = null;
@@ -172,12 +167,6 @@ public class HelpshiftHelper {
             origin = Tag.ORIGIN_UNKNOWN;
         }
 
-        // track origin and helpshift screen in analytics
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(HELPSHIFT_SCREEN_KEY, "conversation");
-        properties.put(HELPSHIFT_ORIGIN_KEY, origin.toString());
-        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
-
         // Add tags to Helpshift metadata
         if (extraTags == null) {
             extraTags = new Tag[]{};
@@ -196,12 +185,6 @@ public class HelpshiftHelper {
         if (origin == null) {
             origin = Tag.ORIGIN_UNKNOWN;
         }
-
-        // track origin and helpshift screen in analytics
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(HELPSHIFT_SCREEN_KEY, "faq");
-        properties.put(HELPSHIFT_ORIGIN_KEY, origin.toString());
-        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
 
         // Add tags to Helpshift metadata
         if (extraTags == null) {

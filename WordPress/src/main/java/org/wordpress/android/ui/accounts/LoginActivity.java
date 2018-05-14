@@ -549,10 +549,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void launchHelpshift(Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
+        intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
         if (getLoginMode() == LoginMode.JETPACK_STATS) {
             Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};
-            intent.putExtra(HelpshiftHelper.EXTRA_TAGS_KEY, tags);
+            intent.putExtra(HelpActivity.EXTRA_TAGS_KEY, tags);
         }
         startActivity(intent);
     }

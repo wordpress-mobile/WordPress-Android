@@ -108,7 +108,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     private void launchHelpshift(HelpshiftHelper.Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
+        intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
         startActivity(intent);
     }
 
