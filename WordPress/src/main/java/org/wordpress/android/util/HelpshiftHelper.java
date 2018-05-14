@@ -35,27 +35,7 @@ public class HelpshiftHelper {
     private static final String HELPSHIFT_ORIGIN_KEY = "origin";
     private static final HashMap<String, Object> METADATA = new HashMap<String, Object>();
 
-    public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
-    public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
-    public static final String ENTERED_EMAIL_KEY = "ENTERED_EMAIL_KEY";
-
     private static HelpshiftHelper mInstance = null;
-
-    public enum MetadataKey {
-        USER_ENTERED_URL("user-entered-url"),
-        USER_ENTERED_USERNAME("user-entered-username"),
-        USER_ENTERED_EMAIL("user-entered-email");
-
-        private final String mStringValue;
-
-        MetadataKey(final String stringValue) {
-            mStringValue = stringValue;
-        }
-
-        public String toString() {
-            return mStringValue;
-        }
-    }
 
     public enum Tag {
         ORIGIN_UNKNOWN("origin:unknown"),
@@ -291,22 +271,6 @@ public class HelpshiftHelper {
         Core.handlePush(context, intent);
     }
 
-    /**
-     * Add metadata to Helpshift conversations
-     *
-     * @param key map key
-     * @param object to store. Be careful with the type used. Nothing is specified in the documentation. Better to use
-     * String but String[] is needed for specific key like Support.TagsKey
-     */
-    public void addMetaData(MetadataKey key, Object object) {
-        METADATA.put(key.toString(), object);
-    }
-
-    public Object getMetaData(MetadataKey key) {
-        return METADATA.get(key.toString());
-    }
-
-
     private String getJetpackMetadataString(SiteModel site) {
         StringBuffer sb = new StringBuffer();
         if (site.isJetpackConnected()) {
@@ -353,21 +317,6 @@ public class HelpshiftHelper {
     }
 
     private HashMap getHelpshiftConfig(Context context, SiteStore siteStore, String wpComUsername) {
-        String emailAddress = (String) getMetaData(MetadataKey.USER_ENTERED_EMAIL);
-        if (TextUtils.isEmpty(emailAddress)) {
-            emailAddress = UserEmailUtils.getPrimaryEmail(context);
-        }
-        // Use the user entered username to pre-fill name
-        String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
-        // If it's null or empty, use split email address to pre-fill name
-        if (TextUtils.isEmpty(name)) {
-            String[] splitEmail = TextUtils.split(emailAddress, "@");
-            if (splitEmail.length >= 1) {
-                name = splitEmail[0];
-            }
-        }
-
-        Core.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(context, siteStore, wpComUsername);
         addPlanTags(siteStore);
         HashMap config = new HashMap();

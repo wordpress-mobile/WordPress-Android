@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -178,12 +177,6 @@ public class SignInDialogFragment extends DialogFragment {
                 ActivityLauncher.openUrlExternal(getContext(), url);
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
-                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
-                        HelpshiftHelper.ENTERED_URL_KEY));
-                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
-                        HelpshiftHelper.ENTERED_USERNAME_KEY));
-                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_EMAIL, arguments.getString(
-                        HelpshiftHelper.ENTERED_EMAIL_KEY));
                 Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
                                                                origin, mAccountStore.getAccount().getUserName());

@@ -546,11 +546,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         });
     }
 
-    private void launchHelpshift(String url, String email, boolean isWpcom, Tag origin) {
+    private void launchHelpshift(Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
-        intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
-        intent.putExtra(HelpshiftHelper.ENTERED_EMAIL_KEY, email);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
         if (getLoginMode() == LoginMode.JETPACK_STATS) {
             Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};
@@ -561,7 +559,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpSiteAddress(String url) {
-        launchHelpshift(url, null, false, Tag.ORIGIN_LOGIN_SITE_ADDRESS);
+        launchHelpshift(Tag.ORIGIN_LOGIN_SITE_ADDRESS);
     }
 
     @Override
@@ -576,22 +574,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpEmailScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL);
+        launchHelpshift(Tag.ORIGIN_LOGIN_EMAIL);
     }
 
     @Override
     public void helpSignupEmailScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_SIGNUP_EMAIL);
+        launchHelpshift(Tag.ORIGIN_SIGNUP_EMAIL);
     }
 
     @Override
     public void helpSignupMagicLinkScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_SIGNUP_MAGIC_LINK);
+        launchHelpshift(Tag.ORIGIN_SIGNUP_MAGIC_LINK);
     }
 
     @Override
     public void helpSocialEmailScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_SOCIAL);
+        launchHelpshift(Tag.ORIGIN_LOGIN_SOCIAL);
     }
 
     @Override
@@ -613,22 +611,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_MAGIC_LINK);
+        launchHelpshift(Tag.ORIGIN_LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_MAGIC_LINK);
+        launchHelpshift(Tag.ORIGIN_LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL_PASSWORD);
+        launchHelpshift(Tag.ORIGIN_LOGIN_EMAIL_PASSWORD);
     }
 
     @Override
     public void help2FaScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_2FA);
+        launchHelpshift(Tag.ORIGIN_LOGIN_2FA);
     }
 
     @Override
@@ -644,7 +642,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        launchHelpshift(url, username, isWpcom, Tag.ORIGIN_LOGIN_USERNAME_PASSWORD);
+        launchHelpshift(Tag.ORIGIN_LOGIN_USERNAME_PASSWORD);
     }
 
     @Override
