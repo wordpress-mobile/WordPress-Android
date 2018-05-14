@@ -24,6 +24,9 @@ public class ReaderMenuAdapter extends BaseAdapter {
     public static final int ITEM_FOLLOW = 0;
     public static final int ITEM_UNFOLLOW = 1;
     public static final int ITEM_BLOCK = 2;
+    public static final int ITEM_NOTIFICATIONS_OFF = 3;
+    public static final int ITEM_NOTIFICATIONS_ON = 4;
+    public static final int ITEM_SHARE = 5;
 
     public ReaderMenuAdapter(Context context, @NonNull List<Integer> menuItems) {
         super();
@@ -74,7 +77,22 @@ public class ReaderMenuAdapter extends BaseAdapter {
             case ITEM_BLOCK:
                 textRes = R.string.reader_menu_block_blog;
                 textColorRes = R.color.grey_dark;
-                iconRes = 0;
+                iconRes = R.drawable.ic_block_grey_dark_24dp;
+                break;
+            case ITEM_NOTIFICATIONS_OFF:
+                textRes = R.string.reader_btn_notifications_off;
+                textColorRes = R.color.reader_notifications_off;
+                iconRes = R.drawable.ic_bell_alert_green_24dp;
+                break;
+            case ITEM_NOTIFICATIONS_ON:
+                textRes = R.string.reader_btn_notifications_on;
+                textColorRes = R.color.reader_notifications_on;
+                iconRes = R.drawable.ic_bell_grey_dark_24dp;
+                break;
+            case ITEM_SHARE:
+                textRes = R.string.reader_btn_share;
+                textColorRes = R.color.grey_dark;
+                iconRes = R.drawable.ic_share_grey_dark_24dp;
                 break;
             default:
                 return convertView;
@@ -95,8 +113,8 @@ public class ReaderMenuAdapter extends BaseAdapter {
         private final ImageView mIcon;
 
         ReaderMenuHolder(View view) {
-            mText = (TextView) view.findViewById(R.id.text);
-            mIcon = (ImageView) view.findViewById(R.id.image);
+            mText = view.findViewById(R.id.text);
+            mIcon = view.findViewById(R.id.image);
         }
     }
 }
