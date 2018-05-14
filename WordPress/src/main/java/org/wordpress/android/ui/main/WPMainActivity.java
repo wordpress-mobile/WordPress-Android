@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -40,6 +41,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
@@ -106,6 +108,7 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_OPEN_TAB = "open_tab";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
+    public static final String ARG_OPENED_FROM_BOOKMARK_SNACKBAR = "show_saved_posts";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -273,6 +276,8 @@ public class WPMainActivity extends AppCompatActivity {
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedTab = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_TAB));
+                boolean openedFromBookmarkSnackbar = (getIntent() != null && getIntent().hasExtra(
+                        ARG_OPENED_FROM_BOOKMARK_SNACKBAR));
                 if (openedFromPush) {
                     // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
@@ -288,6 +293,13 @@ public class WPMainActivity extends AppCompatActivity {
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                 } else if (openRequestedTab) {
                     handleOpenTabIntent(getIntent());
+                } else if (openedFromBookmarkSnackbar) {
+                    ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
+                    if (bookmarkTag != null) { // sanity check
+                        AppPrefs.setReaderTag(bookmarkTag);
+                    }
+
+                    mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
                 } else {
                     // return to the tab that was showing last time
                     int position = AppPrefs.getMainTabIndex();
@@ -334,18 +346,18 @@ public class WPMainActivity extends AppCompatActivity {
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                                               getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showSignupEpilogue(this,
-                                                getIntent().getStringExtra(
-                                                        SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
-                                                getIntent().getStringExtra(
-                                                        SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
-                                                getIntent()
-                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                                                getIntent()
-                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
-                                                false);
+                    getIntent().getStringExtra(
+                            SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
+                    getIntent().getStringExtra(
+                            SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
+                    getIntent()
+                            .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
+                    getIntent()
+                            .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
+                    false);
         }
     }
 
@@ -408,29 +420,31 @@ public class WPMainActivity extends AppCompatActivity {
             GCMMessageService.remove2FANotification(this);
 
             NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(
-                getIntent(),
-                new NotificationsUtils.TwoFactorAuthCallback() {
-                    @Override
-                    public void onTokenValid(String token, String title, String message) {
-                        // we do this here instead of using the service in the background so we make sure
-                        // the user opens the app by using an activity (and thus unlocks the screen if locked,
-                        // for security).
-                        String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
-                        if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
-                            // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                            NotificationsUtils.sendTwoFactorAuthToken(token);
-                        } else {
-                            NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                    getIntent(),
+                    new NotificationsUtils.TwoFactorAuthCallback() {
+                        @Override
+                        public void onTokenValid(String token, String title, String message) {
+                            // we do this here instead of using the service in the background so we make sure
+                            // the user opens the app by using an activity (and thus unlocks the screen if locked,
+                            // for security).
+                            String actionType =
+                                    getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+                            if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                                // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                                NotificationsUtils.sendTwoFactorAuthToken(token);
+                            } else {
+                                NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onTokenInvalid() {
-                        // Show a toast if the user took too long to open the notification
-                        ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                    }
-                });
+                        @Override
+                        public void onTokenInvalid() {
+                            // Show a toast if the user took too long to open the notification
+                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired,
+                                    ToastUtils.Duration.LONG);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                        }
+                    });
         }
 
         // Then hit the server
@@ -604,7 +618,7 @@ public class WPMainActivity extends AppCompatActivity {
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
-                                                        getSelectedSite());
+                            getSelectedSite());
                 }
                 break;
             case WPMainTabAdapter.TAB_READER:
@@ -636,7 +650,7 @@ public class WPMainActivity extends AppCompatActivity {
         if (resolveInfo != null && !getPackageName().equals(resolveInfo.activityInfo.name)) {
             // not set as default handler so, track this to evaluate. Note, a resolver/chooser might be the default.
             AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDLER,
-                                                       resolveInfo.activityInfo.name);
+                    resolveInfo.activityInfo.name);
         }
     }
 

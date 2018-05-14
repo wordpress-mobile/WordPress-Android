@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,7 +39,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
@@ -1016,19 +1016,31 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        Snackbar.make(getView().findViewById(R.id.reader_recycler_view), "Post saved",
-                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction("VIEW ALL",
+        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
-                        //we assume there is only one bookmark tag, otherwise this will not make sense
-                        ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
-                        AppPrefs.setReaderTag(bookmarkTag);
-
-                        mRecyclerView.setCurrentFilter(bookmarkTag);
-                        mRecyclerView.showToolbar();
+                        // if the fragment is part of WPMainActivity we don't just need to update filter and scroll to
+                        // the toolbar. This implementation assumes that Reader list in WPMainActivity will have a
+                        // toolbar.
+                        if (getActivity() instanceof WPMainActivity) {
+                            //we assume there is only one bookmark tag, otherwise this will not make sense
+                            ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
+                            if (bookmarkTag == null) { // sanity check
+                                return;
+                            }
+                            mRecyclerView.setCurrentFilter(bookmarkTag);
+                            mRecyclerView.showToolbar();
+                        } else {
+                            // in case of independent reader list, go back to WPMainActivity
+                            // and instruct it to show saved posts in Reader Tab
+                            Intent intent = new Intent(view.getContext(), WPMainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_BOOKMARK_SNACKBAR, true);
+                            startActivity(intent);
+                        }
                     }
                 })
-                .setActionTextColor(getResources().getColor(R.color.color_accent))
                 .show();
     }
 

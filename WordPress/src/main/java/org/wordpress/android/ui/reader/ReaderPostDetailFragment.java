@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
@@ -22,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -487,20 +485,17 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        Snackbar.make(getView().findViewById(R.id.layout_post_detail_container), "Post saved",
-                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction("VIEW ALL",
+        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
-                        //we assume there is only one bookmark tag, otherwise this will not make sense
-                        ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
-                        AppPrefs.setReaderTag(bookmarkTag);
-
+                        // clear backstack on the way to saved posts reader list
                         Intent intent = new Intent(view.getContext(), WPMainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_BOOKMARK_SNACKBAR, true);
                         startActivity(intent);
                     }
                 })
-                .setActionTextColor(getResources().getColor(R.color.color_accent))
                 .show();
     }
 
