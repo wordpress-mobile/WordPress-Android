@@ -70,20 +70,32 @@ fun showZendeskHelpCenter(context: Context, accountStore: AccountStore) {
             .show(context)
 }
 
-fun createNewTicket(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
+fun createNewTicket(
+    context: Context,
+    accountStore: AccountStore,
+    siteStore: SiteStore,
+    origin: Tag?,
+    extraTags: List<String>?
+) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
     configureZendesk(context, accountStore, siteStore)
-    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin))
+    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
-fun showAllTickets(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
+fun showAllTickets(
+    context: Context,
+    accountStore: AccountStore,
+    siteStore: SiteStore,
+    origin: Tag?,
+    extraTags: List<String>?
+) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
     configureZendesk(context, accountStore, siteStore)
-    RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin))
+    RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
 // Helpers
@@ -100,14 +112,14 @@ private fun configureZendesk(context: Context, accountStore: AccountStore, siteS
     )
 }
 
-private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Tag?) =
+private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Tag?, extraTags: List<String>?) =
         object : BaseZendeskFeedbackConfiguration() {
             override fun getRequestSubject(): String {
                 return ZendeskConstants.ticketSubject
             }
 
             override fun getTags(): MutableList<String> {
-                return zendeskTags(allSites, origin ?: Tag.ORIGIN_UNKNOWN) as MutableList<String>
+                return zendeskTags(allSites, origin ?: Tag.ORIGIN_UNKNOWN, extraTags) as MutableList<String>
             }
         }
 
@@ -136,7 +148,7 @@ private fun blogInformation(allSites: List<SiteModel>?, account: AccountModel?):
     return ZendeskConstants.noneValue
 }
 
-private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag): List<String> {
+private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag, extraTags: List<String>?): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -155,6 +167,9 @@ private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag): List<String> {
         tags.addAll(plans)
     }
     tags.add(origin.toString())
+    extraTags?.let {
+        tags.addAll(it)
+    }
     return tags
 }
 
@@ -198,4 +213,8 @@ private object TicketFieldIds {
     const val logs = 22871957L
     const val networkInformation = 360000086966L
     const val siteState = 360000103103L // TODO("implement")
+}
+
+object ZendeskExtraTags {
+    const val connectingJetpack = "connecting_jetpack"
 }

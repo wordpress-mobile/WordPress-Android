@@ -41,6 +41,7 @@ import org.wordpress.android.login.SignupBottomSheetDialog.SignupSheetListener;
 import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
+import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.RequestCodes;
@@ -63,6 +64,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 
 import javax.inject.Inject;
@@ -551,8 +553,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // Used to pass data to an eventual support service
         intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
         if (getLoginMode() == LoginMode.JETPACK_STATS) {
-            Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};
-            intent.putExtra(HelpActivity.EXTRA_TAGS_KEY, tags);
+            intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY,
+                    (ArrayList<String>) Collections.singletonList(ZendeskExtraTags.connectingJetpack));
         }
         startActivity(intent);
     }

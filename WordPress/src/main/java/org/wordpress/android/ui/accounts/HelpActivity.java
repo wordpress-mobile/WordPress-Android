@@ -20,6 +20,8 @@ import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class HelpActivity extends AppCompatActivity {
@@ -108,11 +110,13 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void createNewZendeskTicket() {
-        ZendeskHelper.createNewTicket(this, mAccountStore, mSiteStore, getOriginTagFromExtras());
+        ZendeskHelper.createNewTicket(this, mAccountStore, mSiteStore, getOriginTagFromExtras(),
+                getExtraTagsFromExtras());
     }
 
     private void showZendeskTickets() {
-        ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginTagFromExtras());
+        ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginTagFromExtras(),
+                getExtraTagsFromExtras());
     }
 
     private void showZendeskFaq() {
@@ -126,5 +130,13 @@ public class HelpActivity extends AppCompatActivity {
             origin = (Tag) extras.get(HelpActivity.ORIGIN_KEY);
         }
         return origin;
+    }
+
+    private List<String> getExtraTagsFromExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+             return extras.getStringArrayList(HelpActivity.EXTRA_TAGS_KEY);
+        }
+        return null;
     }
 }

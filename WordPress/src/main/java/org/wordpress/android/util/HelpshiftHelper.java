@@ -48,7 +48,6 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_SITE_ADDRESS("origin:login-site-address"),
         ORIGIN_LOGIN_SOCIAL("origin:login-social"),
         ORIGIN_LOGIN_USERNAME_PASSWORD("origin:login-username-password"),
-        CONNECTING_JETPACK("connecting_jetpack"),
         ORIGIN_SIGNUP_EMAIL("origin:signup-email"),
         ORIGIN_SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
         ORIGIN_SITE_CREATION_CATEGORY("origin:site-create-site-category"),
