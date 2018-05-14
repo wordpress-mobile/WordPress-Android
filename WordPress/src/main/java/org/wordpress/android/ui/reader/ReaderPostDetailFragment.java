@@ -45,6 +45,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.views.ReaderBookmarkButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
@@ -106,6 +107,7 @@ public class ReaderPostDetailFragment extends Fragment
     private View mLikingUsersDivider;
     private View mLikingUsersLabel;
     private WPTextView mSignInButton;
+    private ReaderBookmarkButton mReaderBookmarkButton;
 
     private ReaderSimplePostContainerView mGlobalRelatedPostsView;
     private ReaderSimplePostContainerView mLocalRelatedPostsView;
@@ -254,6 +256,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
+
+        mReaderBookmarkButton = view.findViewById(R.id.bookmark_button);
 
         final ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress_loading);
         if (mPostSlugsResolutionUnderway) {
@@ -425,6 +429,51 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    private void initBookmarkButton() {
+        if (!canShowFooter()) {
+            return;
+        }
+
+        updateBookmarkView();
+        mReaderBookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                toggleBookmark();
+            }
+        });
+    }
+
+    private void updateBookmarkView() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
+
+        if (!canShowBookmarkButton()) {
+            mReaderBookmarkButton.setVisibility(View.GONE);
+        } else {
+            mReaderBookmarkButton.setVisibility(View.VISIBLE);
+            mReaderBookmarkButton.updateIsBookmarkedState(mPost.isBookmarked);
+        }
+    }
+
+    /*
+     * triggered when user taps the bookmark post button
+     */
+    private void toggleBookmark() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
+
+        if (mPost.isBookmarked) {
+            ReaderPostActions.removeFromBookmarked(mPost);
+        } else {
+            ReaderPostActions.addToBookmarked(mPost);
+        }
+
+        mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
+
+        updateBookmarkView();
+    }
+
     /*
      * changes the like on the passed post
      */
@@ -439,7 +488,7 @@ public class ReaderPostDetailFragment extends Fragment
             ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
             boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike,
-                                                                  mAccountStore.getAccount().getUserId());
+                    mAccountStore.getAccount().getUserId());
             if (!success) {
                 likeCount.setSelected(!isAskingToLike);
                 return;
@@ -739,7 +788,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (!mAccountStore.hasAccessToken()) {
             Snackbar.make(getView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                          Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.sign_in, mSignInClickListener).show();
             return;
         }
@@ -890,7 +939,7 @@ public class ReaderPostDetailFragment extends Fragment
                                 : R.string.reader_err_get_post_not_authorized_signin_fallback;
                         mSignInButton.setVisibility(View.VISIBLE);
                         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED,
-                                                                  mPost);
+                                mPost);
                     }
                     AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, mPost);
                     break;
@@ -1019,7 +1068,7 @@ public class ReaderPostDetailFragment extends Fragment
                             AppLockManager.getInstance().getAppLock().forcePasswordLock();
                         }
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
-                                                                  mDirectOperation, mCommentId, mInterceptedUri);
+                                mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();
                         getActivity().overridePendingTransition(0, 0);
                         return;
@@ -1097,6 +1146,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             refreshIconCounts();
+            initBookmarkButton();
         }
     }
 
@@ -1318,6 +1368,10 @@ public class ReaderPostDetailFragment extends Fragment
         return mPost.isWP()
                && !mPost.isDiscoverPost()
                && (mPost.isCommentsOpen || mPost.numReplies > 0);
+    }
+
+    private boolean canShowBookmarkButton() {
+        return hasPost() && (mPost.isWP() || mPost.isJetpack) && !mPost.isDiscoverPost();
     }
 
     private boolean canShowLikeCount() {
