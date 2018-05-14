@@ -1,7 +1,6 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,6 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextView {
@@ -152,7 +152,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
 
         // if no hardware keys are present, associate being focused to having the on-screen keyboard visible
-        if (getResources().getConfiguration().keyboard == Configuration.KEYBOARD_NOKEYS) {
+        if (!DeviceUtils.getInstance().hasHardwareKeyboard(getContext())) {
             InputMethodManager inputMethodManager = (InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
 
