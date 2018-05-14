@@ -51,6 +51,7 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.plugins.PluginUtils;
+import org.wordpress.android.ui.posts.BasicYesNoCancelFragmentDialog;
 import org.wordpress.android.ui.posts.BasicYesNoFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -274,23 +275,13 @@ public class MySiteFragment extends Fragment
                 AnalyticsTracker.track(Stat.MY_SITE_ICON_TAPPED);
                 SiteModel site = getSelectedSite();
                 if (site != null && site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
-                    BasicYesNoFragmentDialog dialog = new BasicYesNoFragmentDialog();
                     boolean hasIcon = site.getIconUrl() != null;
                     String tag;
                     if (hasIcon) {
-                        tag = TAG_CHANGE_SITE_ICON_DIALOG;
-                        dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
-                                getString(R.string.my_site_icon_dialog_change_message),
-                                getString(R.string.my_site_icon_dialog_change_button),
-                                getString(R.string.my_site_icon_dialog_remove_button));
+                        showChangeSiteIconDialog();
                     } else {
-                        tag = TAG_ADD_SITE_ICON_DIALOG;
-                        dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
-                                getString(R.string.my_site_icon_dialog_add_message),
-                                getString(R.string.yes),
-                                getString(R.string.no));
+                        showAddSiteIconDialog();
                     }
-                    dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
                 }
             }
         });
@@ -381,6 +372,27 @@ public class MySiteFragment extends Fragment
         });
 
         return rootView;
+    }
+
+    private void showAddSiteIconDialog() {
+        BasicYesNoFragmentDialog dialog = new BasicYesNoFragmentDialog();
+        String tag = TAG_ADD_SITE_ICON_DIALOG;
+        dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
+                getString(R.string.my_site_icon_dialog_add_message),
+                getString(R.string.yes),
+                getString(R.string.no));
+        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+    }
+
+    private void showChangeSiteIconDialog() {
+        BasicYesNoCancelFragmentDialog dialog = new BasicYesNoCancelFragmentDialog();
+        String tag = TAG_CHANGE_SITE_ICON_DIALOG;
+        dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
+                getString(R.string.my_site_icon_dialog_change_message),
+                getString(R.string.my_site_icon_dialog_change_button),
+                getString(R.string.my_site_icon_dialog_remove_button),
+                getString(R.string.my_site_icon_dialog_cancel_button));
+        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
     }
 
     private void startWPComLoginForJetpackStats() {
