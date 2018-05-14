@@ -6,12 +6,14 @@ import android.support.v7.app.AlertDialog.Builder
 class BasicYesNoCancelFragmentDialog : BasicYesNoFragmentDialog() {
     internal var mCancelButtonLabel: String? = null
 
-    fun initialize(tag: String,
+    fun initialize(
+        tag: String,
         title: String,
         message: String,
         positiveButtonLabel: String,
         negativeButtonLabel: String,
-        neutralButtonLabel: String) {
+        neutralButtonLabel: String
+    ) {
         initialize(tag, title, message, positiveButtonLabel, negativeButtonLabel)
         mCancelButtonLabel = neutralButtonLabel
     }
