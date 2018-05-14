@@ -1,7 +1,7 @@
 package org.wordpress.android.models.networkresource
 
 /**
- * ListNetworkResource aims to give a highly structured and easy to use way to manage any list that's network bound.
+ * ListState aims to give a highly structured and easy to use way to manage any list's state.
  *
  * There are 5 different states: [Init], [Ready], [Success], [Loading], [Error]. Check out their documentation to see
  * how each state behaves.
@@ -9,21 +9,21 @@ package org.wordpress.android.models.networkresource
  * @property data is initialized depending on each state and once initialized it can not be altered. In [Ready] and
  * [Success] states, it'll be passed as a parameter. In [Loading] and [Error] states, it'll be initialized from the
  * previous state to make sure the access to the data is not lost. In [Init], an empty list will be passed.
- * In situations where the data needs to be changed outside of a fetch [getTransformedListNetworkResource] can be used
+ * In situations where the data needs to be changed outside of a fetch, [transform] can be used
  * to get a new instance by using a transform function.
  */
-sealed class ListNetworkResource<T>(val data: List<T>) {
+sealed class ListState<T>(val data: List<T>) {
     /**
      * In some situations the underlying data might change outside of a fetch. Adding a new item, removing one,
      * a single item getting updated would be some typical examples. Since the [data] property can not be altered
-     * directly, by design, we need a different way to update it.
+     * directly, which is by design, we need a different way to update it.
      *
      * This method can be used to handle any transformation easily while preserving the current state. Any function
      * that takes a [List] and returns a new one can be used as the transformation.
      *
-     * @return a new ListNetworkResource instance that has the transformed data while preserving the state
+     * @return a new ListState instance that has the transformed data while preserving the state
      */
-    abstract fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>): ListNetworkResource<T>
+    abstract fun transform(transformFunc: (List<T>) -> List<T>): ListState<T>
 
     /**
      * Helper function for checking whether the first page is being loaded. It can be used to either show or hide a
@@ -54,11 +54,11 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
     /**
      * This is the state each object should be created in. In this state [data] would be empty and [shouldFetch] will
      * return `false` with the assumption that the caller will need to get ready before fetch can happen. A typical
-     * example would be to initialize a resource as a property and then [ready] it after the necessary setup, such as
+     * example would be to initialize a resource as a property and then [Ready] it after the necessary setup, such as
      * getting the `SiteModel` from a `Store`.
      */
-    class Init<T> : ListNetworkResource<T>(ArrayList()) {
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = this
+    class Init<T> : ListState<T>(ArrayList()) {
+        override fun transform(transformFunc: (List<T>) -> List<T>) = this
     }
 
     /**
@@ -67,8 +67,8 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      * @param data This is one of 2 places where the data can be directly passed in. In most cases, it will be set
      * using the cached version of the data, for example from its `Store`.
      */
-    class Ready<T>(data: List<T>) : ListNetworkResource<T>(data) {
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) = Ready(transform(data))
+    class Ready<T>(data: List<T>) : ListState<T>(data) {
+        override fun transform(transformFunc: (List<T>) -> List<T>) = Ready(transformFunc(data))
     }
 
     /**
@@ -76,18 +76,18 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      *
      * @param data can not be passed directly to [Loading] state as it's prevented by a private constructor.
      * It's initialized either from the previous state or from the transformed data using
-     * [ListNetworkResource.getTransformedListNetworkResource].
+     * [ListState.transform].
      *
      * @param loadingMore flag is used to indicate whether the first page or more data is being fetched. It's default
      * value is `false` which should be useful in situations where pagination is not available.
      */
     class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean)
-        : ListNetworkResource<T>(data) {
-        constructor(previous: ListNetworkResource<T>, loadingMore: Boolean = false)
+        : ListState<T>(data) {
+        constructor(previous: ListState<T>, loadingMore: Boolean = false)
                 : this(previous.data, loadingMore)
 
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Loading(transform(data), loadingMore)
+        override fun transform(transformFunc: (List<T>) -> List<T>) =
+                Loading(transformFunc(data), loadingMore)
     }
 
     /** This state means that at least one fetch has successfully completed.
@@ -99,9 +99,9 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      * available.
      */
     class Success<T>(data: List<T>, val canLoadMore: Boolean = false)
-        : ListNetworkResource<T>(data) {
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Success(transform(data), canLoadMore)
+        : ListState<T>(data) {
+        override fun transform(transformFunc: (List<T>) -> List<T>) =
+                Success(transformFunc(data), canLoadMore)
     }
 
     /**
@@ -109,17 +109,17 @@ sealed class ListNetworkResource<T>(val data: List<T>) {
      *
      * @param data can not be passed directly to [Error] state as it's prevented by a private constructor.
      * It's initialized either from the previous state or from the transformed data using
-     * [ListNetworkResource.getTransformedListNetworkResource].
+     * [ListState.transform].
      *
      * @param errorMessage will be the error string received from the API. It can also be used to show connection errors
      * where the network is not available.
      */
     class Error<T> private constructor(data: List<T>, val errorMessage: String?)
-        : ListNetworkResource<T>(data) {
-        constructor(previous: ListNetworkResource<T>, errorMessage: String?)
+        : ListState<T>(data) {
+        constructor(previous: ListState<T>, errorMessage: String?)
                 : this(previous.data, errorMessage)
 
-        override fun getTransformedListNetworkResource(transform: (List<T>) -> List<T>) =
-                Error(transform(data), errorMessage)
+        override fun transform(transformFunc: (List<T>) -> List<T>) =
+                Error(transformFunc(data), errorMessage)
     }
 }
