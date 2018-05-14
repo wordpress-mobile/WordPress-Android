@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -29,11 +31,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
@@ -56,6 +61,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -467,11 +473,35 @@ public class ReaderPostDetailFragment extends Fragment
             ReaderPostActions.removeFromBookmarked(mPost);
         } else {
             ReaderPostActions.addToBookmarked(mPost);
+            showBookmarkSnackbar();
         }
 
         mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
 
         updateBookmarkView();
+    }
+
+
+    private void showBookmarkSnackbar() {
+        if (!isAdded()) {
+            return;
+        }
+
+        Snackbar.make(getView().findViewById(R.id.layout_post_detail_container), "Post saved",
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction("VIEW ALL",
+                new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        //we assume there is only one bookmark tag, otherwise this will not make sense
+                        ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
+                        AppPrefs.setReaderTag(bookmarkTag);
+
+                        Intent intent = new Intent(view.getContext(), WPMainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .show();
     }
 
     /*
