@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.ContextThemeWrapper;
 
@@ -69,25 +70,41 @@ public class BasicYesNoFragmentDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
+        Builder builder = getBuilder();
+        initBuilder(builder);
+        return builder.create();
+    }
+
+    @NonNull
+    protected Builder getBuilder() {
+        return new Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+    }
+
+    protected void initBuilder(Builder builder) {
         builder.setTitle(mTitle)
                .setMessage(mMessage)
                .setPositiveButton(mPositiveButtonLabel, new DialogInterface.OnClickListener() {
                    @Override public void onClick(DialogInterface dialog, int which) {
-                       ((BasicYesNoDialogClickInterface) getActivity()).onPositiveClicked(mTag);
+                       FragmentActivity activity = getActivity();
+                       if (activity != null) {
+                           ((BasicYesNoDialogClickInterface) activity).onPositiveClicked(mTag);
+                       }
                    }
                })
                .setNegativeButton(mNegativeButtonLabel, new DialogInterface.OnClickListener() {
                    @Override public void onClick(DialogInterface dialog, int which) {
-                       ((BasicYesNoDialogClickInterface) getActivity()).onNegativeClicked(mTag);
+                       FragmentActivity activity = getActivity();
+                       if (activity != null) {
+                           ((BasicYesNoDialogClickInterface) activity).onNegativeClicked(mTag);
+                       }
                    }
                })
                .setCancelable(true);
-        return builder.create();
     }
 
-    @Override public void onAttach(Context context) {
+    @Override
+    public void onAttach(Context context) {
         super.onAttach(context);
         if (!(getActivity() instanceof BasicYesNoDialogClickInterface)) {
             throw new RuntimeException("Hosting activity must implement BasicYesNoDialogClickInterface");
