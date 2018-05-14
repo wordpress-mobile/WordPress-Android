@@ -1482,18 +1482,13 @@
     <string name="invalid_email_message">Your email address isn\'t valid</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
-    <string name="nux_tutorial_get_started_title">Get started!</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="verification_code">Verification code</string>
     <string name="auth_required">Log in again to continue.</string>
-    <string name="send_link">Send link</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
-    <string name="check_your_email">Check your email</string>
-    <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
@@ -1505,7 +1500,6 @@
     <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
-    <string name="faq_button">FAQ</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1825,7 +1819,6 @@
     <string name="plans">Plans</string>
     <string name="plans_loading_error">Unable to load plans</string>
     <string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
 
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>
