@@ -17,8 +17,8 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
@@ -177,7 +177,7 @@ public class SignInDialogFragment extends DialogFragment {
                 ActivityLauncher.openUrlExternal(getContext(), url);
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
-                Tag origin = (Tag) arguments.getSerializable(HelpActivity.ORIGIN_KEY);
+                Origin origin = (Origin) arguments.getSerializable(HelpActivity.ORIGIN_KEY);
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
                                                                origin, mAccountStore.getAccount().getUserName());
                 dismissAllowingStateLoss();

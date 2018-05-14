@@ -14,6 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.WebViewActivity;
+import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 
 import javax.inject.Inject;
@@ -77,7 +78,7 @@ public class ReleaseNotesActivity extends WebViewActivity {
                 startActivity(Intent.createChooser(share, getText(R.string.share_link)));
                 return true;
             case R.id.menu_bug:
-                HelpshiftHelper.Tag origin = (HelpshiftHelper.Tag) getIntent().getSerializableExtra(KEY_HELPSHIFT_TAG);
+                HelpActivity.Origin origin = (HelpActivity.Origin) getIntent().getSerializableExtra(KEY_HELPSHIFT_TAG);
                 HelpshiftHelper.getInstance().showConversation(ReleaseNotesActivity.this, mSiteStore, origin,
                                                                mAccountStore.getAccount().getUserName());
                 return true;

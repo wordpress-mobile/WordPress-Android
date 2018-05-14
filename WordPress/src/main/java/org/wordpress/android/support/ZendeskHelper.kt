@@ -18,9 +18,9 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
-import org.wordpress.android.util.HelpshiftHelper.Tag
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.logInformation
 import java.util.Locale
@@ -74,7 +74,7 @@ fun createNewTicket(
     context: Context,
     accountStore: AccountStore,
     siteStore: SiteStore,
-    origin: Tag?,
+    origin: Origin?,
     extraTags: List<String>?
 ) {
     require(isZendeskEnabled) {
@@ -88,7 +88,7 @@ fun showAllTickets(
     context: Context,
     accountStore: AccountStore,
     siteStore: SiteStore,
-    origin: Tag?,
+    origin: Origin?,
     extraTags: List<String>?
 ) {
     require(isZendeskEnabled) {
@@ -112,14 +112,14 @@ private fun configureZendesk(context: Context, accountStore: AccountStore, siteS
     )
 }
 
-private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Tag?, extraTags: List<String>?) =
+private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Origin?, extraTags: List<String>?) =
         object : BaseZendeskFeedbackConfiguration() {
             override fun getRequestSubject(): String {
                 return ZendeskConstants.ticketSubject
             }
 
             override fun getTags(): MutableList<String> {
-                return zendeskTags(allSites, origin ?: Tag.ORIGIN_UNKNOWN, extraTags) as MutableList<String>
+                return zendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags) as MutableList<String>
             }
         }
 
@@ -148,7 +148,7 @@ private fun blogInformation(allSites: List<SiteModel>?, account: AccountModel?):
     return ZendeskConstants.noneValue
 }
 
-private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag, extraTags: List<String>?): List<String> {
+private fun zendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site

@@ -63,6 +63,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -1789,7 +1790,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                                                               HelpshiftHelper.Tag.ORIGIN_DELETE_SITE,
+                                                               HelpActivity.Origin.DELETE_SITE,
                                                                mAccountStore.getAccount().getUserName());
             }
         });

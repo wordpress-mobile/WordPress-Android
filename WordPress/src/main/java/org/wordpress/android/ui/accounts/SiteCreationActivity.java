@@ -19,7 +19,6 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -105,7 +104,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         return false;
     }
 
-    private void launchHelpshift(HelpshiftHelper.Tag origin) {
+    private void launchHelpshift(HelpActivity.Origin origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
@@ -164,7 +163,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpCategoryScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CATEGORY);
+        launchHelpshift(HelpActivity.Origin.SITE_CREATION_CATEGORY);
     }
 
     @Override
@@ -175,7 +174,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpThemeScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_THEME);
+        launchHelpshift(HelpActivity.Origin.SITE_CREATION_THEME);
     }
 
     @Override
@@ -189,7 +188,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpSiteDetailsScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DETAILS);
+        launchHelpshift(HelpActivity.Origin.SITE_CREATION_DETAILS);
     }
 
     @Override
@@ -203,7 +202,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpDomainScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DOMAIN);
+        launchHelpshift(HelpActivity.Origin.SITE_CREATION_DOMAIN);
     }
 
     @Override
@@ -225,7 +224,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpSiteCreatingScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CREATING);
+        launchHelpshift(HelpActivity.Origin.SITE_CREATION_CREATING);
     }
 
     @Override

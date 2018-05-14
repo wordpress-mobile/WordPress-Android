@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.AppLogViewerActivity;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -110,12 +109,12 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void createNewZendeskTicket() {
-        ZendeskHelper.createNewTicket(this, mAccountStore, mSiteStore, getOriginTagFromExtras(),
+        ZendeskHelper.createNewTicket(this, mAccountStore, mSiteStore, getOriginFromExtras(),
                 getExtraTagsFromExtras());
     }
 
     private void showZendeskTickets() {
-        ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginTagFromExtras(),
+        ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginFromExtras(),
                 getExtraTagsFromExtras());
     }
 
@@ -123,11 +122,11 @@ public class HelpActivity extends AppCompatActivity {
         ZendeskHelper.showZendeskHelpCenter(this, mAccountStore);
     }
 
-    private Tag getOriginTagFromExtras() {
+    private Origin getOriginFromExtras() {
         Bundle extras = getIntent().getExtras();
-        Tag origin = Tag.ORIGIN_UNKNOWN;
+        Origin origin = Origin.UNKNOWN;
         if (extras != null) {
-            origin = (Tag) extras.get(HelpActivity.ORIGIN_KEY);
+            origin = (Origin) extras.get(HelpActivity.ORIGIN_KEY);
         }
         return origin;
     }
@@ -138,5 +137,51 @@ public class HelpActivity extends AppCompatActivity {
              return extras.getStringArrayList(HelpActivity.EXTRA_TAGS_KEY);
         }
         return null;
+    }
+
+    public enum Origin {
+        UNKNOWN("origin:unknown"),
+        LOGIN_SCREEN_WPCOM("origin:wpcom-login-screen"),
+        LOGIN_SCREEN_SELF_HOSTED("origin:wporg-login-screen"),
+        LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),
+        SIGNUP_SCREEN("origin:signup-screen"),
+        ME_SCREEN_HELP("origin:me-screen-help"),
+        DELETE_SITE("origin:delete-site"),
+        FEEDBACK_AZTEC("origin:aztec-feedback"),
+        LOGIN_EMAIL("origin:login-email"),
+        LOGIN_MAGIC_LINK("origin:login-magic-link"),
+        LOGIN_EMAIL_PASSWORD("origin:login-wpcom-password"),
+        LOGIN_2FA("origin:login-2fa"),
+        LOGIN_SITE_ADDRESS("origin:login-site-address"),
+        LOGIN_SOCIAL("origin:login-social"),
+        LOGIN_USERNAME_PASSWORD("origin:login-username-password"),
+        SIGNUP_EMAIL("origin:signup-email"),
+        SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
+        SITE_CREATION_CATEGORY("origin:site-create-site-category"),
+        SITE_CREATION_THEME("origin:site-create-site-theme"),
+        SITE_CREATION_DETAILS("origin:site-create-site-details"),
+        SITE_CREATION_DOMAIN("origin:site-create-site-domain"),
+        SITE_CREATION_CREATING("origin:site-create-creating");
+
+        private final String mStringValue;
+
+        Origin(final String stringValue) {
+            mStringValue = stringValue;
+        }
+
+        public String toString() {
+            return mStringValue;
+        }
+
+        public static String[] toString(Origin[] tags) {
+            if (tags == null) {
+                return null;
+            }
+            String[] res = new String[tags.length];
+            for (int i = 0; i < res.length; i++) {
+                res[i] = tags[i].toString();
+            }
+            return res;
+        }
     }
 }
