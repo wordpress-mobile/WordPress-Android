@@ -103,6 +103,7 @@
     <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
+    <string name="write_post">Write Post</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -1553,6 +1554,7 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
     <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
+    <string name="tabbar_accessibility_label_write">New post. Write a new post.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
 
@@ -2077,7 +2079,6 @@
     <string name="stats_bar_date_value_desc">%s, %d views</string>
     <string name="stats_bar_week_desc">Week of %s</string>
     <string name="fab_add_tag_desc">create tag</string>
-    <string name="fab_create_post_desc">create post</string>
     <string name="fab_create_desc">create</string>
     <string name="stats_legend">stats graph legend</string>
     <string name="stats_tab_tap_content_description">showing %s</string>

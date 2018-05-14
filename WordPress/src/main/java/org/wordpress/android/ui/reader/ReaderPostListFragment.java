@@ -52,6 +52,7 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -105,7 +106,6 @@ public class ReaderPostListFragment extends Fragment
 
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
-    private final ReaderTagList mTags = new ReaderTagList();
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -115,6 +115,8 @@ public class ReaderPostListFragment extends Fragment
     private SearchView mSearchView;
     private MenuItem mSettingsMenuItem;
     private MenuItem mSearchMenuItem;
+
+    private BottomNavController mBottonNavController;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -327,6 +329,21 @@ public class ReaderPostListFragment extends Fragment
             refreshPosts();
             updateCurrentTagIfTime();
         }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // this will throw if parent activity doesn't implement the bottomnav controller interface
+        mBottonNavController = (BottomNavController) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mBottonNavController = null;
     }
 
     @Override
@@ -607,6 +624,12 @@ public class ReaderPostListFragment extends Fragment
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
+
+                // hide the bottom navigation when search is active
+                if (mBottonNavController != null) {
+                    mBottonNavController.onRequestHideBottomNavigation();
+                }
+
                 return true;
             }
 
@@ -616,6 +639,10 @@ public class ReaderPostListFragment extends Fragment
                 resetSearchSuggestionAdapter();
                 mSettingsMenuItem.setVisible(true);
                 mCurrentSearchQuery = null;
+
+                if (mBottonNavController != null) {
+                    mBottonNavController.onRequestShowBottomNavigation();
+                }
 
                 // return to the followed tag that was showing prior to searching
                 resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -1709,6 +1736,8 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    // reset the timestamp that determines when followed tags/blogs are updated so they're
+    // updated when the fragment is recreated (necessary after signin/disconnect)
     public static void resetLastUpdateDate() {
         mLastAutoUpdateDt = null;
     }
@@ -1730,13 +1759,9 @@ public class ReaderPostListFragment extends Fragment
 
         @Override
         protected void onPostExecute(ReaderTagList tagList) {
-            if (tagList != null && !tagList.isSameList(mTags)) {
-                mTags.clear();
-                mTags.addAll(tagList);
-                if (mFilterCriteriaLoaderListener != null) {
-                    //noinspection unchecked
-                    mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) mTags);
-                }
+            if (mFilterCriteriaLoaderListener != null) {
+                //noinspection unchecked
+                mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
             }
         }
     }

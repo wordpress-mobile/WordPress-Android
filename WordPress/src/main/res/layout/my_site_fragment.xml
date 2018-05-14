@@ -479,30 +479,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/empty_list_button_top_margin"
-            android:text="@string/my_site_add_new_site"
             android:contentDescription="@string/my_site_add_new_site"
+            android:text="@string/my_site_add_new_site"
             android:theme="@style/WordPress.Button.Primary"/>
 
     </LinearLayout>
-
-    <!-- this coordinator is only here due to https://code.google.com/p/android/issues/detail?id=175330 -->
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:contentDescription="@string/fab_create_post_desc"
-            app:borderWidth="0dp"
-            app:rippleColor="@color/fab_pressed"
-            app:srcCompat="@drawable/ic_create_white_24dp"/>
-    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>

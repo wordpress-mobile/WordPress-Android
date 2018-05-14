@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -41,8 +40,6 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -79,14 +76,12 @@ public class MySiteFragment extends Fragment
     private View mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
-    private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
 
-    private int mFabTargetYTranslation;
     private int mBlavatarSz;
 
     @Inject AccountStore mAccountStore;
@@ -128,18 +123,6 @@ public class MySiteFragment extends Fragment
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
-        if (getSelectedSite() != null) {
-            // redisplay hidden fab after a short delay
-            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
-                        AniUtils.showFab(mFabView, true);
-                    }
-                }
-            }, delayMs);
-        }
     }
 
     @Override
@@ -147,9 +130,6 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        int fabHeight = getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);
-        int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
-        mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
 
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
@@ -167,26 +147,13 @@ public class MySiteFragment extends Fragment
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
-        mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = (LinearLayout) rootView.findViewById(R.id.row_pages);
-
-        // hide the FAB the first time the fragment is created in order to animate it in onResume()
-        if (savedInstanceState == null) {
-            mFabView.setVisibility(View.INVISIBLE);
-        }
 
         rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), true);
-            }
-        });
-
-        mFabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
             }
         });
 
@@ -342,8 +309,8 @@ public class MySiteFragment extends Fragment
                 if (resultCode != Activity.RESULT_OK || data == null || !isAdded()) {
                     return;
                 }
-                // if user returned from adding a post via the FAB and it was saved as a local
-                // draft, briefly animate the background of the "Blog posts" view to give the
+                // if user returned from adding a post and it was saved as a local draft,
+                // briefly animate the background of the "Blog posts" view to give the
                 // user a cue as to where to go to return to that post
                 if (getView() != null && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
@@ -409,7 +376,6 @@ public class MySiteFragment extends Fragment
 
         if (site == null) {
             mScrollView.setVisibility(View.GONE);
-            mFabView.setVisibility(View.GONE);
             mNoSiteView.setVisibility(View.VISIBLE);
 
             // if the screen height is too short, we can just hide the drake illustration
@@ -518,14 +484,6 @@ public class MySiteFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-    }
-
-    /*
-     * animate the fab as the users scrolls the "My Site" page in the main activity's ViewPager
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
-        mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
     }
 
     @SuppressWarnings("unused")
