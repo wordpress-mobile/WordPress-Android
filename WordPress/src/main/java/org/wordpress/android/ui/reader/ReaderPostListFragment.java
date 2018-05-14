@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
@@ -998,8 +999,38 @@ public class ReaderPostListFragment extends Fragment
                                             .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
                                             .commit();
                     }
+
+                    if (isBookmarked && !isSavedPostsList()) {
+                        showBookmarkSnackbar();
+                    }
                 }
             };
+
+    private boolean isSavedPostsList() {
+        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                && (mCurrentTag != null && mCurrentTag.isBookmarked()));
+    }
+
+    private void showBookmarkSnackbar() {
+        if (!isAdded()) {
+            return;
+        }
+
+        Snackbar.make(getView().findViewById(R.id.reader_recycler_view), "Post saved",
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction("VIEW ALL",
+                new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        //we assume there is only one bookmark tag, otherwise this will not make sense
+                        ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
+                        AppPrefs.setReaderTag(bookmarkTag);
+
+                        mRecyclerView.setCurrentFilter(bookmarkTag);
+                        mRecyclerView.showToolbar();
+                    }
+                })
+                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .show();
+    }
 
     /*
      * called by post adapter to load older posts when user scrolls to the last post
