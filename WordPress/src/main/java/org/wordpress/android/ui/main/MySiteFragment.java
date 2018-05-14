@@ -768,8 +768,10 @@ public class MySiteFragment extends Fragment
 
                     mSiteSettings.setSiteIconMediaId((int) media.getMediaId());
                     mSiteSettings.saveSettings();
-                    showSiteIconProgressBar(false);
+                } else {
+                    AppLog.w(T.MAIN, "Site icon upload completed, but mediaList is empty.");
                 }
+                showSiteIconProgressBar(false);
             } else {
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
                     UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
