@@ -225,6 +225,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private Handler mHandler;
+    private Handler mSyncHandler;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
@@ -281,6 +282,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private SiteModel mSite;
 
+    //Autosync
+    private boolean mIsFinishing;
+    private boolean mIsActive;
+
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
@@ -305,6 +310,7 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
+        mSyncHandler = new Handler();
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -563,9 +569,17 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     };
 
+    private Runnable mAutoSync = new Runnable() {
+        @Override
+        public void run() {
+            savePostAndOptionallyFinish(false);
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
+        mIsActive = true;
         mHandler = new Handler();
         mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
 
@@ -618,6 +632,9 @@ public class EditPostActivity extends AppCompatActivity implements
         mHandler = null;
 
         EventBus.getDefault().unregister(this);
+
+        mIsActive = false;
+        mSyncHandler.postDelayed(mAutoSync, 500);
     }
 
     @Override
@@ -629,6 +646,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
         }
+        mSyncHandler.removeCallbacks(mAutoSync);
+        mSyncHandler = null;
         super.onDestroy();
     }
 
@@ -1656,6 +1675,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish) {
+        if (mSyncHandler != null) {
+            //Stop autosync on pause
+            mSyncHandler.removeCallbacks(null);
+        }
+        if (mIsFinishing) {
+            //Do not call save twice while the activity is already finishing
+            return;
+        } else {
+            mIsFinishing = doFinish;
+        }
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
@@ -1686,7 +1715,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 definitelyDeleteBackspaceDeletedMediaItems();
-
                 if (shouldSave) {
                     if (isNewPost()) {
                         // new post - user just left the editor without publishing, they probably want
@@ -3298,7 +3326,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
         if (post != null && post.getId() == mPost.getId()) {
-            if (event.isError()) {
+            if (event.isError() && mIsActive) {
                 UploadUtils.showSnackbarError(findViewById(R.id.editor_activity), event.error.message);
                 return;
             }
@@ -3306,32 +3334,34 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost = post;
             mIsNewPost = false;
             invalidateOptionsMenu();
-            switch (PostStatus.fromPost(post)) {
-                case PUBLISHED:
-                    // here show snackbar saying it was uploaded
-                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
-                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity), messageRes,
-                            R.string.button_view, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // jump to Editor Preview mode to show this Post
-                                    ActivityLauncher.browsePostOrPage(EditPostActivity.this, mSite, post);
-                                }
-                            });
-                    break;
-                case DRAFT:
-                default:
-                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity),
-                            R.string.editor_draft_saved_online,
-                            R.string.button_publish,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils
-                                            .publishPost(EditPostActivity.this, post, mSite, mDispatcher);
-                                }
-                            });
-                    break;
+            if (mIsActive) {
+                switch (PostStatus.fromPost(post)) {
+                    case PUBLISHED:
+                        // here show snackbar saying it was uploaded
+                        int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                        UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity), messageRes,
+                                R.string.button_view, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // jump to Editor Preview mode to show this Post
+                                        ActivityLauncher.browsePostOrPage(EditPostActivity.this, mSite, post);
+                                    }
+                                });
+                        break;
+                    case DRAFT:
+                    default:
+                        UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity),
+                                R.string.editor_draft_saved_online,
+                                R.string.button_publish,
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        UploadUtils
+                                                .publishPost(EditPostActivity.this, post, mSite, mDispatcher);
+                                    }
+                                });
+                        break;
+                }
             }
         }
     }
