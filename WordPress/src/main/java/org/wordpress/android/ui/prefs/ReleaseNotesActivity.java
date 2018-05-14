@@ -13,9 +13,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
-import org.wordpress.android.util.HelpshiftHelper;
 
 import javax.inject.Inject;
 
@@ -79,8 +79,7 @@ public class ReleaseNotesActivity extends WebViewActivity {
                 return true;
             case R.id.menu_bug:
                 HelpActivity.Origin origin = (HelpActivity.Origin) getIntent().getSerializableExtra(KEY_HELPSHIFT_TAG);
-                HelpshiftHelper.getInstance().showConversation(ReleaseNotesActivity.this, mSiteStore, origin,
-                                                               mAccountStore.getAccount().getUserName());
+                ZendeskHelper.createNewTicket(ReleaseNotesActivity.this, mAccountStore, mSiteStore, origin);
                 return true;
         }
 

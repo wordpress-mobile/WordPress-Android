@@ -70,12 +70,13 @@ fun showZendeskHelpCenter(context: Context, accountStore: AccountStore) {
             .show(context)
 }
 
+@JvmOverloads
 fun createNewTicket(
     context: Context,
-    accountStore: AccountStore,
+    accountStore: AccountStore?,
     siteStore: SiteStore,
     origin: Origin?,
-    extraTags: List<String>?
+    extraTags: List<String>? = null
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
@@ -100,12 +101,12 @@ fun showAllTickets(
 
 // Helpers
 
-private fun configureZendesk(context: Context, accountStore: AccountStore, siteStore: SiteStore) {
+private fun configureZendesk(context: Context, accountStore: AccountStore?, siteStore: SiteStore) {
     zendeskInstance.setIdentity(zendeskIdentity(accountStore))
     zendeskInstance.ticketFormId = TicketFieldIds.form
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore.account)),
+            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore?.account)),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
@@ -123,8 +124,8 @@ private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Ori
             }
         }
 
-private fun zendeskIdentity(accountStore: AccountStore): Identity {
-    val currentAccount = accountStore.account
+private fun zendeskIdentity(accountStore: AccountStore?): Identity {
+    val currentAccount = accountStore?.account
     var email: String? = null
     var name: String? = null
     if (currentAccount != null) {

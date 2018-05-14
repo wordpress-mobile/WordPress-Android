@@ -13,7 +13,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.JetpackCallbacks;
-import org.wordpress.android.util.HelpshiftHelper;
 
 public class MagicLinkSentFragment extends Fragment {
     public interface OnMagicLinkSentInteraction {
@@ -73,8 +72,6 @@ public class MagicLinkSentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
-                intent.putExtra(HelpActivity.ORIGIN_KEY,
-                                HelpshiftHelper.chooseHelpshiftLoginTag(mJetpackCallbacks.isJetpackAuth(), true));
                 startActivity(intent);
             }
         };

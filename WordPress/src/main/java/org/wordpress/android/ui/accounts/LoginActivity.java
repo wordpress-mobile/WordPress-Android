@@ -42,6 +42,7 @@ import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.support.ZendeskExtraTags;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.RequestCodes;
@@ -54,7 +55,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -566,7 +566,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
-        HelpshiftHelper.getInstance().showConversation(this, siteStore, Origin.LOGIN_SITE_ADDRESS, username);
+        ZendeskHelper.createNewTicket(this, null, siteStore, Origin.LOGIN_SITE_ADDRESS);
     }
 
     @Override

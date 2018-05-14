@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
 
 import java.util.UUID;
 
@@ -81,7 +80,8 @@ public class GCMRegistrationIntentService extends JobIntentService {
             }
 
             // Register to other kind of notifications
-            HelpshiftHelper.getInstance().registerDeviceToken(this, gcmToken);
+            // TODO: Handle Zendesk PNs instead
+//            HelpshiftHelper.getInstance().registerDeviceToken(this, gcmToken);
             AnalyticsTracker.registerPushNotificationToken(gcmToken);
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");

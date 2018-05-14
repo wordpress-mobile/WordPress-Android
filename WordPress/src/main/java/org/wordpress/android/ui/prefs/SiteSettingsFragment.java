@@ -62,12 +62,12 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -1789,9 +1789,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                                                               HelpActivity.Origin.DELETE_SITE,
-                                                               mAccountStore.getAccount().getUserName());
+                ZendeskHelper.createNewTicket(getActivity(), mAccountStore, mSiteStore, Origin.DELETE_SITE);
             }
         });
         builder.show();

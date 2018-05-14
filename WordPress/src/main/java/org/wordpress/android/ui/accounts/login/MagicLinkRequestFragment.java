@@ -22,7 +22,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.JetpackCallbacks;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -126,8 +125,6 @@ public class MagicLinkRequestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
-                intent.putExtra(HelpActivity.ORIGIN_KEY,
-                                HelpshiftHelper.chooseHelpshiftLoginTag(mJetpackCallbacks.isJetpackAuth(), true));
                 startActivity(intent);
             }
         };
