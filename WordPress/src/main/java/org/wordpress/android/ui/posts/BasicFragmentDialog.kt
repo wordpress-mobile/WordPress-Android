@@ -27,7 +27,8 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         fun onNegativeClicked(instanceTag: String)
     }
 
-    fun initialize(tag: String,
+    fun initialize(
+        tag: String,
         title: String,
         message: String,
         positiveButtonLabel: String,
