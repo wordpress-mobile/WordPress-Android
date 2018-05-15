@@ -32,6 +32,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -206,6 +207,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
+    private static final String TAG_AUTO_SYNCED_POST_IDENTIFIER = "tag_auto_synced_post_identifier";
+    private static final String TAG_AUTO_SYNCED_POST_FLAG = "tag_auto_synced_post_flag";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -285,6 +288,7 @@ public class EditPostActivity extends AppCompatActivity implements
     // Autosync
     private boolean mIsFinishing;
     private boolean mIsActive;
+    private boolean mIsAutosync;
 
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
@@ -402,6 +406,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
+            mIsAutosync = savedInstanceState.getBoolean(TAG_AUTO_SYNCED_POST_FLAG);
         }
 
         if (mSite == null) {
@@ -551,28 +556,23 @@ public class EditPostActivity extends AppCompatActivity implements
     private Runnable mAutoSave = new Runnable() {
         @Override
         public void run() {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        updatePostObject(true);
-                    } catch (EditorFragmentNotAddedException e) {
-                        AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                        return;
+            try {
+                final String title = (String) mEditorFragment.getTitle();
+                final String content = (String) mEditorFragment.getContent();
+                final Spanned spannedContent = mEditorFragment.getSpannedContent();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updatePostObject(true, title, content, spannedContent);
+                        savePostToDb();
+                        if (mHandler != null) {
+                            mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
+                        }
                     }
-                    savePostToDb();
-                    if (mHandler != null) {
-                        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
-                    }
-                }
-            }).start();
-        }
-    };
-
-    private Runnable mAutoSync = new Runnable() {
-        @Override
-        public void run() {
-            savePostAndOptionallyFinish(false);
+                }).start();
+            } catch (EditorFragmentNotAddedException e) {
+                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+            }
         }
     };
 
@@ -618,7 +618,7 @@ public class EditPostActivity extends AppCompatActivity implements
             for (MediaModel media : allUploadingMediaInPost) {
                 if (media != null) {
                     mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
-                                                                       UploadService.getUploadProgressForMedia(media));
+                            UploadService.getUploadProgressForMedia(media));
                 }
             }
         }
@@ -627,18 +627,37 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-
+        Log.d("autosave", "onPause");
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
 
         EventBus.getDefault().unregister(this);
 
         mIsActive = false;
-        mSyncHandler.postDelayed(mAutoSync, 500);
+        triggerAutoSync();
+    }
+
+    private void triggerAutoSync() {
+        try {
+            final String title = (String) mEditorFragment.getTitle();
+            final String content = (String) mEditorFragment.getContent();
+            final Spanned spannedContent = mEditorFragment.getSpannedContent();
+            mIsAutosync = true;
+            mSyncHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("autosave", "autosyncing on pause");
+                    savePostAndOptionallyFinish(false, title, content, spannedContent);
+                }
+            }, 500);
+        } catch (EditorFragmentNotAddedException e) {
+            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+        }
     }
 
     @Override
     protected void onDestroy() {
+        Log.d("autosave", "onDestroy");
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
         cancelAddMediaListThread();
@@ -646,8 +665,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
         }
-        mSyncHandler.removeCallbacks(mAutoSync);
-        mSyncHandler = null;
         super.onDestroy();
     }
 
@@ -672,6 +689,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
+        outState.putBoolean(TAG_AUTO_SYNCED_POST_FLAG, mIsAutosync);
         outState.putSerializable(WordPress.SITE, mSite);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
@@ -1100,9 +1118,13 @@ public class EditPostActivity extends AppCompatActivity implements
                             getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
                     return false;
                 }
-
-                // we update the mPost object first, so we can pre-check Post publishability and inform the user
-                updatePostObject();
+                try {
+                    // we update the mPost object first, so we can pre-check Post publishability and inform the user
+                    updatePostObject((String) mEditorFragment.getTitle(), (String) mEditorFragment.getContent(),
+                            mEditorFragment.getSpannedContent());
+                } catch (EditorFragmentNotAddedException e) {
+                    AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+                }
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
                     if (isDiscardable()) {
                         String message = getString(
@@ -1261,23 +1283,23 @@ public class EditPostActivity extends AppCompatActivity implements
                                            );
     }
 
-    private synchronized void updatePostObject(boolean isAutosave) throws EditorFragmentNotAddedException {
+    private synchronized void updatePostObject(boolean isAutosave,
+                                               String title,
+                                               String content,
+                                               Spanned spannedContent) {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
         }
 
         // Update post object from fragment fields
-        boolean postTitleOrContentChanged = false;
-        if (mEditorFragment != null) {
-            if (mShowNewEditor || mShowAztecEditor) {
-                postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
-                                                   (String) mEditorFragment.getContent());
-            } else {
-                // TODO: Remove when legacy editor is dropped
-                postTitleOrContentChanged = updatePostContent(isAutosave);
-            }
+        boolean postTitleOrContentChanged;
+        if (mShowNewEditor || mShowAztecEditor) {
+            Log.d("autosave", "Post: " + title + ", " + content);
+            postTitleOrContentChanged = updatePostContentNewEditor(isAutosave, title, content);
+        } else {
+            // TODO: Remove when legacy editor is dropped
+            postTitleOrContentChanged = updatePostContent(isAutosave, title, content, spannedContent);
         }
 
         // only makes sense to change the publish date and locallychanged date if the Post was actaully changed
@@ -1288,21 +1310,23 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    updatePostObject(false);
-                } catch (EditorFragmentNotAddedException e) {
-                    AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                    return;
+        try {
+            final String title = (String) mEditorFragment.getTitle();
+            final String content = (String) mEditorFragment.getContent();
+            final Spanned spannedContent = mEditorFragment.getSpannedContent();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    updatePostObject(false, title, content, spannedContent);
+                    savePostToDb();
+                    if (listener != null) {
+                        listener.onPostSave();
+                    }
                 }
-                savePostToDb();
-                if (listener != null) {
-                    listener.onPostSave();
-                }
-            }
-        }).start();
+            }).start();
+        } catch (EditorFragmentNotAddedException e) {
+            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+        }
     }
 
     @Override
@@ -1605,8 +1629,15 @@ public class EditPostActivity extends AppCompatActivity implements
             builder.create().show();
             return;
         }
-
-        boolean postUpdateSuccessful = updatePostObject();
+        boolean postUpdateSuccessful = false;
+        try {
+            updatePostObject((String) mEditorFragment.getTitle(),
+                    (String) mEditorFragment.getContent(),
+                    mEditorFragment.getSpannedContent());
+            postUpdateSuccessful = true;
+        } catch (EditorFragmentNotAddedException e) {
+            AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+        }
         if (!postUpdateSuccessful) {
             // just return, since the only case updatePostObject() can fail is when the editor
             // fragment is not added to the activity
@@ -1621,7 +1652,15 @@ public class EditPostActivity extends AppCompatActivity implements
             public void run() {
                 boolean isFirstTimePublish = isFirstTimePublish();
 
-                boolean postUpdateSuccessful = updatePostObject();
+                boolean postUpdateSuccessful = false;
+                try {
+                    updatePostObject((String) mEditorFragment.getTitle(),
+                            (String) mEditorFragment.getContent(), mEditorFragment.getSpannedContent());
+                    postUpdateSuccessful = true;
+                } catch (EditorFragmentNotAddedException e) {
+                    AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+
+                }
                 if (!postUpdateSuccessful) {
                     // just return, since the only case updatePostObject() can fail is when the editor
                     // fragment is not added to the activity
@@ -1675,6 +1714,21 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish) {
+        try {
+            final String title = (String) mEditorFragment.getTitle();
+            final String content = (String) mEditorFragment.getContent();
+            final Spanned spannedContent = mEditorFragment.getSpannedContent();
+            mIsAutosync = false;
+            savePostAndOptionallyFinish(doFinish, title, content, spannedContent);
+        } catch (EditorFragmentNotAddedException e) {
+            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+        }
+    }
+
+    private void savePostAndOptionallyFinish(final boolean doFinish,
+                                             final String title,
+                                             final String content,
+                                             final Spanned spannedContent) {
         if (mSyncHandler != null) {
             // Stop autosync on pause
             mSyncHandler.removeCallbacks(null);
@@ -1685,22 +1739,21 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             mIsFinishing = doFinish;
         }
+        if (doFinish) {
+            mIsAutosync = false;
+        }
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d("autosave", "running saving thread");
                 // check if the opened post had some unsaved local changes
                 boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
                 boolean isFirstTimePublish = isFirstTimePublish();
 
-                boolean postUpdateSuccessful = updatePostObject();
-                if (!postUpdateSuccessful) {
-                    // just return, since the only case updatePostObject() can fail is when the editor
-                    // fragment is not added to the activity
-                    return;
-                }
+                updatePostObject(title, content, spannedContent);
 
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
@@ -1724,6 +1777,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Log.d("autosave", "setting post status");
                                     mEditPostSettingsFragment.updatePostStatusRelatedViews();
                                 }
                             });
@@ -1732,11 +1786,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
                     if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasFailedMedia()
                         && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                        Log.d("autosave", "savePostOnlineAndFinishAsync");
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
+                        Log.d("autosave", "savePostLocallyAndFinishAsync");
                         savePostLocallyAndFinishAsync(doFinish);
                     }
                 } else {
+                    Log.d("autosave", "should not save");
                     // discard post if new & empty
                     if (isDiscardable()) {
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
@@ -1783,15 +1840,8 @@ public class EditPostActivity extends AppCompatActivity implements
         return mEditorFragment.hasFailedMediaUploads() || mEditorFragment.isActionInProgress();
     }
 
-    private boolean updatePostObject() {
-        try {
-            updatePostObject(false);
-        } catch (EditorFragmentNotAddedException e) {
-            AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
-            return false;
-        }
-
-        return true;
+    private void updatePostObject(String title, String content, Spanned spannedContent) {
+        updatePostObject(false, title, content, spannedContent);
     }
 
     private void savePostLocallyAndFinishAsync(boolean doFinishActivity) {
@@ -2100,23 +2150,26 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Updates post object with content of this fragment
      */
-    public boolean updatePostContent(boolean isAutoSave) throws EditorFragmentNotAddedException {
+    public boolean updatePostContent(boolean isAutoSave,
+                                     String nullableTitle,
+                                     String nullableContent,
+                                     Spanned spannedContent) {
         if (mPost == null) {
             return false;
         }
-        String title = StringUtils.notNullStr((String) mEditorFragment.getTitle());
+        String title = StringUtils.notNullStr(nullableTitle);
         SpannableStringBuilder postContent;
-        if (mEditorFragment.getSpannedContent() != null) {
+        if (spannedContent != null) {
             // needed by the legacy editor to save local drafts
             try {
-                postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+                postContent = new SpannableStringBuilder(spannedContent);
             } catch (RuntimeException e) {
                 // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
                 // See https://code.google.com/p/android/issues/detail?id=5164
-                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+                postContent = new SpannableStringBuilder(StringUtils.notNullStr(nullableContent));
             }
         } else {
-            postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+            postContent = new SpannableStringBuilder(StringUtils.notNullStr(nullableContent));
         }
 
         String content;
@@ -3165,9 +3218,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
                     CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
-                                                  T.EDITOR,
-                                                  String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber,
-                                                                message));
+                            T.EDITOR,
+                            String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber,
+                                    message));
                 }
 
                 @Override
@@ -3326,15 +3379,19 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
         if (post != null && post.getId() == mPost.getId()) {
-            if (event.isError() && mIsActive) {
-                UploadUtils.showSnackbarError(findViewById(R.id.editor_activity), event.error.message);
+            boolean isAutosync = !mIsActive || mIsAutosync;
+            mIsAutosync = false;
+            if (event.isError()) {
+                if (!isAutosync) {
+                    UploadUtils.showSnackbarError(findViewById(R.id.editor_activity), event.error.message);
+                }
                 return;
             }
 
             mPost = post;
             mIsNewPost = false;
             invalidateOptionsMenu();
-            if (mIsActive) {
+            if (!isAutosync) {
                 switch (PostStatus.fromPost(post)) {
                     case PUBLISHED:
                         // here show snackbar saying it was uploaded
