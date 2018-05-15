@@ -1659,7 +1659,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     postUpdateSuccessful = true;
                 } catch (EditorFragmentNotAddedException e) {
                     AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
-
                 }
                 if (!postUpdateSuccessful) {
                     // just return, since the only case updatePostObject() can fail is when the editor
