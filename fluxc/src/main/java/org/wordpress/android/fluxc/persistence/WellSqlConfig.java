@@ -253,11 +253,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("DROP TABLE IF EXISTS ActivityLogModel");
                 db.execSQL(
-                        "CREATE TABLE ActivityLog (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
-                        + "REMOTE_SITE_ID INTEGER,ACTIVITY_ID TEXT NOT NULL,SUMMARY TEXT NOT NULL,TEXT TEXT NOT NULL,"
-                        + "NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID TEXT,PUBLISHED "
-                        + "INTEGER,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID INTEGER,"
-                        + "AVATAR_URL TEXT,ROLE TEXT)");
+                        "CREATE TABLE IF NOT EXISTS ActivityLog (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID "
+                        + "INTEGER,REMOTE_SITE_ID INTEGER,ACTIVITY_ID TEXT NOT NULL,SUMMARY TEXT NOT NULL,TEXT TEXT "
+                        + "NOT NULL,NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID TEXT,"
+                        + "PUBLISHED INTEGER,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID "
+                        + "INTEGER,AVATAR_URL TEXT,ROLE TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
