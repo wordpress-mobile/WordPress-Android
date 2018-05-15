@@ -372,10 +372,13 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewHelpAndSupport(Context context, Origin origin) {
-        Intent intent = new Intent(context, HelpActivity.class);
-        intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
-        context.startActivity(intent);
+    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin) {
+        ActivityLauncher.viewHelpAndSupport(context, origin, null);
+    }
+
+    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin, @Nullable List<String>
+            extraSupportTags) {
+        context.startActivity(HelpActivity.createIntent(context, origin, extraSupportTags));
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {

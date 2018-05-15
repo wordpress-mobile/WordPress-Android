@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCreatingFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationDomainFragment;
@@ -105,10 +106,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     }
 
     private void launchHelpshift(HelpActivity.Origin origin) {
-        Intent intent = new Intent(this, HelpActivity.class);
-        // Used to pass data to an eventual support service
-        intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
-        startActivity(intent);
+        ActivityLauncher.viewHelpAndSupport(this, origin);
     }
 
     private enum SiteCreationBackStackMode {

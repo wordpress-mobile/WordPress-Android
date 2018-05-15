@@ -3,6 +3,8 @@ package org.wordpress.android.ui.accounts;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -19,16 +21,27 @@ import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class HelpActivity extends AppCompatActivity {
-    public static final String ORIGIN_KEY = "ORIGIN_KEY";
-    public static final String EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY";
+    private static final String ORIGIN_KEY = "ORIGIN_KEY";
+    private static final String EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+
+    public static Intent createIntent(Context context, @NonNull Origin origin,
+                                      @Nullable List<String> extraSupportTags) {
+        Intent intent = new Intent(context, HelpActivity.class);
+        intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
+        if (extraSupportTags != null && !extraSupportTags.isEmpty()) {
+            intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, (ArrayList<String>) extraSupportTags);
+        }
+        return intent;
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {

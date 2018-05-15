@@ -66,6 +66,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -549,14 +550,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void launchHelpshift(Origin origin) {
-        Intent intent = new Intent(this, HelpActivity.class);
-        // Used to pass data to an eventual support service
-        intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
-        if (getLoginMode() == LoginMode.JETPACK_STATS) {
-            intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY,
-                    (ArrayList<String>) Collections.singletonList(ZendeskExtraTags.connectingJetpack));
-        }
-        startActivity(intent);
+        List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
+                .singletonList(ZendeskExtraTags.connectingJetpack) : null;
+        ActivityLauncher.viewHelpAndSupport(this, origin, extraSupportTags);
     }
 
     @Override

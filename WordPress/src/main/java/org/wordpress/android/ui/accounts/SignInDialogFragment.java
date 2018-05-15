@@ -16,10 +16,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
-import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
@@ -179,8 +177,6 @@ public class SignInDialogFragment extends DialogFragment {
                 ActivityLauncher.openUrlExternal(context, url);
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
-                Origin origin = (Origin) arguments.getSerializable(HelpActivity.ORIGIN_KEY);
-                ZendeskHelper.createNewTicket(context, mAccountStore, mSiteStore, origin);
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:
