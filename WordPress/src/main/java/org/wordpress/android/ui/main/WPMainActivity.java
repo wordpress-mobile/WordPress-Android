@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +59,8 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -93,7 +96,9 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
-public class WPMainActivity extends AppCompatActivity implements OnPageListener, BottomNavController {
+public class WPMainActivity extends AppCompatActivity
+        implements OnPageListener, BottomNavController, BasicDialogPositiveClickInterface,
+        BasicDialogNegativeClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
@@ -635,8 +640,9 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener,
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
-                if (getMeFragment() != null) {
-                    getMeFragment().onActivityResult(requestCode, resultCode, data);
+                Fragment fragment = mBottomNav.getActiveFragment();
+                if (fragment instanceof MeFragment || fragment instanceof MySiteFragment) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
         }
@@ -856,11 +862,30 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener,
         if (site != null) {
             mSelectedSite = site;
         }
+        if (getMySiteFragment() != null) {
+            getMySiteFragment().onSiteChanged(site);
+        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
         handleSiteRemoved();
+    }
+
+    @Override
+    public void onPositiveClicked(@NonNull String instanceTag) {
+        MySiteFragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            fragment.onPositiveClicked(instanceTag);
+        }
+    }
+
+    @Override
+    public void onNegativeClicked(@NonNull String instanceTag) {
+        MySiteFragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            fragment.onNegativeClicked(instanceTag);
+        }
     }
 }

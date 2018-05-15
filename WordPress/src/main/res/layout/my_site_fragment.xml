@@ -30,13 +30,25 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless">
 
                     <RelativeLayout
                         android:id="@+id/top_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_large">
+
+                        <ProgressBar
+                            android:id="@+id/my_site_icon_progress"
+                            android:layout_width="@dimen/blavatar_sz"
+                            android:layout_height="@dimen/blavatar_sz"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/margin_large"
+                            android:layout_marginRight="@dimen/margin_large"
+                            android:indeterminate="true"
+                            android:visibility="gone"
+                            android:gravity="center_vertical" />
 
                         <org.wordpress.android.widgets.WPNetworkImageView
                             android:id="@+id/my_site_blavatar"
@@ -45,6 +57,8 @@
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="@dimen/margin_large"
                             android:layout_marginRight="@dimen/margin_large"
+                            android:contentDescription="@string/my_site_icon_content_description"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"/>
 
                         <LinearLayout
