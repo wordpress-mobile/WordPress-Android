@@ -1000,16 +1000,14 @@ public class ReaderPostListFragment extends Fragment
                                             .commit();
                     }
 
-                    if (isBookmarked && !isSavedPostsList()) {
+                    // show snackbar when saving post not in saved posts list
+                    if (isBookmarked
+                        && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                        && (mCurrentTag != null && mCurrentTag.isBookmarked())) {
                         showBookmarkSnackbar();
                     }
                 }
             };
-
-    private boolean isSavedPostsList() {
-        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                && (mCurrentTag != null && mCurrentTag.isBookmarked()));
-    }
 
     private void showBookmarkSnackbar() {
         if (!isAdded()) {
@@ -1020,7 +1018,7 @@ public class ReaderPostListFragment extends Fragment
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
-                        // if the fragment is part of WPMainActivity we don't just need to update filter and scroll to
+                        // if the fragment is part of WPMainActivity we just need to update filter and scroll to
                         // the toolbar. This implementation assumes that Reader list in WPMainActivity will have a
                         // toolbar.
                         if (getActivity() instanceof WPMainActivity) {
