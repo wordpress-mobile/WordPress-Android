@@ -127,17 +127,6 @@ public class MySiteFragment extends Fragment
 
         SiteModel site = getSelectedSite();
         if (site != null) {
-            // redisplay hidden fab after a short delay
-            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
-                        AniUtils.showFab(mFabView, true);
-                    }
-                }
-            }, delayMs);
-
             if (site.getHasFreePlan() && !site.isJetpackConnected()) {
                 mActivityLogContainer.setVisibility(View.GONE);
             } else {
