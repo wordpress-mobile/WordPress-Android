@@ -51,8 +51,7 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.plugins.PluginUtils;
-import org.wordpress.android.ui.posts.BasicYesNoCancelFragmentDialog;
-import org.wordpress.android.ui.posts.BasicYesNoFragmentDialog;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -88,9 +87,10 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MySiteFragment extends Fragment
-        implements SiteSettingsListener, WPMainActivity.OnScrollToTopListener,
-        BasicYesNoFragmentDialog.BasicYesNoDialogClickInterface {
+public class MySiteFragment extends Fragment implements SiteSettingsListener,
+        WPMainActivity.OnScrollToTopListener,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface,
+        BasicFragmentDialog.BasicDialogNegativeClickInterface {
     private static final long ALERT_ANIM_OFFSET_MS = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
@@ -376,17 +376,18 @@ public class MySiteFragment extends Fragment
     }
 
     private void showAddSiteIconDialog() {
-        BasicYesNoFragmentDialog dialog = new BasicYesNoFragmentDialog();
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
         String tag = TAG_ADD_SITE_ICON_DIALOG;
         dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
                 getString(R.string.my_site_icon_dialog_add_message),
                 getString(R.string.yes),
-                getString(R.string.no));
+                getString(R.string.no),
+                null);
         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
     }
 
     private void showChangeSiteIconDialog() {
-        BasicYesNoCancelFragmentDialog dialog = new BasicYesNoCancelFragmentDialog();
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
         String tag = TAG_CHANGE_SITE_ICON_DIALOG;
         dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
                 getString(R.string.my_site_icon_dialog_change_message),
