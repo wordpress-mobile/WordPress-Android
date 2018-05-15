@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -93,7 +94,11 @@ class ActivityLogListFragment : Fragment() {
         context?.let {
             val adapter: ActivityLogAdapter
             if (activityLogList.adapter == null) {
-                adapter = ActivityLogAdapter(it, viewModel)
+                adapter = ActivityLogAdapter(
+                        it,
+                        viewModel,
+                        { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityId) }
+                )
                 activityLogList.adapter = adapter
             } else {
                 adapter = activityLogList.adapter as ActivityLogAdapter

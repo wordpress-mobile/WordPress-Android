@@ -11,12 +11,16 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 
-class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
+class ActivityLogViewHolder(
+    parent: ViewGroup,
+    private val clickListener: (ActivityLogListItemViewModel) -> Unit
+) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.activity_log_list_item, parent, false)) {
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
     private val text: TextView = itemView.findViewById(R.id.action_text)
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
+    private val container: View = itemView.findViewById(R.id.activity_content_container)
     private val button: ImageButton = itemView.findViewById(R.id.rewind_button)
     private val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
@@ -41,6 +45,9 @@ class ActivityLogViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
         thumbnail.setImageResource(activity.icon)
         thumbnail.setBackgroundResource(activity.background)
+        container.setOnClickListener {
+            clickListener(activity)
+        }
     }
 
     fun updateProgress(progress: Int) {
