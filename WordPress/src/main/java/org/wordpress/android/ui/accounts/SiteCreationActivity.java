@@ -105,7 +105,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         return false;
     }
 
-    private void launchHelpshift(HelpActivity.Origin origin) {
+    private void launchZendesk(HelpActivity.Origin origin) {
         ActivityLauncher.viewHelpAndSupport(this, origin);
     }
 
@@ -161,7 +161,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpCategoryScreen() {
-        launchHelpshift(HelpActivity.Origin.SITE_CREATION_CATEGORY);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_CATEGORY);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpThemeScreen() {
-        launchHelpshift(HelpActivity.Origin.SITE_CREATION_THEME);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_THEME);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpSiteDetailsScreen() {
-        launchHelpshift(HelpActivity.Origin.SITE_CREATION_DETAILS);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_DETAILS);
     }
 
     @Override
@@ -200,7 +200,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpDomainScreen() {
-        launchHelpshift(HelpActivity.Origin.SITE_CREATION_DOMAIN);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_DOMAIN);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpSiteCreatingScreen() {
-        launchHelpshift(HelpActivity.Origin.SITE_CREATION_CREATING);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_CREATING);
     }
 
     @Override
