@@ -205,7 +205,7 @@
 
                 <ImageView
                     android:id="@+id/image_visit_icon"
-                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@null"
                     android:layout_gravity="center_vertical"
                     android:layout_height="@dimen/reader_count_icon"
@@ -253,7 +253,7 @@
 
             <ImageView
                 android:id="@+id/image_more"
-                android:background="?android:selectableItemBackgroundBorderless"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/show_more_desc"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
