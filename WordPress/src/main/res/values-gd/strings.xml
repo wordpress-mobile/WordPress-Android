@@ -404,7 +404,6 @@ Language: gd_GB
     <string name="username">Ainm–cleachdaiche</string>
     <string name="log_in">Clàraich a–steach</string>
     <string name="reader">Leughadair</string>
-    <string name="featured">Cleachd mar dhealbh brosnaichte</string>
     <string name="featured_in_post">Gabh a–steach an dealbh ann an susbaint a\' phuist</string>
     <string name="no_network_title">Chan eil lìonra ri fhaighinn</string>
     <string name="caption">Caipsean (roghainneil)</string>

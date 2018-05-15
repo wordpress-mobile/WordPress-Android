@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 07:54:07+0000
+Translation-Revision-Date: 2018-05-01 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Site wordt aangemaakt. Dit kan een paar minuten duren.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Belangrijk</string>
+    <string name="notification_channel_general_title">Algemeen</string>
+    <string name="photo_picker_use_photo">Gebruik deze foto</string>
     <string name="media_preview_title">%1$d van %2$d</string>
     <string name="stock_media_picker_empty_results">Geen overeenkomsten</string>
     <string name="stock_media_picker_initial_empty_subtext">Foto\'s beschikbaar gesteld door %s</string>
@@ -55,7 +61,7 @@ Language: nl
     <string name="reader_list_item_suggestion_remove_desc">verwijderen</string>
     <string name="photo_picker_thumbnail_desc">Video afspelen</string>
     <string name="reader_cardview_post_play_video_desc">aanbevolen video afspelen</string>
-    <string name="post_cardview_featured_desc">aanbevolen</string>
+    <string name="post_cardview_featured_desc">uitgelichte afbeelding</string>
     <string name="plugin_detail_logo_desc">plugin–logo</string>
     <string name="plugin_detail_banner_desc">plugin–banner</string>
     <string name="photo_picker_wpmedia_desc">kiezen uit media op WordPress</string>
@@ -181,6 +187,7 @@ Language: nl
     <string name="site_creation_creating_retry">Probeer opnieuw</string>
     <string name="site_creation_creating_failed">Er ging iets mis…</string>
     <string name="site_creation_empty_site_title">Vul een site titel in</string>
+    <string name="site_creation_title_hint">Site titel</string>
     <string name="site_creation_domain_finish_button">Creëer site </string>
     <string name="site_creation_label_domain_selection_title">Stap 4 van 4</string>
     <string name="site_creation_label_site_details_title">Stap 3 van 4</string>
@@ -195,9 +202,11 @@ Language: nl
     <string name="notification_site_creation_step_tagline">Stap 3 van 4</string>
     <string name="notification_site_creation_step_fetching">Stap 2 van 4</string>
     <string name="notification_site_creation_step_creating">Stap 1 van 4</string>
+    <string name="notification_site_creation_created">Klik om door te gaan.</string>
     <string name="username_changer_title">Verander gebruikersnaam</string>
     <string name="username_changer_action">Opslaan</string>
     <string name="content_description_add_avatar">Voeg avatar toe </string>
+    <string name="signup_user_exists">E–mailadres bestaat al op WordPress.com\nDoorgaan met inloggen. </string>
     <string name="signup_magic_link_progress">E–mail versturen</string>
     <string name="signup_magic_link_error_button_negative">Sluit</string>
     <string name="signup_epilogue_hint_password">Wachtwoord (optioneel)</string>
@@ -1485,7 +1494,6 @@ Language: nl
     <string name="caption">Onderschrift (optioneel)</string>
     <string name="no_network_title">Geen netwerk beschikbaar</string>
     <string name="featured_in_post">Plaats afbeelding in bericht</string>
-    <string name="featured">Gebruiken als uitgelichte afbeelding</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Uploaden …</string>

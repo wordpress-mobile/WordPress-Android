@@ -7,7 +7,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -55,6 +54,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -476,20 +476,16 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void hideSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
+        if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
             ActivityUtils.hideKeyboardForced(mSearchView);
         }
     }
 
     private void showSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
+        if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }
-    }
-
-    private boolean hasHardwareKeyboard() {
-        return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
     @Override

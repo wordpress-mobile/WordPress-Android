@@ -838,7 +838,6 @@ Language: cy_GB
     <string name="caption">Egluryn (dewisol)</string>
     <string name="width">Lled</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
-    <string name="featured">Defnyddio fel delwedd nodwedd</string>
     <string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
