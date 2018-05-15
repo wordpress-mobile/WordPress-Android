@@ -294,11 +294,9 @@ public class WPMainActivity extends AppCompatActivity {
                 } else if (openRequestedTab) {
                     handleOpenTabIntent(getIntent());
                 } else if (openedFromBookmarkSnackbar) {
-                    ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
-                    if (bookmarkTag != null) { // sanity check
-                        AppPrefs.setReaderTag(bookmarkTag);
+                    if (ReaderTagTable.getBookmarkTags().isEmpty()) {
+                        AppPrefs.setReaderTag(ReaderTagTable.getBookmarkTags().get(0));
                     }
-
                     mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
                 } else {
                     // return to the tab that was showing last time

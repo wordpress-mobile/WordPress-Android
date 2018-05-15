@@ -1024,12 +1024,10 @@ public class ReaderPostListFragment extends Fragment
                         // the toolbar. This implementation assumes that Reader list in WPMainActivity will have a
                         // toolbar.
                         if (getActivity() instanceof WPMainActivity) {
-                            //we assume there is only one bookmark tag, otherwise this will not make sense
-                            ReaderTag bookmarkTag = ReaderTagTable.getBookmarkTags().get(0);
-                            if (bookmarkTag == null) { // sanity check
+                            if (ReaderTagTable.getBookmarkTags().isEmpty()) { // sanity check
                                 return;
                             }
-                            mRecyclerView.setCurrentFilter(bookmarkTag);
+                            mRecyclerView.setCurrentFilter(ReaderTagTable.getBookmarkTags().get(0));
                             mRecyclerView.showToolbar();
                         } else {
                             // in case of independent reader list, go back to WPMainActivity
