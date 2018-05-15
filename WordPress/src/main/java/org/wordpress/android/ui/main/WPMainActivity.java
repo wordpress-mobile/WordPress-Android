@@ -190,8 +190,7 @@ public class WPMainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                // nop
+            public void onTabUnselected(TabLayout.Tab tab) {  // nop
             }
 
             @Override
@@ -346,15 +345,10 @@ public class WPMainActivity extends AppCompatActivity {
                     getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showSignupEpilogue(this,
-                    getIntent().getStringExtra(
-                            SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
-                    getIntent().getStringExtra(
-                            SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
-                    getIntent()
-                            .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                    getIntent()
-                            .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
-                    false);
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
     }
 
