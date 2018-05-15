@@ -96,7 +96,8 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
-public class WPMainActivity extends AppCompatActivity implements OnPageListener, BottomNavController, BasicDialogPositiveClickInterface,
+public class WPMainActivity extends AppCompatActivity
+        implements OnPageListener, BottomNavController, BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -639,7 +640,7 @@ public class WPMainActivity extends AppCompatActivity implements OnPageListener,
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
-                Fragment fragment = getActiveFragment();
+                Fragment fragment = mBottomNav.getActiveFragment();
                 if (fragment instanceof MeFragment || fragment instanceof MySiteFragment) {
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
