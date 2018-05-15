@@ -13,7 +13,8 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 
 class ActivityLogViewHolder(
     parent: ViewGroup,
-    private val clickListener: (ActivityLogListItemViewModel) -> Unit
+    private val itemClickListener: (ActivityLogListItemViewModel) -> Unit,
+    private val rewindClickListener: (String?) -> Unit
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.activity_log_list_item, parent, false)) {
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
@@ -25,11 +26,6 @@ class ActivityLogViewHolder(
     private val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
     private lateinit var activity: ActivityLogListItemViewModel
-
-    init {
-        button.setOnClickListener {
-        }
-    }
 
     fun bind(activity: ActivityLogListItemViewModel, previous: ActivityLogListItemViewModel?) {
         this.activity = activity
@@ -44,7 +40,11 @@ class ActivityLogViewHolder(
         thumbnail.setImageResource(activity.icon)
         thumbnail.setBackgroundResource(activity.background)
         container.setOnClickListener {
-            clickListener(activity)
+            itemClickListener(activity)
+        }
+
+        rewindButton.setOnClickListener {
+            rewindClickListener(activity.rewindId)
         }
     }
 

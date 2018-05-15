@@ -12,7 +12,8 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 class ActivityLogAdapter(
     context: Context,
     private val viewModel: ActivityLogViewModel,
-    private val clickListener: (ActivityLogListItemViewModel) -> Unit
+    private val itemClickListener: (ActivityLogListItemViewModel) -> Unit,
+    private val rewindClickListener: (String?) -> Unit
 ) : Adapter<ActivityLogViewHolder>() {
     private val list = mutableListOf<ActivityLogListItemViewModel>()
     private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
@@ -51,6 +52,6 @@ class ActivityLogAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
         val view = layoutInflater.inflate(layout.activity_log_list_item, parent, false) as ViewGroup
-        return ActivityLogViewHolder(view, clickListener)
+        return ActivityLogViewHolder(view, itemClickListener, rewindClickListener)
     }
 }

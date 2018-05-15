@@ -97,7 +97,8 @@ class ActivityLogListFragment : Fragment() {
                 adapter = ActivityLogAdapter(
                         it,
                         viewModel,
-                        { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityId) }
+                        { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityId) },
+                        { }
                 )
                 activityLogList.adapter = adapter
             } else {
