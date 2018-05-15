@@ -477,7 +477,6 @@ public class ReaderPostDetailFragment extends Fragment
         updateBookmarkView();
     }
 
-
     private void showBookmarkSnackbar() {
         if (!isAdded()) {
             return;

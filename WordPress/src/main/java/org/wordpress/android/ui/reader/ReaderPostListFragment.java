@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -1001,9 +1000,11 @@ public class ReaderPostListFragment extends Fragment
                                             .commit();
                     }
 
-                    // show snackbar when saving post not in saved posts list
-                    if (isBookmarked && !(getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                                          && (mCurrentTag != null && mCurrentTag.isBookmarked()))) {
+                    boolean isSavedPostsListShown = getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                                                    && (mCurrentTag != null && mCurrentTag.isBookmarked());
+
+                    // show snackbar when not in saved posts list
+                    if (isBookmarked && !isSavedPostsListShown) {
                         showBookmarkSnackbar();
                     }
                 }
@@ -1019,7 +1020,6 @@ public class ReaderPostListFragment extends Fragment
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
-
                         if (getActivity() instanceof WPMainActivity) {
                             getActivity().overridePendingTransition(0, 0);
                         }
