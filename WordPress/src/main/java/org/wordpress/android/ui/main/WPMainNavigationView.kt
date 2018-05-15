@@ -125,13 +125,13 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val position = getPositionForItemId(item.itemId)
-        if (position == PAGE_NEW_POST) {
+        return if (position == PAGE_NEW_POST) {
             handlePostButtonClicked()
-            return false
+            false
         } else {
             setCurrentPosition(position, false)
             mListener!!.onPageChanged(position)
-            return true
+            true
         }
     }
 
@@ -167,23 +167,23 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     }
 
     private fun getPositionForItemId(@IdRes itemId: Int): Int {
-        when (itemId) {
-            R.id.nav_sites -> return PAGE_MY_SITE
-            R.id.nav_reader -> return PAGE_READER
-            R.id.nav_write -> return PAGE_NEW_POST
-            R.id.nav_me -> return PAGE_ME
-            else -> return PAGE_NOTIFS
+        return when (itemId) {
+            R.id.nav_sites -> PAGE_MY_SITE
+            R.id.nav_reader -> PAGE_READER
+            R.id.nav_write -> PAGE_NEW_POST
+            R.id.nav_me -> PAGE_ME
+            else -> PAGE_NOTIFS
         }
     }
 
     @IdRes
     private fun getItemIdForPosition(position: Int): Int {
-        when (position) {
-            PAGE_MY_SITE -> return R.id.nav_sites
-            PAGE_READER -> return R.id.nav_reader
-            PAGE_NEW_POST -> return R.id.nav_write
-            PAGE_ME -> return R.id.nav_me
-            else -> return R.id.nav_notifications
+        return when (position) {
+            PAGE_MY_SITE -> R.id.nav_sites
+            PAGE_READER -> R.id.nav_reader
+            PAGE_NEW_POST -> R.id.nav_write
+            PAGE_ME -> R.id.nav_me
+            else -> R.id.nav_notifications
         }
     }
 
@@ -238,35 +238,33 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
 
     @DrawableRes
     private fun getDrawableResForPosition(position: Int): Int {
-        when (position) {
-            PAGE_MY_SITE -> return R.drawable.ic_my_sites_white_32dp
-            PAGE_READER -> return R.drawable.ic_reader_white_32dp
-            PAGE_NEW_POST -> return R.drawable.ic_create_white_24dp
-            PAGE_ME -> return R.drawable.ic_user_circle_white_32dp
-            else -> return R.drawable.ic_bell_white_32dp
+        return when (position) {
+            PAGE_MY_SITE -> R.drawable.ic_my_sites_white_32dp
+            PAGE_READER -> R.drawable.ic_reader_white_32dp
+            PAGE_NEW_POST -> R.drawable.ic_create_white_24dp
+            PAGE_ME -> R.drawable.ic_user_circle_white_32dp
+            else -> R.drawable.ic_bell_white_32dp
         }
     }
 
     fun getTitleForPosition(position: Int): CharSequence {
-        @StringRes val idRes: Int
-        when (position) {
-            PAGE_MY_SITE -> idRes = R.string.my_site_section_screen_title
-            PAGE_READER -> idRes = R.string.reader_screen_title
-            PAGE_NEW_POST -> idRes = R.string.write_post
-            PAGE_ME -> idRes = R.string.me_section_screen_title
-            else -> idRes = R.string.notifications_screen_title
+        @StringRes val idRes: Int = when (position) {
+            PAGE_MY_SITE -> R.string.my_site_section_screen_title
+            PAGE_READER -> R.string.reader_screen_title
+            PAGE_NEW_POST -> R.string.write_post
+            PAGE_ME -> R.string.me_section_screen_title
+            else -> R.string.notifications_screen_title
         }
         return context.getString(idRes)
     }
 
     fun getContentDescriptionForPosition(position: Int): CharSequence {
-        @StringRes val idRes: Int
-        when (position) {
-            PAGE_MY_SITE -> idRes = R.string.tabbar_accessibility_label_my_site
-            PAGE_READER -> idRes = R.string.tabbar_accessibility_label_reader
-            PAGE_NEW_POST -> idRes = R.string.tabbar_accessibility_label_write
-            PAGE_ME -> idRes = R.string.tabbar_accessibility_label_me
-            else -> idRes = R.string.tabbar_accessibility_label_notifications
+        @StringRes val idRes: Int = when (position) {
+            PAGE_MY_SITE -> R.string.tabbar_accessibility_label_my_site
+            PAGE_READER -> R.string.tabbar_accessibility_label_reader
+            PAGE_NEW_POST -> R.string.tabbar_accessibility_label_write
+            PAGE_ME -> R.string.tabbar_accessibility_label_me
+            else -> R.string.tabbar_accessibility_label_notifications
         }
         return context.getString(idRes)
     }
@@ -331,12 +329,11 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         private val mFragments = SparseArray<Fragment>(NUM_PAGES)
 
         private fun createFragment(position: Int): Fragment? {
-            val fragment: Fragment
-            when (position) {
-                PAGE_MY_SITE -> fragment = MySiteFragment.newInstance()
-                PAGE_READER -> fragment = ReaderPostListFragment.newInstance()
-                PAGE_ME -> fragment = MeFragment.newInstance()
-                PAGE_NOTIFS -> fragment = NotificationsListFragment.newInstance()
+            val fragment: Fragment = when (position) {
+                PAGE_MY_SITE -> MySiteFragment.newInstance()
+                PAGE_READER -> ReaderPostListFragment.newInstance()
+                PAGE_ME -> MeFragment.newInstance()
+                PAGE_NOTIFS -> NotificationsListFragment.newInstance()
                 else -> return null
             }
 
