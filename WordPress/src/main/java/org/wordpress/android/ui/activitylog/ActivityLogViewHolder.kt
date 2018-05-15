@@ -21,7 +21,7 @@ class ActivityLogViewHolder(
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
-    private val button: ImageButton = itemView.findViewById(R.id.rewind_button)
+    private val rewindButton: ImageButton = itemView.findViewById(R.id.rewind_button)
     private val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
     private lateinit var activity: ActivityLogListItemViewModel
@@ -38,9 +38,7 @@ class ActivityLogViewHolder(
         text.text = activity.text
         header.text = activity.header
 
-        // TODO: Do this instead after rewind is implemented
-//        button.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
-        button.visibility = View.GONE
+        rewindButton.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
         header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
 
         thumbnail.setImageResource(activity.icon)
