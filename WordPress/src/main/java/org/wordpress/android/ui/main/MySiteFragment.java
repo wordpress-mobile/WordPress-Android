@@ -99,6 +99,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
     public static final String TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG";
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
+    public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
 
     private WPNetworkImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -275,13 +276,18 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             public void onClick(View v) {
                 AnalyticsTracker.track(Stat.MY_SITE_ICON_TAPPED);
                 SiteModel site = getSelectedSite();
-                if (site != null && site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
+                if (site != null) {
                     boolean hasIcon = site.getIconUrl() != null;
-                    String tag;
-                    if (hasIcon) {
-                        showChangeSiteIconDialog();
+                    if (site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
+                        if (hasIcon) {
+                            showChangeSiteIconDialog();
+                        } else {
+                            showAddSiteIconDialog();
+                        }
                     } else {
-                        showAddSiteIconDialog();
+                        showEditingSiteIconRequiresPermissionDialog(
+                                hasIcon ? getString(R.string.my_site_icon_dialog_change_requires_permission_message)
+                                        : getString(R.string.my_site_icon_dialog_add_requires_permission_message));
                     }
                 }
             }
@@ -394,6 +400,17 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                 getString(R.string.my_site_icon_dialog_change_button),
                 getString(R.string.my_site_icon_dialog_remove_button),
                 getString(R.string.my_site_icon_dialog_cancel_button));
+        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+    }
+
+    private void showEditingSiteIconRequiresPermissionDialog(String message) {
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        String tag = TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG;
+        dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),
+                message,
+                getString(R.string.dialog_button_ok),
+                null,
+                null);
         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
     }
 
@@ -819,6 +836,9 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             case TAG_CHANGE_SITE_ICON_DIALOG:
                 ActivityLauncher.showPhotoPickerForResult(getActivity(),
                         MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
+                break;
+            case TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG:
+                // no-op
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
