@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 10:54:09+0000
+Translation-Revision-Date: 2018-05-02 15:54:07+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Site oluşturuluyor… Bu işlem birkaç dakika sürebilir.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Önemli</string>
+    <string name="notification_channel_general_title">Genel</string>
+    <string name="photo_picker_use_photo">Bu fotoğrafı kullan</string>
+    <string name="media_preview_title">%1$d of %2$d</string>
     <string name="stock_media_picker_empty_results">Eşleşme yok</string>
+    <string name="stock_media_picker_initial_empty_subtext">%s tarafından sağlanıyor</string>
     <string name="stock_media_picker_initial_empty_text">Medya Kitaplığınıza eklemek için ücretsiz fotoğraflar arayın</string>
     <string name="stock_media_picker_search_hint">Ücretsiz fotoğraf kitaplığı arayın</string>
     <string name="photo_picker_stock_media">Ücretsiz Fotoğraf Kitaplığının içinden seçim yapın</string>
     <string name="error_save_empty_draft">Boş taslak kaydedilemez</string>
+    <string name="site_settings_quota_space_unlimited">%1$s / sınırsız</string>
+    <string name="preview_count">Önizleme %d</string>
+    <string name="add_count">Ekle %d</string>
     <string name="site_creation_domain_selection_title">Yeni Slayt Oluşturma – 4. Adım</string>
     <string name="site_creation_site_details_title">Yeni Slayt Oluşturma – 3. Adım</string>
     <string name="site_creation_theme_selection_title">Yeni Slayt Oluşturma – 2. Adım</string>
@@ -50,7 +61,6 @@ Language: tr
     <string name="reader_list_item_suggestion_remove_desc">silin</string>
     <string name="photo_picker_thumbnail_desc">Video oynatın</string>
     <string name="reader_cardview_post_play_video_desc">öne çıkan videoyu oynatın</string>
-    <string name="post_cardview_featured_desc">öne çıkanlar</string>
     <string name="plugin_detail_logo_desc">eklenti logosu</string>
     <string name="plugin_detail_banner_desc">eklenti başlığı</string>
     <string name="photo_picker_wpmedia_desc">WordPress ortamları arasından seçim yapın</string>
@@ -125,6 +135,7 @@ Language: tr
     <string name="sharing_disabled_description">Jetpack Paylaşım modülünüz devre dışı olduğundan paylaşım ayarlarınıza erişemiyorsunuz.</string>
     <string name="sharing_disabled">Paylaşım modülü devre dışı</string>
     <string name="version_with_name_param">Sürüm %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Yayıncı: %s</string>
     <string name="async_promo_publish_now">Şimdi yayınla</string>
     <string name="notification_sound_has_invalid_path">Seçilen ses geçersiz yola sahip. Lütfen başka bir tane seçin.</string>
@@ -167,6 +178,8 @@ Language: tr
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 dosya ile 1 gönderi karşıya yüklenmedi</string>
     <string name="untitled_in_parentheses">(İsimsiz)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_epilogue_write">İlk gönderiyi yazın</string>
     <string name="site_creation_epilogue_configure">Yapılandır</string>
     <string name="site_creation_epilogue_congrats">Tebrikler!\nSiteniz hazır.</string>
@@ -1536,7 +1549,6 @@ Language: tr
     <string name="caption">Başlık (seçime bağlı)</string>
     <string name="no_network_title">Kullanılabilir ağ yok</string>
     <string name="featured_in_post">Görseli yazı içeriğine ekle</string>
-    <string name="featured">Öne çıkan görsel olarak kullan</string>
     <string name="blogusername">blogkullanıcıadı</string>
     <string name="link_enter_url">Adres</string>
     <string name="uploading">Yükleniyor…</string>
