@@ -1001,8 +1001,8 @@ public class ReaderPostListFragment extends Fragment
                     }
 
                     // show snackbar when saving post not in saved posts list
-                    if (isBookmarked && getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                        && (mCurrentTag != null && mCurrentTag.isBookmarked())) {
+                    if (isBookmarked && !(getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                            && (mCurrentTag != null && mCurrentTag.isBookmarked()))) {
                         showBookmarkSnackbar();
                     }
                 }
