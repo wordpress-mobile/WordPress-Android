@@ -743,6 +743,14 @@
     <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
 
+    <!-- activity log -->
+    <string name="activity">Activity</string>
+    <string name="activity_log">Activity Log</string>
+    <string name="activity_log_icon">Activity icon</string>
+    <string name="activity_log_event">Event</string>
+    <string name="rewind">Rewind</string>
+    <string name="activity_log_jetpack_icon">Jetpack icon</string>
+
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
