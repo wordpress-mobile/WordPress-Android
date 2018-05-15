@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
@@ -22,7 +22,7 @@ dependencies {
     implementation 'com.automattic:tracks:1.1.4'
     implementation 'org.wordpress:utils:1.19.0'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 android {

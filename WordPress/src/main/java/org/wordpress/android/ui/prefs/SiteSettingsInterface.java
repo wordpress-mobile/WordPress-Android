@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -76,26 +75,6 @@ import javax.inject.Inject;
 
 public abstract class SiteSettingsInterface {
     /**
-     * Name of the {@link SharedPreferences} that is used to store local settings.
-     */
-    private static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
-
-    /**
-     * Key used to access the language preference stored in {@link SharedPreferences}.
-     */
-    private static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
-
-    /**
-     * Key used to access the default category preference stored in {@link SharedPreferences}.
-     */
-    private static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
-
-    /**
-     * Key used to access the default post format preference stored in {@link SharedPreferences}.
-     */
-    private static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
-
-    /**
      * Identifies an Ascending (oldest to newest) sort order.
      */
     static final int ASCENDING_SORT = 0;
@@ -139,27 +118,6 @@ public abstract class SiteSettingsInterface {
         }
 
         return new SelfHostedSiteSettings(host, site, listener);
-    }
-
-    /**
-     * Returns an instance of the {@link this#SITE_SETTINGS_PREFS} {@link SharedPreferences}.
-     */
-    public static SharedPreferences siteSettingsPreferences(Context context) {
-        return context.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
-    }
-
-    /**
-     * Gets the default category value stored in {@link SharedPreferences}, 0 by default.
-     */
-    public static int getDefaultCategory(Context context) {
-        return siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 1);
-    }
-
-    /**
-     * Gets the default post format value stored in {@link SharedPreferences}, "" by default.
-     */
-    public static String getDefaultFormat(Context context) {
-        return siteSettingsPreferences(context).getString(DEF_FORMAT_PREF_KEY, "");
     }
 
     /**
@@ -233,11 +191,6 @@ public abstract class SiteSettingsInterface {
 
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
-        siteSettingsPreferences(mContext).edit()
-                                         .putString(LANGUAGE_PREF_KEY, mSettings.language)
-                                         .putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory)
-                                         .putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat)
-                                         .apply();
     }
 
     public @NonNull String getTitle() {

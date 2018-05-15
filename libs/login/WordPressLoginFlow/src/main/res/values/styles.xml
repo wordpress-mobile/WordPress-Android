@@ -49,13 +49,13 @@
     </style>
 
     <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/grey_text_min</item>
     </style>
 
     <style name="LoginTheme.EditText" parent="LoginTheme">
-        <item name="colorControlNormal">@color/grey</item>
+        <item name="colorControlNormal">@color/grey_text_min</item>
         <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textColorHint">@color/grey</item>
+        <item name="android:textColorHint">@color/grey_text_min</item>
         <item name="colorControlActivated">@color/blue_medium</item>
         <item name="colorControlHighlight">@color/blue_medium</item>
     </style>
@@ -66,7 +66,7 @@
     </style>
 
     <style name="LoginTheme.Heading" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_text_min</item>
     </style>
 
     <style name="LoginTheme.Subhead" parent="TextAppearance.AppCompat.Subhead">
@@ -75,7 +75,7 @@
     </style>
 
     <style name="LoginTheme.Username" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_text_min</item>
     </style>
 
     <style name="LoginTheme.Footnote" parent="TextAppearance.AppCompat.Caption">

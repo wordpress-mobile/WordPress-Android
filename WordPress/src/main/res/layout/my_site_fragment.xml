@@ -88,7 +88,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center_vertical"
                                 android:maxLines="1"
-                                android:textColor="@color/grey"
+                                android:textColor="@color/grey_text_min"
                                 android:textSize="@dimen/text_sz_medium"/>
                         </LinearLayout>
 
@@ -112,6 +112,7 @@
                                 android:drawableLeft="@drawable/ic_arrow_left_grey"
                                 android:drawablePadding="@dimen/margin_small"
                                 android:drawableStart="@drawable/ic_arrow_left_grey"
+                                android:drawableTint="@color/grey_dark"
                                 android:gravity="center_vertical|start"
                                 android:minHeight="0dp"
                                 android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
@@ -340,7 +341,6 @@
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/plugins"
-                    android:tint="@color/grey"
                     app:srcCompat="@drawable/ic_gridicons_plugin"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -419,7 +419,6 @@
                     android:id="@+id/my_site_view_site_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:tint="@color/grey_darken_10"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
@@ -445,7 +444,6 @@
                     android:id="@+id/my_site_admin_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:tint="@color/grey_darken_10"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
@@ -495,30 +493,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/empty_list_button_top_margin"
-            android:text="@string/my_site_add_new_site"
             android:contentDescription="@string/my_site_add_new_site"
+            android:text="@string/my_site_add_new_site"
             android:theme="@style/WordPress.Button.Primary"/>
 
     </LinearLayout>
-
-    <!-- this coordinator is only here due to https://code.google.com/p/android/issues/detail?id=175330 -->
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:contentDescription="@string/fab_create_post_desc"
-            app:borderWidth="0dp"
-            app:rippleColor="@color/fab_pressed"
-            app:srcCompat="@drawable/ic_create_white_24dp"/>
-    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>

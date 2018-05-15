@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 08:54:08+0000
+Translation-Revision-Date: 2018-05-01 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">サイトの作成中… これには1、2分かかる場合があります。</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">重要</string>
+    <string name="notification_channel_general_title">一般</string>
+    <string name="photo_picker_use_photo">この写真を使用</string>
     <string name="media_preview_title">%1$d/%2$d</string>
     <string name="stock_media_picker_empty_results">一致するものがありません</string>
     <string name="stock_media_picker_initial_empty_subtext">%s によって提供された写真</string>
@@ -55,7 +61,6 @@ Language: ja_JP
     <string name="reader_list_item_suggestion_remove_desc">削除</string>
     <string name="photo_picker_thumbnail_desc">動画を再生</string>
     <string name="reader_cardview_post_play_video_desc">おすすめ動画を再生</string>
-    <string name="post_cardview_featured_desc">おすすめ</string>
     <string name="plugin_detail_logo_desc">プラグインロゴ</string>
     <string name="plugin_detail_banner_desc">プラグインバナー</string>
     <string name="photo_picker_wpmedia_desc">WordPress メディアから選択</string>
@@ -1541,7 +1546,6 @@ Language: ja_JP
     <string name="caption">キャプション (オプション)</string>
     <string name="no_network_title">利用可能なネットワークがありません</string>
     <string name="featured_in_post">投稿本文中に画像を含める</string>
-    <string name="featured">アイキャッチ画像として使用</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">アップロード中…</string>

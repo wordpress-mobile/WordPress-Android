@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
@@ -287,8 +286,8 @@ public class AppSettingsFragment extends PreferenceFragment
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final ListPreference editorTypePreference =
-                    (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+            final DetailListPreference editorTypePreference =
+                    (DetailListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
 
             editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -297,6 +296,8 @@ public class AppSettingsFragment extends PreferenceFragment
                         int index = Integer.parseInt(value.toString());
                         CharSequence[] entries = editorTypePreference.getEntries();
                         editorTypePreference.setSummary(entries[index]);
+                        // we need to set value manually for DetailListPreference
+                        editorTypePreference.setValue(value.toString());
 
                         switch (index) {
                             case IDX_VISUAL_EDITOR:

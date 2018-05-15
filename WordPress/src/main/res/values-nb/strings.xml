@@ -1217,7 +1217,6 @@ Language: nb_NO
     <string name="caption">Bildetekst (valgfritt)</string>
     <string name="no_network_title">Ingen nettverk tilgjengelige</string>
     <string name="featured_in_post">Legg til bilde i innlegget</string>
-    <string name="featured">Bruk som fremhevet bilde</string>
     <string name="blogusername">Bloggbrukernavn</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Laster opp …</string>

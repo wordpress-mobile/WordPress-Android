@@ -3,7 +3,9 @@ package org.wordpress.android.util;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 import org.wordpress.android.util.AppLog.T;
 
@@ -12,6 +14,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class DeviceUtils {
+    private static final String APP_RUNTIME_ON_CHROME_FLAG = "org.chromium.arc.device_management";
+
     private static DeviceUtils instance;
     private boolean mIsKindleFire = false;
 
@@ -88,6 +92,23 @@ public class DeviceUtils {
     public boolean isDeviceLocked(Context context) {
         KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         return myKM.inKeyguardRestrictedInputMode();
+    }
+
+    /**
+     * Checks if the current device runtime is ARC which effectively means it is a chromebook.
+     *
+     * @param context The context.
+     * @return Whether the device is a chromebook.
+     */
+    public boolean isChromebook(Context context) {
+        return context.getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
+    }
+
+    /**
+     * Checks if the device has a hardware keyboard - note this will return true for emulators
+     */
+    public boolean hasHardwareKeyboard(@NonNull Context context) {
+        return context.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
     }
 
     private String capitalize(String s) {

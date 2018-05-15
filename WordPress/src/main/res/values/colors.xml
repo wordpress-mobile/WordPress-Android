@@ -120,7 +120,7 @@
     <!-- Stats -->
     <color name="stats_text_color">@color/grey_dark</color>
     <color name="stats_link_text_color">@color/blue_wordpress</color>
-    <color name="stats_module_content_list_header">@color/grey</color>
+    <color name="stats_module_content_list_header">@color/grey_text_min</color>
     <color name="stats_blue_labels">@color/grey_darken_20</color>
     <color name="stats_bar_graph_main_series">@color/blue_wordpress</color>
     <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
@@ -133,6 +133,8 @@
     <color name="reader_follow">@color/blue_medium</color>
     <color name="reader_following">@color/alert_green</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
+    <color name="reader_notifications_off">@color/alert_green</color>
+    <color name="reader_notifications_on">@color/grey_dark</color>
     <color name="filtered_list_suggestions">#f8f8f8</color>
     <color name="reader_accent_material_dark">@color/material_deep_teal_200</color>
 

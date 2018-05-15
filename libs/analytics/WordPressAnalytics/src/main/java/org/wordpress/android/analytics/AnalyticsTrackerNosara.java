@@ -8,6 +8,7 @@ import com.automattic.android.tracks.TracksClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -279,8 +280,11 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         if (propertiesToJSON.length() > 0) {
             mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            String jsonString = propertiesToJSON.toString();
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
 
@@ -372,6 +376,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_comment_liked";
             case READER_ARTICLE_COMMENT_UNLIKED:
                 return "reader_article_comment_unliked";
+            case READER_ARTICLE_DETAIL_LIKED:
+                return "reader_article_detail_liked";
+            case READER_ARTICLE_DETAIL_UNLIKED:
+                return "reader_article_detail_unliked";
             case READER_ARTICLE_LIKED:
                 return "reader_article_liked";
             case READER_ARTICLE_OPENED:
@@ -388,6 +396,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_blog_previewed";
             case READER_BLOG_UNFOLLOWED:
                 return "reader_site_unfollowed";
+            case READER_ARTICLE_VISITED:
+                return "reader_article_visited";
             case READER_DISCOVER_VIEWED:
                 return "reader_discover_viewed";
             case READER_INFINITE_SCROLL:
@@ -540,6 +550,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED:
+                return "followed_blog_notifications_reader_enabled";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF:
+                return "followed_blog_notifications_reader_menu_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON:
+                return "followed_blog_notifications_reader_menu_on";
             case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_OFF:
                 return "followed_blog_notifications_settings_off";
             case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_ON:
@@ -643,6 +659,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_created";
             case SHARED_ITEM:
                 return "item_shared";
+            case SHARED_ITEM_READER:
+                return "item_shared_reader";
             case ADDED_SELF_HOSTED_SITE:
                 return "self_hosted_blog_added";
             case SIGNED_IN:
@@ -1043,6 +1061,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
+            case SHORTCUT_STATS_CLICKED:
+                return "shortcut_stats_clicked";
+            case SHORTCUT_NOTIFICATIONS_CLICKED:
+                return "shortcut_notifications_clicked";
+            case SHORTCUT_NEW_POST_CLICKED:
+                return "shortcut_new_post_clicked";
             case AUTOMATED_TRANSFER_CONFIRM_DIALOG_SHOWN:
                 return "automated_transfer_confirm_dialog_shown";
             case AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED:
