@@ -25,7 +25,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -107,7 +106,7 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_OPEN_TAB = "open_tab";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
-    public static final String ARG_OPENED_FROM_BOOKMARK_SNACKBAR = "show_saved_posts";
+    public static final String ARG_READER = "show_reader";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -274,8 +273,6 @@ public class WPMainActivity extends AppCompatActivity {
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedTab = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_TAB));
-                boolean openedFromBookmarkSnackbar = (getIntent() != null && getIntent().hasExtra(
-                        ARG_OPENED_FROM_BOOKMARK_SNACKBAR));
                 if (openedFromPush) {
                     // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
@@ -291,11 +288,6 @@ public class WPMainActivity extends AppCompatActivity {
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                 } else if (openRequestedTab) {
                     handleOpenTabIntent(getIntent());
-                } else if (openedFromBookmarkSnackbar) {
-                    if (!ReaderTagTable.getBookmarkTags().isEmpty()) {
-                        AppPrefs.setReaderTag(ReaderTagTable.getBookmarkTags().get(0));
-                    }
-                    mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
                 } else {
                     // return to the tab that was showing last time
                     int position = AppPrefs.getMainTabIndex();
@@ -391,6 +383,9 @@ public class WPMainActivity extends AppCompatActivity {
             switch (tabIdentifier) {
                 case ARG_NOTIFICATIONS:
                     mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
+                    break;
+                case ARG_READER:
+                    mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
                     break;
             }
         } else {

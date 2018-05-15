@@ -42,6 +42,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -1002,7 +1003,7 @@ public class ReaderPostListFragment extends Fragment
 
                     // show snackbar when saving post not in saved posts list
                     if (isBookmarked && !(getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                            && (mCurrentTag != null && mCurrentTag.isBookmarked()))) {
+                                          && (mCurrentTag != null && mCurrentTag.isBookmarked()))) {
                         showBookmarkSnackbar();
                     }
                 }
@@ -1017,22 +1018,10 @@ public class ReaderPostListFragment extends Fragment
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
-                        // if the fragment is part of WPMainActivity we just need to update filter and scroll to
-                        // the toolbar. This implementation assumes that Reader list in WPMainActivity will have a
-                        // toolbar.
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
+
                         if (getActivity() instanceof WPMainActivity) {
-                            if (ReaderTagTable.getBookmarkTags().isEmpty()) { // sanity check
-                                return;
-                            }
-                            mRecyclerView.setCurrentFilter(ReaderTagTable.getBookmarkTags().get(0));
-                            mRecyclerView.showToolbar();
-                        } else {
-                            // in case of independent reader list, go back to WPMainActivity
-                            // and instruct it to show saved posts in Reader Tab
-                            Intent intent = new Intent(view.getContext(), WPMainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_BOOKMARK_SNACKBAR, true);
-                            startActivity(intent);
+                            getActivity().overridePendingTransition(0, 0);
                         }
                     }
                 })

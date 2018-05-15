@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -486,11 +487,7 @@ public class ReaderPostDetailFragment extends Fragment
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
-                        // clear backstack on the way to saved posts reader list
-                        Intent intent = new Intent(view.getContext(), WPMainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_BOOKMARK_SNACKBAR, true);
-                        startActivity(intent);
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
                     }
                 })
                 .show();
