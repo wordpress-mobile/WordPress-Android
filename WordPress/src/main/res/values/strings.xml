@@ -1517,6 +1517,15 @@
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_add_new_site">Add new site</string>
+    <string name="my_site_icon_dialog_title">Site Icon</string>
+    <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
+    <string name="my_site_icon_dialog_change_message">How would you like to edit the icon?</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">You don\'t have permission to add a site icon.</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">You don\'t have permission to edit the site icon.</string>
+    <string name="my_site_icon_dialog_change_button">Change</string>
+    <string name="my_site_icon_dialog_remove_button">Remove</string>
+    <string name="my_site_icon_dialog_cancel_button">Cancel</string>
+    <string name="my_site_icon_content_description">Change site icon</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
