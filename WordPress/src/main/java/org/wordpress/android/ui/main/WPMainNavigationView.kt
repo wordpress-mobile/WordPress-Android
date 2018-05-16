@@ -37,8 +37,8 @@ import org.wordpress.android.util.AppLog.T
  * four primary views - note that we ignore the built-in icons and labels and
  * insert our own custom views so we have more control over their appearance
  */
-class WPMainNavigationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-        BottomNavigationView(context, attrs, defStyleAttr),
+class WPMainNavigationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0) : BottomNavigationView(context, attrs, defStyleAttr),
         OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
     private lateinit var fragmentManager: FragmentManager
