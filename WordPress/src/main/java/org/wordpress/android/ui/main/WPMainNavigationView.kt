@@ -101,10 +101,11 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     private fun disableShiftMode() {
         val menuView = getChildAt(0) as BottomNavigationMenuView
         try {
-            val shiftingMode = menuView.javaClass.getDeclaredField("mShiftingMode")
-            shiftingMode.isAccessible = true
-            shiftingMode.setBoolean(menuView, false)
-            shiftingMode.isAccessible = false
+            menuView.javaClass.getDeclaredField("mShiftingMode").also { shiftMode ->
+                shiftMode.isAccessible = true
+                shiftMode.setBoolean(menuView, false)
+                shiftMode.isAccessible = false
+            }
             for (i in 0 until menuView.childCount) {
                 val item = menuView.getChildAt(i) as BottomNavigationItemView
                 item.setShiftingMode(false)
