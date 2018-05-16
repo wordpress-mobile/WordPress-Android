@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public class ReaderTag implements Serializable, FilterCriteria {
     private static final String TAG_TITLE_DISCOVER = "Discover";
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public static final String TAG_SLUG_BOOKMARKED = "bookmarked-posts";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
 
     private String mTagSlug; // tag for API calls
@@ -29,7 +30,9 @@ public class ReaderTag implements Serializable, FilterCriteria {
         // we need a slug since it's used to uniquely ID the tag (including setting it as the
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
-            if (!TextUtils.isEmpty(title)) {
+            if (tagType == ReaderTagType.BOOKMARKED) {
+                setTagSlug(TAG_SLUG_BOOKMARKED);
+            } else if (!TextUtils.isEmpty(title)) {
                 setTagSlug(ReaderUtils.sanitizeWithDashes(title));
             } else {
                 setTagSlug(getTagSlugFromEndpoint(endpoint));
