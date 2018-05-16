@@ -28,6 +28,7 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -52,6 +53,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMedia
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -84,10 +86,12 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MySiteFragment extends Fragment implements SiteSettingsListener,
+public class MySiteFragment extends Fragment implements
+        SiteSettingsListener,
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface {
+        BasicFragmentDialog.BasicDialogNegativeClickInterface,
+        PromoDialogClickInterface {
     private static final long ALERT_ANIM_OFFSET_MS = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
@@ -97,6 +101,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     public static final String TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG";
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
+    public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
 
     private WPNetworkImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -407,6 +412,8 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                 if (resultCode == Activity.RESULT_OK) {
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
+
+                    // TODO: Check for Quick Start.
                 }
                 break;
             case RequestCodes.EDIT_POST:
@@ -798,6 +805,9 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             case TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG:
                 // no-op
                 break;
+            case TAG_QUICK_START_DIALOG:
+                // TODO: Go to Quick Start checklist.
+                break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
@@ -815,10 +825,28 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                 mSiteSettings.setSiteIconMediaId(0);
                 mSiteSettings.saveSettings();
                 break;
+            case TAG_QUICK_START_DIALOG:
+                break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
+    }
+
+    @Override
+    public void onNeutralClicked(@NotNull String instanceTag) {
+        switch (instanceTag) {
+            case TAG_QUICK_START_DIALOG:
+                // TODO: Set preference to never show Quick Start dialog and checklist.
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        }
+    }
+
+    @Override
+    public void onLinkClicked(@NotNull String instanceTag) {
     }
 
     @Override

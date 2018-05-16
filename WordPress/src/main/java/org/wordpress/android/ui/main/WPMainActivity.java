@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -61,6 +62,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
+import org.wordpress.android.ui.posts.PromoDialog;
+import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -96,9 +99,12 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
-public class WPMainActivity extends AppCompatActivity
-        implements OnPageListener, BottomNavController, BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface {
+public class WPMainActivity extends AppCompatActivity implements
+        OnPageListener,
+        BottomNavController,
+        BasicDialogPositiveClickInterface,
+        BasicDialogNegativeClickInterface,
+        PromoDialogClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
@@ -530,6 +536,9 @@ public class WPMainActivity extends AppCompatActivity
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
                                                         getSelectedSite());
                 }
+
+                // TODO: Check for Quick Start.
+
                 break;
             case PAGE_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
@@ -597,6 +606,7 @@ public class WPMainActivity extends AppCompatActivity
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
 
+                showQuickStartDialog();
                 setSite(data);
                 jumpNewPost(data);
                 break;
@@ -646,6 +656,23 @@ public class WPMainActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    private void showQuickStartDialog() {
+        String tag = MySiteFragment.TAG_QUICK_START_DIALOG;
+        PromoDialog promoDialog = new PromoDialog();
+        promoDialog.initialize(
+                tag,
+                getString(R.string.quick_start_dialog_need_help_title),
+                getString(R.string.quick_start_dialog_need_help_message),
+                getString(R.string.quick_start_dialog_need_help_button_positive),
+                R.drawable.img_promo_quick_start,
+                getString(R.string.quick_start_dialog_need_help_button_negative),
+                "",
+                getString(R.string.quick_start_dialog_need_help_button_neutral)
+        );
+
+        promoDialog.show(getSupportFragmentManager(), tag);
     }
 
     private void appLanguageChanged() {
@@ -886,6 +913,22 @@ public class WPMainActivity extends AppCompatActivity
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
             fragment.onNegativeClicked(instanceTag);
+        }
+    }
+
+    @Override
+    public void onNeutralClicked(@NotNull String instanceTag) {
+        MySiteFragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            fragment.onNeutralClicked(instanceTag);
+        }
+    }
+
+    @Override
+    public void onLinkClicked(@NotNull String instanceTag) {
+        MySiteFragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            fragment.onLinkClicked(instanceTag);
         }
     }
 }
