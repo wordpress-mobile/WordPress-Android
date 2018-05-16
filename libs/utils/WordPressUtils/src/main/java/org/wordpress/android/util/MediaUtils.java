@@ -512,7 +512,7 @@ public class MediaUtils {
                     return cursor.getString(columnIndex);
                 }
             }
-        } catch (Exception errReadingContentResolver) {
+        } catch (SecurityException errReadingContentResolver) {
             AppLog.e(AppLog.T.UTILS, "Error reading _data column for URI: " + uri, errReadingContentResolver);
         } finally {
             if (cursor != null) {
