@@ -159,10 +159,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         // scroll the active fragment's contents to the top when user re-taps the current item
         val position = getPositionForItemId(item.itemId)
         if (position != PAGE_NEW_POST) {
-            val fragment = navAdapter.getFragment(position)
-            if (fragment is OnScrollToTopListener) {
-                (fragment as OnScrollToTopListener).onScrollToTop()
-            }
+            (navAdapter?.getFragment(position) as? OnScrollToTopListener)?.onScrollToTop()
         }
     }
 
