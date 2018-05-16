@@ -13,6 +13,7 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.LayoutInflater
@@ -230,7 +231,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
      * will have no effect
      */
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
-        val color = resources.getColor(if (isSelected) R.color.blue_medium else R.color.grey_lighten_10)
+        val color = ContextCompat.getColor(context, if (isSelected) R.color.blue_medium else R.color.grey_lighten_10)
         getImageViewForPosition(position)?.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY)
     }
 
