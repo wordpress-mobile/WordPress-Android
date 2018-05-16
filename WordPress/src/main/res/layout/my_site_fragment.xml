@@ -130,7 +130,7 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <!--What's Next-->
+            <!--Quick Start-->
             <LinearLayout
                 android:id="@+id/row_quick_start"
                 android:visibility="gone"
