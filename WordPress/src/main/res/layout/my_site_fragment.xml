@@ -132,20 +132,20 @@
 
             <!--What's Next-->
             <LinearLayout
-                android:id="@+id/row_whats_next"
+                android:id="@+id/row_quick_start"
                 android:visibility="gone"
                 tools:visibility="visible"
                 style="@style/MySiteListRowLayout" >
 
                 <ImageView
-                    android:id="@+id/my_site_whats_next_icon"
+                    android:id="@+id/my_site_quick_start_icon"
                     android:importantForAccessibility="no"
                     app:srcCompat="@drawable/ic_list_checkmark_grey_24dp"
                     style="@style/MySiteListRowIcon" />
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_whats_next_text"
-                    android:text="@string/whats_next_sites"
+                    android:id="@+id/my_site_quick_start_text"
+                    android:text="@string/quick_start_sites"
                     style="@style/MySiteListRowTextView" />
 
                 <RelativeLayout
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent" >
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/my_site_whats_next_progress"
+                        android:id="@+id/my_site_quick_start_progress"
                         android:gravity="end"
                         android:layout_width="wrap_content"
                         android:paddingLeft="@dimen/margin_medium"
@@ -165,13 +165,13 @@
                         style="@style/MySiteListRowSecondaryTextView" />
 
                     <View
-                        android:id="@+id/my_site_whats_next_dot"
+                        android:id="@+id/my_site_quick_start_dot"
                         android:background="@drawable/bg_oval_accent"
                         android:layout_centerVertical="true"
-                        android:layout_height="@dimen/whats_next_dot_size"
-                        android:layout_toLeftOf="@+id/my_site_whats_next_progress"
-                        android:layout_toStartOf="@+id/my_site_whats_next_progress"
-                        android:layout_width="@dimen/whats_next_dot_size"
+                        android:layout_height="@dimen/quick_start_dot_size"
+                        android:layout_toLeftOf="@+id/my_site_quick_start_progress"
+                        android:layout_toStartOf="@+id/my_site_quick_start_progress"
+                        android:layout_width="@dimen/quick_start_dot_size"
                         android:gravity="end"
                         android:visibility="gone"
                         tools:visibility="visible" />
