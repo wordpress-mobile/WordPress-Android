@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -56,6 +57,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -467,11 +469,27 @@ public class ReaderPostDetailFragment extends Fragment
             ReaderPostActions.removeFromBookmarked(mPost);
         } else {
             ReaderPostActions.addToBookmarked(mPost);
+            showBookmarkSnackbar();
         }
 
         mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
 
         updateBookmarkView();
+    }
+
+    private void showBookmarkSnackbar() {
+        if (!isAdded()) {
+            return;
+        }
+
+        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
+                new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                    }
+                })
+                .show();
     }
 
     /*

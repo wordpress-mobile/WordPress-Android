@@ -41,6 +41,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -998,8 +999,34 @@ public class ReaderPostListFragment extends Fragment
                                             .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
                                             .commit();
                     }
+
+                    boolean isSavedPostsListShown = getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                                                    && (mCurrentTag != null && mCurrentTag.isBookmarked());
+
+                    // show snackbar when not in saved posts list
+                    if (isBookmarked && !isSavedPostsListShown) {
+                        showBookmarkSnackbar();
+                    }
                 }
             };
+
+    private void showBookmarkSnackbar() {
+        if (!isAdded()) {
+            return;
+        }
+
+        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
+                new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                        if (getActivity() instanceof WPMainActivity) {
+                            getActivity().overridePendingTransition(0, 0);
+                        }
+                    }
+                })
+                .show();
+    }
 
     /*
      * called by post adapter to load older posts when user scrolls to the last post

@@ -106,6 +106,7 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_OPEN_TAB = "open_tab";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
+    public static final String ARG_READER = "show_reader";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -188,8 +189,7 @@ public class WPMainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                // nop
+            public void onTabUnselected(TabLayout.Tab tab) {  // nop
             }
 
             @Override
@@ -334,18 +334,13 @@ public class WPMainActivity extends AppCompatActivity {
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                                               getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showSignupEpilogue(this,
-                                                getIntent().getStringExtra(
-                                                        SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
-                                                getIntent().getStringExtra(
-                                                        SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
-                                                getIntent()
-                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                                                getIntent()
-                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
-                                                false);
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
     }
 
@@ -389,6 +384,9 @@ public class WPMainActivity extends AppCompatActivity {
                 case ARG_NOTIFICATIONS:
                     mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
                     break;
+                case ARG_READER:
+                    mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
+                    break;
             }
         } else {
             AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
@@ -408,29 +406,31 @@ public class WPMainActivity extends AppCompatActivity {
             GCMMessageService.remove2FANotification(this);
 
             NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(
-                getIntent(),
-                new NotificationsUtils.TwoFactorAuthCallback() {
-                    @Override
-                    public void onTokenValid(String token, String title, String message) {
-                        // we do this here instead of using the service in the background so we make sure
-                        // the user opens the app by using an activity (and thus unlocks the screen if locked,
-                        // for security).
-                        String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
-                        if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
-                            // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                            NotificationsUtils.sendTwoFactorAuthToken(token);
-                        } else {
-                            NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                    getIntent(),
+                    new NotificationsUtils.TwoFactorAuthCallback() {
+                        @Override
+                        public void onTokenValid(String token, String title, String message) {
+                            // we do this here instead of using the service in the background so we make sure
+                            // the user opens the app by using an activity (and thus unlocks the screen if locked,
+                            // for security).
+                            String actionType =
+                                    getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+                            if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                                // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                                NotificationsUtils.sendTwoFactorAuthToken(token);
+                            } else {
+                                NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onTokenInvalid() {
-                        // Show a toast if the user took too long to open the notification
-                        ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                    }
-                });
+                        @Override
+                        public void onTokenInvalid() {
+                            // Show a toast if the user took too long to open the notification
+                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired,
+                                    ToastUtils.Duration.LONG);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                        }
+                    });
         }
 
         // Then hit the server
@@ -604,7 +604,7 @@ public class WPMainActivity extends AppCompatActivity {
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
-                                                        getSelectedSite());
+                            getSelectedSite());
                 }
                 break;
             case WPMainTabAdapter.TAB_READER:
@@ -636,7 +636,7 @@ public class WPMainActivity extends AppCompatActivity {
         if (resolveInfo != null && !getPackageName().equals(resolveInfo.activityInfo.name)) {
             // not set as default handler so, track this to evaluate. Note, a resolver/chooser might be the default.
             AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDLER,
-                                                       resolveInfo.activityInfo.name);
+                    resolveInfo.activityInfo.name);
         }
     }
 
