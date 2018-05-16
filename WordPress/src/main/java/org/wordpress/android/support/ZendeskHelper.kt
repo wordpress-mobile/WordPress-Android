@@ -59,11 +59,11 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
-fun showZendeskHelpCenter(context: Context, accountStore: AccountStore) {
+fun showZendeskHelpCenter(context: Context, accountStore: AccountStore, selectedSite: SiteModel? = null) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore))
+    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
     SupportActivity.Builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
             .withLabelNames(ZendeskConstants.articleLabel)
@@ -76,12 +76,13 @@ fun createNewTicket(
     accountStore: AccountStore?,
     siteStore: SiteStore,
     origin: Origin?,
+    selectedSite: SiteModel?,
     extraTags: List<String>? = null
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore)
+    configureZendesk(context, accountStore, siteStore, selectedSite)
     ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
@@ -90,19 +91,25 @@ fun showAllTickets(
     accountStore: AccountStore,
     siteStore: SiteStore,
     origin: Origin?,
-    extraTags: List<String>?
+    selectedSite: SiteModel? = null,
+    extraTags: List<String>? = null
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore)
+    configureZendesk(context, accountStore, siteStore, selectedSite)
     RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
 // Helpers
 
-private fun configureZendesk(context: Context, accountStore: AccountStore?, siteStore: SiteStore) {
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore))
+private fun configureZendesk(
+    context: Context,
+    accountStore: AccountStore?,
+    siteStore: SiteStore,
+    selectedSite: SiteModel?
+) {
+    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
     zendeskInstance.ticketFormId = TicketFieldIds.form
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
@@ -124,7 +131,7 @@ private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Ori
             }
         }
 
-private fun zendeskIdentity(accountStore: AccountStore?): Identity {
+private fun zendeskIdentity(accountStore: AccountStore?, selectedSite: SiteModel?): Identity {
     val currentAccount = accountStore?.account
     var email: String? = null
     var name: String? = null
@@ -132,7 +139,7 @@ private fun zendeskIdentity(accountStore: AccountStore?): Identity {
         email = currentAccount.email
         name = currentAccount.displayName
     } else {
-        // TODO: Implement for self-hosted sites
+        // TODO: Implement for self-hosted sites using `selectedSite`
         // We can get the selected site and figure out the email/username from there. We can save the details
         // in preferences so that the Zendesk tickets will remain after a site change
     }

@@ -170,7 +170,8 @@ public class MeFragment extends Fragment {
         rootView.findViewById(R.id.row_support).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP);
+                // TODO: Pass selected site to support
+                ActivityLauncher.viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP, null, null);
             }
         });
 

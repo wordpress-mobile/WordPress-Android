@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.support.ZendeskHelper;
@@ -33,10 +34,13 @@ public class HelpActivity extends AppCompatActivity {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
-    public static Intent createIntent(Context context, @NonNull Origin origin,
+    public static Intent createIntent(Context context, @NonNull Origin origin, @Nullable SiteModel selectedSite,
                                       @Nullable List<String> extraSupportTags) {
         Intent intent = new Intent(context, HelpActivity.class);
         intent.putExtra(HelpActivity.ORIGIN_KEY, origin);
+        if (selectedSite != null) {
+            intent.putExtra(WordPress.SITE, selectedSite);
+        }
         if (extraSupportTags != null && !extraSupportTags.isEmpty()) {
             intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, (ArrayList<String>) extraSupportTags);
         }
@@ -123,16 +127,16 @@ public class HelpActivity extends AppCompatActivity {
 
     private void createNewZendeskTicket() {
         ZendeskHelper.createNewTicket(this, mAccountStore, mSiteStore, getOriginFromExtras(),
-                getExtraTagsFromExtras());
+                getSelectedSiteFromExtras(), getExtraTagsFromExtras());
     }
 
     private void showZendeskTickets() {
         ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginFromExtras(),
-                getExtraTagsFromExtras());
+                getSelectedSiteFromExtras(), getExtraTagsFromExtras());
     }
 
     private void showZendeskFaq() {
-        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore);
+        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore, getSelectedSiteFromExtras());
     }
 
     private Origin getOriginFromExtras() {
@@ -144,12 +148,17 @@ public class HelpActivity extends AppCompatActivity {
         return origin;
     }
 
-    private List<String> getExtraTagsFromExtras() {
+    private @Nullable List<String> getExtraTagsFromExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-             return extras.getStringArrayList(HelpActivity.EXTRA_TAGS_KEY);
+            return extras.getStringArrayList(HelpActivity.EXTRA_TAGS_KEY);
         }
         return null;
+    }
+
+    private @Nullable SiteModel getSelectedSiteFromExtras() {
+        Bundle extras = getIntent().getExtras();
+        return extras != null ? (SiteModel) extras.get(WordPress.SITE) : null;
     }
 
     public enum Origin {

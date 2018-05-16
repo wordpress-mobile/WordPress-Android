@@ -79,7 +79,8 @@ public class ReleaseNotesActivity extends WebViewActivity {
                 return true;
             case R.id.menu_bug:
                 HelpActivity.Origin origin = (HelpActivity.Origin) getIntent().getSerializableExtra(KEY_HELPSHIFT_TAG);
-                ZendeskHelper.createNewTicket(ReleaseNotesActivity.this, mAccountStore, mSiteStore, origin);
+                // TODO: Add selected site to ticket information below
+                ZendeskHelper.createNewTicket(ReleaseNotesActivity.this, mAccountStore, mSiteStore, origin, null);
                 return true;
         }
 
