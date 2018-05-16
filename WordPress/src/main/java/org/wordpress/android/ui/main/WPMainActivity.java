@@ -533,11 +533,13 @@ public class WPMainActivity extends AppCompatActivity implements
             case PAGE_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
-                                                        getSelectedSite());
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 }
 
-                // TODO: Check for Quick Start.
+                MySiteFragment fragment = getMySiteFragment();
+                if (fragment != null) {
+                    fragment.checkQuickStart();
+                }
 
                 break;
             case PAGE_READER:

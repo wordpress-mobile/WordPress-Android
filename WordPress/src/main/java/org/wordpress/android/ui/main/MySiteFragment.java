@@ -413,7 +413,7 @@ public class MySiteFragment extends Fragment implements
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
 
-                    // TODO: Check for Quick Start.
+                    checkQuickStart();
                 }
                 break;
             case RequestCodes.EDIT_POST:
@@ -505,6 +505,16 @@ public class MySiteFragment extends Fragment implements
                 }
                 break;
         }
+    }
+
+    /**
+     * Check how to prompt the user with Quick Start.  The logic is as follows:
+     * - For first site, show Quick Start on Sites and {@link org.wordpress.android.widgets.WPDialogSnackbar}.
+     * - After first site, show Quick Start on Sites only.
+     */
+    public void checkQuickStart() {
+        // TODO: Skip check if user opted out of Quick Start.
+        // TODO: Show prompt based on site number, checklist progress, and prompt number.
     }
 
     private void startSiteIconUpload(final String filePath) {
