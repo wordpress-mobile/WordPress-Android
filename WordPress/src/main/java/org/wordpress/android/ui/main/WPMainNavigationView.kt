@@ -283,9 +283,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         txtTitle?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    fun getFragment(position: Int): Fragment? {
-        return navAdapter.getFragment(position)
-    }
+    fun getFragment(position: Int) = navAdapter.getFragment(position)
 
     private fun getItemView(position: Int): BottomNavigationItemView? {
         if (isValidPosition(position)) {
