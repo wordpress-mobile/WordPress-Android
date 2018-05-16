@@ -44,7 +44,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     private var prevPosition = -1
 
     val activeFragment: Fragment?
-        get() = navAdapter!!.getFragment(currentPosition)
+        get() = navAdapter.getFragment(currentPosition)
 
     var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
@@ -131,7 +131,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             false
         } else {
             setCurrentPosition(position, false)
-            pageListener!!.onPageChanged(position)
+            pageListener.onPageChanged(position)
             true
         }
     }
@@ -147,7 +147,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                pageListener!!.onNewPostButtonClicked()
+                pageListener.onNewPostButtonClicked()
             }
 
             override fun onAnimationRepeat(animation: Animation) {
@@ -160,7 +160,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         // scroll the active fragment's contents to the top when user re-taps the current item
         val position = getPositionForItemId(item.itemId)
         if (position != PAGE_NEW_POST) {
-            val fragment = navAdapter!!.getFragment(position)
+            val fragment = navAdapter.getFragment(position)
             if (fragment is OnScrollToTopListener) {
                 (fragment as OnScrollToTopListener).onScrollToTop()
             }
@@ -217,9 +217,9 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             }
         }
 
-        val fragment = navAdapter!!.getFragment(position)
+        val fragment = navAdapter.getFragment(position)
         if (fragment != null) {
-            fragmentManager!!
+            fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .setTransition(TRANSIT_FRAGMENT_FADE)
@@ -234,7 +234,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
      */
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
         val color = resources.getColor(if (isSelected) R.color.blue_medium else R.color.grey_lighten_10)
-        getImageViewForPosition(position).setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY)
+        getImageViewForPosition(position)?.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY)
     }
 
     @DrawableRes
@@ -274,13 +274,12 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         if (position == PAGE_NEW_POST) {
             return null
         }
-        val itemView = getItemView(position)
-        return itemView!!.findViewById(R.id.nav_label)
+        return getItemView(position)?.findViewById(R.id.nav_label)
     }
 
-    private fun getImageViewForPosition(position: Int): ImageView {
+    private fun getImageViewForPosition(position: Int): ImageView? {
         val itemView = getItemView(position)
-        return itemView!!.findViewById(R.id.nav_icon)
+        return itemView?.findViewById(R.id.nav_icon)
     }
 
     private fun showTitleForPosition(position: Int, show: Boolean) {
@@ -291,7 +290,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     }
 
     fun getFragment(position: Int): Fragment? {
-        return navAdapter!!.getFragment(position)
+        return navAdapter.getFragment(position)
     }
 
     private fun getItemView(position: Int): BottomNavigationItemView? {
@@ -306,10 +305,9 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
      * show or hide the badge on the notification page
      */
     fun showNoteBadge(showBadge: Boolean) {
-        val notifView = getItemView(PAGE_NOTIFS)
-        val badgeView = notifView!!.findViewById<View>(R.id.badge)
+        val badgeView = getItemView(PAGE_NOTIFS)?.findViewById<View>(R.id.badge)
 
-        val currentVisibility = badgeView.visibility
+        val currentVisibility = badgeView?.visibility
         val newVisibility = if (showBadge) View.VISIBLE else View.GONE
         if (currentVisibility == newVisibility) {
             return
