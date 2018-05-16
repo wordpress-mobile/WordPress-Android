@@ -91,8 +91,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             itemView.addView(customView)
         }
 
-        val position = AppPrefs.getMainPageIndex()
-        currentPosition = position
+        currentPosition = AppPrefs.getMainPageIndex()
     }
 
     /*
