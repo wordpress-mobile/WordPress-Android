@@ -549,7 +549,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         });
     }
 
-    private void launchZendesk(Origin origin) {
+    private void viewHelpAndSupport(Origin origin) {
         List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
         ActivityLauncher.viewHelpAndSupport(this, origin, extraSupportTags);
@@ -557,7 +557,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpSiteAddress(String url) {
-        launchZendesk(Origin.LOGIN_SITE_ADDRESS);
+        viewHelpAndSupport(Origin.LOGIN_SITE_ADDRESS);
     }
 
     @Override
@@ -572,22 +572,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpEmailScreen(String email) {
-        launchZendesk(Origin.LOGIN_EMAIL);
+        viewHelpAndSupport(Origin.LOGIN_EMAIL);
     }
 
     @Override
     public void helpSignupEmailScreen(String email) {
-        launchZendesk(Origin.SIGNUP_EMAIL);
+        viewHelpAndSupport(Origin.SIGNUP_EMAIL);
     }
 
     @Override
     public void helpSignupMagicLinkScreen(String email) {
-        launchZendesk(Origin.SIGNUP_MAGIC_LINK);
+        viewHelpAndSupport(Origin.SIGNUP_MAGIC_LINK);
     }
 
     @Override
     public void helpSocialEmailScreen(String email) {
-        launchZendesk(Origin.LOGIN_SOCIAL);
+        viewHelpAndSupport(Origin.LOGIN_SOCIAL);
     }
 
     @Override
@@ -609,22 +609,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        launchZendesk(Origin.LOGIN_MAGIC_LINK);
+        viewHelpAndSupport(Origin.LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        launchZendesk(Origin.LOGIN_MAGIC_LINK);
+        viewHelpAndSupport(Origin.LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        launchZendesk(Origin.LOGIN_EMAIL_PASSWORD);
+        viewHelpAndSupport(Origin.LOGIN_EMAIL_PASSWORD);
     }
 
     @Override
     public void help2FaScreen(String email) {
-        launchZendesk(Origin.LOGIN_2FA);
+        viewHelpAndSupport(Origin.LOGIN_2FA);
     }
 
     @Override
@@ -640,7 +640,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        launchZendesk(Origin.LOGIN_USERNAME_PASSWORD);
+        viewHelpAndSupport(Origin.LOGIN_USERNAME_PASSWORD);
     }
 
     @Override
