@@ -212,7 +212,7 @@ class ActivityLogRestClientTest {
         verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
         val state = RewindStatusModel.State.ACTIVE
-        val rewindResponse = REWIND_RESPONSE.copy(state = state.value)
+        val rewindResponse = REWIND_STATUS_RESPONSE.copy(state = state.value)
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
 
         verify(dispatcher).dispatch(rewindStatusActionCaptor.capture())
@@ -222,16 +222,15 @@ class ActivityLogRestClientTest {
             assertNull(this.payload.error)
             assertNotNull(this.payload.rewindStatusModelResponse)
             this.payload.rewindStatusModelResponse?.apply {
-                assertEquals(this.reason, REWIND_RESPONSE.reason)
+                assertEquals(this.reason, REWIND_STATUS_RESPONSE.reason)
                 assertEquals(this.state, state)
-                assertNotNull(this.restore)
-                this.restore?.apply {
-                    assertEquals(this.message, RESTORE_RESPONSE.message)
-                    assertEquals(this.status.value, RESTORE_RESPONSE.status)
-                    assertEquals(this.progress, RESTORE_RESPONSE.progress)
-                    assertEquals(this.id, RESTORE_RESPONSE.rewind_id)
-                    assertEquals(this.errorCode, RESTORE_RESPONSE.error_code)
-                    assertEquals(this.failureReason, RESTORE_RESPONSE.reason)
+                assertNotNull(this.rewind)
+                this.rewind?.apply {
+                    assertEquals(this.status.value, REWIND_RESPONSE.status)
+                    assertEquals(this.progress, REWIND_RESPONSE.progress)
+                    assertEquals(this.rewindId, REWIND_RESPONSE.rewindId)
+                    assertEquals(this.reason, REWIND_RESPONSE.reason)
+                    assertEquals(this.startedAt, REWIND_RESPONSE.startedAt)
                 }
             }
         }
@@ -251,20 +250,6 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivityRewind_dispatchesErrorOnMissingState() {
-        initFetchRewindStatus()
-
-        activityRestClient.fetchActivityRewind(site)
-
-        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
-
-        val rewindResponse = REWIND_RESPONSE.copy(state = null)
-        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
-
-        assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_STATE)
-    }
-
-    @Test
     fun fetchActivityRewind_dispatchesErrorOnWrongState() {
         initFetchRewindStatus()
 
@@ -272,10 +257,10 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
-        val rewindResponse = REWIND_RESPONSE.copy(state = "wrong")
+        val rewindResponse = REWIND_STATUS_RESPONSE.copy(state = "wrong")
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
 
-        assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_REWIND_STATE)
+        assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_RESPONSE)
     }
 
     @Test
@@ -286,24 +271,10 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
-        val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(rewind_id = null))
+        val rewindResponse = REWIND_STATUS_RESPONSE.copy(rewind = REWIND_RESPONSE.copy(rewindId = null))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
 
-        assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_RESTORE_ID)
-    }
-
-    @Test
-    fun fetchActivityRewind_dispatchesErrorOnMissingRestoreStatus() {
-        initFetchRewindStatus()
-
-        activityRestClient.fetchActivityRewind(site)
-
-        verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
-
-        val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = null))
-        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
-
-        assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_RESTORE_STATUS)
+        assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_REWIND_ID)
     }
 
     @Test
@@ -314,10 +285,10 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
-        val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = "wrong"))
+        val rewindResponse = REWIND_STATUS_RESPONSE.copy(rewind = REWIND_RESPONSE.copy(status = "wrong"))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
 
-        assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_RESTORE_STATUS)
+        assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_REWIND_STATE)
     }
 
     @Test
@@ -367,7 +338,7 @@ class ActivityLogRestClientTest {
             assertEquals(this.type, ActivityLogAction.FETCHED_REWIND_STATE)
             assertEquals(this.payload.site, site)
             assertTrue(this.payload.isError)
-            assertEquals(this.payload.error.type, errorType)
+            assertEquals(errorType, this.payload.error.type)
         }
     }
 

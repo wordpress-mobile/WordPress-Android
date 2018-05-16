@@ -164,15 +164,15 @@ constructor(
 
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
-        val rewindStatusValue = response.state
-        val rewindStatus = RewindStatusModel.State.fromValue(rewindStatusValue)
-                ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_REWIND_STATE)
+        val stateValue = response.state
+        val state = RewindStatusModel.State.fromValue(stateValue)
+                ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESPONSE)
         val rewindModel = response.rewind?.let {
             val rewindId = it.rewindId
-                    ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_ID)
+                    ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_REWIND_ID)
             val restoreStatusValue = it.status
             val restoreStatus = RewindStatusModel.Rewind.Status.fromValue(restoreStatusValue)
-                    ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
+                    ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_REWIND_STATE)
             RewindStatusModel.Rewind(
                     rewindId = rewindId,
                     status = restoreStatus,
@@ -183,7 +183,7 @@ constructor(
         }
 
         val rewindStatusModel = RewindStatusModel(
-                state = rewindStatus,
+                state = state,
                 reason = response.reason,
                 lastUpdated = response.last_updated,
                 canAutoconfigure = response.can_autoconfigure,
