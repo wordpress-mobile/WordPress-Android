@@ -545,21 +545,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private Runnable mAutoSave = new Runnable() {
-        @Override
-        public void run() {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    updatePostAndSaveToDb();
-                    if (mHandler != null) {
-                        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
-                    }
-                }
-            }).start();
-        }
-    };
-
     private Runnable mSave = new Runnable() {
         @Override
         public void run() {
@@ -586,7 +571,6 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         mHandler = new Handler();
-        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
 
         EventBus.getDefault().register(this);
 
@@ -633,7 +617,6 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
 
         EventBus.getDefault().unregister(this);
@@ -663,8 +646,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Saves both post objects so we can restore them in onCreate()
-        savePostAsync(null);
         outState.putInt(STATE_KEY_POST_LOCAL_ID, mPost.getId());
         if (!mPost.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
