@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
+import org.wordpress.android.ui.activitylog.RewindStatusSyncer
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -18,7 +19,8 @@ const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
-    private val activityLogStore: ActivityLogStore
+    private val activityLogStore: ActivityLogStore,
+    private val rewindStatusSyncer: RewindStatusSyncer
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -45,11 +47,19 @@ class ActivityLogDetailViewModel
                                         text = it.text,
                                         summary = it.summary,
                                         createdDate = it.published.printDate(),
-                                        createdTime = it.published.printTime()
+                                        createdTime = it.published.printTime(),
+                                        rewindAction = it.rewindID?.let { rewindId ->
+                                            { rewindStatusSyncer.rewind(rewindId, site) }
+                                        }
                                 )
                             }
             )
         }
+        rewindStatusSyncer.start(site)
+    }
+
+    fun stop() {
+        rewindStatusSyncer.stop()
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {
