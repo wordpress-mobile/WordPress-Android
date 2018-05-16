@@ -156,7 +156,7 @@ class WPMainNavigationView @JvmOverloads constructor(context: Context, attrs: At
         // scroll the active fragment's contents to the top when user re-taps the current item
         val position = getPositionForItemId(item.itemId)
         if (position != PAGE_NEW_POST) {
-            (navAdapter?.getFragment(position) as? OnScrollToTopListener)?.onScrollToTop()
+            (navAdapter.getFragment(position) as? OnScrollToTopListener)?.onScrollToTop()
         }
     }
 
