@@ -38,7 +38,9 @@ import org.wordpress.android.util.AppLog.T
  * insert our own custom views so we have more control over their appearance
  */
 class WPMainNavigationView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0) :
         BottomNavigationView(context, attrs, defStyleAttr),
         OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
