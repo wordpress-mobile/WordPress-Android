@@ -18,14 +18,16 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPTextView
 
 class PromoDialog : AppCompatDialogFragment() {
-    private val STATE_KEY_LINK_LABEL = "state_key_link_label"
-    private val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
-    private val STATE_KEY_TAG = "state_key_tag"
-    private val STATE_KEY_TITLE = "state_key_title"
-    private val STATE_KEY_MESSAGE = "state_key_message"
-    private val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
-    private val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
-    private val STATE_KEY_NEUTRAL_BUTTON_LABEL = "state_key_neutral_button_label"
+    companion object {
+        private const val STATE_KEY_LINK_LABEL = "state_key_link_label"
+        private const val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
+        private const val STATE_KEY_TAG = "state_key_tag"
+        private const val STATE_KEY_TITLE = "state_key_title"
+        private const val STATE_KEY_MESSAGE = "state_key_message"
+        private const val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
+        private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
+        private const val STATE_KEY_NEUTRAL_BUTTON_LABEL = "state_key_neutral_button_label"
+    }
 
     @DrawableRes
     private var drawableResId: Int = -1
