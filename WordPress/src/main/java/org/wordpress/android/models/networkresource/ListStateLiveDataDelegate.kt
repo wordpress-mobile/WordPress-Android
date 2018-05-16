@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
 
 class ListStateLiveDataDelegate<T : Any>(
     private var listState: ListState<T> = ListState.Init(),
-    private val liveData: MutableLiveData<ListState<T>> =  MutableLiveData()
+    private val liveData: MutableLiveData<ListState<T>> = MutableLiveData()
 ) {
     init {
         liveData.value = listState
