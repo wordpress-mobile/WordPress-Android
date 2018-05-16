@@ -161,7 +161,7 @@
                         android:paddingStart="@dimen/margin_medium"
                         android:textAlignment="viewEnd"
                         tools:ignore="RtlSymmetry"
-                        tools:text="8/8"
+                        tools:text="7/7"
                         style="@style/MySiteListRowSecondaryTextView" />
 
                     <View
