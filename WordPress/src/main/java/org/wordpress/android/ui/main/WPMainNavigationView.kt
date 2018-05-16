@@ -38,9 +38,9 @@ import org.wordpress.android.util.AppLog.T
  */
 class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListener,
         OnNavigationItemReselectedListener {
-    private var navAdapter: NavAdapter? = null
-    private var fragmentManager: FragmentManager? = null
-    private var pageListener: OnPageListener? = null
+    private lateinit var navAdapter: NavAdapter
+    private lateinit var fragmentManager: FragmentManager
+    private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
 
     val activeFragment: Fragment?
