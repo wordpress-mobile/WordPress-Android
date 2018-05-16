@@ -1,6 +1,15 @@
 package org.wordpress.android.fluxc.model.activity
 
-data class RewindStatusModel(val state: State, val reason: String?, val restore: RestoreStatus?) {
+import java.util.Date
+
+data class RewindStatusModel(
+    val state: State,
+    val reason: String?,
+    val lastUpdated: Date,
+    val canAutoconfigure: Boolean?,
+    val credentials: List<Credentials>?,
+    val rewind: Rewind?
+) {
     enum class State(val value: String) {
         ACTIVE("active"),
         INACTIVE("inactive"),
@@ -16,20 +25,23 @@ data class RewindStatusModel(val state: State, val reason: String?, val restore:
         }
     }
 
-    data class RestoreStatus(
-        val id: String,
+    data class Credentials(
+        val type: String,
+        val role: String,
+        val host: String?,
+        val port: Int?,
+        val stillValid: Boolean
+    )
+
+    data class Rewind(
+        val rewindId: String?,
         val status: Status,
+        val startedAt: Date,
         val progress: Int,
-        val message: String?,
-        val errorCode: String?,
-        val failureReason: String?
+        val reason: String?
     ) {
         enum class Status(val value: String) {
-            QUEUED("queued"),
-            FINISHED("finished"),
-            RUNNING("running"),
-            FAIL("fail"),
-            UNKNOWN("unknown");
+            RUNNING("running"), FINISHED("finished"), FAILED("failed");
 
             companion object {
                 fun fromValue(value: String): Status? {
@@ -40,23 +52,18 @@ data class RewindStatusModel(val state: State, val reason: String?, val restore:
 
         companion object {
             fun build(
-                restoreId: String?,
-                restoreState: String?,
-                restoreProgress: Int?,
-                restoreMessage: String?,
-                restoreErrorCode: String?,
-                restoreFailureReason: String?
-            ): RestoreStatus? {
-                return if (restoreId != null && restoreState != null && restoreProgress != null) {
-                    RestoreStatus(restoreId,
-                            Status.fromValue(restoreState) ?: Status.UNKNOWN,
-                            restoreProgress,
-                            restoreMessage,
-                            restoreErrorCode,
-                            restoreFailureReason)
-                } else {
-                    null
+                rewindId: String?,
+                stringStatus: String?,
+                longStartedAt: Long?,
+                progress: Int?,
+                reason: String?
+            ): Rewind? {
+                val status = stringStatus?.let { Status.fromValue(it) }
+                val startedAt = longStartedAt?.let { Date(it) }
+                if (status != null && startedAt != null && progress != null) {
+                    return Rewind(rewindId, status, startedAt, progress, reason)
                 }
+                return null
             }
         }
     }
