@@ -280,9 +280,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
 
     private fun showTitleForPosition(position: Int, show: Boolean) {
         val txtTitle = getTitleViewForPosition(position)
-        if (txtTitle != null) {
-            txtTitle.visibility = if (show) View.VISIBLE else View.GONE
-        }
+        txtTitle?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     fun getFragment(position: Int): Fragment? {
