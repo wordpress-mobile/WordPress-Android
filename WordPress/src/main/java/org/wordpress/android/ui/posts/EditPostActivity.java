@@ -1357,6 +1357,23 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onNegativeClicked(@NonNull String instanceTag) {
+        switch (instanceTag) {
+            case ASYNC_PROMO_DIALOG_TAG:
+            case TAG_PUBLISH_CONFIRMATION_DIALOG:
+            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
+                // the dialog is automatically dismissed
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        }
+    }
+
+    @Override public void onNeutralClicked(@NotNull String instanceTag) {
+    }
+
+    @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
@@ -1369,20 +1386,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case ASYNC_PROMO_DIALOG_TAG:
                 publishPost();
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
-                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
-        }
-    }
-
-    @Override
-    public void onNegativeClicked(@NonNull String instanceTag) {
-        switch (instanceTag) {
-            case ASYNC_PROMO_DIALOG_TAG:
-            case TAG_PUBLISH_CONFIRMATION_DIALOG:
-            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
-                // the dialog is automatically dismissed
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
