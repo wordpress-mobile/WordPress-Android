@@ -32,7 +32,7 @@
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
 
-    <dimen name="default_dialog_button_height">48dp</dimen>
+    <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
