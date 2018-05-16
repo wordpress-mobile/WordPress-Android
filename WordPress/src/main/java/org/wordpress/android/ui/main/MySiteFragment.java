@@ -542,12 +542,14 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     }
 
     private void showSiteIconProgressBar(boolean isVisible) {
-        if (isVisible) {
-            mBlavatarProgressBar.setVisibility(View.VISIBLE);
-            mBlavatarImageView.setVisibility(View.INVISIBLE);
-        } else {
-            mBlavatarProgressBar.setVisibility(View.GONE);
-            mBlavatarImageView.setVisibility(View.VISIBLE);
+        if (mBlavatarProgressBar != null && mBlavatarImageView != null) {
+            if (isVisible) {
+                mBlavatarProgressBar.setVisibility(View.VISIBLE);
+                mBlavatarImageView.setVisibility(View.INVISIBLE);
+            } else {
+                mBlavatarProgressBar.setVisibility(View.GONE);
+                mBlavatarImageView.setVisibility(View.VISIBLE);
+            }
         }
     }
 

@@ -1128,8 +1128,8 @@ public class ReaderPostDetailFragment extends Fragment
                 txtExcerptFooter.setText(Html.fromHtml(linkText));
 
                 // we can't set the vector drawable in the layout because it will crash pre-API21
-                Drawable drawableRight =
-                        VectorDrawableCompat.create(txtExcerptFooter.getResources(), R.drawable.reader_visit, null);
+                Drawable drawableRight = VectorDrawableCompat.create(
+                        txtExcerptFooter.getResources(), R.drawable.ic_external_grey_min_24dp, null);
                 txtExcerptFooter.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
 
                 txtExcerptFooter.setOnClickListener(new View.OnClickListener() {
