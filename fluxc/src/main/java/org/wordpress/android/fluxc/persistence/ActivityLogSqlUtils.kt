@@ -67,8 +67,12 @@ class ActivityLogSqlUtils
                     .equals(RewindStatusTable.LOCAL_SITE_ID, existingRewindStatus.localSiteId)
                     .endWhere()
                     .put(rewindStatusBuilder, UpdateAllExceptId<RewindStatusBuilder>(RewindStatusBuilder::class.java))
+                    .execute()
         } else {
-            WellSql.insert(rewindStatusBuilder)
+            val insert = WellSql.insert(rewindStatusBuilder)
+            insert.execute()
+            WellSql.insert(rewindStatusModel.credentials?.map { it.toBuilder(rewindStatusBuilder.id) } ?: listOf())
+                    .execute()
         }
     }
 
@@ -130,6 +134,17 @@ class ActivityLogSqlUtils
                 rewindStartedAt = this.rewind?.startedAt?.time,
                 rewindProgress = this.rewind?.progress,
                 rewindReason = this.rewind?.reason
+        )
+    }
+
+    private fun Credentials.toBuilder(rewindStatusId: Int): CredentialsBuilder {
+        return CredentialsBuilder(
+                rewindStateId = rewindStatusId,
+                type = this.type,
+                role = this.role,
+                host = this.host,
+                port = this.port,
+                stillValid = this.stillValid
         )
     }
 
