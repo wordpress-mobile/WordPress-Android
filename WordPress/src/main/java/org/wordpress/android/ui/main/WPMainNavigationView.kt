@@ -37,8 +37,9 @@ import org.wordpress.android.util.AppLog.T
  * four primary views - note that we ignore the built-in icons and labels and
  * insert our own custom views so we have more control over their appearance
  */
-class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListener,
-        OnNavigationItemReselectedListener {
+class WPMainNavigationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+        BottomNavigationView(context, attrs, defStyleAttr),
+        OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
@@ -55,12 +56,6 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         fun onPageChanged(position: Int)
         fun onNewPostButtonClicked()
     }
-
-    constructor(context: Context) : super(context) {}
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
 
     fun init(fm: FragmentManager, listener: OnPageListener) {
         fragmentManager = fm
