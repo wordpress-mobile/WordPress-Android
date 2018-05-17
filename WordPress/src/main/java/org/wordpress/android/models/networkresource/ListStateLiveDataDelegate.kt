@@ -16,6 +16,9 @@ class ListStateLiveDataDelegate<T : Any>(
     fun observe(owner: LifecycleOwner, observer: Observer<ListState<T>>) =
             liveData.observe(owner, observer)
 
+    fun observeForever(observer: (ListState<T>?) -> Unit) =
+            liveData.observeForever { observer(it) }
+
     operator fun setValue(ref: Any, p: KProperty<*>, value: ListState<T>) {
         listState = value
         liveData.postValue(listState)
