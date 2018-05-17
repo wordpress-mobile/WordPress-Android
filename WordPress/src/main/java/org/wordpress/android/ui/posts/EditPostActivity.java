@@ -103,7 +103,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
