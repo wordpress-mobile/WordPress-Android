@@ -336,8 +336,11 @@ public class ReaderPostListFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        // this will throw if parent activity doesn't implement the bottomnav controller interface
-        mBottonNavController = (BottomNavController) context;
+        // detect the bottom nav controller when this fragment is hosted in the main activity - this is used to
+        // hide the bottom nav when the user searches from the reader
+        if (context instanceof BottomNavController) {
+            mBottonNavController = (BottomNavController) context;
+        }
     }
 
     @Override
