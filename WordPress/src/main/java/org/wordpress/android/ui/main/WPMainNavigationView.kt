@@ -100,16 +100,17 @@ class WPMainNavigationView @JvmOverloads constructor(
     private fun disableShiftMode() {
         val menuView = getChildAt(0) as BottomNavigationMenuView
         try {
-            menuView.javaClass.getDeclaredField("mShiftingMode").also { shiftMode ->
-                shiftMode.isAccessible = true
-                shiftMode.setBoolean(menuView, false)
-                shiftMode.isAccessible = false
+            menuView.javaClass.getDeclaredField("mShiftingMode").apply {
+                isAccessible = true
+                setBoolean(menuView, false)
+                isAccessible = false
             }
             for (i in 0 until menuView.childCount) {
-                val item = menuView.getChildAt(i) as BottomNavigationItemView
-                item.setShiftingMode(false)
-                // force the view to update
-                item.setChecked(item.itemData.isChecked)
+                (menuView.getChildAt(i) as BottomNavigationItemView).apply {
+                    setShiftingMode(false)
+                    // force the view to update
+                    setChecked(itemData.isChecked)
+                }
             }
         } catch (e: NoSuchFieldException) {
             AppLog.e(T.MAIN, "Unable to disable shift mode", e)
