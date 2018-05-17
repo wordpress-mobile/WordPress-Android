@@ -252,15 +252,20 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         finish();
     }
 
-    private void markNoteAsRead(Note note) {
-        GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
-        // mark the note as read if it's unread
-        if (note.isUnread()) {
-            NotificationsActions.markNoteAsRead(note);
-            note.setRead();
-            NotificationsTable.saveNote(note);
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-        }
+    private void markNoteAsRead(final Note note) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                GCMMessageService.removeNotificationWithNoteIdFromSystemBar(NotificationsDetailActivity.this, note.getId());
+                // mark the note as read if it's unread
+                if (note.isUnread()) {
+                    NotificationsActions.markNoteAsRead(note);
+                    note.setRead();
+                    NotificationsTable.saveNote(note);
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+                }
+            }
+        }).start();
     }
 
     private void setActionBarTitleForNote(Note note) {
