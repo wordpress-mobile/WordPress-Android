@@ -29,6 +29,8 @@
     <declare-styleable name="LearnMorePreference">
         <attr name="url" format="string" />
         <attr name="caption" format="string" />
+        <attr name="button" format="string" />
+        <attr name="learnMoreIcon" format="reference" />
         <attr name="useCustomJsFormatting" format="boolean" />
     </declare-styleable>
 
