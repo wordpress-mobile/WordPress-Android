@@ -214,13 +214,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PREVIEW = 2;
 
-    private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
-
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
 
     private static final String WHAT_IS_NEW_IN_MOBILE_URL =
             "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
+    public static final int CHANGE_SAVE_DELAY = 500;
 
     enum AddExistingdMediaSource {
         WP_MEDIA_LIBRARY,
@@ -551,21 +550,17 @@ public class EditPostActivity extends AppCompatActivity implements
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    updatePostAndSaveToDb();
+                    try {
+                        updatePostObject(true);
+                    } catch (EditorFragmentNotAddedException e) {
+                        AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                        return;
+                    }
+                    savePostToDb();
                 }
             }).start();
         }
     };
-
-    private void updatePostAndSaveToDb() {
-        try {
-            updatePostObject(true);
-        } catch (EditorFragmentNotAddedException e) {
-            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-            return;
-        }
-        savePostToDb();
-    }
 
     @Override
     protected void onResume() {
@@ -1831,7 +1826,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, new Observer<Editable>() {
                         @Override public void onChanged(@Nullable Editable editable) {
                             mHandler.removeCallbacks(mSave);
-                            mHandler.postDelayed(mSave, 500);
+                            mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
                         }
                     });
 
