@@ -221,7 +221,8 @@ class PluginBrowserViewModel @Inject constructor(
     @SuppressWarnings("unused")
     fun onWPOrgPluginFetched(event: OnWPOrgPluginFetched) {
         if (event.isError) {
-            AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " +
+                    event.error.type)
             return
         }
         updateAllPluginListsForSlug(event.pluginSlug)
@@ -231,8 +232,8 @@ class PluginBrowserViewModel @Inject constructor(
     @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         if (event.isError) {
-            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
-                    event.error.type)
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " +
+                    "${event.type}: $event.error.type")
             updateListStateToError(event.type, event.error.message)
         } else {
             updateListStateToSuccess(event.type, event.canLoadMore)
@@ -395,10 +396,14 @@ class PluginBrowserViewModel @Inject constructor(
 
     private fun updateListStateToError(directoryType: PluginDirectoryType, errorMessage: String?) {
         when (directoryType) {
-            PluginDirectoryType.FEATURED -> featuredPluginsListState = ListState.Error(featuredPluginsListState, errorMessage)
-            PluginDirectoryType.NEW -> newPluginsListState = ListState.Error(newPluginsListState, errorMessage)
-            PluginDirectoryType.POPULAR -> popularPluginsListState = ListState.Error(popularPluginsListState, errorMessage)
-            PluginDirectoryType.SITE -> sitePluginsListState = ListState.Error(sitePluginsListState, errorMessage)
+            PluginDirectoryType.FEATURED ->
+                featuredPluginsListState = ListState.Error(featuredPluginsListState, errorMessage)
+            PluginDirectoryType.NEW ->
+                newPluginsListState = ListState.Error(newPluginsListState, errorMessage)
+            PluginDirectoryType.POPULAR ->
+                popularPluginsListState = ListState.Error(popularPluginsListState, errorMessage)
+            PluginDirectoryType.SITE ->
+                sitePluginsListState = ListState.Error(sitePluginsListState, errorMessage)
         }
     }
 }
