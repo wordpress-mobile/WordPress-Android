@@ -86,7 +86,7 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSitePluginsLiveData()
+        mViewModel.getSitePlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
@@ -96,7 +96,7 @@ public class PluginListFragment extends Fragment {
                       }
                   });
 
-        mViewModel.getFeaturedPluginsLiveData()
+        mViewModel.getFeaturedPlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
@@ -106,7 +106,7 @@ public class PluginListFragment extends Fragment {
                       }
                   });
 
-        mViewModel.getPopularPluginsLiveData()
+        mViewModel.getPopularPlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
@@ -116,7 +116,7 @@ public class PluginListFragment extends Fragment {
                       }
                   });
 
-        mViewModel.getNewPluginsLiveData()
+        mViewModel.getNewPlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
@@ -126,7 +126,7 @@ public class PluginListFragment extends Fragment {
                       }
                   });
 
-        mViewModel.getSearchResultsLiveData()
+        mViewModel.getSearchResults()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
