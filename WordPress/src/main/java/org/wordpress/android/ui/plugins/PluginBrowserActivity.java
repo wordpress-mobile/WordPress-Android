@@ -170,7 +170,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePluginsLiveData()
+        mViewModel.getSitePlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
@@ -191,7 +191,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                       }
                   });
 
-        mViewModel.getFeaturedPluginsLiveData()
+        mViewModel.getFeaturedPlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
@@ -201,7 +201,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                       }
                   });
 
-        mViewModel.getPopularPluginsLiveData()
+        mViewModel.getPopularPlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
@@ -211,7 +211,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                       }
                   });
 
-        mViewModel.getNewPluginsLiveData()
+        mViewModel.getNewPlugins()
                   .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
                       public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {

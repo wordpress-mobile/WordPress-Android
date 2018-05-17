@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.models.networkresource.ListStateLiveDataDelegate
 import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -55,47 +56,17 @@ class PluginBrowserViewModel @Inject constructor(
 
     private val handler = Handler()
 
-    private val _featuredPluginsLiveData = MutableLiveData<PluginListState>()
-    private val _popularPluginsLiveData = MutableLiveData<PluginListState>()
-    private val _newPluginsLiveData = MutableLiveData<PluginListState>()
-    private val _sitePluginsLiveData = MutableLiveData<PluginListState>()
-    private val _searchResultsLiveData = MutableLiveData<PluginListState>()
+    val featuredPlugins = ListStateLiveDataDelegate<ImmutablePluginModel>()
+    val popularPlugins = ListStateLiveDataDelegate<ImmutablePluginModel>()
+    val newPlugins = ListStateLiveDataDelegate<ImmutablePluginModel>()
+    val sitePlugins = ListStateLiveDataDelegate<ImmutablePluginModel>()
+    val searchResults = ListStateLiveDataDelegate<ImmutablePluginModel>()
 
-    val featuredPluginsLiveData: LiveData<PluginListState>
-        get() = _featuredPluginsLiveData
-
-    val popularPluginsLiveData: LiveData<PluginListState>
-        get() = _popularPluginsLiveData
-
-    val newPluginsLiveData: LiveData<PluginListState>
-        get() = _newPluginsLiveData
-
-    val sitePluginsLiveData: LiveData<PluginListState>
-        get() = _sitePluginsLiveData
-
-    val searchResultsLiveData: LiveData<PluginListState>
-        get() = _searchResultsLiveData
-
-    private var featuredPlugins: ListState<ImmutablePluginModel>
-            by Delegates.observable(ListState.Init()) { _, _, new ->
-                _featuredPluginsLiveData.postValue(new)
-            }
-    private var popularPlugins: ListState<ImmutablePluginModel>
-            by Delegates.observable(ListState.Init()) { _, _, new ->
-                _popularPluginsLiveData.postValue(new)
-            }
-    private var newPlugins: ListState<ImmutablePluginModel>
-            by Delegates.observable(ListState.Init()) { _, _, new ->
-                _newPluginsLiveData.postValue(new)
-            }
-    private var sitePlugins: ListState<ImmutablePluginModel>
-            by Delegates.observable(ListState.Init()) { _, _, new ->
-                _sitePluginsLiveData.postValue(new)
-            }
-    private var searchResults: ListState<ImmutablePluginModel>
-            by Delegates.observable(ListState.Init()) { _, _, new ->
-                _searchResultsLiveData.postValue(new)
-            }
+    private var featuredPluginsListState: ListState<ImmutablePluginModel> by featuredPlugins
+    private var popularPluginsListState: ListState<ImmutablePluginModel> by popularPlugins
+    private var newPluginsListState: ListState<ImmutablePluginModel> by newPlugins
+    private var sitePluginsListState: ListState<ImmutablePluginModel> by sitePlugins
+    private var searchResultsListState: ListState<ImmutablePluginModel> by searchResults
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -201,27 +172,27 @@ class PluginBrowserViewModel @Inject constructor(
         }
         when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> {
-                sitePlugins = ListState.Loading(sitePlugins, loadMore)
+                sitePluginsListState = ListState.Loading(sitePluginsListState, loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             PluginBrowserViewModel.PluginListType.FEATURED -> {
-                featuredPlugins = ListState.Loading(featuredPlugins, loadMore)
+                featuredPluginsListState = ListState.Loading(featuredPluginsListState, loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             PluginBrowserViewModel.PluginListType.POPULAR -> {
-                popularPlugins = ListState.Loading(popularPlugins, loadMore)
+                popularPluginsListState = ListState.Loading(popularPluginsListState, loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             PluginBrowserViewModel.PluginListType.NEW -> {
-                newPlugins = ListState.Loading(newPlugins, loadMore)
+                newPluginsListState = ListState.Loading(newPluginsListState, loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             PluginBrowserViewModel.PluginListType.SEARCH -> {
-                searchResults = ListState.Loading(searchResults, loadMore)
+                searchResultsListState = ListState.Loading(searchResultsListState, loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
             }
@@ -233,10 +204,10 @@ class PluginBrowserViewModel @Inject constructor(
             return false
         }
         return when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> sitePlugins.shouldFetch(loadMore)
-            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPlugins.shouldFetch(loadMore)
-            PluginBrowserViewModel.PluginListType.POPULAR -> popularPlugins.shouldFetch(loadMore)
-            PluginBrowserViewModel.PluginListType.NEW -> newPlugins.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.SITE -> sitePluginsListState.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPluginsListState.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.POPULAR -> popularPluginsListState.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.NEW -> newPluginsListState.shouldFetch(loadMore)
             // We should always do the initial search because the string might have changed and it is
             // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
             // pages of search, so if we are trying to load more, we can ignore it
@@ -276,10 +247,10 @@ class PluginBrowserViewModel @Inject constructor(
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            searchResults = ListState.Error(searchResults, event.error.message)
+            searchResultsListState = ListState.Error(searchResultsListState, event.error.message)
             return
         }
-        searchResults = ListState.Success(event.plugins, false) // Disable pagination for search
+        searchResultsListState = ListState.Success(event.plugins, false) // Disable pagination for search
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -347,12 +318,12 @@ class PluginBrowserViewModel @Inject constructor(
                         if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
                     }
                 }
-                featuredPlugins = featuredPlugins.transform(transformFunc)
-                newPlugins = newPlugins.transform(transformFunc)
-                searchResults = searchResults.transform(transformFunc)
-                popularPlugins = popularPlugins.transform(transformFunc)
+                featuredPluginsListState = featuredPluginsListState.transform(transformFunc)
+                newPluginsListState = newPluginsListState.transform(transformFunc)
+                searchResultsListState = searchResultsListState.transform(transformFunc)
+                popularPluginsListState = popularPluginsListState.transform(transformFunc)
 
-                sitePlugins = sitePlugins.transform { list ->
+                sitePluginsListState = sitePluginsListState.transform { list ->
                     if (!updatedPlugin.isInstalled) {
                         list.filter { it.slug != slug }
                     } else if (list.none { it.slug == slug }) {
@@ -373,7 +344,7 @@ class PluginBrowserViewModel @Inject constructor(
                 }
             }, 250)
         } else {
-            searchResults = ListState.Ready(ArrayList())
+            searchResultsListState = ListState.Ready(ArrayList())
 
             if (shouldSearch) {
                 fetchPlugins(PluginListType.SEARCH, false)
@@ -386,8 +357,8 @@ class PluginBrowserViewModel @Inject constructor(
         if (!shouldSearch) {
             return false
         }
-        return when (searchResults) {
-            is ListState.Success, is ListState.Error -> searchResults.data.isEmpty()
+        return when (searchResultsListState) {
+            is ListState.Success, is ListState.Error -> searchResultsListState.data.isEmpty()
             else -> false
         }
     }
@@ -402,10 +373,10 @@ class PluginBrowserViewModel @Inject constructor(
         site?.let {
             val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
             when (directoryType) {
-                PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Ready(pluginList)
-                PluginDirectoryType.NEW -> newPlugins = ListState.Ready(pluginList)
-                PluginDirectoryType.POPULAR -> popularPlugins = ListState.Ready(pluginList)
-                PluginDirectoryType.SITE -> sitePlugins = ListState.Ready(pluginList)
+                PluginDirectoryType.FEATURED -> featuredPluginsListState = ListState.Ready(pluginList)
+                PluginDirectoryType.NEW -> newPluginsListState = ListState.Ready(pluginList)
+                PluginDirectoryType.POPULAR -> popularPluginsListState = ListState.Ready(pluginList)
+                PluginDirectoryType.SITE -> sitePluginsListState = ListState.Ready(pluginList)
             }
         }
     }
@@ -414,20 +385,20 @@ class PluginBrowserViewModel @Inject constructor(
         site?.let {
             val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
             when (directoryType) {
-                PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Success(pluginList, canLoadMore)
-                PluginDirectoryType.NEW -> newPlugins = ListState.Success(pluginList, canLoadMore)
-                PluginDirectoryType.POPULAR -> popularPlugins = ListState.Success(pluginList, canLoadMore)
-                PluginDirectoryType.SITE -> sitePlugins = ListState.Success(pluginList, canLoadMore)
+                PluginDirectoryType.FEATURED -> featuredPluginsListState = ListState.Success(pluginList, canLoadMore)
+                PluginDirectoryType.NEW -> newPluginsListState = ListState.Success(pluginList, canLoadMore)
+                PluginDirectoryType.POPULAR -> popularPluginsListState = ListState.Success(pluginList, canLoadMore)
+                PluginDirectoryType.SITE -> sitePluginsListState = ListState.Success(pluginList, canLoadMore)
             }
         }
     }
 
     private fun updateListStateToError(directoryType: PluginDirectoryType, errorMessage: String?) {
         when (directoryType) {
-            PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Error(featuredPlugins, errorMessage)
-            PluginDirectoryType.NEW -> newPlugins = ListState.Error(newPlugins, errorMessage)
-            PluginDirectoryType.POPULAR -> popularPlugins = ListState.Error(popularPlugins, errorMessage)
-            PluginDirectoryType.SITE -> sitePlugins = ListState.Error(sitePlugins, errorMessage)
+            PluginDirectoryType.FEATURED -> featuredPluginsListState = ListState.Error(featuredPluginsListState, errorMessage)
+            PluginDirectoryType.NEW -> newPluginsListState = ListState.Error(newPluginsListState, errorMessage)
+            PluginDirectoryType.POPULAR -> popularPluginsListState = ListState.Error(popularPluginsListState, errorMessage)
+            PluginDirectoryType.SITE -> sitePluginsListState = ListState.Error(sitePluginsListState, errorMessage)
         }
     }
 }
