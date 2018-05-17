@@ -256,7 +256,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                GCMMessageService.removeNotificationWithNoteIdFromSystemBar(NotificationsDetailActivity.this, note.getId());
+                GCMMessageService.removeNotificationWithNoteIdFromSystemBar(
+                        NotificationsDetailActivity.this, note.getId());
                 // mark the note as read if it's unread
                 if (note.isUnread()) {
                     NotificationsActions.markNoteAsRead(note);
