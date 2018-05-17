@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 31;
+        return 33;
     }
 
     @Override
@@ -261,6 +261,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 31:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 32:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("DROP TABLE IF EXISTS RewindStatus");
                 db.execSQL(
                         "CREATE TABLE RewindStatus (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
@@ -305,7 +309,30 @@ public class WellSqlConfig extends DefaultWellConfig {
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {
-                // TODO
+                case 30:
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderModel");
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderNoteModel");
+                    db.execSQL("CREATE TABLE WCOrderModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                               + "REMOTE_ORDER_ID INTEGER,NUMBER TEXT NOT NULL,STATUS TEXT NOT NULL,"
+                               + "CURRENCY TEXT NOT NULL,DATE_CREATED TEXT NOT NULL,TOTAL TEXT NOT NULL,"
+                               + "TOTAL_TAX TEXT NOT NULL,SHIPPING_TOTAL TEXT NOT NULL,PAYMENT_METHOD TEXT NOT NULL,"
+                               + "PAYMENT_METHOD_TITLE TEXT NOT NULL,PRICES_INCLUDE_TAX INTEGER,"
+                               + "CUSTOMER_NOTE TEXT NOT NULL,DISCOUNT_TOTAL TEXT NOT NULL,"
+                               + "DISCOUNT_CODES TEXT NOT NULL,REFUND_TOTAL REAL,BILLING_FIRST_NAME TEXT NOT NULL,"
+                               + "BILLING_LAST_NAME TEXT NOT NULL,BILLING_COMPANY TEXT NOT NULL,"
+                               + "BILLING_ADDRESS1 TEXT NOT NULL,BILLING_ADDRESS2 TEXT NOT NULL,"
+                               + "BILLING_CITY TEXT NOT NULL,BILLING_STATE TEXT NOT NULL,"
+                               + "BILLING_POSTCODE TEXT NOT NULL,BILLING_COUNTRY TEXT NOT NULL,"
+                               + "BILLING_EMAIL TEXT NOT NULL,BILLING_PHONE TEXT NOT NULL,"
+                               + "SHIPPING_FIRST_NAME TEXT NOT NULL,SHIPPING_LAST_NAME TEXT NOT NULL,"
+                               + "SHIPPING_COMPANY TEXT NOT NULL,SHIPPING_ADDRESS1 TEXT NOT NULL,"
+                               + "SHIPPING_ADDRESS2 TEXT NOT NULL,SHIPPING_CITY TEXT NOT NULL,"
+                               + "SHIPPING_STATE TEXT NOT NULL,SHIPPING_POSTCODE TEXT NOT NULL,"
+                               + "SHIPPING_COUNTRY TEXT NOT NULL,LINE_ITEMS TEXT NOT NULL)");
+                    db.execSQL("CREATE TABLE WCOrderNoteModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,LOCAL_ORDER_ID INTEGER,REMOTE_NOTE_ID INTEGER,"
+                               + "DATE_CREATED TEXT NOT NULL,NOTE TEXT NOT NULL,IS_CUSTOMER_NOTE INTEGER)");
+                    break;
             }
         }
     }
