@@ -57,23 +57,21 @@ class ActivityLogSqlUtils
         return WellSql.delete(ActivityLogBuilder::class.java).execute()
     }
 
-    fun insertOrUpdateRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
-        val existingRewindStatus = getRewindStatusBuilder(site)
+    fun replaceRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
         val rewindStatusBuilder = rewindStatusModel.toBuilder(site)
-        if (existingRewindStatus != null) {
-            WellSql.update(RewindStatusBuilder::class.java)
-                    .where()
-                    .equals(RewindStatusTable.ID, existingRewindStatus.id)
-                    .equals(RewindStatusTable.LOCAL_SITE_ID, existingRewindStatus.localSiteId)
-                    .endWhere()
-                    .put(rewindStatusBuilder, UpdateAllExceptId<RewindStatusBuilder>(RewindStatusBuilder::class.java))
-                    .execute()
-        } else {
-            val insert = WellSql.insert(rewindStatusBuilder)
-            insert.execute()
-            WellSql.insert(rewindStatusModel.credentials?.map { it.toBuilder(rewindStatusBuilder.id) } ?: listOf())
-                    .execute()
-        }
+        WellSql.delete(RewindStatusBuilder::class.java)
+                .where()
+                .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+        WellSql.delete(CredentialsBuilder::class.java)
+                .where()
+                .equals(RewindStatusCredentialsTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+        WellSql.insert(rewindStatusBuilder).execute()
+        WellSql.insert(rewindStatusModel.credentials?.map { it.toBuilder(rewindStatusBuilder.id, site) } ?: listOf())
+                .execute()
     }
 
     fun getRewindStatusForSite(site: SiteModel): RewindStatusModel? {
@@ -130,15 +128,17 @@ class ActivityLogSqlUtils
                 reason = this.reason,
                 canAutoconfigure = this.canAutoconfigure,
                 rewindId = this.rewind?.rewindId,
-                rewindStatus =  this.rewind?.status?.value,
+                rewindStatus = this.rewind?.status?.value,
                 rewindStartedAt = this.rewind?.startedAt?.time,
                 rewindProgress = this.rewind?.progress,
                 rewindReason = this.rewind?.reason
         )
     }
 
-    private fun Credentials.toBuilder(rewindStatusId: Int): CredentialsBuilder {
+    private fun Credentials.toBuilder(rewindStatusId: Int, site: SiteModel): CredentialsBuilder {
         return CredentialsBuilder(
+                localSiteId = site.id,
+                remoteSiteId = site.siteId,
                 rewindStateId = rewindStatusId,
                 type = this.type,
                 role = this.role,
@@ -246,6 +246,8 @@ class ActivityLogSqlUtils
     @Table(name = "RewindStatusCredentials")
     data class CredentialsBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
+        @Column var localSiteId: Int,
+        @Column var remoteSiteId: Long,
         @Column var rewindStateId: Int,
         @Column var type: String,
         @Column var role: String,
@@ -253,7 +255,7 @@ class ActivityLogSqlUtils
         @Column var host: String? = null,
         @Column var port: Int? = null
     ) : Identifiable {
-        constructor(): this(-1, 0, "", "", false)
+        constructor() : this(-1, 0, 0, 0, "", "", false)
 
         override fun setId(id: Int) {
             this.mId = id

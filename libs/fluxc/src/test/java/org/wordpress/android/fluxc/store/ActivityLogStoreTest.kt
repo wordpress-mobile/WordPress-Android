@@ -148,7 +148,7 @@ class ActivityLogStoreTest {
 
         activityLogStore.onAction(action)
 
-        verify(activityLogSqlUtils).insertOrUpdateRewindStatus(siteModel, rewindStatusModel)
+        verify(activityLogSqlUtils).replaceRewindStatus(siteModel, rewindStatusModel)
         val expectedChangeEvent = ActivityLogStore.OnRewindStatusFetched(ActivityLogAction.FETCHED_REWIND_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
