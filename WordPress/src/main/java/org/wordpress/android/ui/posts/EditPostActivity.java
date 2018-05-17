@@ -219,7 +219,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final String WHAT_IS_NEW_IN_MOBILE_URL =
             "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
-    public static final int CHANGE_SAVE_DELAY = 500;
+    private static final int CHANGE_SAVE_DELAY = 500;
+    public static final int MAX_UNSAVED_POSTS = 50;
 
     enum AddExistingdMediaSource {
         WP_MEDIA_LIBRARY,
@@ -227,6 +228,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private Handler mHandler;
+    private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
@@ -550,6 +552,7 @@ public class EditPostActivity extends AppCompatActivity implements
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    mDebounceCounter = 0;
                     try {
                         updatePostObject(true);
                     } catch (EditorFragmentNotAddedException e) {
@@ -1826,7 +1829,12 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, new Observer<Editable>() {
                         @Override public void onChanged(@Nullable Editable editable) {
                             mHandler.removeCallbacks(mSave);
-                            mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
+                            if (mDebounceCounter < MAX_UNSAVED_POSTS) {
+                                mDebounceCounter++;
+                                mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
+                            } else {
+                                mHandler.post(mSave);
+                            }
                         }
                     });
 
