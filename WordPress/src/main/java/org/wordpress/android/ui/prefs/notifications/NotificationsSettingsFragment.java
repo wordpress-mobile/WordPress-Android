@@ -32,6 +32,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -259,6 +260,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     data.getBooleanExtra(NotificationSettingsFollowedDialog.KEY_EMAIL_COMMENTS, false);
 
             if (notifyPosts != mPreviousNotifyPosts) {
+                ReaderBlogTable.setNotificationsEnabledByBlogId(Long.parseLong(mNotificationUpdatedSite), notifyPosts);
                 AddOrDeleteSubscriptionPayload payload;
 
                 if (notifyPosts) {

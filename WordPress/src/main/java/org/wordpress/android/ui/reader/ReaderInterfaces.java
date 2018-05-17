@@ -33,4 +33,12 @@ public class ReaderInterfaces {
     public interface DataLoadedListener {
         void onDataLoaded(boolean isEmpty);
     }
+
+    /*
+     * used by adapters to notify when follow button has been tapped
+     */
+    public interface OnFollowListener {
+        void onFollowTapped(View view, String blogName, long blogId);
+        void onFollowingTapped();
+    }
 }

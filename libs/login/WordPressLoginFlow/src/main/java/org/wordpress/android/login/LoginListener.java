@@ -65,8 +65,6 @@ public interface LoginListener {
     // TODO This should have a more generic name, it more or less means any kind of login was finished
     void startPostLoginServices();
 
-    void setHelpContext(String faqId, String faqSection);
-
     // Signup
     void doStartSignup();
     void helpSignupEmailScreen(String email);

@@ -116,7 +116,6 @@ import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
-import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -184,7 +183,8 @@ public class EditPostActivity extends AppCompatActivity implements
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
-        BasicYesNoFragmentDialog.BasicYesNoDialogClickInterface,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface,
+        BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
@@ -365,16 +365,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 // Create a new post
-                List<Long> categories = new ArrayList<>();
-                String postFormat = "";
-                if (mSite.isUsingWpComRestApi()) {
-                    // TODO: replace SiteSettingsInterface.getX by calls to mSite.getDefaultCategory
-                    // and mSite.getDefaultFormat. We can get these from /me/sites endpoint for .com/jetpack sites.
-                    // There might be a way to get that information from a XMLRPC request as well.
-                    categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
-                    postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
-                }
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
+                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 EventBus.getDefault().postSticky(
                         new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
@@ -1060,10 +1051,10 @@ public class EditPostActivity extends AppCompatActivity implements
         hidePhotoPicker();
 
         if (itemId == R.id.menu_save_post) {
-            if (!AppPrefs.isAsyncPromoRequired()) {
-                showPublishConfirmationOrUpdateIfNotLocalDraft();
-            } else {
+            if (AppPrefs.isAsyncPromoRequired() && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
                 showAsyncPromoDialog();
+            } else {
+                showPublishConfirmationOrUpdateIfNotLocalDraft();
             }
         } else {
             // Disable other action bar buttons while a media upload is in progress
@@ -1141,15 +1132,15 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showPublishConfirmationDialog() {
-        BasicYesNoFragmentDialog publishConfirmationDialog = new BasicYesNoFragmentDialog();
+        BasicFragmentDialog publishConfirmationDialog = new BasicFragmentDialog();
         publishConfirmationDialog.initialize(
                 TAG_PUBLISH_CONFIRMATION_DIALOG,
                 getString(R.string.dialog_confirm_publish_title),
                 mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                         : getString(R.string.dialog_confirm_publish_message_post),
                 getString(R.string.dialog_confirm_publish_yes),
-                getString(R.string.keep_editing)
-                                            );
+                getString(R.string.keep_editing),
+                null);
         publishConfirmationDialog.show(getSupportFragmentManager(), TAG_PUBLISH_CONFIRMATION_DIALOG);
     }
 
@@ -1365,7 +1356,8 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
     }
 
-    @Override public void onPositiveClicked(@NonNull String instanceTag) {
+    @Override
+    public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
@@ -1384,7 +1376,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    @Override public void onNegativeClicked(@NonNull String instanceTag) {
+    @Override
+    public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
@@ -1397,7 +1390,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    @Override public void onLinkClicked(@NotNull String instanceTag) {
+    @Override
+    public void onLinkClicked(@NotNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
                 Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
@@ -1655,13 +1649,14 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showRemoveFailedUploadsDialog() {
-        BasicYesNoFragmentDialog removeFailedUploadsDialog = new BasicYesNoFragmentDialog();
+        BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
         removeFailedUploadsDialog.initialize(
                 TAG_REMOVE_FAILED_UPLOADS_DIALOG,
                 null,
                 getString(R.string.editor_toast_failed_uploads),
                 getString(R.string.editor_remove_failed_uploads),
-                getString(android.R.string.cancel));
+                getString(android.R.string.cancel),
+                null);
         removeFailedUploadsDialog.show(getSupportFragmentManager(), TAG_REMOVE_FAILED_UPLOADS_DIALOG);
     }
 

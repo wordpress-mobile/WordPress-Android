@@ -404,7 +404,6 @@ Language: sr_RS
     <string name="caption">Натпис (опционо)</string>
     <string name="no_network_title">Нема доступне мреже</string>
     <string name="featured_in_post">Укључи слику у садржај чланка</string>
-    <string name="featured">Користи као препоручену слику</string>
     <string name="blogusername">korisnickoimebloga</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови сервиса</string>

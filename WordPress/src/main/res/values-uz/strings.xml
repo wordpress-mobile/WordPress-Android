@@ -91,7 +91,6 @@ Language: uz
     <string name="username">Foydalanuvchi nomi</string>
     <string name="reader">Rider</string>
     <string name="anonymous">Anonim</string>
-    <string name="featured">Yuz rasm sifatida foydalanish</string>
     <string name="featured_in_post">Postga rasm qo‘shish</string>
     <string name="no_network_title">Netvork mavjud emas</string>
     <string name="width">En</string>

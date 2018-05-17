@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-20 13:26:43+0000
+Translation-Revision-Date: 2018-04-25 14:41:12+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Vytváření webu … Může to trvat několik minut.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Důležité</string>
+    <string name="notification_channel_general_title">Všeobecné</string>
+    <string name="photo_picker_use_photo">Použijte tuto fotku</string>
     <string name="media_preview_title">%1$d z %2$d</string>
     <string name="stock_media_picker_empty_results">Žádné shody</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografie poskytl %s</string>
@@ -55,7 +61,7 @@ Language: cs_CZ
     <string name="reader_list_item_suggestion_remove_desc">smazat</string>
     <string name="photo_picker_thumbnail_desc">Přehrát video</string>
     <string name="reader_cardview_post_play_video_desc">přehrát doporučené video</string>
-    <string name="post_cardview_featured_desc">doporučené</string>
+    <string name="post_cardview_featured_desc">náhledový obrázek</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">Vybrat z WordPress media</string>
@@ -214,7 +220,6 @@ Language: cs_CZ
     <string name="notification_site_creation_step_tagline">Krok 3 ze 4</string>
     <string name="notification_site_creation_step_fetching">Krok 2 ze 4</string>
     <string name="notification_site_creation_step_creating">Krok 1 ze 4</string>
-    <string name="notification_site_creation_title_in_progress">Vytváření webu…</string>
     <string name="notification_site_creation_created">Dotkněte se pro pokračování.</string>
     <string name="notification_site_creation_title_success">Web vytvořen!</string>
     <string name="google_error_timeout">Google delší chvíli nereaguje. Možná byste měli počkat, až budete mít silnější připojení k internetu.</string>
@@ -262,11 +267,13 @@ Language: cs_CZ
     <string name="plugin_installed_failed">Chyba instalace %s</string>
     <string name="plugin_installed_successfully">Instalace byla úspěšná %s</string>
     <string name="plugin_install">Instalovat</string>
+    <string name="site_settings_like_header">To se mi líbí</string>
     <string name="my_site_add_new_site">Přidat novou stránku</string>
     <string name="my_site_create_new_site">Vytvořte nový web pro svůj podnik, časopis nebo osobní blog; nebo připojite existující stránky běžící na WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">Chcete–li získat užitečná oznámení v zařízení z vašeho webu WordPress, musíte nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
     <string name="site_settings_lazy_load_images_summary">Zlepšete rychlost vašeho webu pouze načtením obrázků viditelných na obrazovce. Nové obrázky se načtou těsně předtím, než se projdou do zobrazení. To zabraňuje divákům, aby museli stahovat všechny snímky na stránce najednou, dokonce i ty, které nevidí.</string>
     <string name="site_settings_lazy_load_images">Postupné načítání obrázků \"Lazy–load\"</string>
+    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimalizuje vaše obrázky a načítá je z nejbližších serverů. Pomocí naší globální sítě serverů pro doručování obsahu se zvýší rychlost načítání vašeho webu.</string>
     <string name="site_settings_serve_images_from_our_servers">Načítejte obrázky z našich serverů</string>
     <string name="site_settings_speed_up_your_site">Zrychlete svůj web</string>
     <string name="stats_jetpack_connection_setup_info">Pro použití Stats na tomto WordPress webu bude potřeba nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
@@ -395,6 +402,7 @@ Language: cs_CZ
     <string name="jetpack_disconnect_confirm">Odpojit</string>
     <string name="jetpack_disconnect_confirmation_message">Opravdu chcete odpojit Jetpack od webové stránky?</string>
     <string name="jetpack_disconnect_pref_title">\"Odpojit z WordPress.com\"</string>
+    <string name="site_settings_jetpack_whitelist_description">Do whitelistu můžete přidat IP adresy nebo série IP adres a vyhnout se tak blokování IP adress ze strany Jetpack. Můžete zadat IPv4 a IPv6. Chcete-li určit rozsah, zadejte nízkou hodnotu a vysokou hodnotu oddělenou pomlčkou. Příklad: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Vyžadovat dvoustupňové ověření</string>
     <string name="jetpack_match_wpcom_via_email_title">Spárovat účty pomocí emailu</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Povolit přihlášení pomocí WordPress.com</string>
@@ -441,6 +449,8 @@ Language: cs_CZ
     <string name="notification_settings_category_other">Jiné</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Všechny moje weby</string>
     <string name="notification_settings_category_your_sites">Weby</string>
+    <string name="notification_settings_master_off_message">Pokud vypnete Nastavení oznámení, zakáží se všechna oznámení z této aplikace. Můžete detailně nastavit, jaký typ upozornění chcete obdržet po zapnutí nastavení oznámení.</string>
+    <string name="notification_settings_master_off_title">Chcete–li dostávat oznámení na tomto zařízení, zapněte Nastavení oznámení.</string>
     <string name="notification_settings_master_hint_off">Povolit oznámení</string>
     <string name="notification_settings_master_hint_on">Zakázat oznámení</string>
     <string name="notification_settings_master_status_off">Vypnuto</string>
@@ -461,7 +471,11 @@ Language: cs_CZ
     <string name="error_unknown_post">Příspěvek nebyl nalezen na serveru</string>
     <string name="error_post_does_not_exist">Tento příspěvek už neexistuje</string>
     <string name="error_media_canceled">Nahrávání média bylo zrušeno</string>
+    <string name="error_upload_page_media_param">Při nahrávání médií na tuto stránku došlo k chybě: %s.</string>
+    <string name="error_upload_page_param">Při nahrávání této stránky došlo k chybě: %s.</string>
     <string name="async_promo_link">Jak to funguje?</string>
+    <string name="async_promo_description">Nyní můžete opustit editor a váš příspěvek uloží a zveřejní! Zkuste to!</string>
+    <string name="async_promo_title">Publikuj s důvěrou</string>
     <string name="editor_uploading_post">Příspěvek se nahrává</string>
     <string name="uploading_media">Nahrávám média…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Opravdu? Smazání tohoto příspěvku zruší také nahrávání médií.</string>
@@ -494,8 +508,11 @@ Language: cs_CZ
     <string name="enter_wpcom_password">Zadejte heslo k WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Je vyžadován přihlašovací email</string>
     <string name="password_incorrect">Zdá se, že zadané heslo je nesprávné. Zkontrolujte prosím své údaje a zkuste to znovu.</string>
+    <string name="requesting_otp">Vyžádání ověřovacího kódu pomocí SMS.</string>
+    <string name="enter_verification_code">Téměř hotovo! Zadejte ověřovací kód z aplikace Authenticator.</string>
     <string name="open_mail">Otevřít email</string>
     <string name="next">Další</string>
+    <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí emailové adresy pro správu všech vašich stránek na WordPress.</string>
     <string name="login_promo_text_anytime">Spojte se s oblíbenými stránkami a zapojte se do rozhovoru kdekoli a kdykoliv.</string>
     <string name="login_promo_text_realtime">Sledujte čtenáře z celého světa, kteří čtou a interagují s vaším webem – v reálném čase.</string>
     <string name="image_optimization_promo_title">Zapnout optimalizaci obrázků?</string>
@@ -1473,7 +1490,6 @@ Language: cs_CZ
     <string name="caption">Popis (nepovinné)</string>
     <string name="no_network_title">Síť není dostupná</string>
     <string name="featured_in_post">Vložit obrázek do obsahu příspěvku</string>
-    <string name="featured">Použít jako náhledový obrázek</string>
     <string name="blogusername">Jmémo blogera</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Nahrávám…</string>

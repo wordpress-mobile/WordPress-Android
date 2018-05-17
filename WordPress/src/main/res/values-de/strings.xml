@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-18 11:54:08+0000
+Translation-Revision-Date: 2018-05-04 02:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Website wird erstellt … Dies kann ein paar Minuten dauern.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Wichtig</string>
+    <string name="notification_channel_general_title">Allgemein</string>
+    <string name="photo_picker_use_photo">Dieses Foto verwenden</string>
     <string name="media_preview_title">%1$d von %2$d</string>
     <string name="stock_media_picker_empty_results">Keine Treffer</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotos bereitgestellt von %s</string>
@@ -55,7 +61,6 @@ Language: de
     <string name="reader_list_item_suggestion_remove_desc">löschen</string>
     <string name="photo_picker_thumbnail_desc">Video abspielen</string>
     <string name="reader_cardview_post_play_video_desc">präsentiertes Video abspielen</string>
-    <string name="post_cardview_featured_desc">präsentiert</string>
     <string name="plugin_detail_logo_desc">Plugin–Logo</string>
     <string name="plugin_detail_banner_desc">Plugin–Banner</string>
     <string name="photo_picker_wpmedia_desc">aus WordPress–Medien auswählen</string>
@@ -1540,7 +1545,6 @@ Language: de
     <string name="caption">Bildunterschrift (optional)</string>
     <string name="no_network_title">Kein Netzwerk verfügbar</string>
     <string name="featured_in_post">Bild im Beitragsinhalt verwenden</string>
-    <string name="featured">Als Beitragsbild nutzen</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Lädt hoch…</string>

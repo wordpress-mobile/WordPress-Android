@@ -59,9 +59,6 @@ public class HelpshiftHelper {
 
     public enum Tag {
         ORIGIN_UNKNOWN("origin:unknown"),
-        ORIGIN_LOGIN_SCREEN_WPCOM("origin:wpcom-login-screen"),
-        ORIGIN_LOGIN_SCREEN_SELFHOSTED("origin:wporg-login-screen"),
-        ORIGIN_LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),
         ORIGIN_SIGNUP_SCREEN("origin:signup-screen"),
         ORIGIN_ME_SCREEN_HELP("origin:me-screen-help"),
         ORIGIN_DELETE_SITE("origin:delete-site"),
@@ -374,16 +371,5 @@ public class HelpshiftHelper {
         config.put(Support.CustomMetadataKey, METADATA);
         config.put("showSearchOnNewConversation", true);
         return config;
-    }
-
-    // Deprecated. Used by the old login activities and may be removed with the old code.
-    // 2017.07.30 - Aerych
-    public static Tag chooseHelpshiftLoginTag(boolean isJetpackAuth, boolean isWPComMode) {
-        // Tag assignment:
-        // ORIGIN_LOGIN_SCREEN_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
-        // ORIGIN_LOGIN_SCREEN_WPCOM for when trying to log into a WPCOM site and UI not in forced self-hosted mode
-        // ORIGIN_LOGIN_SCREEN_SELFHOSTED when logging in a selfhosted site
-        return isJetpackAuth ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK
-                : (isWPComMode ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED);
     }
 }

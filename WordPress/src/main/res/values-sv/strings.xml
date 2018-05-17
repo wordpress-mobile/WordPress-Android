@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-10 17:10:08+0000
+Translation-Revision-Date: 2018-04-24 20:05:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Skapar webbplatsen… Det kan ta några minuter.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Viktigt</string>
+    <string name="notification_channel_general_title">Allmänt</string>
+    <string name="photo_picker_use_photo">Använd detta foto</string>
     <string name="media_preview_title">%1$d av %2$d</string>
     <string name="stock_media_picker_empty_results">Inga träffar</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografrier från %s</string>
@@ -55,7 +61,7 @@ Language: sv_SE
     <string name="reader_list_item_suggestion_remove_desc">ta bort</string>
     <string name="photo_picker_thumbnail_desc">Spela video</string>
     <string name="reader_cardview_post_play_video_desc">spela utvald video</string>
-    <string name="post_cardview_featured_desc">utvald</string>
+    <string name="post_cardview_featured_desc">utvald bild</string>
     <string name="plugin_detail_logo_desc">tilläggets logga</string>
     <string name="plugin_detail_banner_desc">tilläggets banner–bild</string>
     <string name="photo_picker_wpmedia_desc">välj från WordPress mediakatalog</string>
@@ -214,7 +220,6 @@ Language: sv_SE
     <string name="notification_site_creation_step_tagline">Steg 3 av 4</string>
     <string name="notification_site_creation_step_fetching">Steg 2 av 4</string>
     <string name="notification_site_creation_step_creating">Steg 1 av 4</string>
-    <string name="notification_site_creation_title_in_progress">Skapar webbplats…</string>
     <string name="notification_site_creation_created">Knacka för att fortsätta.</string>
     <string name="notification_site_creation_title_success">Webbplats skapad!</string>
     <string name="google_error_timeout">Det tog för lång tid för Google att svara. Du kan behöva vänta tills du har en stabilare internetuppkoppling.</string>
@@ -1545,7 +1550,6 @@ Language: sv_SE
     <string name="caption">Bildtext (valfritt)</string>
     <string name="no_network_title">Inget nätverk tillgängligt</string>
     <string name="featured_in_post">Inkludera bild i inlägget</string>
-    <string name="featured">Använd som utvald bild</string>
     <string name="blogusername">användarnamn</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Laddar upp…</string>

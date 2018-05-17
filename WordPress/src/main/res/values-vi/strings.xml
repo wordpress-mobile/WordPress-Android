@@ -747,7 +747,6 @@ Language: vi_VN
     <string name="no_network_title">Không có mạng</string>
     <string name="width">Chiều rộng</string>
     <string name="posts">Bài viết</string>
-    <string name="featured">Sử dụng như là hình ảnh đặc trưng</string>
     <string name="anonymous">Ẩn danh</string>
     <string name="blogusername">tên người dùng blog</string>
     <string name="link_enter_url">URL</string>
