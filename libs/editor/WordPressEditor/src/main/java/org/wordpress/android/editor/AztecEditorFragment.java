@@ -70,6 +70,7 @@ import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
+import org.wordpress.aztec.AztecText.EditorHasChanges;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.IHistoryListener;
@@ -1037,6 +1038,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
+    }
+
+    @Override public boolean shouldLoadContentFromEditor() {
+        return mContent.hasChanges() != EditorHasChanges.NO_CHANGES;
     }
 
     @Override
