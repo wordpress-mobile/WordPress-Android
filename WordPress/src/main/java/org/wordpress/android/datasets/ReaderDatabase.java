@@ -20,7 +20,8 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 135;
+    private static final int DB_VERSION = 136;
+    private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 135; // do not change this value
 
     /*
      * version history
@@ -88,6 +89,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 133 - no schema changes, simply clearing to accommodate video card_type
      * 134 - added tbl_posts.use_excerpt
      * 135 - added tbl_posts.is_bookmarked
+     * 136 - added support for migration scripts
      */
 
     /*
@@ -144,12 +146,29 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         createAllTables(db);
     }
 
+    @SuppressWarnings({"FallThrough"})
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // for now just reset the db when upgrading, future versions may want to avoid this
-        // and modify table structures, etc., on upgrade while preserving data
-        AppLog.i(T.READER, "Upgrading database from version " + oldVersion + " to version " + newVersion);
-        reset(db);
+        AppLog.i(T.READER,
+                "Upgrading database from version " + oldVersion + " to version " + newVersion + " IN PROGRESS");
+        int currentVersion = oldVersion;
+        if (currentVersion <= DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT) {
+            // versions 0 - 135 didn't support migration scripts, so we can safely drop and recreate all tables
+            reset(db);
+            currentVersion = DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT;
+        }
+
+        switch (currentVersion) {
+            case 135:
+                // no-op
+                currentVersion++;
+        }
+        if (currentVersion != newVersion) {
+            throw new RuntimeException(
+                    "Migration from version " + oldVersion + " to version " + newVersion + " FAILED. ");
+        }
+        AppLog.i(T.READER,
+                "Upgrading database from version " + oldVersion + " to version " + newVersion + " SUCCEEDED");
     }
 
     @Override
