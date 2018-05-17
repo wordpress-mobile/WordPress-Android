@@ -31,7 +31,7 @@ val SiteModel.stateLogInformation: String
         val apiString = if (isUsingWpComRestApi) "REST" else "XML-RPC"
         return when {
             isWPCom -> "wpcom"
-            isJetpackConnected -> "jetpack_connected($apiString)"
+            isJetpackConnected -> "jetpack_connected - $apiString"
             isJetpackInstalled -> "jetpack_installed"
             else -> "self_hosted"
         }

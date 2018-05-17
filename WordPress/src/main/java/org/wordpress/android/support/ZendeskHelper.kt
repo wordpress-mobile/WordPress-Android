@@ -21,7 +21,9 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.logInformation
+import org.wordpress.android.util.stateLogInformation
 import java.util.Locale
 
 private val zendeskInstance: ZendeskConfig
@@ -110,12 +112,18 @@ private fun configureZendesk(
 ) {
     zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
     zendeskInstance.ticketFormId = TicketFieldIds.form
+    val currentSiteInformation = if (selectedSite != null) {
+        "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
+    } else {
+        "not_selected"
+    }
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites)),
+            CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
-            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
-            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
+            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
+            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context))
     )
 }
 
@@ -219,7 +227,7 @@ private object TicketFieldIds {
     const val form = 360000010286L
     const val logs = 22871957L
     const val networkInformation = 360000086966L
-    const val siteState = 360000103103L // TODO("implement")
+    const val currentSite = 360000103103L
 }
 
 object ZendeskExtraTags {
