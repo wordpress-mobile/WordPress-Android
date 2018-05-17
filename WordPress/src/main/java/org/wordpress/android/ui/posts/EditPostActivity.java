@@ -1049,9 +1049,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         hidePhotoPicker();
+        boolean userCanPublishPosts = userCanPublishPosts();
 
-        if (itemId == R.id.menu_save_post) {
-            if (AppPrefs.isAsyncPromoRequired() && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
+        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts)) {
+            if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts
+                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
                 showAsyncPromoDialog();
             } else {
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
@@ -1148,7 +1150,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // if post is a draft, first make sure to confirm the PUBLISH action, in case
         // the user tapped on it accidentally
         PostStatus status = PostStatus.fromPost(mPost);
-        if ((status == PostStatus.PUBLISHED || status == PostStatus.UNKNOWN) && mPost.isLocalDraft()) {
+        if (userCanPublishPosts() && (status == PostStatus.PUBLISHED || status == PostStatus.UNKNOWN)
+            && mPost.isLocalDraft()) {
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
@@ -1253,9 +1256,14 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
+                final String newContent;
+                if (mEditorFragment.shouldLoadContentFromEditor()) {
+                    newContent = (String) mEditorFragment.getContent();
+                } else {
+                    newContent = mPost.getContent();
+                }
                 postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
-                                                   (String) mEditorFragment.getContent());
+                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(), newContent);
             } else {
                 // TODO: Remove when legacy editor is dropped
                 postTitleOrContentChanged = updatePostContent(isAutosave);
@@ -3303,40 +3311,13 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
         if (post != null && post.getId() == mPost.getId()) {
-            if (event.isError()) {
-                UploadUtils.showSnackbarError(findViewById(R.id.editor_activity), event.error.message);
-                return;
-            }
-
-            mPost = post;
-            mIsNewPost = false;
-            invalidateOptionsMenu();
-            switch (PostStatus.fromPost(post)) {
-                case PUBLISHED:
-                    // here show snackbar saying it was uploaded
-                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
-                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity), messageRes,
-                            R.string.button_view, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // jump to Editor Preview mode to show this Post
-                                    ActivityLauncher.browsePostOrPage(EditPostActivity.this, mSite, post);
-                                }
-                            });
-                    break;
-                case DRAFT:
-                default:
-                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity),
-                            R.string.editor_draft_saved_online,
-                            R.string.button_publish,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils
-                                            .publishPost(EditPostActivity.this, post, mSite, mDispatcher);
-                                }
-                            });
-                    break;
+            View snackbarAttachView = findViewById(R.id.editor_activity);
+            UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
+                    event.isError() ? event.error.message : null, getSite(), mDispatcher);
+            if (!event.isError()) {
+                mPost = post;
+                mIsNewPost = false;
+                invalidateOptionsMenu();
             }
         }
     }

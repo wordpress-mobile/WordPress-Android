@@ -1187,6 +1187,10 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         return false;
     }
 
+    @Override public boolean shouldLoadContentFromEditor() {
+        return true;
+    }
+
     @Override
     public void removeAllFailedMediaUploads() { }
 
