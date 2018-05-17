@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -13,6 +15,7 @@ import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -31,6 +34,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -57,6 +61,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mOptimizedVideo;
     private DetailListPreference mVideoWidthPref;
     private DetailListPreference mVideoEncorderBitratePref;
+    private PreferenceScreen mPrivacySettings;
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
@@ -117,6 +122,8 @@ public class AppSettingsFragment extends PreferenceFragment
         mVideoEncorderBitratePref =
                 (DetailListPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+        mPrivacySettings = (PreferenceScreen) WPPrefUtils
+                .getPrefAndSetClickListener(this, R.string.pref_key_privacy_settings, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -218,6 +225,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
             return handleOssPreferenceClick();
+        } else if (preference == mPrivacySettings) {
+            setupPrivacySettings();
         }
 
         return false;
@@ -468,5 +477,32 @@ public class AppSettingsFragment extends PreferenceFragment
         pref.setValue(value);
         pref.setSummary(summary);
         pref.refreshAdapter();
+    }
+
+    private void setupPrivacySettings() {
+        if (mPrivacySettings == null || !isAdded()) {
+            return;
+        }
+        String title = getString(R.string.preference_privacy_settings);
+        Dialog dialog = mPrivacySettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+    }
+
+    private void setupPreferenceList(ListView prefList, Resources res) {
+        if (prefList == null || res == null) {
+            return;
+        }
+
+        // customize list dividers
+        //noinspection deprecation
+        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
+        prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
+        // remove footer divider bar
+        prefList.setFooterDividersEnabled(false);
+        //noinspection deprecation
+        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
     }
 }

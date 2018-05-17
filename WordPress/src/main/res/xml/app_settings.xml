@@ -11,13 +11,49 @@
         android:layout="@layout/wp_preference_layout"
         android:title="@string/interface_language"/>
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="@string/pref_key_send_usage"
-        android:layout="@layout/wp_preference_layout"
-        android:summary="@string/preference_send_usage_stats_summary"
-        android:title="@string/preference_send_usage_stats"
-        android:widgetLayout="@layout/wp_preference_switch"/>
+    <PreferenceScreen
+        android:id="@+id/pref_privacy_settings"
+        android:key="@string/pref_key_privacy_settings"
+        android:title="@string/preference_privacy_settings">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_send_usage"
+            android:layout="@layout/wp_preference_layout"
+            android:summary="@string/preference_send_usage_stats_summary"
+            android:title="@string/preference_send_usage_stats"
+            android:widgetLayout="@layout/wp_preference_switch"
+            app:preficon="@drawable/ic_stats_alt_grey_24dp"
+            />
+
+        <org.wordpress.android.ui.prefs.LearnMorePreference
+            android:id="@+id/pref_cookie_policy_learn_more"
+            android:key="@string/pref_key_cookie_policy_learn_more"
+            android:title="@string/cookie_policy_learn_more_header"
+            app:caption="@string/cookie_policy_learn_more_caption"
+            app:url="https://www.automattic.com/cookies"
+            app:preficon="@drawable/ic_info_grey_800_32dp"
+            app:useCustomJsFormatting="true"/>
+
+        <org.wordpress.android.ui.prefs.LearnMorePreference
+            android:id="@+id/pref_privacy_policy_learn_more"
+            android:key="@string/pref_key_privacy_policy_learn_more"
+            android:title="@string/privacy_policy_learn_more_header"
+            app:caption="@string/privacy_policy_learn_more_caption"
+            app:url="https://www.automattic.com/privacy"
+            app:preficon="@drawable/ic_user_circle_grey_24dp"
+            app:useCustomJsFormatting="true"/>
+
+        <org.wordpress.android.ui.prefs.LearnMorePreference
+            android:id="@+id/pref_third_party_policy_learn_more"
+            android:key="@string/pref_key_third_party_policy_learn_more"
+            android:title="@string/third_party_policy_learn_more_header"
+            app:caption="@string/third_party_policy_learn_more_caption"
+            app:url="https://www.automattic.com/cookies"
+            app:preficon="@drawable/ic_bell_alert_green_24dp"
+            app:useCustomJsFormatting="true"/>
+
+    </PreferenceScreen>
 
     <Preference
         android:key="@string/pref_key_device_settings"
