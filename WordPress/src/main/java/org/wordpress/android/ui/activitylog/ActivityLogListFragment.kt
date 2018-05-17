@@ -67,7 +67,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.eventsLiveData.observe(this, Observer { listState ->
+        viewModel.events.observe(this, Observer { listState ->
             listState?.let {
                 setEvents(listState.data)
                 refreshProgressBars(listState)

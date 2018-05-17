@@ -17,8 +17,8 @@ class ActivityLogViewModel @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore
 ) : ViewModel() {
-    val eventsLiveData = ListStateLiveDataDelegate<ActivityLogListItemViewModel>()
-    private var events: ListState<ActivityLogListItemViewModel> by eventsLiveData
+    val events = ListStateLiveDataDelegate<ActivityLogListItemViewModel>()
+    var eventListState: ListState<ActivityLogListItemViewModel> by events
 
     private var isStarted = false
 
@@ -49,7 +49,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun reloadEvents() {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
         val items = eventList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
-        events = ListState.Ready(items)
+        eventListState = ListState.Ready(items)
     }
 
     fun pullToRefresh() {
@@ -57,8 +57,8 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun fetchEvents(loadMore: Boolean) {
-        if (events.shouldFetch(loadMore)) {
-            events = ListState.Loading(events, loadMore)
+        if (eventListState.shouldFetch(loadMore)) {
+            eventListState = ListState.Loading(eventListState, loadMore)
             val payload = ActivityLogStore.FetchActivityLogPayload(site, loadMore)
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
         }
@@ -74,7 +74,7 @@ class ActivityLogViewModel @Inject constructor(
     @SuppressWarnings("unused")
     fun onActivityLogFetched(event: OnActivityLogFetched) {
         if (event.isError) {
-            events = ListState.Error(events, event.error.message)
+            eventListState = ListState.Error(eventListState, event.error.message)
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
             return
         }
@@ -82,7 +82,7 @@ class ActivityLogViewModel @Inject constructor(
         if (event.rowsAffected > 0) {
             val eventList = activityLogStore.getActivityLogForSite(site, false)
             val items = eventList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
-            events = ListState.Success(items, event.canLoadMore)
+            eventListState = ListState.Success(items, event.canLoadMore)
         }
     }
 }
