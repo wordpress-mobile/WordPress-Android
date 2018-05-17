@@ -90,7 +90,7 @@ class ActivityLogStore
             emitChange(OnRewindStatusFetched(payload.error, action))
         } else {
             if (payload.rewindStatusModelResponse != null) {
-                activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
+                activityLogSqlUtils.replaceRewindStatus(payload.site, payload.rewindStatusModelResponse)
             }
             emitChange(OnRewindStatusFetched(action))
         }
