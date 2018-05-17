@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -100,7 +100,7 @@ public class CommentsActivity extends AppCompatActivity
             CommentsListFragment commentsListFragment = new CommentsListFragment();
             // initialize comment status filter first time
             commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                                 .add(R.id.layout_fragment_container, commentsListFragment,
                                      getString(R.string.fragment_tag_comment_list))
                                 .commitAllowingStateLoss();
@@ -128,8 +128,8 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -142,7 +142,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     private CommentsListFragment getListFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_comment_list));
         if (fragment == null) {
             return null;
@@ -155,7 +155,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     private void showReaderFragment(long remoteBlogId, long postId) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
         Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
