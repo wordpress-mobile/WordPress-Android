@@ -54,12 +54,15 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -561,6 +564,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
         int count = 0;
+
+        if (mSubscriptionCount > 0) {
+            Collections.sort(subscriptions, new Comparator<SubscriptionModel>() {
+                @Override public int compare(SubscriptionModel o1, SubscriptionModel o2) {
+                    return StringUtils.compareIgnoreCase(o1.getBlogName(), o2.getBlogName());
+                }
+            });
+        }
 
         for (final SubscriptionModel subscription : subscriptions) {
             if (context == null) {
