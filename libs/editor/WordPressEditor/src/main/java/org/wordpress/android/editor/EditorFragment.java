@@ -2,8 +2,6 @@ package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
@@ -18,6 +16,8 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
