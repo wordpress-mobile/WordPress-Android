@@ -10,12 +10,29 @@ import com.yarolegovich.wellsql.core.TableClass;
 
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
-    private Class<? extends Identifiable> mStoreClass;
+    private List<Class<? extends Identifiable>> mStoreClassList;
 
     public SingleStoreWellSqlConfigForTests(Context context, Class<? extends Identifiable> token) {
         super(context);
-        mStoreClass = token;
+        mStoreClassList = new ArrayList<>();
+        mStoreClassList.add(token);
+    }
+
+    public SingleStoreWellSqlConfigForTests(Context context, Class<? extends Identifiable> token,
+                                            @AddOn String... addOns) {
+        super(context, addOns);
+        mStoreClassList = new ArrayList<>();
+        mStoreClassList.add(token);
+    }
+
+    public SingleStoreWellSqlConfigForTests(Context context, List<Class<? extends Identifiable>> tokens,
+                                            @AddOn String... addOns) {
+        super(context, addOns);
+        mStoreClassList = tokens;
     }
 
     @Override
@@ -25,7 +42,9 @@ public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
 
     @Override
     public void onCreate(SQLiteDatabase db, WellTableManager helper) {
-        helper.createTable(mStoreClass);
+        for (Class<? extends Identifiable> clazz : mStoreClassList) {
+            helper.createTable(clazz);
+        }
     }
 
     /**
@@ -33,8 +52,10 @@ public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
      */
     public void reset() {
         SQLiteDatabase db = WellSql.giveMeWritableDb();
-        TableClass table = getTable(mStoreClass);
-        db.execSQL("DROP TABLE " + table.getTableName());
-        db.execSQL(table.createStatement());
+        for (Class<? extends Identifiable> clazz : mStoreClassList) {
+            TableClass table = getTable(clazz);
+            db.execSQL("DROP TABLE " + table.getTableName());
+            db.execSQL(table.createStatement());
+        }
     }
 }
