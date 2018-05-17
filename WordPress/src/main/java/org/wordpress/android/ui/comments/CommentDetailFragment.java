@@ -240,22 +240,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
-        mTxtStatus = (TextView) view.findViewById(R.id.text_status);
-        mTxtContent = (TextView) view.findViewById(R.id.text_content);
+        mTxtStatus = view.findViewById(R.id.text_status);
+        mTxtContent = view.findViewById(R.id.text_content);
 
         //noinspection InflateParams
         mLayoutButtons = (ViewGroup) inflater.inflate(R.layout.comment_action_footer, null, false);
         mBtnLikeComment = mLayoutButtons.findViewById(R.id.btn_like);
-        mBtnLikeIcon = (ImageView) mLayoutButtons.findViewById(R.id.btn_like_icon);
-        mBtnLikeTextView = (TextView) mLayoutButtons.findViewById(R.id.btn_like_text);
+        mBtnLikeIcon = mLayoutButtons.findViewById(R.id.btn_like_icon);
+        mBtnLikeTextView = mLayoutButtons.findViewById(R.id.btn_like_text);
         mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
-        mBtnModerateIcon = (ImageView) mLayoutButtons.findViewById(R.id.btn_moderate_icon);
-        mBtnModerateTextView = (TextView) mLayoutButtons.findViewById(R.id.btn_moderate_text);
+        mBtnModerateIcon = mLayoutButtons.findViewById(R.id.btn_moderate_icon);
+        mBtnModerateTextView = mLayoutButtons.findViewById(R.id.btn_moderate_text);
         mBtnEditComment = mLayoutButtons.findViewById(R.id.btn_edit);
         mBtnSpamComment = mLayoutButtons.findViewById(R.id.btn_spam);
-        mBtnSpamCommentText = (TextView) mLayoutButtons.findViewById(R.id.btn_spam_text);
+        mBtnSpamCommentText = mLayoutButtons.findViewById(R.id.btn_spam_text);
         mBtnTrashComment = mLayoutButtons.findViewById(R.id.btn_trash);
-        mBtnTrashCommentText = (TextView) mLayoutButtons.findViewById(R.id.btn_trash_text);
+        mBtnTrashCommentText = mLayoutButtons.findViewById(R.id.btn_trash_text);
 
         // As we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
         // CommentDetailFragment itself:
@@ -264,10 +264,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // to populate it with. Otherwise, we could be searching and finding the container for _another fragment/page
         // in the viewpager_, which would cause strange results (changing the views for a different fragment than we
         // intended to).
-        mCommentContentLayout = (ViewGroup) view.findViewById(R.id.comment_content_container);
+        mCommentContentLayout = view.findViewById(R.id.comment_content_container);
 
-        mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
-        mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
+        mLayoutReply = view.findViewById(R.id.layout_comment_box);
+        mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
         setReplyUniqueId();
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
@@ -598,7 +598,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // these two views contain all the other views except the progress bar
-        final ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
+        final ScrollView scrollView = getView().findViewById(R.id.scroll_view);
         final View layoutBottom = getView().findViewById(R.id.layout_bottom);
 
         // hide container views when comment is null (will happen when opened from a notification)
@@ -641,9 +641,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mCommentContentLayout.addView(mLayoutButtons);
         }
 
-        final WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
-        final TextView txtName = (TextView) getView().findViewById(R.id.text_name);
-        final TextView txtDate = (TextView) getView().findViewById(R.id.text_date);
+        final WPNetworkImageView imgAvatar = getView().findViewById(R.id.image_avatar);
+        final TextView txtName = getView().findViewById(R.id.text_name);
+        final TextView txtDate = getView().findViewById(R.id.text_date);
 
         txtName.setText(mComment.getAuthorName() == null ? getString(R.string.anonymous) : mComment.getAuthorName());
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(mComment.getDatePublished()),
@@ -735,7 +735,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        final TextView txtPostTitle = (TextView) getView().findViewById(R.id.text_post_title);
+        final TextView txtPostTitle = getView().findViewById(R.id.text_post_title);
         boolean postExists = ReaderPostTable.postExists(site.getSiteId(), postId);
 
         // the post this comment is on can only be requested if this is a .com blog or a
@@ -887,7 +887,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mEditReply.setEnabled(false);
         EditTextUtils.hideSoftInput(mEditReply);
         mSubmitReplyBtn.setVisibility(View.GONE);
-        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
+        final ProgressBar progress = getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
         mIsSubmittingReply = true;
@@ -986,7 +986,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
-                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_grey_24dp);
+                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_24dp);
+                mBtnModerateIcon.setColorFilter(ContextCompat.getColor(mBtnModerateIcon.getContext(), R.color.grey),
+                        android.graphics.PorterDuff.Mode.SRC_IN);
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
