@@ -310,7 +310,8 @@ public class UploadUtils {
                         UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online);
                     }
                 } else {
-                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                    int messageRes = post.isPage() ? R.string.page_published
+                            : (userCanPublish ? R.string.post_published : R.string.post_submitted);
                     UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
                                                           R.string.button_view, new View.OnClickListener() {
                                 @Override
