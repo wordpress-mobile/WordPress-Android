@@ -24,13 +24,15 @@ val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse.ActivityRespons
         "OK",
         "activity123")
 val ACTIVITY_RESPONSE_PAGE = ActivityLogRestClient.ActivitiesResponse.Page(listOf(ACTIVITY_RESPONSE))
-val RESTORE_RESPONSE = ActivityLogRestClient.RewindStatusResponse.RestoreStatusResponse(rewind_id = "123",
-        status = RewindStatusModel.RestoreStatus.Status.RUNNING.value,
+val REWIND_RESPONSE = ActivityLogRestClient.RewindStatusResponse.Rewind(rewindId = "123",
+        status = RewindStatusModel.Rewind.Status.RUNNING.value,
         progress = 10,
-        message = "running",
-        error_code = null,
-        reason = "nit")
-val REWIND_RESPONSE = ActivityLogRestClient.RewindStatusResponse("reason",
-        RewindStatusModel.State.ACTIVE.value,
-        Date(),
-        RESTORE_RESPONSE)
+        reason = "nit",
+        startedAt = Date())
+val REWIND_STATUS_RESPONSE = ActivityLogRestClient.RewindStatusResponse(
+        state = RewindStatusModel.State.ACTIVE.value,
+        reason = "reason",
+        last_updated = Date(),
+        can_autoconfigure = true,
+        credentials = listOf(),
+        rewind = REWIND_RESPONSE)

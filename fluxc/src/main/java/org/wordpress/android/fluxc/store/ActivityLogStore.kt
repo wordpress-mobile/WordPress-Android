@@ -90,7 +90,7 @@ class ActivityLogStore
             emitChange(OnRewindStatusFetched(payload.error, action))
         } else {
             if (payload.rewindStatusModelResponse != null) {
-                activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
+                activityLogSqlUtils.replaceRewindStatus(payload.site, payload.rewindStatusModelResponse)
             }
             emitChange(OnRewindStatusFetched(action))
         }
@@ -197,11 +197,8 @@ class ActivityLogStore
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
-        MISSING_STATE,
         INVALID_REWIND_STATE,
-        MISSING_RESTORE_ID,
-        MISSING_RESTORE_STATUS,
-        INVALID_RESTORE_STATUS
+        MISSING_REWIND_ID
     }
 
     class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError

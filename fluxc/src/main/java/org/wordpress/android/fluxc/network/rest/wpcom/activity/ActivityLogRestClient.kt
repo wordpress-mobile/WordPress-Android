@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -163,30 +164,33 @@ constructor(
 
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
-        val rewindStatusValue = response.state ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_STATE)
-        val rewindStatus = RewindStatusModel.State.fromValue(rewindStatusValue)
-                ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_REWIND_STATE)
-        val restoreStatusModel = response.restoreResponse?.let {
-            val rewindId = it.rewind_id
-                    ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_ID)
+        val stateValue = response.state
+        val state = RewindStatusModel.State.fromValue(stateValue)
+                ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESPONSE)
+        val rewindModel = response.rewind?.let {
+            val rewindId = it.rewindId
+                    ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_REWIND_ID)
             val restoreStatusValue = it.status
-                    ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
-            val restoreStatus = RewindStatusModel.RestoreStatus.Status.fromValue(restoreStatusValue)
-                    ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
-            RewindStatusModel.RestoreStatus(
-                    id = rewindId,
+            val restoreStatus = RewindStatusModel.Rewind.Status.fromValue(restoreStatusValue)
+                    ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_REWIND_STATE)
+            RewindStatusModel.Rewind(
+                    rewindId = rewindId,
                     status = restoreStatus,
                     progress = it.progress,
-                    message = it.message,
-                    errorCode = it.error_code,
-                    failureReason = it.reason
+                    startedAt = it.startedAt,
+                    reason = it.reason
             )
         }
 
         val rewindStatusModel = RewindStatusModel(
-                state = rewindStatus,
+                state = state,
                 reason = response.reason,
-                restore = restoreStatusModel
+                lastUpdated = response.last_updated,
+                canAutoconfigure = response.can_autoconfigure,
+                credentials = response.credentials?.map {
+                    Credentials(it.type, it.role, it.host, it.port, it.still_valid)
+                },
+                rewind = rewindModel
         )
         return FetchedRewindStatePayload(rewindStatusModel, site)
     }
@@ -246,17 +250,26 @@ constructor(
     }
 
     data class RewindStatusResponse(
-        val reason: String,
-        val state: String?,
+        val state: String,
+        val reason: String?,
         val last_updated: Date,
-        val restoreResponse: RestoreStatusResponse?
+        val can_autoconfigure: Boolean?,
+        val credentials: List<Credentials>?,
+        val rewind: Rewind?
     ) {
-        data class RestoreStatusResponse(
-            val rewind_id: String?,
-            val status: String?,
-            val progress: Int = 0,
-            val message: String?,
-            val error_code: String?,
+        data class Credentials(
+            val type: String,
+            val role: String,
+            val host: String?,
+            val port: Int?,
+            val still_valid: Boolean
+        )
+
+        data class Rewind(
+            val rewindId: String?,
+            val status: String,
+            val startedAt: Date,
+            val progress: Int,
             val reason: String?
         )
     }

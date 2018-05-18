@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.ActivityLogTable
+import com.wellsql.generated.RewindStatusCredentialsTable
 import com.wellsql.generated.RewindStatusTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
@@ -11,6 +12,7 @@ import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -55,32 +57,44 @@ class ActivityLogSqlUtils
         return WellSql.delete(ActivityLogBuilder::class.java).execute()
     }
 
-    fun insertOrUpdateRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
-        val existingRewindStatus = getRewindStatusBuilder(site)
+    fun replaceRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
         val rewindStatusBuilder = rewindStatusModel.toBuilder(site)
-        if (existingRewindStatus != null) {
-            WellSql.update(RewindStatusBuilder::class.java)
-                    .where()
-                    .equals(RewindStatusTable.ID, existingRewindStatus.id)
-                    .equals(RewindStatusTable.LOCAL_SITE_ID, existingRewindStatus.localSiteId)
-                    .endWhere()
-                    .put(rewindStatusBuilder, UpdateAllExceptId<RewindStatusBuilder>(RewindStatusBuilder::class.java))
-        } else {
-            WellSql.insert(rewindStatusBuilder)
-        }
+        WellSql.delete(RewindStatusBuilder::class.java)
+                .where()
+                .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+        WellSql.delete(CredentialsBuilder::class.java)
+                .where()
+                .equals(RewindStatusCredentialsTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+        WellSql.insert(rewindStatusBuilder).execute()
+        WellSql.insert(rewindStatusModel.credentials?.map { it.toBuilder(rewindStatusBuilder.id, site) } ?: listOf())
+                .execute()
     }
 
     fun getRewindStatusForSite(site: SiteModel): RewindStatusModel? {
-        return getRewindStatusBuilder(site)?.build()
+        val rewindStatusBuilder = getRewindStatusBuilder(site)
+        val credentials = rewindStatusBuilder?.id?.let { getCredentialsBuilder(it) }
+        return rewindStatusBuilder?.build(credentials?.map { it.build() })
     }
 
     private fun getRewindStatusBuilder(site: SiteModel): RewindStatusBuilder? {
         return WellSql.select(RewindStatusBuilder::class.java)
                 .where()
-                .equals(ActivityLogTable.LOCAL_SITE_ID, site.id)
+                .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
                 .endWhere()
                 .asModel
                 .firstOrNull()
+    }
+
+    private fun getCredentialsBuilder(rewindId: Int): List<CredentialsBuilder> {
+        return WellSql.select(CredentialsBuilder::class.java)
+                .where()
+                .equals(RewindStatusCredentialsTable.REWIND_STATE_ID, rewindId)
+                .endWhere()
+                .asModel
     }
 
     private fun ActivityLogModel.toBuilder(site: SiteModel): ActivityLogBuilder {
@@ -109,14 +123,28 @@ class ActivityLogSqlUtils
         return RewindStatusBuilder(
                 localSiteId = site.id,
                 remoteSiteId = site.siteId,
-                rewindState = this.state.value,
+                state = this.state.value,
+                lastUpdated = this.lastUpdated.time,
                 reason = this.reason,
-                restoreId = this.restore?.id,
-                restoreFailureReason = this.restore?.failureReason,
-                restoreMessage = this.restore?.message,
-                restoreProgress = this.restore?.progress,
-                restoreErrorCode = this.restore?.errorCode,
-                restoreState = this.restore?.status?.value
+                canAutoconfigure = this.canAutoconfigure,
+                rewindId = this.rewind?.rewindId,
+                rewindStatus = this.rewind?.status?.value,
+                rewindStartedAt = this.rewind?.startedAt?.time,
+                rewindProgress = this.rewind?.progress,
+                rewindReason = this.rewind?.reason
+        )
+    }
+
+    private fun Credentials.toBuilder(rewindStatusId: Int, site: SiteModel): CredentialsBuilder {
+        return CredentialsBuilder(
+                localSiteId = site.id,
+                remoteSiteId = site.siteId,
+                rewindStateId = rewindStatusId,
+                type = this.type,
+                role = this.role,
+                host = this.host,
+                port = this.port,
+                stillValid = this.stillValid
         )
     }
 
@@ -179,16 +207,17 @@ class ActivityLogSqlUtils
         @Column private var mId: Int = -1,
         @Column var localSiteId: Int,
         @Column var remoteSiteId: Long,
-        @Column var rewindState: String? = null,
+        @Column var state: String,
+        @Column var lastUpdated: Long,
         @Column var reason: String? = null,
-        @Column var restoreId: String? = null,
-        @Column var restoreState: String? = null,
-        @Column var restoreProgress: Int? = null,
-        @Column var restoreMessage: String? = null,
-        @Column var restoreErrorCode: String? = null,
-        @Column var restoreFailureReason: String? = null
+        @Column var canAutoconfigure: Boolean? = null,
+        @Column var rewindId: String? = null,
+        @Column var rewindStatus: String? = null,
+        @Column var rewindStartedAt: Long? = null,
+        @Column var rewindProgress: Int? = null,
+        @Column var rewindReason: String? = null
     ) : Identifiable {
-        constructor() : this(-1, 0, 0)
+        constructor() : this(-1, 0, 0, "", 0)
 
         override fun setId(id: Int) {
             this.mId = id
@@ -196,17 +225,46 @@ class ActivityLogSqlUtils
 
         override fun getId() = mId
 
-        fun build(): RewindStatusModel {
-            val restoreStatus = RewindStatusModel.RestoreStatus.build(
-                    restoreId,
-                    restoreState,
-                    restoreProgress,
-                    restoreMessage,
-                    restoreErrorCode,
-                    restoreFailureReason
+        fun build(credentials: List<Credentials>?): RewindStatusModel {
+            val restoreStatus = RewindStatusModel.Rewind.build(
+                    rewindId,
+                    rewindStatus,
+                    rewindStartedAt,
+                    rewindProgress,
+                    rewindReason
             )
-            return RewindStatusModel(rewindState?.let { RewindStatusModel.State.fromValue(it) }
-                    ?: RewindStatusModel.State.UNKNOWN, reason, restoreStatus)
+            return RewindStatusModel(
+                    RewindStatusModel.State.fromValue(state) ?: RewindStatusModel.State.UNKNOWN,
+                    reason,
+                    Date(lastUpdated),
+                    canAutoconfigure,
+                    credentials,
+                    restoreStatus)
+        }
+    }
+
+    @Table(name = "RewindStatusCredentials")
+    data class CredentialsBuilder(
+        @PrimaryKey @Column private var mId: Int = -1,
+        @Column var localSiteId: Int,
+        @Column var remoteSiteId: Long,
+        @Column var rewindStateId: Int,
+        @Column var type: String,
+        @Column var role: String,
+        @Column var stillValid: Boolean,
+        @Column var host: String? = null,
+        @Column var port: Int? = null
+    ) : Identifiable {
+        constructor() : this(-1, 0, 0, 0, "", "", false)
+
+        override fun setId(id: Int) {
+            this.mId = id
+        }
+
+        override fun getId() = mId
+
+        fun build(): Credentials {
+            return Credentials(type, role, host, port, stillValid)
         }
     }
 }
