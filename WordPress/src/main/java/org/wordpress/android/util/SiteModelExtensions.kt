@@ -1,17 +1,17 @@
 package org.wordpress.android.util
 
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 
-val SiteModel.logInformation: String
-    get() {
-        val usernameStr = if (username.isNullOrEmpty()) username else "NO"
-        val extraStr = if (isWPCom) {
-            " wp.com account: $usernameStr blogId: $siteId plan: $planShortName ($planId)"
-        } else {
-            " jetpack: $jetpackLogInformation"
-        }
-        return "<Blog Name: ${SiteUtils.getSiteNameOrHomeURL(this)} URL: $url XML-RPC: $xmlRpcUrl$extraStr>"
+fun SiteModel.logInformation(currentUserAccount: AccountModel?): String {
+    val usernameStr = if (!currentUserAccount?.userName.isNullOrEmpty()) currentUserAccount?.userName else "NO"
+    val extraStr = if (isWPCom) {
+        " wp.com account: $usernameStr blogId: $siteId plan: $planShortName ($planId)"
+    } else {
+        " jetpack: $jetpackLogInformation"
     }
+    return "<Blog Name: ${SiteUtils.getSiteNameOrHomeURL(this)} URL: $url XML-RPC: $xmlRpcUrl$extraStr>"
+}
 
 val SiteModel.jetpackLogInformation: String
     get() {

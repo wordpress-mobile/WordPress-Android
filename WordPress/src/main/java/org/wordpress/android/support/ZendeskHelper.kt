@@ -14,6 +14,7 @@ import com.zendesk.sdk.network.impl.ZendeskConfig
 import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -117,9 +118,10 @@ private fun configureZendesk(
     } else {
         "not_selected"
     }
+    val bloginf = blogInformation(siteStore.sites, accountStore?.account)
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites)),
+            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore?.account)),
             CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
@@ -156,9 +158,9 @@ private fun zendeskIdentity(accountStore: AccountStore?, selectedSite: SiteModel
 private fun zendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
-private fun blogInformation(allSites: List<SiteModel>?): String {
+private fun blogInformation(allSites: List<SiteModel>?, account: AccountModel?): String {
     allSites?.let {
-        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation }
+        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(account) }
     }
     return ZendeskConstants.noneValue
 }
