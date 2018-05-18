@@ -266,7 +266,7 @@ public class WPMainActivity extends AppCompatActivity
                                                 false);
         }
 
-        Snackbar.make(findViewById(R.id.coordinator), "Snackbar", -2).show();
+        Snackbar.make(findViewById(R.id.coordinator), "Snackbar", 0).show();
     }
 
     private @Nullable String getAuthToken() {
@@ -490,7 +490,6 @@ public class WPMainActivity extends AppCompatActivity
 
     private void showBottomNav(boolean show) {
         mBottomNav.setVisibility(show ? View.VISIBLE : View.GONE);
-        findViewById(R.id.bottom_navigation_separator).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     // user switched pages in the bottom navbar

@@ -20,7 +20,7 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/bottom_container"
         android:layout_below="@+id/toolbar"/>
 
@@ -46,27 +46,18 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <View
-            android:id="@+id/bottom_navigation_separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_lighten_20"/>
-
         <!-- this coordinator exists only for snackbars -->
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/coordinator"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"/>
 
-            <org.wordpress.android.ui.main.WPMainNavigationView
-                android:id="@+id/bottom_navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:elevation="0dp"
-                app:menu="@menu/bottom_nav_main"/>
-        </android.support.design.widget.CoordinatorLayout>
+        <org.wordpress.android.ui.main.WPMainNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:menu="@menu/bottom_nav_main"/>
     </LinearLayout>
-
 
 </RelativeLayout>
