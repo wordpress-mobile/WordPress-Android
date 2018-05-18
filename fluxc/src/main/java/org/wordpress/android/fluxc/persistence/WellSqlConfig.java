@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 32;
+        return 33;
     }
 
     @Override
@@ -262,6 +262,18 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 31:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 32:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS RewindStatus");
+                db.execSQL(
+                        "CREATE TABLE RewindStatus (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,STATE TEXT NOT NULL,LAST_UPDATED INTEGER,REASON TEXT,"
+                        + "CAN_AUTOCONFIGURE INTEGER,REWIND_ID TEXT,REWIND_STATUS TEXT,REWIND_STARTED_AT INTEGER,"
+                        + "REWIND_PROGRESS INTEGER,REWIND_REASON TEXT)");
+                db.execSQL(
+                        "CREATE TABLE RewindStatusCredentials (_id INTEGER PRIMARY KEY AUTOINCREMENT,REWIND_STATE_ID "
+                        + "INTEGER,TYPE TEXT NOT NULL,ROLE TEXT NOT NULL,STILL_VALID INTEGER,HOST TEXT,PORT INTEGER)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
