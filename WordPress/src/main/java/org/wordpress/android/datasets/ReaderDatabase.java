@@ -154,13 +154,13 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to version " + newVersion + " IN PROGRESS");
         int currentVersion = oldVersion;
         if (currentVersion <= DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT) {
-            // versions 0 - 135 didn't support migration scripts, so we can safely drop and recreate all tables
+            // versions 0 - 136 didn't support migration scripts, so we can safely drop and recreate all tables
             reset(db);
             currentVersion = DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT;
         }
 
         switch (currentVersion) {
-            case 135:
+            case 136:
                 // no-op
                 currentVersion++;
         }
