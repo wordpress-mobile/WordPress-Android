@@ -29,9 +29,9 @@ wp.helpshift.api.key = wordpress
 wp.helpshift.api.domain = wordpressorg.helpshift.com
 wp.helpshift.api.id = wordpressorg_platform_20030527000000000-000000000000000
 wp.app_license_key = wordpress
-wp.zendesk.app_id=todo
-wp.zendesk.domain=todo
-wp.zendesk.oauth_client_id=todo
+wp.zendesk.app_id=wordpress
+wp.zendesk.domain=wordpress
+wp.zendesk.oauth_client_id=wordpress
 
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
 wp.res.com.google.android.geo.api.key = geo-api-key
