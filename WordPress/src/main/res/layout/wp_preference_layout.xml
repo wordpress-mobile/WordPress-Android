@@ -32,8 +32,8 @@
             tools:visibility="visible"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
             android:contentDescription="@null"
             android:visibility="gone"/>
 
