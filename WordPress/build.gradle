@@ -187,7 +187,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
     }
 
-    compile group: 'com.zendesk', name: 'sdk', version: '1.11.0.1'
+    implementation group: 'com.zendesk', name: 'sdk', version: '1.11.0.1'
 
     lintChecks 'org.wordpress:lint:1.0.1'
 
