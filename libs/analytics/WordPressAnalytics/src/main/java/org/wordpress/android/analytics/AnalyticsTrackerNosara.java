@@ -477,11 +477,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_BOOKMARKED_POST_OPENED_FROM_OTHER_POST_LIST:
                 return "reader_bookmarked_post_opened";
             case READER_BOOKMARKED_LIST_VIEWED_FROM_FILTER:
-                return "reader_bookmarked_post_list_viewed";
+                return "reader_bookmarked_list_viewed";
             case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
-                return "reader_bookmarked_post_list_viewed";
+                return "reader_bookmarked_list_viewed";
             case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
-                return "reader_bookmarked_post_list_viewed";
+                return "reader_bookmarked_list_viewed";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
