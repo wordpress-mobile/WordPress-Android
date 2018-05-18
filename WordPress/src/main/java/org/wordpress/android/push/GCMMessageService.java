@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -739,12 +738,9 @@ public class GCMMessageService extends GcmListenerService {
                     // We're re-using the same builder for single and group.
                 }
 
-                // Call broadcast receiver when notification is dismissed
-                Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
-                notificationDeletedIntent.putExtra("notificationId", pushId);
-                notificationDeletedIntent.setAction(String.valueOf(pushId));
+                // Call processing service when notification is dismissed
                 PendingIntent pendingDeleteIntent =
-                        PendingIntent.getBroadcast(context, pushId, notificationDeletedIntent, 0);
+                        NotificationsProcessingService.getPendingIntentForNotificationDismiss(context, pushId);
                 builder.setDeleteIntent(pendingDeleteIntent);
 
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
@@ -986,12 +982,10 @@ public class GCMMessageService extends GcmListenerService {
                               authIgnorePendingIntent);
 
 
-            // Call broadcast receiver when notification is dismissed
-            Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
-            notificationDeletedIntent.putExtra("notificationId", AUTH_PUSH_NOTIFICATION_ID);
-            notificationDeletedIntent.setAction(String.valueOf(AUTH_PUSH_NOTIFICATION_ID));
+            // Call processing service when notification is dismissed
             PendingIntent pendingDeleteIntent =
-                    PendingIntent.getBroadcast(context, AUTH_PUSH_NOTIFICATION_ID, notificationDeletedIntent, 0);
+                    NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                            context, AUTH_PUSH_NOTIFICATION_ID);
             builder.setDeleteIntent(pendingDeleteIntent);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
