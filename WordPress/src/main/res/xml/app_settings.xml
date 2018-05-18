@@ -20,37 +20,30 @@
             android:defaultValue="true"
             android:key="@string/pref_key_send_usage"
             android:layout="@layout/wp_preference_layout"
-            android:summary="@string/preference_send_usage_stats_summary"
             android:title="@string/preference_collect_information"
             android:widgetLayout="@layout/wp_preference_switch"
-            android:icon="@drawable/ic_stats_grey_24dp"/>
+            android:icon="@drawable/ic_stats_grey_min_24dp"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
-            android:id="@+id/pref_cookie_policy_learn_more"
-            android:key="@string/pref_key_cookie_policy_learn_more"
             android:title="@string/cookie_policy_learn_more_header"
             app:caption="@string/cookie_policy_learn_more_caption"
             app:url="https://www.automattic.com/cookies"
-            app:learnMoreIcon="@drawable/ic_info_outline_grey_24dp"
+            app:icon="@drawable/ic_info_outline_grey_min_24dp"
             app:useCustomJsFormatting="true"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
-            android:id="@+id/pref_privacy_policy_learn_more"
-            android:key="@string/pref_key_privacy_policy_learn_more"
             android:title="@string/privacy_policy_learn_more_header"
             app:caption="@string/privacy_policy_learn_more_caption"
             app:button="@string/privacy_policy_read"
             app:url="https://www.automattic.com/privacy"
-            app:learnMoreIcon="@drawable/ic_user_circle_grey_text_24dp"
+            app:icon="@drawable/ic_user_circle_grey_min_24dp"
             app:useCustomJsFormatting="true"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
-            android:id="@+id/pref_third_party_policy_learn_more"
-            android:key="@string/pref_key_third_party_policy_learn_more"
             android:title="@string/third_party_policy_learn_more_header"
             app:caption="@string/third_party_policy_learn_more_caption"
             app:url="https://www.automattic.com/cookies"
-            app:learnMoreIcon="@drawable/ic_briefcase_grey_24dp"
+            app:icon="@drawable/ic_briefcase_grey_min_24dp"
             app:useCustomJsFormatting="true"/>
 
     </PreferenceScreen>

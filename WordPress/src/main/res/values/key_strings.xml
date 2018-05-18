@@ -17,9 +17,6 @@
     <string name="pref_key_passlock" translatable="false" tools:ignore="UnusedResources">wp_pref_passlock_enabled</string>
     <string name="pref_key_privacy_settings" translatable="false">wp_pref_privacy_settings</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
-    <string name="pref_key_cookie_policy_learn_more" translatable="false">wp_pref_cookie_policy_learn_more</string>
-    <string name="pref_key_privacy_policy_learn_more" translatable="false">wp_pref_privacy_policy_learn_more</string>
-    <string name="pref_key_third_party_policy_learn_more" translatable="false">wp_pref_third_party_policy_learn_more</string>
     <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
