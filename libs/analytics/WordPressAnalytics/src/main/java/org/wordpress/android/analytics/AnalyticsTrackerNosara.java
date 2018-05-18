@@ -465,21 +465,16 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_USER_UNAUTHORIZED:
                 return "reader_user_unauthorized";
             case READER_POST_BOOKMAKED_FROM_CARD:
-                return "reader_post_bookmarked";
             case READER_POST_BOOKMAKED_FROM_DETAILS:
                 return "reader_post_bookmarked";
             case READER_POST_UNBOOKMARKED_FROM_CARD:
-                return "reader_post_unbookmarked";
             case READER_POST_UNBOOKMARKED_FROM_DETAILS:
                 return "reader_post_unbookmarked";
             case READER_BOOKMARKED_POST_OPENED_FROM_SAVED_POST_LIST:
-                return "reader_bookmarked_post_opened";
             case READER_BOOKMARKED_POST_OPENED_FROM_OTHER_POST_LIST:
                 return "reader_bookmarked_post_opened";
             case READER_BOOKMARKED_LIST_VIEWED_FROM_FILTER:
-                return "reader_bookmarked_list_viewed";
             case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
-                return "reader_bookmarked_list_viewed";
             case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
                 return "reader_bookmarked_list_viewed";
             case EDITOR_CREATED_POST:
