@@ -53,6 +53,7 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     private String mCaption;
     private String mButtonText;
     private int mIcon = -1;
+    private int mLayout = R.layout.learn_more_pref;
     private boolean mUseCustomJsFormatting;
 
     public LearnMorePreference(Context context, AttributeSet attrs) {
@@ -77,6 +78,8 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
                 }
             } else if (index == R.styleable.LearnMorePreference_icon) {
                 mIcon = array.getResourceId(index, -1);
+            } else if (index == R.styleable.LearnMorePreference_layout) {
+                mLayout = array.getResourceId(index, -1);
             }
         }
         array.recycle();
@@ -85,7 +88,7 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     @Override
     protected View onCreateView(@NonNull ViewGroup parent) {
         super.onCreateView(parent);
-        View view = View.inflate(getContext(), R.layout.learn_more_pref, null);
+        View view = View.inflate(getContext(), mLayout, null);
         Button learnMoreButton = view.findViewById(R.id.learn_more_button);
         learnMoreButton.setOnClickListener(this);
 
@@ -101,8 +104,10 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
 
         if (mIcon != -1) {
             ImageView icon = view.findViewById(R.id.learn_more_icon);
-            icon.setImageResource(mIcon);
-            icon.setVisibility(View.VISIBLE);
+            if (icon != null) {
+                icon.setImageResource(mIcon);
+                icon.setVisibility(View.VISIBLE);
+            }
         }
 
         return view;
