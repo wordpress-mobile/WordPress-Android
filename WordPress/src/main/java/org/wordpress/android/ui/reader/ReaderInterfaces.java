@@ -35,6 +35,15 @@ public class ReaderInterfaces {
     }
 
     /*
+     * used by adapters to notify when follow button has been tapped
+     */
+    public interface OnFollowListener {
+        void onFollowTapped(View view, String blogName, long blogId);
+
+        void onFollowingTapped();
+    }
+
+    /*
      * used by adapters to notify when post bookmarked state has changed
      */
     public interface OnPostBookmarkedListener {

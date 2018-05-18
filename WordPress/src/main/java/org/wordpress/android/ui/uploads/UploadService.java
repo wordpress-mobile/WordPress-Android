@@ -347,6 +347,13 @@ public class UploadService extends Service {
         PostUploadHandler.setLegacyMode(enabled);
     }
 
+    public static void uploadMedia(Context context, @NonNull MediaModel media) {
+        ArrayList<MediaModel> list = new ArrayList<>();
+        list.add(media);
+
+        uploadMedia(context, list);
+    }
+
     public static void uploadMedia(Context context, @NonNull ArrayList<MediaModel> mediaList) {
         if (context == null) {
             return;

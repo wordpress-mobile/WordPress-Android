@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.plans.adapters;
 
-import android.app.FragmentManager;
 import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import org.wordpress.android.ui.plans.PlanFragment;
 import org.wordpress.android.ui.plans.models.Plan;
