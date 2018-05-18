@@ -297,7 +297,6 @@ Language: mk
     <string name="caption">Наслов (изборно)</string>
     <string name="no_network_title">Не е достапна мрежа</string>
     <string name="featured_in_post">Вклучете ги сликите во содржината на написот</string>
-    <string name="featured">Користи како избрана слика</string>
     <string name="blogusername">блогкорисник</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови за користење</string>

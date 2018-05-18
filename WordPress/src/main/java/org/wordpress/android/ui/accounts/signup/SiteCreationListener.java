@@ -27,6 +27,4 @@ public interface SiteCreationListener {
     void doConfigureSite(int siteLocalId);
 
     void doWriteFirstPost(int siteLocalId);
-
-    void setHelpContext(String faqId, String faqSection);
 }

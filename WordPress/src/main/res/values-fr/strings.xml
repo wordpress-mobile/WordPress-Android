@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 09:54:08+0000
+Translation-Revision-Date: 2018-05-02 17:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Création du site… Cette opération peut prendre quelques minutes.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Important</string>
+    <string name="notification_channel_general_title">Général</string>
+    <string name="photo_picker_use_photo">Utiliser cette photo</string>
     <string name="media_preview_title">%1$d sur %2$d</string>
     <string name="stock_media_picker_empty_results">Aucun résultat</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos fournies par %s</string>
@@ -55,7 +61,6 @@ Language: fr
     <string name="reader_list_item_suggestion_remove_desc">supprimer</string>
     <string name="photo_picker_thumbnail_desc">Lire la vidéo</string>
     <string name="reader_cardview_post_play_video_desc">lire la vidéo à la une</string>
-    <string name="post_cardview_featured_desc">à la une</string>
     <string name="plugin_detail_logo_desc">logo de l\'extension</string>
     <string name="plugin_detail_banner_desc">bannière de l\'extension</string>
     <string name="photo_picker_wpmedia_desc">sélectionner à partir du média WordPress</string>
@@ -1528,7 +1533,6 @@ Language: fr
     <string name="caption">Légende (optionnel)</string>
     <string name="no_network_title">Pas de réseau disponible</string>
     <string name="featured_in_post">Inclure une image dans le contenu de la publication</string>
-    <string name="featured">Utiliser comme image à la une</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Téléversement…</string>

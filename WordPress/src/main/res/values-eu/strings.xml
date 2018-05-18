@@ -575,7 +575,6 @@ Language: eu_ES
     <string name="log_in">Saioa hasi</string>
     <string name="username">Erabiltzaile–izena</string>
     <string name="reader">Irakurlea</string>
-    <string name="featured">Nabarmendutako irudi bezala erabili</string>
     <string name="no_network_title">Ez dago sarerik eskuragarri</string>
     <string name="width">Zabalera</string>
     <string name="anonymous">Anonimoa</string>

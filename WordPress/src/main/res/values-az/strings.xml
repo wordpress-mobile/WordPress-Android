@@ -387,7 +387,6 @@ Language: az
     <string name="no_network_title">Şəbəkə əlçatan deyil</string>
     <string name="caption">Başlıq(istəyə bağlı)</string>
     <string name="width">genişlik</string>
-    <string name="featured">Fərdi təsvir olaraq istifadə edin</string>
     <string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>
     <string name="blogusername">bloqistifadəçiadı</string>
     <string name="link_enter_url">URL</string>

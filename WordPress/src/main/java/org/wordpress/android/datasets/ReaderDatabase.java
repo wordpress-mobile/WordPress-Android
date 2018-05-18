@@ -21,7 +21,7 @@ import java.util.Locale;
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
     private static final int DB_VERSION = 136;
-    private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 135; // do not change this value
+    private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
      * version history
@@ -88,8 +88,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 132 - no schema changes, simply clearing to accommodate gallery card_type
      * 133 - no schema changes, simply clearing to accommodate video card_type
      * 134 - added tbl_posts.use_excerpt
-     * 135 - added tbl_posts.is_bookmarked
-     * 136 - added support for migration scripts
+     * 135 - added tbl_blog_info.is_notifications_enabled in ReaderBlogTable
+     * 136 - added tbl_posts.is_bookmarked
+     * 137 - added support for migration scripts
      */
 
     /*
