@@ -987,8 +987,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
                 mBtnModerateIcon.setImageResource(R.drawable.ic_undo_24dp);
-                mBtnModerateIcon.setColorFilter(ContextCompat.getColor(mBtnModerateIcon.getContext(), R.color.grey_text_min),
-                        android.graphics.PorterDuff.Mode.SRC_IN);
+                mBtnModerateIcon
+                        .setColorFilter(ContextCompat.getColor(mBtnModerateIcon.getContext(), R.color.grey_text_min),
+                                android.graphics.PorterDuff.Mode.SRC_IN);
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
