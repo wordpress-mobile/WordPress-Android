@@ -553,7 +553,6 @@ Language: th
     <string name="width">ความกว้าง</string>
     <string name="posts">เรื่อง</string>
     <string name="anonymous">นิรนาม</string>
-    <string name="featured">ใช้เป็นรูปเด่น</string>
     <string name="featured_in_post">รวมรูปภาพในเนื้อหาเรื่อง</string>
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="blogusername">บล็อกชื่อผู้ใช้</string>

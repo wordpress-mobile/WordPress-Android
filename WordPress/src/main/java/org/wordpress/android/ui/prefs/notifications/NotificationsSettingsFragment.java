@@ -32,6 +32,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -59,6 +60,8 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -259,6 +262,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     data.getBooleanExtra(NotificationSettingsFollowedDialog.KEY_EMAIL_COMMENTS, false);
 
             if (notifyPosts != mPreviousNotifyPosts) {
+                ReaderBlogTable.setNotificationsEnabledByBlogId(Long.parseLong(mNotificationUpdatedSite), notifyPosts);
                 AddOrDeleteSubscriptionPayload payload;
 
                 if (notifyPosts) {
@@ -499,6 +503,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
         mSiteCount = sites.size();
 
+        if (mSiteCount > 0) {
+            Collections.sort(sites, new Comparator<SiteModel>() {
+                @Override public int compare(SiteModel o1, SiteModel o2) {
+                    return SiteUtils.getSiteNameOrHomeURL(o1).compareToIgnoreCase(SiteUtils.getSiteNameOrHomeURL(o2));
+                }
+            });
+        }
+
         Context context = getActivity();
 
         blogsCategory.removeAll();
@@ -559,6 +571,15 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
         int count = 0;
+
+        if (mSubscriptionCount > 0) {
+            Collections.sort(subscriptions, new Comparator<SubscriptionModel>() {
+                @Override public int compare(SubscriptionModel o1, SubscriptionModel o2) {
+                    return getSiteNameOrHostFromSubscription(o1)
+                            .compareToIgnoreCase(getSiteNameOrHostFromSubscription(o2));
+                }
+            });
+        }
 
         for (final SubscriptionModel subscription : subscriptions) {
             if (context == null) {

@@ -996,7 +996,6 @@ Language: bg
     <string name="caption">Надпис (незадължителен)</string>
     <string name="no_network_title">Няма активна мрежа</string>
     <string name="featured_in_post">Използване на снимката в съдържанието на публикацията</string>
-    <string name="featured">Задаване като основно изображение на публикацията</string>
     <string name="blogusername">потребителско име</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Качва се…</string>

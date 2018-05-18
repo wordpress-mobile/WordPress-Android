@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-19 17:35:21+0000
+Translation-Revision-Date: 2018-05-02 12:27:01+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Creez situl… Poate dura câteva minute.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Important</string>
+    <string name="notification_channel_general_title">General</string>
+    <string name="photo_picker_use_photo">Folosește această fotografie</string>
     <string name="media_preview_title">%1$d din %2$d</string>
     <string name="stock_media_picker_empty_results">Nicio potrivire</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografii oferite de %s</string>
@@ -55,7 +61,7 @@ Language: ro
     <string name="reader_list_item_suggestion_remove_desc">șterge</string>
     <string name="photo_picker_thumbnail_desc">Rulează videoul</string>
     <string name="reader_cardview_post_play_video_desc">rulează videoul reprezentativ</string>
-    <string name="post_cardview_featured_desc">reprezentativ</string>
+    <string name="post_cardview_featured_desc">imagine reprezentativă</string>
     <string name="plugin_detail_logo_desc">logo modul</string>
     <string name="plugin_detail_banner_desc">banner modul</string>
     <string name="photo_picker_wpmedia_desc">alege din media WordPress</string>
@@ -214,7 +220,6 @@ Language: ro
     <string name="notification_site_creation_step_tagline">Pasul 3 din 4</string>
     <string name="notification_site_creation_step_fetching">Pasul 2 din 4</string>
     <string name="notification_site_creation_step_creating">Pasul 1 din 4</string>
-    <string name="notification_site_creation_title_in_progress">Creez situl…</string>
     <string name="notification_site_creation_created">Atinge pentru a continua.</string>
     <string name="notification_site_creation_title_success">Sit creat!</string>
     <string name="google_error_timeout">A durat prea mult până a răspuns Google. Va trebui să aștepți până când ai o conexiune la internet mai bună.</string>
@@ -648,7 +653,7 @@ Language: ro
     <string name="media_insert_title">Adaugă mai multe fotografii</string>
     <string name="media_gallery_column_count_multi">%d coloane</string>
     <string name="media_gallery_column_count_single">O coloană</string>
-    <string name="editor_confirm_email_prompt_negative">Retrimite email</string>
+    <string name="editor_confirm_email_prompt_negative">Retrimite emailul</string>
     <string name="editor_confirm_email_prompt_message_with_email">Am trimis un email la %s când te–ai înregistrat prima dată. Te rog deschide mesajul și dă clic pe butonul albastru pentru a activa publicarea.</string>
     <string name="editor_confirm_email_prompt_message">Am trimis un email când te–ai înregistrat prima dată. Te rog deschide mesajul și dă clic pe butonul albastru pentru a activa publicarea.</string>
     <string name="editor_confirm_email_prompt_title">Te rog confirmă–ți adresa de email</string>
@@ -874,7 +879,7 @@ Language: ro
     <string name="primary_domain">Domeniul primar</string>
     <string name="error_deleting_site_summary">A apărut o eroare la ștergerea sitului tău. Te rog contactează suportul pentru mai multă asistență</string>
     <string name="error_deleting_site">Eroare la ștergere sit</string>
-    <string name="site_settings_export_content_title">Export conținut</string>
+    <string name="site_settings_export_content_title">Exportă conținutul</string>
     <string name="confirm_delete_site_prompt">Te rog scrie %1$s în câmpul de mai jos pentru confirmare. Situl tău va fi dus apoi pentru totdeauna.</string>
     <string name="confirm_delete_site">Confirmă ștergerea sitului</string>
     <string name="contact_support">Contactează suportul</string>
@@ -1545,7 +1550,6 @@ Language: ro
     <string name="caption">Text asociat (opțional)</string>
     <string name="no_network_title">Nu e disponibilă nicio rețea.</string>
     <string name="featured_in_post">Include imaginea în conținutul articolului</string>
-    <string name="featured">Folosită ca imagine reprezentativă</string>
     <string name="blogusername">nume utilizator blog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Încărcare…</string>

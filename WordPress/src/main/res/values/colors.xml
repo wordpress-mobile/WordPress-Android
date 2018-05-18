@@ -137,6 +137,8 @@
     <color name="reader_follow">@color/blue_medium</color>
     <color name="reader_following">@color/alert_green</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
+    <color name="reader_notifications_off">@color/alert_green</color>
+    <color name="reader_notifications_on">@color/grey_dark</color>
     <color name="filtered_list_suggestions">#f8f8f8</color>
     <color name="reader_accent_material_dark">@color/material_deep_teal_200</color>
 

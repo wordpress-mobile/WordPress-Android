@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -111,6 +112,7 @@ public class ReaderPostLogic {
                 // request posts older than the post with the gap marker for this tag
                 beforeDate = ReaderPostTable.getGapMarkerDateForTag(tag);
                 break;
+            case REQUEST_NEWER:
             default:
                 beforeDate = null;
                 break;
@@ -236,9 +238,14 @@ public class ReaderPostLogic {
                                     // remove the last server post to deal with the edge case of
                                     // there actually not being a gap between local & server
                                     serverPosts.remove(numServerPosts - 1);
-                                    AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
+                                    ReaderBlogIdPostId gapMarker = ReaderPostTable.getGapMarkerIdsForTag(tag);
+                                    if (gapMarker != null) {
+                                        // We mustn't have two gapMarkers at the same time. Therefor we need to
+                                        // delete all posts before the current gapMarker and clear the gapMarker flag.
+                                        ReaderPostTable.deletePostsBeforeGapMarkerForTag(tag);
+                                        ReaderPostTable.removeGapMarkerForTag(tag);
+                                    }
                                 }
-                                ReaderPostTable.removeGapMarkerForTag(tag);
                                 break;
                             case REQUEST_OLDER_THAN_GAP:
                                 // if service was started as a request to fill a gap, delete existing posts
@@ -246,14 +253,17 @@ public class ReaderPostLogic {
                                 ReaderPostTable.deletePostsBeforeGapMarkerForTag(tag);
                                 ReaderPostTable.removeGapMarkerForTag(tag);
                                 break;
+                            case REQUEST_OLDER:
+                                // no-op
+                                break;
                         }
                     }
-
                     ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
 
                     // gap marker must be set after saving server posts
                     if (postWithGap != null) {
                         ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
+                        AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
                     }
                 } else if (updateResult == ReaderActions.UpdateResult.UNCHANGED
                            && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {

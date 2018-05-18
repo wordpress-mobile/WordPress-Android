@@ -689,7 +689,6 @@ Language: sk
     <string name="caption">Titulok (voliteľný)</string>
     <string name="no_network_title">Sieť nedostupná</string>
     <string name="featured_in_post">Vložiť obrázok do príspevku</string>
-    <string name="featured">Použiť ilustračný obrázok</string>
     <string name="blogusername">Používateľské meno</string>
     <string name="link_enter_url">URL adresa</string>
     <string name="app_title">WordPress pre Android</string>

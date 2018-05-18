@@ -654,6 +654,7 @@ public class GCMMessageService extends GcmListenerService {
                         String.format(context.getString(R.string.new_notifications), ACTIVE_NOTIFICATIONS_MAP.size());
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context,
                         context.getString(R.string.notification_channel_normal_id))
+                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                         .setSmallIcon(R.drawable.ic_my_sites_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
@@ -667,7 +668,8 @@ public class GCMMessageService extends GcmListenerService {
                 showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             } else {
                 // Set the individual notification we've already built as the group summary
-                builder.setGroupSummary(true);
+                builder.setGroupSummary(true)
+                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
                 showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             }
             // reinsert 2fa bundle if it was present

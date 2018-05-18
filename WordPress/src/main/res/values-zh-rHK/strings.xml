@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 09:54:08+0000
+Translation-Revision-Date: 2018-05-02 07:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">正在建立網站… 可能需要一點時間。</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">重要</string>
+    <string name="notification_channel_general_title">一般</string>
+    <string name="photo_picker_use_photo">使用此相片</string>
     <string name="media_preview_title">第 %1$d 個 (共 %2$d 個)</string>
     <string name="stock_media_picker_empty_results">無符合項目</string>
     <string name="stock_media_picker_initial_empty_subtext">由 %s 提供的相片</string>
@@ -55,7 +61,6 @@ Language: zh_TW
     <string name="reader_list_item_suggestion_remove_desc">刪除</string>
     <string name="photo_picker_thumbnail_desc">播放影片</string>
     <string name="reader_cardview_post_play_video_desc">播放特色影片</string>
-    <string name="post_cardview_featured_desc">精選</string>
     <string name="plugin_detail_logo_desc">外掛程式標誌</string>
     <string name="plugin_detail_banner_desc">外掛程式橫幅</string>
     <string name="photo_picker_wpmedia_desc">從 WordPress 媒體中挑選</string>
@@ -1515,7 +1520,6 @@ Language: zh_TW
     <string name="width">寬度</string>
     <string name="posts">文章</string>
     <string name="anonymous">匿名</string>
-    <string name="featured">選為精選圖片</string>
     <string name="featured_in_post">文章內容包含圖片</string>
     <string name="no_network_title">沒有網路連線</string>
     <string name="blogusername">網誌使用者帳號</string>

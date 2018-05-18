@@ -16,6 +16,7 @@ public class ReaderBlog {
     public boolean isPrivate;
     public boolean isJetpack;
     public boolean isFollowing;
+    public boolean isNotificationsEnabled;
     public int numSubscribers;
 
     private String mName;
@@ -28,6 +29,11 @@ public class ReaderBlog {
         ReaderBlog blog = new ReaderBlog();
         if (json == null) {
             return blog;
+        }
+
+        JSONObject jsonNotification = JSONUtils.getJSONChild(json, "delivery_methods/notification");
+        if (jsonNotification != null) {
+            blog.isNotificationsEnabled = JSONUtils.getBool(jsonNotification, "send_posts");
         }
 
         // if meta/data/site exists then JSON is for a read/following/mine?meta=site subscription,
