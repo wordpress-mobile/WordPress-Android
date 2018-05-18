@@ -46,7 +46,8 @@ public class AppLog {
         PLANS,
         PEOPLE,
         SHARING,
-        PLUGINS
+        PLUGINS,
+        ACTIVITY_LOG
     }
 
     public static final String TAG = "WordPress";
