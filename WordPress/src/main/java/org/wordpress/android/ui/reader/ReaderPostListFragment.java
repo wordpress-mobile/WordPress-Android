@@ -1001,13 +1001,13 @@ public class ReaderPostListFragment extends Fragment
                     }
 
                     // show snackbar when not in saved posts list
-                    if (isBookmarked && !isSavedPostListShown()) {
+                    if (isBookmarked && !isBookmarksList()) {
                         showBookmarkSnackbar();
                     }
                 }
             };
 
-    private boolean isSavedPostListShown() {
+    private boolean isBookmarksList() {
         return getPostListType() == ReaderPostListType.TAG_FOLLOWED
                && (mCurrentTag != null && mCurrentTag.isBookmarked());
     }
@@ -1496,7 +1496,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         if (post.isBookmarked) {
-            if (isSavedPostListShown()) {
+            if (isBookmarksList()) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BOOKMARKED_POST_OPENED_FROM_SAVED_POST_LIST);
             } else {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BOOKMARKED_POST_OPENED_FROM_OTHER_POST_LIST);
