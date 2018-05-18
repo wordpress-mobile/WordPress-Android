@@ -1022,8 +1022,7 @@ public class ReaderPostListFragment extends Fragment
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
                         AnalyticsTracker
-                                .track(AnalyticsTracker.Stat
-                                        .READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR);
+                                .track(AnalyticsTracker.Stat.READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR);
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                         if (getActivity() instanceof WPMainActivity) {
                             getActivity().overridePendingTransition(0, 0);
@@ -1577,7 +1576,7 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
-        } else if (tag.isBookmarked()){
+        } else if (tag.isBookmarked()) {
             stat = AnalyticsTracker.Stat.READER_BOOKMARKED_LIST_VIEWED_FROM_FILTER;
         }
 
