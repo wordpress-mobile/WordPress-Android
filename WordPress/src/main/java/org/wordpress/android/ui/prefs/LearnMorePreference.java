@@ -75,7 +75,7 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
                 if (id != -1) {
                     mButtonText = array.getResources().getString(id);
                 }
-            } else if (index == R.styleable.LearnMorePreference_learnMoreIcon) {
+            } else if (index == R.styleable.LearnMorePreference_icon) {
                 mIcon = array.getResourceId(index, -1);
             }
         }
