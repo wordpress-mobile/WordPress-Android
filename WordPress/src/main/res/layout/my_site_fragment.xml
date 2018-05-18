@@ -198,6 +198,24 @@
 
             </LinearLayout>
 
+            <!--Activity Log-->
+            <LinearLayout
+                android:id="@+id/row_activity_log"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_activity_log_icon"
+                    style="@style/MySiteListRowIcon"
+                    app:srcCompat="@drawable/ic_history_alt_grey_24dp"
+                    android:importantForAccessibility="no"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_activity_log_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:text="@string/activity" />
+
+            </LinearLayout>
+
             <!--Plan-->
             <LinearLayout
                 android:id="@+id/row_plan"
@@ -393,7 +411,7 @@
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/plugins"
-                    app:srcCompat="@drawable/ic_gridicons_plugin"/>
+                    app:srcCompat="@drawable/ic_plugins_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plugins_text_view"

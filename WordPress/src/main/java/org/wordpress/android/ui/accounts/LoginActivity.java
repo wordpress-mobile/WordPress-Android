@@ -647,11 +647,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         launchHelpshift(url, username, isWpcom, Tag.ORIGIN_LOGIN_USERNAME_PASSWORD);
     }
 
-    @Override
-    public void setHelpContext(String faqId, String faqSection) {
-        // nothing implemented here yet. This will set the context the `help()` callback should work with
-    }
-
     // SmartLock
 
     @Override
