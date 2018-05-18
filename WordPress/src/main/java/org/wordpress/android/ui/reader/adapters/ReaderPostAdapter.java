@@ -96,6 +96,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_SITE_HEADER = 2;
     private static final int VIEW_TYPE_TAG_HEADER = 3;
     private static final int VIEW_TYPE_GAP_MARKER = 4;
+    private static final int VIEW_TYPE_REMOVED_POST = 5;
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
@@ -134,6 +135,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private class ReaderRemovedPostViewHolder extends RecyclerView.ViewHolder {
+        final CardView mCardView;
+
+        private final ViewGroup mRemovedPostContainer;
+        private final TextView mTxtRemovedPostTitle;
+        private final TextView mUndoRemoveAction;
+
+        ReaderRemovedPostViewHolder(View itemView) {
+            super(itemView);
+            mCardView = itemView.findViewById(R.id.card_view);
+            mTxtRemovedPostTitle = itemView.findViewById(R.id.removed_post_title);
+            mRemovedPostContainer = itemView.findViewById(R.id.removed_item_container);
+            mUndoRemoveAction = itemView.findViewById(R.id.undo_remove);
+        }
+    }
     /*
      * full post
      */
@@ -144,12 +160,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtText;
         private final TextView mTxtAuthorAndBlogName;
         private final TextView mTxtDateline;
-        private final TextView mTxtRemovedPostTitle;
 
         private final ReaderIconCountView mCommentCount;
         private final ReaderIconCountView mLikeCount;
         private final ImageView mBtnBookmark;
-        private final TextView mUndoRemoveAction;
 
         private final ImageView mImgMore;
         private final ImageView mImgVideoOverlay;
@@ -169,27 +183,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderThumbnailStrip mThumbnailStrip;
 
-        private final ViewGroup mRemovedPostContainer;
-        private final ViewGroup mLayoutContainer;
 
         ReaderPostViewHolder(View itemView) {
             super(itemView);
 
             mCardView = itemView.findViewById(R.id.card_view);
 
-            mRemovedPostContainer = itemView.findViewById(R.id.removed_item_container);
-            mLayoutContainer = itemView.findViewById(R.id.layout_container);
-
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
             mTxtAuthorAndBlogName = itemView.findViewById(R.id.text_author_and_blog_name);
             mTxtDateline = itemView.findViewById(R.id.text_dateline);
-            mTxtRemovedPostTitle = itemView.findViewById(R.id.removed_post_title);
 
             mCommentCount = itemView.findViewById(R.id.count_comments);
             mLikeCount = itemView.findViewById(R.id.count_likes);
             mBtnBookmark = itemView.findViewById(R.id.bookmark);
-            mUndoRemoveAction = itemView.findViewById(R.id.undo_remove);
 
             mFramePhoto = itemView.findViewById(R.id.frame_photo);
             mTxtPhotoTitle = mFramePhoto.findViewById(R.id.text_photo_title);
@@ -300,6 +307,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ReaderPost post = getItem(position);
             if (post != null && post.isXpost()) {
                 return VIEW_TYPE_XPOST;
+            } else if (post != null && isBookmarksList() && !post.isBookmarked) {
+                return VIEW_TYPE_REMOVED_POST;
             } else {
                 return VIEW_TYPE_POST;
             }
@@ -309,6 +318,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public @NonNull RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
+        View postView;
         switch (viewType) {
             case VIEW_TYPE_SITE_HEADER:
                 return new SiteHeaderViewHolder(new ReaderSiteHeaderView(context));
@@ -320,11 +330,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             case VIEW_TYPE_XPOST:
-                View xpostView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
-                return new ReaderXPostViewHolder(xpostView);
-
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
+                return new ReaderXPostViewHolder(postView);
+            case VIEW_TYPE_REMOVED_POST:
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_removed_post, parent, false);
+                return new ReaderRemovedPostViewHolder(postView);
             default:
-                View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
                 return new ReaderPostViewHolder(postView);
         }
     }
@@ -335,6 +347,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             renderPost(position, (ReaderPostViewHolder) holder);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
+        } else if (holder instanceof ReaderRemovedPostViewHolder) {
+            renderRemovedPost(position, (ReaderRemovedPostViewHolder) holder);
         } else if (holder instanceof SiteHeaderViewHolder) {
             SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
             siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
@@ -378,6 +392,31 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.mTxtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));
 
         checkLoadMore(position);
+    }
+
+    private void renderRemovedPost(final int position, final ReaderRemovedPostViewHolder holder) {
+        final ReaderPost post = getItem(position);
+        final Context context = holder.mRemovedPostContainer.getContext();
+        holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
+        Drawable[] compoundDrawables = holder.mUndoRemoveAction.getCompoundDrawables();
+        for (Drawable item : compoundDrawables) {
+            if (item != null) {
+                DrawableCompat.setTint(item, context.getResources().getColor(R.color.blue_medium));
+            }
+        }
+        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoPostUnbookmarked(post, position);
+            }
+        });
+    }
+
+    private void undoPostUnbookmarked(final ReaderPost post, final int position) {
+        if (!post.isBookmarked) {
+            toggleBookmark(post.blogId, post.postId);
+            notifyItemChanged(position);
+        }
     }
 
     private void renderPost(final int position, final ReaderPostViewHolder holder) {
@@ -516,12 +555,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isBookmarksList() && !post.isBookmarked) {
-                    undoPostUnbookmarked(holder, post, position);
-                } else {
-                    if (mPostSelectedListener != null) {
-                        mPostSelectedListener.onPostSelected(post);
-                    }
+                if (mPostSelectedListener != null) {
+                    mPostSelectedListener.onPostSelected(post);
                 }
             }
         });
@@ -533,13 +568,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
             mRenderedIds.add(post.getPseudoId());
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
-        }
-    }
-
-    private void undoPostUnbookmarked(final ReaderPostViewHolder holder, final ReaderPost post, final int position) {
-        if (!post.isBookmarked) {
-            toggleBookmark(post.blogId, post.postId);
-            notifyItemChanged(position);
         }
     }
 
@@ -836,7 +864,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void initBookmarkButton(final int position, final ReaderPostViewHolder holder, final ReaderPost post) {
         updateBookmarkView(holder, post);
-        updateRemovedPostContainer(holder, post);
         holder.mBtnBookmark.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 toggleBookmark(post.blogId, post.postId);
@@ -868,25 +895,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             bookmarkButton.setContentDescription(context.getString(R.string.reader_remove_bookmark));
         } else {
             bookmarkButton.setContentDescription(context.getString(R.string.reader_add_bookmark));
-        }
-    }
-
-    private void updateRemovedPostContainer(final ReaderPostViewHolder holder, final ReaderPost post) {
-        final Context context = holder.mBtnBookmark.getContext();
-        holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-
-        if (isBookmarksList() && !post.isBookmarked) {
-            holder.mLayoutContainer.setVisibility(View.GONE);
-            holder.mRemovedPostContainer.setVisibility(View.VISIBLE);
-        } else {
-            holder.mLayoutContainer.setVisibility(View.VISIBLE);
-            holder.mRemovedPostContainer.setVisibility(View.GONE);
-        }
-        Drawable[] compoundDrawables = holder.mUndoRemoveAction.getCompoundDrawables();
-        for (Drawable item : compoundDrawables) {
-            if (item != null) {
-                DrawableCompat.setTint(item, context.getResources().getColor(R.color.blue_medium));
-            }
         }
     }
 

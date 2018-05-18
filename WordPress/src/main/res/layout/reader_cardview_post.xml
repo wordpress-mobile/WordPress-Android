@@ -15,46 +15,6 @@
     card_view:cardElevation="@dimen/reader_card_elevation"
     tools:targetApi="LOLLIPOP">
 
-    <RelativeLayout
-        android:id="@+id/removed_item_container"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:background="?android:selectableItemBackground"
-        android:gravity="center_vertical"
-        android:paddingEnd="@dimen/reader_card_content_padding"
-        android:paddingLeft="@dimen/reader_card_content_padding"
-        android:paddingRight="@dimen/reader_card_content_padding"
-        android:paddingStart="@dimen/reader_card_content_padding"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/removed_post_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
-            android:layout_toLeftOf="@+id/undo_remove"
-            android:layout_toStartOf="@+id/undo_remove"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:textColor="@color/grey_text_min"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="Removed Best post ever"/>
-
-        <TextView
-            android:id="@+id/undo_remove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/ic_undo_24dp"
-            android:drawablePadding="@dimen/margin_small"
-            android:drawableStart="@drawable/ic_undo_24dp"
-            android:text="@string/undo"
-            android:textColor="@color/blue_medium"
-            android:textSize="@dimen/text_sz_large"/>
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
