@@ -13,10 +13,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPTextView;
@@ -52,8 +52,8 @@ public class HelpActivity extends AppCompatActivity {
         WPTextView version = findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
 
-        WPTextView applogButton = findViewById(R.id.applog_button);
-        applogButton.setOnClickListener(new OnClickListener() {
+        WPTextView appLogButton = findViewById(R.id.applog_button);
+        appLogButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
@@ -83,43 +83,46 @@ public class HelpActivity extends AppCompatActivity {
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
         WPTextView contactUsButton = findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle extras = getIntent().getExtras();
-                Tag origin = Tag.ORIGIN_UNKNOWN;
-                Tag[] extraTags = null;
-                if (extras != null) {
-                    // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
-                    // related code at the same place (Note: value can be null).
-                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, extras.getString(
-                            HelpshiftHelper.ENTERED_URL_KEY));
-                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
-                            HelpshiftHelper.ENTERED_USERNAME_KEY));
-                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_EMAIL, extras.getString(
-                            HelpshiftHelper.ENTERED_EMAIL_KEY));
-                    origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
-                    extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
-                }
-
-                HelpshiftHelper.getInstance().showConversation(HelpActivity.this, mSiteStore, origin,
-                                                               mAccountStore.getAccount().getUserName(), extraTags);
+            @Override public void onClick(View view) {
+                createNewZendeskTicket();
             }
         });
 
-        WPTextView faqbutton = findViewById(R.id.faq_button);
-        faqbutton.setOnClickListener(new OnClickListener() {
+        WPTextView faqButton = findViewById(R.id.faq_button);
+        faqButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle extras = getIntent().getExtras();
-                Tag origin = Tag.ORIGIN_UNKNOWN;
-                Tag[] extraTags = null;
-                if (extras != null) {
-                    origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
-                    extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
-                }
-                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, mSiteStore, origin,
-                                                      mAccountStore.getAccount().getUserName(), extraTags);
+                showZendeskFaq();
             }
         });
+
+        WPTextView myTicketsButton = findViewById(R.id.my_tickets_button);
+        myTicketsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showZendeskTickets();
+            }
+        });
+    }
+
+    private void createNewZendeskTicket() {
+        ZendeskHelper.createNewTicket(this, mAccountStore, mSiteStore, getOriginTagFromExtras());
+    }
+
+    private void showZendeskTickets() {
+        ZendeskHelper.showAllTickets(this, mAccountStore, mSiteStore, getOriginTagFromExtras());
+    }
+
+    private void showZendeskFaq() {
+        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore);
+    }
+
+    private Tag getOriginTagFromExtras() {
+        Bundle extras = getIntent().getExtras();
+        Tag origin = Tag.ORIGIN_UNKNOWN;
+        if (extras != null) {
+            origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
+        }
+        return origin;
     }
 }

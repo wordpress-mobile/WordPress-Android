@@ -63,6 +63,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -274,6 +275,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         HelpshiftHelper.init(this);
+        ZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID, LocaleManager.getSafeLocale(this));
 
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
