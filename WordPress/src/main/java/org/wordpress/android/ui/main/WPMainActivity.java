@@ -487,6 +487,7 @@ public class WPMainActivity extends AppCompatActivity
 
     private void showBottomNav(boolean show) {
         mBottomNav.setVisibility(show ? View.VISIBLE : View.GONE);
+        findViewById(R.id.navbar_separator).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     // user switched pages in the bottom navbar
