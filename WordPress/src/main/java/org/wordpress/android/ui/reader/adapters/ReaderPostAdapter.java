@@ -756,7 +756,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (mPosts == null || mPosts.size() == 0);
     }
 
-    private boolean isSavedPostsList() {
+    public boolean isSavedPostsList() {
         return (getPostListType() == ReaderPostListType.TAG_FOLLOWED
                 && (mCurrentTag != null && mCurrentTag.isBookmarked()));
     }
@@ -901,8 +901,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void toggleBookmark(View bookmarkButton, long blogId, long postId) {
         ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
         if (post.isBookmarked) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_POST_UNBOOKMARKED_FROM_CARD);
             ReaderPostActions.removeFromBookmarked(post);
         } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_POST_BOOKMAKED_FROM_CARD);
             ReaderPostActions.addToBookmarked(post);
         }
 

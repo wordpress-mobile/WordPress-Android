@@ -1000,15 +1000,17 @@ public class ReaderPostListFragment extends Fragment
                                             .commit();
                     }
 
-                    boolean isSavedPostsListShown = getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                                                    && (mCurrentTag != null && mCurrentTag.isBookmarked());
-
                     // show snackbar when not in saved posts list
-                    if (isBookmarked && !isSavedPostsListShown) {
+                    if (isBookmarked && !isSavedPostListShown()) {
                         showBookmarkSnackbar();
                     }
                 }
             };
+
+    private boolean isSavedPostListShown() {
+        return getPostListType() == ReaderPostListType.TAG_FOLLOWED
+               && (mCurrentTag != null && mCurrentTag.isBookmarked());
+    }
 
     private void showBookmarkSnackbar() {
         if (!isAdded()) {
@@ -1019,6 +1021,9 @@ public class ReaderPostListFragment extends Fragment
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
+                        AnalyticsTracker
+                                .track(AnalyticsTracker.Stat
+                                        .READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR);
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                         if (getActivity() instanceof WPMainActivity) {
                             getActivity().overridePendingTransition(0, 0);
@@ -1491,6 +1496,14 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
+        if (post.isBookmarked) {
+            if (isSavedPostListShown()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BOOKMARKED_POST_OPENED_FROM_SAVED_POST_LIST);
+            } else {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BOOKMARKED_POST_OPENED_FROM_OTHER_POST_LIST);
+            }
+        }
+
         // "discover" posts that highlight another post should open the original (source) post when tapped
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
@@ -1564,6 +1577,8 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
+        } else if (tag.isBookmarked()){
+            stat = AnalyticsTracker.Stat.READER_BOOKMARKED_LIST_VIEWED_FROM_FILTER;
         }
 
         if (stat == null) {
