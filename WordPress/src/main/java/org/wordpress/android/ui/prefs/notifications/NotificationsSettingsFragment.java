@@ -54,7 +54,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
@@ -504,6 +503,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
         mSiteCount = sites.size();
 
+        if (mSiteCount > 0) {
+            Collections.sort(sites, new Comparator<SiteModel>() {
+                @Override public int compare(SiteModel o1, SiteModel o2) {
+                    return SiteUtils.getSiteNameOrHomeURL(o1).compareToIgnoreCase(SiteUtils.getSiteNameOrHomeURL(o2));
+                }
+            });
+        }
+
         Context context = getActivity();
 
         blogsCategory.removeAll();
@@ -568,7 +575,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (mSubscriptionCount > 0) {
             Collections.sort(subscriptions, new Comparator<SubscriptionModel>() {
                 @Override public int compare(SubscriptionModel o1, SubscriptionModel o2) {
-                    return StringUtils.compareIgnoreCase(o1.getBlogName(), o2.getBlogName());
+                    return getSiteNameOrHostFromSubscription(o1)
+                            .compareToIgnoreCase(getSiteNameOrHostFromSubscription(o2));
                 }
             });
         }
