@@ -714,7 +714,6 @@
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
-    <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="cookie_policy_learn_more_header">Cookie Policy</string>

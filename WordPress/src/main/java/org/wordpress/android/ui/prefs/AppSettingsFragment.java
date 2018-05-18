@@ -226,7 +226,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
             return handleOssPreferenceClick();
         } else if (preference == mPrivacySettings) {
-            setupPrivacySettings();
+            return handlePrivacyClick();
         }
 
         return false;
@@ -479,30 +479,15 @@ public class AppSettingsFragment extends PreferenceFragment
         pref.refreshAdapter();
     }
 
-    private void setupPrivacySettings() {
+    private boolean handlePrivacyClick() {
         if (mPrivacySettings == null || !isAdded()) {
-            return;
+            return false;
         }
         String title = getString(R.string.preference_privacy_settings);
         Dialog dialog = mPrivacySettings.getDialog();
         if (dialog != null) {
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
-    }
-
-    private void setupPreferenceList(ListView prefList, Resources res) {
-        if (prefList == null || res == null) {
-            return;
-        }
-
-        // customize list dividers
-        //noinspection deprecation
-        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
-        prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
-        // remove footer divider bar
-        prefList.setFooterDividersEnabled(false);
-        //noinspection deprecation
-        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
+        return true;
     }
 }
