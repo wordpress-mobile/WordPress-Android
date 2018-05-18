@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -15,7 +14,6 @@ import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
