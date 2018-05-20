@@ -97,7 +97,8 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
  * Main activity which hosts sites, reader, me and notifications pages
  */
 public class WPMainActivity extends AppCompatActivity
-        implements OnPageListener, BottomNavController, BasicDialogPositiveClickInterface,
+        implements OnPageListener, MainFragmentScrollListener,
+        BottomNavController, BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -129,6 +130,20 @@ public class WPMainActivity extends AppCompatActivity
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
+
+    @Override
+    public void onFragmentScrollUp() {
+        if (mBottomNavContainer.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNavContainer, true);
+        }
+    }
+
+    @Override
+    public void onFragmentScrollDown() {
+        if (mBottomNavContainer.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNavContainer, false);
+        }
+    }
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
