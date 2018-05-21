@@ -55,7 +55,7 @@ public class NumberPickerDialog extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         TextView switchText = (TextView) view.findViewById(R.id.number_picker_text);
         mSwitch = (Switch) view.findViewById(R.id.number_picker_switch);

@@ -653,7 +653,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 from,
                 to);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setCancelable(true);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
@@ -687,7 +687,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void confirmRemovePlugin() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
         String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
                 mPlugin.getDisplayName(),
@@ -1128,7 +1128,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * UI for it, so we get a confirmation first in this step.
      */
     private void confirmInstallPluginForAutomatedTransfer() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setTitle(getResources().getText(R.string.plugin_install_first_plugin_confirmation_dialog_title));
         builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
         builder.setPositiveButton(R.string.plugin_install_first_plugin_confirmation_dialog_install_btn,
