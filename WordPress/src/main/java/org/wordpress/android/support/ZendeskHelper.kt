@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
@@ -65,11 +66,14 @@ fun showZendeskHelpCenter(context: Context, accountStore: AccountStore, selected
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
-    SupportActivity.Builder()
-            .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-            .withLabelNames(ZendeskConstants.articleLabel)
-            .show(context)
+    AppPrefs.setSupportEmail("")
+    runWithSupportEmail(context) { email ->
+        zendeskInstance.setIdentity(zendeskIdentity(email, email))
+        SupportActivity.Builder()
+                .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
+                .withLabelNames(ZendeskConstants.articleLabel)
+                .show(context)
+    }
 }
 
 @JvmOverloads
