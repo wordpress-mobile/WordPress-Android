@@ -10,6 +10,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -57,6 +58,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mOptimizedVideo;
     private DetailListPreference mVideoWidthPref;
     private DetailListPreference mVideoEncorderBitratePref;
+    private EditTextPreferenceWithValidation mSupportEmailPreference;
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
@@ -99,6 +101,8 @@ public class AppSettingsFragment extends PreferenceFragment
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.pref_key_support_email))
+                .setOnPreferenceClickListener(this);
 
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils
@@ -117,6 +121,15 @@ public class AppSettingsFragment extends PreferenceFragment
         mVideoEncorderBitratePref =
                 (DetailListPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+
+        mSupportEmailPreference = (EditTextPreferenceWithValidation) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_support_email, this);
+        mSupportEmailPreference.getEditText()
+                .setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mSupportEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
+        String supportEmail = AppPrefs.getSupportEmail();
+        mSupportEmailPreference
+                .setSummary(TextUtils.isEmpty(supportEmail) ? getString(R.string.preference_not_set) : supportEmail);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -263,6 +276,10 @@ public class AppSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
                                          newValue.toString(),
                                          getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+        } else if (preference == mSupportEmailPreference) {
+            String supportEmail = newValue.toString();
+            AppPrefs.setSupportEmail(supportEmail);
+            mSupportEmailPreference.setSummary(supportEmail);
         }
         return true;
     }

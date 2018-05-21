@@ -103,6 +103,7 @@
     <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
+    <string name="support_email">Support Email</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -711,6 +712,7 @@
     <!--      End      -->
 
     <!-- preferences -->
+    <string name="preference_not_set">Not Set</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_send_usage_stats">Send statistics</string>

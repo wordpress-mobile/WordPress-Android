@@ -149,7 +149,10 @@ public class AppPrefs {
         ASKED_PERMISSION_LOCATION_FINE,
 
         // Updated after WP.com themes have been fetched
-        LAST_WP_COM_THEMES_SYNC
+        LAST_WP_COM_THEMES_SYNC,
+
+        // Support email address that's independent of any account or site
+        SUPPORT_EMAIL
     }
 
     private static SharedPreferences prefs() {
@@ -590,6 +593,14 @@ public class AppPrefs {
     public static int getVideoOptimizeQuality() {
         int quality = getInt(DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY, 0);
         return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_VIDEO_ENCODER_BITRATE_KB;
+    }
+
+    public static void setSupportEmail(String email) {
+        setString(UndeletablePrefKey.SUPPORT_EMAIL, email);
+    }
+
+    public static String getSupportEmail() {
+        return getString(UndeletablePrefKey.SUPPORT_EMAIL);
     }
 
     /*
