@@ -254,8 +254,10 @@ public class GCMMessageService extends GcmListenerService {
 
     // NoteID is the ID if the note in WordPress
     public static synchronized void bumpPushNotificationsTappedAnalytics(String noteID) {
-        for (int id : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
-            Bundle noteBundle = ACTIVE_NOTIFICATIONS_MAP.get(id);
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator();
+             it.hasNext();) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Bundle noteBundle = row.getValue();
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
                 AnalyticsTracker.flush();
