@@ -120,6 +120,7 @@ public class WPMainActivity extends AppCompatActivity
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
+    private boolean mIsBottomNavHidden;
 
     private SiteModel mSelectedSite;
 
@@ -130,26 +131,6 @@ public class WPMainActivity extends AppCompatActivity
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
-
-    public void showBottomNav(boolean show) {
-        if (show && mBottomNavContainer.getVisibility() != View.VISIBLE) {
-            AniUtils.animateBottomBar(mBottomNavContainer, true);
-        } else if (!show && mBottomNavContainer.getVisibility() == View.VISIBLE) {
-            AniUtils.animateBottomBar(mBottomNavContainer, false);
-        }
-    }
-
-    /*
-     * Called by the four fragments when their views are scrolled so we can toggle the bottom navigation
-     */
-    @Override
-    public void onFragmentScrolled(int dy) {
-        if (dy < 0) {
-            showBottomNav(true);
-        } else if (dy > 0) {
-            showBottomNav(false);
-        }
-    }
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -496,8 +477,29 @@ public class WPMainActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
+    public void showBottomNav(boolean show) {
+        if (show && mBottomNavContainer.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNavContainer, true);
+        } else if (!show && mBottomNavContainer.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNavContainer, false);
+        }
+    }
+
+    /*
+     * Called by the four fragments when their views are scrolled so we can toggle the bottom navigation
+     */
+    @Override
+    public void onFragmentScrolled(int dy) {
+        if (dy < 0 && !mIsBottomNavHidden) {
+            showBottomNav(true);
+        } else if (dy > 0) {
+            showBottomNav(false);
+        }
+    }
+
     @Override
     public void onRequestShowBottomNavigation() {
+        mIsBottomNavHidden = false;
         mBottomNavContainer.setVisibility(View.VISIBLE);
     }
 
@@ -506,6 +508,7 @@ public class WPMainActivity extends AppCompatActivity
         // we only hide the bottom navigation when there's not a hardware keyboard present
         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
             mBottomNavContainer.setVisibility(View.GONE);
+            mIsBottomNavHidden = true;
         }
     }
 
