@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 15:54:07+0000
+Translation-Revision-Date: 2018-05-15 15:47:45+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="login_email_button_signup">Hesabınız yok mu? %1$sKaydolun%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Eklenti özelliği sitenin olumlu itibara sahip olmasını gerektirir.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Eklenti özelliği birincil alan adı aboneliğinin bu kullanıcıyla ilişkilendirilmesini gerektirir.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Eklenti özelliği yönetici ayrıcalıkları gerektirir.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Eklenti, VIP sitelere yüklenemez.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Eklenti, disk alanı kısıtlamaları nedeniyle yüklenemiyor.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Eklenti özelliği doğrulanmış bir e–posta adresi gerektirir.</string>
+    <string name="plugin_install_site_ineligible_site_private">Eklenti özelliği sitenin herkese açık olmasını gerektirir.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Eklenti özelliği business paket gerektirir.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Eklenti özelliği özel alan adı gerektirir.</string>
+    <string name="plugin_install_site_ineligible_default_error">Eklenti özelliği bu site için kullanılamaz.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Son kurulumu yapıyoruz — neredeyse bitti…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Eklenti yükleniyor…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Yükle</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Sitenize ilk eklentinin yüklenmesi 1 dakikaya kadar sürebilir. Bu sırada sitenizde değişiklik yapamayacaksınız.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Eklentiyi yükle</string>
+    <string name="notification_settings_followed_dialog_title">Bildirimler</string>
+    <string name="notification_settings_followed_dialog_email_comments">Yeni yorumlar hakkında bana e–posta gönder</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Haftalık</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Anında</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Günlük</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Yeni gönderiler</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Bu sitedeki yeni gönderiler için bildirim alın</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Yeni gönderiler hakkında bana e–posta gönder</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Tüm Takip Ettiğim Siteler</string>
+    <string name="notification_settings_category_followed_sites">Takip Edilen Siteler</string>
+    <string name="content_description_person_reading_device_notification">Cihaz bildirimlerini okuyan kişi</string>
+    <string name="content_description_people_looking_charts">Grafiklere ve çizelgelere bakan kişiler</string>
+    <string name="comment_title">%s, %s üzerinde</string>
+    <string name="dialog_confirm_delete_permanently_page">Bu sayfayı kalıcı olarak silmek istediğinizden emin misiniz?</string>
+    <string name="dialog_confirm_delete_permanently_post">Bu gönderiyi kalıcı olarak silmek istediğinizden emin misiniz?</string>
     <string name="notification_site_creation_title_in_progress">Site oluşturuluyor… Bu işlem birkaç dakika sürebilir.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -61,6 +92,7 @@ Language: tr
     <string name="reader_list_item_suggestion_remove_desc">silin</string>
     <string name="photo_picker_thumbnail_desc">Video oynatın</string>
     <string name="reader_cardview_post_play_video_desc">öne çıkan videoyu oynatın</string>
+    <string name="post_cardview_featured_desc">öne çıkan görsel</string>
     <string name="plugin_detail_logo_desc">eklenti logosu</string>
     <string name="plugin_detail_banner_desc">eklenti başlığı</string>
     <string name="photo_picker_wpmedia_desc">WordPress ortamları arasından seçim yapın</string>
@@ -79,7 +111,6 @@ Language: tr
     <string name="profile_picture">%s adlı kullanıcının profil resmi</string>
     <string name="comment_checkmark_desc">onay işareti</string>
     <string name="signup_with_google_progress">Google ile kaydolunuyor…</string>
-    <string name="editor_toast_no_action_taken">Bir hata oluştu. İşlem yapılmadı.</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack’e bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack’e zaten bağlısınız</string>
     <string name="menu_undo_snackbar_action">GERİ AL</string>
@@ -275,7 +306,7 @@ Language: tr
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack resimlerinizi optimize eder ve bunları ziyaretçilerinize en yakın sunucu konumundan sunar. Global içerik sağlama ağımızı kullanmak sitenizin yüklenme hızını artıracak.</string>
     <string name="site_settings_serve_images_from_our_servers">Resimleri sunucularımızdan sunun</string>
     <string name="site_settings_speed_up_your_site">Sitenizi hızlandırın</string>
-    <string name="stats_jetpack_connection_setup_info">WordPress sitenizde İstatistikleri kullanmak için, Jetpack eklentisini yüklemelisiniz. Jetpack’i kurmak istiyor musunuz?</string>
+    <string name="stats_jetpack_connection_setup_info">WordPress sitenizde İstatistikleri kullanmak için, Jetpack eklentisini yüklemelisiniz. Jetpack’i kurmak ister misiniz?</string>
     <string name="stats_jetpack_connection_setup">Jetpack\'i Kur</string>
     <string name="plugin_chevron_icon_content_description">Değiştir metni</string>
     <string name="plugin_info_your_version">WordPress sürümünüz</string>
