@@ -219,7 +219,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("source", "other_post_list");
                 break;
             case READER_POST_SAVED_FROM_SAVED_POST_LIST:
-                predefinedEventProperties.put("source", "saved_posts_list");
+                predefinedEventProperties.put("source", "saved_post_list");
                 break;
             case READER_POST_SAVED_FROM_DETAILS:
                 predefinedEventProperties.put("source", "post_details");
@@ -228,13 +228,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("source", "other_post_list");
                 break;
             case READER_POST_UNSAVED_FROM_SAVED_POST_LIST:
-                predefinedEventProperties.put("source", "saved_posts_list");
+                predefinedEventProperties.put("source", "saved_post_list");
                 break;
             case READER_POST_UNSAVED_FROM_DETAILS:
                 predefinedEventProperties.put("source", "post_details");
                 break;
             case READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST:
-                predefinedEventProperties.put("source", "saved_posts_list");
+                predefinedEventProperties.put("source", "saved_post_list");
                 break;
             case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
                 predefinedEventProperties.put("source", "other_post_list");
@@ -243,10 +243,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("source", "reader_filter");
                 break;
             case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
-                predefinedEventProperties.put("source", "bookmark_snackbar_post_list");
+                predefinedEventProperties.put("source", "save_snackbar_post_list");
                 break;
             case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
-                predefinedEventProperties.put("source", "bookmark_snackbar_post_details");
+                predefinedEventProperties.put("source", "save_snackbar_post_details");
                 break;
         }
 
