@@ -203,7 +203,8 @@ public class MeFragment extends Fragment {
                 @Override public void onScrollChange(NestedScrollView v, int scrollX, int scrollY,
                                                      int oldScrollX, int oldScrollY) {
                     int dy = scrollY - oldScrollY;
-                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                    int offsetY = v.getScrollY();
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy, offsetY);
                 }
             });
         }

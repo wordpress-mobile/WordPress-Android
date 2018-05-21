@@ -21,45 +21,38 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_container"
+        android:layout_above="@+id/connection_bar"
         android:layout_below="@+id/toolbar"/>
 
-    <LinearLayout
-        android:id="@+id/bottom_container"
+    <!-- this coordinator exists only for snackbars -->
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_navigation"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/connection_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_navigation"
+        android:background="@color/alert_yellow"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
+        android:text="@string/connectionbar_no_connection"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_small"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <org.wordpress.android.ui.main.WPMainNavigationView
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <!-- this coordinator exists only for snackbars -->
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/coordinator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/connection_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/alert_yellow"
-            android:gravity="center"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
-            android:text="@string/connectionbar_no_connection"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_small"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-        <org.wordpress.android.ui.main.WPMainNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:elevation="16dp"
-            app:menu="@menu/bottom_nav_main"/>
-
-    </LinearLayout>
+        android:background="@android:color/white"
+        app:menu="@menu/bottom_nav_main"/>
 
 </RelativeLayout>

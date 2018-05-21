@@ -138,7 +138,8 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                    int offsetY = recyclerView.getScrollY();
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy, offsetY);
                 }
             });
         }

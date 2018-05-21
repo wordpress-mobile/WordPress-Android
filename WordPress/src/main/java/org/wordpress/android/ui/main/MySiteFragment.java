@@ -370,7 +370,8 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                 @Override public void onScrollChange(NestedScrollView v, int scrollX, int scrollY,
                                                      int oldScrollX, int oldScrollY) {
                     int dy = scrollY - oldScrollY;
-                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                    int offsetY = v.getScrollY();
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy, offsetY);
                 }
             });
         }
