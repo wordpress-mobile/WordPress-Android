@@ -307,7 +307,7 @@ public class PublicizeListActivity extends AppCompatActivity
             return;
         }
 
-        PublicizeActions.connectStepTwo(event.getSiteId(), event.getKeychainId());
+        PublicizeActions.connectStepTwo(event.getSiteId(), event.getKeychainId(), event.getService());
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.connecting_account));
         mProgressDialog.show();
