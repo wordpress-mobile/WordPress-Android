@@ -115,7 +115,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
         switch (mDialogType) {
             case DATE_PICKER:
                 final DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert),
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog),
                         null,
                         mYear,
                         mMonth,
