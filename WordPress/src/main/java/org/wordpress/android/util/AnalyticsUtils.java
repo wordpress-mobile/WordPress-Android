@@ -201,6 +201,20 @@ public class AnalyticsUtils {
     }
 
     /**
+     * Bump Analytics and add blog_id into properties
+     *
+     * @param stat The Stat to bump
+     * @param blogID The REMOTE blog ID.
+     * @param properties Properties to attach to the event
+     */
+    public static void trackWithSiteId(AnalyticsTracker.Stat stat, long blogID, Map<String, Object> properties) {
+        if (blogID != 0) {
+            properties.put(BLOG_ID_KEY, blogID);
+        }
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
      * Bump Analytics for a reader post
      *
      * @param stat The Stat to bump
