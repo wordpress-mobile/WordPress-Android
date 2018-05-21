@@ -268,8 +268,10 @@ public class GCMMessageService extends GcmListenerService {
 
     // Mark all notifications as tapped
     public static synchronized void bumpPushNotificationsTappedAllAnalytics() {
-        for (int id : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
-            Bundle noteBundle = ACTIVE_NOTIFICATIONS_MAP.get(id);
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator();
+             it.hasNext();) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Bundle noteBundle = row.getValue();
             bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
         }
         AnalyticsTracker.flush();
