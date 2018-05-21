@@ -53,6 +53,15 @@
         <item name="android:background">@color/grey_darken_10</item>
     </style>
 
+    <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/blue_medium</item>
+        <item name="actionModeStyle">@style/Calypso.ActionMode</item>
+        <item name="android:listDivider">@drawable/preferences_divider</item>
+        <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
+    </style>
+
     <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
