@@ -900,13 +900,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private void toggleBookmark(View bookmarkButton, long blogId, long postId) {
         ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
+
+        AnalyticsTracker.Stat eventToTrack;
         if (post.isBookmarked) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_CARD);
+            eventToTrack = isSavedPostsList() ? AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST :
+                    AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST;
             ReaderPostActions.removeFromBookmarked(post);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_POST_SAVED_FROM_CARD);
+            eventToTrack = isSavedPostsList() ? AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST :
+                    AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST;
             ReaderPostActions.addToBookmarked(post);
         }
+
+        AnalyticsTracker.track(eventToTrack);
 
         // update post in array and on screen
         post = ReaderPostTable.getBlogPost(blogId, postId, true);

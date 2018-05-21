@@ -215,14 +215,20 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
                 predefinedEventProperties.put("source", "social");
                 break;
-            case READER_POST_SAVED_FROM_CARD:
-                predefinedEventProperties.put("source", "reader_card");
+            case READER_POST_SAVED_FROM_OTHER_POST_LIST:
+                predefinedEventProperties.put("source", "other_post_list");
+                break;
+            case READER_POST_SAVED_FROM_SAVED_POST_LIST:
+                predefinedEventProperties.put("source", "saved_posts_list");
                 break;
             case READER_POST_SAVED_FROM_DETAILS:
                 predefinedEventProperties.put("source", "post_details");
                 break;
-            case READER_POST_UNSAVED_FROM_CARD:
-                predefinedEventProperties.put("source", "reader_card");
+            case READER_POST_UNSAVED_FROM_OTHER_POST_LIST:
+                predefinedEventProperties.put("source", "other_post_list");
+                break;
+            case READER_POST_UNSAVED_FROM_SAVED_POST_LIST:
+                predefinedEventProperties.put("source", "saved_posts_list");
                 break;
             case READER_POST_UNSAVED_FROM_DETAILS:
                 predefinedEventProperties.put("source", "post_details");
@@ -464,10 +470,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_wpcom_sign_in_needed";
             case READER_USER_UNAUTHORIZED:
                 return "reader_user_unauthorized";
-            case READER_POST_SAVED_FROM_CARD:
+            case READER_POST_SAVED_FROM_OTHER_POST_LIST:
+            case READER_POST_SAVED_FROM_SAVED_POST_LIST:
             case READER_POST_SAVED_FROM_DETAILS:
                 return "reader_post_saved";
-            case READER_POST_UNSAVED_FROM_CARD:
+            case READER_POST_UNSAVED_FROM_OTHER_POST_LIST:
+            case READER_POST_UNSAVED_FROM_SAVED_POST_LIST:
             case READER_POST_UNSAVED_FROM_DETAILS:
                 return "reader_post_unsaved";
             case READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST:
