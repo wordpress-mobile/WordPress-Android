@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.text.TextUtils;
@@ -54,7 +53,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.BottomNavController;
-import org.wordpress.android.ui.main.MainFragmentScrollListener;
+import org.wordpress.android.ui.main.MainScrollListener;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -458,28 +457,10 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    public static void attachScrollListener(@NonNull final Fragment fragment, @NonNull RecyclerView recycler) {
-        recycler.setOnScrollListener(new OnScrollListener() {
-            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (fragment.getActivity() instanceof MainFragmentScrollListener) {
-                    MainFragmentScrollListener listener = (MainFragmentScrollListener) fragment.getActivity();
-                    if (dy < 0) {
-                        listener.onFragmentScrollUp();
-                    } else if (dy > 0) {
-                        listener.onFragmentScrollDown();
-                    }
-                }
-            }
-        });
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
         mRecyclerView = rootView.findViewById(R.id.reader_recycler_view);
-
-        attachScrollListener(this, mRecyclerView.getRecyclerView());
         Context context = container.getContext();
 
         // view that appears when current tag/blog has no posts - box images in this view are
@@ -598,6 +579,10 @@ public class ReaderPostListFragment extends Fragment
         // progress bar that appears when loading more posts
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
+
+        if (getActivity() instanceof MainScrollListener) {
+            ((MainScrollListener) getActivity()).onScrollingViewCreated(mRecyclerView.getRecyclerView());
+        }
 
         return rootView;
     }

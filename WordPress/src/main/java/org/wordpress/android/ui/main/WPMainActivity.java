@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -97,7 +99,7 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
  * Main activity which hosts sites, reader, me and notifications pages
  */
 public class WPMainActivity extends AppCompatActivity
-        implements OnPageListener, MainFragmentScrollListener,
+        implements OnPageListener, MainScrollListener,
         BottomNavController, BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
@@ -131,17 +133,32 @@ public class WPMainActivity extends AppCompatActivity
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
 
-    @Override
-    public void onFragmentScrollUp() {
-        if (mBottomNavContainer.getVisibility() != View.VISIBLE) {
+    public void showBottomNav(boolean show) {
+        if (show && mBottomNavContainer.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mBottomNavContainer, true);
+        } else if (!show && mBottomNavContainer.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNavContainer, false);
         }
     }
 
+    /*
+     * Called by the four fragments when their views are created - we use this to attach a scroll listener
+     * that enables hiding the bottom navigation when scrolling down
+     */
     @Override
-    public void onFragmentScrollDown() {
-        if (mBottomNavContainer.getVisibility() == View.VISIBLE) {
-            AniUtils.animateBottomBar(mBottomNavContainer, false);
+    public void onScrollingViewCreated(@NonNull View view) {
+        if (view instanceof RecyclerView) {
+            RecyclerView recycler = (RecyclerView) view;
+            recycler.setOnScrollListener(new OnScrollListener() {
+                @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy < 0) {
+                        showBottomNav(true);
+                    } else if (dy > 0) {
+                        showBottomNav(false);
+                    }
+                }
+            });
         }
     }
 
