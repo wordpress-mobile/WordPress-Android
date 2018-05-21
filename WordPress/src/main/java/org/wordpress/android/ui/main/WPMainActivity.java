@@ -112,7 +112,8 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
 
-    private View mBottomNavContainer;
+    private static final int MIN_SCROLL_DISTANCE = 8;
+
     private WPMainNavigationView mBottomNav;
     private Toolbar mToolbar;
 
@@ -164,8 +165,6 @@ public class WPMainActivity extends AppCompatActivity
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(R.string.app_title);
         setSupportActionBar(mToolbar);
-
-        mBottomNavContainer = findViewById(R.id.navbar_container);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getFragmentManager(), this);
@@ -478,10 +477,10 @@ public class WPMainActivity extends AppCompatActivity
     }
 
     public void showBottomNav(boolean show) {
-        if (show && mBottomNavContainer.getVisibility() != View.VISIBLE) {
-            AniUtils.animateBottomBar(mBottomNavContainer, true);
-        } else if (!show && mBottomNavContainer.getVisibility() == View.VISIBLE) {
-            AniUtils.animateBottomBar(mBottomNavContainer, false);
+        if (show && mBottomNav.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNav, true);
+        } else if (!show && mBottomNav.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNav, false);
         }
     }
 
@@ -492,22 +491,27 @@ public class WPMainActivity extends AppCompatActivity
     public void onFragmentScrolled(int dy) {
         if (dy < 0 && !mIsBottomNavHidden) {
             showBottomNav(true);
-        } else if (dy > 0) {
+        } else if (dy >= MIN_SCROLL_DISTANCE) {
             showBottomNav(false);
         }
+        AppLog.w(T.MAIN, Integer.toString(dy));
     }
 
+    /*
+     * these two are called by the reader fragment when a search is performed so we can hide the bottom navigation
+     * to prevent it appearing above the keyboard
+     */
     @Override
     public void onRequestShowBottomNavigation() {
         mIsBottomNavHidden = false;
-        mBottomNavContainer.setVisibility(View.VISIBLE);
+        showBottomNav(true);
     }
 
     @Override
     public void onRequestHideBottomNavigation() {
         // we only hide the bottom navigation when there's not a hardware keyboard present
         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
-            mBottomNavContainer.setVisibility(View.GONE);
+            showBottomNav(false);
             mIsBottomNavHidden = true;
         }
     }
