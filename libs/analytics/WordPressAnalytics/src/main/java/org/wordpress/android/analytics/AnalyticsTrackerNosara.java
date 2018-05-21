@@ -243,10 +243,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("source", "reader_filter");
                 break;
             case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
-                predefinedEventProperties.put("source", "saved_snackbar_post_list");
+                predefinedEventProperties.put("source", "post_list_saved_post_snackbar");
                 break;
             case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
-                predefinedEventProperties.put("source", "saved_snackbar_post_details");
+                predefinedEventProperties.put("source", "post_details_saved_post_snackbar");
                 break;
         }
 
