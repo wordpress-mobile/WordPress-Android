@@ -215,31 +215,31 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
                 predefinedEventProperties.put("source", "social");
                 break;
-            case READER_POST_BOOKMAKED_FROM_CARD:
+            case READER_POST_SAVED_FROM_CARD:
                 predefinedEventProperties.put("source", "reader_card");
                 break;
-            case READER_POST_BOOKMAKED_FROM_DETAILS:
+            case READER_POST_SAVED_FROM_DETAILS:
                 predefinedEventProperties.put("source", "post_details");
                 break;
-            case READER_POST_UNBOOKMARKED_FROM_CARD:
+            case READER_POST_UNSAVED_FROM_CARD:
                 predefinedEventProperties.put("source", "reader_card");
                 break;
-            case READER_POST_UNBOOKMARKED_FROM_DETAILS:
+            case READER_POST_UNSAVED_FROM_DETAILS:
                 predefinedEventProperties.put("source", "post_details");
                 break;
-            case READER_BOOKMARKED_POST_OPENED_FROM_SAVED_POST_LIST:
+            case READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST:
                 predefinedEventProperties.put("source", "saved_posts_list");
                 break;
-            case READER_BOOKMARKED_POST_OPENED_FROM_OTHER_POST_LIST:
+            case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
                 predefinedEventProperties.put("source", "other_post_list");
                 break;
-            case READER_BOOKMARKED_LIST_VIEWED_FROM_FILTER:
+            case READER_SAVED_LIST_VIEWED_FROM_FILTER:
                 predefinedEventProperties.put("source", "reader_filter");
                 break;
-            case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
+            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
                 predefinedEventProperties.put("source", "bookmark_snackbar_post_list");
                 break;
-            case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
+            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
                 predefinedEventProperties.put("source", "bookmark_snackbar_post_details");
                 break;
         }
@@ -464,19 +464,19 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_wpcom_sign_in_needed";
             case READER_USER_UNAUTHORIZED:
                 return "reader_user_unauthorized";
-            case READER_POST_BOOKMAKED_FROM_CARD:
-            case READER_POST_BOOKMAKED_FROM_DETAILS:
-                return "reader_post_bookmarked";
-            case READER_POST_UNBOOKMARKED_FROM_CARD:
-            case READER_POST_UNBOOKMARKED_FROM_DETAILS:
-                return "reader_post_unbookmarked";
-            case READER_BOOKMARKED_POST_OPENED_FROM_SAVED_POST_LIST:
-            case READER_BOOKMARKED_POST_OPENED_FROM_OTHER_POST_LIST:
-                return "reader_bookmarked_post_opened";
-            case READER_BOOKMARKED_LIST_VIEWED_FROM_FILTER:
-            case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
-            case READER_BOOKMARKED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
-                return "reader_bookmarked_list_viewed";
+            case READER_POST_SAVED_FROM_CARD:
+            case READER_POST_SAVED_FROM_DETAILS:
+                return "reader_post_saved";
+            case READER_POST_UNSAVED_FROM_CARD:
+            case READER_POST_UNSAVED_FROM_DETAILS:
+                return "reader_post_unsaved";
+            case READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST:
+            case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
+                return "reader_saved_post_opened";
+            case READER_SAVED_LIST_VIEWED_FROM_FILTER:
+            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
+            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
+                return "reader_saved_list_viewed";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
