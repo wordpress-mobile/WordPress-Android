@@ -1085,6 +1085,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "automated_transfer_status_failed";
             case AUTOMATED_TRANSFER_FLOW_COMPLETE:
                 return "automated_transfer_flow_complete";
+            case PUBLICIZE_SERVICE_CONNECTED:
+                return "publicize_service_connected";
             default:
                 return null;
         }

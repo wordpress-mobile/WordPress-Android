@@ -10,11 +10,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
@@ -119,6 +121,10 @@ public class PublicizeActions {
                 PublicizeConnection connection = PublicizeConnection.fromJson(jsonObject);
                 PublicizeTable.addOrUpdateConnection(connection);
                 EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.CONNECT));
+
+                Map<String, Object> analyticsProperties = new HashMap<>();
+                analyticsProperties.put("service", serviceId);
+                AnalyticsUtils.trackWithSiteId(Stat.PUBLICIZE_SERVICE_CONNECTED, siteId, analyticsProperties);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
