@@ -139,7 +139,9 @@ public class GCMMessageService extends GcmListenerService {
                                                                                         String noteId) {
         if (ACTIVE_NOTIFICATIONS_MAP.size() > 0) {
             // get the corresponding bundle for this noteId
-            for (Map.Entry<Integer, Bundle> row : ACTIVE_NOTIFICATIONS_MAP.entrySet()) {
+            // using a copy of the ArrayMap to iterate over on, as we might need to modify the original array
+            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(ACTIVE_NOTIFICATIONS_MAP);
+            for (Map.Entry<Integer, Bundle> row : tmpMap.entrySet()) {
                 Bundle noteBundle = row.getValue();
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                     NOTIFICATION_HELPER.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
