@@ -118,7 +118,6 @@ private fun configureZendesk(
     } else {
         "not_selected"
     }
-    val bloginf = blogInformation(siteStore.sites, accountStore?.account)
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore?.account)),
