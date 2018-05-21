@@ -619,12 +619,14 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            // first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
-            Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
-            if (ACTIVE_NOTIFICATIONS_MAP.size() > 1) {
+            // using a copy of the map to avoid concurrency problems
+            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(ACTIVE_NOTIFICATIONS_MAP);
+            // first remove 2fa push from the map, so it's not shown in the inbox style group notif
+            tmpMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+            if (tmpMap.size() > 1) {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 int noteCtr = 1;
-                for (Bundle pushBundle : ACTIVE_NOTIFICATIONS_MAP.values()) {
+                for (Bundle pushBundle : tmpMap.values()) {
                     // InboxStyle notification is limited to 5 lines
                     if (noteCtr > MAX_INBOX_ITEMS) {
                         break;
@@ -645,13 +647,13 @@ public class GCMMessageService extends GcmListenerService {
                     noteCtr++;
                 }
 
-                if (ACTIVE_NOTIFICATIONS_MAP.size() > MAX_INBOX_ITEMS) {
+                if (tmpMap.size() > MAX_INBOX_ITEMS) {
                     inboxStyle.setSummaryText(String.format(context.getString(R.string.more_notifications),
-                                                            ACTIVE_NOTIFICATIONS_MAP.size() - MAX_INBOX_ITEMS));
+                            tmpMap.size() - MAX_INBOX_ITEMS));
                 }
 
                 String subject =
-                        String.format(context.getString(R.string.new_notifications), ACTIVE_NOTIFICATIONS_MAP.size());
+                        String.format(context.getString(R.string.new_notifications), tmpMap.size());
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context,
                         context.getString(R.string.notification_channel_normal_id))
                         .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
@@ -671,10 +673,6 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setGroupSummary(true)
                         .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
                 showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
-            }
-            // reinsert 2fa bundle if it was present
-            if (authPNBundle != null) {
-                ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
             }
         }
 
