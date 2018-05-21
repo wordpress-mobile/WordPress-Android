@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 
 public class EditTextPreferenceWithValidation extends SummaryEditTextPreference {
     private ValidationType mValidationType = ValidationType.NONE;
+    // Ignore the default value, such as "Not Set", while showing the dialog
+    private String mStringToIgnoreForPrefilling = "";
 
     public EditTextPreferenceWithValidation(Context context) {
         super(context);
@@ -59,7 +61,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         }
 
         CharSequence summary = getSummary();
-        if (TextUtils.isEmpty(summary)) {
+        if (summary == null || summary.equals(mStringToIgnoreForPrefilling)) {
             getEditText().setText("");
         } else {
             getEditText().setText(summary);
@@ -90,6 +92,10 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
 
     public void setValidationType(ValidationType validationType) {
         mValidationType = validationType;
+    }
+
+    public void setStringToIgnoreForPrefilling(String stringToIgnoreForPrefilling) {
+        mStringToIgnoreForPrefilling = stringToIgnoreForPrefilling;
     }
 
     public enum ValidationType {

@@ -127,9 +127,11 @@ public class AppSettingsFragment extends PreferenceFragment
         mSupportEmailPreference.getEditText()
                 .setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mSupportEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
+        String defaultSupportEmailValue = getString(R.string.preference_not_set);
+        mSupportEmailPreference.setStringToIgnoreForPrefilling(defaultSupportEmailValue);
         String supportEmail = AppPrefs.getSupportEmail();
         mSupportEmailPreference
-                .setSummary(TextUtils.isEmpty(supportEmail) ? getString(R.string.preference_not_set) : supportEmail);
+                .setSummary(TextUtils.isEmpty(supportEmail) ? defaultSupportEmailValue : supportEmail);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
