@@ -33,6 +33,7 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.MainScrollListener;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -130,6 +131,10 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 onScrollToTop();
             }
         });
+
+        if (getActivity() instanceof MainScrollListener) {
+            ((MainScrollListener) getActivity()).onScrollingViewCreated(mRecyclerView);
+        }
 
         return view;
     }

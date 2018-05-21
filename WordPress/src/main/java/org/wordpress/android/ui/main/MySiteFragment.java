@@ -364,6 +364,10 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             }
         });
 
+        if (getActivity() instanceof MainScrollListener) {
+            ((MainScrollListener) getActivity()).onScrollingViewCreated(mScrollView);
+        }
+
         return rootView;
     }
 

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scroll_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:id="@+id/scroll_view"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingEnd="@dimen/content_margin"
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin"
-        android:paddingEnd="@dimen/content_margin"
         android:paddingStart="@dimen/content_margin">
 
         <android.support.v7.widget.CardView
@@ -36,16 +36,16 @@
                         android:id="@+id/avatar_container"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/me_profile_photo">
+                        android:contentDescription="@string/me_profile_photo"
+                        android:padding="4dp">
 
                         <org.wordpress.android.widgets.WPNetworkImageView
                             android:id="@+id/me_avatar"
                             android:layout_width="@dimen/avatar_sz_inner_circle"
                             android:layout_height="@dimen/avatar_sz_inner_circle"
                             app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
-                            app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" />
+                            app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp"/>
                     </FrameLayout>
 
                     <ProgressBar
@@ -53,47 +53,47 @@
                         style="@android:style/Widget.Holo.ProgressBar"
                         android:layout_width="@dimen/avatar_sz_inner_circle"
                         android:layout_height="@dimen/avatar_sz_inner_circle"
-                        android:background="@drawable/shape_oval_translucent"
                         android:layout_gravity="center"
-                        android:padding="@dimen/margin_large"
-                        android:indeterminate="true"
+                        android:background="@drawable/shape_oval_translucent"
                         android:clickable="true"
                         android:focusable="true"
+                        android:indeterminate="true"
+                        android:padding="@dimen/margin_large"
                         android:visibility="gone"
                         tools:visibility="visible"/>
                 </FrameLayout>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/change_photo"
-                    android:background="?attr/selectableItemBackground"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@id/frame_avatar"
-                    android:textColor="@color/grey_darken_10"
-                    android:padding="8dp"
-                    android:textAllCaps="true"
-                    android:textSize="10sp"
+                    android:layout_centerHorizontal="true"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:padding="8dp"
                     android:text="@string/change_photo"
-                    tools:text="Change photo"
-                    tools:ignore="SmallSp"/>
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_darken_10"
+                    android:textSize="10sp"
+                    tools:ignore="SmallSp"
+                    tools:text="Change photo"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_display_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/change_photo"
-                    android:layout_marginTop="8dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
                     android:maxLines="1"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_large"
                     android:textStyle="bold"
-                    tools:text="Full Name" />
+                    tools:text="Full Name"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_username"
@@ -105,7 +105,7 @@
                     android:maxLines="1"
                     android:textColor="@color/grey_darken_20"
                     android:textSize="@dimen/text_sz_medium"
-                    tools:text="username" />
+                    tools:text="username"/>
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
@@ -117,17 +117,17 @@
             <ImageView
                 android:id="@+id/me_my_profile_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_user_grey_24dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_user_grey_24dp"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_my_profile_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/my_profile" />
+                android:text="@string/my_profile"/>
 
         </LinearLayout>
 
-        <View style="@style/MeListSectionDividerView" />
+        <View style="@style/MeListSectionDividerView"/>
 
         <LinearLayout
             android:id="@+id/row_account_settings"
@@ -136,17 +136,17 @@
             <ImageView
                 android:id="@+id/me_account_settings_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_cog_grey_24dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_cog_grey_24dp"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_account_settings_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/account_settings" />
+                android:text="@string/account_settings"/>
 
         </LinearLayout>
 
-        <View style="@style/MeListSectionDividerView" />
+        <View style="@style/MeListSectionDividerView"/>
 
         <LinearLayout
             android:id="@+id/row_app_settings"
@@ -155,17 +155,17 @@
             <ImageView
                 android:id="@+id/me_app_settings_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_phone_grey_darken_24dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_phone_grey_darken_24dp"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_app_settings_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/me_btn_app_settings" />
+                android:text="@string/me_btn_app_settings"/>
 
         </LinearLayout>
 
-        <View style="@style/MeListSectionDividerView" />
+        <View style="@style/MeListSectionDividerView"/>
 
         <LinearLayout
             android:id="@+id/row_notifications"
@@ -174,18 +174,19 @@
             <ImageView
                 android:id="@+id/me_notifications_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_bell_grey_darken_24dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_bell_grey_darken_24dp"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_notifications_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/notification_settings" />
+                android:text="@string/notification_settings"/>
 
         </LinearLayout>
 
-        <View android:id="@+id/me_notifications_divider"
-            style="@style/MeListSectionDividerView" />
+        <View
+            android:id="@+id/me_notifications_divider"
+            style="@style/MeListSectionDividerView"/>
 
         <LinearLayout
             android:id="@+id/row_support"
@@ -194,17 +195,17 @@
             <ImageView
                 android:id="@+id/me_support_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_help_grey_24dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_help_grey_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/me_support_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/me_btn_support" />
+                android:text="@string/me_btn_support"/>
 
         </LinearLayout>
 
-        <View style="@style/MeListSectionDividerView" />
+        <View style="@style/MeListSectionDividerView"/>
 
         <LinearLayout
             android:id="@+id/row_logout"
@@ -213,17 +214,17 @@
             <ImageView
                 android:id="@+id/me_login_logout_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_sign_out_grey_24dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_sign_out_grey_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/me_login_logout_text_view"
                 style="@style/MeListRowTextView"
-                tools:text="@string/me_btn_login_logout" />
+                tools:text="@string/me_btn_login_logout"/>
 
         </LinearLayout>
 
-        <View style="@style/MeListSectionDividerView" />
+        <View style="@style/MeListSectionDividerView"/>
 
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
