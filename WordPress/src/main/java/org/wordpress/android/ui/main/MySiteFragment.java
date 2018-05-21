@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.NestedScrollView.OnScrollChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -365,7 +366,13 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
         });
 
         if (getActivity() instanceof MainScrollListener) {
-            ((MainScrollListener) getActivity()).onScrollingViewCreated(mScrollView);
+            mScrollView.setOnScrollChangeListener(new OnScrollChangeListener() {
+                @Override public void onScrollChange(NestedScrollView v, int scrollX, int scrollY,
+                                                     int oldScrollX, int oldScrollY) {
+                    int dy = scrollY - oldScrollY;
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                }
+            });
         }
 
         return rootView;

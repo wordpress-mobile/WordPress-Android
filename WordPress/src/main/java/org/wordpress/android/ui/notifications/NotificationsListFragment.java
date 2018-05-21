@@ -9,6 +9,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,7 +134,13 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         });
 
         if (getActivity() instanceof MainScrollListener) {
-            ((MainScrollListener) getActivity()).onScrollingViewCreated(mRecyclerView);
+            mRecyclerView.addOnScrollListener(new OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                }
+            });
         }
 
         return view;

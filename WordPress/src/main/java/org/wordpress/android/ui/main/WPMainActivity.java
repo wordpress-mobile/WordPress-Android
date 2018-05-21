@@ -11,15 +11,10 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.NestedScrollView.OnScrollChangeListener;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -145,37 +140,14 @@ public class WPMainActivity extends AppCompatActivity
     }
 
     /*
-     * Called by the four fragments when their views are created - we use this to attach a scroll listener
-     * that enables hiding the bottom navigation when scrolling down
+     * Called by the four fragments when their views are scrolled so we can toggle the bottom navigation
      */
     @Override
-    public void onScrollingViewCreated(@NonNull View view) {
-        if (view instanceof RecyclerView) {
-            RecyclerView recycler = (RecyclerView) view;
-            recycler.setOnScrollListener(new OnScrollListener() {
-                @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    if (dy < 0) {
-                        showBottomNav(true);
-                    } else if (dy > 0) {
-                        showBottomNav(false);
-                    }
-                }
-            });
-        } else if (view instanceof NestedScrollView) {
-            NestedScrollView scrollView = (NestedScrollView) view;
-            scrollView.setOnScrollChangeListener(new OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY,
-                                           int oldScrollX, int oldScrollY) {
-                    int dy = scrollY - oldScrollY;
-                    if (dy < 0) {
-                        showBottomNav(true);
-                    } else if (dy > 0) {
-                        showBottomNav(false);
-                    }
-                }
-            });
+    public void onFragmentScrolled(int dy) {
+        if (dy < 0) {
+            showBottomNav(true);
+        } else if (dy > 0) {
+            showBottomNav(false);
         }
     }
 
