@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +29,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -214,13 +217,13 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PREVIEW = 2;
 
-    private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
-
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
 
     private static final String WHAT_IS_NEW_IN_MOBILE_URL =
             "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
+    private static final int CHANGE_SAVE_DELAY = 500;
+    public static final int MAX_UNSAVED_POSTS = 50;
 
     enum AddExistingdMediaSource {
         WP_MEDIA_LIBRARY,
@@ -229,6 +232,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private Handler mHandler;
     private Handler mSyncHandler;
+    private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
@@ -553,7 +557,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private Runnable mAutoSave = new Runnable() {
+    private Runnable mSave = new Runnable() {
         @Override
         public void run() {
             try {
@@ -563,11 +567,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        mDebounceCounter = 0;
                         updatePostObject(true, title, content, spannedContent);
                         savePostToDb();
-                        if (mHandler != null) {
-                            mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
-                        }
                     }
                 }).start();
             } catch (EditorFragmentNotAddedException e) {
@@ -581,7 +583,6 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onResume();
         mIsActive = true;
         mHandler = new Handler();
-        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
 
         EventBus.getDefault().register(this);
 
@@ -627,7 +628,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        mHandler.removeCallbacks(mAutoSave);
+
         mHandler = null;
 
         EventBus.getDefault().unregister(this);
@@ -1907,6 +1908,18 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
 
+                    mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, new Observer<Editable>() {
+                        @Override public void onChanged(@Nullable Editable editable) {
+                            mHandler.removeCallbacks(mSave);
+                            if (mDebounceCounter < MAX_UNSAVED_POSTS) {
+                                mDebounceCounter++;
+                                mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
+                            } else {
+                                mHandler.post(mSave);
+                            }
+                        }
+                    });
+
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
 
@@ -3020,7 +3033,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                                                                  FluxCUtils.mediaFileFromMediaModel(media));
+                        FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
             UploadService.cancelFinalNotification(this, mPost);

@@ -21,6 +21,8 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -49,6 +51,9 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     private Dialog mDialog;
     private String mUrl;
     private String mCaption;
+    private String mButtonText;
+    private int mIcon = -1;
+    private int mLayout = R.layout.learn_more_pref;
     private boolean mUseCustomJsFormatting;
 
     public LearnMorePreference(Context context, AttributeSet attrs) {
@@ -66,6 +71,15 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
                 if (id != -1) {
                     mCaption = array.getResources().getString(id);
                 }
+            } else if (index == R.styleable.LearnMorePreference_button) {
+                int id = array.getResourceId(index, -1);
+                if (id != -1) {
+                    mButtonText = array.getResources().getString(id);
+                }
+            } else if (index == R.styleable.LearnMorePreference_icon) {
+                mIcon = array.getResourceId(index, -1);
+            } else if (index == R.styleable.LearnMorePreference_layout) {
+                mLayout = array.getResourceId(index, -1);
             }
         }
         array.recycle();
@@ -74,13 +88,26 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     @Override
     protected View onCreateView(@NonNull ViewGroup parent) {
         super.onCreateView(parent);
-        View view = View.inflate(getContext(), R.layout.learn_more_pref, null);
-        view.setOnClickListener(this);
+        View view = View.inflate(getContext(), mLayout, null);
+        Button learnMoreButton = view.findViewById(R.id.learn_more_button);
+        learnMoreButton.setOnClickListener(this);
 
         if (!TextUtils.isEmpty(mCaption)) {
-            TextView captionView = (TextView) view.findViewById(R.id.learn_more_caption);
-            captionView.setText(mCaption);
-            captionView.setVisibility(View.VISIBLE);
+            TextView caption = view.findViewById(R.id.learn_more_caption);
+            caption.setText(mCaption);
+            caption.setVisibility(View.VISIBLE);
+        }
+
+        if (!TextUtils.isEmpty(mButtonText)) {
+            learnMoreButton.setText(mButtonText);
+        }
+
+        if (mIcon != -1) {
+            ImageView icon = view.findViewById(R.id.learn_more_icon);
+            if (icon != null) {
+                icon.setImageResource(mIcon);
+                icon.setVisibility(View.VISIBLE);
+            }
         }
 
         return view;

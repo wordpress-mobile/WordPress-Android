@@ -715,8 +715,15 @@
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
-    <string name="preference_send_usage_stats">Send statistics</string>
-    <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
+    <string name="preference_collect_information">Collect information</string>
+    <string name="preference_privacy_settings">Privacy settings</string>
+    <string name="cookie_policy_learn_more_header">Cookie Policy</string>
+    <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
+    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
+    <string name="privacy_policy_learn_more_caption">This information helps us improve our products, make marketing to you more relevant, personalize your WordPress.com experience, and more as detailed in our privacy policy.</string>
+    <string name="third_party_policy_learn_more_header">Third Party Policy</string>
+    <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
+    <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
 
