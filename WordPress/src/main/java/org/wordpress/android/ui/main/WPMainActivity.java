@@ -68,6 +68,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -478,10 +479,14 @@ public class WPMainActivity extends AppCompatActivity
     }
 
     public void showBottomNav(boolean show) {
+        Duration duration = Duration.SHORT;
+        View separator = findViewById(R.id.bottom_navigation_separator);
         if (show && mBottomNav.getVisibility() != View.VISIBLE) {
-            AniUtils.animateBottomBar(mBottomNav, true);
+            AniUtils.animateBottomBar(mBottomNav, true, duration);
+            AniUtils.fadeIn(separator, duration);
         } else if (!show && mBottomNav.getVisibility() == View.VISIBLE) {
             AniUtils.animateBottomBar(mBottomNav, false);
+            AniUtils.fadeOut(separator, duration);
         }
     }
 
