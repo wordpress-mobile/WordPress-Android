@@ -230,18 +230,16 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
-        for (Integer pushId : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
-            notificationManager.cancel(pushId);
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Integer pushId = row.getKey();
+            // don't cancel or remove the AUTH notification if it exists
+            if (!pushId.equals(AUTH_PUSH_NOTIFICATION_ID)) {
+                notificationManager.cancel(pushId);
+                it.remove();
+            }
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
-
-        // reinsert 2fa bundle if it was present
-        if (authPNBundle != null) {
-            ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
-        }
-
-        clearNotifications();
     }
 
     public static synchronized void remove2FANotification(Context context) {
