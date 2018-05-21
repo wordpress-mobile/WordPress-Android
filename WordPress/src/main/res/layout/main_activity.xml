@@ -20,22 +20,16 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/connection_bar"
         android:layout_below="@+id/toolbar"/>
-
-    <!-- this coordinator exists only for snackbars -->
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_navigation"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/connection_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_navigation"
+        android:layout_alignWithParentIfMissing="true"
         android:background="@color/alert_yellow"
         android:gravity="center"
         android:paddingBottom="@dimen/margin_medium"
@@ -46,6 +40,14 @@
         android:textSize="@dimen/text_sz_small"
         android:visibility="gone"
         tools:visibility="visible"/>
+
+    <!-- this coordinator exists only for snackbars -->
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_alignWithParentIfMissing="true"/>
 
     <org.wordpress.android.ui.main.WPMainNavigationView
         android:id="@+id/bottom_navigation"
