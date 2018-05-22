@@ -36,10 +36,11 @@ private fun runWithSupportEmailAndNameFromUserInput(
     emailAndNameSelected: (String, String) -> Unit
 ) {
     val accountEmail = accountStore?.account?.email
-    val siteEmail = selectedSite?.email
-    val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else siteEmail
+    val accountDisplayName = accountStore?.account?.displayName
+    val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else selectedSite?.email
+    val nameSuggestion = if (!accountDisplayName.isNullOrEmpty()) accountDisplayName else selectedSite?.username
 
-    val (layout, emailField, nameField) = inputDialogLayout(context, emailSuggestion)
+    val (layout, emailField, nameField) = inputDialogLayout(context, emailSuggestion, nameSuggestion)
 
     val builder = AlertDialog.Builder(context)
     builder.setView(layout)
@@ -58,7 +59,8 @@ private fun runWithSupportEmailAndNameFromUserInput(
 
 private fun inputDialogLayout(
     context: Context,
-    emailSuggestion: String?
+    emailSuggestion: String?,
+    nameSuggestion: String?
 ): Triple<ViewGroup, EditText, EditText> {
     val layout = LinearLayout(context)
     layout.orientation = LinearLayout.VERTICAL
@@ -73,7 +75,7 @@ private fun inputDialogLayout(
     val nameLabel = inputDialogLabel(context, R.string.support_name)
     layout.addView(nameLabel)
 
-    val nameField = inputDialogEditText(context, InputType.TYPE_CLASS_TEXT, null)
+    val nameField = inputDialogEditText(context, InputType.TYPE_CLASS_TEXT, nameSuggestion)
     layout.addView(nameField)
     return Triple(layout, emailField, nameField)
 }
