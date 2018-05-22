@@ -28,7 +28,8 @@ public class SelfSignedSSLUtils {
     public static void showSSLWarningDialog(@NonNull final Context context,
                                             @NonNull final MemorizingTrustManager memorizingTrustManager,
                                             @Nullable final Callback callback) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog));
+        AlertDialog.Builder alert = new AlertDialog.Builder(
+                new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert));
         alert.setTitle(context.getString(org.wordpress.android.R.string.ssl_certificate_error));
         alert.setMessage(context.getString(org.wordpress.android.R.string.ssl_certificate_ask_trust));
         alert.setPositiveButton(org.wordpress.android.R.string.yes, new DialogInterface.OnClickListener() {

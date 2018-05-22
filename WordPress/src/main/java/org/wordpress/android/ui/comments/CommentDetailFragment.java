@@ -333,7 +333,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // If the comment status is trash or spam, next deletion is a permanent deletion.
                 if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                     dialogBuilder.setTitle(getResources().getText(R.string.delete));
                     dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
                     dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),

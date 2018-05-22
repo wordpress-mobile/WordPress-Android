@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-24 20:47:14+0000
+Translation-Revision-Date: 2018-05-10 08:50:15+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="login_email_button_signup">Еще нет учетной записи? %1$sЗарегистрируйтесь%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Возможность установки плагинов требует, чтобы сайт не был в серых списках.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Возможность установки плагинов требует связи подписки основного домена и этого пользователя.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Возможность установки плагинов требует привилегий администратора.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Плагин не может быть установлен на VIP сайтах.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Плагин не может быть установлен из–за ограничений дискового пространства.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Возможность установки плагинов требует проверенного адреса email.</string>
+    <string name="plugin_install_site_ineligible_site_private">Возможность установки плагинов требует открытого сайта.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Возможность установки плагинов требует бизнес тариф.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Возможность установки плагинов требует пользовательского домена.</string>
+    <string name="plugin_install_site_ineligible_default_error">Возможность установки плагинов недоступна для этого сайта.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Мы завершаем установку -– почти готово…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Установка плагина…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Установить</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Установка первого плагина на сайт может занять до 1 минуты. В течении этого времени вы не сможете вносить изменения на ваш сайт.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Установить плагин</string>
+    <string name="notification_settings_followed_dialog_title">Уведомления</string>
+    <string name="notification_settings_followed_dialog_email_comments">Посылать по эл.почте новые комментарии</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Еженедельно</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Сразу</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Ежедневно</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Новые записи</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Получать уведомления о новых записях на этом сайте</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Посылать по эл.почте новые записи</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Все мои сайты с подпиской</string>
+    <string name="notification_settings_category_followed_sites">Сайты с подпиской</string>
+    <string name="content_description_person_reading_device_notification">Персональные устройства чтения с уведомлениями</string>
+    <string name="content_description_people_looking_charts">Люди, смотрящие на графики и диаграммы</string>
+    <string name="comment_title">%s в %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Точно хотите навсегда удалить эту страницу?</string>
+    <string name="dialog_confirm_delete_permanently_post">Точно хотите навсегда удалить эту запись?</string>
     <string name="notification_site_creation_title_in_progress">Создание сайта… Это займет пару минут.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -80,7 +111,6 @@ Language: ru
     <string name="profile_picture">Изображение профиля %s</string>
     <string name="comment_checkmark_desc">отметка</string>
     <string name="signup_with_google_progress">Регистрация через Google…</string>
-    <string name="editor_toast_no_action_taken">Возникла ошибка. Никаких действий не совершено.</string>
     <string name="jetpack_connection_failed_with_reason">Подключение к Jetpack не удалось: %s</string>
     <string name="jetpack_already_connected_toast">Вы уже подключили Jetpack</string>
     <string name="menu_undo_snackbar_action">ОТМЕНИТЬ</string>

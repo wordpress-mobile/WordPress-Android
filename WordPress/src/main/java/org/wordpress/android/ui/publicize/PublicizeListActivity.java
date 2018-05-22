@@ -251,7 +251,8 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     private void confirmDisconnect(final PublicizeConnection publicizeConnection) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
         builder.setMessage(
                 String.format(getString(R.string.dlg_confirm_publicize_disconnect), publicizeConnection.getLabel()));
         builder.setTitle(R.string.share_btn_disconnect);

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-03 09:54:06+0000
+Translation-Revision-Date: 2018-05-15 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="login_email_button_signup">아직 계정이 없으신가요? %1$s가입하세요.%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">플러그인 기능을 사용하려면 사이트가 양호한 상태여야 합니다.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">플러그인 기능을 사용하려면 이 사용자와 연결된 기본 도메인 구독이 필요합니다.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">플러그인 기능을 사용하려면 관리자 권한이 필요합니다.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">플러그인은 VIP 사이트에 설치할 수 없습니다.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">디스크 공간이 부족하여 플러그인을 설치할 수 없습니다.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">플러그인 기능을 사용하려면 확인된 이메일 주소가 필요합니다.</string>
+    <string name="plugin_install_site_ineligible_site_private">플러그인 기능을 사용하려면 사이트를 공개해야 합니다.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">플러그인 기능을 사용하려면 비즈니스 요금제가 필요합니다.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">플러그인 기능을 사용하려면 사용자 정의 도메인이 필요합니다.</string>
+    <string name="plugin_install_site_ineligible_default_error">이 사이트에서는 플러그인 기능을 사용할 수 없습니다.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">최종 설정을 완료하는 중입니다. 조금만 기다려 주세요…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">플러그인을 설치하는 중…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">설치</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">첫 번째 플러그인을 사이트에 설치하는 데에는 최대 1분이 소요될 수 있습니다. 이 시간 동안은 사이트를 변경할 수 없습니다.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">플러그인 설치</string>
+    <string name="notification_settings_followed_dialog_title">알림</string>
+    <string name="notification_settings_followed_dialog_email_comments">새 댓글을 이메일로 받기</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">매주</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">즉시</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">매일</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">새 글</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">이 사이트의 새 글에 대한 알림 받기</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">새 글을 이메일로 받기</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">팔로우한 사이트 전체</string>
+    <string name="notification_settings_category_followed_sites">팔로우한 사이트</string>
+    <string name="content_description_person_reading_device_notification">기기에서 알림을 읽고 있는 사람</string>
+    <string name="content_description_people_looking_charts">그래프와 차트를 보는 사람들</string>
+    <string name="comment_title">%s의 %s</string>
+    <string name="dialog_confirm_delete_permanently_page">이 페이지를 영구적으로 삭제하시겠습니까?</string>
+    <string name="dialog_confirm_delete_permanently_post">이 글을 영구적으로 삭제하시겠습니까?</string>
     <string name="notification_site_creation_title_in_progress">사이트를 만드는 중… 수 분이 걸릴 수 있습니다.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -79,7 +110,6 @@ Language: ko_KR
     <string name="profile_picture">%s의 프로필 사진</string>
     <string name="comment_checkmark_desc">확인 표시</string>
     <string name="signup_with_google_progress">Google로 가입하는 중…</string>
-    <string name="editor_toast_no_action_taken">오류가 발생했습니다. 아무런 작업도 수행되지 않았습니다.</string>
     <string name="jetpack_connection_failed_with_reason">젯팩에 연결 실패: %s</string>
     <string name="jetpack_already_connected_toast">이미 젯팩에 연결되어 있습니다.</string>
     <string name="menu_undo_snackbar_action">실행 취소</string>
@@ -272,7 +302,6 @@ Language: ko_KR
     <string name="site_settings_serve_images_from_our_servers_summary">젯팩은 회원님의 이미지를 최적화하며 방문자에게 가장 가까운 서버 위치에서 이미지를 제공합니다. 글로벌 콘텐츠 제공 네트워크를 사용하면 사이트의 로드 속도가 향상됩니다.</string>
     <string name="site_settings_serve_images_from_our_servers">서버에서 이미지 제공</string>
     <string name="site_settings_speed_up_your_site">사이트 속도 향상</string>
-    <string name="stats_jetpack_connection_setup_info">워드프레스 사이트에서 통계를 사용하려면 젯팩 플러그인을 설치해야 합니다. 젯팩을 설치하시겠어요?</string>
     <string name="stats_jetpack_connection_setup">젯팩 설정</string>
     <string name="plugin_chevron_icon_content_description">텍스트 토글</string>
     <string name="plugin_info_your_version">현재 워드프레스 버전</string>

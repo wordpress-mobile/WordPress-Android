@@ -126,7 +126,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         mProgressView = view.findViewById(R.id.progress_view);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);

@@ -151,7 +151,7 @@ public class WPMediaUtils {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(activity, R.style.Calypso_Dialog));
+                new ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert));
         builder.setTitle(org.wordpress.android.R.string.image_optimization_promo_title);
         builder.setMessage(org.wordpress.android.R.string.image_optimization_promo_desc);
         builder.setPositiveButton(R.string.turn_on, onClickListener);
@@ -212,7 +212,7 @@ public class WPMediaUtils {
 
     private static void showSDCardRequiredDialog(Context context) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(context, R.style.Calypso_Dialog));
+                new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert));
         dialogBuilder.setTitle(context.getResources().getText(R.string.sdcard_title));
         dialogBuilder.setMessage(context.getResources().getText(R.string.sdcard_message));
         dialogBuilder.setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {

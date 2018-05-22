@@ -118,7 +118,7 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
 
         builder.setTitle(title);
         builder.setMessage(message);
