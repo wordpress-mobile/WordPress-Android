@@ -65,8 +65,8 @@ fun showZendeskHelpCenter(context: Context, accountStore: AccountStore, selected
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    runWithSupportEmail(context, accountStore, selectedSite) { email ->
-        zendeskInstance.setIdentity(zendeskIdentity(email, email))
+    runWithSupportEmailAndName(context, accountStore, selectedSite) { email, name ->
+        zendeskInstance.setIdentity(zendeskIdentity(email, name))
         SupportActivity.Builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
                 .withLabelNames(ZendeskConstants.articleLabel)
