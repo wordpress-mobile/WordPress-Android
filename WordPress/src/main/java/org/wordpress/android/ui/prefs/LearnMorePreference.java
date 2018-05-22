@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.Preference;
@@ -55,6 +57,7 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     private int mIcon = -1;
     private int mLayout = R.layout.learn_more_pref;
     private boolean mUseCustomJsFormatting;
+    private boolean mOpenInDialog;
 
     public LearnMorePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -80,6 +83,8 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
                 mIcon = array.getResourceId(index, -1);
             } else if (index == R.styleable.LearnMorePreference_layout) {
                 mLayout = array.getResourceId(index, -1);
+            } else if (index == R.styleable.LearnMorePreference_openInDialog) {
+                mOpenInDialog = array.getBoolean(index, false);
             }
         }
         array.recycle();
@@ -128,7 +133,9 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
             super.onRestoreInstanceState(state);
         } else {
             super.onRestoreInstanceState(((SavedState) state).getSuperState());
-            showDialog();
+            if (mOpenInDialog) {
+                showDialog();
+            }
         }
     }
 
@@ -138,7 +145,14 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
             return;
         }
         AnalyticsTracker.track(Stat.SITE_SETTINGS_LEARN_MORE_CLICKED);
-        showDialog();
+        if (mOpenInDialog) {
+            showDialog();
+        } else {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
+            if (browserIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                v.getContext().startActivity(browserIntent);
+            }
+        }
     }
 
     private void showDialog() {
