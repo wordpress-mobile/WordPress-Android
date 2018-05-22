@@ -494,7 +494,7 @@ public class WPMainActivity extends AppCompatActivity
      * Called by the four fragments when their views are scrolled so we can toggle the bottom navigation
      */
     @Override
-    public void onFragmentScrolled(int dy, int offsetY) {
+    public void onFragmentScrolled(int dy) {
         if (dy < 0 && !mIsBottomNavHidden) {
             showBottomNav(true);
         } else if (dy >= MIN_SCROLL_DISTANCE) {

@@ -589,8 +589,7 @@ public class ReaderPostListFragment extends Fragment
                     hideNewPostsBar();
                 }
                 if (getActivity() instanceof MainScrollListener) {
-                    int offsetY = recyclerView.getScrollY();
-                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy, offsetY);
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
                 }
             }
         });
