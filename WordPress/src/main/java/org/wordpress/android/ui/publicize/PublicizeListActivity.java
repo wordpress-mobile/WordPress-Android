@@ -313,8 +313,7 @@ public class PublicizeListActivity extends AppCompatActivity
             } else if (event.getAction() == ConnectAction.DISCONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_DISCONNECTED, mSite, analyticsProperties);
             }
-        }
-        else {
+        } else {
             ToastUtils.showToast(this, R.string.error_generic);
         }
     }
