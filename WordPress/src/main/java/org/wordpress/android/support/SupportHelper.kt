@@ -13,6 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.util.validateEmail
 
 fun runWithSupportEmailAndName(
     context: Context,
@@ -42,19 +43,28 @@ private fun runWithSupportEmailAndNameFromUserInput(
 
     val (layout, emailField, nameField) = inputDialogLayout(context, emailSuggestion, nameSuggestion)
 
-    val builder = AlertDialog.Builder(context)
-    builder.setView(layout)
-    builder.setMessage(context.getString(R.string.support_dialog_enter_email_and_name))
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val email = emailField.text.toString()
-                val name = nameField.text.toString()
-                // TODO: validate email
+    val dialog = AlertDialog.Builder(context)
+            .setView(layout)
+            .setMessage(context.getString(R.string.support_dialog_enter_email_and_name))
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+    dialog.setOnShowListener {
+        val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+        button.setOnClickListener { _ ->
+            val email = emailField.text.toString()
+            val name = nameField.text.toString()
+            if (validateEmail(email)) {
                 AppPrefs.setSupportEmail(email)
                 AppPrefs.setSupportName(name)
                 emailAndNameSelected(email, name)
+                dialog.dismiss()
+            } else {
+                emailField.error = context.getString(R.string.invalid_email_message)
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        }
+    }
+    dialog.show()
 }
 
 private fun inputDialogLayout(
