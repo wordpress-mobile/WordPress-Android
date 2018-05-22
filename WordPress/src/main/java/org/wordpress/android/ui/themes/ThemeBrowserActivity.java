@@ -349,7 +349,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void showAlertDialogOnNewSettingNewTheme(ThemeModel newTheme) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
 
         String thanksMessage = String.format(getString(R.string.theme_prompt), newTheme.getName());
         if (!TextUtils.isEmpty(newTheme.getAuthorName())) {

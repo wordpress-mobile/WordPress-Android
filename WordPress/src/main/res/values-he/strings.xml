@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-01 10:54:07+0000
+Translation-Revision-Date: 2018-05-15 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="login_email_button_signup">אין לך חשבון עדיין? %1$sהרשמה%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">כדי להוסיף את התוסף, האתר חייב להיות יציב.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">כדי להוסיף את התוסף, הרישום לעדכונים בדומיין חייב להיות משויך למשתמש זה.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">כדי להוסיף את התוסף, יש לאפשר הרשאות של מנהל מערכת.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">לא ניתן להתקין את התוסף באתרי VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">לא ניתן להתקין את התוסף עקב מגבלות שטח בדיסק.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">כדי להוסיף את התוסף, יש לספק כתובת אימייל מאומתת.</string>
+    <string name="plugin_install_site_ineligible_site_private">כדי להוסיף את התוסף, האתר חייב להיות ציבורי.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">כדי להוסיף את התוסף, יש להתחבר לתוכנית לעסקים.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">כדי להוסיף את התוסף, יש להגדיר דומיין אישי.</string>
+    <string name="plugin_install_site_ineligible_default_error">לא ניתן להגדיר את התוסף עבור האתר הזה.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">אנחנו מחילים את ההגדרות הסופיות – תכף נסיים…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">מתקין תוסף…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">התקנה</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">ההתקנה של התוסף הראשון באתר עשויה לארוך כדקה. במהלך ההתקנה, לא תהיה לך אפשרות לבצע שינויים באתר.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">התקנת תוסף</string>
+    <string name="notification_settings_followed_dialog_title">הודעות</string>
+    <string name="notification_settings_followed_dialog_email_comments">שלחו לי אימייל על תגובות חדשות</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">פעם בשבוע</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">מייד</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">פעם ביום</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">פוסטים חדשים</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">קבלת הודעות על פוסטים חדשים שיפורסמו באתר זה</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">שלח לי אימייל על פוסטים חדשים</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">כל האתרים שנמצאים אצלי במעקב</string>
+    <string name="notification_settings_category_followed_sites">אתרים במעקב</string>
+    <string name="content_description_person_reading_device_notification">קריאת מכשיר עם הודעות</string>
+    <string name="content_description_people_looking_charts">אנשים מסתכלים על גרפים ותרשימים</string>
+    <string name="comment_title">%s ב–%s</string>
+    <string name="dialog_confirm_delete_permanently_page">האם ברצונך למחוק את העמוד לצמיתות?</string>
+    <string name="dialog_confirm_delete_permanently_post">האם ברצונך למחוק את הפוסט לצמיתות?</string>
     <string name="notification_site_creation_title_in_progress">יוצר את האתר… הפעולה תימשך מספר דקות.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -79,7 +110,6 @@ Language: he_IL
     <string name="profile_picture">תמונת הפרופיל של %s</string>
     <string name="comment_checkmark_desc">סימן ביקורת</string>
     <string name="signup_with_google_progress">מתחבר ל–Google…</string>
-    <string name="editor_toast_no_action_taken">אירעה שגיאה. לא בוצעה פעולה.</string>
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל–Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב–Jetpack כבר מחובר</string>
     <string name="menu_undo_snackbar_action">ביטול פעולה אחרונה</string>
@@ -272,7 +302,6 @@ Language: he_IL
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack ימטב את התמונות שלך ויציג אותן ממיקום השרת הקרוב ביותר למבקרים שלך. שימוש ברשת שליחת התוכן העולמית שלנו ישפר את מהירות הטעינה של האתר שלך.</string>
     <string name="site_settings_serve_images_from_our_servers">הצגת תמונות מהשרתים שלנו</string>
     <string name="site_settings_speed_up_your_site">הגברת המהירות של האתר שלך</string>
-    <string name="stats_jetpack_connection_setup_info">כדי להשתמש בנתונים סטטיסטיים באתר שלך ב–WordPress, עליך להתקין את התוסף של Jetpack. רוצה להגדיר את Jetpack?</string>
     <string name="stats_jetpack_connection_setup">הגדרת Jetpack</string>
     <string name="plugin_chevron_icon_content_description">החלפה בין המלל</string>
     <string name="plugin_info_your_version">הגרסה של WordPress שמותקנת אצלך</string>

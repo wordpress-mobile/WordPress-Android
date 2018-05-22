@@ -634,7 +634,7 @@ public class SitePickerActivity extends AppCompatActivity
                     {getString(R.string.site_picker_create_wpcom),
                             getString(R.string.site_picker_add_self_hosted)};
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setTitle(R.string.site_picker_add_site);
             builder.setAdapter(
                     new ArrayAdapter<CharSequence>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items) {
@@ -672,7 +672,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     private void showRemoveSelfHostedSiteDialog(@NonNull final SiteModel site) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
         dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
