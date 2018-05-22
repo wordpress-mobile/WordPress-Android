@@ -103,6 +103,7 @@
     <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
+    <string name="write_post">Write Post</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -280,6 +281,7 @@
     <!-- post view -->
     <string name="draft_uploaded">Draft uploaded</string>
     <string name="post_published">Post published</string>
+    <string name="post_submitted">Post submitted</string>
     <string name="page_published">Page published</string>
     <string name="post_scheduled">Post scheduled</string>
     <string name="page_scheduled">Page scheduled</string>
@@ -713,8 +715,15 @@
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
-    <string name="preference_send_usage_stats">Send statistics</string>
-    <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
+    <string name="preference_collect_information">Collect information</string>
+    <string name="preference_privacy_settings">Privacy settings</string>
+    <string name="cookie_policy_learn_more_header">Cookie Policy</string>
+    <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
+    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
+    <string name="privacy_policy_learn_more_caption">This information helps us improve our products, make marketing to you more relevant, personalize your WordPress.com experience, and more as detailed in our privacy policy.</string>
+    <string name="third_party_policy_learn_more_header">Third Party Policy</string>
+    <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
+    <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
 
@@ -741,6 +750,14 @@
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
+
+    <!-- activity log -->
+    <string name="activity">Activity</string>
+    <string name="activity_log">Activity Log</string>
+    <string name="activity_log_icon">Activity icon</string>
+    <string name="activity_log_event">Event</string>
+    <string name="rewind">Rewind</string>
+    <string name="activity_log_jetpack_icon">Jetpack icon</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -1358,6 +1375,12 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_btn_notifications_off">Turn off site notifications</string>
+    <string name="reader_btn_notifications_on">Turn on site notifications</string>
+
+    <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
+    <string name="reader_followed_blog_notifications_action">Enable</string>
+    <string name="reader_followed_blog_notifications_this">this site</string>
 
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
@@ -1475,18 +1498,13 @@
     <string name="invalid_email_message">Your email address isn\'t valid</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
-    <string name="nux_tutorial_get_started_title">Get started!</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="verification_code">Verification code</string>
     <string name="auth_required">Log in again to continue.</string>
-    <string name="send_link">Send link</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
-    <string name="check_your_email">Check your email</string>
-    <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
@@ -1498,7 +1516,6 @@
     <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
-    <string name="faq_button">FAQ</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1516,6 +1533,15 @@
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_add_new_site">Add new site</string>
+    <string name="my_site_icon_dialog_title">Site Icon</string>
+    <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
+    <string name="my_site_icon_dialog_change_message">How would you like to edit the icon?</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">You don\'t have permission to add a site icon.</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">You don\'t have permission to edit the site icon.</string>
+    <string name="my_site_icon_dialog_change_button">Change</string>
+    <string name="my_site_icon_dialog_remove_button">Remove</string>
+    <string name="my_site_icon_dialog_cancel_button">Cancel</string>
+    <string name="my_site_icon_content_description">Change site icon</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -1547,6 +1573,7 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
     <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
+    <string name="tabbar_accessibility_label_write">New post. Write a new post.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
 
@@ -1817,7 +1844,6 @@
     <string name="plans">Plans</string>
     <string name="plans_loading_error">Unable to load plans</string>
     <string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
 
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>
@@ -2071,7 +2097,6 @@
     <string name="stats_bar_date_value_desc">%s, %d views</string>
     <string name="stats_bar_week_desc">Week of %s</string>
     <string name="fab_add_tag_desc">create tag</string>
-    <string name="fab_create_post_desc">create post</string>
     <string name="fab_create_desc">create</string>
     <string name="stats_legend">stats graph legend</string>
     <string name="stats_tab_tap_content_description">showing %s</string>

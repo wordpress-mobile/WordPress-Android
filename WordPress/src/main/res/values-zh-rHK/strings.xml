@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 07:54:07+0000
+Translation-Revision-Date: 2018-05-15 06:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="login_email_button_signup">還沒有帳號？%1$s註冊%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">外掛功能需要該網站具有良好聲譽。</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">外掛功能需要主要網域訂閱與此名使用者相關聯。</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">外掛功能需要管理員權限。</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">外掛程式無法安裝於 VIP 網站。</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">由於磁碟空間的限制，無法安裝外掛程式。</string>
+    <string name="plugin_install_site_ineligible_email_unverified">外掛功能需要通過驗證的電子郵件地址。</string>
+    <string name="plugin_install_site_ineligible_site_private">外掛功能需要該網站為公開網站。</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">外掛功能需要有商務版方案。</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">外掛功能需要有自訂網域。</string>
+    <string name="plugin_install_site_ineligible_default_error">外掛功能不適用於此網站。</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">我們正在進行最後的設定，作業即將完成……</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">正在安裝外掛程式……</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">安裝</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">在你的網站上安裝第一個外掛程式，可能需要 1 分鐘的時間。在此期間，你無法對你的網站進行任何變更。</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">安裝外掛程式</string>
+    <string name="notification_settings_followed_dialog_title">通知</string>
+    <string name="notification_settings_followed_dialog_email_comments">新留言的電子郵件</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">每週</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">即時</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">每天</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">新文章</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">接收來自此網站的新文章通知</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">有新文章時透過電子郵件通知我</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">我關注的所有網站</string>
+    <string name="notification_settings_category_followed_sites">關注的網站</string>
+    <string name="content_description_person_reading_device_notification">正在讀取通知裝置的使用者</string>
+    <string name="content_description_people_looking_charts">正在查看圖表的使用者</string>
+    <string name="comment_title">%s 於 %s</string>
+    <string name="dialog_confirm_delete_permanently_page">確定要永久刪除此頁面？</string>
+    <string name="dialog_confirm_delete_permanently_post">確定要永久刪除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在建立網站… 可能需要一點時間。</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -79,7 +110,6 @@ Language: zh_TW
     <string name="profile_picture">%s 的個人檔案照片</string>
     <string name="comment_checkmark_desc">檢查標記</string>
     <string name="signup_with_google_progress">透過 Google 註冊…</string>
-    <string name="editor_toast_no_action_taken">發生錯誤。未採取動作。</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_undo_snackbar_action">復原</string>
@@ -271,7 +301,6 @@ Language: zh_TW
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack 會最佳化你的圖片，並從與訪客距離最近的伺服器提供圖片。使用我們的全球內容傳遞網路可大幅提升網站的載入速度。</string>
     <string name="site_settings_serve_images_from_our_servers">由我們的伺服器提供圖片</string>
     <string name="site_settings_speed_up_your_site">加快網站的速度</string>
-    <string name="stats_jetpack_connection_setup_info">若要使用你 WordPress 網站的「統計」功能，必須安裝 Jetpack 外掛程式。是否要設定 Jetpack？</string>
     <string name="stats_jetpack_connection_setup">設定 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切換文字</string>
     <string name="plugin_info_your_version">你的 WordPress 版本</string>

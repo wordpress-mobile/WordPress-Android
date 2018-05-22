@@ -139,7 +139,9 @@ public class GCMMessageService extends GcmListenerService {
                                                                                         String noteId) {
         if (ACTIVE_NOTIFICATIONS_MAP.size() > 0) {
             // get the corresponding bundle for this noteId
-            for (Map.Entry<Integer, Bundle> row : ACTIVE_NOTIFICATIONS_MAP.entrySet()) {
+            // using a copy of the ArrayMap to iterate over on, as we might need to modify the original array
+            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(ACTIVE_NOTIFICATIONS_MAP);
+            for (Map.Entry<Integer, Bundle> row : tmpMap.entrySet()) {
                 Bundle noteBundle = row.getValue();
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                     NOTIFICATION_HELPER.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
@@ -172,13 +174,13 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void clearNotifications() {
-        Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
-
-        ACTIVE_NOTIFICATIONS_MAP.clear();
-
-        // reinsert 2fa bundle if it was present
-        if (authPNBundle != null) {
-            ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Integer pushId = row.getKey();
+            // don't cancel or remove the AUTH notification if it exists
+            if (!pushId.equals(AUTH_PUSH_NOTIFICATION_ID)) {
+                it.remove();
+            }
         }
     }
 
@@ -228,18 +230,16 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
-        for (Integer pushId : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
-            notificationManager.cancel(pushId);
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Integer pushId = row.getKey();
+            // don't cancel or remove the AUTH notification if it exists
+            if (!pushId.equals(AUTH_PUSH_NOTIFICATION_ID)) {
+                notificationManager.cancel(pushId);
+                it.remove();
+            }
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
-
-        // reinsert 2fa bundle if it was present
-        if (authPNBundle != null) {
-            ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
-        }
-
-        clearNotifications();
     }
 
     public static synchronized void remove2FANotification(Context context) {
@@ -254,8 +254,10 @@ public class GCMMessageService extends GcmListenerService {
 
     // NoteID is the ID if the note in WordPress
     public static synchronized void bumpPushNotificationsTappedAnalytics(String noteID) {
-        for (int id : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
-            Bundle noteBundle = ACTIVE_NOTIFICATIONS_MAP.get(id);
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator();
+             it.hasNext();) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Bundle noteBundle = row.getValue();
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
                 AnalyticsTracker.flush();
@@ -266,8 +268,10 @@ public class GCMMessageService extends GcmListenerService {
 
     // Mark all notifications as tapped
     public static synchronized void bumpPushNotificationsTappedAllAnalytics() {
-        for (int id : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
-            Bundle noteBundle = ACTIVE_NOTIFICATIONS_MAP.get(id);
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator();
+             it.hasNext();) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Bundle noteBundle = row.getValue();
             bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
         }
         AnalyticsTracker.flush();
@@ -619,12 +623,14 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            // first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
-            Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
-            if (ACTIVE_NOTIFICATIONS_MAP.size() > 1) {
+            // using a copy of the map to avoid concurrency problems
+            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(ACTIVE_NOTIFICATIONS_MAP);
+            // first remove 2fa push from the map, so it's not shown in the inbox style group notif
+            tmpMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+            if (tmpMap.size() > 1) {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 int noteCtr = 1;
-                for (Bundle pushBundle : ACTIVE_NOTIFICATIONS_MAP.values()) {
+                for (Bundle pushBundle : tmpMap.values()) {
                     // InboxStyle notification is limited to 5 lines
                     if (noteCtr > MAX_INBOX_ITEMS) {
                         break;
@@ -645,15 +651,16 @@ public class GCMMessageService extends GcmListenerService {
                     noteCtr++;
                 }
 
-                if (ACTIVE_NOTIFICATIONS_MAP.size() > MAX_INBOX_ITEMS) {
+                if (tmpMap.size() > MAX_INBOX_ITEMS) {
                     inboxStyle.setSummaryText(String.format(context.getString(R.string.more_notifications),
-                                                            ACTIVE_NOTIFICATIONS_MAP.size() - MAX_INBOX_ITEMS));
+                            tmpMap.size() - MAX_INBOX_ITEMS));
                 }
 
                 String subject =
-                        String.format(context.getString(R.string.new_notifications), ACTIVE_NOTIFICATIONS_MAP.size());
+                        String.format(context.getString(R.string.new_notifications), tmpMap.size());
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context,
                         context.getString(R.string.notification_channel_normal_id))
+                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                         .setSmallIcon(R.drawable.ic_my_sites_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
@@ -667,12 +674,9 @@ public class GCMMessageService extends GcmListenerService {
                 showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             } else {
                 // Set the individual notification we've already built as the group summary
-                builder.setGroupSummary(true);
+                builder.setGroupSummary(true)
+                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
                 showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
-            }
-            // reinsert 2fa bundle if it was present
-            if (authPNBundle != null) {
-                ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
             }
         }
 
@@ -761,16 +765,16 @@ public class GCMMessageService extends GcmListenerService {
 
             // Check for wpcom auth push, if so we will process this push differently
             // and we'll remove the auth special notif out of the map while we re-build the remaining notifs
-            Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
+            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(ACTIVE_NOTIFICATIONS_MAP);
+            Bundle authPNBundle = tmpMap.remove(AUTH_PUSH_NOTIFICATION_ID);
             if (authPNBundle != null) {
                 handlePushAuth(context, authPNBundle);
-                if (ACTIVE_NOTIFICATIONS_MAP.size() > 0 && noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                if (tmpMap.size() > 0 && noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
                     // get the data for the next notification in map for re-build
                     // because otherwise we would be keeping the PUSH_AUTH type note in `data`
-                    data = ACTIVE_NOTIFICATIONS_MAP.values().iterator().next();
+                    data = tmpMap.values().iterator().next();
                 } else if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
-                    // only note is the 2fa note, just reinsert it in the map and return
-                    ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+                    // only note is the 2fa note, just return
                     return;
                 }
             }
@@ -784,10 +788,10 @@ public class GCMMessageService extends GcmListenerService {
             NotificationCompat.Builder builder = null;
             String wpcomNoteID = null;
 
-            if (ACTIVE_NOTIFICATIONS_MAP.size() == 1) {
+            if (tmpMap.size() == 1) {
                 // only one notification remains, so get the proper message for it and re-instate
                 // in the system dashboard
-                Bundle remainingNote = ACTIVE_NOTIFICATIONS_MAP.values().iterator().next();
+                Bundle remainingNote = tmpMap.values().iterator().next();
                 if (remainingNote != null) {
                     String remainingNoteTitle =
                             StringEscapeUtils.unescapeHtml4(remainingNote.getString(PUSH_ARG_TITLE));
@@ -816,9 +820,9 @@ public class GCMMessageService extends GcmListenerService {
 
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
-                    if (!ACTIVE_NOTIFICATIONS_MAP.isEmpty()) {
+                    if (!tmpMap.isEmpty()) {
                         showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID,
-                                                         ACTIVE_NOTIFICATIONS_MAP.keyAt(0), false);
+                                tmpMap.keyAt(0), false);
                     }
                 }
             }
@@ -841,11 +845,6 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
-
-            // reinsert 2fa bundle if it was present
-            if (authPNBundle != null) {
-                ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
-            }
         }
 
         private String getNotificationTitleOrAppNameFromBundle(Context context, Bundle data) {

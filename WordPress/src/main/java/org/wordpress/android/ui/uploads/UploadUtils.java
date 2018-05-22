@@ -25,6 +25,7 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -271,6 +272,7 @@ public class UploadUtils {
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher) {
+        boolean userCanPublish = SiteUtils.isAccessedViaWPComRest(site) ? site.getHasCapabilityPublishPosts() : true;
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
@@ -295,16 +297,21 @@ public class UploadUtils {
             if (post != null) {
                 boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
                 if (isDraft) {
-                    View.OnClickListener publishPostListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            UploadUtils.publishPost(activity, post, site, dispatcher);
-                        }
-                    };
-                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
-                                                          R.string.button_publish, publishPostListener);
+                    if (userCanPublish) {
+                        View.OnClickListener publishPostListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                UploadUtils.publishPost(activity, post, site, dispatcher);
+                            }
+                        };
+                        UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
+                                R.string.button_publish, publishPostListener);
+                    } else {
+                        UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online);
+                    }
                 } else {
-                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                    int messageRes = post.isPage() ? R.string.page_published
+                            : (userCanPublish ? R.string.post_published : R.string.post_submitted);
                     UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
                                                           R.string.button_view, new View.OnClickListener() {
                                 @Override

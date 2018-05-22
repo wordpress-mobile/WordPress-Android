@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-01 08:54:08+0000
+Translation-Revision-Date: 2018-05-16 05:22:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="login_email_button_signup">アカウントをまだお持ちではありませんか ?%1$s登録%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">プラグイン機能を使うには、サイトが問題のない状態でなければなりません。</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">プラグイン機能を使うには、一次ドメインサブスクリプションがこのユーザーに関連付けられている必要があります。</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">プラグイン機能を使うには、管理者権限が必要です。</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">プラグインは、VIP サイトにはインストールできません。</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">ディスク容量制限のためにプラグインをインストールできません。</string>
+    <string name="plugin_install_site_ineligible_email_unverified">プラグイン機能を使うには、確認済みのメールアドレスが必要です。</string>
+    <string name="plugin_install_site_ineligible_site_private">プラグイン機能を使うには、サイトが公開されていることが必要です。</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">プラグイン機能には、ビジネスプランが必要です。</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">プラグイン機能には、カスタムドメインが必要です。</string>
+    <string name="plugin_install_site_ineligible_default_error">このサイトでは、プラグイン機能はご利用いただけません。</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">最終セットアップを実行中です — あと少しです…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">プラグインのインストール中…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">インストール</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">サイトに最初のプラグインをインストールするには最大 １ 分かかる場合があります。その間、サイトへの変更は行うことができなくなります。</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">プラグインのインストール</string>
+    <string name="notification_settings_followed_dialog_title">通知</string>
+    <string name="notification_settings_followed_dialog_email_comments">新規コメント通知メールを受け取る</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">毎週</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">即時</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">毎日</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">新規投稿</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">このサイトから新規投稿の通知を受け取る</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">新しい投稿をメールで通知</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">フォロー中のすべてのサイト</string>
+    <string name="notification_settings_category_followed_sites">フォロー中のサイト</string>
+    <string name="content_description_person_reading_device_notification">通知をデバイスで見ている人</string>
+    <string name="content_description_people_looking_charts">グラフとチャートを見ている人</string>
+    <string name="comment_title">%s 投稿日時: %s</string>
+    <string name="dialog_confirm_delete_permanently_page">このページを完全に削除しますか ?</string>
+    <string name="dialog_confirm_delete_permanently_post">この投稿を完全に削除しますか ?</string>
     <string name="notification_site_creation_title_in_progress">サイトの作成中… これには1、2分かかる場合があります。</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -42,7 +73,7 @@ Language: ja_JP
     <string name="stats_views_one_desc">表示回数1</string>
     <string name="stats_views_zero_desc">表示回数0</string>
     <string name="stats_follower_since_desc">%s前以後</string>
-    <string name="stats_tab_tap_content_description">%s表示中</string>
+    <string name="stats_tab_tap_content_description">%sを表示中</string>
     <string name="stats_legend">統計グラフの凡例</string>
     <string name="fab_create_desc">作成</string>
     <string name="fab_create_post_desc">投稿の作成</string>
@@ -79,7 +110,6 @@ Language: ja_JP
     <string name="profile_picture">%s のプロフィール写真</string>
     <string name="comment_checkmark_desc">チェックマーク</string>
     <string name="signup_with_google_progress">Google アカウントを作成…</string>
-    <string name="editor_toast_no_action_taken">エラーが発生しました。操作は実行されていません。</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack への接続に失敗しました:%s</string>
     <string name="jetpack_already_connected_toast">すでに Jetpack に接続しています</string>
     <string name="menu_undo_snackbar_action">取り消し</string>
@@ -272,7 +302,6 @@ Language: ja_JP
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack が画像を最適化し、訪問者に最も近いところにあるサーバーから画像を提供します。WordPress.com のグローバルコンテンツ配信ネットワークを使用すると、サイトの読み込み速度が向上します。</string>
     <string name="site_settings_serve_images_from_our_servers">WordPress.com のサーバーから画像を提供</string>
     <string name="site_settings_speed_up_your_site">サイトをスピードアップ</string>
-    <string name="stats_jetpack_connection_setup_info">WordPress サイトで統計情報機能を使用するには、Jetpack プラグインをインストールする必要があります。 Jetpack を設定しますか ?</string>
     <string name="stats_jetpack_connection_setup">Jetpack を設定</string>
     <string name="plugin_chevron_icon_content_description">テキストを切り替え</string>
     <string name="plugin_info_your_version">お使いの WordPress バージョン</string>

@@ -1,6 +1,7 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.arch.lifecycle.LiveData;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -70,6 +71,7 @@ import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
+import org.wordpress.aztec.AztecText.EditorHasChanges;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.IHistoryListener;
@@ -180,6 +182,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private int maxMediaSize;
     private int minMediaSize;
 
+    private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -206,9 +210,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
-        mTitle = (EditTextWithKeyBackListener) view.findViewById(R.id.title);
-        mContent = (AztecText) view.findViewById(R.id.aztec);
-        mSource = (SourceViewEditText) view.findViewById(R.id.source);
+        mTitle = view.findViewById(R.id.title);
+        mContent = view.findViewById(R.id.aztec);
+        mSource = view.findViewById(R.id.source);
+
+        mTitle.addTextChangedListener(mTextWatcher);
+        mContent.addTextChangedListener(mTextWatcher);
 
         // Set the default value for max and min picture sizes.
         maxMediaSize = EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity());
@@ -862,6 +869,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public LiveData<Editable> getTitleOrContentChanged() {
+        return mTextWatcher.getAfterTextChanged();
+    }
+
+    @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
         if (getActivity() == null) {
             // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
@@ -1037,6 +1049,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
+    }
+
+    @Override public boolean shouldLoadContentFromEditor() {
+        return mContent.hasChanges() != EditorHasChanges.NO_CHANGES;
     }
 
     @Override
