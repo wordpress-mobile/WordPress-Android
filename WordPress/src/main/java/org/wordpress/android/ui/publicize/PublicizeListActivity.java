@@ -309,6 +309,8 @@ public class PublicizeListActivity extends AppCompatActivity
 
             if (event.getAction() == ConnectAction.CONNECT || event.getAction() == ConnectAction.RECONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_CONNECTED, mSite, analyticsProperties);
+            } else if (event.getAction() == ConnectAction.DISCONNECT) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_DISCONNECTED, mSite, analyticsProperties);
             }
         }
         else {
