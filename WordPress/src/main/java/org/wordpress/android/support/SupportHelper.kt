@@ -5,6 +5,7 @@ package org.wordpress.android.support
 import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.text.InputType
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -37,21 +38,7 @@ private fun runWithSupportEmailAndNameFromUserInput(
     val siteEmail = selectedSite?.email
     val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else siteEmail
 
-    val layout = LinearLayout(context)
-    layout.orientation = LinearLayout.VERTICAL
-
-    val emailLabel = label(context, R.string.email)
-    layout.addView(emailLabel)
-
-    val emailInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-    val emailField = editText(context, emailInputType, emailSuggestion, true)
-    layout.addView(emailField)
-
-    val nameLabel = label(context, R.string.first_name)
-    layout.addView(nameLabel)
-
-    val nameField = editText(context, InputType.TYPE_CLASS_TEXT, null)
-    layout.addView(nameField)
+    val (layout, emailField, nameField) = inputDialogLayout(context, emailSuggestion)
 
     val builder = AlertDialog.Builder(context)
     builder.setView(layout)
@@ -67,13 +54,35 @@ private fun runWithSupportEmailAndNameFromUserInput(
             .show()
 }
 
-private fun label(context: Context, textResource: Int): TextView {
+private fun inputDialogLayout(
+    context: Context,
+    emailSuggestion: String?
+): Triple<ViewGroup, EditText, EditText> {
+    val layout = LinearLayout(context)
+    layout.orientation = LinearLayout.VERTICAL
+
+    val emailLabel = inputDialogLabel(context, R.string.email)
+    layout.addView(emailLabel)
+
+    val emailInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+    val emailField = inputDialogEditText(context, emailInputType, emailSuggestion, true)
+    layout.addView(emailField)
+
+    val nameLabel = inputDialogLabel(context, R.string.first_name)
+    layout.addView(nameLabel)
+
+    val nameField = inputDialogEditText(context, InputType.TYPE_CLASS_TEXT, null)
+    layout.addView(nameField)
+    return Triple(layout, emailField, nameField)
+}
+
+private fun inputDialogLabel(context: Context, textResource: Int): TextView {
     val textView = TextView(context)
     textView.setText(textResource)
     return textView
 }
 
-private fun editText(
+private fun inputDialogEditText(
     context: Context,
     inputType: Int,
     initialText: String?,
