@@ -228,7 +228,7 @@ public class EditPostActivity extends AppCompatActivity implements
         STOCK_PHOTO_LIBRARY
     }
 
-    private Handler mHandler;
+    private Handler mHandler = new Handler();
     private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
@@ -569,7 +569,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mHandler = new Handler();
 
         EventBus.getDefault().register(this);
 
@@ -615,8 +614,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-
-        mHandler = null;
 
         EventBus.getDefault().unregister(this);
     }
