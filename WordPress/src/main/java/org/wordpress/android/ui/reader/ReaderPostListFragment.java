@@ -1022,7 +1022,7 @@ public class ReaderPostListFragment extends Fragment
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
                         AnalyticsTracker
-                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR);
+                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                         if (getActivity() instanceof WPMainActivity) {
                             getActivity().overridePendingTransition(0, 0);

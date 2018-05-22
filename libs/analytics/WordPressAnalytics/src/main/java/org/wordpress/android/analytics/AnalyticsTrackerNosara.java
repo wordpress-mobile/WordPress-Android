@@ -242,11 +242,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_LIST_VIEWED_FROM_FILTER:
                 predefinedEventProperties.put("source", "reader_filter");
                 break;
-            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
-                predefinedEventProperties.put("source", "post_list_saved_post_snackbar");
+            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
+                predefinedEventProperties.put("source", "post_list_saved_post_notice");
                 break;
-            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
-                predefinedEventProperties.put("source", "post_details_saved_post_snackbar");
+            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
+                predefinedEventProperties.put("source", "post_details_saved_post_notice");
                 break;
         }
 
@@ -482,8 +482,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
                 return "reader_saved_post_opened";
             case READER_SAVED_LIST_VIEWED_FROM_FILTER:
-            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR:
-            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR:
+            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
+            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
                 return "reader_saved_list_viewed";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";

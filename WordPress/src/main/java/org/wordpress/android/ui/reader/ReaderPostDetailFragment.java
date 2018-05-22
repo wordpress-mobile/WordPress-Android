@@ -489,7 +489,7 @@ public class ReaderPostDetailFragment extends Fragment
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
                         AnalyticsTracker
-                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_SNACKBAR);
+                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE);
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                     }
                 })
