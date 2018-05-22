@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.activitylog
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import androidx.work.Constraints
+import androidx.work.Constraints.Builder
 import androidx.work.Data
 import androidx.work.NetworkType.NOT_REQUIRED
 import androidx.work.WorkManager
@@ -9,7 +10,6 @@ import androidx.work.Worker
 import androidx.work.Worker.WorkerResult.FAILURE
 import androidx.work.Worker.WorkerResult.SUCCESS
 import androidx.work.ktx.PeriodicWorkRequestBuilder
-import com.helpshift.support.Log
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewind
@@ -33,32 +34,18 @@ import javax.inject.Inject
 class RewindStatusSyncer
 @Inject
 constructor(private val activityLogStore: ActivityLogStore, val dispatcher: Dispatcher) {
-    private val progressTag = "progressWorkerTag"
-    private val mutableRewindStatus = MutableLiveData<RewindStatusModel>()
-    private val mutableRewindProgress = MutableLiveData<Rewind>()
+    private val mutableRewindAvailable = MutableLiveData<Boolean>()
+    private val mutableRewindState = MutableLiveData<Rewind>()
     private var site: SiteModel? = null
-//
-//    val rewindState: LiveData<RewindStatusModel> = mutableRewindStatus
-//    val rewindProgress: LiveData<RewindStatusModel.Rewind> = mutableRewindProgress
+
+    val rewindAvailable: LiveData<Boolean> = mutableRewindAvailable
+    val rewindState: LiveData<Rewind> = mutableRewindState
 
     fun rewind(rewindId: String, site: SiteModel) {
         dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))
-        val workManager = WorkManager.getInstance()
-        if (workManager.getStatusesByTag(progressTag).value != null) {
-            Log.d("rewind", "Cancelling worker")
-            workManager.cancelAllWorkByTag(progressTag)
-        }
-        val networkConstraints = Constraints.Builder()
-                .setRequiredNetworkType(NOT_REQUIRED)
-                .build()
-        val data = Data.Builder().putInt(SITE_ID_KEY, site.id).build()
-        val work = PeriodicWorkRequestBuilder<ProgressWorker>(10, SECONDS)
-                .setConstraints(networkConstraints)
-                .addTag(progressTag)
-                .setInputData(data)
-                .build()
-        Log.d("rewind", "Enqueueing work")
-        workManager.enqueue(work)
+        mutableRewindAvailable.postValue(false)
+        mutableRewindState.postValue(null)
+        RewindStateProgressWorker.startWorker(site)
     }
 
     fun start(site: SiteModel) {
@@ -66,7 +53,7 @@ constructor(private val activityLogStore: ActivityLogStore, val dispatcher: Disp
         dispatcher.register(this)
         val state = activityLogStore.getRewindStatusForSite(site)
         if (state != null) {
-            mutableRewindStatus.postValue(state)
+            onRewindStatus(state)
         } else {
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
         }
@@ -80,69 +67,90 @@ constructor(private val activityLogStore: ActivityLogStore, val dispatcher: Disp
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onRewindStatusFetched(event: OnRewindStatusFetched) {
-        Log.d("rewind", "OnRewindStatusFetched")
+        if (event.isError) {
+            RewindStateProgressWorker.cancelWorker()
+            return
+        }
         site?.let {
-            Log.d("rewind", "Site not null")
             val rewindStatusForSite = activityLogStore.getRewindStatusForSite(it)
             rewindStatusForSite?.let {
-                Log.d("rewind", "Rewind status for site: ${rewindStatusForSite.state.value}")
-                mutableRewindStatus.postValue(it)
-            }
-            rewindStatusForSite?.rewind?.let {
-                Log.d("rewind", "Rewind op state: ${it.status.value}")
-                mutableRewindProgress.postValue(it)
-                if (it.status != RUNNING) {
-                    Log.d("rewind", "Cancelling work on success")
-                    WorkManager.getInstance().cancelAllWorkByTag(progressTag)
+                onRewindStatus(it)
+                it.rewind?.let {
+                    mutableRewindState.postValue(it)
+                    if (it.status != RUNNING) {
+                        RewindStateProgressWorker.cancelWorker()
+                    }
                 }
             }
         }
-        if (event.isError) {
-            Log.d("rewind", "Cancelling work on error: ${event.error.type}")
-//            WorkManager.getInstance().cancelAllWorkByTag(progressTag)
-            return
-        }
+    }
+
+    private fun onRewindStatus(rewindStatus: RewindStatusModel?) {
+        mutableRewindAvailable.postValue(rewindStatus != null && rewindStatus.state == ACTIVE && rewindStatus.rewind == null)
     }
 
     @Subscribe(threadMode = BACKGROUND)
     @SuppressWarnings("unused")
     fun onRewind(event: OnRewind) {
         if (event.isError) {
-            Log.d("rewind", "OnRewind error: ${event.error.message}")
-            WorkManager.getInstance().cancelAllWorkByTag(progressTag)
+            RewindStateProgressWorker.cancelWorker()
         }
-        Log.d("rewind", "OnRewind: ${event.restoreId}")
+        site?.let {
+            val state = activityLogStore.getRewindStatusForSite(it)
+            if (state != null) {
+                onRewindStatus(state)
+            }
+        }
     }
 }
 
 const val SITE_ID_KEY = "SITE_ID"
 
-class ProgressWorker : Worker() {
-    private val counterKey = "COUNTER_KEY"
-    @Inject lateinit var activityLogStore: ActivityLogStore
-    @Inject lateinit var siteStore: SiteStore
-    @Inject lateinit var dispatcher: Dispatcher
+class RewindStateProgressWorker : Worker() {
+    companion object {
+        const val TAG = "progressWorkerTag"
+        fun startWorker(site: SiteModel) {
+            val workManager = WorkManager.getInstance()
+            if (workManager.getStatusesByTag(RewindStateProgressWorker.TAG).value != null) {
+                workManager.cancelAllWorkByTag(RewindStateProgressWorker.TAG)
+            }
+            val networkConstraints = Builder()
+                    .setRequiredNetworkType(NOT_REQUIRED)
+                    .build()
+            val data = Data.Builder().putInt(SITE_ID_KEY, site.id).build()
+            val work = PeriodicWorkRequestBuilder<RewindStateProgressWorker>(10, SECONDS)
+                    .setConstraints(networkConstraints)
+                    .addTag(RewindStateProgressWorker.TAG)
+                    .setInputData(data)
+                    .build()
+            workManager.enqueue(work)
+        }
+
+        fun cancelWorker() {
+            WorkManager.getInstance().cancelAllWorkByTag(RewindStateProgressWorker.TAG)
+        }
+    }
+    @Inject
+    lateinit var activityLogStore: ActivityLogStore
+    @Inject
+    lateinit var siteStore: SiteStore
+    @Inject
+    lateinit var dispatcher: Dispatcher
 
     override fun doWork(): Worker.WorkerResult {
-        Log.d("rewind", "Worker starting")
         (applicationContext as WordPress).component().inject(this)
         val siteId = inputData.getInt(SITE_ID_KEY, -1)
-        val counter = inputData.getInt(counterKey, -1)
-        Log.d("rewind", "Counter: $counter")
         if (siteId != -1) {
             val site = siteStore.getSiteByLocalId(siteId)
-            Log.d("rewind", "Site ID ${site.id}")
             val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
             if (rewindStatusForSite?.rewind?.status == FINISHED) {
-                Log.d("rewind", "Success")
                 return SUCCESS
             }
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
-            Log.d("rewind", "Retrying")
-            outputData = Data.Builder().putInt(counterKey, counter + 1).build()
             return WorkerResult.RETRY
         }
-        Log.d("rewind", "Failing")
         return FAILURE
     }
+
+    class
 }

@@ -39,7 +39,7 @@ import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogF
 import org.wordpress.android.ui.activitylog.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogListFragment;
-import org.wordpress.android.ui.activitylog.ProgressWorker;
+import org.wordpress.android.ui.activitylog.RewindStateProgressWorker;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -379,7 +379,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ActivityLogDetailFragment object);
 
-    void inject(ProgressWorker object);
+    void inject(RewindStateProgressWorker object);
 
     void inject(PluginListFragment object);
 

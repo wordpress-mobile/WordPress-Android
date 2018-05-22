@@ -6,9 +6,11 @@ import android.arch.lifecycle.ViewModel
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.RewindStatusSyncer
+import org.wordpress.android.util.AppLog
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,6 +30,10 @@ class ActivityLogDetailViewModel
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
+    val rewindAvailable: LiveData<Boolean>
+        get() = rewindStatusSyncer.rewindAvailable
+    val rewindState: LiveData<Rewind>
+        get() = rewindStatusSyncer.rewindState
 
     fun start(site: SiteModel, activityLogId: String) {
         this.site = site
@@ -50,6 +56,8 @@ class ActivityLogDetailViewModel
                                         createdTime = it.published.printTime(),
                                         rewindAction = it.rewindID?.let { rewindId ->
                                             { rewindStatusSyncer.rewind(rewindId, site) }
+                                        } ?: {
+                                            AppLog.e(AppLog.T.ACTIVITY_LOG, "Trying to rewind activity without rewind ID")
                                         }
                                 )
                             }
