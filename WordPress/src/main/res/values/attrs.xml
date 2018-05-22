@@ -32,6 +32,7 @@
         <attr name="button" format="string" />
         <attr name="icon" format="reference" />
         <attr name="layout" format="reference" />
+        <attr name="openInDialog" format="boolean" />
         <attr name="useCustomJsFormatting" format="boolean" />
     </declare-styleable>
 
