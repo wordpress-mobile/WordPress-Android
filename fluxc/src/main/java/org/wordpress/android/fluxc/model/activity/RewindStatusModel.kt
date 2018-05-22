@@ -53,13 +53,11 @@ data class RewindStatusModel(
             fun build(
                 rewindId: String?,
                 stringStatus: String?,
-                longStartedAt: Long?,
                 progress: Int?,
                 reason: String?
             ): Rewind? {
                 val status = stringStatus?.let { Status.fromValue(it) }
-                val startedAt = longStartedAt?.let { Date(it) }
-                if (status != null && startedAt != null && progress != null) {
+                if (status != null && progress != null) {
                     return Rewind(rewindId, status, progress, reason)
                 }
                 return null

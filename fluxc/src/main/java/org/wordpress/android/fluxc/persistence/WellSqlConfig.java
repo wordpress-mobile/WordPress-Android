@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 34;
+        return 35;
     }
 
     @Override
@@ -282,6 +282,15 @@ public class WellSqlConfig extends DefaultWellConfig {
                         "CREATE TABLE RewindStatusCredentials (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID "
                         + "INTEGER,REMOTE_SITE_ID INTEGER,REWIND_STATE_ID INTEGER,TYPE TEXT NOT NULL,ROLE TEXT NOT "
                         + "NULL,STILL_VALID INTEGER,HOST TEXT,PORT INTEGER)");
+                oldVersion++;
+            case 34:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS RewindStatus");
+                db.execSQL(
+                        "CREATE TABLE RewindStatus (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,STATE TEXT NOT NULL,LAST_UPDATED INTEGER,REASON TEXT,"
+                        + "CAN_AUTOCONFIGURE INTEGER,REWIND_ID TEXT,REWIND_STATUS TEXT,REWIND_PROGRESS INTEGER,"
+                        + "REWIND_REASON TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
