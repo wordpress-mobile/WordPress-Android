@@ -168,7 +168,7 @@ constructor(
         val state = RewindStatusModel.State.fromValue(stateValue)
                 ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESPONSE)
         val rewindModel = response.rewind?.let {
-            val rewindId = it.rewindId
+            val rewindId = it.rewind_id
                     ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_REWIND_ID)
             val restoreStatusValue = it.status
             val restoreStatus = RewindStatusModel.Rewind.Status.fromValue(restoreStatusValue)
@@ -177,7 +177,7 @@ constructor(
                     rewindId = rewindId,
                     status = restoreStatus,
                     progress = it.progress,
-                    startedAt = it.startedAt,
+                    startedAt = it.started_at,
                     reason = it.reason
             )
         }
@@ -266,9 +266,11 @@ constructor(
         )
 
         data class Rewind(
-            val rewindId: String?,
+            val rewind_id: String?,
+            val restore_id: String?,
+            val site_id: String?,
             val status: String,
-            val startedAt: Date,
+            val started_at: Date,
             val progress: Int,
             val reason: String?
         )

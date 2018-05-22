@@ -228,9 +228,9 @@ class ActivityLogRestClientTest {
                 this.rewind?.apply {
                     assertEquals(this.status.value, REWIND_RESPONSE.status)
                     assertEquals(this.progress, REWIND_RESPONSE.progress)
-                    assertEquals(this.rewindId, REWIND_RESPONSE.rewindId)
+                    assertEquals(this.rewindId, REWIND_RESPONSE.rewind_id)
                     assertEquals(this.reason, REWIND_RESPONSE.reason)
-                    assertEquals(this.startedAt, REWIND_RESPONSE.startedAt)
+                    assertEquals(this.startedAt, REWIND_RESPONSE.started_at)
                 }
             }
         }
@@ -271,7 +271,7 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindStatusResponse>>())
 
-        val rewindResponse = REWIND_STATUS_RESPONSE.copy(rewind = REWIND_RESPONSE.copy(rewindId = null))
+        val rewindResponse = REWIND_STATUS_RESPONSE.copy(rewind = REWIND_RESPONSE.copy(rewind_id = null))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
 
         assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_REWIND_ID)
