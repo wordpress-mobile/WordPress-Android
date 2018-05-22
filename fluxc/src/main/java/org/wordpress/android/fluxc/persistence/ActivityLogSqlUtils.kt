@@ -129,7 +129,6 @@ class ActivityLogSqlUtils
                 canAutoconfigure = this.canAutoconfigure,
                 rewindId = this.rewind?.rewindId,
                 rewindStatus = this.rewind?.status?.value,
-                rewindStartedAt = this.rewind?.startedAt?.time,
                 rewindProgress = this.rewind?.progress,
                 rewindReason = this.rewind?.reason
         )
@@ -213,7 +212,6 @@ class ActivityLogSqlUtils
         @Column var canAutoconfigure: Boolean? = null,
         @Column var rewindId: String? = null,
         @Column var rewindStatus: String? = null,
-        @Column var rewindStartedAt: Long? = null,
         @Column var rewindProgress: Int? = null,
         @Column var rewindReason: String? = null
     ) : Identifiable {
@@ -229,7 +227,6 @@ class ActivityLogSqlUtils
             val restoreStatus = RewindStatusModel.Rewind.build(
                     rewindId,
                     rewindStatus,
-                    rewindStartedAt,
                     rewindProgress,
                     rewindReason
             )

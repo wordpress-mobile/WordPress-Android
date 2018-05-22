@@ -28,7 +28,6 @@ val REWIND_RESPONSE = ActivityLogRestClient.RewindStatusResponse.Rewind(rewind_i
         status = RewindStatusModel.Rewind.Status.RUNNING.value,
         progress = 10,
         reason = "nit",
-        started_at = Date(),
         site_id = null,
         restore_id = null)
 val REWIND_STATUS_RESPONSE = ActivityLogRestClient.RewindStatusResponse(
