@@ -28,7 +28,6 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -865,7 +864,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Override
-    public void onNeutralClicked(@NotNull String instanceTag) {
+    public void onNeutralClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_QUICK_START_DIALOG:
                 // TODO: Set preference to never show Quick Start dialog and checklist.
@@ -877,7 +876,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Override
-    public void onLinkClicked(@NotNull String instanceTag) {
+    public void onLinkClicked(@NonNull String instanceTag) {
     }
 
     @Override

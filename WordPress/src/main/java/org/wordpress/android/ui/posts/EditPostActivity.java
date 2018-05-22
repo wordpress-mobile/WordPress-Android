@@ -47,7 +47,6 @@ import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -1378,7 +1377,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    @Override public void onNeutralClicked(@NotNull String instanceTag) {
+    @Override
+    public void onNeutralClicked(@NonNull String instanceTag) {
     }
 
     @Override
@@ -1402,7 +1402,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLinkClicked(@NotNull String instanceTag) {
+    public void onLinkClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
                 Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);

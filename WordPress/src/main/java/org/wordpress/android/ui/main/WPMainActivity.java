@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -924,7 +923,7 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onNeutralClicked(@NotNull String instanceTag) {
+    public void onNeutralClicked(@NonNull String instanceTag) {
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
             fragment.onNeutralClicked(instanceTag);
@@ -932,7 +931,7 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLinkClicked(@NotNull String instanceTag) {
+    public void onLinkClicked(@NonNull String instanceTag) {
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
             fragment.onLinkClicked(instanceTag);
