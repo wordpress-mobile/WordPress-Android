@@ -228,7 +228,7 @@ public class EditPostActivity extends AppCompatActivity implements
         STOCK_PHOTO_LIBRARY
     }
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
@@ -310,6 +310,7 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
+        mHandler = new Handler();
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -622,6 +623,10 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mSave);
+            mHandler = null;
+        }
         cancelAddMediaListThread();
         removePostOpenInEditorStickyEvent();
         if (mEditorFragment instanceof AztecEditorFragment) {
@@ -1838,12 +1843,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
                     mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, new Observer<Editable>() {
                         @Override public void onChanged(@Nullable Editable editable) {
-                            mHandler.removeCallbacks(mSave);
-                            if (mDebounceCounter < MAX_UNSAVED_POSTS) {
-                                mDebounceCounter++;
-                                mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
-                            } else {
-                                mHandler.post(mSave);
+                            if (mHandler != null) {
+                                mHandler.removeCallbacks(mSave);
+                                if (mDebounceCounter < MAX_UNSAVED_POSTS) {
+                                    mDebounceCounter++;
+                                    mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
+                                } else {
+                                    mHandler.post(mSave);
+                                }
                             }
                         }
                     });
