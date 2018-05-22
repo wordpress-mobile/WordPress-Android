@@ -103,7 +103,6 @@
     <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
-    <string name="support_email">Support Email</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -1531,6 +1530,11 @@
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
+
+    <!--Support strings-->
+    <string name="support_dialog_enter_email_and_name">To continue please enter your email address and name</string>
+    <string name="support_email">Email</string>
+    <string name="support_name">Name</string>
 
     <!-- Helpshift overridden strings -->
     <string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>

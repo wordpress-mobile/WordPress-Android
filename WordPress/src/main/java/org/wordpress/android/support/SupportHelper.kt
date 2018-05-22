@@ -42,7 +42,7 @@ private fun runWithSupportEmailAndNameFromUserInput(
 
     val builder = AlertDialog.Builder(context)
     builder.setView(layout)
-    builder.setTitle(context.getString(R.string.support_email))
+    builder.setMessage(context.getString(R.string.support_dialog_enter_email_and_name))
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 val email = emailField.text.toString()
                 val name = nameField.text.toString()
@@ -61,14 +61,14 @@ private fun inputDialogLayout(
     val layout = LinearLayout(context)
     layout.orientation = LinearLayout.VERTICAL
 
-    val emailLabel = inputDialogLabel(context, R.string.email)
+    val emailLabel = inputDialogLabel(context, R.string.support_email)
     layout.addView(emailLabel)
 
     val emailInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
     val emailField = inputDialogEditText(context, emailInputType, emailSuggestion, true)
     layout.addView(emailField)
 
-    val nameLabel = inputDialogLabel(context, R.string.first_name)
+    val nameLabel = inputDialogLabel(context, R.string.support_name)
     layout.addView(nameLabel)
 
     val nameField = inputDialogEditText(context, InputType.TYPE_CLASS_TEXT, null)
