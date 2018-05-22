@@ -330,7 +330,7 @@ public class WellSqlConfig extends DefaultWellConfig {
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {
-                case 30:
+                case 31:
                     db.execSQL("DROP TABLE IF EXISTS WCOrderModel");
                     db.execSQL("DROP TABLE IF EXISTS WCOrderNoteModel");
                     db.execSQL("CREATE TABLE WCOrderModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
