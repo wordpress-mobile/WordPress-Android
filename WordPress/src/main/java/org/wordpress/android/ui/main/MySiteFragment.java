@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.NestedScrollView.OnScrollChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,7 +23,6 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
@@ -113,7 +114,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     private View mSettingsView;
     private LinearLayout mAdminView;
     private LinearLayout mNoSiteView;
-    private ScrollView mScrollView;
+    private NestedScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
@@ -363,6 +364,16 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                                            mAccountStore.getAccount().getUserName());
             }
         });
+
+        if (getActivity() instanceof MainScrollListener) {
+            mScrollView.setOnScrollChangeListener(new OnScrollChangeListener() {
+                @Override public void onScrollChange(NestedScrollView v, int scrollX, int scrollY,
+                                                     int oldScrollX, int oldScrollY) {
+                    int dy = scrollY - oldScrollY;
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                }
+            });
+        }
 
         return rootView;
     }

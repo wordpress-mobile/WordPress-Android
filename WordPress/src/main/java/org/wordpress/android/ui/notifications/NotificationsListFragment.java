@@ -9,6 +9,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.MainScrollListener;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -130,6 +132,16 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 onScrollToTop();
             }
         });
+
+        if (getActivity() instanceof MainScrollListener) {
+            mRecyclerView.addOnScrollListener(new OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                }
+            });
+        }
 
         return view;
     }

@@ -68,6 +68,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -97,7 +98,8 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
  * Main activity which hosts sites, reader, me and notifications pages
  */
 public class WPMainActivity extends AppCompatActivity
-        implements OnPageListener, BottomNavController, BasicDialogPositiveClickInterface,
+        implements OnPageListener, MainScrollListener,
+        BottomNavController, BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -111,13 +113,17 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
 
+    private static final int MIN_SCROLL_DISTANCE = 8;
+
     private WPMainNavigationView mBottomNav;
+    private View mBottomNavContainer;
     private Toolbar mToolbar;
 
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
+    private boolean mIsBottomNavHidden;
 
     private SiteModel mSelectedSite;
 
@@ -472,8 +478,37 @@ public class WPMainActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
+    public void showBottomNav(boolean show) {
+        Duration duration = Duration.SHORT;
+        View separator = findViewById(R.id.bottom_navigation_separator);
+        if (show && mBottomNav.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNav, true, duration);
+            AniUtils.fadeIn(separator, duration);
+        } else if (!show && mBottomNav.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mBottomNav, false);
+            AniUtils.fadeOut(separator, duration);
+        }
+    }
+
+    /*
+     * Called by the four fragments when their views are scrolled so we can toggle the bottom navigation
+     */
+    @Override
+    public void onFragmentScrolled(int dy) {
+        if (dy < 0 && !mIsBottomNavHidden) {
+            showBottomNav(true);
+        } else if (dy >= MIN_SCROLL_DISTANCE) {
+            showBottomNav(false);
+        }
+    }
+
+    /*
+     * these two are called by the reader fragment when a search is performed so we can hide the bottom navigation
+     * to prevent it appearing above the keyboard
+     */
     @Override
     public void onRequestShowBottomNavigation() {
+        mIsBottomNavHidden = false;
         showBottomNav(true);
     }
 
@@ -482,12 +517,8 @@ public class WPMainActivity extends AppCompatActivity
         // we only hide the bottom navigation when there's not a hardware keyboard present
         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
             showBottomNav(false);
+            mIsBottomNavHidden = true;
         }
-    }
-
-    private void showBottomNav(boolean show) {
-        mBottomNav.setVisibility(show ? View.VISIBLE : View.GONE);
-        findViewById(R.id.navbar_separator).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     // user switched pages in the bottom navbar

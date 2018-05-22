@@ -162,6 +162,10 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
+
     private void setup(boolean refresh) {
         List<FilterCriteria> criterias = mFilterListener.onLoadFilterCriteriaOptions(refresh);
         if (criterias != null) {

@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.NestedScrollView.OnScrollChangeListener;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -193,6 +195,17 @@ public class MeFragment extends Fragment {
             if (savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR, false)) {
                 showGravatarProgressBar(true);
             }
+        }
+
+        if (getActivity() instanceof MainScrollListener) {
+            NestedScrollView scrollView = rootView.findViewById(R.id.scroll_view);
+            scrollView.setOnScrollChangeListener(new OnScrollChangeListener() {
+                @Override public void onScrollChange(NestedScrollView v, int scrollX, int scrollY,
+                                                     int oldScrollX, int oldScrollY) {
+                    int dy = scrollY - oldScrollY;
+                    ((MainScrollListener) getActivity()).onFragmentScrolled(dy);
+                }
+            });
         }
 
         return rootView;
