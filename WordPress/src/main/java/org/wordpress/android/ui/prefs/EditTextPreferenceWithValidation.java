@@ -42,11 +42,11 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                     String error = null;
                     CharSequence text = getEditText().getText();
                     if (mValidationType == ValidationType.EMAIL) {
-                        error = ValidationUtils.validateEmail(text) ? getContext()
-                                .getString(R.string.invalid_email_message) : null;
+                        error = ValidationUtils.validateEmail(text) ? null
+                                : getContext().getString(R.string.invalid_email_message);
                     } else if (!TextUtils.isEmpty(text) && mValidationType == ValidationType.URL) {
-                        error = ValidationUtils.validateUrl(text) ? getContext()
-                                .getString(R.string.invalid_url_message) : null;
+                        error = ValidationUtils.validateUrl(text) ? null
+                                : getContext().getString(R.string.invalid_url_message);
                     }
 
                     if (error != null) {
