@@ -17,10 +17,12 @@ public class PublicizeEvents {
     public static class ActionCompleted {
         private final boolean mSucceeded;
         private final ConnectAction mAction;
+        private String mService;
 
-        public ActionCompleted(boolean succeeded, ConnectAction action) {
+        public ActionCompleted(boolean succeeded, ConnectAction action, String service) {
             mSucceeded = succeeded;
             mAction = action;
+            mService = service;
         }
 
         public ConnectAction getAction() {
@@ -29,6 +31,10 @@ public class PublicizeEvents {
 
         public boolean didSucceed() {
             return mSucceeded;
+        }
+
+        public String getService() {
+            return mService;
         }
     }
 

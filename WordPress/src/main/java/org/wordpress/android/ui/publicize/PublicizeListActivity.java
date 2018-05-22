@@ -16,15 +16,21 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -297,7 +303,15 @@ public class PublicizeListActivity extends AppCompatActivity
         }
         reloadDetailFragment();
 
-        if (!event.didSucceed()) {
+        if (event.didSucceed()) {
+            Map<String, Object> analyticsProperties = new HashMap<>();
+            analyticsProperties.put("service", event);
+
+            if (event.getAction() == ConnectAction.CONNECT || event.getAction() == ConnectAction.RECONNECT) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_CONNECTED, mSite, analyticsProperties);
+            }
+        }
+        else {
             ToastUtils.showToast(this, R.string.error_generic);
         }
     }

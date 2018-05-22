@@ -10,13 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
@@ -49,7 +47,8 @@ public class PublicizeActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(AppLog.T.SHARING, "disconnect succeeded");
-                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.DISCONNECT));
+                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.DISCONNECT,
+                        connection.getService()));
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -57,7 +56,8 @@ public class PublicizeActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SHARING, volleyError);
                 PublicizeTable.addOrUpdateConnection(connection);
-                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.DISCONNECT));
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.DISCONNECT,
+                        connection.getService()));
             }
         };
 
@@ -72,7 +72,7 @@ public class PublicizeActions {
     public static void connect(long siteId, String serviceId, long currentUserId) {
         if (TextUtils.isEmpty(serviceId)) {
             AppLog.w(AppLog.T.SHARING, "cannot connect without service");
-            EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
+            EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId));
             return;
         }
 
@@ -101,7 +101,7 @@ public class PublicizeActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SHARING, volleyError);
-                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId));
             }
         };
 
@@ -120,18 +120,14 @@ public class PublicizeActions {
                 AppLog.d(AppLog.T.SHARING, "connect succeeded");
                 PublicizeConnection connection = PublicizeConnection.fromJson(jsonObject);
                 PublicizeTable.addOrUpdateConnection(connection);
-                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.CONNECT));
-
-                Map<String, Object> analyticsProperties = new HashMap<>();
-                analyticsProperties.put("service", serviceId);
-                AnalyticsUtils.trackWithSiteId(Stat.PUBLICIZE_SERVICE_CONNECTED, siteId, analyticsProperties);
+                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.CONNECT, serviceId));
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SHARING, volleyError);
-                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId));
             }
         };
 
