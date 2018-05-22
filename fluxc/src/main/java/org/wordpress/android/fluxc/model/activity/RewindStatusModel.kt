@@ -36,7 +36,6 @@ data class RewindStatusModel(
     data class Rewind(
         val rewindId: String?,
         val status: Status,
-        val startedAt: Date,
         val progress: Int,
         val reason: String?
     ) {
@@ -61,7 +60,7 @@ data class RewindStatusModel(
                 val status = stringStatus?.let { Status.fromValue(it) }
                 val startedAt = longStartedAt?.let { Date(it) }
                 if (status != null && startedAt != null && progress != null) {
-                    return Rewind(rewindId, status, startedAt, progress, reason)
+                    return Rewind(rewindId, status, progress, reason)
                 }
                 return null
             }

@@ -177,7 +177,6 @@ constructor(
                     rewindId = rewindId,
                     status = restoreStatus,
                     progress = it.progress,
-                    startedAt = it.started_at,
                     reason = it.reason
             )
         }
@@ -270,7 +269,6 @@ constructor(
             val restore_id: String?,
             val site_id: String?,
             val status: String,
-            val started_at: Date,
             val progress: Int,
             val reason: String?
         )

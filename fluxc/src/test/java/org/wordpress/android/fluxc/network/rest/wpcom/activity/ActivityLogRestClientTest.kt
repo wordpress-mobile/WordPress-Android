@@ -230,7 +230,6 @@ class ActivityLogRestClientTest {
                     assertEquals(this.progress, REWIND_RESPONSE.progress)
                     assertEquals(this.rewindId, REWIND_RESPONSE.rewind_id)
                     assertEquals(this.reason, REWIND_RESPONSE.reason)
-                    assertEquals(this.startedAt, REWIND_RESPONSE.started_at)
                 }
             }
         }

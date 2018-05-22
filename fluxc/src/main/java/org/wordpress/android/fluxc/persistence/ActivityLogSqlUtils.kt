@@ -129,7 +129,6 @@ class ActivityLogSqlUtils
                 canAutoconfigure = this.canAutoconfigure,
                 rewindId = this.rewind?.rewindId,
                 rewindStatus = this.rewind?.status?.value,
-                rewindStartedAt = this.rewind?.startedAt?.time,
                 rewindProgress = this.rewind?.progress,
                 rewindReason = this.rewind?.reason
         )
