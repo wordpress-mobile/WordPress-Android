@@ -28,23 +28,20 @@
             android:title="@string/cookie_policy_learn_more_header"
             app:caption="@string/cookie_policy_learn_more_caption"
             app:url="https://www.automattic.com/cookies"
-            app:icon="@drawable/ic_info_outline_grey_min_24dp"
-            app:useCustomJsFormatting="true"/>
+            app:icon="@drawable/ic_info_outline_grey_min_24dp"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/privacy_policy_learn_more_header"
             app:caption="@string/privacy_policy_learn_more_caption"
             app:button="@string/privacy_policy_read"
             app:url="https://www.automattic.com/privacy"
-            app:icon="@drawable/ic_user_circle_grey_min_24dp"
-            app:useCustomJsFormatting="true"/>
+            app:icon="@drawable/ic_user_circle_grey_min_24dp"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/third_party_policy_learn_more_header"
             app:caption="@string/third_party_policy_learn_more_caption"
             app:url="https://www.automattic.com/cookies"
-            app:icon="@drawable/ic_briefcase_grey_min_24dp"
-            app:useCustomJsFormatting="true"/>
+            app:icon="@drawable/ic_briefcase_grey_min_24dp"/>
 
     </PreferenceScreen>
 

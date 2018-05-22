@@ -265,6 +265,7 @@
                     app:caption="@string/site_settings_learn_more_caption"
                     app:url="https://en.support.wordpress.com/settings/discussion-settings/#default-article-settings"
                     app:useCustomJsFormatting="true"
+                    app:openInDialog="true"
                     app:layout="@layout/learn_more_pref_old"/>
 
             </PreferenceCategory>
@@ -437,6 +438,7 @@
                     android:title="@string/site_settings_learn_more_header"
                     app:url="https://jetpack.com/support/sso/"
                     app:useCustomJsFormatting="false"
+                    app:openInDialog="true"
                     app:layout="@layout/learn_more_pref_old"/>
 
             </PreferenceCategory>
