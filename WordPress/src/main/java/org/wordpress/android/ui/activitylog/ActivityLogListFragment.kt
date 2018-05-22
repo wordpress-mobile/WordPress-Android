@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
@@ -66,28 +67,22 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(this, Observer<List<ActivityLogListItemViewModel>> {
-            reloadEvents()
-        })
-
-        viewModel.eventListStatus.observe(this, Observer<ActivityLogViewModel.ActivityLogListStatus> { listStatus ->
-            refreshProgressBars(listStatus)
+        viewModel.events.observe(this, Observer { listState ->
+            listState?.let {
+                setEvents(listState.data)
+                refreshProgressBars(listState)
+            }
         })
     }
 
-    private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
+    private fun refreshProgressBars(listState: ListState<ActivityLogListItemViewModel>) {
         if (!isAdded || view == null) {
             return
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
-        swipeToRefreshHelper.isRefreshing = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.FETCHING
+        swipeToRefreshHelper.isRefreshing = listState.isFetchingFirstPage()
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
-        val showLoadMore = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
-        activityLogListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
-    }
-
-    private fun reloadEvents() {
-        setEvents(viewModel.events.value ?: emptyList())
+        activityLogListProgress.visibility = if (listState.isLoadingMore()) View.VISIBLE else View.GONE
     }
 
     private fun setEvents(events: List<ActivityLogListItemViewModel>) {
