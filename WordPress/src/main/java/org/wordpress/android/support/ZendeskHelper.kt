@@ -86,8 +86,10 @@ fun createNewTicket(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore, selectedSite)
-    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    runWithSupportEmailAndName(context, accountStore, selectedSite) { email, name ->
+        configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
+        ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    }
 }
 
 fun showAllTickets(
@@ -101,19 +103,23 @@ fun showAllTickets(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore, selectedSite)
-    RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    runWithSupportEmailAndName(context, accountStore, selectedSite) { email, name ->
+        configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
+        RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    }
 }
 
 // Helpers
 
 private fun configureZendesk(
     context: Context,
+    email: String,
+    name: String,
     accountStore: AccountStore?,
     siteStore: SiteStore,
     selectedSite: SiteModel?
 ) {
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
+    zendeskInstance.setIdentity(zendeskIdentity(email, name))
     zendeskInstance.ticketFormId = TicketFieldIds.form
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
@@ -140,21 +146,6 @@ private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Ori
                 return zendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags) as MutableList<String>
             }
         }
-
-private fun zendeskIdentity(accountStore: AccountStore?, selectedSite: SiteModel?): Identity {
-    val currentAccount = accountStore?.account
-    var email: String? = null
-    var name: String? = null
-    if (currentAccount != null) {
-        email = currentAccount.email
-        name = currentAccount.displayName
-    } else {
-        // TODO: Implement for self-hosted sites using `selectedSite`
-        // We can get the selected site and figure out the email/username from there. We can save the details
-        // in preferences so that the Zendesk tickets will remain after a site change
-    }
-    return zendeskIdentity(email, name)
-}
 
 private fun zendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
