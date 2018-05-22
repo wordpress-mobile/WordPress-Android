@@ -20,9 +20,10 @@ fun runWithSupportEmailAndName(
     selectedSite: SiteModel?,
     emailAndNameSelected: (String, String) -> Unit
 ) {
-    val currentEmail = AppPrefs.getSupportEmail()
-    if (!currentEmail.isNullOrEmpty()) {
-        emailAndNameSelected(currentEmail, "")
+    val email = AppPrefs.getSupportEmail()
+    val name = AppPrefs.getSupportName()
+    if (!email.isNullOrEmpty()) {
+        emailAndNameSelected(email, name)
     } else {
         runWithSupportEmailAndNameFromUserInput(context, accountStore, selectedSite, emailAndNameSelected)
     }
@@ -48,6 +49,7 @@ private fun runWithSupportEmailAndNameFromUserInput(
                 val name = nameField.text.toString()
                 // TODO: validate email
                 AppPrefs.setSupportEmail(email)
+                AppPrefs.setSupportName(name)
                 emailAndNameSelected(email, name)
             }
             .setNegativeButton(android.R.string.cancel, null)

@@ -151,8 +151,9 @@ public class AppPrefs {
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC,
 
-        // Support email address that's independent of any account or site
-        SUPPORT_EMAIL
+        // Support email address and name that's independent of any account or site
+        SUPPORT_EMAIL,
+        SUPPORT_NAME
     }
 
     private static SharedPreferences prefs() {
@@ -601,6 +602,14 @@ public class AppPrefs {
 
     public static String getSupportEmail() {
         return getString(UndeletablePrefKey.SUPPORT_EMAIL);
+    }
+
+    public static void setSupportName(String name) {
+        setString(UndeletablePrefKey.SUPPORT_NAME, name);
+    }
+
+    public static String getSupportName() {
+        return getString(UndeletablePrefKey.SUPPORT_NAME);
     }
 
     /*
