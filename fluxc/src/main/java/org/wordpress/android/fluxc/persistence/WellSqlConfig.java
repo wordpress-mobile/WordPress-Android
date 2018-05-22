@@ -331,6 +331,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {
                 case 31:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("DROP TABLE IF EXISTS WCOrderModel");
                     db.execSQL("DROP TABLE IF EXISTS WCOrderNoteModel");
                     db.execSQL("CREATE TABLE WCOrderModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
@@ -355,6 +356,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "DATE_CREATED TEXT NOT NULL,NOTE TEXT NOT NULL,IS_CUSTOMER_NOTE INTEGER)");
                     break;
                 case 35:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("CREATE TABLE WCOrderStatsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,UNIT TEXT NOT NULL,FIELDS TEXT NOT NULL,DATA TEXT NOT NULL)");
                     break;
