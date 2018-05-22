@@ -164,7 +164,8 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     private void confirmClearSavedSearches(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog));
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert));
         builder.setMessage(R.string.dlg_confirm_clear_search_history)
                .setCancelable(true)
                .setNegativeButton(R.string.no, null)

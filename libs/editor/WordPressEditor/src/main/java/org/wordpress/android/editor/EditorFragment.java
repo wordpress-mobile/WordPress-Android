@@ -589,7 +589,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1364,7 +1364,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(
-                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(
                         R.string.stop_upload_dialog_button_yes, new DialogInterface.OnClickListener() {

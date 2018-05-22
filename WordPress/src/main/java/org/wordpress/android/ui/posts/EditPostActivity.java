@@ -1577,7 +1577,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                     account.getEmail());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
@@ -2930,7 +2930,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
             builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {

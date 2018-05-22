@@ -622,7 +622,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                                   final CheckBox featuredCheckBox, final CheckBox featuredInPostCheckBox,
                                   final int maxWidth, final Spinner alignmentSpinner, final WPImageSpan imageSpan) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getString(R.string.image_settings));
         builder.setView(alertView);
         builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {

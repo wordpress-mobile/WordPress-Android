@@ -47,7 +47,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         initSite(savedInstanceState);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
