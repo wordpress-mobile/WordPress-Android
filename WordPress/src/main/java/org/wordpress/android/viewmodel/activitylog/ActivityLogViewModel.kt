@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
-import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -75,7 +74,6 @@ class ActivityLogViewModel @Inject constructor(
             val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.postValue(newStatus)
             val payload = ActivityLogStore.FetchActivityLogPayload(site, loadMore)
-            dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
         }
     }
