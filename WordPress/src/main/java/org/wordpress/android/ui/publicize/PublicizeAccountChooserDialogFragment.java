@@ -103,7 +103,9 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
-                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId));
+                String service = mNotConnectedAccounts.get(mSelectedIndex).getService();
+                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId,
+                        service));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

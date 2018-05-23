@@ -17,10 +17,12 @@ public class PublicizeEvents {
     public static class ActionCompleted {
         private final boolean mSucceeded;
         private final ConnectAction mAction;
+        private String mService;
 
-        public ActionCompleted(boolean succeeded, ConnectAction action) {
+        public ActionCompleted(boolean succeeded, ConnectAction action, String service) {
             mSucceeded = succeeded;
             mAction = action;
+            mService = service;
         }
 
         public ConnectAction getAction() {
@@ -30,15 +32,21 @@ public class PublicizeEvents {
         public boolean didSucceed() {
             return mSucceeded;
         }
+
+        public String getService() {
+            return mService;
+        }
     }
 
     public static class ActionAccountChosen {
         private long mSiteId;
         private int mKeychainId;
+        private String mService;
 
-        public ActionAccountChosen(long siteId, int keychainId) {
+        public ActionAccountChosen(long siteId, int keychainId, String service) {
             mSiteId = siteId;
             mKeychainId = keychainId;
+            mService = service;
         }
 
         public long getSiteId() {
@@ -47,6 +55,10 @@ public class PublicizeEvents {
 
         public int getKeychainId() {
             return mKeychainId;
+        }
+
+        public String getService() {
+            return mService;
         }
     }
 
