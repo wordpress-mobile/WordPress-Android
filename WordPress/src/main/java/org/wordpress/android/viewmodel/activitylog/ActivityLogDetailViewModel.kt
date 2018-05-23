@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
-import org.wordpress.android.ui.activitylog.RewindStatusSyncer
+import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.util.AppLog
 import java.text.DateFormat
 import java.util.Date
@@ -22,7 +22,7 @@ class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
-    private val rewindStatusSyncer: RewindStatusSyncer
+    private val rewindStatusService: RewindStatusService
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -31,9 +31,9 @@ class ActivityLogDetailViewModel
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
     val rewindAvailable: LiveData<Boolean>
-        get() = rewindStatusSyncer.rewindAvailable
+        get() = rewindStatusService.rewindAvailable
     val rewindState: LiveData<Rewind>
-        get() = rewindStatusSyncer.rewindState
+        get() = rewindStatusService.rewindState
 
     fun start(site: SiteModel, activityLogId: String) {
         this.site = site
@@ -55,7 +55,7 @@ class ActivityLogDetailViewModel
                                         createdDate = it.published.printDate(),
                                         createdTime = it.published.printTime(),
                                         rewindAction = it.rewindID?.let { rewindId ->
-                                            { rewindStatusSyncer.rewind(rewindId, site) }
+                                            { rewindStatusService.rewind(rewindId, site) }
                                         } ?: {
                                             AppLog.e(
                                                     AppLog.T.ACTIVITY_LOG,
@@ -66,11 +66,11 @@ class ActivityLogDetailViewModel
                             }
             )
         }
-        rewindStatusSyncer.start(site)
+        rewindStatusService.start(site)
     }
 
     fun stop() {
-        rewindStatusSyncer.stop()
+        rewindStatusService.stop()
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {

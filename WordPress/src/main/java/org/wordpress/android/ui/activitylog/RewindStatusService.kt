@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import javax.inject.Inject
 
-class RewindStatusSyncer
+class RewindStatusService
 @Inject
 constructor(
     private val activityLogStore: ActivityLogStore,

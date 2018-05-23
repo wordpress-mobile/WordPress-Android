@@ -36,7 +36,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class RewindStatusSyncerTest {
+class RewindStatusServiceTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
 
     private val actionCaptor = argumentCaptor<Action<Any>>()
@@ -46,7 +46,7 @@ class RewindStatusSyncerTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var site: SiteModel
 
-    private lateinit var syncer: RewindStatusSyncer
+    private lateinit var rewindStatusService: RewindStatusService
     private var rewindAvailable: Boolean? = null
     private var rewindState: Rewind? = null
 
@@ -63,11 +63,11 @@ class RewindStatusSyncerTest {
 
     @Before
     fun setUp() {
-        syncer = RewindStatusSyncer(activityLogStore, workerController, dispatcher)
+        rewindStatusService = RewindStatusService(activityLogStore, workerController, dispatcher)
         rewindAvailable = null
         rewindState = null
-        syncer.rewindAvailable.observeForever { rewindAvailable = it }
-        syncer.rewindState.observeForever { rewindState = it }
+        rewindStatusService.rewindAvailable.observeForever { rewindAvailable = it }
+        rewindStatusService.rewindState.observeForever { rewindState = it }
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
     }
 
@@ -75,9 +75,9 @@ class RewindStatusSyncerTest {
     fun emitsAvailableRewindStatusOnStartWhenActiveStatusPresent() {
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(activeRewindStatusModel)
 
-        syncer.start(site)
+        rewindStatusService.start(site)
 
-        verify(dispatcher).register(syncer)
+        verify(dispatcher).register(rewindStatusService)
         assertEquals(rewindAvailable, true)
     }
 
@@ -86,9 +86,9 @@ class RewindStatusSyncerTest {
         val inactiveRewindStatusModel = activeRewindStatusModel.copy(state = INACTIVE)
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(inactiveRewindStatusModel)
 
-        syncer.start(site)
+        rewindStatusService.start(site)
 
-        verify(dispatcher).register(syncer)
+        verify(dispatcher).register(rewindStatusService)
         assertEquals(rewindAvailable, false)
     }
 
@@ -97,32 +97,32 @@ class RewindStatusSyncerTest {
         val inactiveRewindStatusModel = activeRewindStatusModel.copy(rewind = rewindInProgress)
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(inactiveRewindStatusModel)
 
-        syncer.start(site)
+        rewindStatusService.start(site)
 
-        verify(dispatcher).register(syncer)
+        verify(dispatcher).register(rewindStatusService)
         assertEquals(rewindAvailable, false)
     }
 
     @Test
     fun triggersFetchWhenRewindStatusNotAvailable() {
-        syncer.start(site)
+        rewindStatusService.start(site)
 
-        verify(dispatcher).register(syncer)
+        verify(dispatcher).register(rewindStatusService)
         assertFetchRewindStatusAction()
     }
 
     @Test
     fun unregistersOnStop() {
-        syncer.stop()
+        rewindStatusService.stop()
 
-        verify(dispatcher).unregister(syncer)
+        verify(dispatcher).unregister(rewindStatusService)
     }
 
     @Test
     fun triggersRewindAndRepeatedWorkerOnRewind() {
         val rewindId = "10"
 
-        syncer.rewind(rewindId, site)
+        rewindStatusService.rewind(rewindId, site)
 
         assertRewindAction(rewindId)
         assertEquals(false, rewindAvailable)
@@ -132,19 +132,19 @@ class RewindStatusSyncerTest {
 
     @Test
     fun cancelsWorkerOnFetchErrorRewindState() {
-        syncer.onRewindStatusFetched(OnRewindStatusFetched(RewindStatusError(INVALID_RESPONSE, null), REWIND))
+        rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(RewindStatusError(INVALID_RESPONSE, null), REWIND))
 
         verify(workerController).cancelWorker()
     }
 
     @Test
     fun onRewindStateInProgressUpdateState() {
-        syncer.start(site)
+        rewindStatusService.start(site)
 
         val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
 
-        syncer.onRewindStatusFetched(OnRewindStatusFetched(FETCH_REWIND_STATE))
+        rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(FETCH_REWIND_STATE))
 
         assertEquals(rewindAvailable, false)
         assertEquals(rewindState, rewindInProgress)
@@ -152,13 +152,13 @@ class RewindStatusSyncerTest {
 
     @Test
     fun onRewindStateFinishedUpdateStateAndCancelWorker() {
-        syncer.start(site)
+        rewindStatusService.start(site)
 
         val rewindFinished = rewindInProgress.copy(status = FINISHED, progress = 100)
         val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindFinished)
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
 
-        syncer.onRewindStatusFetched(OnRewindStatusFetched(FETCH_REWIND_STATE))
+        rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(FETCH_REWIND_STATE))
 
         assertEquals(rewindAvailable, true)
         assertEquals(rewindState, rewindFinished)
@@ -167,18 +167,18 @@ class RewindStatusSyncerTest {
 
     @Test
     fun onRewindErrorCancelWorker() {
-        syncer.onRewind(OnRewind(RewindError(RewindErrorType.INVALID_RESPONSE, null), REWIND))
+        rewindStatusService.onRewind(OnRewind(RewindError(RewindErrorType.INVALID_RESPONSE, null), REWIND))
 
         verify(workerController).cancelWorker()
     }
 
     @Test
     fun onRewindUpdateRewindStatus() {
-        syncer.start(site)
+        rewindStatusService.start(site)
 
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(activeRewindStatusModel)
 
-        syncer.onRewind(OnRewind("10", REWIND))
+        rewindStatusService.onRewind(OnRewind("10", REWIND))
 
         assertEquals(rewindAvailable, true)
     }
