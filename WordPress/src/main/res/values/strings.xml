@@ -758,6 +758,7 @@
     <string name="activity_log_event">Event</string>
     <string name="rewind">Rewind</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
+    <string name="activity_log_empty_list">No events recorded yet</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
