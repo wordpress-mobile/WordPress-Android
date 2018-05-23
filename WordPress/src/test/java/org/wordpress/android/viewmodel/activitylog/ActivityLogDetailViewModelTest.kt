@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
+import org.wordpress.android.ui.activitylog.RewindStatusSyncer
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -27,6 +28,7 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var rewindStatusSyncer: RewindStatusSyncer
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val activityID = "id1"
@@ -60,7 +62,7 @@ class ActivityLogDetailViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogDetailViewModel(dispatcher, activityLogStore)
+        viewModel = ActivityLogDetailViewModel(dispatcher, activityLogStore, rewindStatusSyncer)
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
     }
 
