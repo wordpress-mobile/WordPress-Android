@@ -57,7 +57,10 @@ class ActivityLogDetailViewModel
                                         rewindAction = it.rewindID?.let { rewindId ->
                                             { rewindStatusSyncer.rewind(rewindId, site) }
                                         } ?: {
-                                            AppLog.e(AppLog.T.ACTIVITY_LOG, "Trying to rewind activity without rewind ID")
+                                            AppLog.e(
+                                                    AppLog.T.ACTIVITY_LOG,
+                                                    "Trying to rewind activity without rewind ID"
+                                            )
                                         }
                                 )
                             }

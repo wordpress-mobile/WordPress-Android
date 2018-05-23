@@ -52,12 +52,9 @@ constructor() {
             const val SITE_ID_KEY = "SITE_ID"
         }
 
-        @Inject
-        lateinit var activityLogStore: ActivityLogStore
-        @Inject
-        lateinit var siteStore: SiteStore
-        @Inject
-        lateinit var dispatcher: Dispatcher
+        @Inject lateinit var activityLogStore: ActivityLogStore
+        @Inject lateinit var siteStore: SiteStore
+        @Inject lateinit var dispatcher: Dispatcher
 
         override fun doWork(): WorkerResult {
             (applicationContext as WordPress).component().inject(this)
