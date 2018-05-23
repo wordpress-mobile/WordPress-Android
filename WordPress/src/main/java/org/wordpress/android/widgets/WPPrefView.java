@@ -407,7 +407,7 @@ public class WPPrefView extends LinearLayout implements
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog))
+                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog_Alert))
                 .setTitle(mTitleTextView.getText())
                 .setView(customView)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -434,7 +434,7 @@ public class WPPrefView extends LinearLayout implements
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog))
+                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog_Alert))
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -465,7 +465,7 @@ public class WPPrefView extends LinearLayout implements
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog))
+                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog_Alert))
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

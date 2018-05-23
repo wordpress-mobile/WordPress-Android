@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-01 11:54:07+0000
+Translation-Revision-Date: 2018-05-21 13:54:07+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="login_email_button_signup">أليس لديك حساب؟ %1$sالاشتراك%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">تتطلب ميزة المكوّن الإضافي أن يكون الموقع في وضع جيد.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">تتطلب ميزة المكوّن الإضافي ربط اشترك النطاق الأساسي بهذا المستخدم.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">تتطلب ميزة المكوّن الإضافي مزايا المسؤول.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">يتعذر تثبيت المكوّن الإضافي على مواقع VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">يتعذر تثبيت المكوّن الإضافي بسبب قيود مساحة القرص.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">تتطلب ميزة المكوّن الإضافي عنوان بريد إلكتروني تم التحقق منه.</string>
+    <string name="plugin_install_site_ineligible_site_private">تتطلب ميزة المكوّن الإضافي أن يكون الموقع عامًا.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">تتطلب ميزة المكوّن الإضافي باقة الشركات.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">تتطلب ميزة المكوّن الإضافي نطاقًا مخصصًا.</string>
+    <string name="plugin_install_site_ineligible_default_error">تكون ميزة المكوّن الإضافي غير متاحة لهذا الموقع.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">نقوم بالإعداد النهائي — انتهينا تقريبًا…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">جارٍ تثبيت المكوّن الإضافي…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">تثبيت</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">يمكن أن يستغرق تثبيت المكوّن الإضافي الأول على موقعك حتى دقيقة واحدة. لن تتمكن من إجراء تغييرات على موقعك خلال هذه الفترة.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">تثبيت المكون الإضافي</string>
+    <string name="notification_settings_followed_dialog_title">التنبيهات</string>
+    <string name="notification_settings_followed_dialog_email_comments">إرسال التعليقات الجديدة عبر البريد الإلكتروني</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">أسبوعيًّا</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">فورًا</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">يوميًا</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">مقالات جديدة</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">تلقي إخطارات للمقالات الجديدة من هذا الموقع</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">أرسل رسالة بالبريد الإلكتروني تتضمن المقالات الجديدة</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">جميع المواقع التي أتابعها</string>
+    <string name="notification_settings_category_followed_sites">المواقع التي تمت متابعتها</string>
+    <string name="content_description_person_reading_device_notification">جهاز قراءة الشخصيات مع وجود إخطارات</string>
+    <string name="content_description_people_looking_charts">الأشخاص الذين ينظرون إلى الرسومات والمخططات</string>
+    <string name="comment_title">%s في %s</string>
+    <string name="dialog_confirm_delete_permanently_page">هل ترغب بالتأكيد في حذف هذه الصفحة بشكل دائم؟</string>
+    <string name="dialog_confirm_delete_permanently_post">هل ترغب بالتأكيد في حذف هذه المقالة بشكل دائم؟</string>
     <string name="notification_site_creation_title_in_progress">جارٍ إنشاء الموقع… قد يستغرق هذا الأمر بضع دقائق.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -79,7 +110,6 @@ Language: ar
     <string name="profile_picture">صورة الملف الشخصي لـ %s</string>
     <string name="comment_checkmark_desc">علامة الاختيار</string>
     <string name="signup_with_google_progress">جارٍ التسجيل باستخدام Google…</string>
-    <string name="editor_toast_no_action_taken">حدث خطأ. لم يتم اتخاذ أي إجراء.</string>
     <string name="jetpack_connection_failed_with_reason">فشل الاتصال بـ Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">أنت متصل بالفعل بـ Jetpack</string>
     <string name="menu_undo_snackbar_action">تراجع</string>
@@ -222,6 +252,7 @@ Language: ar
     <string name="signup_user_exists">يوجد البريد الإلكتروني بالفعل في وردبرس.كوم.\nمتابعة تسجيل الدخول.</string>
     <string name="signup_updating_account">جارٍ تحديث الحساب…</string>
     <string name="signup_magic_link_progress">إرسال البريد الإلكتروني</string>
+    <string name="signup_terms_of_service_text">يعني تسجيل الدخول موافقتك على %1$sشروط الخدمة%2$s.</string>
     <string name="signup_magic_link_message">أرسلنا إليك رابطًا لا يحتاج إلى كلمة مرور لتسجيل الدخول! تحقق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط الموجود في البريد الإلكتروني لإنهاء تسجيل الدخول.</string>
     <string name="signup_magic_link_error_button_positive">إعادة المحاولة</string>
     <string name="signup_magic_link_error_button_negative">إغلاق</string>
@@ -260,7 +291,6 @@ Language: ar
     <string name="site_settings_serve_images_from_our_servers_summary">سيُحسّن Jetpack صورك ويوفِّرها من موقع الخادم الأقرب إلى زائريك. سيؤدي استخدام شبكة توصيل المحتوى العالمية إلى تعزيز سرعة التحميل في موقعك.</string>
     <string name="site_settings_serve_images_from_our_servers">الحصول على الصور من خوادمنا</string>
     <string name="site_settings_speed_up_your_site">زيادة سرعة موقعك</string>
-    <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقعك على وردبرس، سيتعين عليك تثبيت المكوّن الإضافي Jetpack. هل ترغب في إعداد Jetpack؟</string>
     <string name="stats_jetpack_connection_setup">إعداد Jetpack</string>
     <string name="plugin_chevron_icon_content_description">التبديل بين النصوص</string>
     <string name="plugin_info_your_version">إصدار وردبرس الخاص بك</string>

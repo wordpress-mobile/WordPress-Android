@@ -224,9 +224,4 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     public void helpSiteCreatingScreen() {
         launchZendesk(HelpActivity.Origin.SITE_CREATION_CREATING);
     }
-
-    @Override
-    public void setHelpContext(String faqId, String faqSection) {
-        // nothing implemented here yet. This will set the context the `help()` callback should work with
-    }
 }

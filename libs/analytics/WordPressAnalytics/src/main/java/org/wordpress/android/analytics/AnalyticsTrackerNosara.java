@@ -53,7 +53,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
-        Map<String, Object> predefinedEventProperties = new HashMap<String, Object>();
+        Map<String, Object> predefinedEventProperties = new HashMap<>();
         switch (stat) {
             case EDITOR_ADDED_PHOTO_NEW:
             case EDITOR_ADDED_VIDEO_NEW:
@@ -349,7 +349,6 @@ public class AnalyticsTrackerNosara extends Tracker {
 
     @Override
     public void registerPushNotificationToken(String regId) {
-        return;
     }
 
     @SuppressWarnings("checkstyle:methodlength")
@@ -377,6 +376,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_comment_liked";
             case READER_ARTICLE_COMMENT_UNLIKED:
                 return "reader_article_comment_unliked";
+            case READER_ARTICLE_DETAIL_LIKED:
+                return "reader_article_detail_liked";
+            case READER_ARTICLE_DETAIL_UNLIKED:
+                return "reader_article_detail_unliked";
             case READER_ARTICLE_LIKED:
                 return "reader_article_liked";
             case READER_ARTICLE_OPENED:
@@ -393,6 +396,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_blog_previewed";
             case READER_BLOG_UNFOLLOWED:
                 return "reader_site_unfollowed";
+            case READER_ARTICLE_VISITED:
+                return "reader_article_visited";
             case READER_DISCOVER_VIEWED:
                 return "reader_discover_viewed";
             case READER_INFINITE_SCROLL:
@@ -545,6 +550,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED:
+                return "followed_blog_notifications_reader_enabled";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF:
+                return "followed_blog_notifications_reader_menu_off";
+            case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON:
+                return "followed_blog_notifications_reader_menu_on";
             case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_OFF:
                 return "followed_blog_notifications_settings_off";
             case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_ON:
@@ -648,6 +659,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_created";
             case SHARED_ITEM:
                 return "item_shared";
+            case SHARED_ITEM_READER:
+                return "item_shared_reader";
             case ADDED_SELF_HOSTED_SITE:
                 return "self_hosted_blog_added";
             case SIGNED_IN:
@@ -906,6 +919,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "me_gravatar_upload_exception";
             case MY_SITE_ACCESSED:
                 return "my_site_tab_accessed";
+            case MY_SITE_ICON_TAPPED:
+                return "my_site_icon_tapped";
+            case MY_SITE_ICON_REMOVED:
+                return "my_site_icon_removed";
+            case MY_SITE_ICON_SHOT_NEW:
+                return "my_site_icon_shot_new";
+            case MY_SITE_ICON_GALLERY_PICKED:
+                return "my_site_icon_gallery_picked";
+            case MY_SITE_ICON_CROPPED:
+                return "my_site_icon_cropped";
+            case MY_SITE_ICON_UPLOADED:
+                return "my_site_icon_uploaded";
+            case MY_SITE_ICON_UPLOAD_UNSUCCESSFUL:
+                return "my_site_icon_upload_unsuccessful";
             case THEMES_ACCESSED_THEMES_BROWSER:
                 return "themes_theme_browser_accessed";
             case THEMES_ACCESSED_SEARCH:
@@ -982,8 +1009,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deep_linked_fallback";
             case DEEP_LINK_NOT_DEFAULT_HANDLER:
                 return "deep_link_not_default_handler";
-            case MAIN_TABS_SWIPED:
-                return "main_tabs_swiped";
             case MEDIA_LIBRARY_ADDED_PHOTO:
                 return "media_library_photo_added";
             case MEDIA_LIBRARY_ADDED_VIDEO:

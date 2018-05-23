@@ -26,9 +26,9 @@ wp.oauth.app_secret = wordpress
 wp.gcm.id = wordpress
 wp.db_secret = wordpress
 wp.app_license_key = wordpress
-wp.zendesk.app_id=todo
-wp.zendesk.domain=todo
-wp.zendesk.oauth_client_id=todo
+wp.zendesk.app_id=wordpress
+wp.zendesk.domain=wordpress
+wp.zendesk.oauth_client_id=wordpress
 
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
 wp.res.com.google.android.geo.api.key = geo-api-key

@@ -161,7 +161,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
             case TIME_PICKER:
                 boolean is24HrFormat = DateFormat.is24HourFormat(getActivity());
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog),
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert),
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker,

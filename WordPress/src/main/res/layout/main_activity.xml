@@ -1,42 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_view_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/root_view_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <org.wordpress.android.ui.main.WPMainTabLayout
-        android:id="@+id/tab_layout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/tab_background"
-        android:elevation="@dimen/tabs_elevation"
-        app:tabIndicatorColor="@color/tab_indicator"
+        android:background="@color/color_primary"
+        android:elevation="@dimen/appbar_elevation"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         tools:targetApi="LOLLIPOP"/>
 
-    <org.wordpress.android.widgets.WPViewPager
-        android:id="@+id/viewpager_main"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/connection_bar"
-        android:layout_below="@+id/tab_layout" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_container"
+        android:layout_below="@+id/toolbar"/>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/connection_bar"
+    <LinearLayout
+        android:id="@+id/bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/alert_yellow"
-        android:gravity="center"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_medium"
-        android:text="@string/connectionbar_no_connection"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_sz_small"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/connection_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/alert_yellow"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_medium"
+            android:text="@string/connectionbar_no_connection"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_small"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <!-- this coordinator exists only for snackbars -->
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/navbar_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_lighten_20"/>
+
+        <org.wordpress.android.ui.main.WPMainNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:elevation="0dp"
+            app:menu="@menu/bottom_nav_main"/>
+    </LinearLayout>
 
 </RelativeLayout>

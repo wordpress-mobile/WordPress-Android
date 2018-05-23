@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 12:27:01+0000
+Translation-Revision-Date: 2018-05-11 12:05:04+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="login_email_button_signup">Nu ai un cont? %1$sÎnregistrează–te%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Funcționalitatea modulului necesită ca situl să fie în stare bună.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Funcționalitatea modulului necesită ca abonamentul domeniul principal să fie asociat acestui utilizator.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Funcționalitatea modulului necesită privilegii de administrator.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Modulul nu poate fi instalat pe situri VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Modulul nu poate fi instalat din cauza limitărilor de spațiu pe disc.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Funcționalitatea modulului necesită o adresă de email verificată.</string>
+    <string name="plugin_install_site_ineligible_site_private">Funcționalitatea modulului necesită ca situl să fie public.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Funcționalitatea modulului necesită un plan Business.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Funcționalitatea modulului necesită un domeniu personalizat.</string>
+    <string name="plugin_install_site_ineligible_default_error">Funcționalitatea modulului nu este disponibilă pentru acest sit.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Facem inițializarea finală – este aproape gata…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Instalez modulul…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalează</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalarea primului modul pe situl tău poate dura până la 1 minut. În acest timp nu vei putea face modificări în situl tău.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Instalează modulul</string>
+    <string name="notification_settings_followed_dialog_title">Notificări</string>
+    <string name="notification_settings_followed_dialog_email_comments">Trimite–mi email la comentarii noi</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Săptămânal</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Imediat</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Zilnic</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Articole noi</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Primește notificări la articole noi pe acest sit</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Trimite–mi email la articole noi</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Toate siturile mele urmărite</string>
+    <string name="notification_settings_category_followed_sites">Situri urmărite</string>
+    <string name="content_description_person_reading_device_notification">Persoană care citește un dispozitiv cu notificări</string>
+    <string name="content_description_people_looking_charts">Oameni care se uită la grafice și diagrame</string>
+    <string name="comment_title">%s pe %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Sigur vrei să ștergi definitiv această pagină?</string>
+    <string name="dialog_confirm_delete_permanently_post">Sigur vrei să ștergi definitiv acest articol?</string>
     <string name="notification_site_creation_title_in_progress">Creez situl… Poate dura câteva minute.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -80,7 +111,6 @@ Language: ro
     <string name="profile_picture">poza de profil a lui %s</string>
     <string name="comment_checkmark_desc">bifează marcajul</string>
     <string name="signup_with_google_progress">Înregistrare cu Google…</string>
-    <string name="editor_toast_no_action_taken">A apărut o eroare. N–am făcut nimic.</string>
     <string name="jetpack_connection_failed_with_reason">Conectarea la Jetpack a eșuat: %s</string>
     <string name="jetpack_already_connected_toast">Ești deja conectat la Jetpack</string>
     <string name="menu_undo_snackbar_action">REVENIRE</string>

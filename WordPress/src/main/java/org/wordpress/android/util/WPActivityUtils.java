@@ -45,7 +45,12 @@ public class WPActivityUtils {
             }
         }
 
+        // find the root view, then make sure the toolbar doesn't already exist
         ViewGroup root = (ViewGroup) child.getParent();
+        if (root.findViewById(R.id.toolbar) != null) {
+            return;
+        }
+
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
                                           .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);

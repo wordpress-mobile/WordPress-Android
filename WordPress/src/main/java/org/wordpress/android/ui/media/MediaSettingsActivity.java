@@ -1032,7 +1032,8 @@ public class MediaSettingsActivity extends AppCompatActivity
             resId = R.string.confirm_delete_media_image;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog))
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
                 .setMessage(resId)
                 .setCancelable(true).setPositiveButton(
                         isMediaFromEditor() ? R.string.remove : R.string.delete, new DialogInterface.OnClickListener() {

@@ -560,7 +560,7 @@ public class PostsListFragment extends Fragment
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                     builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
                             .setMessage(message)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -574,7 +574,7 @@ public class PostsListFragment extends Fragment
                     builder.create().show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                     builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
                             .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -593,7 +593,7 @@ public class PostsListFragment extends Fragment
 
     private void showPublishConfirmationDialog(final PostModel post) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
                .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                                    : getString(R.string.dialog_confirm_publish_message_post))

@@ -2,14 +2,14 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
@@ -333,7 +333,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // If the comment status is trash or spam, next deletion is a permanent deletion.
                 if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                     dialogBuilder.setTitle(getResources().getText(R.string.delete));
                     dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
                     dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
@@ -691,7 +691,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         }
 
-        getFragmentManager().invalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     /*
@@ -1103,7 +1103,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         addDetailFragment(note.getId());
 
-        getFragmentManager().invalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     private void addDetailFragment(String noteId) {

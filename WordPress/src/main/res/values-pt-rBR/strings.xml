@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-25 14:16:29+0000
+Translation-Revision-Date: 2018-05-18 23:07:52+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="login_email_button_signup">Não tem uma conta? %1$sRegistre–se%2$s</string>
     <string name="notification_site_creation_title_in_progress">Criando site… Isto pode levar alguns minutos.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -32,7 +33,12 @@ Language: pt_BR
     <string name="stats_comments_many_desc">%d comentários</string>
     <string name="stats_comments_one_desc">um comentário</string>
     <string name="stats_comments_zero_desc">nenhum comentário</string>
+    <string name="stats_clicks_many_desc">%d cliques</string>
+    <string name="stats_clicks_one_desc">Um clique</string>
+    <string name="stats_clicks_zero_desc">Nenhum clique</string>
+    <string name="stats_views_many_desc">%d visualizações</string>
     <string name="stats_views_one_desc">uma visualização</string>
+    <string name="stats_views_zero_desc">Nenhuma visualização</string>
     <string name="media_preview_desc">Visualizar</string>
     <string name="media_preview_audio_desc">áudio</string>
     <string name="media_grid_item_trash_desc">lixeira</string>

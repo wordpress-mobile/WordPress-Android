@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
@@ -30,6 +31,7 @@ public class ReaderSimplePostView extends LinearLayout {
         void onSimplePostClick(View v, long siteId, long postId);
     }
 
+    private OnFollowListener mFollowListener;
     private ReaderSimplePost mSimplePost;
 
     public ReaderSimplePostView(Context context) {
@@ -57,6 +59,10 @@ public class ReaderSimplePostView extends LinearLayout {
         inflate(context, R.layout.reader_simple_post_view, this);
     }
 
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
+    }
+
     public void showPost(ReaderSimplePost simplePost,
                          ViewGroup parent,
                          boolean isGlobal,
@@ -68,8 +74,8 @@ public class ReaderSimplePostView extends LinearLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         View postView = inflater.inflate(R.layout.reader_simple_post_view, parent, false);
-        TextView txtTitle = (TextView) postView.findViewById(R.id.text_simple_post_title);
-        TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_simple_post_excerpt);
+        TextView txtTitle = postView.findViewById(R.id.text_simple_post_title);
+        TextView txtExcerpt = postView.findViewById(R.id.text_simple_post_excerpt);
         View siteHeader = postView.findViewById(R.id.layout_simple_post_site_header);
 
         txtTitle.setText(mSimplePost.getTitle());
@@ -83,9 +89,9 @@ public class ReaderSimplePostView extends LinearLayout {
 
         // site header only appears for global related posts
         if (isGlobal) {
-            WPNetworkImageView imgAvatar = (WPNetworkImageView) siteHeader.findViewById(R.id.image_avatar);
-            TextView txtSiteName = (TextView) siteHeader.findViewById(R.id.text_site_name);
-            TextView txtAuthorName = (TextView) siteHeader.findViewById(R.id.text_author_name);
+            WPNetworkImageView imgAvatar = siteHeader.findViewById(R.id.image_avatar);
+            TextView txtSiteName = siteHeader.findViewById(R.id.text_site_name);
+            TextView txtAuthorName = siteHeader.findViewById(R.id.text_author_name);
             txtSiteName.setText(mSimplePost.getSiteName());
             txtAuthorName.setText(mSimplePost.getAuthorName());
             if (mSimplePost.hasAuthorAvatarUrl()) {
@@ -96,7 +102,7 @@ public class ReaderSimplePostView extends LinearLayout {
                 imgAvatar.setVisibility(View.GONE);
             }
 
-            ReaderFollowButton btnFollow = (ReaderFollowButton) siteHeader.findViewById(R.id.simple_post_follow_button);
+            ReaderFollowButton btnFollow = siteHeader.findViewById(R.id.simple_post_follow_button);
             btnFollow.setIsFollowed(mSimplePost.isFollowing());
             btnFollow.setOnClickListener(new OnClickListener() {
                 @Override
@@ -133,6 +139,14 @@ public class ReaderSimplePostView extends LinearLayout {
 
         final boolean isAskingToFollow = !mSimplePost.isFollowing();
 
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(btnFollow, mSimplePost.getSiteName(), mSimplePost.getSiteId());
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
+
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -160,7 +174,7 @@ public class ReaderSimplePostView extends LinearLayout {
     }
 
     private void showFeaturedImage(final View postView) {
-        final WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_featured);
+        final WPNetworkImageView imgFeatured = postView.findViewById(R.id.image_featured);
 
         // post must have an excerpt in order to show featured image (not enough space otherwise)
         if (!mSimplePost.hasFeaturedImageUrl() || !mSimplePost.hasExcerpt()) {

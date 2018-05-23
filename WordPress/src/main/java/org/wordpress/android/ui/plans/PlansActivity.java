@@ -267,7 +267,7 @@ public class PlansActivity extends AppCompatActivity {
 
     private PlansPagerAdapter getPageAdapter() {
         if (mPageAdapter == null) {
-            mPageAdapter = new PlansPagerAdapter(getFragmentManager(), mAvailablePlans);
+            mPageAdapter = new PlansPagerAdapter(getSupportFragmentManager(), mAvailablePlans);
         }
         return mPageAdapter;
     }
