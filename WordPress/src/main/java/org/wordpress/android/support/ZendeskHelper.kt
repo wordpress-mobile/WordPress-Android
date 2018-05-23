@@ -18,9 +18,9 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
-import org.wordpress.android.util.HelpshiftHelper.Tag
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.logInformation
 import java.util.Locale
@@ -70,49 +70,62 @@ fun showZendeskHelpCenter(context: Context, accountStore: AccountStore) {
             .show(context)
 }
 
-fun createNewTicket(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
+@JvmOverloads
+fun createNewTicket(
+    context: Context,
+    accountStore: AccountStore?,
+    siteStore: SiteStore,
+    origin: Origin?,
+    extraTags: List<String>? = null
+) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
     configureZendesk(context, accountStore, siteStore)
-    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin))
+    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
-fun showAllTickets(context: Context, accountStore: AccountStore, siteStore: SiteStore, origin: Tag?) {
+fun showAllTickets(
+    context: Context,
+    accountStore: AccountStore,
+    siteStore: SiteStore,
+    origin: Origin?,
+    extraTags: List<String>?
+) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
     configureZendesk(context, accountStore, siteStore)
-    RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin))
+    RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
 // Helpers
 
-private fun configureZendesk(context: Context, accountStore: AccountStore, siteStore: SiteStore) {
+private fun configureZendesk(context: Context, accountStore: AccountStore?, siteStore: SiteStore) {
     zendeskInstance.setIdentity(zendeskIdentity(accountStore))
     zendeskInstance.ticketFormId = TicketFieldIds.form
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore.account)),
+            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore?.account)),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
     )
 }
 
-private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Tag?) =
+private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Origin?, extraTags: List<String>?) =
         object : BaseZendeskFeedbackConfiguration() {
             override fun getRequestSubject(): String {
                 return ZendeskConstants.ticketSubject
             }
 
             override fun getTags(): MutableList<String> {
-                return zendeskTags(allSites, origin ?: Tag.ORIGIN_UNKNOWN) as MutableList<String>
+                return zendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags) as MutableList<String>
             }
         }
 
-private fun zendeskIdentity(accountStore: AccountStore): Identity {
-    val currentAccount = accountStore.account
+private fun zendeskIdentity(accountStore: AccountStore?): Identity {
+    val currentAccount = accountStore?.account
     var email: String? = null
     var name: String? = null
     if (currentAccount != null) {
@@ -136,7 +149,7 @@ private fun blogInformation(allSites: List<SiteModel>?, account: AccountModel?):
     return ZendeskConstants.noneValue
 }
 
-private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag): List<String> {
+private fun zendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -155,6 +168,9 @@ private fun zendeskTags(allSites: List<SiteModel>?, origin: Tag): List<String> {
         tags.addAll(plans)
     }
     tags.add(origin.toString())
+    extraTags?.let {
+        tags.addAll(it)
+    }
     return tags
 }
 
@@ -198,4 +214,8 @@ private object TicketFieldIds {
     const val logs = 22871957L
     const val networkInformation = 360000086966L
     const val siteState = 360000103103L // TODO("implement")
+}
+
+object ZendeskExtraTags {
+    const val connectingJetpack = "connecting_jetpack"
 }

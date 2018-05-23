@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCreatingFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationDomainFragment;
@@ -19,7 +20,6 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -105,11 +105,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         return false;
     }
 
-    private void launchHelpshift(HelpshiftHelper.Tag origin) {
-        Intent intent = new Intent(this, HelpActivity.class);
-        // Used to pass data to an eventual support service
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
-        startActivity(intent);
+    private void launchZendesk(HelpActivity.Origin origin) {
+        ActivityLauncher.viewHelpAndSupport(this, origin);
     }
 
     private enum SiteCreationBackStackMode {
@@ -164,7 +161,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpCategoryScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CATEGORY);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_CATEGORY);
     }
 
     @Override
@@ -175,7 +172,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpThemeScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_THEME);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_THEME);
     }
 
     @Override
@@ -189,7 +186,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpSiteDetailsScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DETAILS);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_DETAILS);
     }
 
     @Override
@@ -203,7 +200,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpDomainScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DOMAIN);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_DOMAIN);
     }
 
     @Override
@@ -225,7 +222,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void helpSiteCreatingScreen() {
-        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CREATING);
+        launchZendesk(HelpActivity.Origin.SITE_CREATION_CREATING);
     }
 
     @Override

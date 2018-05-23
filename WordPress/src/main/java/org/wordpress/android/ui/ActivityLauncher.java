@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
@@ -55,8 +56,6 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -373,10 +372,13 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewHelpAndSupport(Context context, Tag origin) {
-        Intent intent = new Intent(context, HelpActivity.class);
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
-        context.startActivity(intent);
+    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin) {
+        ActivityLauncher.viewHelpAndSupport(context, origin, null);
+    }
+
+    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin, @Nullable List<String>
+            extraSupportTags) {
+        context.startActivity(HelpActivity.createIntent(context, origin, extraSupportTags));
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {

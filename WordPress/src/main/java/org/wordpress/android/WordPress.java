@@ -82,7 +82,6 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
@@ -274,7 +273,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
-        HelpshiftHelper.init(this);
         ZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
                 BuildConfig.ZENDESK_OAUTH_CLIENT_ID, LocaleManager.getSafeLocale(this));
 

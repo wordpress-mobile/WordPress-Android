@@ -38,7 +38,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -124,7 +123,8 @@ public class GCMMessageService extends GcmListenerService {
 
         // Handle helpshift PNs
         if (TextUtils.equals(data.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
+            // TODO: Handle Zendesk PNs instead
+//            HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
             return;
         }
 

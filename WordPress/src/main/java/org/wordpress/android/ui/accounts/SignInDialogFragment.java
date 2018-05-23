@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -17,9 +18,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
-import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
@@ -166,7 +164,8 @@ public class SignInDialogFragment extends DialogFragment {
     }
 
     private void onClickAction(View v, int action, Bundle arguments) {
-        if (!isAdded()) {
+        Activity context = getActivity();
+        if (!isAdded() || context == null) {
             return;
         }
         switch (action) {
@@ -175,36 +174,27 @@ public class SignInDialogFragment extends DialogFragment {
                 if (TextUtils.isEmpty(url)) {
                     return;
                 }
-                ActivityLauncher.openUrlExternal(getContext(), url);
+                ActivityLauncher.openUrlExternal(context, url);
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
-                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
-                        HelpshiftHelper.ENTERED_URL_KEY));
-                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
-                        HelpshiftHelper.ENTERED_USERNAME_KEY));
-                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_EMAIL, arguments.getString(
-                        HelpshiftHelper.ENTERED_EMAIL_KEY));
-                Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
-                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                                                               origin, mAccountStore.getAccount().getUserName());
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:
-                startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
+                startActivity(new Intent(context, AppLogViewerActivity.class));
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_FAQ_PAGE:
                 String faqId = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID);
                 String sectionId = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID);
                 if (faqId != null) {
-                    Support.showSingleFAQ(getActivity(), faqId);
+                    Support.showSingleFAQ(context, faqId);
                 } else if (sectionId != null) {
-                    Support.showFAQSection(getActivity(), sectionId);
+                    Support.showFAQSection(context, sectionId);
                 }
                 break;
             default:
             case ACTION_FINISH:
-                getActivity().finish();
+                context.finish();
                 break;
         }
     }
