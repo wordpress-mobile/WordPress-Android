@@ -47,7 +47,7 @@ public class SiteUtils {
         if (!TextUtils.isEmpty(site.getIconUrl())) {
             return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH);
         } else {
-            return GravatarUtils.blavatarFromUrl(site.getUrl(), size);
+            return null;
         }
     }
 

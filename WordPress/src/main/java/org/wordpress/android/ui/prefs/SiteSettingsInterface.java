@@ -47,6 +47,7 @@ import javax.inject.Inject;
  * - Address
  * - Privacy
  * - Language
+ * - Site icon
  * - Username (.org only)
  * - Password (.org only)
  * - Default Category
@@ -724,6 +725,11 @@ public abstract class SiteSettingsInterface {
         }
     }
 
+    public void setSiteIconMediaId(int siteIconMediaId) {
+        mSettings.siteIconMediaId = siteIconMediaId;
+    }
+
+
     public void setUsername(String username) {
         mSettings.username = username;
     }
@@ -989,6 +995,7 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
+            mRemoteSettings.siteIconMediaId = mSettings.siteIconMediaId;
         } else {
             mSettings.isInLocalTable = false;
             mSettings.localTableId = mSite.getId();

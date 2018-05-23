@@ -40,7 +40,7 @@ public class RoleSelectDialogFragment extends DialogFragment {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(R.string.role);
         builder.setItems(stringRoles, new DialogInterface.OnClickListener() {
             @Override

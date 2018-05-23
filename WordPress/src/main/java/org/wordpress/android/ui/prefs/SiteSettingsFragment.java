@@ -571,7 +571,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void disconnectFromJetpack() {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setMessage(R.string.jetpack_disconnect_confirmation_message);
         builder.setPositiveButton(R.string.jetpack_disconnect_confirm, new DialogInterface.OnClickListener() {
             @Override
@@ -1009,7 +1009,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showExportContentDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(R.string.export_your_content);
         String email = mAccountStore.getAccount().getEmail();
         builder.setMessage(getString(R.string.export_your_content_message, email));
@@ -1091,7 +1091,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showPurchasesDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(R.string.premium_upgrades_title);
         builder.setMessage(R.string.premium_upgrades_message);
         builder.setPositiveButton(R.string.show_purchases, new DialogInterface.OnClickListener() {
@@ -1131,7 +1131,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(R.string.delete_site_warning_title);
         String text = getString(R.string.delete_site_warning, "<b>" + UrlUtils.getHost(mSite.getUrl()) + "</b>")
                       + "<br><br>"
@@ -1511,7 +1511,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
-                                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                 final EditText input = new EditText(getActivity());
                 WPPrefUtils.layoutAsInput(input);
                 input.setWidth(getResources().getDimensionPixelSize(R.dimen.list_editor_input_max_width));
@@ -1777,7 +1777,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showDeleteSiteErrorDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(R.string.error_deleting_site);
         builder.setMessage(R.string.error_deleting_site_summary);
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

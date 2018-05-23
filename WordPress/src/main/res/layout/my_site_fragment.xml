@@ -30,13 +30,25 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless">
 
                     <RelativeLayout
                         android:id="@+id/top_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_large">
+
+                        <ProgressBar
+                            android:id="@+id/my_site_icon_progress"
+                            android:layout_width="@dimen/blavatar_sz"
+                            android:layout_height="@dimen/blavatar_sz"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/margin_large"
+                            android:layout_marginRight="@dimen/margin_large"
+                            android:indeterminate="true"
+                            android:visibility="gone"
+                            android:gravity="center_vertical" />
 
                         <org.wordpress.android.widgets.WPNetworkImageView
                             android:id="@+id/my_site_blavatar"
@@ -45,6 +57,8 @@
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="@dimen/margin_large"
                             android:layout_marginRight="@dimen/margin_large"
+                            android:contentDescription="@string/my_site_icon_content_description"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"/>
 
                         <LinearLayout
@@ -129,6 +143,24 @@
                     android:id="@+id/my_site_stats_text_view"
                     style="@style/MySiteListRowTextView"
                     android:text="@string/stats"/>
+
+            </LinearLayout>
+
+            <!--Activity Log-->
+            <LinearLayout
+                android:id="@+id/row_activity_log"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_activity_log_icon"
+                    style="@style/MySiteListRowIcon"
+                    app:srcCompat="@drawable/ic_history_alt_grey_24dp"
+                    android:importantForAccessibility="no"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_activity_log_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:text="@string/activity" />
 
             </LinearLayout>
 
@@ -327,7 +359,7 @@
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/plugins"
-                    app:srcCompat="@drawable/ic_gridicons_plugin"/>
+                    app:srcCompat="@drawable/ic_plugins_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plugins_text_view"
@@ -479,30 +511,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/empty_list_button_top_margin"
-            android:text="@string/my_site_add_new_site"
             android:contentDescription="@string/my_site_add_new_site"
+            android:text="@string/my_site_add_new_site"
             android:theme="@style/WordPress.Button.Primary"/>
 
     </LinearLayout>
-
-    <!-- this coordinator is only here due to https://code.google.com/p/android/issues/detail?id=175330 -->
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:contentDescription="@string/fab_create_post_desc"
-            app:borderWidth="0dp"
-            app:rippleColor="@color/fab_pressed"
-            app:srcCompat="@drawable/ic_create_white_24dp"/>
-    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>

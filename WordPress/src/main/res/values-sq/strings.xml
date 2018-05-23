@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-30 10:20:23+0000
+Translation-Revision-Date: 2018-05-11 10:33:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="login_email_button_signup">S’keni llogari? %1$sRegjistrohuni%2$s</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Veçoria e shtojcës lyp që pajtimi i përkatësisë parësore të jetë përshoqëruar me këtë përdorues.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Veçoria e shtojcës lyp privilegje përgjegjësi.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Shtojca s’mund të instalohet në sajte VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Shtojca s’mund të instalohet, për shkak kufizimesh hapësire në disk.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Veçoria e shtojcës lyp një adresë email të verifikuar.</string>
+    <string name="plugin_install_site_ineligible_site_private">Veçoria e shtojcës lyp që sajti të jetë publik.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Veçoria e shtojcës lyp paketë biznes.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Veçoria e shtojcës lyp një përkatësi vetjake.</string>
+    <string name="plugin_install_site_ineligible_default_error">Veçoria e shtojcës s’është e mundshme për këtë sajt.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Po kryejmë hapin përfundimtar — thuajse mbaruam…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Po instalohet shtojca…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instaloje</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalimi i shtojcës së parë në sajtin tuaj mund të hajë deri në 1 minutë. Gjatë kësaj kohe, s’do të jeni në gjendje të bëni ndryshime në sajtin tuaj.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Instaloje shtojcën</string>
+    <string name="notification_settings_followed_dialog_title">Njoftime</string>
+    <string name="notification_settings_followed_dialog_email_comments">Dërgomë komentet e reja me email</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Përjavë</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Menjëherë</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Përditë</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Postime të reja</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Merrni njoftime postimesh të reja nga ky sajt</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Dërgomë postimet e reja me email</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Krejt Sajtet e Ndjekur Prej Meje</string>
+    <string name="notification_settings_category_followed_sites">Sajte të Ndjekur</string>
+    <string name="content_description_person_reading_device_notification">Person që lexon pajisje me njoftime</string>
+    <string name="content_description_people_looking_charts">Persona që shohin grafikë dhe klasifikime</string>
+    <string name="comment_title">%s te %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Jeni i sigurt se doni të fshihet përgjithmonë kjo faqe?</string>
+    <string name="dialog_confirm_delete_permanently_post">Jeni i sigurt se doni të fshihet përgjithmonë ky postim?</string>
     <string name="notification_site_creation_title_in_progress">Po krijohet sajti… Kjo mund të dojë ca minuta.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -80,7 +110,6 @@ Language: sq_AL
     <string name="profile_picture">Foto profili e %s</string>
     <string name="comment_checkmark_desc">shenjë</string>
     <string name="signup_with_google_progress">Po bëhet regjistrim me Google…</string>
-    <string name="editor_toast_no_action_taken">Ndodhi një gabim. S’u bë ndonjë veprim.</string>
     <string name="jetpack_connection_failed_with_reason">Dështoi lidhja me Jetpack–un: %s</string>
     <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur teJetpack–u</string>
     <string name="menu_undo_snackbar_action">ZHBËJE</string>

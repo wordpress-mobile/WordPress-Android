@@ -109,13 +109,13 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         SiteViewHolder(View view) {
             super(view);
-            mLayoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
-            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
-            mTxtDomain = (TextView) view.findViewById(R.id.text_domain);
-            mImgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
+            mLayoutContainer = view.findViewById(R.id.layout_container);
+            mTxtTitle = view.findViewById(R.id.text_title);
+            mTxtDomain = view.findViewById(R.id.text_domain);
+            mImgBlavatar = view.findViewById(R.id.image_blavatar);
             mDivider = view.findViewById(R.id.divider);
             mIsSiteHidden = null;
-            mSelectedRadioButton = (RadioButton) view.findViewById(R.id.radio_selected);
+            mSelectedRadioButton = view.findViewById(R.id.radio_selected);
         }
     }
 

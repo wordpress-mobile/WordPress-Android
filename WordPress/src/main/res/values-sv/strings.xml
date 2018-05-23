@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-24 20:05:42+0000
+Translation-Revision-Date: 2018-05-10 09:58:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="login_email_button_signup">Har du inget konto? %1$sRegistrera dig%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Funktionen för tillägg kräver att webbplatsen har gott anseende.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Funktionen för tillägg kräver att domänens abonnemang är kopplat till denna användare.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Funktionen med tillägg kräver administratörsbehörighet.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Tillägg kan inte installeras på VIP–webbplatser.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Det går inte att installera tillägget på grund av begränsat lagringsutrymme.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">För funktionen med tillägg måste e–postadressen vara bekräftad.</string>
+    <string name="plugin_install_site_ineligible_site_private">För funktionen med tillägg krävs att webbplatsen är publik.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">För funktionen med tillägg krävs ett business–konto.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">För funktionen med tillägg krävs ett anpassat domännamn.</string>
+    <string name="plugin_install_site_ineligible_default_error">Funktionen med tillägg är inte tillgänglig för denna webbplats.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Vi genomför de sista förberedelserna – nästan klart…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installerar tillägget…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installera</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installationen av det första tillägget på din webbplats kan ta upp till 1 minut. Under denna tid kan du inte ändra något på webbplatsen.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Installera tillägget</string>
+    <string name="notification_settings_followed_dialog_title">Notiser</string>
+    <string name="notification_settings_followed_dialog_email_comments">Skicka kommentarer till mig via e–post</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">En gång i veckan</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Omedelbart</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Dagligen</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Nya inlägg</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Få notiser om nya inlägg från denna webbplats</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Skicka mig nya inlägg via e–post</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Alla webbplatser jag följer</string>
+    <string name="notification_settings_category_followed_sites">Följda webbplatser</string>
+    <string name="content_description_person_reading_device_notification">Person som läser en mobil enhet med notiser</string>
+    <string name="content_description_people_looking_charts">Personers som studerar diagram och tabeller</string>
+    <string name="comment_title">%s om %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Är du säker på att du vill radera denna sida permanent?</string>
+    <string name="dialog_confirm_delete_permanently_post">Är du säker på att du vill radera detta inlägg permanent?</string>
     <string name="notification_site_creation_title_in_progress">Skapar webbplatsen… Det kan ta några minuter.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -80,7 +111,6 @@ Language: sv_SE
     <string name="profile_picture">profilbild för %s</string>
     <string name="comment_checkmark_desc">förbockningsmärke</string>
     <string name="signup_with_google_progress">Registrering via Google…</string>
-    <string name="editor_toast_no_action_taken">Ett fel har inträffat. Ingen åtgärd vidtogs.</string>
     <string name="jetpack_connection_failed_with_reason">Anslutningen till Jetpack fungerade inte: %s</string>
     <string name="jetpack_already_connected_toast">DU är redan ansluten till Jetpack</string>
     <string name="menu_undo_snackbar_action">ÅNGRA</string>
@@ -276,7 +306,7 @@ Language: sv_SE
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack kommer att optimera dina bilder och leverera dem från den server som finns närmast dina besökare. Användningen av vårt globala nätverk för innehållsdistribution får din webbplats att laddas snabbare.</string>
     <string name="site_settings_serve_images_from_our_servers">Leverera bilder från våra servrar</string>
     <string name="site_settings_speed_up_your_site">Snabba upp din webbplats</string>
-    <string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
+    <string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress–webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Konfigurera Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Text på/av</string>
     <string name="plugin_info_your_version">Din WordPress–version</string>

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-24 21:46:49+0000
+Translation-Revision-Date: 2018-05-10 17:36:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="login_email_button_signup">¿No tienes una cuenta? %1$s Regístrate %2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Una característica del plugin requiere que el sitio esté en buen estado.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Una característica del plugin necesita que la suscripción principal del dominio esté asociada con este usuario.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Una característica del plugin necesita privilegios de administrador.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">El plugin no puede instalarse en sitios VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">El plugin no se puede instalar debido a las limitaciones de espacio del disco.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Una característica del plugin requiere una dirección de correo electrónico verificada.</string>
+    <string name="plugin_install_site_ineligible_site_private">Una característica del plugin requiere que el sitio sea público.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Una característica del plugin requiere un plan business.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Una característica del plugin requiere un dominio personalizado.</string>
+    <string name="plugin_install_site_ineligible_default_error">Una característica del plugin no está disponible para este sitio.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Estamos haciendo la configuración final, está casi listo…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Instalando plugin…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalar</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalar el primer plugin en tu sitio puede tomar hasta 1 minuto. Durante este tiempo, no podrás realizar cambios en tu sitio.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Instalar plugin</string>
+    <string name="notification_settings_followed_dialog_title">Notificaciones</string>
+    <string name="notification_settings_followed_dialog_email_comments">Enviarme nuevos comentarios por correo electrónico</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Semanalmente</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Instantáneamente</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Diariamente</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Entradas nuevas</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Recibe notificaciones de nuevas publicaciones en este sitio</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Enviarme nuevas entradas por correo electrónico</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Todos mis sitios seguidos</string>
+    <string name="notification_settings_category_followed_sites">Sitios seguidos</string>
+    <string name="content_description_person_reading_device_notification">Dispositivo de lectura personal con notificaciones</string>
+    <string name="content_description_people_looking_charts">Gente mirando gráficos y tablas</string>
+    <string name="comment_title">%s en %s</string>
+    <string name="dialog_confirm_delete_permanently_page">¿Estás seguro de que deseas eliminar definitivamente esta página?</string>
+    <string name="dialog_confirm_delete_permanently_post">¿Seguro que quieres eliminar definitivamente esta publicación?</string>
     <string name="notification_site_creation_title_in_progress">Creando sitio… Puede tardar unos minutos.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -80,7 +111,6 @@ Language: es
     <string name="profile_picture">Imagen de perfil de %s</string>
     <string name="comment_checkmark_desc">marca de verificación</string>
     <string name="signup_with_google_progress">Registrarse con Google…</string>
-    <string name="editor_toast_no_action_taken">Ocurrió un error. Ninguna acción tomada.</string>
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>
     <string name="menu_undo_snackbar_action">DESHACER</string>

@@ -49,7 +49,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
         View view = inflater.inflate(R.layout.publicize_account_chooser_dialog, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         configureAlertDialog(view, builder);
         configureRecyclerViews(view);
 

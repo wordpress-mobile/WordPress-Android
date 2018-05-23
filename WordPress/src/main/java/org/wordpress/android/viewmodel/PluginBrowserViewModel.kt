@@ -5,8 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.WorkerThread
-import android.text.TextUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.WordPress
@@ -26,19 +24,20 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated
 import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
+import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
-import java.util.HashMap
-import java.util.HashSet
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
 private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
 private const val KEY_TITLE = "KEY_TITLE"
 
-@WorkerThread
+typealias PluginListState = ListState<ImmutablePluginModel>
+
 class PluginBrowserViewModel @Inject constructor(
     private val mDispatcher: Dispatcher,
     private val mPluginStore: PluginStore,
@@ -52,60 +51,51 @@ class PluginBrowserViewModel @Inject constructor(
         SEARCH
     }
 
-    enum class PluginListStatus {
-        CAN_LOAD_MORE,
-        DONE,
-        ERROR,
-        FETCHING,
-        LOADING_MORE
-    }
-
     private var isStarted = false
 
     private val handler = Handler()
-    private val updatedPluginSlugSet = HashSet<String>()
 
-    private val _featuredPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val featuredPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _featuredPlugins
+    private val _featuredPluginsLiveData = MutableLiveData<PluginListState>()
+    private val _popularPluginsLiveData = MutableLiveData<PluginListState>()
+    private val _newPluginsLiveData = MutableLiveData<PluginListState>()
+    private val _sitePluginsLiveData = MutableLiveData<PluginListState>()
+    private val _searchResultsLiveData = MutableLiveData<PluginListState>()
 
-    private val _popularPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val popularPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _popularPlugins
+    val featuredPluginsLiveData: LiveData<PluginListState>
+        get() = _featuredPluginsLiveData
 
-    private val _newPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val newPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _newPlugins
+    val popularPluginsLiveData: LiveData<PluginListState>
+        get() = _popularPluginsLiveData
 
-    private val _sitePlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val sitePlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _sitePlugins
-    val isSitePluginsEmpty: Boolean
-        get() = sitePlugins.value == null || sitePlugins.value!!.isEmpty()
+    val newPluginsLiveData: LiveData<PluginListState>
+        get() = _newPluginsLiveData
 
-    private val _searchResults = MutableLiveData<List<ImmutablePluginModel>>()
-    val searchResults: LiveData<List<ImmutablePluginModel>>
-        get() = _searchResults
+    val sitePluginsLiveData: LiveData<PluginListState>
+        get() = _sitePluginsLiveData
 
-    private val _featuredPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val featuredPluginsListStatus: LiveData<PluginListStatus>
-        get() = _featuredPluginsListStatus
+    val searchResultsLiveData: LiveData<PluginListState>
+        get() = _searchResultsLiveData
 
-    private val _newPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val newPluginsListStatus: LiveData<PluginListStatus>
-        get() = _newPluginsListStatus
-
-    private val _popularPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val popularPluginsListStatus: LiveData<PluginListStatus>
-        get() = _popularPluginsListStatus
-
-    private val _sitePluginsListStatus = MutableLiveData<PluginListStatus>()
-    val sitePluginsListStatus: LiveData<PluginListStatus>
-        get() = _sitePluginsListStatus
-
-    private val _searchPluginsListStatus = MutableLiveData<PluginListStatus>()
-    val searchPluginsListStatus: LiveData<PluginListStatus>
-        get() = _searchPluginsListStatus
+    private var featuredPlugins: ListState<ImmutablePluginModel>
+            by Delegates.observable(ListState.Init()) { _, _, new ->
+                _featuredPluginsLiveData.postValue(new)
+            }
+    private var popularPlugins: ListState<ImmutablePluginModel>
+            by Delegates.observable(ListState.Init()) { _, _, new ->
+                _popularPluginsLiveData.postValue(new)
+            }
+    private var newPlugins: ListState<ImmutablePluginModel>
+            by Delegates.observable(ListState.Init()) { _, _, new ->
+                _newPluginsLiveData.postValue(new)
+            }
+    private var sitePlugins: ListState<ImmutablePluginModel>
+            by Delegates.observable(ListState.Init()) { _, _, new ->
+                _sitePluginsLiveData.postValue(new)
+            }
+    private var searchResults: ListState<ImmutablePluginModel>
+            by Delegates.observable(ListState.Init()) { _, _, new ->
+                _searchResultsLiveData.postValue(new)
+            }
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -153,10 +143,10 @@ class PluginBrowserViewModel @Inject constructor(
         if (isStarted) {
             return
         }
-        reloadPluginDirectory(PluginDirectoryType.FEATURED)
-        reloadPluginDirectory(PluginDirectoryType.NEW)
-        reloadPluginDirectory(PluginDirectoryType.POPULAR)
-        reloadPluginDirectory(PluginDirectoryType.SITE)
+        updateListStateToReady(PluginDirectoryType.FEATURED)
+        updateListStateToReady(PluginDirectoryType.NEW)
+        updateListStateToReady(PluginDirectoryType.POPULAR)
+        updateListStateToReady(PluginDirectoryType.SITE)
 
         fetchPlugins(PluginListType.SITE, false)
         fetchPlugins(PluginListType.FEATURED, false)
@@ -166,21 +156,38 @@ class PluginBrowserViewModel @Inject constructor(
         isStarted = true
     }
 
-    // Site & WPOrg plugin management
+    // Actions
 
-    private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
-        site?.let {
-            val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
-            when (directoryType) {
-                PluginDirectoryType.FEATURED -> _featuredPlugins.postValue(pluginList)
-                PluginDirectoryType.NEW -> _newPlugins.postValue(pluginList)
-                PluginDirectoryType.POPULAR -> _popularPlugins.postValue(pluginList)
-                PluginDirectoryType.SITE -> _sitePlugins.postValue(pluginList)
-            }
+    fun getDiffCallback(oldList: List<ImmutablePluginModel>, newList: List<ImmutablePluginModel>):
+            ListDiffCallback<ImmutablePluginModel> {
+        val areItemsTheSame: (ImmutablePluginModel?, ImmutablePluginModel?) -> Boolean = { old, new ->
+            old?.slug == new?.slug
         }
+
+        val areContentsTheSame: (ImmutablePluginModel?, ImmutablePluginModel?) -> Boolean = { old, new ->
+            var same = false
+            old?.let {
+                new?.let {
+                    same = old.slug == new.slug &&
+                            old.displayName == new.displayName &&
+                            old.authorName == new.authorName &&
+                            old.icon == new.icon &&
+                            old.isInstalled == new.isInstalled &&
+                            old.isActive == new.isActive &&
+                            old.isAutoUpdateEnabled == new.isAutoUpdateEnabled &&
+                            old.installedVersion == new.installedVersion &&
+                            old.wpOrgPluginVersion == new.wpOrgPluginVersion &&
+                            old.averageStarRating == new.averageStarRating
+                }
+            }
+            same
+        }
+        return ListDiffCallback(oldList, newList, areItemsTheSame, areContentsTheSame)
     }
 
-    // Pull to refresh
+    fun loadMore(listType: PluginListType) {
+        fetchPlugins(listType, true)
+    }
 
     fun pullToRefresh(pluginListType: PluginListType) {
         fetchPlugins(pluginListType, false)
@@ -192,30 +199,29 @@ class PluginBrowserViewModel @Inject constructor(
         if (!shouldFetchPlugins(listType, loadMore)) {
             return
         }
-        val newStatus = if (loadMore) PluginListStatus.LOADING_MORE else PluginListStatus.FETCHING
         when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> {
-                _sitePluginsListStatus.postValue(newStatus)
+                sitePlugins = ListState.Loading(sitePlugins, loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             PluginBrowserViewModel.PluginListType.FEATURED -> {
-                _featuredPluginsListStatus.postValue(newStatus)
+                featuredPlugins = ListState.Loading(featuredPlugins, loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             PluginBrowserViewModel.PluginListType.POPULAR -> {
-                _popularPluginsListStatus.postValue(newStatus)
+                popularPlugins = ListState.Loading(popularPlugins, loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             PluginBrowserViewModel.PluginListType.NEW -> {
-                _newPluginsListStatus.postValue(newStatus)
+                newPlugins = ListState.Loading(newPlugins, loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             PluginBrowserViewModel.PluginListType.SEARCH -> {
-                _searchPluginsListStatus.postValue(newStatus)
+                searchResults = ListState.Loading(searchResults, loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
             }
@@ -226,135 +232,94 @@ class PluginBrowserViewModel @Inject constructor(
         if (listType == PluginListType.SITE && SiteUtils.isNonAtomicBusinessPlanSite(site)) {
             return false
         }
-        val currentStatus = when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> sitePluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.POPULAR -> popularPluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.NEW -> newPluginsListStatus.value
+        return when (listType) {
+            PluginBrowserViewModel.PluginListType.SITE -> sitePlugins.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPlugins.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.POPULAR -> popularPlugins.shouldFetch(loadMore)
+            PluginBrowserViewModel.PluginListType.NEW -> newPlugins.shouldFetch(loadMore)
             // We should always do the initial search because the string might have changed and it is
             // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
             // pages of search, so if we are trying to load more, we can ignore it
-            PluginBrowserViewModel.PluginListType.SEARCH -> return !loadMore
+            PluginBrowserViewModel.PluginListType.SEARCH -> !loadMore
         }
-        if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
-            // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
-            // and the user pulled to refresh, we don't want (or need) the 2 requests colliding
-            return false
-        }
-        return !(loadMore && currentStatus != PluginListStatus.CAN_LOAD_MORE)
-    }
-
-    fun loadMore(listType: PluginListType) {
-        fetchPlugins(listType, true)
     }
 
     // Network Callbacks
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onWPOrgPluginFetched(event: OnWPOrgPluginFetched) {
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!event.pluginSlug.isNullOrEmpty() && updatedPluginSlugSet.add(event.pluginSlug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.pluginSlug)
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
-        val listStatus = if (event.isError) {
+        if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
                     event.error.type)
-            PluginListStatus.ERROR
+            updateListStateToError(event.type, event.error.message)
         } else {
-            if (event.canLoadMore) PluginListStatus.CAN_LOAD_MORE else PluginListStatus.DONE
-        }
-        when (event.type) {
-            PluginDirectoryType.FEATURED -> _featuredPluginsListStatus.postValue(listStatus)
-            PluginDirectoryType.NEW -> _newPluginsListStatus.postValue(listStatus)
-            PluginDirectoryType.POPULAR -> _popularPluginsListStatus.postValue(listStatus)
-            PluginDirectoryType.SITE -> _sitePluginsListStatus.postValue(listStatus)
-            null -> AppLog.d(T.PLUGINS, "Plugin directory type shouldn't be null")
-        }
-        if (!event.isError) {
-            reloadPluginDirectory(event.type)
+            updateListStateToSuccess(event.type, event.canLoadMore)
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onPluginDirectorySearched(event: OnPluginDirectorySearched) {
         if (searchQuery != event.searchTerm) {
             return
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            _searchPluginsListStatus.postValue(PluginListStatus.ERROR)
+            searchResults = ListState.Error(searchResults, event.error.message)
             return
         }
-        _searchResults.postValue(event.plugins)
-        _searchPluginsListStatus.postValue(PluginListStatus.DONE)
+        searchResults = ListState.Success(event.plugins, false) // Disable pagination for search
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onSitePluginConfigured(event: OnSitePluginConfigured) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onSitePluginDeleted(event: OnSitePluginDeleted) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onSitePluginInstalled(event: OnSitePluginInstalled) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onSitePluginUpdated(event: OnSitePluginUpdated) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update
-        // if the slug is not in the set
-        if (!TextUtils.isEmpty(event.slug) && updatedPluginSlugSet.add(event.slug)) {
-            updateAllPluginListsIfNecessary()
-        }
+        updateAllPluginListsForSlug(event.slug)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -374,100 +339,46 @@ class PluginBrowserViewModel @Inject constructor(
 
     // Keeping the data up to date
 
-    private fun updateAllPluginListsIfNecessary() {
-        val copiedSet = HashSet(updatedPluginSlugSet)
-        handler.postDelayed({
-            // Using the size of the set for comparison might fail since we clear the updatedPluginSlugSet
-            if (copiedSet == updatedPluginSlugSet) {
-                updateAllPluginListsWithNewPlugins(copiedSet)
-                updatedPluginSlugSet.clear()
-            }
-        }, 250)
-    }
+    private fun updateAllPluginListsForSlug(slug: String?) {
+        site?.let { site ->
+            mPluginStore.getImmutablePluginBySlug(site, slug)?.let { updatedPlugin ->
+                val transformFunc: (List<ImmutablePluginModel>) -> List<ImmutablePluginModel> = { list ->
+                    list.map { currentPlugin ->
+                        if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
+                    }
+                }
+                featuredPlugins = featuredPlugins.transform(transformFunc)
+                newPlugins = newPlugins.transform(transformFunc)
+                searchResults = searchResults.transform(transformFunc)
+                popularPlugins = popularPlugins.transform(transformFunc)
 
-    private fun updateAllPluginListsWithNewPlugins(updatedPluginSlugSet: Set<String>) {
-        if (updatedPluginSlugSet.isEmpty()) {
-            return
-        }
-        val newPluginMap = HashMap<String, ImmutablePluginModel>(updatedPluginSlugSet.size)
-        for (slug in updatedPluginSlugSet) {
-            val immutablePlugin = mPluginStore.getImmutablePluginBySlug(site!!, slug)
-            if (immutablePlugin != null) {
-                newPluginMap[slug] = immutablePlugin
+                sitePlugins = sitePlugins.transform { list ->
+                    if (!updatedPlugin.isInstalled) {
+                        list.filter { it.slug != slug }
+                    } else if (list.none { it.slug == slug }) {
+                        list.plus(updatedPlugin).sortedBy { it.displayName }
+                    } else {
+                        list.map { if (it.slug == slug) updatedPlugin else it }
+                    }
+                }
             }
-        }
-        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
-        // reflected
-        updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
-
-        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
-        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
-        // information is much more reliable than any manual update we can make
-        reloadPluginDirectory(PluginDirectoryType.SITE)
-    }
-
-    private fun updatePluginListWithNewPlugin(
-        mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
-        newPluginMap: Map<String, ImmutablePluginModel>
-    ) {
-        val pluginList = mutableLiveData.value
-        if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
-            // Nothing to update
-            return
-        }
-        // When a site or wporg plugin is updated we need to update every occurrence of that item
-        val newList = ArrayList<ImmutablePluginModel>(pluginList.size)
-        var isChanged = false
-        for (immutablePlugin in pluginList) {
-            val slug = immutablePlugin.slug
-            val newPlugin = newPluginMap[slug]
-            if (newPlugin != null) {
-                // add new item
-                newList.add(newPlugin)
-                isChanged = true
-            } else {
-                // add old item
-                newList.add(immutablePlugin)
-            }
-        }
-        // Only update if the list is actually changed
-        if (isChanged) {
-            mutableLiveData.postValue(newList)
         }
     }
 
     private fun submitSearch(query: String, delayed: Boolean) {
-        // If the query is not long enough we don't need to delay it
-        if (delayed && shouldSearch) {
+        if (delayed) {
             handler.postDelayed({
                 if (query == searchQuery) {
                     submitSearch(query, false)
                 }
             }, 250)
         } else {
-            clearSearchResults()
+            searchResults = ListState.Ready(ArrayList())
 
             if (shouldSearch) {
                 fetchPlugins(PluginListType.SEARCH, false)
-            } else {
-                // Due to the query being changed after the last fetch, the status won't ever be updated, so we need
-                // to manually do it. Consider the following case:
-                // 1. Search the plugins for "contact" which will change the status to FETCHING
-                // 2. Before the fetch completes delete the text
-                // 3. In `onPluginDirectorySearched` the result will be ignored, because the query changed, but it won't
-                // be triggered again, because another fetch didn't happen (due to query being empty)
-                // 4. The status will be stuck in FETCHING until another search occurs. The following reset fixes the
-                // problem.
-                _searchPluginsListStatus.postValue(PluginListStatus.DONE)
             }
         }
-    }
-
-    private fun clearSearchResults() {
-        _searchResults.postValue(ArrayList())
     }
 
     fun shouldShowEmptySearchResultsView(): Boolean {
@@ -475,23 +386,48 @@ class PluginBrowserViewModel @Inject constructor(
         if (!shouldSearch) {
             return false
         }
-        return if (searchPluginsListStatus.value != PluginListStatus.DONE &&
-                searchPluginsListStatus.value != PluginListStatus.ERROR) {
-            false
-        } else searchResults.value == null || searchResults.value!!.isEmpty()
+        return when (searchResults) {
+            is ListState.Success, is ListState.Error -> searchResults.data.isEmpty()
+            else -> false
+        }
     }
 
     fun setTitle(title: String?) {
         _title.postValue(title)
     }
 
-    fun getPluginsForListType(listType: PluginListType): List<ImmutablePluginModel>? {
-        return when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> sitePlugins.value
-            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPlugins.value
-            PluginBrowserViewModel.PluginListType.POPULAR -> popularPlugins.value
-            PluginBrowserViewModel.PluginListType.NEW -> newPlugins.value
-            PluginBrowserViewModel.PluginListType.SEARCH -> searchResults.value
+    // ListState Helpers
+
+    private fun updateListStateToReady(directoryType: PluginDirectoryType) {
+        site?.let {
+            val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
+            when (directoryType) {
+                PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Ready(pluginList)
+                PluginDirectoryType.NEW -> newPlugins = ListState.Ready(pluginList)
+                PluginDirectoryType.POPULAR -> popularPlugins = ListState.Ready(pluginList)
+                PluginDirectoryType.SITE -> sitePlugins = ListState.Ready(pluginList)
+            }
+        }
+    }
+
+    private fun updateListStateToSuccess(directoryType: PluginDirectoryType, canLoadMore: Boolean) {
+        site?.let {
+            val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
+            when (directoryType) {
+                PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Success(pluginList, canLoadMore)
+                PluginDirectoryType.NEW -> newPlugins = ListState.Success(pluginList, canLoadMore)
+                PluginDirectoryType.POPULAR -> popularPlugins = ListState.Success(pluginList, canLoadMore)
+                PluginDirectoryType.SITE -> sitePlugins = ListState.Success(pluginList, canLoadMore)
+            }
+        }
+    }
+
+    private fun updateListStateToError(directoryType: PluginDirectoryType, errorMessage: String?) {
+        when (directoryType) {
+            PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Error(featuredPlugins, errorMessage)
+            PluginDirectoryType.NEW -> newPlugins = ListState.Error(newPlugins, errorMessage)
+            PluginDirectoryType.POPULAR -> popularPlugins = ListState.Error(popularPlugins, errorMessage)
+            PluginDirectoryType.SITE -> sitePlugins = ListState.Error(sitePlugins, errorMessage)
         }
     }
 }
