@@ -61,6 +61,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
+import org.wordpress.android.ui.posts.PromoDialog;
+import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -96,10 +98,14 @@ import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
-public class WPMainActivity extends AppCompatActivity
-        implements OnPageListener, BottomNavController, BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface {
+public class WPMainActivity extends AppCompatActivity implements
+        OnPageListener,
+        BottomNavController,
+        BasicDialogPositiveClickInterface,
+        BasicDialogNegativeClickInterface,
+        PromoDialogClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
+    public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
     public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
@@ -527,9 +533,14 @@ public class WPMainActivity extends AppCompatActivity
             case PAGE_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
-                                                        getSelectedSite());
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 }
+
+                MySiteFragment fragment = getMySiteFragment();
+                if (fragment != null) {
+                    fragment.checkQuickStart();
+                }
+
                 break;
             case PAGE_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
@@ -597,6 +608,7 @@ public class WPMainActivity extends AppCompatActivity
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
 
+                showQuickStartDialog();
                 setSite(data);
                 jumpNewPost(data);
                 break;
@@ -619,6 +631,10 @@ public class WPMainActivity extends AppCompatActivity
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
+
+                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                        showQuickStartDialog();
+                    }
 
                     setSite(data);
                     jumpNewPost(data);
@@ -646,6 +662,23 @@ public class WPMainActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    private void showQuickStartDialog() {
+        String tag = MySiteFragment.TAG_QUICK_START_DIALOG;
+        PromoDialog promoDialog = new PromoDialog();
+        promoDialog.initialize(
+                tag,
+                getString(R.string.quick_start_dialog_need_help_title),
+                getString(R.string.quick_start_dialog_need_help_message),
+                getString(R.string.quick_start_dialog_need_help_button_positive),
+                R.drawable.img_promo_quick_start,
+                getString(R.string.quick_start_dialog_need_help_button_negative),
+                "",
+                getString(R.string.quick_start_dialog_need_help_button_neutral)
+        );
+
+        promoDialog.show(getSupportFragmentManager(), tag);
     }
 
     private void appLanguageChanged() {
@@ -886,6 +919,22 @@ public class WPMainActivity extends AppCompatActivity
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
             fragment.onNegativeClicked(instanceTag);
+        }
+    }
+
+    @Override
+    public void onNeutralClicked(@NonNull String instanceTag) {
+        MySiteFragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            fragment.onNeutralClicked(instanceTag);
+        }
+    }
+
+    @Override
+    public void onLinkClicked(@NonNull String instanceTag) {
+        MySiteFragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            fragment.onLinkClicked(instanceTag);
         }
     }
 }

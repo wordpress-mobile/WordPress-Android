@@ -32,7 +32,7 @@
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
 
-    <dimen name="default_dialog_button_height">48dp</dimen>
+    <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
@@ -309,7 +309,9 @@
 
     <dimen name="padding_input_row_start">60dp</dimen>
 
-    <dimen name="dialog_snackbar_button_height">36dp</dimen>
+    <dimen name="dialog_snackbar_content_padding">20dp</dimen>
+
+    <dimen name="quick_start_dot_size">8dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>

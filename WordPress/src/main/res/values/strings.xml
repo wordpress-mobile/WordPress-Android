@@ -2156,4 +2156,12 @@
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
+
+    <string name="quick_start_dialog_need_help_button_negative">No</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
+    <string name="quick_start_dialog_need_help_button_positive">Yes</string>
+    <string name="quick_start_dialog_need_help_message">Our Quick Start checklist walks you through the basics of setting up a new website.</string>
+    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
+    <string name="quick_start_sites">Quick Start</string>
+
 </resources>

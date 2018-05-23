@@ -209,6 +209,13 @@ public class SitePickerActivity extends AppCompatActivity
             case RequestCodes.CREATE_SITE:
                 if (resultCode == RESULT_OK) {
                     debounceLoadSites();
+
+                    if (data == null) {
+                        data = new Intent();
+                    }
+
+                    data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
+
                     setResult(resultCode, data);
                     finish();
                 }
