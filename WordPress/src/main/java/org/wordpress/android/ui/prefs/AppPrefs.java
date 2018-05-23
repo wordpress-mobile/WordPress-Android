@@ -51,8 +51,8 @@ public class AppPrefs {
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
 
-        // index of the last active tab in main activity
-        MAIN_TAB_INDEX,
+        // index of the last active page in main activity
+        MAIN_PAGE_INDEX,
 
         // index of the last active item in Stats activity
         STATS_ITEM_INDEX,
@@ -355,12 +355,12 @@ public class AppPrefs {
         remove(DeletablePrefKey.LAST_ACTIVITY_STR);
     }
 
-    public static int getMainTabIndex() {
-        return getInt(DeletablePrefKey.MAIN_TAB_INDEX);
+    public static int getMainPageIndex() {
+        return getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
     }
 
-    public static void setMainTabIndex(int index) {
-        setInt(DeletablePrefKey.MAIN_TAB_INDEX, index);
+    public static void setMainPageIndex(int index) {
+        setInt(DeletablePrefKey.MAIN_PAGE_INDEX, index);
     }
 
     // Stats Widgets

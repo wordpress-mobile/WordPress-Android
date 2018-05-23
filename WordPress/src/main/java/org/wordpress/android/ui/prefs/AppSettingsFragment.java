@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -57,6 +59,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mOptimizedVideo;
     private DetailListPreference mVideoWidthPref;
     private DetailListPreference mVideoEncorderBitratePref;
+    private PreferenceScreen mPrivacySettings;
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
@@ -117,6 +120,8 @@ public class AppSettingsFragment extends PreferenceFragment
         mVideoEncorderBitratePref =
                 (DetailListPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+        mPrivacySettings = (PreferenceScreen) WPPrefUtils
+                .getPrefAndSetClickListener(this, R.string.pref_key_privacy_settings, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -147,7 +152,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (mAccountStore.hasAccessToken() && NetworkUtils.isNetworkAvailable(getActivity())) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
@@ -218,6 +223,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
             return handleOssPreferenceClick();
+        } else if (preference == mPrivacySettings) {
+            return handlePrivacyClick();
         }
 
         return false;
@@ -468,5 +475,17 @@ public class AppSettingsFragment extends PreferenceFragment
         pref.setValue(value);
         pref.setSummary(summary);
         pref.refreshAdapter();
+    }
+
+    private boolean handlePrivacyClick() {
+        if (mPrivacySettings == null || !isAdded()) {
+            return false;
+        }
+        String title = getString(R.string.preference_privacy_settings);
+        Dialog dialog = mPrivacySettings.getDialog();
+        if (dialog != null) {
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+        return true;
     }
 }

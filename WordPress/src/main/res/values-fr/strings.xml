@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 17:54:07+0000
+Translation-Revision-Date: 2018-05-15 19:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="login_email_button_signup">Vous n\'avez pas encore de compte ? %1$sS\'inscrire%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">La fonctionnalité d\'extension requiert un site en règle.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">La fonctionnalité d\'extension requiert qu\'un abonnement à un domaine principal soit associé à cet utilisateur.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">La fonctionnalité d\'extension requiert des privilèges d\'administration.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Impossible d\'installer l\'extension sur des sites VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Impossible d\'installer l\'extension du fait de l\'espace limité sur le disque.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">La fonctionnalité d\'extension requiert une adresse e–mail vérifiée.</string>
+    <string name="plugin_install_site_ineligible_site_private">La fonctionnalité d\'extension requiert que le site soit public.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">La fonctionnalité d\'extension requiert un plan Business.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">La fonctionnalité d\'extension requiert un domaine personnalisé.</string>
+    <string name="plugin_install_site_ineligible_default_error">La fonctionnalité d\'extension n\'est pas disponible pour ce site.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Nous finalisons la configuration, nous aurons bientôt terminé…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installation de l\'extension en cours</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installer</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">L\'installation de la première extension sur votre site peut prendre jusqu\'à 1 minute. Pendant ce temps, vous ne pourrez pas modifier votre site.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Installer l\'extension</string>
+    <string name="notification_settings_followed_dialog_title">Notifications</string>
+    <string name="notification_settings_followed_dialog_email_comments">M\'envoyer de nouveaux commentaires par e–mail</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Hebdomadaire</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Instantanément</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Journalier</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Nouveaux articles</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Recevoir des notifications relatives aux nouveaux articles publiés sur ce site</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Me tenir informé par e–mail des nouveaux articles</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Tous les sites auxquels je suis abonné</string>
+    <string name="notification_settings_category_followed_sites">Sites suivis</string>
+    <string name="content_description_person_reading_device_notification">Appareil de lecture avec notifications</string>
+    <string name="content_description_people_looking_charts">Personne regardant des graphiques et des tableaux</string>
+    <string name="comment_title">%s sur %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Voulez–vous vraiment supprimer définitivement cette page ?</string>
+    <string name="dialog_confirm_delete_permanently_post">Voulez–vous vraiment supprimer définitivement cet article ?</string>
     <string name="notification_site_creation_title_in_progress">Création du site… Cette opération peut prendre quelques minutes.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -61,6 +92,7 @@ Language: fr
     <string name="reader_list_item_suggestion_remove_desc">supprimer</string>
     <string name="photo_picker_thumbnail_desc">Lire la vidéo</string>
     <string name="reader_cardview_post_play_video_desc">lire la vidéo à la une</string>
+    <string name="post_cardview_featured_desc">image mise en avant</string>
     <string name="plugin_detail_logo_desc">logo de l\'extension</string>
     <string name="plugin_detail_banner_desc">bannière de l\'extension</string>
     <string name="photo_picker_wpmedia_desc">sélectionner à partir du média WordPress</string>
@@ -79,7 +111,6 @@ Language: fr
     <string name="profile_picture">Photo de profil de %s</string>
     <string name="comment_checkmark_desc">coche</string>
     <string name="signup_with_google_progress">Inscription avec Google…</string>
-    <string name="editor_toast_no_action_taken">Une erreur s\'est produite. Aucune action entreprise.</string>
     <string name="jetpack_connection_failed_with_reason">Échec de la connexion à Jetpack : %s</string>
     <string name="jetpack_already_connected_toast">Vous êtes déjà abonné à Jetpack</string>
     <string name="menu_undo_snackbar_action">ANNULER</string>
@@ -135,6 +166,7 @@ Language: fr
     <string name="sharing_disabled_description">Votre module Jetpack de partage étant désactivé, vos options de partage sont inaccessibles.</string>
     <string name="sharing_disabled">Module de partage désactivé</string>
     <string name="version_with_name_param">Version %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Éditeur : %s</string>
     <string name="async_promo_publish_now">Publier maintenant</string>
     <string name="notification_sound_has_invalid_path">Le chemin du son choisi n\'est pas valide. Choisissez–en un autre.</string>
@@ -177,6 +209,8 @@ Language: fr
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 article avec 1 fichier non chargé</string>
     <string name="untitled_in_parentheses">(Sans titre)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_epilogue_write">Écrire un premier article</string>
     <string name="site_creation_epilogue_configure">Configurer</string>
     <string name="site_creation_epilogue_congrats">Bravo !\nVotre site est prêt.</string>
@@ -333,6 +367,12 @@ Language: fr
     <string name="plugin_remove_progress_dialog_message">Suppression de %s …</string>
     <string name="plugin_disable_progress_dialog_message">Désactivation de %s …</string>
     <string name="plugin_configuration_failed">Une erreur est survenue pendant la configuration de l\'extension : %s</string>
+    <string name="plugin_remove_failed">Erreur de suppression de %s.</string>
+    <string name="plugin_removed_successfully">Suppression réussie de %s.</string>
+    <string name="plugin_updated_failed_detailed">Erreur de mise à jour de %1$s : %2$s</string>
+    <string name="plugin_updated_failed">Erreur de mise à jour de %s.</string>
+    <string name="plugin_updated_successfully">Mise à jour effectuée pour %s.</string>
+    <string name="plugin_available_version">Version %s disponible.</string>
     <string name="plugin_detail_label_state_autoupdates">Mises à jour automatiques</string>
     <string name="plugin_detail_label_state_active">Actif</string>
     <string name="plugin_inactive">Inactif</string>
@@ -363,6 +403,7 @@ Language: fr
     <string name="image_size">Taille</string>
     <string name="uploading_subtitle_media_only_one">1 fichier restant</string>
     <string name="uploading_subtitle_media_only">%1$d fichiers sur %2$d fichiers</string>
+    <string name="uploading_subtitle_posts_only_one">1 article restant</string>
     <string name="uploading_title">Téléversement…</string>
     <string name="media_files_uploaded_write_post">Écrire un article</string>
     <string name="media_all_files_uploaded_successfully">%d fichiers ont bien été téléversés</string>
@@ -949,6 +990,7 @@ Language: fr
     <string name="error_post_account_settings">Impossible d\'enregistrer vos réglages de compte</string>
     <string name="error_fetch_account_settings">Impossible de récupérer vos réglages de compte</string>
     <string name="error_fetch_my_profile">Impossible de récupérer votre profil</string>
+    <string name="stats_widget_promo_ok_btn_label">J’ai compris</string>
     <string name="stats_widget_promo_desc">Ajoutez le widget à votre écran d\'accueil afin d\'accéder à vos statistiques en un clic.</string>
     <string name="stats_widget_promo_title">Widget Stats pour Écran d\'Accueil</string>
     <string name="site_settings_unknown_language_code_error">Code de langue non reconnu</string>
@@ -1178,8 +1220,10 @@ Language: fr
     <string name="site_picker_cant_hide_current_site">\"%s\" n\'a pas été caché, c\'est le site selectionné</string>
     <string name="me_btn_support">Aide &amp; Support</string>
     <string name="account_settings">Paramètres du compte</string>
+    <string name="site_picker_create_wpcom">Créer un site WordPress.com</string>
     <string name="site_picker_edit_visibility">Montrer/cacher les sites</string>
     <string name="site_picker_add_self_hosted">Ajouter un site auto–hébergé</string>
+    <string name="site_picker_add_site">Ajout de nouveau site</string>
     <string name="my_site_btn_switch_site">Changer de Site</string>
     <string name="site_picker_title">Choisir un site</string>
     <string name="my_site_btn_view_site">Afficher le site</string>
@@ -1424,6 +1468,8 @@ Language: fr
     <string name="comment_status_spam">Indésirable</string>
     <string name="comment_status_unapproved">En attente</string>
     <string name="comment_status_approved">Approuvé</string>
+    <string name="delete_page">Supprimer la page ?</string>
+    <string name="delete_post">Supprimer l’article ?</string>
     <string name="post_settings">Paramètres d\'article</string>
     <string name="file_not_found">Impossible de trouver le fichier pour le téléverser. Aurait–il été supprimé ou déplacé ?</string>
     <string name="horizontal_alignment">Alignement horizontal</string>

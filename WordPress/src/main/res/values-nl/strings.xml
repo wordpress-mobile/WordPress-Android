@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-01 10:54:09+0000
+Translation-Revision-Date: 2018-05-15 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="login_email_button_signup">Heb je nog geen account? %1$sRegistreren%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Voor deze plugin–functie moet de site in goede staat zijn.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Voor deze plugin–functie moet het abonnement op het primaire domein aan deze gebruiker zijn gekoppeld.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Voor deze plugin–functie zijn beheerdersrechten vereist.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Deze plugin kan niet op VIP–sites geïnstalleerd worden.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Deze plugin kan niet geïnstalleerd worden vanwege begrenzingen van de schijfruimte.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Voor deze plugin-functie moet een e–mailadres geverifieerd zijn.</string>
+    <string name="plugin_install_site_ineligible_site_private">Voor deze plugin–functie moet de site openbaar zijn.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Voor deze plugin–functie moet je een Business abonnement hebben.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Voor deze plugin–functie moet je een aangepast domein hebben.</string>
+    <string name="plugin_install_site_ineligible_default_error">Deze plugin–functie is niet beschikbaar voor deze site.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">We voeren de laatste instellingen door, nog even geduld …</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wordt geïnstalleerd …</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installeren</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Het installeren van de eerste plugin op je site kan maximaal een minuut duren. Terwijl dit gebeurt, kun je geen wijzigingen aan je site aanbrengen.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Plugin installeren</string>
+    <string name="notification_settings_followed_dialog_title">Meldingen</string>
+    <string name="notification_settings_followed_dialog_email_comments">Stuur me nieuwe reacties via e–mail</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Wekelijks</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Direct</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Dagelijks</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Nieuwe berichten</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Ontvang meldingen voor nieuwe berichten op deze site</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Stuur me nieuwe berichten via e–mail</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Al mijn gevolgde sites</string>
+    <string name="notification_settings_category_followed_sites">Gevolgde sites</string>
+    <string name="content_description_person_reading_device_notification">Persoon die naar een apparaat met meldingen kijkt</string>
+    <string name="content_description_people_looking_charts">Mensen die naar grafieken en tabellen kijken</string>
+    <string name="comment_title">%s op %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Weet je zeker dat je deze pagina permanent wilt verwijderen?</string>
+    <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wilt verwijderen?</string>
     <string name="notification_site_creation_title_in_progress">Site wordt aangemaakt. Dit kan een paar minuten duren.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -80,7 +111,6 @@ Language: nl
     <string name="profile_picture">profielfoto van %s\'</string>
     <string name="comment_checkmark_desc">vinkje</string>
     <string name="signup_with_google_progress">Inschrijven bij Google …</string>
-    <string name="editor_toast_no_action_taken">Er is een fout opgetreden. Geen actie ondernomen.</string>
     <string name="jetpack_connection_failed_with_reason">Verbinden met Jetpack mislukt: %s</string>
     <string name="jetpack_already_connected_toast">Je bent al verbonden met Jetpack</string>
     <string name="menu_undo_snackbar_action">ONGEDAAN MAKEN</string>
@@ -221,7 +251,6 @@ Language: nl
     <string name="plugin_install">Installeer</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor jouw bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
-    <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack-plugin om statistieken voor je WordPress–site te gebruiken. Wil je Jetpack instellen?</string>
     <string name="stats_jetpack_connection_setup">Jetpack instellen</string>
     <string name="plugin_chevron_icon_content_description">Tekst in–/uitschakelen</string>
     <string name="plugin_info_your_version">Jouw WordPress versie</string>

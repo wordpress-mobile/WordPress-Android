@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.2.31'
+    ext.arch_components_version = '1.1.1'
 
     repositories {
         jcenter()
@@ -7,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
@@ -20,10 +21,9 @@ allprojects {
     apply plugin: 'checkstyle'
 
     repositories {
+        google()
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
+        maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
     }
 
     task checkstyle(type: Checkstyle) {
@@ -69,5 +69,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '75ef27c8245eb60f3a4574d4d7ead766bce3d59b'
+    fluxCVersion = 'd4e583f21840111065f12e743cbf31de4307266b'
 }

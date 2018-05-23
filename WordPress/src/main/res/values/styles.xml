@@ -22,7 +22,7 @@
         <item name="colorButtonNormal">@color/light_gray</item>
 
         <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
-        <item name="android:alertDialogTheme">@style/Calypso.Dialog</item>
+        <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
 
@@ -73,7 +73,8 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
-    <style name="DropDownListView.Light.WordPress" parent="android:Widget.Holo.ListView.DropDown">
+    <style name="DropDownListView.Light.WordPress" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@color/white</item>
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
         <item name="android:fadeScrollbars">false</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_transparent_black</item>
@@ -150,7 +151,7 @@
     <style name="MediaSettings.TextInputStyle">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
-    <style name="MediaSettings.TextInputTheme" parent="TextAppearance.AppCompat">
+    <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/grey_darken_10</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
@@ -158,10 +159,7 @@
         <item name="colorControlActivated">@color/blue_wordpress</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
-
-        <!-- Fix for crash on ASUS devices - https://github.com/wordpress-mobile/WordPress-Android/issues/7038 -->
-        <item name="android:textColorHighlight">@color/transparent</item>
-        <item name="android:textColorLink">@color/transparent</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
     <style name="MediaSettings.Divider">
         <item name="android:background">@color/divider_grey</item>

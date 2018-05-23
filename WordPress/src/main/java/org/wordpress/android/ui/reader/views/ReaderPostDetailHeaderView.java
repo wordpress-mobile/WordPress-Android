@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AppLog;
@@ -24,6 +25,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * topmost view in post detail - shows blavatar + avatar, author name, blog name, and follow button
  */
 public class ReaderPostDetailHeaderView extends LinearLayout {
+    private OnFollowListener mFollowListener;
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
     private boolean mEnableBlogPreview = true;
@@ -45,14 +47,18 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_post_detail_header_view, this);
-        mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
+        mFollowButton = view.findViewById(R.id.header_follow_button);
+    }
+
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
     }
 
     public void setPost(@NonNull ReaderPost post, boolean isSignedInWPCom) {
         mPost = post;
 
-        TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
-        TextView txtSubtitle = (TextView) findViewById(R.id.text_header_subtitle);
+        TextView txtTitle = findViewById(R.id.text_header_title);
+        TextView txtSubtitle = findViewById(R.id.text_header_subtitle);
         View avatarFrame = findViewById(R.id.frame_avatar);
 
         boolean hasBlogName = mPost.hasBlogName();
@@ -97,7 +103,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollowStatus();
+                    toggleFollowStatus(v);
                 }
             });
         } else {
@@ -116,8 +122,8 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         int frameSize = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar_frame);
 
         View avatarFrame = findViewById(R.id.frame_avatar);
-        WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
-        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
+        WPNetworkImageView imgBlavatar = findViewById(R.id.image_header_blavatar);
+        WPNetworkImageView imgAvatar = findViewById(R.id.image_header_avatar);
 
         /*
          * - if there's a blavatar and an avatar, show both of them overlaid using default sizing
@@ -184,12 +190,20 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         }
     };
 
-    private void toggleFollowStatus() {
+    private void toggleFollowStatus(final View followButton) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
+
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(followButton, mPost.getBlogName(), mPost.blogId);
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
