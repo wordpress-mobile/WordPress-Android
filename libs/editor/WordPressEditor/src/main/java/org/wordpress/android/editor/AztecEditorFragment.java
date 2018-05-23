@@ -1052,7 +1052,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override public boolean shouldLoadContentFromEditor() {
-        return mContent.hasChanges() != EditorHasChanges.NO_CHANGES;
+        if (mContent.getVisibility() == View.VISIBLE) {
+            return mContent.hasChanges() != EditorHasChanges.NO_CHANGES;
+        } else {
+            return mSource.hasChanges() != EditorHasChanges.NO_CHANGES;
+        }
     }
 
     @Override
