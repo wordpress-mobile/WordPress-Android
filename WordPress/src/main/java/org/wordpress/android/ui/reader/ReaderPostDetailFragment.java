@@ -522,8 +522,10 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (mPost.isBookmarked) {
             ReaderPostActions.removeFromBookmarked(mPost);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS);
         } else {
             ReaderPostActions.addToBookmarked(mPost);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS);
             showBookmarkSnackbar();
         }
 
@@ -541,6 +543,8 @@ public class ReaderPostDetailFragment extends Fragment
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
+                        AnalyticsTracker
+                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE);
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                     }
                 })
