@@ -1,29 +1,17 @@
 package org.wordpress.android.util
 
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 
-fun SiteModel.logInformation(currentUserAccount: AccountModel?): String {
-    val usernameStr = if (!currentUserAccount?.userName.isNullOrEmpty()) currentUserAccount?.userName else "NO"
-    val extraStr = if (isWPCom) {
-        " wp.com account: $usernameStr blogId: $siteId plan: $planShortName ($planId)"
-    } else {
-        " jetpack: $jetpackLogInformation"
-    }
-    return "<Blog Name: ${SiteUtils.getSiteNameOrHomeURL(this)} URL: $url XML-RPC: $xmlRpcUrl$extraStr>"
-}
-
-val SiteModel.jetpackLogInformation: String
+val SiteModel.logInformation: String
     get() {
-        val jpVersionStr = if (jetpackVersion.isNullOrEmpty()) "unknown" else jetpackVersion
-        val siteIdStr = if (siteId == 0L) "unknown" else "$siteId"
-        return when {
-            // We don't add the username of the user to the jetpack connected string (ex: connected as exampleUsername)
-            // because we don't know whether the current user is the one that's connected with Jetpack.
-            isJetpackConnected -> "🚀✅ Jetpack $jpVersionStr connected with site ID $siteIdStr"
-            isJetpackInstalled -> "🚀❌ Jetpack $jpVersionStr not connected"
-            else -> "🚀❔Jetpack not installed"
-        }
+        val typeLog = "Type: ($stateLogInformation)"
+        val usernameLog = if (isUsingWpComRestApi) "" else username
+        val urlLog = "${if (isUsingWpComRestApi) "REST" else "Self-hosted"} URL: $url"
+        val planLog = if (isUsingWpComRestApi) "Plan: $planShortName ($planId)" else ""
+        val jetpackVersionLog = if (isJetpackInstalled) "Jetpack-version: $jetpackVersion" else ""
+        return listOf(typeLog, usernameLog, urlLog, planLog, jetpackVersionLog)
+                .filter { it != "" }
+                .joinToString(separator = " ", prefix = "<", postfix = ">")
     }
 
 val SiteModel.stateLogInformation: String
@@ -32,7 +20,7 @@ val SiteModel.stateLogInformation: String
         return when {
             isWPCom -> "wpcom"
             isJetpackConnected -> "jetpack_connected - $apiString"
-            isJetpackInstalled -> "jetpack_installed"
+            isJetpackInstalled -> "self-hosted - jetpack_installed"
             else -> "self_hosted"
         }
     }
