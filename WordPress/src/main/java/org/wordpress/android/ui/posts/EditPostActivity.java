@@ -1662,7 +1662,7 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
         removeFailedUploadsDialog.initialize(
                 TAG_REMOVE_FAILED_UPLOADS_DIALOG,
-                null,
+                "",
                 getString(R.string.editor_toast_failed_uploads),
                 getString(R.string.editor_remove_failed_uploads),
                 getString(android.R.string.cancel),
