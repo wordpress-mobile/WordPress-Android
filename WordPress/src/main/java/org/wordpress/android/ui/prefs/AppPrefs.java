@@ -149,7 +149,10 @@ public class AppPrefs {
         ASKED_PERMISSION_LOCATION_FINE,
 
         // Updated after WP.com themes have been fetched
-        LAST_WP_COM_THEMES_SYNC
+        LAST_WP_COM_THEMES_SYNC,
+
+        // user id last used to login with
+        LAST_USED_USER_ID
     }
 
     private static SharedPreferences prefs() {
@@ -337,6 +340,14 @@ public class AppPrefs {
 
     public static void setLastAppVersionCode(int versionCode) {
         setInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX, versionCode);
+    }
+
+    public static long getLastUsedUserId() {
+        return getLong(UndeletablePrefKey.LAST_USED_USER_ID);
+    }
+
+    public static void setLastUsedUserId(long userId) {
+        setLong(UndeletablePrefKey.LAST_USED_USER_ID, userId);
     }
 
     /**
