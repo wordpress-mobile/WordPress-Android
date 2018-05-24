@@ -713,7 +713,6 @@
     <!--      End      -->
 
     <!-- preferences -->
-    <string name="preference_not_set">Not Set</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>

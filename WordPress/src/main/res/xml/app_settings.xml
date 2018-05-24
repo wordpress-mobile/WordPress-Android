@@ -121,7 +121,9 @@
             android:key="@string/pref_key_site_video_encoder_bitrate"
             android:title="@string/site_settings_default_video_quality_title"
             app:longClickHint="@string/site_settings_video_quality_hint"/>
+
     </PreferenceCategory>
+
 
     <PreferenceCategory
         android:key="@string/pref_key_passlock_section"
@@ -141,20 +143,7 @@
             android:layout="@layout/wp_preference_layout"
             android:persistent="false"
             android:title="@string/passcode_change_passcode"/>
-    </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="@string/pref_key_support_section"
-        android:layout="@layout/wp_preference_category"
-        android:title="@string/support">
-        <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
-            android:key="@string/pref_key_support_email"
-            android:layout="@layout/wp_preference_layout"
-            android:title="@string/support_email" />
-        <!--<Preference-->
-            <!--android:key="@string/pref_key_support_email"-->
-            <!--android:layout="@layout/wp_preference_layout"-->
-            <!--android:title="@string/support_email"/>-->
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -171,6 +160,7 @@
             android:key="@string/pref_key_oss_licenses"
             android:layout="@layout/wp_preference_layout"
             android:title="@string/open_source_licenses"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
