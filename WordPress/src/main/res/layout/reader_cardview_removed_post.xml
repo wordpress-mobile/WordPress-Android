@@ -43,9 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/ic_undo_24dp"
             android:drawablePadding="@dimen/margin_small"
-            android:drawableStart="@drawable/ic_undo_24dp"
             android:text="@string/undo"
             android:textColor="@color/blue_medium"
             android:textSize="@dimen/text_sz_large"/>

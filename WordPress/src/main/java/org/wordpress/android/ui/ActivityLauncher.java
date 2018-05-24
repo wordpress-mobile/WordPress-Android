@@ -25,6 +25,8 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
+import org.wordpress.android.ui.activitylog.ActivityLogDetailActivity;
+import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -70,6 +72,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
+import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
@@ -156,7 +159,7 @@ public class ActivityLauncher {
 
     public static void viewNotifications(Context context) {
         Intent intent = new Intent(context, WPMainActivity.class);
-        intent.putExtra(WPMainActivity.ARG_OPEN_TAB, WPMainActivity.ARG_NOTIFICATIONS);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
     }
@@ -169,7 +172,7 @@ public class ActivityLauncher {
         }
 
         Intent intent = new Intent(context, WPMainActivity.class);
-        intent.putExtra(WPMainActivity.ARG_OPEN_TAB, WPMainActivity.ARG_READER);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
@@ -262,6 +265,21 @@ public class ActivityLauncher {
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
             context.startActivity(intent);
         }
+    }
+
+    public static void viewActivityLogList(Activity activity, SiteModel site) {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_LIST, site);
+        Intent intent = new Intent(activity, ActivityLogListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
+    }
+
+    public static void viewActivityLogDetail(Activity activity, SiteModel site, String activityId) {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_DETAIL, site);
+        Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
+        activity.startActivity(intent);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {

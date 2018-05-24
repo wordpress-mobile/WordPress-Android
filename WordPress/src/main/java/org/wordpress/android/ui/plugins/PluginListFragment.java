@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.plugins;
 
-
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -12,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
+import org.wordpress.android.models.networkresource.ListState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -85,101 +86,61 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
-                if (mListType == PluginListType.SITE) {
-                    reloadPlugins();
-                }
-            }
-        });
-
-        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
-                if (mListType == PluginListType.FEATURED) {
-                    reloadPlugins();
-                }
-            }
-        });
-
-        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
-                if (mListType == PluginListType.NEW) {
-                    reloadPlugins();
-                }
-            }
-        });
-
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
-                if (mListType == PluginListType.POPULAR) {
-                    reloadPlugins();
-                }
-            }
-        });
-
-        mViewModel.getSearchResults().observe(this, new Observer<List<ImmutablePluginModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
-                if (mListType == PluginListType.SEARCH) {
-                    reloadPlugins();
-                }
-            }
-        });
-
-        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.SITE) {
-                    refreshProgressBars(listStatus);
-                }
-            }
-        });
-
-        mViewModel.getFeaturedPluginsListStatus()
-                  .observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+        mViewModel.getSitePluginsLiveData()
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
                       @Override
-                      public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                          if (mListType == PluginListType.FEATURED) {
-                              refreshProgressBars(listStatus);
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
+                          if (mListType == PluginListType.SITE) {
+                              refreshPluginsAndProgressBars(listState);
                           }
                       }
                   });
 
-        mViewModel.getNewPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.NEW) {
-                    refreshProgressBars(listStatus);
-                }
-            }
-        });
+        mViewModel.getFeaturedPluginsLiveData()
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
+                          if (mListType == PluginListType.FEATURED) {
+                              refreshPluginsAndProgressBars(listState);
+                          }
+                      }
+                  });
 
-        mViewModel.getPopularPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.POPULAR) {
-                    refreshProgressBars(listStatus);
-                }
-            }
-        });
+        mViewModel.getPopularPluginsLiveData()
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
+                          if (mListType == PluginListType.POPULAR) {
+                              refreshPluginsAndProgressBars(listState);
+                          }
+                      }
+                  });
 
-        mViewModel.getSearchPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.SEARCH) {
-                    refreshProgressBars(listStatus);
-                    if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
-                        ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
-                    }
+        mViewModel.getNewPluginsLiveData()
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
+                          if (mListType == PluginListType.NEW) {
+                              refreshPluginsAndProgressBars(listState);
+                          }
+                      }
+                  });
 
-                    showEmptyView(mViewModel.shouldShowEmptySearchResultsView());
-                }
-            }
-        });
+        mViewModel.getSearchResultsLiveData()
+                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
+                      @Override
+                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
+                          if (mListType == PluginListType.SEARCH) {
+                              refreshPluginsAndProgressBars(listState);
+
+                              if (listState instanceof ListState.Error) {
+                                  ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
+                              }
+
+                              showEmptyView(mViewModel.shouldShowEmptySearchResultsView());
+                          }
+                      }
+                  });
     }
 
     @Override
@@ -211,30 +172,30 @@ public class PluginListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    void reloadPlugins() {
-        setPlugins(mViewModel.getPluginsForListType(mListType));
-    }
-
-    private void setPlugins(@Nullable List<ImmutablePluginModel> plugins) {
-        PluginListAdapter adapter;
+    private void refreshPluginsAndProgressBars(@Nullable ListState<ImmutablePluginModel> listState) {
+        if (listState == null) {
+            return;
+        }
+        final PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
             mRecycler.setAdapter(adapter);
         } else {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
-        adapter.setPlugins(plugins);
+        adapter.setPlugins(listState.getData());
+        refreshProgressBars(listState);
     }
 
-    protected void refreshProgressBars(PluginBrowserViewModel.PluginListStatus pluginListStatus) {
-        if (!isAdded() || getView() == null) {
+    protected void refreshProgressBars(@Nullable ListState listState) {
+        if (!isAdded() || getView() == null || listState == null) {
             return;
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
-        mSwipeToRefreshHelper.setRefreshing(pluginListStatus == PluginBrowserViewModel.PluginListStatus.FETCHING);
+        mSwipeToRefreshHelper.setRefreshing(listState.isFetchingFirstPage());
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
-        boolean showLoadMore = pluginListStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE;
-        getView().findViewById(R.id.progress).setVisibility(showLoadMore ? View.VISIBLE : View.GONE);
+        getView().findViewById(R.id.progress).setVisibility(
+                listState.isLoadingMore() ? View.VISIBLE : View.GONE);
     }
 
     void showEmptyView(boolean show) {
@@ -252,10 +213,11 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
+        void setPlugins(@NonNull List<ImmutablePluginModel> items) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mViewModel.getDiffCallback(mItems, items));
             mItems.clear();
             mItems.addAll(items);
-            notifyDataSetChanged();
+            diffResult.dispatchUpdatesTo(this);
         }
 
         protected @Nullable Object getItem(int position) {

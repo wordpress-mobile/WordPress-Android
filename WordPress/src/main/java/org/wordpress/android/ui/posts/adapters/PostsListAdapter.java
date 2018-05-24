@@ -395,11 +395,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void showPagePopupMenu(View view, final PostModel page) {
         Context context = view.getContext();
         final ListPopupWindow listPopup = new ListPopupWindow(context);
-        listPopup.setAnchorView(view);
-
         listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-        listPopup.setModal(true);
         listPopup.setAdapter(new PageMenuAdapter(context, page));
+        listPopup.setAnchorView(view);
+        listPopup.setModal(true);
         listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

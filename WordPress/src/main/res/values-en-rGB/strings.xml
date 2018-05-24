@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-29 14:21:07+0000
+Translation-Revision-Date: 2018-04-24 22:02:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Creating site… This might take a couple of minutes.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Important</string>
+    <string name="notification_channel_general_title">General</string>
+    <string name="photo_picker_use_photo">Use this photo</string>
+    <string name="media_preview_title">%1$d of %2$d</string>
+    <string name="stock_media_picker_empty_results">No matches</string>
+    <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+    <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
+    <string name="stock_media_picker_search_hint">Search free photo library</string>
+    <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="error_save_empty_draft">Can\'t save an empty draft</string>
+    <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
+    <string name="preview_count">Preview %d</string>
+    <string name="add_count">Add %d</string>
     <string name="site_creation_domain_selection_title">Create New Site Step 4</string>
     <string name="site_creation_site_details_title">Create New Site Step 3</string>
     <string name="site_creation_theme_selection_title">Create New Site Step 2</string>
@@ -45,7 +61,7 @@ Language: en_GB
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_cardview_post_play_video_desc">play featured video</string>
-    <string name="post_cardview_featured_desc">featured</string>
+    <string name="post_cardview_featured_desc">featured image</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
@@ -204,7 +220,6 @@ Language: en_GB
     <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
     <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
     <string name="notification_site_creation_step_creating">Step 1 of 4</string>
-    <string name="notification_site_creation_title_in_progress">Creating site…</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
@@ -1535,7 +1550,6 @@ Language: en_GB
     <string name="caption">Caption (optional)</string>
     <string name="no_network_title">No network available</string>
     <string name="featured_in_post">Include image in post content</string>
-    <string name="featured">Use as featured image</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Uploading…</string>

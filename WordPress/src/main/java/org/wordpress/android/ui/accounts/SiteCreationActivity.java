@@ -227,9 +227,4 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     public void helpSiteCreatingScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CREATING);
     }
-
-    @Override
-    public void setHelpContext(String faqId, String faqSection) {
-        // nothing implemented here yet. This will set the context the `help()` callback should work with
-    }
 }

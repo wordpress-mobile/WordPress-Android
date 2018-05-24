@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -34,6 +36,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -80,6 +83,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final ReaderPostList mPosts = new ReaderPostList();
     private final HashSet<String> mRenderedIds = new HashSet<>();
 
+    private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
@@ -223,6 +227,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     int position = getAdapterPosition();
                     ReaderPost post = getItem(position);
                     if (post != null) {
+                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
                         ReaderActivityLauncher.openUrl(view.getContext(), post.getUrl());
                     }
                 }
@@ -321,7 +326,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         View postView;
         switch (viewType) {
             case VIEW_TYPE_SITE_HEADER:
-                return new SiteHeaderViewHolder(new ReaderSiteHeaderView(context));
+                ReaderSiteHeaderView readerSiteHeaderView = new ReaderSiteHeaderView(context);
+                readerSiteHeaderView.setOnFollowListener(mFollowListener);
+                return new SiteHeaderViewHolder(readerSiteHeaderView);
 
             case VIEW_TYPE_TAG_HEADER:
                 return new TagHeaderViewHolder(new ReaderTagHeaderView(context));
@@ -398,12 +405,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-        Drawable[] compoundDrawables = holder.mUndoRemoveAction.getCompoundDrawables();
-        for (Drawable item : compoundDrawables) {
-            if (item != null) {
-                DrawableCompat.setTint(item, context.getResources().getColor(R.color.blue_medium));
-            }
-        }
+        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_undo_24dp);
+        DrawableCompat.setTint(drawable, context.getResources().getColor(R.color.blue_medium));
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+        holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -646,6 +651,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
                 break;
 
+            case OTHER:
             default:
                 // something else, so hide discover section
                 postHolder.mLayoutDiscover.setVisibility(View.GONE);
@@ -687,6 +693,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isDiscover() {
         return mCurrentTag != null && mCurrentTag.isDiscover();
+    }
+
+    public void setOnFollowListener(OnFollowListener listener) {
+        mFollowListener = listener;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -741,6 +751,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void clear() {
+        mGapMarkerPosition = -1;
         if (!mPosts.isEmpty()) {
             mPosts.clear();
             notifyDataSetChanged();
@@ -801,7 +812,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        if (hasCustomFirstItem()) {
+        if (hasCustomFirstItem() || mGapMarkerPosition != -1) {
             return mPosts.size() + 1;
         }
         return mPosts.size();
@@ -959,7 +970,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // from folks who ask 'why do I have more likes than page views?'.
             ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
         } else {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, post);
         }
 
         // update post in array and on screen
@@ -976,11 +987,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private void toggleBookmark(final long blogId, final long postId) {
         ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
+
+        AnalyticsTracker.Stat eventToTrack;
         if (post.isBookmarked) {
+            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+                    : AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST;
             ReaderPostActions.removeFromBookmarked(post);
         } else {
+            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
+                    : AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST;
             ReaderPostActions.addToBookmarked(post);
         }
+
+        AnalyticsTracker.track(eventToTrack);
 
         // update post in array and on screen
         post = ReaderPostTable.getBlogPost(blogId, postId, true);
@@ -1005,6 +1024,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         boolean isCurrentlyFollowed = ReaderPostTable.isPostFollowed(post);
         final boolean isAskingToFollow = !isCurrentlyFollowed;
+
+        if (mFollowListener != null) {
+            if (isAskingToFollow) {
+                mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
+            } else {
+                mFollowListener.onFollowingTapped();
+            }
+        }
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
@@ -1060,6 +1087,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderPostList mAllPosts;
 
+        private boolean mCanRequestMorePostsTemp;
+        private int mGapMarkerPositionTemp;
+
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -1099,10 +1129,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
-            mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+            mCanRequestMorePostsTemp = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
             // determine whether a gap marker exists - only applies to tagged posts
-            mGapMarkerPosition = getGapMarkerPosition();
+            mGapMarkerPositionTemp = getGapMarkerPosition();
 
             return true;
         }
@@ -1117,31 +1147,32 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return -1;
             }
 
-            // find the position of the gap marker post
-            int gapPosition = mAllPosts.indexOfIds(gapMarkerIds);
-            if (gapPosition > -1) {
-                // increment it because we want the gap marker to appear *below* this post
-                gapPosition++;
-                // increment it again if there's a custom first item
-                if (hasCustomFirstItem()) {
-                    gapPosition++;
-                }
+            int gapMarkerPostPosition = mAllPosts.indexOfIds(gapMarkerIds);
+            int gapMarkerPosition = -1;
+            if (gapMarkerPostPosition > -1) {
                 // remove the gap marker if it's on the last post (edge case but
                 // it can happen following a purge)
-                if (gapPosition >= mAllPosts.size() - 1) {
-                    gapPosition = -1;
+                if (gapMarkerPostPosition == mAllPosts.size() - 1) {
                     AppLog.w(AppLog.T.READER, "gap marker at/after last post, removed");
                     ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
                 } else {
-                    AppLog.d(AppLog.T.READER, "gap marker at position " + gapPosition);
+                    // we want the gap marker to appear *below* this post
+                    gapMarkerPosition = gapMarkerPostPosition + 1;
+                    // increment it if there's a custom first item
+                    if (hasCustomFirstItem()) {
+                        gapMarkerPosition++;
+                    }
+                    AppLog.d(AppLog.T.READER, "gap marker at position " + gapMarkerPostPosition);
                 }
             }
-            return gapPosition;
+            return gapMarkerPosition;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                ReaderPostAdapter.this.mGapMarkerPosition = mGapMarkerPositionTemp;
+                ReaderPostAdapter.this.mCanRequestMorePosts = mCanRequestMorePostsTemp;
                 mPosts.clear();
                 mPosts.addAll(mAllPosts);
                 notifyDataSetChanged();

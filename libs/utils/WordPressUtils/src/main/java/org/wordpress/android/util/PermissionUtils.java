@@ -2,11 +2,10 @@ package org.wordpress.android.util;
 
 import android.Manifest.permission;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class PermissionUtils {
         }
         if (toRequest.size() > 0) {
             String[] requestedPermissions = toRequest.toArray(new String[toRequest.size()]);
-            FragmentCompat.requestPermissions(fragment, requestedPermissions, requestCode);
+            fragment.requestPermissions(requestedPermissions, requestCode);
             return false;
         }
         return true;

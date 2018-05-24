@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-17 07:54:07+0000
+Translation-Revision-Date: 2018-05-02 07:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="notification_site_creation_title_in_progress">Membuat situs… Hal ini mungkin memerlukan beberapa menit.</string>
+    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_title">Penting</string>
+    <string name="notification_channel_general_title">Umum</string>
+    <string name="photo_picker_use_photo">Gunakan foto ini</string>
     <string name="media_preview_title">%1$d dari %2$d</string>
     <string name="stock_media_picker_empty_results">Tidak ada yang cocok</string>
     <string name="stock_media_picker_initial_empty_subtext">Foto disediakan oleh %s</string>
@@ -55,7 +61,6 @@ Language: id
     <string name="reader_list_item_suggestion_remove_desc">hapus</string>
     <string name="photo_picker_thumbnail_desc">putar video</string>
     <string name="reader_cardview_post_play_video_desc">putar video andalan</string>
-    <string name="post_cardview_featured_desc">sorotan</string>
     <string name="plugin_detail_logo_desc">logo plugin</string>
     <string name="plugin_detail_banner_desc">banner plugin</string>
     <string name="photo_picker_wpmedia_desc">pilih dari media WordPress</string>
@@ -1493,7 +1498,6 @@ Language: id
     <string name="caption">Subjudul (opsional)</string>
     <string name="no_network_title">Tidak ada jaringan</string>
     <string name="featured_in_post">Sertakan gambar dalam konten tulisan</string>
-    <string name="featured">Gunakan sebagai gambar terfitur</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Mengunggah…</string>
