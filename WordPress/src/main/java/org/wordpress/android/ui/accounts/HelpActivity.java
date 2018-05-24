@@ -99,6 +99,13 @@ public class HelpActivity extends AppCompatActivity {
 
         TextView version = findViewById(R.id.application_version);
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
+
+        findViewById(R.id.contact_email).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
