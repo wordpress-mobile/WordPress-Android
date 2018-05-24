@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +13,10 @@ import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -910,9 +915,8 @@ public class ReaderPostListFragment extends Fragment
         String description = null;
 
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
-            // only local bookmarks are currently supported, so if there are no data in the local database we can
-            // show an empty view
-            title = getString(R.string.reader_empty_posts_bookmarked);
+            setEmptyTitleAndDescriptionForBookmarksList();
+            return;
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
@@ -963,6 +967,34 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setEmptyTitleAndDescription(title, description);
+    }
+
+    private void setEmptyTitleAndDescriptionForBookmarksList() {
+        // only local bookmarks are currently supported, so if there are no data in the local database we can
+        // show an empty view
+        TextView titleView = mEmptyView.findViewById(R.id.title_empty);
+        TextView descriptionView = mEmptyView.findViewById(R.id.description_empty);
+
+        // replace %s placeholder with bookmark outline icon
+        String description = getString(R.string.reader_empty_saved_posts_description);
+        SpannableStringBuilder ssb = new SpannableStringBuilder(description);
+        int imagePlaceholderPosition = description.indexOf("%s");
+        addBookmarkImageSpan(ssb, imagePlaceholderPosition);
+
+        titleView.setText(getString(R.string.reader_empty_saved_posts_title));
+        descriptionView.setText(ssb, BufferType.SPANNABLE);
+        descriptionView.setContentDescription(String.format(description, getString(R.string.reader_add_bookmark)));
+
+        titleView.setVisibility(View.VISIBLE);
+        descriptionView.setVisibility(View.VISIBLE);
+        mEmptyViewBoxImages.setVisibility(View.GONE);
+    }
+
+    private void addBookmarkImageSpan(SpannableStringBuilder ssb, int imagePlaceholderPosition) {
+        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_outline_18dp);
+        d.setBounds(0, 0, (int) (d.getIntrinsicWidth() * 1.2), (int) (d.getIntrinsicHeight() * 1.2));
+        ssb.setSpan(new ImageSpan(d), imagePlaceholderPosition, imagePlaceholderPosition + 2,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void setEmptyTitleAndDescription(@NonNull String title, String description) {
