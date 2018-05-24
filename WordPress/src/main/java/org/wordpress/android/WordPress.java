@@ -49,7 +49,6 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
-import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -308,13 +307,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
-
-        // if we haven't saved the previous user id, save it now if the user is logged in
-        if (AppPrefs.getLastUsedUserId() == 0
-            && mAccountStore.hasAccessToken()
-            && mAccountStore.getAccount() != null) {
-            AppPrefs.setLastUsedUserId(mAccountStore.getAccount().getUserId());
-        }
     }
 
     protected void initDaggerComponent() {
@@ -531,13 +523,25 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 appLock.setPassword(null);
             }
         }
-        if (!event.isError() && event.causeOfChange == AccountAction.FETCH_SETTINGS && mAccountStore.hasAccessToken()) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            boolean hasUserOptedOut = !prefs.getBoolean(getString(R.string.pref_key_send_usage), true);
-            AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut);
-            // When local and remote prefs are different, force opt out to TRUE
-            if (hasUserOptedOut != mAccountStore.getAccount().getTracksOptOut()) {
-                AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
+
+        if (!event.isError() && mAccountStore.hasAccessToken()) {
+            // previously we reset the reader database on logout but this meant losing saved posts
+            // so now we only reset it when the user id changes
+            if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+                long thisUserId = mAccountStore.getAccount().getUserId();
+                long lastUserId = AppPrefs.getLastUsedUserId();
+                if (thisUserId != lastUserId) {
+                    AppPrefs.setLastUsedUserId(thisUserId);
+                    ReaderDatabase.reset();
+                }
+            } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                boolean hasUserOptedOut = !prefs.getBoolean(getString(R.string.pref_key_send_usage), true);
+                AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut);
+                // When local and remote prefs are different, force opt out to TRUE
+                if (hasUserOptedOut != mAccountStore.getAccount().getTracksOptOut()) {
+                    AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
+                }
             }
         }
     }
