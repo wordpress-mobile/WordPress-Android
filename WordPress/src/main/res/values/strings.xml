@@ -1517,6 +1517,8 @@
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
+    <string name="application_log_button">Application log</string>
+    <string name="support_contact_email">Contact email</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>

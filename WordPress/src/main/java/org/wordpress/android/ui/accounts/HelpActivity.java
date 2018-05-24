@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -20,7 +21,6 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,23 +61,19 @@ public class HelpActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0); // remove shadow
-            actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        WPTextView version = findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
-        WPTextView contactUsButton = findViewById(R.id.contact_us_button);
+        TextView contactUsButton = findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 createNewZendeskTicket();
             }
         });
 
-        WPTextView faqButton = findViewById(R.id.faq_button);
+        TextView faqButton = findViewById(R.id.faq_button);
         faqButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +81,7 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
 
-        WPTextView myTicketsButton = findViewById(R.id.my_tickets_button);
+        TextView myTicketsButton = findViewById(R.id.my_tickets_button);
         myTicketsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,13 +89,16 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
 
-        WPTextView appLogButton = findViewById(R.id.applog_button);
+        TextView appLogButton = findViewById(R.id.application_log_button);
         appLogButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
             }
         });
+
+        TextView version = findViewById(R.id.application_version);
+        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
     }
 
     @Override
