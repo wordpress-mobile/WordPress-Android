@@ -532,6 +532,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 long lastUserId = AppPrefs.getLastUsedUserId();
                 if (thisUserId != lastUserId) {
                     AppPrefs.setLastUsedUserId(thisUserId);
+                    AppLog.i(T.READER, "User changed, resetting reader db");
                     ReaderDatabase.reset();
                 }
             } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
