@@ -132,7 +132,8 @@ class RewindStatusServiceTest {
 
     @Test
     fun cancelsWorkerOnFetchErrorRewindState() {
-        rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(RewindStatusError(INVALID_RESPONSE, null), REWIND))
+        val error = RewindStatusError(INVALID_RESPONSE, null)
+        rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(error, REWIND))
 
         verify(workerController).cancelWorker()
     }
