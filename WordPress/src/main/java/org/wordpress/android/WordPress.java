@@ -49,6 +49,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -307,6 +308,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+
+        // if we haven't saved the previous user id, save it now if the user is logged in
+        if (AppPrefs.getLastUsedUserId() == 0
+            && mAccountStore.hasAccessToken()
+            && mAccountStore.getAccount() != null) {
+            AppPrefs.setLastUsedUserId(mAccountStore.getAccount().getUserId());
+        }
     }
 
     protected void initDaggerComponent() {
@@ -564,9 +572,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // delete wpcom and jetpack sites
         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
 
-        // reset all reader-related prefs & data
+        // reset all prefs
         AppPrefs.reset();
-        ReaderDatabase.reset();
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
