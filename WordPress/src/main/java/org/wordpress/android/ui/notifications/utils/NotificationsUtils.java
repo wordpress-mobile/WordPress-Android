@@ -371,7 +371,8 @@ public class NotificationsUtils {
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog));
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert));
         builder.setTitle(title).setMessage(message);
 
         builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {

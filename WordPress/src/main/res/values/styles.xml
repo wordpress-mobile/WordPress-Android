@@ -22,7 +22,7 @@
         <item name="colorButtonNormal">@color/light_gray</item>
 
         <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
-        <item name="android:alertDialogTheme">@style/Calypso.Dialog</item>
+        <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
 
