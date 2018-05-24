@@ -5,6 +5,7 @@ package org.wordpress.android.support
 import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
+import com.zendesk.logger.Logger
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
 import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
 import com.zendesk.sdk.model.access.AnonymousIdentity
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
@@ -51,6 +53,7 @@ fun setupZendesk(
         return
     }
     zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
+    Logger.setLoggable(BuildConfig.DEBUG)
     updateZendeskDeviceLocale(deviceLocale)
 }
 
