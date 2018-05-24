@@ -1067,7 +1067,7 @@ public class ReaderPostListFragment extends Fragment
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
                         AnalyticsTracker
-                                .track(AnalyticsTracker.Stat.READER_BOOKMARKED_LIST_VIEWED_FROM_POST_LIST_SNACKBAR);
+                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                         if (getActivity() instanceof WPMainActivity) {
                             getActivity().overridePendingTransition(0, 0);
@@ -1543,9 +1543,9 @@ public class ReaderPostListFragment extends Fragment
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BOOKMARKED_POST_OPENED_FROM_SAVED_POST_LIST);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST);
             } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BOOKMARKED_POST_OPENED_FROM_OTHER_POST_LIST);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST);
             }
         }
 
@@ -1623,7 +1623,7 @@ public class ReaderPostListFragment extends Fragment
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
         } else if (tag.isBookmarked()) {
-            stat = AnalyticsTracker.Stat.READER_BOOKMARKED_LIST_VIEWED_FROM_FILTER;
+            stat = AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_FILTER;
         }
 
         if (stat == null) {
