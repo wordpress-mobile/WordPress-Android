@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -398,12 +399,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-        Drawable[] compoundDrawables = holder.mUndoRemoveAction.getCompoundDrawables();
-        for (Drawable item : compoundDrawables) {
-            if (item != null) {
-                DrawableCompat.setTint(item, context.getResources().getColor(R.color.blue_medium));
-            }
-        }
+        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_undo_24dp);
+        DrawableCompat.setTint(drawable, context.getResources().getColor(R.color.blue_medium));
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+        holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
