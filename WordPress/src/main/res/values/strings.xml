@@ -1476,7 +1476,8 @@
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
-    <string name="reader_empty_posts_bookmarked">You haven\'t saved any posts</string>
+    <string name="reader_empty_saved_posts_title">No posts saved \u2014 yet!</string>
+    <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
     <string name="reader_empty_posts_in_search_title">No posts found</string>
