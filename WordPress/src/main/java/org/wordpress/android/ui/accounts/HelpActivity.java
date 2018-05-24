@@ -128,7 +128,8 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void showZendeskFaq() {
-        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore, getSelectedSiteFromExtras());
+        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore, mSiteStore, getOriginFromExtras(),
+                getSelectedSiteFromExtras(), getExtraTagsFromExtras());
     }
 
     private Origin getOriginFromExtras() {

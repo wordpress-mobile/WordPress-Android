@@ -12,6 +12,7 @@ import com.zendesk.sdk.model.access.Identity
 import com.zendesk.sdk.model.request.CustomField
 import com.zendesk.sdk.network.impl.ZendeskConfig
 import com.zendesk.sdk.requests.RequestActivity
+import com.zendesk.sdk.support.ContactUsButtonVisibility
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.AccountModel
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
@@ -61,17 +63,33 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
-fun showZendeskHelpCenter(context: Context, accountStore: AccountStore, selectedSite: SiteModel? = null) {
+fun showZendeskHelpCenter(
+    context: Context,
+    accountStore: AccountStore?,
+    siteStore: SiteStore,
+    origin: Origin?,
+    selectedSite: SiteModel?,
+    extraTags: List<String>? = null
+) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    runWithSupportEmailAndName(context, accountStore, selectedSite) { email, name ->
-        zendeskInstance.setIdentity(zendeskIdentity(email, name))
-        SupportActivity.Builder()
-                .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-                .withLabelNames(ZendeskConstants.articleLabel)
-                .show(context)
+    val supportEmail = AppPrefs.getSupportEmail()
+    val isIdentityAvailable = !supportEmail.isNullOrEmpty()
+    if (isIdentityAvailable) {
+        val supportName = AppPrefs.getSupportName()
+        configureZendesk(context, supportEmail, supportName, accountStore, siteStore, selectedSite)
+    } else {
+        zendeskInstance.setIdentity(zendeskIdentity(null, null))
     }
+    val contactUsButtonVisibility = if (isIdentityAvailable)
+        ContactUsButtonVisibility.ARTICLE_LIST_AND_ARTICLE else ContactUsButtonVisibility.OFF
+    SupportActivity.Builder()
+            .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
+            .withLabelNames(ZendeskConstants.articleLabel)
+            .withContactUsButtonVisibility(contactUsButtonVisibility)
+            .withContactConfiguration(zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+            .show(context)
 }
 
 @JvmOverloads
