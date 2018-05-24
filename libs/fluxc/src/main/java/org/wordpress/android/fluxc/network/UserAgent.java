@@ -1,9 +1,9 @@
 package org.wordpress.android.fluxc.network;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.webkit.WebView;
+
+import org.wordpress.android.util.PackageUtils;
 
 public class UserAgent {
     private String mUserAgent;
@@ -40,23 +40,5 @@ public class UserAgent {
     @Override
     public String toString() {
         return getUserAgent();
-    }
-
-    // TODO: reuse util methods
-    private PackageInfo getPackageInfo(Context context) {
-        try {
-            PackageManager manager = context.getPackageManager();
-            return manager.getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            return null;
-        }
-    }
-
-    private String getVersionName(Context context) {
-        PackageInfo packageInfo = getPackageInfo(context);
-        if (packageInfo != null) {
-            return packageInfo.versionName;
-        }
-        return "0";
     }
 }
