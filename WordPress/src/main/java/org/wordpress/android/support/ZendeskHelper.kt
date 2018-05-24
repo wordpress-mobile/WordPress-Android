@@ -63,6 +63,11 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
+/**
+ * We don't force a valid identity for Help Center. If the identity is already there, we use it to enable the
+ * contact us button on the Help Center, if it's not, we give the option to the user to browse the FAQ without
+ * setting an email.
+ */
 fun showZendeskHelpCenter(
     context: Context,
     accountStore: AccountStore?,
@@ -87,6 +92,7 @@ fun showZendeskHelpCenter(
     SupportActivity.Builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
             .withLabelNames(ZendeskConstants.articleLabel)
+            .showConversationsMenuButton(isIdentityAvailable)
             .withContactUsButtonVisibility(contactUsButtonVisibility)
             .withContactConfiguration(zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
             .show(context)
