@@ -577,8 +577,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // delete wpcom and jetpack sites
         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
 
-        // reset all reader-related prefs & data
+        // reset all deletable prefs
         AppPrefs.reset();
+
+        // reset the reader database, but retain bookmarked posts
         ReaderDatabase.reset(true);
 
         // Reset Stats Data
