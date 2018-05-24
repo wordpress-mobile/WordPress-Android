@@ -441,11 +441,6 @@ public class ReaderPostActions {
 
     public static void removeFromBookmarked(@NonNull final ReaderPost post) {
         if (post.isBookmarked) {
-            ReaderTagList bookmarkTags = ReaderTagTable.getBookmarkTags();
-
-            for (ReaderTag tag : bookmarkTags) {
-                ReaderPostTable.removeTagsFromPost(post.blogId, post.postId, tag.tagType);
-            }
             ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, false);
         } else {
             String msg = "removeFromBookmarked called on a post which wasn't bookmarked.";

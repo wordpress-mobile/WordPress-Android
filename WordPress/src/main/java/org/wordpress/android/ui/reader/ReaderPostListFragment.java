@@ -1607,6 +1607,10 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || isCurrentTag(tag)) {
             return;
         }
+        // clear 'post removed from saved posts' undo items
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
+            ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
+        }
 
         trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));

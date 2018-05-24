@@ -208,9 +208,28 @@ public class ReaderPostTable {
             numDeleted += purgePostsForTag(db, tag);
         }
 
+        numDeleted += purgeUnbookmarkedPostsWithBookmarkTag();
+
         // delete search results
         numDeleted += purgeSearchResults(db);
+        return numDeleted;
+    }
 
+    /**
+     * When the user unbookmarks a post, we keep the row in the database, but we just change the is_bookmarked flag
+     * to false, so we can show "undo" items in the saved posts list. This method purges database from such rows.
+     */
+    public static int purgeUnbookmarkedPostsWithBookmarkTag() {
+        int numDeleted = 0;
+        ReaderTagList tags = ReaderTagTable.getAllTags();
+        for (ReaderTag tag : tags) {
+            if (tag.isBookmarked()) {
+                // delete posts which has a bookmark tag but is_bookmarked flag is false
+                String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+                numDeleted += ReaderDatabase.getWritableDb()
+                                            .delete("tbl_posts", "tag_name=? AND tag_type=? AND is_bookmarked=0", args);
+            }
+        }
         return numDeleted;
     }
 
