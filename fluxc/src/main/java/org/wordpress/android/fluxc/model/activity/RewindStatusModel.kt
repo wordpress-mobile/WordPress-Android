@@ -35,6 +35,7 @@ data class RewindStatusModel(
 
     data class Rewind(
         val rewindId: String?,
+        val restoreId: Long,
         val status: Status,
         val progress: Int,
         val reason: String?
@@ -52,13 +53,14 @@ data class RewindStatusModel(
         companion object {
             fun build(
                 rewindId: String?,
+                restoreId: Long?,
                 stringStatus: String?,
                 progress: Int?,
                 reason: String?
             ): Rewind? {
                 val status = stringStatus?.let { Status.fromValue(it) }
-                if (status != null && progress != null) {
-                    return Rewind(rewindId, status, progress, reason)
+                if (status != null && progress != null && restoreId != null) {
+                    return Rewind(rewindId, restoreId, status, progress, reason)
                 }
                 return null
             }
