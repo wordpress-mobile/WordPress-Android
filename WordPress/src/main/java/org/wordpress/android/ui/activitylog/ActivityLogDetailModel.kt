@@ -10,5 +10,5 @@ data class ActivityLogDetailModel(
     val summary: String? = null,
     val createdDate: String = "",
     val createdTime: String = "",
-    val rewindAction: (() -> Unit)? = null
+    val rewindAction: (() -> Boolean)
 )

@@ -19,7 +19,8 @@ import org.wordpress.android.widgets.WPNetworkImageView
 import javax.inject.Inject
 
 class ActivityLogDetailFragment : Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     companion object {
@@ -63,13 +64,15 @@ class ActivityLogDetailFragment : Fragment() {
             activityCreatedDate.text = activityLogModel?.createdDate
             activityCreatedTime.text = activityLogModel?.createdTime
 
-            activityRewindButton.setClickListenerOrHide(activityLogModel?.rewindAction)
+            val rewindAndFinish = activityLogModel?.rewindAction?.let {
+                rewindAction -> {
+                    if (rewindAction()) activity?.finish()
+                }
+            }
+            activityRewindButton.setClickListenerOrHide(rewindAndFinish)
         })
-        viewModel.rewindAvailable.observe(this, Observer {
-            available -> activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
-        })
-        viewModel.rewindState.observe(this, Observer {
-            TODO("Implement progress bar")
+        viewModel.rewindAvailable.observe(this, Observer { available ->
+            activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
         })
         viewModel.start(site, activityLogId)
     }
@@ -122,10 +125,8 @@ class ActivityLogDetailFragment : Fragment() {
             this.setOnClickListener {
                 function()
             }
-            this.visibility = View.VISIBLE
         } else {
             this.setOnClickListener(null)
-            this.visibility = View.GONE
         }
     }
 }
