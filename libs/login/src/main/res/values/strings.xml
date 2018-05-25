@@ -137,10 +137,9 @@
     This resource will be automatically overwritten in the host project with the real value from google-services.json. -->
     <string name="default_web_client_id">placeholder</string>
 
-    <!-- same as above, we need to have these same-named string resources to be used as channel IDs in a similar way in the
-    host application -->
-    <string name="notification_channel_normal_id">placeholder</string>
-    <string name="notification_channel_important_id">placeholder</string>
+    <!-- Placeholder for notification channel to be used by login service notification.
+     This resource must be overwritten in the host project with a real notification channel id it has configured. -->
+    <string name="login_notification_channel_id">placeholder</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
