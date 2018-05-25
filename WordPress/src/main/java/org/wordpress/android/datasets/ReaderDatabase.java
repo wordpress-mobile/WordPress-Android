@@ -141,7 +141,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         if (retainBookmarkedPosts && ReaderPostTable.hasBookmarkedPosts()) {
             ReaderTagList tags = ReaderTagTable.getBookmarkTags();
             if (!tags.isEmpty()) {
-                ReaderPostList bookmarkedPosts = ReaderPostTable.getPostsWithTag(tags.get(0), 0, true);
+                ReaderPostList bookmarkedPosts = ReaderPostTable.getPostsWithTag(tags.get(0), 0, false);
                 db.beginTransaction();
                 try {
                     getDatabase().reset(db);
