@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 2
         versionName "1.1"
 
@@ -31,14 +31,14 @@ android {
 }
 
 dependencies {
-    implementation ('org.wordpress:utils:1.20.1') {
+    implementation ('org.wordpress:utils:1.20.3') {
         exclude group: "com.mcxiaoke.volley"
     }
 
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 
-    api 'com.google.android.gms:play-services-auth:10.0.1'
+    api 'com.google.android.gms:play-services-auth:12.0.1'
 
     // Share FluxC version from host project if defined, otherwise fallback to default
     if (project.hasProperty("fluxCVersion")) {
@@ -47,7 +47,7 @@ dependencies {
             exclude group: "org.wordpress", module: "utils"
         }
     } else {
-        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6") {
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:d4e583f21840111065f12e743cbf31de4307266b") {
             exclude group: "com.android.support"
             exclude group: "org.wordpress", module: "utils"
         }
@@ -63,7 +63,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig

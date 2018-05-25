@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.ContextThemeWrapper;
@@ -140,7 +141,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         LinearLayout googleLoginButton = rootView.findViewById(R.id.login_google_button);
         googleLoginButton.setOnClickListener(new OnClickListener() {
-            @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
             @Override
             public void onClick(View view) {
                 mAnalyticsListener.trackSocialButtonClick();
@@ -196,11 +196,25 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
+        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+            secondaryButton.setText(Html.fromHtml(String.format(getResources().getString(
+                    R.string.login_email_button_signup), "<u>", "</u>")));
+            secondaryButton.setOnClickListener(new OnClickListener() {
+                public void onClick(View view) {
+                    mLoginListener.doStartSignup();
+                    mGoogleApiClient.stopAutoManage(getActivity());
+
+                    if (mGoogleApiClient.isConnected()) {
+                        mGoogleApiClient.disconnect();
+                    }
+                }
+            });
+        } else {
+            secondaryButton.setVisibility(View.GONE);
+        }
 
         primaryButton.setOnClickListener(new OnClickListener() {
-            @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
-            public void onClick(View v) {
+            public void onClick(View view) {
                 next(getCleanedEmail());
             }
         });

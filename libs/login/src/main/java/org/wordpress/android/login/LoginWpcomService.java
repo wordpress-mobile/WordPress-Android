@@ -113,7 +113,9 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
 
     private static class LoginNotification {
         static Notification progress(Context context, int progress) {
-            return AutoForegroundNotification.progress(context, progress,
+            return AutoForegroundNotification.progress(context,
+                    context.getString(R.string.notification_channel_normal_id),
+                    progress,
                     R.string.notification_login_title_in_progress,
                     R.string.notification_logging_in,
                     R.drawable.login_notification_icon,
@@ -122,6 +124,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
 
         static Notification success(Context context) {
             return AutoForegroundNotification.success(context,
+                    context.getString(R.string.notification_channel_normal_id),
                     R.string.notification_login_title_success,
                     R.string.notification_logged_in,
                     R.drawable.login_notification_icon,
@@ -130,6 +133,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
 
         static Notification failure(Context context, @StringRes int content) {
             return AutoForegroundNotification.failure(context,
+                    context.getString(R.string.notification_channel_normal_id),
                     R.string.notification_login_title_stopped,
                     content,
                     R.drawable.login_notification_icon,
