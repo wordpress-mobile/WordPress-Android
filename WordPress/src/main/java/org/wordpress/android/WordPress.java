@@ -615,7 +615,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
-    private static final String USER_AGENT_APPNAME = "wp-android";
+    public static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
 
     public static String getUserAgent() {
