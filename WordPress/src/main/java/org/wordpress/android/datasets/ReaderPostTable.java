@@ -483,6 +483,11 @@ public class ReaderPostTable {
         update(blogId, postId, values);
     }
 
+    public static boolean hasBookmarkedPosts() {
+        String sql = "SELECT 1 FROM tbl_posts WHERE is_bookmarked != 0 LIMIT 1";
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, null);
+    }
+
     private static void update(long blogId, long postId, ContentValues values) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         ReaderDatabase.getWritableDb().update(

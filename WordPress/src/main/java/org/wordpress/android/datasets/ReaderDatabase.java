@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -131,10 +133,27 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     /*
      * resets (clears) the reader database
      */
-    public static void reset() {
+    public static void reset(boolean retainBookmarkedPosts) {
         // note that we must call getWritableDb() before getDatabase() in case the database
         // object hasn't been created yet
         SQLiteDatabase db = getWritableDb();
+
+        if (retainBookmarkedPosts && ReaderPostTable.hasBookmarkedPosts()) {
+            ReaderTagList tags = ReaderTagTable.getBookmarkTags();
+            if (!tags.isEmpty()) {
+                ReaderPostList bookmarkedPosts = ReaderPostTable.getPostsWithTag(tags.get(0), 0, false);
+                db.beginTransaction();
+                try {
+                    getDatabase().reset(db);
+                    ReaderPostTable.addOrUpdatePosts(tags.get(0), bookmarkedPosts);
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                return;
+            }
+        }
+
         getDatabase().reset(db);
     }
 
