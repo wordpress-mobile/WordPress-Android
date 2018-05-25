@@ -324,7 +324,7 @@ public class MeFragment extends Fragment {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
                                        mAccountStore.getAccount().getUserName());
 
-        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog))
+        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert))
                 .setMessage(message)
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {

@@ -20,32 +20,37 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/connection_bar"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_container"
         android:layout_below="@+id/toolbar"/>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/connection_bar"
+    <LinearLayout
+        android:id="@+id/bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/navbar_container"
         android:layout_alignParentBottom="true"
-        android:background="@color/alert_yellow"
-        android:gravity="center"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_medium"
-        android:text="@string/connectionbar_no_connection"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_sz_small"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/navbar_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/connection_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/alert_yellow"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_medium"
+            android:text="@string/connectionbar_no_connection"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_small"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <!-- this coordinator exists only for snackbars -->
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <View
             android:id="@+id/navbar_separator"
@@ -58,15 +63,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:layout_below="@+id/navbar_separator"
             app:elevation="0dp"
             app:menu="@menu/bottom_nav_main"/>
-    </RelativeLayout>
-
-    <!-- this coordinator exists only for snackbars -->
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    </LinearLayout>
 
 </RelativeLayout>

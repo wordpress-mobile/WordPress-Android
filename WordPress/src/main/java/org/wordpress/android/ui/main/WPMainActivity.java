@@ -112,7 +112,6 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
 
-    private View mBottomNavContainer;
     private WPMainNavigationView mBottomNav;
     private Toolbar mToolbar;
 
@@ -163,8 +162,6 @@ public class WPMainActivity extends AppCompatActivity
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(R.string.app_title);
         setSupportActionBar(mToolbar);
-
-        mBottomNavContainer = findViewById(R.id.navbar_container);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getFragmentManager(), this);
@@ -478,15 +475,20 @@ public class WPMainActivity extends AppCompatActivity
 
     @Override
     public void onRequestShowBottomNavigation() {
-        mBottomNavContainer.setVisibility(View.VISIBLE);
+        showBottomNav(true);
     }
 
     @Override
     public void onRequestHideBottomNavigation() {
         // we only hide the bottom navigation when there's not a hardware keyboard present
         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
-            mBottomNavContainer.setVisibility(View.GONE);
+            showBottomNav(false);
         }
+    }
+
+    private void showBottomNav(boolean show) {
+        mBottomNav.setVisibility(show ? View.VISIBLE : View.GONE);
+        findViewById(R.id.navbar_separator).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     // user switched pages in the bottom navbar
