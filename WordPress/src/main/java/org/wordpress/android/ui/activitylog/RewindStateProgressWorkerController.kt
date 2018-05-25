@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Statu
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker.Companion.RESTORE_ID_KEY
 import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker.Companion.SITE_ID_KEY
 import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker.Companion.TAG
 import java.util.concurrent.TimeUnit.SECONDS
@@ -25,7 +26,7 @@ import javax.inject.Inject
 class RewindStateProgressWorkerController
 @Inject
 constructor() {
-    fun startWorker(site: SiteModel) {
+    fun startWorker(site: SiteModel, restoreId: Long) {
         val workManager = WorkManager.getInstance()
         if (workManager.getStatusesByTag(TAG).value != null) {
             workManager.cancelAllWorkByTag(TAG)
@@ -33,7 +34,7 @@ constructor() {
         val networkConstraints = Builder()
                 .setRequiredNetworkType(NOT_REQUIRED)
                 .build()
-        val data = Data.Builder().putInt(SITE_ID_KEY, site.id).build()
+        val data = Data.Builder().putInt(SITE_ID_KEY, site.id).putLong(RESTORE_ID_KEY, restoreId).build()
         val work = PeriodicWorkRequestBuilder<RewindStateProgressWorker>(10, SECONDS)
                 .setConstraints(networkConstraints)
                 .addTag(TAG)
@@ -50,6 +51,7 @@ constructor() {
         companion object {
             const val TAG = "progressWorkerTag"
             const val SITE_ID_KEY = "SITE_ID"
+            const val RESTORE_ID_KEY = "RESTORE_ID"
         }
 
         @Inject lateinit var activityLogStore: ActivityLogStore
@@ -59,11 +61,17 @@ constructor() {
         override fun doWork(): WorkerResult {
             (applicationContext as WordPress).component().inject(this)
             val siteId = inputData.getInt(SITE_ID_KEY, -1)
-            if (siteId != -1) {
+            val restoreId = inputData.getLong(RESTORE_ID_KEY, -1L)
+            if (siteId != -1 && restoreId != -1L) {
                 val site = siteStore.getSiteByLocalId(siteId)
                 val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
-                if (rewindStatusForSite?.rewind?.status == FINISHED) {
-                    return SUCCESS
+                val rewind = rewindStatusForSite?.rewind
+                rewind?.let {
+                    if (rewind.status == FINISHED && rewind.restoreId == restoreId) {
+                        return SUCCESS
+                    } else if (rewind.restoreId != restoreId) {
+                        return FAILURE
+                    }
                 }
                 dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
                 return RETRY

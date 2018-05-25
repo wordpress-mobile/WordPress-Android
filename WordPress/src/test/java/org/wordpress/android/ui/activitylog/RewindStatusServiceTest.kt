@@ -2,6 +2,7 @@ package org.wordpress.android.ui.activitylog
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert.assertEquals
@@ -59,7 +60,13 @@ class RewindStatusServiceTest {
             canAutoconfigure = null
     )
 
-    private val rewindInProgress = Rewind(rewindId = "1", status = RUNNING, progress = 23, reason = null)
+    private val rewindInProgress = Rewind(
+            rewindId = "1",
+            restoreId = 10,
+            status = RUNNING,
+            progress = 23,
+            reason = null
+    )
 
     @Before
     fun setUp() {
@@ -119,7 +126,7 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun triggersRewindAndRepeatedWorkerOnRewind() {
+    fun triggersRewindAndMakesActionUnavailable() {
         val rewindId = "10"
 
         rewindStatusService.rewind(rewindId, site)
@@ -127,7 +134,6 @@ class RewindStatusServiceTest {
         assertRewindAction(rewindId)
         assertEquals(false, rewindAvailable)
         assertNull(rewindState)
-        verify(workerController).startWorker(site)
     }
 
     @Test
@@ -167,21 +173,27 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun onRewindErrorCancelWorker() {
-        rewindStatusService.onRewind(OnRewind(RewindError(RewindErrorType.INVALID_RESPONSE, null), REWIND))
-
-        verify(workerController).cancelWorker()
-    }
-
-    @Test
-    fun onRewindUpdateRewindStatus() {
+    fun onRewindErrorCancelWorkerAndReenableRewindStatus() {
         rewindStatusService.start(site)
+        reset(dispatcher)
 
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(activeRewindStatusModel)
 
+        rewindStatusService.onRewind(OnRewind(RewindError(RewindErrorType.INVALID_RESPONSE, null), REWIND))
+
+        verify(workerController).cancelWorker()
+        assertEquals(rewindAvailable, true)
+        assertNull(rewindState)
+    }
+
+    @Test
+    fun onRewindFetchStatusAndStartWorker() {
+        rewindStatusService.start(site)
+        reset(dispatcher)
+
         rewindStatusService.onRewind(OnRewind("10", REWIND))
 
-        assertEquals(rewindAvailable, true)
+        verify(workerController).startWorker(site, 10)
     }
 
     private fun assertFetchRewindStatusAction() {

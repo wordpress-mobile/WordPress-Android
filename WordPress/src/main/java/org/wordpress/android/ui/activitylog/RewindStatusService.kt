@@ -16,7 +16,9 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewind
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import javax.inject.Inject
 
 class RewindStatusService
@@ -27,17 +29,21 @@ constructor(
     private val dispatcher: Dispatcher
 ) {
     private val mutableRewindAvailable = MutableLiveData<Boolean>()
+    private val mutableRewindError = MutableLiveData<RewindError>()
+    private val mutableRewindStatusFetchError = MutableLiveData<RewindStatusError>()
     private val mutableRewindState = MutableLiveData<Rewind>()
     private var site: SiteModel? = null
 
     val rewindAvailable: LiveData<Boolean> = mutableRewindAvailable
+    val rewindError: LiveData<RewindError> = mutableRewindError
+    val rewindStatusFetchError: LiveData<RewindStatusError> = mutableRewindStatusFetchError
     val rewindState: LiveData<Rewind> = mutableRewindState
 
     fun rewind(rewindId: String, site: SiteModel) {
         dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))
         mutableRewindAvailable.postValue(false)
+        mutableRewindError.postValue(null)
         mutableRewindState.postValue(null)
-        workerController.startWorker(site)
     }
 
     fun start(site: SiteModel) {
@@ -62,21 +68,25 @@ constructor(
                         rewindStatus.state == ACTIVE &&
                         rewindStatus.rewind?.status != RUNNING
         )
+        mutableRewindState.postValue(rewindStatus?.rewind)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onRewindStatusFetched(event: OnRewindStatusFetched) {
         if (event.isError) {
+            event.error?.let {
+                mutableRewindStatusFetchError.postValue(it)
+            }
             workerController.cancelWorker()
-            return
+        } else {
+            mutableRewindStatusFetchError.postValue(null)
         }
         site?.let {
             val rewindStatusForSite = activityLogStore.getRewindStatusForSite(it)
             rewindStatusForSite?.let {
                 onRewindStatus(it)
                 it.rewind?.let {
-                    mutableRewindState.postValue(it)
                     if (it.status != RUNNING) {
                         workerController.cancelWorker()
                     }
@@ -89,12 +99,21 @@ constructor(
     @SuppressWarnings("unused")
     fun onRewind(event: OnRewind) {
         if (event.isError) {
+            event.error?.let {
+                mutableRewindError.postValue(it)
+            }
+            mutableRewindAvailable.postValue(true)
             workerController.cancelWorker()
+            site?.let {
+                val state = activityLogStore.getRewindStatusForSite(it)
+                if (state != null) {
+                    onRewindStatus(state)
+                }
+            }
         }
         site?.let {
-            val state = activityLogStore.getRewindStatusForSite(it)
-            if (state != null) {
-                onRewindStatus(state)
+            event.restoreId?.let { restoreId ->
+                workerController.startWorker(it, restoreId.toLong())
             }
         }
     }
