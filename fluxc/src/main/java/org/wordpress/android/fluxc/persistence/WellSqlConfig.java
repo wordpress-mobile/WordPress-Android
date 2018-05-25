@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 35;
+        return 36;
     }
 
     @Override
@@ -292,6 +292,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "CAN_AUTOCONFIGURE INTEGER,REWIND_ID TEXT,REWIND_STATUS TEXT,REWIND_PROGRESS INTEGER,"
                         + "REWIND_REASON TEXT)");
                 oldVersion++;
+            case 35:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -326,7 +330,8 @@ public class WellSqlConfig extends DefaultWellConfig {
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {
-                case 30:
+                case 31:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("DROP TABLE IF EXISTS WCOrderModel");
                     db.execSQL("DROP TABLE IF EXISTS WCOrderNoteModel");
                     db.execSQL("CREATE TABLE WCOrderModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
@@ -349,6 +354,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                     db.execSQL("CREATE TABLE WCOrderNoteModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,LOCAL_ORDER_ID INTEGER,REMOTE_NOTE_ID INTEGER,"
                                + "DATE_CREATED TEXT NOT NULL,NOTE TEXT NOT NULL,IS_CUSTOMER_NOTE INTEGER)");
+                    break;
+                case 35:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCOrderStatsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,UNIT TEXT NOT NULL,FIELDS TEXT NOT NULL,DATA TEXT NOT NULL)");
                     break;
             }
         }
