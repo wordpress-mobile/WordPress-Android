@@ -70,7 +70,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = Builder(ContextThemeWrapper(activity, R.style.Calypso_Dialog))
+        val builder = Builder(ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert))
         builder.setTitle(mTitle)
                 .setMessage(mMessage)
                 .setPositiveButton(mPositiveButtonLabel) { _, _ ->

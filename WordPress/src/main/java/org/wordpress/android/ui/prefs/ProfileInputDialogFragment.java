@@ -48,7 +48,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         //noinspection InflateParams
         View promptView = layoutInflater.inflate(R.layout.my_profile_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         alertDialogBuilder.setView(promptView);
 
         final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);

@@ -389,7 +389,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
     }
 
-    private void showEditingSiteIconRequiresPermissionDialog(String message) {
+    private void showEditingSiteIconRequiresPermissionDialog(@NonNull String message) {
         BasicFragmentDialog dialog = new BasicFragmentDialog();
         String tag = TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG;
         dialog.initialize(tag, getString(R.string.my_site_icon_dialog_title),

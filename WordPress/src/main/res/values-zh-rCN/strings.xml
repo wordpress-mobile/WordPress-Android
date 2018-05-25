@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 08:54:08+0000
+Translation-Revision-Date: 2018-05-15 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="login_email_button_signup">还没有帐户？%1$s注册%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">使用插件功能需要站点具有良好的信誉。</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">使用插件功能需要具有与该用户关联的主域订阅。</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">使用插件功能需要具有管理员权限。</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">无法在 VIP 站点上安装插件。</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">由于磁盘空间限制，无法安装插件。</string>
+    <string name="plugin_install_site_ineligible_email_unverified">使用插件功能需要提供已验证的电子邮件地址。</string>
+    <string name="plugin_install_site_ineligible_site_private">使用插件功能需要站点处于公开状态。</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">使用插件功能需要具有商务版套餐。</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">使用插件功能需要具有自定义域。</string>
+    <string name="plugin_install_site_ineligible_default_error">插件功能不适用于此站点。</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">我们正在进行最后设置 – 即将完成…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">正在安装插件…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">安装</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">在站点上安装第一个插件最多需要 1 分钟。在此期间，您将无法更改自己的站点。</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">安装插件</string>
+    <string name="notification_settings_followed_dialog_title">通知</string>
+    <string name="notification_settings_followed_dialog_email_comments">通过电子邮件向我发送新评论</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">每周</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">即时</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">每日</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">新文章</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">接收有关此站点发布的新文章的通知</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">通过电子邮件向我发送新文章</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">我关注的所有站点</string>
+    <string name="notification_settings_category_followed_sites">关注的站点</string>
+    <string name="content_description_person_reading_device_notification">用户正在阅读设备上的通知</string>
+    <string name="content_description_people_looking_charts">用户正在查看图形和图表</string>
+    <string name="comment_title">%s 对 %s 的评论</string>
+    <string name="dialog_confirm_delete_permanently_page">是否确定要永久删除此页面？</string>
+    <string name="dialog_confirm_delete_permanently_post">是否确定要永久删除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在创建站点…这可能需要几分钟的时间。</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -79,7 +110,6 @@ Language: zh_CN
     <string name="profile_picture">%s的个人资料照片</string>
     <string name="comment_checkmark_desc">选中标记</string>
     <string name="signup_with_google_progress">使用 Google 注册…</string>
-    <string name="editor_toast_no_action_taken">出现了错误。未执行任何操作。</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack 连接中断：%s</string>
     <string name="jetpack_already_connected_toast">您已连接至 Jetpack</string>
     <string name="menu_undo_snackbar_action">撤消</string>
@@ -271,7 +301,6 @@ Language: zh_CN
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack 将优化您的图片，并通过距离访客最近的服务器位置提供。使用我们的全球内容交付网络将大大提升您站点的加载速度。</string>
     <string name="site_settings_serve_images_from_our_servers">通过服务器提供图片</string>
     <string name="site_settings_speed_up_your_site">加快站点加载速度</string>
-    <string name="stats_jetpack_connection_setup_info">要在 WordPress 站点中使用统计功能，您需要安装 Jetpack 插件。是否希望设置 Jetpack？</string>
     <string name="stats_jetpack_connection_setup">设置 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切换文本</string>
     <string name="plugin_info_your_version">您的 WordPress 版本</string>
