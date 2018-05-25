@@ -198,7 +198,8 @@ class ActivityLogStore
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
         INVALID_REWIND_STATE,
-        MISSING_REWIND_ID
+        MISSING_REWIND_ID,
+        MISSING_RESTORE_ID
     }
 
     class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError

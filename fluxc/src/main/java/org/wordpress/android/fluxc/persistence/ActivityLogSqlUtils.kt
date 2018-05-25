@@ -211,6 +211,7 @@ class ActivityLogSqlUtils
         @Column var reason: String? = null,
         @Column var canAutoconfigure: Boolean? = null,
         @Column var rewindId: String? = null,
+        @Column var restoreId: Long? = null,
         @Column var rewindStatus: String? = null,
         @Column var rewindProgress: Int? = null,
         @Column var rewindReason: String? = null
@@ -226,6 +227,7 @@ class ActivityLogSqlUtils
         fun build(credentials: List<Credentials>?): RewindStatusModel {
             val restoreStatus = RewindStatusModel.Rewind.build(
                     rewindId,
+                    restoreId,
                     rewindStatus,
                     rewindProgress,
                     rewindReason
