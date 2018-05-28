@@ -69,10 +69,7 @@ class ActivityLogViewModel @Inject constructor(
         fetchEvents(false)
     }
 
-    fun onRewindButtonClicked(activity: ActivityLogListItemViewModel) {
-        val rewindActivity = ActivityLogListItemViewModel.fromRewind(activity,
-                "Rewinding",
-                "rewind")
+    fun onRewindButtonClicked(rewindActivity: ActivityLogListItemViewModel) {
         val newEvents = ArrayList(_events.value!!)
         newEvents.add(0, rewindActivity)
         _events.postValue(newEvents)

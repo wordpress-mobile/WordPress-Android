@@ -104,7 +104,9 @@ class ActivityLogListFragment : Fragment() {
                         it,
                         viewModel,
                         { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityId) },
-                        { viewModel.onRewindButtonClicked(it) }
+                        { activity -> viewModel.onRewindButtonClicked(ActivityLogListItemViewModel.fromRewind(activity,
+                                getString(R.string.activity_log_currently_restoring_title),
+                                getString(R.string.activity_log_currently_restoring_message))) }
                 )
                 activityLogList.adapter = adapter
             } else {
