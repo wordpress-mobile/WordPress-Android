@@ -59,6 +59,7 @@
     <string name="keep_editing">Keep editing</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
+    <string name="removed">Removed</string>
     <string name="search">Search</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
@@ -1331,6 +1332,7 @@
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
     <string name="passcodelock_prompt_message">Enter your PIN</string>
+    <!--suppress CheckTagEmptyBody -->
     <string name="passcodelock_hint"></string>
 
     <!--
@@ -1347,6 +1349,7 @@
     <!--
       reader strings
     -->
+    <string name="reader_save_for_later_title">Saved posts</string>
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now">now</string>
 
@@ -1378,6 +1381,12 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_add_bookmark">Add to saved posts</string>
+    <string name="reader_remove_bookmark">Remove from saved posts</string>
+    <string name="reader_btn_bookmark">Save</string>
+    <string name="reader_btn_bookmarked">Saved</string>
+    <string name="reader_bookmark_snack_btn">View All</string>
+    <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
 
@@ -1477,6 +1486,8 @@
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+    <string name="reader_empty_saved_posts_title">No posts saved \u2014 yet!</string>
+    <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
     <string name="reader_empty_posts_in_search_title">No posts found</string>

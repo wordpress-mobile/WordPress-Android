@@ -523,13 +523,26 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 appLock.setPassword(null);
             }
         }
-        if (!event.isError() && event.causeOfChange == AccountAction.FETCH_SETTINGS && mAccountStore.hasAccessToken()) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            boolean hasUserOptedOut = !prefs.getBoolean(getString(R.string.pref_key_send_usage), true);
-            AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut);
-            // When local and remote prefs are different, force opt out to TRUE
-            if (hasUserOptedOut != mAccountStore.getAccount().getTracksOptOut()) {
-                AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
+
+        if (!event.isError() && mAccountStore.hasAccessToken()) {
+            // previously we reset the reader database on logout but this meant losing saved posts
+            // so now we only reset it when the user id changes
+            if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+                long thisUserId = mAccountStore.getAccount().getUserId();
+                long lastUserId = AppPrefs.getLastUsedUserId();
+                if (thisUserId != lastUserId) {
+                    AppPrefs.setLastUsedUserId(thisUserId);
+                    AppLog.i(T.READER, "User changed, resetting reader db");
+                    ReaderDatabase.reset(false);
+                }
+            } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                boolean hasUserOptedOut = !prefs.getBoolean(getString(R.string.pref_key_send_usage), true);
+                AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut);
+                // When local and remote prefs are different, force opt out to TRUE
+                if (hasUserOptedOut != mAccountStore.getAccount().getTracksOptOut()) {
+                    AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
+                }
             }
         }
     }
@@ -564,9 +577,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // delete wpcom and jetpack sites
         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
 
-        // reset all reader-related prefs & data
+        // reset all user prefs
         AppPrefs.reset();
-        ReaderDatabase.reset();
+
+        // reset the reader database, but retain bookmarked posts
+        ReaderDatabase.reset(true);
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
@@ -615,7 +630,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
-    private static final String USER_AGENT_APPNAME = "wp-android";
+    public static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
 
     public static String getUserAgent() {

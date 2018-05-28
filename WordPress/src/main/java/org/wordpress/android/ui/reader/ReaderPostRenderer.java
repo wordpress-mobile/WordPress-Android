@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * fact that WebView "converts CSS pixel values to density-independent pixel values"
  * http://developer.android.com/guide/webapps/targeting.html
  */
-class ReaderPostRenderer {
+public class ReaderPostRenderer {
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final int mMinFullSizeWidthDp;
@@ -50,7 +50,7 @@ class ReaderPostRenderer {
     private ImageSizeMap mAttachmentSizes;
 
     @SuppressLint("SetJavaScriptEnabled")
-    ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
+    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -70,7 +70,7 @@ class ReaderPostRenderer {
         webView.getSettings().setJavaScriptEnabled(true);
     }
 
-    void beginRender() {
+    public void beginRender() {
         final Handler handler = new Handler();
         mRenderBuilder = new StringBuilder(getPostContent());
 

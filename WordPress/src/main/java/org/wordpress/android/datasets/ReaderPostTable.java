@@ -77,7 +77,8 @@ public class ReaderPostTable {
             + "tag_type," // 42
             + "has_gap_marker," // 43
             + "card_type," // 44
-            + "use_excerpt"; // 45
+            + "use_excerpt," // 45
+            + "is_bookmarked"; // 46
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -124,7 +125,8 @@ public class ReaderPostTable {
             + "tag_type," // 41
             + "has_gap_marker," // 42
             + "card_type," // 43
-            + "use_excerpt"; // 44
+            + "use_excerpt," // 44
+            + "is_bookmarked"; // 45
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -173,6 +175,7 @@ public class ReaderPostTable {
                    + " has_gap_marker INTEGER DEFAULT 0,"
                    + " card_type TEXT,"
                    + " use_excerpt INTEGER DEFAULT 0,"
+                   + " is_bookmarked INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -205,9 +208,28 @@ public class ReaderPostTable {
             numDeleted += purgePostsForTag(db, tag);
         }
 
+        numDeleted += purgeUnbookmarkedPostsWithBookmarkTag();
+
         // delete search results
         numDeleted += purgeSearchResults(db);
+        return numDeleted;
+    }
 
+    /**
+     * When the user unbookmarks a post, we keep the row in the database, but we just change the is_bookmarked flag
+     * to false, so we can show "undo" items in the saved posts list. This method purges database from such rows.
+     */
+    public static int purgeUnbookmarkedPostsWithBookmarkTag() {
+        int numDeleted = 0;
+        ReaderTagList tags = ReaderTagTable.getAllTags();
+        for (ReaderTag tag : tags) {
+            if (tag.isBookmarked()) {
+                // delete posts which has a bookmark tag but is_bookmarked flag is false
+                String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+                numDeleted += ReaderDatabase.getWritableDb()
+                                            .delete("tbl_posts", "tag_name=? AND tag_type=? AND is_bookmarked=0", args);
+            }
+        }
         return numDeleted;
     }
 
@@ -405,16 +427,10 @@ public class ReaderPostTable {
     }
 
     public static void setNumCommentsForPost(long blogId, long postId, int numComments) {
-        String[] args = {Long.toString(blogId), Long.toString(postId)};
-
         ContentValues values = new ContentValues();
         values.put("num_replies", numComments);
 
-        ReaderDatabase.getWritableDb().update(
-                "tbl_posts",
-                values,
-                "blog_id=? AND post_id=?",
-                args);
+        update(blogId, postId, values);
     }
 
     public static void incNumCommentsForPost(long blogId, long postId) {
@@ -452,13 +468,28 @@ public class ReaderPostTable {
         if (post == null) {
             return;
         }
-
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-
         ContentValues values = new ContentValues();
         values.put("num_likes", numLikes);
         values.put("is_liked", SqlUtils.boolToSql(isLikedByCurrentUser));
 
+        update(post.blogId, post.postId, values);
+    }
+
+
+    public static void setBookmarkFlag(long blogId, long postId, boolean bookmark) {
+        ContentValues values = new ContentValues();
+        values.put("is_bookmarked", SqlUtils.boolToSql(bookmark));
+
+        update(blogId, postId, values);
+    }
+
+    public static boolean hasBookmarkedPosts() {
+        String sql = "SELECT 1 FROM tbl_posts WHERE is_bookmarked != 0 LIMIT 1";
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, null);
+    }
+
+    private static void update(long blogId, long postId, ContentValues values) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
         ReaderDatabase.getWritableDb().update(
                 "tbl_posts",
                 values,
@@ -486,6 +517,18 @@ public class ReaderPostTable {
         return ReaderDatabase.getWritableDb().delete(
                 "tbl_posts",
                 "tag_name=? AND tag_type=?",
+                args);
+    }
+
+    public static int removeTagsFromPost(long blogId, long postId, final ReaderTagType tagType) {
+        if (tagType == null) {
+            return 0;
+        }
+
+        String[] args = {Integer.toString(tagType.toInt()), Long.toString(blogId), Long.toString(postId)};
+        return ReaderDatabase.getWritableDb().delete(
+                "tbl_posts",
+                "tag_type=? AND blog_id=? AND post_id=?",
                 args);
     }
 
@@ -630,7 +673,7 @@ public class ReaderPostTable {
             return "date_published";
         } else if (tag.tagType == ReaderTagType.SEARCH) {
             return "score";
-        } else if (tag.isTagTopic()) {
+        } else if (tag.isTagTopic() || tag.isBookmarked()) {
             return "date_tagged";
         } else {
             return "date_published";
@@ -734,12 +777,14 @@ public class ReaderPostTable {
             return;
         }
 
+        updateIsBookmarkedField(posts);
+
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
-                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45)");
+                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46)");
 
         db.beginTransaction();
         try {
@@ -797,6 +842,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(43, SqlUtils.boolToSql(hasGapMarker));
                 stmtPosts.bindString(44, ReaderCardType.toString(post.getCardType()));
                 stmtPosts.bindLong(45, SqlUtils.boolToSql(post.useExcerpt));
+                stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
                 stmtPosts.execute();
             }
 
@@ -878,9 +924,8 @@ public class ReaderPostTable {
      * same as getPostsWithTag() but only returns the blogId/postId pairs
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsWithTag(ReaderTag tag, int maxPosts) {
-        ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
         if (tag == null) {
-            return idList;
+            return new ReaderBlogIdPostIdList();
         }
 
         String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_name=? AND tag_type=?";
@@ -900,6 +945,26 @@ public class ReaderPostTable {
         }
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+        return getBlogIdPostIds(sql, args);
+    }
+
+    private static ReaderBlogIdPostIdList getBlogIdPostIdsWithTagType(ReaderTagType tagType, int maxPosts) {
+        if (tagType == null) {
+            return new ReaderBlogIdPostIdList();
+        }
+
+        String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_type=?";
+
+        if (maxPosts > 0) {
+            sql += " LIMIT " + Integer.toString(maxPosts);
+        }
+
+        String[] args = {Integer.toString(tagType.toInt())};
+        return getBlogIdPostIds(sql, args);
+    }
+
+    private static ReaderBlogIdPostIdList getBlogIdPostIds(@NonNull String sql, @NonNull String[] args) {
+        ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -988,6 +1053,7 @@ public class ReaderPostTable {
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
         post.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
+        post.isBookmarked = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_bookmarked")));
 
         post.setPrimaryTag(c.getString(c.getColumnIndex("primary_tag")));
         post.setSecondaryTag(c.getString(c.getColumnIndex("secondary_tag")));
@@ -1019,5 +1085,25 @@ public class ReaderPostTable {
             AppLog.e(AppLog.T.READER, e);
         }
         return posts;
+    }
+
+    /**
+     * Currently "is_bookmarked" field is not supported by the server, therefore posts from the server have always
+     * is_bookmarked set to false. This method is a workaround which makes sure, that the field is always up to date
+     * and synced across all instances(rows) of each post.
+     */
+    private static void updateIsBookmarkedField(final ReaderPostList posts) {
+        ReaderBlogIdPostIdList bookmarkedPosts = getBookmarkedPostIds();
+        for (ReaderPost post : posts) {
+            for (ReaderBlogIdPostId bookmarkedPostId : bookmarkedPosts) {
+                if (post.blogId == bookmarkedPostId.getBlogId() && post.postId == bookmarkedPostId.getPostId()) {
+                    post.isBookmarked = true;
+                }
+            }
+        }
+    }
+
+    private static ReaderBlogIdPostIdList getBookmarkedPostIds() {
+        return getBlogIdPostIdsWithTagType(ReaderTagType.BOOKMARKED, 99999);
     }
 }
