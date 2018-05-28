@@ -69,6 +69,15 @@ class ActivityLogViewModel @Inject constructor(
         fetchEvents(false)
     }
 
+    fun onRewindButtonClicked(activity: ActivityLogListItemViewModel) {
+        val rewindActivity = ActivityLogListItemViewModel.fromRewind(activity,
+                "Rewinding",
+                "rewind")
+        val newEvents = ArrayList(_events.value!!)
+        newEvents.add(0, rewindActivity)
+        _events.postValue(newEvents)
+    }
+
     private fun fetchEvents(loadMore: Boolean) {
         if (shouldFetchEvents(loadMore)) {
             val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING

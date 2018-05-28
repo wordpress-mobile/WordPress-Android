@@ -14,7 +14,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 class ActivityLogViewHolder(
     parent: ViewGroup,
     private val itemClickListener: (ActivityLogListItemViewModel) -> Unit,
-    private val rewindClickListener: (String?) -> Unit
+    private val rewindClickListener: (ActivityLogListItemViewModel) -> Unit
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.activity_log_list_item, parent, false)) {
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
@@ -34,7 +34,19 @@ class ActivityLogViewHolder(
         text.text = activity.text
         header.text = activity.header
 
-        rewindButton.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
+        activity.isRewindable.observeForever({ isActivityRewindable ->
+            rewindButton.visibility = if (isActivityRewindable == true) View.VISIBLE else View.GONE
+        })
+
+        activity.rewindProgress.observeForever({ progress ->
+            if (progress != null && progress != 0 && progress != 100) {
+                progressBar.visibility = View.VISIBLE
+                progressBar.progress = progress
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        })
+
         header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
 
         thumbnail.setImageResource(activity.icon)
@@ -44,16 +56,7 @@ class ActivityLogViewHolder(
         }
 
         rewindButton.setOnClickListener {
-            rewindClickListener(activity.rewindId)
-        }
-    }
-
-    fun updateProgress(progress: Int) {
-        if (progress != 0 && progress != 100) {
-            progressBar.visibility = View.VISIBLE
-            progressBar.progress = progress
-        } else {
-            progressBar.visibility = View.GONE
+            rewindClickListener(activity)
         }
     }
 }

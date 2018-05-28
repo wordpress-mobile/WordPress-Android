@@ -104,7 +104,7 @@ class ActivityLogListFragment : Fragment() {
                         it,
                         viewModel,
                         { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityId) },
-                        { }
+                        { viewModel.onRewindButtonClicked(it) }
                 )
                 activityLogList.adapter = adapter
             } else {

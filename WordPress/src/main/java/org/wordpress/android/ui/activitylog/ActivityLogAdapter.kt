@@ -13,7 +13,7 @@ class ActivityLogAdapter(
     context: Context,
     private val viewModel: ActivityLogViewModel,
     private val itemClickListener: (ActivityLogListItemViewModel) -> Unit,
-    private val rewindClickListener: (String?) -> Unit
+    private val rewindClickListener: (ActivityLogListItemViewModel) -> Unit
 ) : Adapter<ActivityLogViewHolder>() {
     private val list = mutableListOf<ActivityLogListItemViewModel>()
     private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
