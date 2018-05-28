@@ -1557,8 +1557,8 @@
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
 
     <!--Support strings-->
-    <string name="support_identity_input_dialog_message">To continue please enter your email address and name</string>
     <string name="support_identity_input_dialog_enter_email_and_name">To continue please enter your email address and name</string>
+    <string name="support_identity_input_dialog_enter_email">To continue please enter your email address</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
 
     <!-- Helpshift overridden strings -->
