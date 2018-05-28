@@ -111,6 +111,10 @@ class ActivityLogListFragment : Fragment() {
                 adapter = activityLogList.adapter as ActivityLogAdapter
             }
             adapter.updateList(events)
+
+            if (viewModel.eventListStatus.value != LOADING_MORE) {
+                activityLogList.scrollToPosition(0)
+            }
         }
     }
 }

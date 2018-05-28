@@ -31,13 +31,14 @@ data class ActivityLogListItemViewModel(
         }
 
         fun fromRewind(viewModel: ActivityLogListItemViewModel, title: String, message: String): ActivityLogListItemViewModel {
-            return viewModel.copy(datePublished = Date(), rewindable = false, status = "warning", gridIcon = "notice",
-                    summary = title, text = String.format(message, viewModel.datePublished), isRewindInProgress = true)
+            return viewModel.copy(activityId = "-1", datePublished = Date(), rewindable = false, status = "warning",
+                    gridIcon = "notice-outline", summary = title, text = String.format(message, viewModel.datePublished),
+                    isRewindInProgress = true)
         }
     }
 
     init {
-        isRewindable.value = rewindable
+        isRewindable.postValue(rewindable)
     }
 
     val header: String by lazy {
