@@ -78,7 +78,7 @@ private fun inputDialogLayout(
     val emailLabel = inputDialogLabel(context, R.string.support_email)
     layout.addView(emailLabel)
 
-    val emailInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+    val emailInputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
     val emailField = inputDialogEditText(context, emailInputType, emailSuggestion, true)
     layout.addView(emailField)
 

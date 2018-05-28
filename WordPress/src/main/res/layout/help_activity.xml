@@ -38,7 +38,7 @@
         <View style="@style/HelpActivityDivider"/>
 
         <LinearLayout
-            android:id="@+id/contact_email"
+            android:id="@+id/contact_email_container"
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,6 +53,7 @@
                 android:textSize="@dimen/text_sz_large"/>
 
             <TextView
+                android:id="@+id/contact_email_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/support_contact_email_not_set"
