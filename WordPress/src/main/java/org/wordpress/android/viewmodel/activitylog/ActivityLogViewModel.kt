@@ -35,6 +35,9 @@ class ActivityLogViewModel @Inject constructor(
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
+    private val isRewindInProgress: Boolean
+        get() = events.value?.isNotEmpty() == true && events.value?.first()?.isRewindInProgress == true
+
     lateinit var site: SiteModel
 
     init {
@@ -69,10 +72,18 @@ class ActivityLogViewModel @Inject constructor(
         fetchEvents(false)
     }
 
+    fun onItemClicked(callback: () -> Unit) {
+        if (!isRewindInProgress) {
+            callback()
+        }
+    }
+
     fun onRewindButtonClicked(rewindActivity: ActivityLogListItemViewModel) {
-        val newEvents = ArrayList(_events.value!!)
-        newEvents.add(0, rewindActivity)
-        _events.postValue(newEvents)
+        if (!isRewindInProgress) {
+            val newEvents = ArrayList(_events.value!!)
+            newEvents.add(0, rewindActivity)
+            _events.postValue(newEvents)
+        }
     }
 
     private fun fetchEvents(loadMore: Boolean) {
