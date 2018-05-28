@@ -1513,7 +1513,6 @@
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
-    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
