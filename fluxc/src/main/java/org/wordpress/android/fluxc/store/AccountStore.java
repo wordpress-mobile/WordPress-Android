@@ -1191,7 +1191,7 @@ public class AccountStore extends Store {
     private void handleUpdatedSubscription(SubscriptionResponsePayload payload) {
         OnSubscriptionUpdated event = new OnSubscriptionUpdated();
         if (payload.isError()) {
-            event.error = new SubscriptionError(event.error.toString(), event.error.message);
+            event.error = payload.error;
         } else {
             event.subscribed = payload.isSubscribed;
             event.type = payload.type;
