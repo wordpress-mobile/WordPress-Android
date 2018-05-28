@@ -14,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -96,6 +97,22 @@ class ActivityLogListFragment : Fragment() {
         setEvents(viewModel.events.value ?: emptyList())
     }
 
+    private fun onItemClicked(item: ActivityLogListItemViewModel) {
+         viewModel.onItemClicked {
+             ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, item.activityId)
+         }
+    }
+
+    private fun onRewindButtonClicked(item: ActivityLogListItemViewModel) {
+        val dialog = BasicFragmentDialog()
+        dialog.initialize("rewind-dialog",
+                getString(R.string.activity_log_rewind_site),
+                getString(R.string.activity_log_currently_restoring_message, item.time),
+                getString(R.string.activity_log_rewind_site),
+                getString(R.string.cancel))
+        dialog.show(fragmentManager,"rewind-dialog")
+    }
+
     private fun setEvents(events: List<ActivityLogListItemViewModel>) {
         context?.let {
             val adapter: ActivityLogAdapter
@@ -103,10 +120,8 @@ class ActivityLogListFragment : Fragment() {
                 adapter = ActivityLogAdapter(
                         it,
                         viewModel,
-                        { ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, it.activityId) },
-                        { activity -> viewModel.onRewindButtonClicked(ActivityLogListItemViewModel.fromRewind(activity,
-                                getString(R.string.activity_log_currently_restoring_title),
-                                getString(R.string.activity_log_currently_restoring_message))) }
+                        { item -> onItemClicked(item) },
+                        { item -> onRewindButtonClicked(item) }
                 )
                 activityLogList.adapter = adapter
             } else {

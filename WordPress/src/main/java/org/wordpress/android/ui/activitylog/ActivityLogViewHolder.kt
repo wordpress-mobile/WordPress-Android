@@ -39,14 +39,10 @@ class ActivityLogViewHolder(
         })
 
         activity.rewindProgress.observeForever({ progress ->
-            if (progress != null && progress != 0 && progress != 100) {
-                progressBar.visibility = View.VISIBLE
-                progressBar.progress = progress
-            } else {
-                progressBar.visibility = View.GONE
-            }
+            progressBar.progress = progress ?: 0
         })
 
+        progressBar.visibility = if (activity.isRewindInProgress) View.VISIBLE else View.GONE
         header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
 
         thumbnail.setImageResource(activity.icon)

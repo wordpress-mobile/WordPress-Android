@@ -5,13 +5,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
+import org.wordpress.android.ui.posts.BasicFragmentDialog
 
-class ActivityLogListActivity : AppCompatActivity() {
+class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogPositiveClickInterface,
+        BasicFragmentDialog.BasicDialogNegativeClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (application as WordPress).component().inject(this)
         setContentView(R.layout.activity_log_list_activity)
 
         setSupportActionBar(toolbar)
@@ -27,5 +27,14 @@ class ActivityLogListActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPositiveClicked(instanceTag: String) {
+//        viewModel.onRewindButtonClicked(ActivityLogListItemViewModel.makeRewindItem(item,
+//        getString(R.string.activity_log_currently_restoring_title),
+//        getString(R.string.activity_log_currently_restoring_message, item.time)))
+    }
+
+    override fun onNegativeClicked(instanceTag: String) {
     }
 }

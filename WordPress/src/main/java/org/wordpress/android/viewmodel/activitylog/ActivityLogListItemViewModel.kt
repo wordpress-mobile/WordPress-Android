@@ -16,9 +16,10 @@ data class ActivityLogListItemViewModel(
     private val rewindable: Boolean,
     val rewindId: String?,
     private val datePublished: Date,
-    private val isRewindInProgress: Boolean = false
+    val isRewindInProgress: Boolean = false
 ) {
-    private val timeFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
+    private val dateFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
+    private val timeFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault())
 
     val isRewindable = MutableLiveData<Boolean>()
     val rewindProgress = MutableLiveData<Int>()
@@ -30,19 +31,19 @@ data class ActivityLogListItemViewModel(
                     model.status, model.rewindable ?: false, model.rewindID, model.published)
         }
 
-        fun fromRewind(viewModel: ActivityLogListItemViewModel, title: String, message: String): ActivityLogListItemViewModel {
-            return viewModel.copy(activityId = "-1", datePublished = Date(), rewindable = false, status = "warning",
-                    gridIcon = "notice-outline", summary = title, text = String.format(message, viewModel.datePublished),
-                    isRewindInProgress = true)
+        fun makeRewindItem(viewModel: ActivityLogListItemViewModel, title: String, message: String): ActivityLogListItemViewModel {
+            return ActivityLogListItemViewModel("-1", message, title,"notice-outline", "warning",
+                    false, "-1", Date(), true)
         }
     }
 
     init {
         isRewindable.postValue(rewindable)
+        rewindProgress.postValue(30)
     }
 
     val header: String by lazy {
-        timeFormatter.format(datePublished)
+        dateFormatter.format(datePublished)
     }
 
     val background by lazy {
@@ -51,6 +52,10 @@ data class ActivityLogListItemViewModel(
 
     val icon by lazy {
         convertGridIconToDrawable(gridIcon)
+    }
+
+    val time: String by lazy {
+        timeFormatter.format(datePublished)
     }
 
     fun isHeaderVisible(previous: ActivityLogListItemViewModel?): Boolean {

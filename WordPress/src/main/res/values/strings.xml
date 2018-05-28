@@ -762,6 +762,8 @@
     <string name="activity_log_empty_list">No events recorded yet</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_currently_restoring_message">Rewinding to %s</string>
+    <string name="activity_log_rewind_site">Rewinding Site</string>
+    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %s? This will remove all content and options created or changed since then.</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
