@@ -15,9 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -539,35 +536,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
              .withAspectRatio(1, 1)
              .withOptions(options)
              .start(getActivity(), this);
-    }
-
-    private void showAlert(View view) {
-        if (isAdded() && view != null) {
-            Animation highlightAnimation = new AlphaAnimation(0.0f, 1.0f);
-            highlightAnimation.setInterpolator(new Interpolator() {
-                private float bounce(float t) {
-                    return t * t * 24.0f;
-                }
-
-                public float getInterpolation(float t) {
-                    t *= 1.1226f;
-                    if (t < 0.184f) {
-                        return bounce(t);
-                    } else if (t < 0.545f) {
-                        return bounce(t - 0.40719f);
-                    } else if (t < 0.7275f) {
-                        return -bounce(t - 0.6126f) + 1.0f;
-                    } else {
-                        return 0.0f;
-                    }
-                }
-            });
-            highlightAnimation.setStartOffset(ALERT_ANIM_OFFSET_MS);
-            highlightAnimation.setRepeatCount(1);
-            highlightAnimation.setRepeatMode(Animation.RESTART);
-            highlightAnimation.setDuration(ALERT_ANIM_DURATION_MS);
-            view.startAnimation(highlightAnimation);
-        }
     }
 
     private void refreshSelectedSiteDetails(SiteModel site) {

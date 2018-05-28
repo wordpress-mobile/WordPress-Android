@@ -596,14 +596,6 @@ public class WPMainActivity extends AppCompatActivity
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
                     return;
                 }
-                // if user returned from adding a post and it was saved as a local draft,
-                // briefly animate the background of the "Blog posts" view to give the
-                // user a cue as to where to go to return to that post
-                // TODO
-                /*if (getView() != null && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
-                    showAlert(getView().findViewById(R.id.postsGlowBackground));
-                }*/
-
                 int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
                 final SiteModel site = getSelectedSite();
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
