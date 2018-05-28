@@ -51,7 +51,7 @@ constructor(
         dispatcher.register(this)
         val state = activityLogStore.getRewindStatusForSite(site)
         if (state != null) {
-            onRewindStatus(state)
+            updateRewindStatus(state)
         } else {
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
         }
@@ -62,7 +62,7 @@ constructor(
         site = null
     }
 
-    private fun onRewindStatus(rewindStatus: RewindStatusModel?) {
+    private fun updateRewindStatus(rewindStatus: RewindStatusModel?) {
         mutableRewindAvailable.postValue(
                 rewindStatus != null &&
                         rewindStatus.state == ACTIVE &&
@@ -85,7 +85,7 @@ constructor(
         site?.let {
             val rewindStatusForSite = activityLogStore.getRewindStatusForSite(it)
             rewindStatusForSite?.let {
-                onRewindStatus(it)
+                updateRewindStatus(it)
                 it.rewind?.let {
                     if (it.status != RUNNING) {
                         workerController.cancelWorker()
@@ -107,7 +107,7 @@ constructor(
             site?.let {
                 val state = activityLogStore.getRewindStatusForSite(it)
                 if (state != null) {
-                    onRewindStatus(state)
+                    updateRewindStatus(state)
                 }
             }
         }
