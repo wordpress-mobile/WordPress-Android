@@ -19,8 +19,7 @@ import org.wordpress.android.widgets.WPNetworkImageView
 import javax.inject.Inject
 
 class ActivityLogDetailFragment : Fragment() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     companion object {
