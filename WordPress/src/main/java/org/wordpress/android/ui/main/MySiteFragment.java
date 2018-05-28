@@ -33,7 +33,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -48,7 +47,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -139,13 +137,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        mDispatcher.unregister(this);
-        super.onDestroy();
     }
 
     @Override
@@ -423,36 +414,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                 if (resultCode == Activity.RESULT_OK) {
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
-                }
-                break;
-            case RequestCodes.EDIT_POST:
-                if (resultCode != Activity.RESULT_OK || data == null || !isAdded()) {
-                    return;
-                }
-                // if user returned from adding a post and it was saved as a local draft,
-                // briefly animate the background of the "Blog posts" view to give the
-                // user a cue as to where to go to return to that post
-                if (getView() != null && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
-                    showAlert(getView().findViewById(R.id.postsGlowBackground));
-                }
-
-                final PostModel post = mPostStore.
-                                                         getPostByLocalPostId(
-                                                                 data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID,
-                                                                                  0));
-
-                if (post != null) {
-                    final SiteModel site = getSelectedSite();
-                    UploadUtils.handleEditPostResultSnackbars(getActivity(),
-                                                              getActivity().findViewById(R.id.coordinator), resultCode,
-                                                              data, post, site,
-                                                              new View.OnClickListener() {
-                                                                  @Override
-                                                                  public void onClick(View v) {
-                                                                      UploadUtils.publishPost(getActivity(), post, site,
-                                                                                              mDispatcher);
-                                                                  }
-                                                              });
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
