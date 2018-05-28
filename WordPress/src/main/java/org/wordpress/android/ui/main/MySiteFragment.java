@@ -26,8 +26,6 @@ import android.widget.ScrollView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -40,7 +38,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -787,22 +784,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                     UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                             getActivity().findViewById(R.id.coordinator), false,
                             event.mediaModelList, site, event.successMessage);
-                }
-            }
-        }
-    }
-
-    // FluxC events
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostUploaded(OnPostUploaded event) {
-        if (isAdded() && event.post != null) {
-            SiteModel site = getSelectedSite();
-            if (site != null) {
-                if (event.post.getLocalSiteId() == site.getId()) {
-                    UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator),
-                            event.isError(), event.post, null, site, mDispatcher);
                 }
             }
         }

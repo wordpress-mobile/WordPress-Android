@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -847,6 +849,23 @@ public class WPMainActivity extends AppCompatActivity
         }
 
         // Else no site selected
+    }
+
+    // FluxC events
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(OnPostUploaded event) {
+        SiteModel site = getSelectedSite();
+        if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+            UploadUtils.onPostUploadedSnackbarHandler(
+                    this,
+                    findViewById(R.id.coordinator),
+                    event.isError(),
+                    event.post,
+                    null,
+                    site,
+                    mDispatcher);
+        }
     }
 
     @SuppressWarnings("unused")
