@@ -879,10 +879,22 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         };
-        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked),
+        Snackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked),
                 AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(R.string.undo, undoListener)
                 .show();
+    }
+
+    /*
+     * returns the parent view for snackbars - if this fragment is hosted in the main activity we want the
+     * parent to be the main activity's CoordinatorLayout
+     */
+    private View getSnackbarParent() {
+        View coordinator = getActivity().findViewById(R.id.coordinator);
+        if (coordinator != null) {
+            return coordinator;
+        }
+        return getView();
     }
 
     /*
@@ -1756,7 +1768,7 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
-        Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+        Snackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
                         "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                     new View.OnClickListener() {
