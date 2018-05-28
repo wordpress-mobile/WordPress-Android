@@ -2,9 +2,8 @@ package org.wordpress.android.ui.posts;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,13 +19,17 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -212,13 +215,13 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PREVIEW = 2;
 
-    private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
-
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
 
     private static final String WHAT_IS_NEW_IN_MOBILE_URL =
             "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
+    private static final int CHANGE_SAVE_DELAY = 500;
+    public static final int MAX_UNSAVED_POSTS = 50;
 
     enum AddExistingdMediaSource {
         WP_MEDIA_LIBRARY,
@@ -226,6 +229,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private Handler mHandler;
+    private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
@@ -240,7 +244,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
+     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -306,6 +310,7 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
+        mHandler = new Handler();
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -335,7 +340,7 @@ public class EditPostActivity extends AppCompatActivity implements
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
@@ -543,12 +548,13 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private Runnable mAutoSave = new Runnable() {
+    private Runnable mSave = new Runnable() {
         @Override
         public void run() {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    mDebounceCounter = 0;
                     try {
                         updatePostObject(true);
                     } catch (EditorFragmentNotAddedException e) {
@@ -556,9 +562,6 @@ public class EditPostActivity extends AppCompatActivity implements
                         return;
                     }
                     savePostToDb();
-                    if (mHandler != null) {
-                        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
-                    }
                 }
             }).start();
         }
@@ -567,8 +570,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mHandler = new Handler();
-        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
 
         EventBus.getDefault().register(this);
 
@@ -615,9 +616,6 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        mHandler.removeCallbacks(mAutoSave);
-        mHandler = null;
-
         EventBus.getDefault().unregister(this);
     }
 
@@ -625,6 +623,10 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mSave);
+            mHandler = null;
+        }
         cancelAddMediaListThread();
         removePostOpenInEditorStickyEvent();
         if (mEditorFragment instanceof AztecEditorFragment) {
@@ -659,7 +661,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
         if (mEditorFragment != null) {
-            getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
+            getSupportFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
         }
     }
 
@@ -782,12 +784,12 @@ public class EditPostActivity extends AppCompatActivity implements
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        mPhotoPickerFragment = (PhotoPickerFragment) getFragmentManager().findFragmentByTag(PHOTO_PICKER_TAG);
+        mPhotoPickerFragment = (PhotoPickerFragment) getSupportFragmentManager().findFragmentByTag(PHOTO_PICKER_TAG);
         if (mPhotoPickerFragment == null) {
             MediaBrowserType mediaBrowserType =
                     mShowAztecEditor ? MediaBrowserType.AZTEC_EDITOR_PICKER : MediaBrowserType.EDITOR_PICKER;
             mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, mediaBrowserType, getSite());
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.photo_fragment_container, mPhotoPickerFragment, PHOTO_PICKER_TAG)
                     .commit();
@@ -1016,7 +1018,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean handleBackPressed() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
             if (fragment instanceof ImageSettingsDialogFragment) {
@@ -1049,9 +1051,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         hidePhotoPicker();
+        boolean userCanPublishPosts = userCanPublishPosts();
 
-        if (itemId == R.id.menu_save_post) {
-            if (AppPrefs.isAsyncPromoRequired() && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
+        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts)) {
+            if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts
+                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
                 showAsyncPromoDialog();
             } else {
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
@@ -1148,7 +1152,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // if post is a draft, first make sure to confirm the PUBLISH action, in case
         // the user tapped on it accidentally
         PostStatus status = PostStatus.fromPost(mPost);
-        if ((status == PostStatus.PUBLISHED || status == PostStatus.UNKNOWN) && mPost.isLocalDraft()) {
+        if (userCanPublishPosts() && (status == PostStatus.PUBLISHED || status == PostStatus.UNKNOWN)
+            && mPost.isLocalDraft()) {
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
@@ -1253,9 +1258,8 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
-                                                   (String) mEditorFragment.getContent());
+                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                        (String) mEditorFragment.getContent());
             } else {
                 // TODO: Remove when legacy editor is dropped
                 postTitleOrContentChanged = updatePostContent(isAutosave);
@@ -1652,7 +1656,7 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
         removeFailedUploadsDialog.initialize(
                 TAG_REMOVE_FAILED_UPLOADS_DIALOG,
-                null,
+                "",
                 getString(R.string.editor_toast_failed_uploads),
                 getString(R.string.editor_remove_failed_uploads),
                 getString(android.R.string.cancel),
@@ -1830,6 +1834,20 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
+
+                    mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, new Observer<Editable>() {
+                        @Override public void onChanged(@Nullable Editable editable) {
+                            if (mHandler != null) {
+                                mHandler.removeCallbacks(mSave);
+                                if (mDebounceCounter < MAX_UNSAVED_POSTS) {
+                                    mDebounceCounter++;
+                                    mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
+                                } else {
+                                    mHandler.post(mSave);
+                                }
+                            }
+                        }
+                    });
 
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
@@ -2941,7 +2959,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                                                                  FluxCUtils.mediaFileFromMediaModel(media));
+                        FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
             UploadService.cancelFinalNotification(this, mPost);
@@ -3303,40 +3321,13 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
         if (post != null && post.getId() == mPost.getId()) {
-            if (event.isError()) {
-                UploadUtils.showSnackbarError(findViewById(R.id.editor_activity), event.error.message);
-                return;
-            }
-
-            mPost = post;
-            mIsNewPost = false;
-            invalidateOptionsMenu();
-            switch (PostStatus.fromPost(post)) {
-                case PUBLISHED:
-                    // here show snackbar saying it was uploaded
-                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
-                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity), messageRes,
-                            R.string.button_view, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // jump to Editor Preview mode to show this Post
-                                    ActivityLauncher.browsePostOrPage(EditPostActivity.this, mSite, post);
-                                }
-                            });
-                    break;
-                case DRAFT:
-                default:
-                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity),
-                            R.string.editor_draft_saved_online,
-                            R.string.button_publish,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils
-                                            .publishPost(EditPostActivity.this, post, mSite, mDispatcher);
-                                }
-                            });
-                    break;
+            View snackbarAttachView = findViewById(R.id.editor_activity);
+            UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
+                    event.isError() ? event.error.message : null, getSite(), mDispatcher);
+            if (!event.isError()) {
+                mPost = post;
+                mIsNewPost = false;
+                invalidateOptionsMenu();
             }
         }
     }

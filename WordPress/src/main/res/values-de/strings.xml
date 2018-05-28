@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-04 02:54:07+0000
+Translation-Revision-Date: 2018-05-15 08:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="login_email_button_signup">Du hast noch kein Konto? %1$sRegistrieren%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Für das Plugin–Feature ist eine einwandfreie Historie der Website erforderlich.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Für das Plugin–Feature muss dieser Benutzer dem Abonnement für die Hauptdomain zugeordnet sein.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Das Plugin–Feature erfordert Administratorrechte.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Das Plugin kann nicht auf VIP–Websites installiert werden.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Das Plugin kann aufgrund von begrenztem Speicherplatz nicht installiert werden.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">DasPlugin-Feature erfordert eine bestätigte E-Mail–Adresse.</string>
+    <string name="plugin_install_site_ineligible_site_private">Für das Plugin–Feature muss die Website öffentlich sein.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Für das Plugin-Feature ist ein Business–Tarif erforderlich.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Für das Plugin–Feature ist eine individuelle Domain erforderlich.</string>
+    <string name="plugin_install_site_ineligible_default_error">Das Plugin–Feature ist für diese Website nicht verfügbar.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Die finale Einrichtung läuft – fast fertig …</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wird installiert …</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installieren</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Die Installation des ersten Plugins auf deiner Website kann bis zu einer Minute dauern. Während dieser Zeit kannst du keine Änderungen an deiner Website vornehmen.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Plugin installieren</string>
+    <string name="notification_settings_followed_dialog_title">Benachrichtigungen</string>
+    <string name="notification_settings_followed_dialog_email_comments">Neue Kommentare per E–Mail senden</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Wöchentlich</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Sofort</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Täglich</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Neue Beiträge</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Benachrichtigungen über neue Beiträge von dieser Website erhalten</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Neue Beiträge per E–Mail senden</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Alle meine abonnierten Websites</string>
+    <string name="notification_settings_category_followed_sites">Abonnierte Websites</string>
+    <string name="content_description_person_reading_device_notification">Person, die Benachrichtigungen auf einem Gerät durchliest</string>
+    <string name="content_description_people_looking_charts">Personen, die auf Diagramme und Grafiken schauen</string>
+    <string name="comment_title">%s auf %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Bist du sicher, dass du diese Seite endgültig löschen möchtest?</string>
+    <string name="dialog_confirm_delete_permanently_post">Bist du sicher, dass du diesen Beitrag endgültig löschen möchtest?</string>
     <string name="notification_site_creation_title_in_progress">Website wird erstellt … Dies kann ein paar Minuten dauern.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -78,7 +109,6 @@ Language: de
     <string name="profile_picture">Profilbild von %s</string>
     <string name="comment_checkmark_desc">Markierungszeichen</string>
     <string name="signup_with_google_progress">Anmelden mit Google …</string>
-    <string name="editor_toast_no_action_taken">Es ist ein Fehler aufgetreten. Keine Aktion ausgeführt.</string>
     <string name="jetpack_connection_failed_with_reason">Verbindung zu Jetpack fehlgeschlagen: %s</string>
     <string name="jetpack_already_connected_toast">Du bist bereits mit Jetpack verbunden</string>
     <string name="menu_undo_snackbar_action">RÜCKGÄNGIG MACHEN</string>
@@ -271,7 +301,6 @@ Language: de
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimiert deine Bilder und stellt sie über den Server-Standort bereit, der am nächsten an deinen Website-Besuchern liegt. Unser globales Netzwerk für Content–Auslieferung verkürzt die Ladezeiten deiner Website.</string>
     <string name="site_settings_serve_images_from_our_servers">Bereitstellen von Bildern über unsere Server</string>
     <string name="site_settings_speed_up_your_site">Erhöhe die Geschwindigkeit deiner Website</string>
-    <string name="stats_jetpack_connection_setup_info">Wenn du Statistiken zu deiner WordPress-Website erhalten möchtest, musst du das Jetpack–Plugin installieren. Möchtest du Jetpack einrichten?</string>
     <string name="stats_jetpack_connection_setup">Jetpack einrichten</string>
     <string name="plugin_chevron_icon_content_description">Text umschalten</string>
     <string name="plugin_info_your_version">Deine WordPress Version</string>

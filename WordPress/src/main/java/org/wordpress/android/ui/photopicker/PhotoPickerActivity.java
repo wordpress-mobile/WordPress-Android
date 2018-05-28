@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -123,7 +123,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         PhotoPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
             fragment = PhotoPickerFragment.newInstance(this, mBrowserType, mSite);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                                 .commitAllowingStateLoss();
@@ -145,7 +145,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     }
 
     private PhotoPickerFragment getPickerFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(PICKER_FRAGMENT_TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PICKER_FRAGMENT_TAG);
         if (fragment != null) {
             return (PhotoPickerFragment) fragment;
         }

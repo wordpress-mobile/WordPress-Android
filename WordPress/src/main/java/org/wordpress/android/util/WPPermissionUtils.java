@@ -179,7 +179,8 @@ public class WPPermissionUtils {
         String message = String.format(activity.getString(R.string.permissions_denied_message),
                 getPermissionName(activity, permission));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.Calypso_Dialog))
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert))
                 .setTitle(activity.getString(R.string.permissions_denied_title))
                 .setMessage(Html.fromHtml(message))
                 .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {

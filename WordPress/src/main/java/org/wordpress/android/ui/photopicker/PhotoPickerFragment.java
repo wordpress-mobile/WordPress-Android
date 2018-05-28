@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.Manifest.permission;
-import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -507,14 +506,14 @@ public class PhotoPickerFragment extends Fragment {
 
     private void requestStoragePermission() {
         String[] permissions = new String[]{permission.WRITE_EXTERNAL_STORAGE};
-        FragmentCompat.requestPermissions(
-                this, permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
+        requestPermissions(
+                permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
     private void requestCameraPermission() {
         String[] permissions = new String[]{permission.CAMERA};
-        FragmentCompat.requestPermissions(
-                this, permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
+        requestPermissions(
+                permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     @Override

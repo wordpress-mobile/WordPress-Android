@@ -2,8 +2,7 @@ package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.arch.lifecycle.LiveData;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
@@ -18,6 +17,8 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -132,6 +133,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
     private long mActionStartedAt = -1;
+    private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
     private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
         private long mLastSetCoordsTimestamp;
@@ -340,8 +342,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // -- HTML mode configuration
 
         mSourceView = view.findViewById(R.id.sourceview);
-        mSourceViewTitle = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_title);
-        mSourceViewContent = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_content);
+        mSourceViewTitle = view.findViewById(R.id.sourceview_title);
+        mSourceViewContent = view.findViewById(R.id.sourceview_content);
+
+        mSourceViewTitle.addTextChangedListener(mTextWatcher);
+        mSourceViewContent.addTextChangedListener(mTextWatcher);
 
         // Toggle format bar on/off as user changes focus between title and content in HTML mode
         mSourceViewTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -584,7 +589,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1001,6 +1006,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public LiveData<Editable> getTitleOrContentChanged() {
+        return mTextWatcher.getAfterTextChanged();
+    }
+
+    @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
         if (!mDomHasLoaded) {
             // If the DOM hasn't loaded yet, we won't be able to add media to the ZSSEditor
@@ -1350,7 +1360,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(
-                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(
                         R.string.stop_upload_dialog_button_yes, new DialogInterface.OnClickListener() {
