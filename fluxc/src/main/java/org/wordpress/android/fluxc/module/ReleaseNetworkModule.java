@@ -83,12 +83,6 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public UserAgent provideUserAgent(Context appContext) {
-        return new UserAgent(appContext);
-    }
-
-    @Singleton
-    @Provides
     public SiteRestClient provideSiteRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AppSecrets appSecrets,
