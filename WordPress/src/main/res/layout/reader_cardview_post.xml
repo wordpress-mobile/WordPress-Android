@@ -48,33 +48,35 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/margin_large"
-                android:paddingLeft="@dimen/reader_follow_button_padding"
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_alignParentEnd="true"
-                android:paddingStart="@dimen/reader_follow_button_padding"/>
+                android:paddingLeft="@dimen/reader_follow_button_padding"
+                android:paddingStart="@dimen/reader_follow_button_padding"
+                android:paddingRight="@dimen/reader_follow_button_padding"
+                android:paddingEnd="@dimen/reader_follow_button_padding"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_medium"
                 android:layout_toLeftOf="@+id/follow_button"
                 android:layout_toRightOf="@+id/image_avatar_or_blavatar"
                 android:layout_toStartOf="@+id/follow_button"
                 android:layout_toEndOf="@+id/image_avatar_or_blavatar"
-                android:layout_marginEnd="@dimen/margin_large">
+                android:layout_marginEnd="@dimen/margin_medium">
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:textAlignment="viewStart"
-                    android:gravity="start"
                     android:id="@+id/text_author_and_blog_name"
                     style="@style/ReaderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:gravity="start"
                     android:maxLines="1"
+                    android:textAlignment="viewStart"
                     android:textColor="@color/reader_hyperlink"
                     android:textSize="@dimen/text_sz_medium"
-                    tools:text="text_blog_name" />
+                    tools:text="text_blog_nametext_blog_name text_blog_name"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_dateline"
@@ -227,6 +229,27 @@
                     android:textSize="@dimen/text_sz_medium" />
 
             </LinearLayout>
+
+            <ViewStub
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/bookmark"
+                android:layout_toStartOf="@+id/bookmark"
+                android:layout_toRightOf="@+id/visit"
+                android:layout_toEndOf="@+id/visit"/>
+
+            <ImageView
+                android:id="@+id/bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/count_comments"
+                android:layout_toStartOf="@id/count_comments"
+                android:layout_alignWithParentIfMissing="true"
+                app:srcCompat="@drawable/ic_bookmark_18dp"
+                android:contentDescription="@string/reader_add_bookmark"
+                android:padding="@dimen/margin_medium"
+                android:layout_centerVertical="true"
+                />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:id="@+id/count_comments"

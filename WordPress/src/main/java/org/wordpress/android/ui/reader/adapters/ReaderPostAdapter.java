@@ -1,11 +1,20 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +38,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -77,6 +87,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
+    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
@@ -89,6 +100,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_SITE_HEADER = 2;
     private static final int VIEW_TYPE_TAG_HEADER = 3;
     private static final int VIEW_TYPE_GAP_MARKER = 4;
+    private static final int VIEW_TYPE_REMOVED_POST = 5;
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
@@ -127,6 +139,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private class ReaderRemovedPostViewHolder extends RecyclerView.ViewHolder {
+        final CardView mCardView;
+
+        private final ViewGroup mRemovedPostContainer;
+        private final TextView mTxtRemovedPostTitle;
+        private final TextView mUndoRemoveAction;
+
+        ReaderRemovedPostViewHolder(View itemView) {
+            super(itemView);
+            mCardView = itemView.findViewById(R.id.card_view);
+            mTxtRemovedPostTitle = itemView.findViewById(R.id.removed_post_title);
+            mRemovedPostContainer = itemView.findViewById(R.id.removed_item_container);
+            mUndoRemoveAction = itemView.findViewById(R.id.undo_remove);
+        }
+    }
     /*
      * full post
      */
@@ -140,6 +167,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderIconCountView mCommentCount;
         private final ReaderIconCountView mLikeCount;
+        private final ImageView mBtnBookmark;
 
         private final ImageView mImgMore;
         private final ImageView mImgVideoOverlay;
@@ -159,6 +187,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderThumbnailStrip mThumbnailStrip;
 
+
         ReaderPostViewHolder(View itemView) {
             super(itemView);
 
@@ -171,6 +200,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             mCommentCount = itemView.findViewById(R.id.count_comments);
             mLikeCount = itemView.findViewById(R.id.count_likes);
+            mBtnBookmark = itemView.findViewById(R.id.bookmark);
 
             mFramePhoto = itemView.findViewById(R.id.frame_photo);
             mTxtPhotoTitle = mFramePhoto.findViewById(R.id.text_photo_title);
@@ -282,6 +312,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ReaderPost post = getItem(position);
             if (post != null && post.isXpost()) {
                 return VIEW_TYPE_XPOST;
+            } else if (post != null && isBookmarksList() && !post.isBookmarked) {
+                return VIEW_TYPE_REMOVED_POST;
             } else {
                 return VIEW_TYPE_POST;
             }
@@ -289,8 +321,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public @NonNull RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
+        View postView;
         switch (viewType) {
             case VIEW_TYPE_SITE_HEADER:
                 ReaderSiteHeaderView readerSiteHeaderView = new ReaderSiteHeaderView(context);
@@ -304,21 +337,25 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             case VIEW_TYPE_XPOST:
-                View xpostView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
-                return new ReaderXPostViewHolder(xpostView);
-
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
+                return new ReaderXPostViewHolder(postView);
+            case VIEW_TYPE_REMOVED_POST:
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_removed_post, parent, false);
+                return new ReaderRemovedPostViewHolder(postView);
             default:
-                View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
                 return new ReaderPostViewHolder(postView);
         }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ReaderPostViewHolder) {
             renderPost(position, (ReaderPostViewHolder) holder);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
+        } else if (holder instanceof ReaderRemovedPostViewHolder) {
+            renderRemovedPost(position, (ReaderRemovedPostViewHolder) holder);
         } else if (holder instanceof SiteHeaderViewHolder) {
             SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
             siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
@@ -364,7 +401,30 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         checkLoadMore(position);
     }
 
-    private void renderPost(int position, ReaderPostViewHolder holder) {
+    private void renderRemovedPost(final int position, final ReaderRemovedPostViewHolder holder) {
+        final ReaderPost post = getItem(position);
+        final Context context = holder.mRemovedPostContainer.getContext();
+        holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
+        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_undo_24dp);
+        DrawableCompat.setTint(drawable, context.getResources().getColor(R.color.blue_medium));
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+        holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoPostUnbookmarked(post, position);
+            }
+        });
+    }
+
+    private void undoPostUnbookmarked(final ReaderPost post, final int position) {
+        if (!post.isBookmarked) {
+            toggleBookmark(post.blogId, post.postId);
+            notifyItemChanged(position);
+        }
+    }
+
+    private void renderPost(final int position, final ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
         ReaderTypes.ReaderPostListType postListType = getPostListType();
         if (post == null) {
@@ -459,6 +519,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         showLikes(holder, post);
         showComments(holder, post);
+        initBookmarkButton(position, holder, post);
 
         // more menu only shows for followed tags
         if (!mIsLoggedOutReader && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
@@ -552,7 +613,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (discoverData.hasAvatarUrl()) {
                     postHolder.mImgDiscoverAvatar
                             .setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
-                                         WPNetworkImageView.ImageType.AVATAR);
+                                    WPNetworkImageView.ImageType.AVATAR);
                 } else {
                     postHolder.mImgDiscoverAvatar.showDefaultGravatarImageAndNullifyUrl();
                 }
@@ -644,6 +705,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
         mDataLoadedListener = listener;
+    }
+
+    public void setOnPostBookmarkedListener(ReaderInterfaces.OnPostBookmarkedListener listener) {
+        mOnPostBookmarkedListener = listener;
     }
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
@@ -757,6 +822,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (mPosts == null || mPosts.size() == 0);
     }
 
+    private boolean isBookmarksList() {
+        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                && (mCurrentTag != null && mCurrentTag.isBookmarked()));
+    }
+
     @Override
     public long getItemId(int position) {
         switch (getItemViewType(position)) {
@@ -773,7 +843,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void showLikes(final ReaderPostViewHolder holder, final ReaderPost post) {
         boolean canShowLikes;
-        if (post.isDiscoverPost()) {
+        if (post.isDiscoverPost() || isBookmarksList()) {
             canShowLikes = false;
         } else if (mIsLoggedOutReader) {
             canShowLikes = post.numLikes > 0;
@@ -786,8 +856,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
             holder.mLikeCount.setVisibility(View.VISIBLE);
             holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mCardView.getContext(),
-                                                                                     post.numLikes,
-                                                                                     post.isLikedByCurrentUser));
+                    post.numLikes,
+                    post.isLikedByCurrentUser));
             // can't like when logged out
             if (!mIsLoggedOutReader) {
                 holder.mLikeCount.setOnClickListener(new View.OnClickListener() {
@@ -803,9 +873,58 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private void initBookmarkButton(final int position, final ReaderPostViewHolder holder, final ReaderPost post) {
+        updateBookmarkView(holder, post);
+        holder.mBtnBookmark.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                toggleBookmark(post.blogId, post.postId);
+                if (isBookmarksList()) {
+                    // automatically starts the expand/collapse animations
+                    notifyItemChanged(position);
+                } else {
+                    // notifyItemChanged highlights the item for a bit, we need to manually updateTheView to prevent it
+                    updateBookmarkView(holder, getItem(position));
+                }
+            }
+        });
+    }
+
+    private void updateBookmarkView(final ReaderPostViewHolder holder, final ReaderPost post) {
+        final ImageView bookmarkButton = holder.mBtnBookmark;
+        Context context = holder.mBtnBookmark.getContext();
+
+        boolean canBookmarkPost = (post.isWP() || post.isJetpack) && !post.isDiscoverPost();
+        if (canBookmarkPost) {
+            bookmarkButton.setVisibility(View.VISIBLE);
+        } else {
+            bookmarkButton.setVisibility(View.GONE);
+        }
+        bookmarkButton.setImageResource(post.isBookmarked ? R.drawable.ic_bookmark_18dp
+                : R.drawable.ic_bookmark_outline_18dp);
+        ReaderUtils.setBackgroundToRoundRipple(bookmarkButton);
+        if (post.isBookmarked) {
+            bookmarkButton.setContentDescription(context.getString(R.string.reader_remove_bookmark));
+        } else {
+            bookmarkButton.setContentDescription(context.getString(R.string.reader_add_bookmark));
+        }
+    }
+
+    /**
+     * Creates 'Removed [post title]' text, with the '[post title]' in bold.
+     */
+    @NonNull
+    private SpannableStringBuilder createTextForRemovedPostContainer(ReaderPost post, Context context) {
+        String removedString = context.getString(R.string.removed);
+        String removedPostTitle = removedString + " " + post.getTitle();
+        SpannableStringBuilder str = new SpannableStringBuilder(removedPostTitle);
+        str.setSpan(new StyleSpan(Typeface.BOLD), removedString.length(), removedPostTitle.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return str;
+    }
+
     private void showComments(final ReaderPostViewHolder holder, final ReaderPost post) {
         boolean canShowComments;
-        if (post.isDiscoverPost()) {
+        if (post.isDiscoverPost() || isBookmarksList()) {
             canShowComments = false;
         } else if (mIsLoggedOutReader) {
             canShowComments = post.numReplies > 0;
@@ -860,6 +979,38 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
             showLikes(holder, updatedPost);
+        }
+    }
+
+    /*
+     * triggered when user taps the bookmark post button
+     */
+    private void toggleBookmark(final long blogId, final long postId) {
+        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
+
+        AnalyticsTracker.Stat eventToTrack;
+        if (post.isBookmarked) {
+            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+                    : AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST;
+            ReaderPostActions.removeFromBookmarked(post);
+        } else {
+            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
+                    : AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST;
+            ReaderPostActions.addToBookmarked(post);
+        }
+
+        AnalyticsTracker.track(eventToTrack);
+
+        // update post in array and on screen
+        post = ReaderPostTable.getBlogPost(blogId, postId, true);
+        int position = mPosts.indexOfPost(post);
+        if (post != null && position > -1) {
+            mPosts.set(position, post);
+
+            if (mOnPostBookmarkedListener != null) {
+                mOnPostBookmarkedListener
+                        .onBookmarkedStateChanged(post.isBookmarked, blogId, postId, !isBookmarksList());
+            }
         }
     }
 
@@ -972,7 +1123,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return false;
             }
 
-            if (mPosts.isSameList(mAllPosts)) {
+            if (mPosts.isSameListWithBookmark(mAllPosts)) {
                 return false;
             }
 
