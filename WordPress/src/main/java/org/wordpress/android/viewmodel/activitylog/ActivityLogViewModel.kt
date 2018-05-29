@@ -2,20 +2,26 @@ package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
+import android.arch.lifecycle.Transformations
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 
 class ActivityLogViewModel @Inject constructor(
     val dispatcher: Dispatcher,
-    private val activityLogStore: ActivityLogStore
+    private val activityLogStore: ActivityLogStore,
+    private val rewindStatusService: RewindStatusService
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
@@ -36,11 +42,19 @@ class ActivityLogViewModel @Inject constructor(
         get() = _eventListStatus
 
     private val isRewindInProgress: Boolean
-        get() = events.value?.isNotEmpty() == true && events.value?.first()?.isRewindInProgress == true
+        get() = Transformations.map(rewindStatusService.rewindState, { state -> state.status === RUNNING }).value ?: false
 
     private val isLoadingInProgress: Boolean
         get() = eventListStatus === ActivityLogListStatus.LOADING_MORE ||
                 eventListStatus === ActivityLogListStatus.FETCHING
+
+    private val rewindStateObserver = Observer<RewindStatusModel.Rewind> { state ->
+        when (state?.status) {
+            RewindStatusModel.Rewind.Status.FINISHED,
+            RewindStatusModel.Rewind.Status.FAILED -> reloadEvents()
+            else -> {}
+        }
+    }
 
     lateinit var site: SiteModel
 
@@ -50,6 +64,8 @@ class ActivityLogViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        rewindStatusService.rewindState.removeObserver(rewindStateObserver)
+
         super.onCleared()
     }
 
@@ -62,6 +78,8 @@ class ActivityLogViewModel @Inject constructor(
 
         reloadEvents()
         fetchEvents(false)
+
+        rewindStatusService.rewindState.observeForever(rewindStateObserver)
 
         isStarted = true
     }
@@ -89,6 +107,11 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onRewindConfirmed(rewindActivity: ActivityLogListItemViewModel) {
+        insertProgressListItem(rewindActivity)
+        rewindStatusService.rewind(rewindActivity.rewindId!!, site)
+    }
+
+    private fun insertProgressListItem(rewindActivity: ActivityLogListItemViewModel) {
         val newEvents = ArrayList(_events.value!!)
         newEvents.add(0, rewindActivity)
         _events.postValue(newEvents)
