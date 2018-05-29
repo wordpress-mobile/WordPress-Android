@@ -274,12 +274,12 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewActivityLogDetail(Activity activity, SiteModel site, String activityId) {
+    public static void viewActivityLogDetailForResult(Activity activity, SiteModel site, String activityId) {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_DETAIL, site);
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {

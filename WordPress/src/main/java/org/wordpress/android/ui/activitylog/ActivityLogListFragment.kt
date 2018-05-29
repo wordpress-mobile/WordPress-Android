@@ -107,7 +107,7 @@ class ActivityLogListFragment : Fragment() {
 
     private fun onItemClicked(item: ActivityLogListItemViewModel) {
          viewModel.onItemClicked {
-             ActivityLauncher.viewActivityLogDetail(activity, viewModel.site, item.activityId)
+             ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, item.activityId)
          }
     }
 

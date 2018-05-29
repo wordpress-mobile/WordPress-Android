@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.activitylog
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
+import org.wordpress.android.R.id
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 
 class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface {
@@ -29,13 +33,25 @@ class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDi
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPositiveClicked(instanceTag: String) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (fragment is ActivityLogListFragment) {
-            fragment.onRewindConfirmed(instanceTag)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RequestCodes.ACTIVITY_LOG_DETAIL) {
+            data?.getStringExtra(ACTIVITY_LOG_ID_KEY)?.let {
+                passRewindConfirmation(it)
+            }
         }
     }
 
+    override fun onPositiveClicked(instanceTag: String) {
+        passRewindConfirmation(instanceTag)
+    }
+
     override fun onNegativeClicked(instanceTag: String) {
+    }
+
+    private fun passRewindConfirmation(activityId: String) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is ActivityLogListFragment) {
+            fragment.onRewindConfirmed(activityId)
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.activitylog
 
+import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import org.wordpress.android.widgets.WPNetworkImageView
@@ -65,7 +67,7 @@ class ActivityLogDetailFragment : Fragment() {
 
             activityRewindButton.setClickListenerOrHide(activityLogModel?.rewindAction)
         })
-        viewModel.start(site, activityLogId)
+        viewModel.start(site, activityLogId, this::onRewindButtonClicked)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -76,6 +78,12 @@ class ActivityLogDetailFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, viewModel.site)
         outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
+    }
+
+    fun onRewindConfirmed(activityId: String) {
+        val intent = activity?.intent?.putExtra(ACTIVITY_LOG_ID_KEY, activityId)
+        activity?.setResult(RESULT_OK, intent)
+        activity?.finish()
     }
 
     private fun setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
@@ -116,5 +124,15 @@ class ActivityLogDetailFragment : Fragment() {
             this.setOnClickListener(null)
             this.visibility = View.GONE
         }
+    }
+
+    private fun onRewindButtonClicked(item: ActivityLogDetailModel) {
+        val dialog = BasicFragmentDialog()
+        dialog.initialize(item.activityID,
+                getString(R.string.activity_log_rewind_site),
+                getString(R.string.activity_log_rewind_dialog_message, item.createdDate, item.createdTime),
+                getString(R.string.activity_log_rewind_site),
+                getString(R.string.cancel))
+        dialog.show(fragmentManager, item.activityID)
     }
 }

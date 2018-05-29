@@ -22,14 +22,17 @@ class ActivityLogDetailViewModel
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
+    private lateinit var showRewindDialog: (ActivityLogDetailModel) -> Unit
 
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
 
-    fun start(site: SiteModel, activityLogId: String) {
+    fun start(site: SiteModel, activityLogId: String, showRewindDialog: (ActivityLogDetailModel) -> Unit) {
         this.site = site
         this.activityLogId = activityLogId
+        this.showRewindDialog = showRewindDialog
+
         if (activityLogId != _item.value?.activityID) {
             _item.postValue(
                     activityLogStore
@@ -45,11 +48,16 @@ class ActivityLogDetailViewModel
                                         text = it.text,
                                         summary = it.summary,
                                         createdDate = it.published.printDate(),
-                                        createdTime = it.published.printTime()
+                                        createdTime = it.published.printTime(),
+                                        rewindAction = if (it.rewindable == true) this::onRewindClicked else null
                                 )
                             }
             )
         }
+    }
+
+    private fun onRewindClicked() {
+        showRewindDialog(_item.value!!)
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {
