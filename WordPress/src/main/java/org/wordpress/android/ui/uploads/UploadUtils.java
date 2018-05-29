@@ -95,13 +95,12 @@ public class UploadUtils {
         return uploadError != null && uploadError.mediaError != null;
     }
 
-    public static void handleEditPostResultSnackbars(final Activity activity, View snackbarAttachView,
-                                                     int resultCode, Intent data,
-                                                     final PostModel post, final SiteModel site,
+    public static void handleEditPostResultSnackbars(@NonNull final Activity activity,
+                                                     @NonNull View snackbarAttachView,
+                                                     @NonNull Intent data,
+                                                     @NonNull final PostModel post,
+                                                     @NonNull final SiteModel site,
                                                      View.OnClickListener publishPostListener) {
-        if (resultCode != Activity.RESULT_OK || data == null) {
-            return;
-        }
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything

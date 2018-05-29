@@ -603,7 +603,6 @@ public class WPMainActivity extends AppCompatActivity
                     UploadUtils.handleEditPostResultSnackbars(
                             this,
                             findViewById(R.id.coordinator),
-                            resultCode,
                             data,
                             post,
                             site,

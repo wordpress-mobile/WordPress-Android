@@ -225,9 +225,8 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        final PostModel post = mPostStore.
-                                                 getPostByLocalPostId(
-                                                         data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+        int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+        final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
         if ((post == null)
                 && !data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
@@ -236,15 +235,17 @@ public class PostsListFragment extends Fragment
         }
 
         UploadUtils.handleEditPostResultSnackbars(getActivity(),
-                                                  getActivity().findViewById(R.id.coordinator), resultCode, data, post,
-                                                  mSite,
-                                                  new View.OnClickListener() {
-                                                      @Override
-                                                      public void onClick(View v) {
-                                                          UploadUtils
-                                                                  .publishPost(getActivity(), post, mSite, mDispatcher);
-                                                      }
-                                                  });
+                getActivity().findViewById(R.id.coordinator),
+                data,
+                post,
+                mSite,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UploadUtils
+                                .publishPost(getActivity(), post, mSite, mDispatcher);
+                    }
+                });
     }
 
     private void initSwipeToRefreshHelper(View view) {
