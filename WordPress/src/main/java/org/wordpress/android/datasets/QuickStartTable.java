@@ -140,7 +140,7 @@ public class QuickStartTable {
     }
 
     private static void setBooleanWithColumnAndSiteId(boolean value, String column, int siteId) {
-        String[] arguments = {Boolean.toString(value), Integer.toString(siteId)};
+        String[] arguments = {String.valueOf(SqlUtils.boolToSql(value)), Integer.toString(siteId)};
         QuickStartDatabase.getWritableDatabaseHelper().execSQL(
                 "UPDATE " + TABLE + " SET " + column + "=?"
                 + " WHERE " + COLUMN_SITE_ID + "=?", arguments
