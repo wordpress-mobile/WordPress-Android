@@ -25,7 +25,7 @@ data class ActivityLogListItemViewModel(
         }
 
         fun makeRewindItem(title: String, message: String): ActivityLogListItemViewModel {
-            return ActivityLogListItemViewModel("-1", message, title,"notice-outline", "warning",
+            return ActivityLogListItemViewModel("-1", message, title, "notice-outline", "warning",
                     false, "-1", Date(), true)
         }
     }

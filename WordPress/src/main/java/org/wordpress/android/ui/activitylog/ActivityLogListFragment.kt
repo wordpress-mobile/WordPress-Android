@@ -106,9 +106,9 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun onItemClicked(item: ActivityLogListItemViewModel) {
-         viewModel.onItemClicked {
-             ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, item.activityId)
-         }
+        viewModel.onItemClicked {
+            ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, item.activityId)
+        }
     }
 
     private fun onRewindButtonClicked(item: ActivityLogListItemViewModel) {
