@@ -3,12 +3,9 @@ package org.wordpress.android.ui.accounts
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.text.InputType
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -17,12 +14,12 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.createNewTicket
 import org.wordpress.android.support.showAllTickets
+import org.wordpress.android.support.showSupportEmailInputDialog
 import org.wordpress.android.support.showZendeskHelpCenter
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.validateEmail
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -72,8 +69,13 @@ class HelpActivity : AppCompatActivity() {
         val version = findViewById<TextView>(R.id.application_version)
         version.text = getString(R.string.version_with_name_param, WordPress.versionName)
 
+        val supportEmailTextView = findViewById<TextView>(R.id.contact_email_address)
+        supportEmailTextView.text = AppPrefs.getSupportEmail()
+
         findViewById<View>(R.id.contact_email_container).setOnClickListener {
-            showSupportEmailDialog()
+            showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { selectedEmail ->
+                supportEmailTextView.text = selectedEmail
+            }
         }
     }
 
@@ -103,41 +105,6 @@ class HelpActivity : AppCompatActivity() {
     private fun showZendeskFaq() {
         showZendeskHelpCenter(this, accountStore, siteStore, originFromExtras,
                 selectedSiteFromExtras, extraTagsFromExtras)
-    }
-
-    private fun showSupportEmailDialog() {
-        val currentEmail = AppPrefs.getSupportEmail()
-        val emailField = EditText(this)
-        emailField.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-        currentEmail?.let {
-            emailField.setText(it)
-            emailField.setSelection(0, it.length)
-        }
-
-        val dialog = AlertDialog.Builder(this)
-                .setView(emailField)
-                .setMessage(getString(R.string.support_contact_email))
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null)
-                .create()
-        dialog.setOnShowListener {
-            val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
-            button.setOnClickListener { _ ->
-                val newEmail = emailField.text.toString()
-                if (validateEmail(newEmail)) {
-                    updateSupportEmail(newEmail)
-                    dialog.dismiss()
-                } else {
-                    emailField.error = getString(R.string.invalid_email_message)
-                }
-            }
-        }
-        dialog.show()
-    }
-
-    private fun updateSupportEmail(email: String) {
-        findViewById<TextView>(R.id.contact_email_address).text = email
-        AppPrefs.setSupportEmail(email)
     }
 
     enum class Origin(private val stringValue: String) {
