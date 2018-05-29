@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.activitylog
 
-import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import java.text.DateFormat
@@ -13,7 +12,7 @@ data class ActivityLogListItemViewModel(
     val text: String,
     private val gridIcon: String?,
     private val status: String?,
-    private val rewindable: Boolean,
+    val isRewindable: Boolean,
     val rewindId: String?,
     private val datePublished: Date,
     val isRewindInProgress: Boolean = false
@@ -28,7 +27,7 @@ data class ActivityLogListItemViewModel(
                     model.status, model.rewindable ?: false, model.rewindID, model.published)
         }
 
-        fun makeRewindItem(viewModel: ActivityLogListItemViewModel, title: String, message: String): ActivityLogListItemViewModel {
+        fun makeRewindItem(title: String, message: String): ActivityLogListItemViewModel {
             return ActivityLogListItemViewModel("-1", message, title,"notice-outline", "warning",
                     false, "-1", Date(), true)
         }

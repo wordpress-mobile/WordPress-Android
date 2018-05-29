@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
@@ -36,6 +35,7 @@ class ActivityLogViewHolder(
 
         progressBarContainer.visibility = if (activity.isRewindInProgress) View.VISIBLE else View.GONE
         header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
+        rewindButton.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
 
         thumbnail.setImageResource(activity.icon)
         thumbnail.setBackgroundResource(activity.background)

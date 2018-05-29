@@ -70,7 +70,7 @@ class ActivityLogListFragment : Fragment() {
 
     fun onRewindConfirmed(activityId: String) {
         viewModel.events.value?.firstOrNull { it.activityId == activityId }?.let { item ->
-            viewModel.onRewindConfirmed(ActivityLogListItemViewModel.makeRewindItem(item,
+            viewModel.onRewindConfirmed(ActivityLogListItemViewModel.makeRewindItem(
                     getString(R.string.activity_log_currently_restoring_title),
                     getString(R.string.activity_log_currently_restoring_message, item.date, item.time)))
         }
