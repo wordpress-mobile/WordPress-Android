@@ -30,9 +30,10 @@ class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDi
     }
 
     override fun onPositiveClicked(instanceTag: String) {
-//        viewModel.onRewindButtonClicked(ActivityLogListItemViewModel.makeRewindItem(item,
-//        getString(R.string.activity_log_currently_restoring_title),
-//        getString(R.string.activity_log_currently_restoring_message, item.time)))
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment is ActivityLogListFragment) {
+            fragment.onRewindConfirmed(instanceTag)
+        }
     }
 
     override fun onNegativeClicked(instanceTag: String) {

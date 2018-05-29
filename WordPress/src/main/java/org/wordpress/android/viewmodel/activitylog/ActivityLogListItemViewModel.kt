@@ -19,10 +19,7 @@ data class ActivityLogListItemViewModel(
     val isRewindInProgress: Boolean = false
 ) {
     private val dateFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
-    private val timeFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault())
-
-    val isRewindable = MutableLiveData<Boolean>()
-    val rewindProgress = MutableLiveData<Int>()
+    private val timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault())
 
     companion object {
         @JvmStatic
@@ -37,13 +34,15 @@ data class ActivityLogListItemViewModel(
         }
     }
 
-    init {
-        isRewindable.postValue(rewindable)
-        rewindProgress.postValue(30)
+    val header: String
+        get() = this.date
+
+    val date: String by lazy {
+        dateFormatter.format(datePublished)
     }
 
-    val header: String by lazy {
-        dateFormatter.format(datePublished)
+    val time: String by lazy {
+        timeFormatter.format(datePublished)
     }
 
     val background by lazy {
@@ -52,10 +51,6 @@ data class ActivityLogListItemViewModel(
 
     val icon by lazy {
         convertGridIconToDrawable(gridIcon)
-    }
-
-    val time: String by lazy {
-        timeFormatter.format(datePublished)
     }
 
     fun isHeaderVisible(previous: ActivityLogListItemViewModel?): Boolean {

@@ -38,6 +38,10 @@ class ActivityLogViewModel @Inject constructor(
     private val isRewindInProgress: Boolean
         get() = events.value?.isNotEmpty() == true && events.value?.first()?.isRewindInProgress == true
 
+    private val isLoadingInProgress: Boolean
+        get() = eventListStatus === ActivityLogListStatus.LOADING_MORE ||
+                eventListStatus === ActivityLogListStatus.FETCHING
+
     lateinit var site: SiteModel
 
     init {
@@ -78,12 +82,16 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    fun onRewindButtonClicked(rewindActivity: ActivityLogListItemViewModel) {
+    fun onRewindButtonClicked(callback: () -> Unit) {
         if (!isRewindInProgress) {
-            val newEvents = ArrayList(_events.value!!)
-            newEvents.add(0, rewindActivity)
-            _events.postValue(newEvents)
+            callback()
         }
+    }
+
+    fun onRewindConfirmed(rewindActivity: ActivityLogListItemViewModel) {
+        val newEvents = ArrayList(_events.value!!)
+        newEvents.add(0, rewindActivity)
+        _events.postValue(newEvents)
     }
 
     private fun fetchEvents(loadMore: Boolean) {
@@ -96,13 +104,10 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun shouldFetchEvents(loadMore: Boolean): Boolean {
-        return if (_eventListStatus.value == ActivityLogListStatus.FETCHING ||
-                _eventListStatus.value == ActivityLogListStatus.LOADING_MORE) {
-            false
-        } else if (loadMore) {
-            _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
-        } else {
-            true
+        return when {
+            isLoadingInProgress -> false
+            loadMore -> _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
+            else -> true
         }
     }
 

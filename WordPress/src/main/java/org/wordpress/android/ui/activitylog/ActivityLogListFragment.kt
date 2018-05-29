@@ -68,6 +68,14 @@ class ActivityLogListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
+    fun onRewindConfirmed(activityId: String) {
+        viewModel.events.value?.firstOrNull { it.activityId == activityId }?.let { item ->
+            viewModel.onRewindConfirmed(ActivityLogListItemViewModel.makeRewindItem(item,
+                    getString(R.string.activity_log_currently_restoring_title),
+                    getString(R.string.activity_log_currently_restoring_message, item.date, item.time)))
+        }
+    }
+
     private fun setupObservers() {
         viewModel.events.observe(this, Observer<List<ActivityLogListItemViewModel>> {
             reloadEvents()
@@ -104,13 +112,15 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun onRewindButtonClicked(item: ActivityLogListItemViewModel) {
-        val dialog = BasicFragmentDialog()
-        dialog.initialize("rewind-dialog",
-                getString(R.string.activity_log_rewind_site),
-                getString(R.string.activity_log_currently_restoring_message, item.time),
-                getString(R.string.activity_log_rewind_site),
-                getString(R.string.cancel))
-        dialog.show(fragmentManager,"rewind-dialog")
+        viewModel.onRewindButtonClicked({
+            val dialog = BasicFragmentDialog()
+            dialog.initialize(item.activityId,
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.activity_log_rewind_dialog_message, item.date, item.time),
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.cancel))
+            dialog.show(fragmentManager, item.activityId)
+        })
     }
 
     private fun setEvents(events: List<ActivityLogListItemViewModel>) {
