@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.utils;
 
+import android.support.annotation.NonNull;
+
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.text.SimpleDateFormat;
@@ -16,7 +18,7 @@ public class SiteUtils {
      *
      * Imported from WordPress-Android with some modifications.
      */
-    public static String getCurrentDateTimeForSite(SiteModel site, String pattern) {
+    public static @NonNull String getCurrentDateTimeForSite(@NonNull SiteModel site, @NonNull String pattern) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.ROOT);
         return getCurrentDateTimeForSite(site, dateFormat);
     }
@@ -27,7 +29,8 @@ public class SiteUtils {
      *
      * Imported from WordPress-Android with some modifications.
      */
-    public static String getCurrentDateTimeForSite(SiteModel site, SimpleDateFormat dateFormat) {
+    public static @NonNull String getCurrentDateTimeForSite(@NonNull SiteModel site,
+                                                            @NonNull SimpleDateFormat dateFormat) {
         String wpTimeZone = site.getTimezone();
 
         /*
