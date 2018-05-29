@@ -36,39 +36,11 @@ fun showSupportIdentityInputDialogAndRunWithEmailAndName(
     if (!currentEmail.isNullOrEmpty()) {
         emailAndNameSelected(currentEmail, AppPrefs.getSupportName())
     } else {
-        showSupportIdentityInputDialog(context, account, selectedSite, false) { email, name ->
+        val (emailSuggestion, nameSuggestion) = supportEmailAndNameSuggestion(account, selectedSite)
+        showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion, false) { email, name ->
             AppPrefs.setSupportEmail(email)
             AppPrefs.setSupportName(name)
             emailAndNameSelected(email, name)
-        }
-    }
-}
-
-// TODO: Use this function in the new Help screen
-/**
- * This function will check whether there is a support email saved in the AppPrefs and use the saved email run the
- * provided function. The difference between this function and [showSupportIdentityInputDialogAndRunWithEmailAndName]
- * is that only the email field will be shown in the dialog. It's intended to be used when the support email
- * needs to be updated. It uses the same input dialog to avoid any inconsistencies.
- *
- * @param context Context the dialog will be showed from
- * @param account WordPress.com account to be used for email suggestion in the input dialog
- * @param selectedSite Selected site to be used for email suggestion in case the user is not logged in
- * @param emailSelected Function to run with the email from AppPrefs or the input dialog
- */
-fun showSupportIdentityInputDialogAndRunWithEmail(
-    context: Context,
-    account: AccountModel?,
-    selectedSite: SiteModel?,
-    emailSelected: (String) -> Unit
-) {
-    val currentEmail = AppPrefs.getSupportEmail()
-    if (!currentEmail.isNullOrEmpty()) {
-        emailSelected(currentEmail)
-    } else {
-        showSupportIdentityInputDialog(context, account, selectedSite, true) { email, _ ->
-            AppPrefs.setSupportEmail(email)
-            emailSelected(email)
         }
     }
 }
@@ -78,23 +50,22 @@ fun showSupportIdentityInputDialogAndRunWithEmail(
  * from it.
  *
  * @param context Context the dialog will be showed from
- * @param account WordPress.com account for email and name suggestion
- * @param selectedSite Selected site to be used for email and name suggestion in case the user is not logged in
+ * @param email Initial value for the email field
+ * @param name Initial value for the name field
  * @param isNameInputHidden Whether the name input field should be shown or not
  * @param emailAndNameSelected Function to run with the email and name inputs from the dialog. Even if the
  * [isNameInputHidden] parameter is true, the input in the name field will be provided and it's up to the caller to
  * ignore the name parameter.
  */
-private fun showSupportIdentityInputDialog(
+fun showSupportIdentityInputDialog(
     context: Context,
-    account: AccountModel?,
-    selectedSite: SiteModel?,
+    email: String?,
+    name: String?,
     isNameInputHidden: Boolean,
     emailAndNameSelected: (String, String) -> Unit
 ) {
-    val (emailSuggestion, nameSuggestion) = supportEmailAndNameSuggestion(account, selectedSite)
     val (layout, emailEditText, nameEditText) =
-            supportIdentityInputDialogLayout(context, isNameInputHidden, emailSuggestion, nameSuggestion)
+            supportIdentityInputDialogLayout(context, isNameInputHidden, email, name)
 
     val dialog = AlertDialog.Builder(context, R.style.Calypso_Dialog)
             .setView(layout)
@@ -104,10 +75,10 @@ private fun showSupportIdentityInputDialog(
     dialog.setOnShowListener {
         val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
         button.setOnClickListener { _ ->
-            val email = emailEditText.text.toString()
-            val name = nameEditText.text.toString()
-            if (validateEmail(email)) {
-                emailAndNameSelected(email, name)
+            val newEmail = emailEditText.text.toString()
+            val newName = nameEditText.text.toString()
+            if (validateEmail(newEmail)) {
+                emailAndNameSelected(newEmail, newName)
                 dialog.dismiss()
             } else {
                 emailEditText.error = context.getString(R.string.invalid_email_message)
