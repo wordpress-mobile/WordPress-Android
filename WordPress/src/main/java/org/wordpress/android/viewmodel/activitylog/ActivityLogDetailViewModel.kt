@@ -8,6 +8,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
+import org.wordpress.android.ui.activitylog.RewindStatusService
+import org.wordpress.android.util.AppLog
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -18,7 +20,8 @@ const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
-    private val activityLogStore: ActivityLogStore
+    private val activityLogStore: ActivityLogStore,
+    private val rewindStatusService: RewindStatusService
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -27,6 +30,8 @@ class ActivityLogDetailViewModel
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
+    val rewindAvailable: LiveData<Boolean>
+        get() = rewindStatusService.rewindAvailable
 
     fun start(site: SiteModel, activityLogId: String, showRewindDialog: (ActivityLogDetailModel) -> Unit) {
         this.site = site
@@ -49,11 +54,27 @@ class ActivityLogDetailViewModel
                                         summary = it.summary,
                                         createdDate = it.published.printDate(),
                                         createdTime = it.published.printTime(),
-                                        rewindAction = if (it.rewindable == true) this::onRewindClicked else null
+                                        rewindAction = it.rewindID?.let { rewindId ->
+                                            {
+                                                rewindStatusService.rewind(rewindId, site)
+                                            true
+                                            }
+                                        } ?: {
+                                            AppLog.e(
+                                                    AppLog.T.ACTIVITY_LOG,
+                                                    "Trying to rewind activity without rewind ID"
+                                            )
+                                            false
+                                        }
                                 )
                             }
             )
         }
+        rewindStatusService.start(site)
+    }
+
+    fun stop() {
+        rewindStatusService.stop()
     }
 
     private fun onRewindClicked() {
