@@ -65,15 +65,11 @@ class ActivityLogDetailFragment : Fragment() {
             activityCreatedDate.text = activityLogModel?.createdDate
             activityCreatedTime.text = activityLogModel?.createdTime
 
-            val rewindAndFinish = activityLogModel?.rewindAction?.let {
-                rewindAction -> {
-                    if (rewindAction()) activity?.finish()
-                }
-            }
-            activityRewindButton.setClickListenerOrHide(rewindAndFinish)
+            activityRewindButton.setClickListener(activityLogModel?.rewindAction)
         })
         viewModel.rewindAvailable.observe(this, Observer { available ->
-            activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
+            val isButtonVisible = viewModel.activityLogItem.value?.isRewindButtonVisible ?: false
+            activityRewindButton.visibility = if (available == true && isButtonVisible) View.VISIBLE else View.GONE
         })
         viewModel.start(site, activityLogId, this::onRewindButtonClicked)
     }
@@ -127,7 +123,7 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
-    private fun View.setClickListenerOrHide(function: (() -> Unit)?) {
+    private fun View.setClickListener(function: (() -> Unit)?) {
         if (function != null) {
             this.setOnClickListener {
                 function()

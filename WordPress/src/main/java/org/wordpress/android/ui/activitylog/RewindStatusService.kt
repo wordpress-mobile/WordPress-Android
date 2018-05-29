@@ -64,8 +64,7 @@ constructor(
 
     private fun updateRewindStatus(rewindStatus: RewindStatusModel?) {
         mutableRewindAvailable.postValue(
-                rewindStatus != null &&
-                        rewindStatus.state == ACTIVE &&
+                        rewindStatus?.state == ACTIVE &&
                         rewindStatus.rewind?.status != RUNNING
         )
         mutableRewindState.postValue(rewindStatus?.rewind)

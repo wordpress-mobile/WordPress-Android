@@ -48,23 +48,20 @@ class ActivityLogDetailViewModel
                                         activityID = it.activityID,
                                         actorIconUrl = it.actor?.avatarURL,
                                         showJetpackIcon = it.actor?.showJetpackIcon(),
+                                        isRewindButtonVisible = it.rewindable ?: false,
                                         actorName = it.actor?.displayName,
                                         actorRole = it.actor?.role,
                                         text = it.text,
                                         summary = it.summary,
                                         createdDate = it.published.printDate(),
                                         createdTime = it.published.printTime(),
-                                        rewindAction = it.rewindID?.let { rewindId ->
-                                            {
-                                                rewindStatusService.rewind(rewindId, site)
-                                            true
-                                            }
+                                        rewindAction = it.rewindID?.let {
+                                            { this.onRewindClicked() }
                                         } ?: {
                                             AppLog.e(
                                                     AppLog.T.ACTIVITY_LOG,
                                                     "Trying to rewind activity without rewind ID"
                                             )
-                                            false
                                         }
                                 )
                             }
