@@ -42,7 +42,10 @@ class ActivityLogViewModel @Inject constructor(
         get() = _eventListStatus
 
     private val isRewindInProgress: Boolean
-        get() = Transformations.map(rewindStatusService.rewindState, { state -> state.status === RUNNING }).value ?: false
+        get() = Transformations.map(
+                    rewindStatusService.rewindState,
+                    { state -> state.status === RUNNING })
+                .value ?: false
 
     private val isLoadingInProgress: Boolean
         get() = eventListStatus === ActivityLogListStatus.LOADING_MORE ||
