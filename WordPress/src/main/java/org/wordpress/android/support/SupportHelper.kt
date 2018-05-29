@@ -4,109 +4,142 @@ package org.wordpress.android.support
 
 import android.content.Context
 import android.support.v7.app.AlertDialog
-import android.text.InputType
-import android.view.ViewGroup
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.validateEmail
 
-fun runWithSupportEmailAndName(
+/**
+ * This function will check whether there is a support email saved in the AppPrefs and use the saved email and name
+ * to run the provided function, most likely a support request. If there is no saved support email, it'll trigger a
+ * function to show a dialog with email and name input fields which then it'll save to AppPrefs and run the provided
+ * function.
+ *
+ * @param context Context the dialog will be showed from
+ * @param account WordPress.com account to be used for email and name suggestion in the input dialog
+ * @param selectedSite Selected site to be used for email and name suggestion in case the user is not logged in
+ * @param emailAndNameSelected Function to run with the email and name from AppPrefs or the input dialog
+ */
+fun showSupportIdentityInputDialogAndRunWithEmailAndName(
     context: Context,
-    accountStore: AccountStore?,
+    account: AccountModel?,
     selectedSite: SiteModel?,
     emailAndNameSelected: (String, String) -> Unit
 ) {
-    val email = AppPrefs.getSupportEmail()
-    val name = AppPrefs.getSupportName()
-    if (!email.isNullOrEmpty()) {
-        emailAndNameSelected(email, name)
+    val currentEmail = AppPrefs.getSupportEmail()
+    if (!currentEmail.isNullOrEmpty()) {
+        emailAndNameSelected(currentEmail, AppPrefs.getSupportName())
     } else {
-        runWithSupportEmailAndNameFromUserInput(context, accountStore, selectedSite, emailAndNameSelected)
+        val (emailSuggestion, nameSuggestion) = supportEmailAndNameSuggestion(account, selectedSite)
+        showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion, false) { email, name ->
+            AppPrefs.setSupportEmail(email)
+            AppPrefs.setSupportName(name)
+            emailAndNameSelected(email, name)
+        }
     }
 }
 
-private fun runWithSupportEmailAndNameFromUserInput(
+/**
+ * This is a helper function that shows the support identity input dialog and runs the provided function with the input
+ * from it.
+ *
+ * @param context Context the dialog will be showed from
+ * @param email Initial value for the email field
+ * @param name Initial value for the name field
+ * @param isNameInputHidden Whether the name input field should be shown or not
+ * @param emailAndNameSelected Function to run with the email and name inputs from the dialog. Even if the
+ * [isNameInputHidden] parameter is true, the input in the name field will be provided and it's up to the caller to
+ * ignore the name parameter.
+ */
+fun showSupportIdentityInputDialog(
     context: Context,
-    accountStore: AccountStore?,
-    selectedSite: SiteModel?,
+    email: String?,
+    name: String?,
+    isNameInputHidden: Boolean,
     emailAndNameSelected: (String, String) -> Unit
 ) {
-    val accountEmail = accountStore?.account?.email
-    val accountDisplayName = accountStore?.account?.displayName
-    val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else selectedSite?.email
-    val nameSuggestion = if (!accountDisplayName.isNullOrEmpty()) accountDisplayName else selectedSite?.username
+    val (layout, emailEditText, nameEditText) =
+            supportIdentityInputDialogLayout(context, isNameInputHidden, email, name)
 
-    val (layout, emailField, nameField) = inputDialogLayout(context, emailSuggestion, nameSuggestion)
-
-    val dialog = AlertDialog.Builder(context)
+    val dialog = AlertDialog.Builder(context, R.style.Calypso_Dialog)
             .setView(layout)
-            .setMessage(context.getString(R.string.support_dialog_enter_email_and_name))
             .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(android.R.string.cancel, null)
             .create()
     dialog.setOnShowListener {
         val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
         button.setOnClickListener { _ ->
-            val email = emailField.text.toString()
-            val name = nameField.text.toString()
-            if (validateEmail(email)) {
-                AppPrefs.setSupportEmail(email)
-                AppPrefs.setSupportName(name)
-                emailAndNameSelected(email, name)
+            val newEmail = emailEditText.text.toString()
+            val newName = nameEditText.text.toString()
+            if (validateEmail(newEmail)) {
+                emailAndNameSelected(newEmail, newName)
                 dialog.dismiss()
             } else {
-                emailField.error = context.getString(R.string.invalid_email_message)
+                emailEditText.error = context.getString(R.string.invalid_email_message)
             }
         }
     }
     dialog.show()
 }
 
-private fun inputDialogLayout(
+/**
+ * This is a helper function that inflates the support identity dialog layout.
+ *
+ * @param context Context to use to inflate the layout
+ * @param isNameInputHidden Whether the name EditText should be visible or not
+ * @param emailSuggestion Initial value for the email EditText
+ * @param nameSuggestion Initial value for the name EditText
+ *
+ * @return a Triple with layout View, email EditText and name EditText
+ */
+private fun supportIdentityInputDialogLayout(
     context: Context,
+    isNameInputHidden: Boolean,
     emailSuggestion: String?,
     nameSuggestion: String?
-): Triple<ViewGroup, EditText, EditText> {
-    val layout = LinearLayout(context)
-    layout.orientation = LinearLayout.VERTICAL
+): Triple<View, EditText, EditText> {
+    val layout = LayoutInflater.from(context).inflate(R.layout.support_email_and_name_dialog, null)
 
-    val emailLabel = inputDialogLabel(context, R.string.support_email)
-    layout.addView(emailLabel)
-
-    val emailInputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-    val emailField = inputDialogEditText(context, emailInputType, emailSuggestion, true)
-    layout.addView(emailField)
-
-    val nameLabel = inputDialogLabel(context, R.string.support_name)
-    layout.addView(nameLabel)
-
-    val nameField = inputDialogEditText(context, InputType.TYPE_CLASS_TEXT, nameSuggestion)
-    layout.addView(nameField)
-    return Triple(layout, emailField, nameField)
-}
-
-private fun inputDialogLabel(context: Context, textResource: Int): TextView {
-    val textView = TextView(context)
-    textView.setText(textResource)
-    return textView
-}
-
-private fun inputDialogEditText(
-    context: Context,
-    inputType: Int,
-    initialText: String?,
-    textSelected: Boolean = false
-): EditText {
-    val editText = EditText(context)
-    editText.inputType = inputType
-    editText.setText(initialText)
-    if (textSelected) {
-        editText.setSelection(0, initialText?.length ?: 0)
+    val messageText = layout.findViewById<TextView>(R.id.support_identity_input_dialog_message)
+    val message = if (isNameInputHidden) {
+        R.string.support_identity_input_dialog_enter_email
+    } else {
+        R.string.support_identity_input_dialog_enter_email_and_name
     }
-    return editText
+    messageText.setText(message)
+
+    val emailEditText = layout.findViewById<EditText>(R.id.support_identity_input_dialog_email_edit_text)
+    emailEditText.setText(emailSuggestion)
+    emailEditText.setSelection(0, emailSuggestion?.length ?: 0)
+
+    val nameEditText = layout.findViewById<EditText>(R.id.support_identity_input_dialog_name_edit_text)
+    nameEditText.setText(nameSuggestion)
+    nameEditText.visibility = if (isNameInputHidden) GONE else View.VISIBLE
+
+    return Triple(layout, emailEditText, nameEditText)
+}
+
+/**
+ * This is a helper function to returns suggested email and name values to be used in the support identity dialog.
+ *
+ * @param account WordPress.com account
+ * @param selectedSite Selected site of the user which will be used if the [account] is null
+ *
+ * @return a Pair with email and name suggestion
+ */
+private fun supportEmailAndNameSuggestion(
+    account: AccountModel?,
+    selectedSite: SiteModel?
+): Pair<String?, String?> {
+    val accountEmail = account?.email
+    val accountDisplayName = account?.displayName
+    val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else selectedSite?.email
+    val nameSuggestion = if (!accountDisplayName.isNullOrEmpty()) accountDisplayName else selectedSite?.username
+    return Pair(emailSuggestion, nameSuggestion)
 }
