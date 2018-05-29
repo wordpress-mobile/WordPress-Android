@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -10,10 +11,12 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
-    private static final String TAG_TITLE_DISCOVER = "Discover";
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
     public static final String TAG_SLUG_BOOKMARKED = "bookmarked-posts";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
+
+    private static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
+            ReaderConstants.DISCOVER_SITE_ID);
 
     private String mTagSlug; // tag for API calls
     private String mTagDisplayName; // tag for display, usually the same as the slug
@@ -161,7 +164,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isDiscover() {
-        return tagType == ReaderTagType.DEFAULT && getTagSlug().equals(TAG_TITLE_DISCOVER);
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(DISCOVER_PATH);
     }
 
     public boolean isTagTopic() {
