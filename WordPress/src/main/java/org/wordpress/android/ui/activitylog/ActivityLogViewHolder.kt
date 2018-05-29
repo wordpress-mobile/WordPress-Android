@@ -20,7 +20,7 @@ class ActivityLogViewHolder(
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
     private val text: TextView = itemView.findViewById(R.id.action_text)
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
-    private val progressBar: ProgressBar = itemView.findViewById(R.id.rewind_progress_bar)
+    private val progressBarContainer: View = itemView.findViewById(R.id.rewind_progress_bar_container)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
     private val rewindButton: ImageButton = itemView.findViewById(R.id.rewind_button)
     private val header: TextView = itemView.findViewById(R.id.activity_header_text)
@@ -34,15 +34,7 @@ class ActivityLogViewHolder(
         text.text = activity.text
         header.text = activity.header
 
-        activity.isRewindable.observeForever({ isActivityRewindable ->
-            rewindButton.visibility = if (isActivityRewindable == true) View.VISIBLE else View.GONE
-        })
-
-        activity.rewindProgress.observeForever({ progress ->
-            progressBar.progress = progress ?: 0
-        })
-
-        progressBar.visibility = if (activity.isRewindInProgress) View.VISIBLE else View.GONE
+        progressBarContainer.visibility = if (activity.isRewindInProgress) View.VISIBLE else View.GONE
         header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
 
         thumbnail.setImageResource(activity.icon)
