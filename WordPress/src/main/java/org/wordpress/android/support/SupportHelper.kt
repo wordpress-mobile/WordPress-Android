@@ -21,11 +21,33 @@ fun showSupportIdentityInputDialogAndRunWithEmailAndName(
     selectedSite: SiteModel?,
     emailAndNameSelected: (String, String) -> Unit
 ) {
-    val email = AppPrefs.getSupportEmail()
-    if (!email.isNullOrEmpty()) {
-        emailAndNameSelected(email, AppPrefs.getSupportName())
+    val currentEmail = AppPrefs.getSupportEmail()
+    if (!currentEmail.isNullOrEmpty()) {
+        emailAndNameSelected(currentEmail, AppPrefs.getSupportName())
     } else {
-        showSupportIdentityInputDialog(context, accountStore, selectedSite, false, emailAndNameSelected)
+        showSupportIdentityInputDialog(context, accountStore, selectedSite, false) { email, name ->
+            AppPrefs.setSupportEmail(email)
+            AppPrefs.setSupportName(name)
+            emailAndNameSelected(email, name)
+        }
+    }
+}
+
+// TODO: Use this method in the new Help screen
+fun showSupportIdentityInputDialogAndRunWithEmail(
+    context: Context,
+    accountStore: AccountStore?,
+    selectedSite: SiteModel?,
+    emailSelected: (String) -> Unit
+) {
+    val currentEmail = AppPrefs.getSupportEmail()
+    if (!currentEmail.isNullOrEmpty()) {
+        emailSelected(currentEmail)
+    } else {
+        showSupportIdentityInputDialog(context, accountStore, selectedSite, true) { email, _ ->
+            AppPrefs.setSupportEmail(email)
+            emailSelected(email)
+        }
     }
 }
 
@@ -36,11 +58,7 @@ private fun showSupportIdentityInputDialog(
     isNameInputHidden: Boolean,
     emailAndNameSelected: (String, String) -> Unit
 ) {
-    val accountEmail = accountStore?.account?.email
-    val accountDisplayName = accountStore?.account?.displayName
-    val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else selectedSite?.email
-    val nameSuggestion = if (!accountDisplayName.isNullOrEmpty()) accountDisplayName else selectedSite?.username
-
+    val (emailSuggestion, nameSuggestion) = supportEmailAndNameSuggestion(accountStore, selectedSite)
     val (layout, emailEditText, nameEditText) =
             supportIdentityInputDialog(context, isNameInputHidden, emailSuggestion, nameSuggestion)
 
@@ -55,8 +73,6 @@ private fun showSupportIdentityInputDialog(
             val email = emailEditText.text.toString()
             val name = nameEditText.text.toString()
             if (validateEmail(email)) {
-                AppPrefs.setSupportEmail(email)
-                AppPrefs.setSupportName(name)
                 emailAndNameSelected(email, name)
                 dialog.dismiss()
             } else {
@@ -92,4 +108,15 @@ private fun supportIdentityInputDialog(
     nameEditText.visibility = if (isNameInputHidden) GONE else View.VISIBLE
 
     return Triple(layout, emailEditText, nameEditText)
+}
+
+private fun supportEmailAndNameSuggestion(
+    accountStore: AccountStore?,
+    selectedSite: SiteModel?
+): Pair<String?, String?> {
+    val accountEmail = accountStore?.account?.email
+    val accountDisplayName = accountStore?.account?.displayName
+    val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else selectedSite?.email
+    val nameSuggestion = if (!accountDisplayName.isNullOrEmpty()) accountDisplayName else selectedSite?.username
+    return Pair(emailSuggestion, nameSuggestion)
 }
