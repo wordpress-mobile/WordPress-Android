@@ -67,7 +67,9 @@ class ActivityLogViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
+
         rewindStatusService.rewindState.removeObserver(rewindStateObserver)
+        rewindStatusService.stop()
 
         super.onCleared()
     }
@@ -82,6 +84,7 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents()
         fetchEvents(false)
 
+        rewindStatusService.start(site)
         rewindStatusService.rewindState.observeForever(rewindStateObserver)
 
         isStarted = true

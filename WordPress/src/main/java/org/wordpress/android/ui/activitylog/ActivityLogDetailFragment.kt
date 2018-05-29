@@ -74,11 +74,6 @@ class ActivityLogDetailFragment : Fragment() {
         viewModel.start(site, activityLogId, this::onRewindButtonClicked)
     }
 
-    override fun onDestroy() {
-        viewModel.stop()
-        super.onDestroy()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_log_item_detail, container, false)
     }
