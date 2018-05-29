@@ -127,7 +127,9 @@ public class UploadUtils {
             return;
         }
 
-        boolean isScheduledPost = PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+        PostStatus postStatus = PostStatus.fromPost(post);
+
+        boolean isScheduledPost = postStatus == PostStatus.SCHEDULED;
         if (isScheduledPost) {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
@@ -137,7 +139,7 @@ public class UploadUtils {
             return;
         }
 
-        boolean isPublished = PostStatus.fromPost(post) == PostStatus.PUBLISHED;
+        boolean isPublished = postStatus == PostStatus.PUBLISHED;
         if (isPublished) {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
@@ -149,7 +151,7 @@ public class UploadUtils {
             return;
         }
 
-        boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
+        boolean isDraft = postStatus == PostStatus.DRAFT;
         if (isDraft) {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button
