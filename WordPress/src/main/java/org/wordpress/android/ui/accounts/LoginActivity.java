@@ -552,7 +552,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void viewHelpAndSupport(Origin origin) {
         List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
-        ActivityLauncher.viewHelpAndSupport(this, origin, extraSupportTags);
+        ActivityLauncher.viewHelpAndSupport(this, origin, null, extraSupportTags);
     }
 
     @Override
@@ -562,7 +562,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
-        ZendeskHelper.createNewTicket(this, null, siteStore, Origin.LOGIN_SITE_ADDRESS);
+        ZendeskHelper.createNewTicket(this, null, siteStore, Origin.LOGIN_SITE_ADDRESS, null);
     }
 
     @Override

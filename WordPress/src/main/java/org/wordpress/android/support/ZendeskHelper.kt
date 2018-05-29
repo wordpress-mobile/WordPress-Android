@@ -14,7 +14,6 @@ import com.zendesk.sdk.network.impl.ZendeskConfig
 import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -22,7 +21,9 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.logInformation
+import org.wordpress.android.util.stateLogInformation
 import java.util.Locale
 
 private val zendeskInstance: ZendeskConfig
@@ -59,11 +60,11 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
-fun showZendeskHelpCenter(context: Context, accountStore: AccountStore) {
+fun showZendeskHelpCenter(context: Context, accountStore: AccountStore, selectedSite: SiteModel? = null) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore))
+    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
     SupportActivity.Builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
             .withLabelNames(ZendeskConstants.articleLabel)
@@ -76,12 +77,13 @@ fun createNewTicket(
     accountStore: AccountStore?,
     siteStore: SiteStore,
     origin: Origin?,
+    selectedSite: SiteModel?,
     extraTags: List<String>? = null
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore)
+    configureZendesk(context, accountStore, siteStore, selectedSite)
     ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
@@ -90,26 +92,38 @@ fun showAllTickets(
     accountStore: AccountStore,
     siteStore: SiteStore,
     origin: Origin?,
-    extraTags: List<String>?
+    selectedSite: SiteModel? = null,
+    extraTags: List<String>? = null
 ) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore)
+    configureZendesk(context, accountStore, siteStore, selectedSite)
     RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 }
 
 // Helpers
 
-private fun configureZendesk(context: Context, accountStore: AccountStore?, siteStore: SiteStore) {
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore))
+private fun configureZendesk(
+    context: Context,
+    accountStore: AccountStore?,
+    siteStore: SiteStore,
+    selectedSite: SiteModel?
+) {
+    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
     zendeskInstance.ticketFormId = TicketFieldIds.form
+    val currentSiteInformation = if (selectedSite != null) {
+        "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
+    } else {
+        "not_selected"
+    }
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore?.account)),
+            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites)),
+            CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
-            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context)),
-            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context))
+            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
+            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context))
     )
 }
 
@@ -124,7 +138,7 @@ private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Ori
             }
         }
 
-private fun zendeskIdentity(accountStore: AccountStore?): Identity {
+private fun zendeskIdentity(accountStore: AccountStore?, selectedSite: SiteModel?): Identity {
     val currentAccount = accountStore?.account
     var email: String? = null
     var name: String? = null
@@ -132,7 +146,7 @@ private fun zendeskIdentity(accountStore: AccountStore?): Identity {
         email = currentAccount.email
         name = currentAccount.displayName
     } else {
-        // TODO: Implement for self-hosted sites
+        // TODO: Implement for self-hosted sites using `selectedSite`
         // We can get the selected site and figure out the email/username from there. We can save the details
         // in preferences so that the Zendesk tickets will remain after a site change
     }
@@ -142,9 +156,9 @@ private fun zendeskIdentity(accountStore: AccountStore?): Identity {
 private fun zendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
-private fun blogInformation(allSites: List<SiteModel>?, account: AccountModel?): String {
+private fun blogInformation(allSites: List<SiteModel>?): String {
     allSites?.let {
-        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(account) }
+        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation }
     }
     return ZendeskConstants.noneValue
 }
@@ -213,7 +227,7 @@ private object TicketFieldIds {
     const val form = 360000010286L
     const val logs = 22871957L
     const val networkInformation = 360000086966L
-    const val siteState = 360000103103L // TODO("implement")
+    const val currentSite = 360000103103L
 }
 
 object ZendeskExtraTags {

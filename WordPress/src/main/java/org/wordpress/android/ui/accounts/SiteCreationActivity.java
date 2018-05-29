@@ -106,7 +106,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     }
 
     private void launchZendesk(HelpActivity.Origin origin) {
-        ActivityLauncher.viewHelpAndSupport(this, origin);
+        ActivityLauncher.viewHelpAndSupport(this, origin, null, null);
     }
 
     private enum SiteCreationBackStackMode {
