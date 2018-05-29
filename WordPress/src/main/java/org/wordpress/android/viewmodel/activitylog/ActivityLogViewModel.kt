@@ -76,15 +76,15 @@ class ActivityLogViewModel @Inject constructor(
         fetchEvents(false)
     }
 
-    fun onItemClicked(callback: () -> Unit) {
+    fun onItemClicked(showItemDetail: () -> Unit) {
         if (!isRewindInProgress) {
-            callback()
+            showItemDetail()
         }
     }
 
-    fun onRewindButtonClicked(callback: () -> Unit) {
+    fun onRewindButtonClicked(showRewindDialog: () -> Unit) {
         if (!isRewindInProgress) {
-            callback()
+            showRewindDialog()
         }
     }
 

@@ -130,8 +130,8 @@ class ActivityLogListFragment : Fragment() {
                 adapter = ActivityLogAdapter(
                         it,
                         viewModel,
-                        { item -> onItemClicked(item) },
-                        { item -> onRewindButtonClicked(item) }
+                        this::onItemClicked,
+                        this::onRewindButtonClicked
                 )
                 activityLogList.adapter = adapter
             } else {

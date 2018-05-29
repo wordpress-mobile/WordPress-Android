@@ -17,9 +17,6 @@ data class ActivityLogListItemViewModel(
     private val datePublished: Date,
     val isRewindInProgress: Boolean = false
 ) {
-    private val dateFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
-    private val timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault())
-
     companion object {
         @JvmStatic
         fun fromDomainModel(model: ActivityLogModel): ActivityLogListItemViewModel {
@@ -37,11 +34,11 @@ data class ActivityLogListItemViewModel(
         get() = this.date
 
     val date: String by lazy {
-        dateFormatter.format(datePublished)
+        DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(datePublished)
     }
 
     val time: String by lazy {
-        timeFormatter.format(datePublished)
+        DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(datePublished)
     }
 
     val background by lazy {
