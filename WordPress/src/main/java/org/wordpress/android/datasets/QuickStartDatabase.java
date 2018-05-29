@@ -57,11 +57,11 @@ public class QuickStartDatabase extends SQLiteOpenHelper {
     }
 
     private void createAllTables(SQLiteDatabase database) {
-        // TODO: Create all tables for Quick Start database.
+        QuickStartTable.createTables((database));
     }
 
     private void dropAllTables(SQLiteDatabase database) {
-        // TODO: Drop all tables for Quick Start database.
+        QuickStartTable.dropTables((database));
     }
 
     public static QuickStartDatabase getDatabase() {
