@@ -10,14 +10,25 @@ import android.view.View.GONE
 import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.validateEmail
 
+/**
+ * This function will check whether there is a support email saved in the AppPrefs and use the saved email and name
+ * to run the provided function, most likely a support request. If there is no saved support email, it'll trigger a
+ * function to show a dialog with email and name input fields which then it'll save to AppPrefs and run the provided
+ * function.
+ *
+ * @param context Context the dialog will be showed from
+ * @param account WordPress.com account to be used for email and name suggestion in the input dialog
+ * @param selectedSite Selected site to be used for email and name suggestion in case the user is not logged in
+ * @param emailAndNameSelected Function to run with the email and name from AppPrefs or the input dialog
+ */
 fun showSupportIdentityInputDialogAndRunWithEmailAndName(
     context: Context,
-    accountStore: AccountStore?,
+    account: AccountModel?,
     selectedSite: SiteModel?,
     emailAndNameSelected: (String, String) -> Unit
 ) {
@@ -25,7 +36,7 @@ fun showSupportIdentityInputDialogAndRunWithEmailAndName(
     if (!currentEmail.isNullOrEmpty()) {
         emailAndNameSelected(currentEmail, AppPrefs.getSupportName())
     } else {
-        showSupportIdentityInputDialog(context, accountStore, selectedSite, false) { email, name ->
+        showSupportIdentityInputDialog(context, account, selectedSite, false) { email, name ->
             AppPrefs.setSupportEmail(email)
             AppPrefs.setSupportName(name)
             emailAndNameSelected(email, name)
@@ -33,10 +44,21 @@ fun showSupportIdentityInputDialogAndRunWithEmailAndName(
     }
 }
 
-// TODO: Use this method in the new Help screen
+// TODO: Use this function in the new Help screen
+/**
+ * This function will check whether there is a support email saved in the AppPrefs and use the saved email run the
+ * provided function. The difference between this function and [showSupportIdentityInputDialogAndRunWithEmailAndName]
+ * is that only the email field will be shown in the dialog. It's intended to be used when the support email
+ * needs to be updated. It uses the same input dialog to avoid any inconsistencies.
+ *
+ * @param context Context the dialog will be showed from
+ * @param account WordPress.com account to be used for email suggestion in the input dialog
+ * @param selectedSite Selected site to be used for email suggestion in case the user is not logged in
+ * @param emailSelected Function to run with the email from AppPrefs or the input dialog
+ */
 fun showSupportIdentityInputDialogAndRunWithEmail(
     context: Context,
-    accountStore: AccountStore?,
+    account: AccountModel?,
     selectedSite: SiteModel?,
     emailSelected: (String) -> Unit
 ) {
@@ -44,23 +66,35 @@ fun showSupportIdentityInputDialogAndRunWithEmail(
     if (!currentEmail.isNullOrEmpty()) {
         emailSelected(currentEmail)
     } else {
-        showSupportIdentityInputDialog(context, accountStore, selectedSite, true) { email, _ ->
+        showSupportIdentityInputDialog(context, account, selectedSite, true) { email, _ ->
             AppPrefs.setSupportEmail(email)
             emailSelected(email)
         }
     }
 }
 
+/**
+ * This is a helper function that shows the support identity input dialog and runs the provided function with the input
+ * from it.
+ *
+ * @param context Context the dialog will be showed from
+ * @param account WordPress.com account for email and name suggestion
+ * @param selectedSite Selected site to be used for email and name suggestion in case the user is not logged in
+ * @param isNameInputHidden Whether the name input field should be shown or not
+ * @param emailAndNameSelected Function to run with the email and name inputs from the dialog. Even if the
+ * [isNameInputHidden] parameter is true, the input in the name field will be provided and it's up to the caller to
+ * ignore the name parameter.
+ */
 private fun showSupportIdentityInputDialog(
     context: Context,
-    accountStore: AccountStore?,
+    account: AccountModel?,
     selectedSite: SiteModel?,
     isNameInputHidden: Boolean,
     emailAndNameSelected: (String, String) -> Unit
 ) {
-    val (emailSuggestion, nameSuggestion) = supportEmailAndNameSuggestion(accountStore, selectedSite)
+    val (emailSuggestion, nameSuggestion) = supportEmailAndNameSuggestion(account, selectedSite)
     val (layout, emailEditText, nameEditText) =
-            supportIdentityInputDialog(context, isNameInputHidden, emailSuggestion, nameSuggestion)
+            supportIdentityInputDialogLayout(context, isNameInputHidden, emailSuggestion, nameSuggestion)
 
     val dialog = AlertDialog.Builder(context, R.style.Calypso_Dialog)
             .setView(layout)
@@ -83,7 +117,17 @@ private fun showSupportIdentityInputDialog(
     dialog.show()
 }
 
-private fun supportIdentityInputDialog(
+/**
+ * This is a helper function that inflates the support identity dialog layout.
+ *
+ * @param context Context to use to inflate the layout
+ * @param isNameInputHidden Whether the name EditText should be visible or not
+ * @param emailSuggestion Initial value for the email EditText
+ * @param nameSuggestion Initial value for the name EditText
+ *
+ * @return a Triple with layout View, email EditText and name EditText
+ */
+private fun supportIdentityInputDialogLayout(
     context: Context,
     isNameInputHidden: Boolean,
     emailSuggestion: String?,
@@ -110,12 +154,20 @@ private fun supportIdentityInputDialog(
     return Triple(layout, emailEditText, nameEditText)
 }
 
+/**
+ * This is a helper function to returns suggested email and name values to be used in the support identity dialog.
+ *
+ * @param account WordPress.com account
+ * @param selectedSite Selected site of the user which will be used if the [account] is null
+ *
+ * @return a Pair with email and name suggestion
+ */
 private fun supportEmailAndNameSuggestion(
-    accountStore: AccountStore?,
+    account: AccountModel?,
     selectedSite: SiteModel?
 ): Pair<String?, String?> {
-    val accountEmail = accountStore?.account?.email
-    val accountDisplayName = accountStore?.account?.displayName
+    val accountEmail = account?.email
+    val accountDisplayName = account?.displayName
     val emailSuggestion = if (!accountEmail.isNullOrEmpty()) accountEmail else selectedSite?.email
     val nameSuggestion = if (!accountDisplayName.isNullOrEmpty()) accountDisplayName else selectedSite?.username
     return Pair(emailSuggestion, nameSuggestion)

@@ -113,7 +113,7 @@ fun createNewTicket(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    showSupportIdentityInputDialogAndRunWithEmailAndName(context, accountStore, selectedSite) { email, name ->
+    showSupportIdentityInputDialogAndRunWithEmailAndName(context, accountStore?.account, selectedSite) { email, name ->
         configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
         ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
     }
@@ -130,7 +130,7 @@ fun showAllTickets(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    showSupportIdentityInputDialogAndRunWithEmailAndName(context, accountStore, selectedSite) { email, name ->
+    showSupportIdentityInputDialogAndRunWithEmailAndName(context, accountStore.account, selectedSite) { email, name ->
         configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
         RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
     }
