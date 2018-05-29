@@ -226,6 +226,7 @@
     <string name="title">Title</string>
     <string name="pages_empty_list">No pages yet. Why not create one?</string>
     <string name="page_settings">Page settings</string>
+    <string name="pages">Pages</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
@@ -2192,4 +2193,10 @@
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
+
+    <!-- Pages -->
+    <string name="pages_published">Published</string>
+    <string name="pages_drafts">Drafts</string>
+    <string name="pages_scheduled">Scheduled</string>
+    <string name="pages_trashed">Trashed</string>
 </resources>

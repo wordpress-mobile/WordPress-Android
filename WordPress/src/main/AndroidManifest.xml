@@ -230,6 +230,10 @@
             android:theme="@style/Calypso.NoActionBar"
             android:label="" />
         <activity
+            android:name=".ui.pages.PageListActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/pages" />
+        <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
             android:theme="@style/Calypso.NoActionBar" />
