@@ -365,8 +365,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         internal const val PAGE_ME = 3
         internal const val PAGE_NOTIFS = 4
 
-        private const val TAG_MY_SITE = "my-site"
-        private const val TAG_READER = "reader"
+        private const val TAG_MY_SITE = "tag-mysite"
+        private const val TAG_READER = "tag-reader"
         private const val TAG_ME = "tag-me"
         private const val TAG_NOTIFS = "tag-notifs"
     }
