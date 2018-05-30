@@ -228,9 +228,10 @@ public class PostsListFragment extends Fragment
         int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
         final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-        if ((post == null)
-                && !data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.LONG);
+        if (post == null) {
+            if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
+                ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.LONG);
+            }
             return;
         }
 
