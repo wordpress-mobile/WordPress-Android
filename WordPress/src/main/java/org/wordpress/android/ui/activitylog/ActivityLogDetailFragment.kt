@@ -65,7 +65,7 @@ class ActivityLogDetailFragment : Fragment() {
             activityCreatedDate.text = activityLogModel?.createdDate
             activityCreatedTime.text = activityLogModel?.createdTime
 
-            activityRewindButton.setClickListener(activityLogModel?.rewindAction)
+            activityRewindButton.setOnClickListener(activityLogModel?.rewindAction)
         })
         viewModel.rewindAvailable.observe(this, Observer { available ->
             val isButtonVisible = viewModel.activityLogItem.value?.isRewindButtonVisible ?: false
@@ -118,7 +118,7 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
-    private fun View.setClickListener(function: (() -> Unit)?) {
+    private fun View.setOnClickListener(function: (() -> Unit)?) {
         if (function != null) {
             this.setOnClickListener {
                 function()
