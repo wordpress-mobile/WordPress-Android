@@ -68,7 +68,7 @@ class ActivityLogDetailFragment : Fragment() {
                     if (rewindAction()) activity?.finish()
                 }
             }
-            activityRewindButton.setClickListenerOrHide(rewindAndFinish)
+            activityRewindButton.setOnClickListener(rewindAndFinish)
         })
         viewModel.rewindAvailable.observe(this, Observer { available ->
             activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
@@ -119,7 +119,7 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
-    private fun View.setClickListenerOrHide(function: (() -> Unit)?) {
+    private fun View.setOnClickListener(function: (() -> Unit)?) {
         if (function != null) {
             this.setOnClickListener {
                 function()
