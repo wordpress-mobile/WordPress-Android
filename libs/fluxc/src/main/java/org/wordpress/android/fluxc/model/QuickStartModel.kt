@@ -11,7 +11,11 @@ class QuickStartModel(@PrimaryKey @Column private var id: Int = 0) : Identifiabl
     @Column var siteId: Long = 0
     @Column var taskName: String? = null
     @Column var isDone: Boolean = false
+        @JvmName("setIsDone")
+        set
     @Column var isShown: Boolean = false
+        @JvmName("setIsShown")
+        set
 
     override fun getId(): Int {
         return this.id
@@ -19,13 +23,5 @@ class QuickStartModel(@PrimaryKey @Column private var id: Int = 0) : Identifiabl
 
     override fun setId(id: Int) {
         this.id = id
-    }
-
-    fun setIsDone(isDone: Boolean) {
-        this.isDone = isDone
-    }
-
-    fun setIsShown(isShown: Boolean) {
-        this.isShown = isShown
     }
 }
