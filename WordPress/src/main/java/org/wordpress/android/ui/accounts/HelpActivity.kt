@@ -70,7 +70,10 @@ class HelpActivity : AppCompatActivity() {
         version.text = getString(R.string.version_with_name_param, WordPress.versionName)
 
         val supportEmailTextView = findViewById<TextView>(R.id.contact_email_address)
-        supportEmailTextView.text = AppPrefs.getSupportEmail()
+        val supportEmail = AppPrefs.getSupportEmail()
+        if (!supportEmail.isNullOrEmpty()) {
+            supportEmailTextView.text = supportEmail
+        }
 
         findViewById<View>(R.id.contact_email_container).setOnClickListener {
             showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { selectedEmail ->
