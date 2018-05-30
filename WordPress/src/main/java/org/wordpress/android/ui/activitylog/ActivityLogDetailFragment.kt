@@ -63,9 +63,22 @@ class ActivityLogDetailFragment : Fragment() {
             activityCreatedDate.text = activityLogModel?.createdDate
             activityCreatedTime.text = activityLogModel?.createdTime
 
-            activityRewindButton.setClickListenerOrHide(activityLogModel?.rewindAction)
+            val rewindAndFinish = activityLogModel?.rewindAction?.let {
+                rewindAction -> {
+                    if (rewindAction()) activity?.finish()
+                }
+            }
+            activityRewindButton.setOnClickListener(rewindAndFinish)
+        })
+        viewModel.rewindAvailable.observe(this, Observer { available ->
+            activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
         })
         viewModel.start(site, activityLogId)
+    }
+
+    override fun onDestroy() {
+        viewModel.stop()
+        super.onDestroy()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -106,15 +119,13 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
-    private fun View.setClickListenerOrHide(function: (() -> Unit)?) {
+    private fun View.setOnClickListener(function: (() -> Unit)?) {
         if (function != null) {
             this.setOnClickListener {
                 function()
             }
-            this.visibility = View.VISIBLE
         } else {
             this.setOnClickListener(null)
-            this.visibility = View.GONE
         }
     }
 }
