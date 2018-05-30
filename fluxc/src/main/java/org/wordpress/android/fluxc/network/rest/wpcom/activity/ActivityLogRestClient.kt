@@ -90,7 +90,7 @@ constructor(
         val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
         val request = wpComGsonRequestBuilder.buildPostRequest(url, mapOf(), RewindResponse::class.java,
                 { response ->
-                    val payload = ActivityLogStore.RewindResultPayload(response.restore_id, site)
+                    val payload = ActivityLogStore.RewindResultPayload(rewindId, response.restore_id, site)
                     dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
                 },
                 { networkError ->
@@ -98,7 +98,7 @@ constructor(
                             RewindErrorType.GENERIC_ERROR,
                             RewindErrorType.INVALID_RESPONSE,
                             RewindErrorType.AUTHORIZATION_REQUIRED), networkError.message)
-                    val payload = ActivityLogStore.RewindResultPayload(error, site)
+                    val payload = ActivityLogStore.RewindResultPayload(error, rewindId, site)
                     dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
                 })
         add(request)
