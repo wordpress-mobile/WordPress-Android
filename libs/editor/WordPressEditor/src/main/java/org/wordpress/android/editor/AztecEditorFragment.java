@@ -550,16 +550,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void addAztecAudioShortcodePlugin() {
-        boolean foundAudioShortCodePlugin = false;
         for (IAztecPlugin plugin : mContent.getPlugins()) {
             if (plugin instanceof AudioShortcodePlugin) {
-                foundAudioShortCodePlugin = true;
-                break;
+                return;
             }
         }
-        if (!foundAudioShortCodePlugin) {
-            mContent.getPlugins().add(new AudioShortcodePlugin());
-        }
+        mContent.getPlugins().add(new AudioShortcodePlugin());
     }
 
     /*
