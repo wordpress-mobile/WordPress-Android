@@ -4,24 +4,30 @@ package org.wordpress.android.support
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.preference.PreferenceManager
 import android.telephony.TelephonyManager
 import com.zendesk.logger.Logger
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
 import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
 import com.zendesk.sdk.model.access.AnonymousIdentity
 import com.zendesk.sdk.model.access.Identity
+import com.zendesk.sdk.model.push.PushRegistrationResponse
 import com.zendesk.sdk.model.request.CustomField
 import com.zendesk.sdk.network.impl.ZendeskConfig
 import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.ContactUsButtonVisibility
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
+import com.zendesk.service.ErrorResponse
+import com.zendesk.service.ZendeskCallback
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
@@ -161,6 +167,18 @@ private fun configureZendesk(
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
             CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context))
     )
+    val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+    val lastRegisteredGCMToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
+    zendeskInstance.enablePushWithIdentifier(lastRegisteredGCMToken,
+            object : ZendeskCallback<PushRegistrationResponse>() {
+                override fun onSuccess(response: PushRegistrationResponse?) {
+                    AppLog.e(AppLog.T.NOTIFS, response.toString())
+                }
+
+                override fun onError(errorResponse: ErrorResponse?) {
+                    AppLog.e(AppLog.T.NOTIFS, errorResponse.toString())
+                }
+            })
 }
 
 private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Origin?, extraTags: List<String>?) =
