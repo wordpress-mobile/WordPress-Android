@@ -5,4 +5,6 @@
 /sites/$site/activity
 /sites/$site/rewind
 
+/sites/$site/stats/orders/
+
 /users/username/suggestions/
