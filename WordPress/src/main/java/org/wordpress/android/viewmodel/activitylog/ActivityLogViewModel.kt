@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import android.arch.lifecycle.Transformations
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 
 class ActivityLogViewModel @Inject constructor(
     val dispatcher: Dispatcher,
@@ -40,6 +41,14 @@ class ActivityLogViewModel @Inject constructor(
     private val _eventListStatus = MutableLiveData<ActivityLogListStatus>()
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
+
+    private val _showRewindDialog = SingleLiveEvent<ActivityLogListItemViewModel>()
+    val showRewindDialog: LiveData<ActivityLogListItemViewModel>
+        get() = _showRewindDialog
+
+    private val _showItemDetail = SingleLiveEvent<ActivityLogListItemViewModel>()
+    val showItemDetail: LiveData<ActivityLogListItemViewModel>
+        get() = _showItemDetail
 
     private val isRewindInProgress: Boolean
         get() = Transformations.map(
@@ -100,15 +109,15 @@ class ActivityLogViewModel @Inject constructor(
         fetchEvents(false)
     }
 
-    fun onItemClicked(showItemDetail: () -> Unit) {
+    fun onItemClicked(item: ActivityLogListItemViewModel) {
         if (!isRewindInProgress) {
-            showItemDetail()
+            _showItemDetail.postValue(item)
         }
     }
 
-    fun onRewindButtonClicked(showRewindDialog: () -> Unit) {
+    fun onRewindButtonClicked(item: ActivityLogListItemViewModel) {
         if (!isRewindInProgress) {
-            showRewindDialog()
+            _showRewindDialog.postValue(item)
         }
     }
 

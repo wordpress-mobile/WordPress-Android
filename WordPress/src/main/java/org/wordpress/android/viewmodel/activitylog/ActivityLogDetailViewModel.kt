@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -25,18 +26,21 @@ class ActivityLogDetailViewModel
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
-    private lateinit var showRewindDialog: (ActivityLogDetailModel) -> Unit
+
+    private val _showRewindDialog = SingleLiveEvent<ActivityLogDetailModel>()
+    val showRewindDialog: LiveData<ActivityLogDetailModel>
+        get() = _showRewindDialog
 
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
+
     val rewindAvailable: LiveData<Boolean>
         get() = rewindStatusService.rewindAvailable
 
-    fun start(site: SiteModel, activityLogId: String, showRewindDialog: (ActivityLogDetailModel) -> Unit) {
+    fun start(site: SiteModel, activityLogId: String) {
         this.site = site
         this.activityLogId = activityLogId
-        this.showRewindDialog = showRewindDialog
 
         if (activityLogId != _item.value?.activityID) {
             _item.postValue(
@@ -70,7 +74,7 @@ class ActivityLogDetailViewModel
     }
 
     private fun onRewindClicked() {
-        showRewindDialog(_item.value!!)
+        _showRewindDialog.postValue(_item.value!!)
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {

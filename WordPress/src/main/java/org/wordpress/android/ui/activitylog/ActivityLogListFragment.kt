@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -84,6 +85,24 @@ class ActivityLogListFragment : Fragment() {
         viewModel.eventListStatus.observe(this, Observer<ActivityLogViewModel.ActivityLogListStatus> { listStatus ->
             refreshProgressBars(listStatus)
         })
+
+        viewModel.showItemDetail.observe(this, Observer<ActivityLogListItemViewModel> {
+            ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it?.activityId)
+        })
+
+        viewModel.showRewindDialog.observe(this, Observer<ActivityLogListItemViewModel> {
+            displayRewindDialog(it)
+        })
+    }
+
+    private fun displayRewindDialog(it: ActivityLogListItemViewModel?) {
+        val dialog = BasicFragmentDialog()
+        dialog.initialize(it!!.activityId,
+                getString(string.activity_log_rewind_site),
+                getString(string.activity_log_rewind_dialog_message, it.date, it.time),
+                getString(string.activity_log_rewind_site),
+                getString(string.cancel))
+        dialog.show(fragmentManager, it.activityId)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
@@ -106,21 +125,11 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun onItemClicked(item: ActivityLogListItemViewModel) {
-        viewModel.onItemClicked {
-            ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, item.activityId)
-        }
+        viewModel.onItemClicked(item)
     }
 
     private fun onRewindButtonClicked(item: ActivityLogListItemViewModel) {
-        viewModel.onRewindButtonClicked({
-            val dialog = BasicFragmentDialog()
-            dialog.initialize(item.activityId,
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.activity_log_rewind_dialog_message, item.date, item.time),
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.cancel))
-            dialog.show(fragmentManager, item.activityId)
-        })
+        viewModel.onRewindButtonClicked(item)
     }
 
     private fun setEvents(events: List<ActivityLogListItemViewModel>) {

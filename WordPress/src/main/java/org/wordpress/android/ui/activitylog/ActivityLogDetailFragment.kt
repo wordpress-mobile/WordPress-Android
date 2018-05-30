@@ -54,6 +54,7 @@ class ActivityLogDetailFragment : Fragment() {
             }
             else -> throw Throwable("Couldn't initialize Activity Log view model")
         }
+
         viewModel.activityLogItem.observe(this, Observer { activityLogModel ->
             setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
             activityActorName.setTextOrHide(activityLogModel?.actorName)
@@ -67,11 +68,17 @@ class ActivityLogDetailFragment : Fragment() {
 
             activityRewindButton.setOnClickListener(activityLogModel?.rewindAction)
         })
+
         viewModel.rewindAvailable.observe(this, Observer { available ->
             val isButtonVisible = viewModel.activityLogItem.value?.isRewindButtonVisible ?: false
             activityRewindButton.visibility = if (available == true && isButtonVisible) View.VISIBLE else View.GONE
         })
-        viewModel.start(site, activityLogId, this::onRewindButtonClicked)
+
+        viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> {
+            onRewindButtonClicked(it!!)
+        })
+
+        viewModel.start(site, activityLogId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
