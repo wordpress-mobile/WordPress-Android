@@ -278,6 +278,7 @@ public class ThemeBrowserFragment extends Fragment
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, mSite);
                 mCallback.onTryAndCustomizeSelected(mCurrentThemeId);
             }
         });

@@ -19,6 +19,8 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import javax.inject.Inject
 
 class ActivityLogListFragment : Fragment() {
@@ -80,10 +82,14 @@ class ActivityLogListFragment : Fragment() {
             return
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
-        swipeToRefreshHelper.isRefreshing = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.FETCHING
+        swipeToRefreshHelper.isRefreshing = eventListStatus === FETCHING
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
-        val showLoadMore = eventListStatus === ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+        val showLoadMore = eventListStatus === LOADING_MORE
         activityLogListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
+
+        emptyView.visibility = if (viewModel.events.value?.isNotEmpty() == false &&
+                eventListStatus !== LOADING_MORE &&
+                eventListStatus !== FETCHING) View.VISIBLE else View.GONE
     }
 
     private fun reloadEvents() {

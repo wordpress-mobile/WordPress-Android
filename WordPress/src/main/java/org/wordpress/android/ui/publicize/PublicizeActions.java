@@ -47,7 +47,8 @@ public class PublicizeActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(AppLog.T.SHARING, "disconnect succeeded");
-                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.DISCONNECT));
+                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.DISCONNECT,
+                        connection.getService()));
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -55,7 +56,8 @@ public class PublicizeActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SHARING, volleyError);
                 PublicizeTable.addOrUpdateConnection(connection);
-                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.DISCONNECT));
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.DISCONNECT,
+                        connection.getService()));
             }
         };
 
@@ -70,7 +72,7 @@ public class PublicizeActions {
     public static void connect(long siteId, String serviceId, long currentUserId) {
         if (TextUtils.isEmpty(serviceId)) {
             AppLog.w(AppLog.T.SHARING, "cannot connect without service");
-            EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
+            EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId));
             return;
         }
 
@@ -91,7 +93,7 @@ public class PublicizeActions {
                             .post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
                     long keyringConnectionId = parseServiceKeyringId(serviceId, currentUserId, jsonObject);
-                    connectStepTwo(siteId, keyringConnectionId);
+                    connectStepTwo(siteId, keyringConnectionId, serviceId);
                 }
             }
         };
@@ -99,7 +101,7 @@ public class PublicizeActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SHARING, volleyError);
-                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId));
             }
         };
 
@@ -111,21 +113,21 @@ public class PublicizeActions {
      * step two in creating a publicize connection: now that we have the keyring connection id,
      * create the actual connection
      */
-    public static void connectStepTwo(long siteId, long keyringConnectionId) {
+    public static void connectStepTwo(final long siteId, long keyringConnectionId, final String serviceId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(AppLog.T.SHARING, "connect succeeded");
                 PublicizeConnection connection = PublicizeConnection.fromJson(jsonObject);
                 PublicizeTable.addOrUpdateConnection(connection);
-                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.CONNECT));
+                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.CONNECT, serviceId));
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SHARING, volleyError);
-                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId));
             }
         };
 
