@@ -338,7 +338,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new MoreToolbarButton(mContent))
                 .addPlugin(new CaptionShortcodePlugin(mContent))
                 .addPlugin(new VideoShortcodePlugin())
-                .addPlugin(new AudioShortcodePlugin())
                 .addPlugin(new HiddenGutenbergPlugin())
                 .addPlugin(mediaToolbarGalleryButton)
                 .addPlugin(mediaToolbarCameraButton)
@@ -537,6 +536,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mContent.setCalypsoMode(false);
             mSource.setCalypsoMode(false);
         } else {
+            // only add the AudioShortCodePlugin when opening non-Gutenberg posts
+            addAztecAudioShortcodePlugin();
             mContent.setCalypsoMode(true);
             mSource.setCalypsoMode(true);
         }
@@ -546,6 +547,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         updateFailedAndUploadingMedia();
 
         mAztecReady = true;
+    }
+
+    private void addAztecAudioShortcodePlugin() {
+        for (IAztecPlugin plugin : mContent.getPlugins()) {
+            if (plugin instanceof AudioShortcodePlugin) {
+                return;
+            }
+        }
+        mContent.getPlugins().add(new AudioShortcodePlugin());
     }
 
     /*
