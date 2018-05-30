@@ -69,15 +69,9 @@ class HelpActivity : AppCompatActivity() {
         val version = findViewById<TextView>(R.id.application_version)
         version.text = getString(R.string.version_with_name_param, WordPress.versionName)
 
-        val supportEmailTextView = findViewById<TextView>(R.id.contact_email_address)
-        val supportEmail = AppPrefs.getSupportEmail()
-        if (!supportEmail.isNullOrEmpty()) {
-            supportEmailTextView.text = supportEmail
-        }
-
         findViewById<View>(R.id.contact_email_container).setOnClickListener {
-            showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { selectedEmail ->
-                supportEmailTextView.text = selectedEmail
+            showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { _ ->
+                refreshContactEmailText()
             }
         }
     }
@@ -85,6 +79,7 @@ class HelpActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.HELP_SCREEN)
+        refreshContactEmailText()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -108,6 +103,13 @@ class HelpActivity : AppCompatActivity() {
     private fun showZendeskFaq() {
         showZendeskHelpCenter(this, accountStore, siteStore, originFromExtras,
                 selectedSiteFromExtras, extraTagsFromExtras)
+    }
+
+    private fun refreshContactEmailText() {
+        val supportEmail = AppPrefs.getSupportEmail()
+        if (!supportEmail.isNullOrEmpty()) {
+            findViewById<TextView>(R.id.contact_email_address).text = supportEmail
+        }
     }
 
     enum class Origin(private val stringValue: String) {
