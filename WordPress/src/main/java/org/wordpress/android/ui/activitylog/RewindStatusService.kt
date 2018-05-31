@@ -45,10 +45,10 @@ constructor(
 
     fun rewind(rewindId: String, site: SiteModel) {
         dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))
+        updateRewindProgress(rewindId, 0, RUNNING)
         mutableRewindAvailable.postValue(false)
         mutableRewindError.postValue(null)
         mutableRewindState.postValue(null)
-        mutableRewindProgress.postValue(null)
     }
 
     fun start(site: SiteModel) {
@@ -90,8 +90,6 @@ constructor(
             if (rewind.status != RUNNING) {
                 workerController.cancelWorker()
             }
-        } else {
-            mutableRewindProgress.postValue(null)
         }
     }
 
@@ -111,23 +109,22 @@ constructor(
         mutableRewindError.postValue(event.error)
         if (event.isError) {
             mutableRewindAvailable.postValue(true)
-            workerController.cancelWorker()
             reloadRewindStatus()
+            updateRewindProgress(event.rewindId, 0, Status.FAILED, event.error?.type?.toString())
+            return
         }
-        val rewindStatus = if (event.isError) Status.FAILED else Status.RUNNING
-        updateRewindProgress(event.rewindId, 0, rewindStatus, event.error?.message)
         site?.let {
             event.restoreId?.let { restoreId ->
-                workerController.startWorker(it, restoreId.toLong())
+                workerController.startWorker(it, restoreId)
             }
         }
     }
 
     private fun updateRewindProgress(
         rewindId: String,
-        progress: Int,
+        progress: Int?,
         rewindStatus: Rewind.Status,
-        rewindError: String?
+        rewindError: String? = null
     ) {
         activityLogStore.getActivityLogItemByRewindId(rewindId)?.let {
             val rewindProgress = RewindProgress(it.activityID, progress, it.published, rewindStatus, rewindError)
@@ -137,9 +134,9 @@ constructor(
 
     data class RewindProgress(
         val activityId: String,
-        val progress: Int,
+        val progress: Int?,
         val date: Date,
-        val failure: Rewind.Status,
+        val status: Rewind.Status,
         val failureReason: String? = null
     )
 }
