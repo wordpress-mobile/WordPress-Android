@@ -41,7 +41,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 37;
+        return 38;
     }
 
     @Override
@@ -304,6 +304,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "REMOTE_SITE_ID INTEGER,STATE TEXT NOT NULL,LAST_UPDATED INTEGER,REASON TEXT,"
                         + "CAN_AUTOCONFIGURE INTEGER,REWIND_ID TEXT,RESTORE_ID INTEGER,REWIND_STATUS TEXT,"
                         + "REWIND_PROGRESS INTEGER,REWIND_REASON TEXT)");
+                oldVersion++;
+            case 37:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE QuickStartModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "SITE_ID INTEGER,TASK_NAME TEXT,IS_DONE INTEGER,IS_SHOWN INTEGER)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
