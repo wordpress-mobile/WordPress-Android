@@ -53,6 +53,26 @@ class ActivityLogSqlUtils
                 .map { it.build() }
     }
 
+    fun getActivityByRewindId(rewindId: String): ActivityLogModel? {
+        return WellSql.select(ActivityLogBuilder::class.java)
+                .where()
+                .equals(ActivityLogTable.REWIND_ID, rewindId)
+                .endWhere()
+                .asModel
+                .firstOrNull()
+                ?.build()
+    }
+
+    fun getActivityByActivityId(activityId: String): ActivityLogModel? {
+        return WellSql.select(ActivityLogBuilder::class.java)
+                .where()
+                .equals(ActivityLogTable.ACTIVITY_ID, activityId)
+                .endWhere()
+                .asModel
+                .firstOrNull()
+                ?.build()
+    }
+
     fun deleteActivityLog(): Int {
         return WellSql.delete(ActivityLogBuilder::class.java).execute()
     }

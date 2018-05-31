@@ -47,6 +47,14 @@ class ActivityLogStore
         return activityLogSqlUtils.getActivitiesForSite(site, order)
     }
 
+    fun getActivityLogItemByRewindId(rewindId: String): ActivityLogModel? {
+        return activityLogSqlUtils.getActivityByRewindId(rewindId)
+    }
+
+    fun getActivityLogItemByActivityId(activityId: String): ActivityLogModel? {
+        return activityLogSqlUtils.getActivityByActivityId(activityId)
+    }
+
     fun getRewindStatusForSite(site: SiteModel): RewindStatusModel? {
         return activityLogSqlUtils.getRewindStatusForSite(site)
     }
@@ -98,9 +106,9 @@ class ActivityLogStore
 
     private fun emitRewindResult(payload: RewindResultPayload, action: ActivityLogAction) {
         if (payload.error != null) {
-            emitChange(OnRewind(payload.error, action))
+            emitChange(OnRewind(payload.rewindId, payload.error, action))
         } else {
-            emitChange(OnRewind(restoreId = payload.restoreId, causeOfChange = action))
+            emitChange(OnRewind(rewindId = payload.rewindId, restoreId = payload.restoreId, causeOfChange = action))
         }
     }
 
@@ -128,11 +136,12 @@ class ActivityLogStore
     }
 
     data class OnRewind(
+        val rewindId: String,
         val restoreId: String? = null,
         var causeOfChange: ActivityLogAction
     ) : Store.OnChanged<RewindError>() {
-        constructor(error: RewindError, causeOfChange: ActivityLogAction) :
-                this(restoreId = null, causeOfChange = causeOfChange) {
+        constructor(rewindId: String, error: RewindError, causeOfChange: ActivityLogAction) :
+                this(rewindId = rewindId, restoreId = null, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -174,8 +183,12 @@ class ActivityLogStore
         }
     }
 
-    class RewindResultPayload(val restoreId: String? = null, val site: SiteModel) : Payload<RewindError>() {
-        constructor(error: RewindError, site: SiteModel) : this(site = site) {
+    class RewindResultPayload(
+        val rewindId: String,
+        val restoreId: String? = null,
+        val site: SiteModel
+    ) : Payload<RewindError>() {
+        constructor(error: RewindError, rewindId: String, site: SiteModel) : this(rewindId = rewindId, site = site) {
             this.error = error
         }
     }
