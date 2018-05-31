@@ -547,6 +547,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         VolleyUtils.cancelAllRequests(sRequestQueue);
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
+        ZendeskHelper.disablePushNotifications();
         try {
             String gcmId = BuildConfig.GCM_ID;
             if (!TextUtils.isEmpty(gcmId)) {

@@ -61,6 +61,11 @@ fun setupZendesk(
     zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
     Logger.setLoggable(BuildConfig.DEBUG)
     updateZendeskDeviceLocale(deviceLocale)
+    val supportEmail = AppPrefs.getSupportEmail()
+    if (!supportEmail.isNullOrEmpty()) {
+        zendeskInstance.setIdentity(zendeskIdentity(supportEmail, AppPrefs.getSupportName()))
+        enablePushNotifications()
+    }
 }
 
 // TODO("Make sure changing the language of the app updates the locale for Zendesk")
@@ -142,6 +147,44 @@ fun showAllTickets(
     }
 }
 
+// TODO: enable push notifications after the user login (if they weren't logged in)
+fun enablePushNotifications() {
+    require(isZendeskEnabled) {
+        zendeskNeedsToBeEnabledError
+    }
+    val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+    val lastRegisteredGCMToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
+    if (lastRegisteredGCMToken.isNullOrEmpty()) {
+        // No GCM token
+        return
+    }
+    zendeskInstance.enablePushWithIdentifier(lastRegisteredGCMToken,
+            object : ZendeskCallback<PushRegistrationResponse>() {
+                override fun onSuccess(response: PushRegistrationResponse?) {
+                    // TODO: Add logs
+                }
+
+                override fun onError(errorResponse: ErrorResponse?) {
+                    // TODO: Add logs
+                }
+            })
+}
+
+fun disablePushNotifications() {
+    val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+    val lastRegisteredGCMToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
+    zendeskInstance.disablePush(lastRegisteredGCMToken,
+            object : ZendeskCallback<Void>() {
+                override fun onSuccess(response: Void) {
+                    // TODO: Add logs
+                }
+
+                override fun onError(errorResponse: ErrorResponse?) {
+                    // TODO: Add logs
+                }
+            })
+}
+
 // Helpers
 
 private fun configureZendesk(
@@ -167,18 +210,6 @@ private fun configureZendesk(
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
             CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context))
     )
-    val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
-    val lastRegisteredGCMToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
-    zendeskInstance.enablePushWithIdentifier(lastRegisteredGCMToken,
-            object : ZendeskCallback<PushRegistrationResponse>() {
-                override fun onSuccess(response: PushRegistrationResponse?) {
-                    AppLog.e(AppLog.T.NOTIFS, response.toString())
-                }
-
-                override fun onError(errorResponse: ErrorResponse?) {
-                    AppLog.e(AppLog.T.NOTIFS, errorResponse.toString())
-                }
-            })
 }
 
 private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Origin?, extraTags: List<String>?) =

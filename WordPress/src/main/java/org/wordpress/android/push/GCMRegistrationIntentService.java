@@ -15,6 +15,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -80,6 +81,9 @@ public class GCMRegistrationIntentService extends JobIntentService {
             }
 
             // Register to other kind of notifications
+            if (mAccountStore.hasAccessToken()) {
+                ZendeskHelper.enablePushNotifications();
+            }
             AnalyticsTracker.registerPushNotificationToken(gcmToken);
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
