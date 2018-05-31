@@ -227,9 +227,6 @@ class ActivityLogRestClientTest {
                 assertNotNull(this.rewind)
                 this.rewind?.apply {
                     assertEquals(this.status.value, REWIND_RESPONSE.status)
-                    assertEquals(this.progress, REWIND_RESPONSE.progress)
-                    assertEquals(this.rewindId, REWIND_RESPONSE.rewind_id)
-                    assertEquals(this.reason, REWIND_RESPONSE.reason)
                 }
             }
         }
@@ -298,7 +295,7 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindResponse>>())
 
-        val restoreId = "restoreId"
+        val restoreId = 10L
         rewindSuccessMethodCaptor.firstValue.invoke(RewindResponse(restoreId))
 
         verify(dispatcher).dispatch(mRewindActionCaptor.capture())
