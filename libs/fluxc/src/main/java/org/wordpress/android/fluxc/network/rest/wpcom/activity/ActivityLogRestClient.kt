@@ -21,7 +21,10 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.API_ERROR
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import java.util.Date
@@ -90,8 +93,13 @@ constructor(
         val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
         val request = wpComGsonRequestBuilder.buildPostRequest(url, mapOf(), RewindResponse::class.java,
                 { response ->
-                    val payload = ActivityLogStore.RewindResultPayload(rewindId, response.restore_id, site)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
+                    if (response.ok != true && (response.error != null && response.error.isNotEmpty())) {
+                        val payload = RewindResultPayload(RewindError(API_ERROR, response.error), rewindId, site)
+                        dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
+                    } else {
+                        val payload = ActivityLogStore.RewindResultPayload(rewindId, response.restore_id, site)
+                        dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
+                    }
                 },
                 { networkError ->
                     val error = ActivityLogStore.RewindError(genericToError(networkError,
@@ -277,5 +285,5 @@ constructor(
         )
     }
 
-    class RewindResponse(val restore_id: Long)
+    class RewindResponse(val restore_id: Long, val ok: Boolean?, val error: String?)
 }
