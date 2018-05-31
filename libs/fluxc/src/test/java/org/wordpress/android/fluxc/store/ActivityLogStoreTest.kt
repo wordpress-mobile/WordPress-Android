@@ -167,13 +167,38 @@ class ActivityLogStoreTest {
 
     @Test
     fun emitsRewindResult() {
+        val rewindId = "rewindId"
         val restoreId = "restoreId"
-        val payload = ActivityLogStore.RewindResultPayload(restoreId, siteModel)
+        val payload = ActivityLogStore.RewindResultPayload(rewindId, restoreId, siteModel)
         val action = ActivityLogActionBuilder.newRewindResultAction(payload)
 
         activityLogStore.onAction(action)
 
-        val expectedChangeEvent = ActivityLogStore.OnRewind(restoreId, ActivityLogAction.REWIND_RESULT)
+        val expectedChangeEvent = ActivityLogStore.OnRewind(rewindId, restoreId, ActivityLogAction.REWIND_RESULT)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
+    fun returnsActivityLogItemFromDbByRewindId() {
+        val rewindId = "rewindId"
+        val activityLogModel = mock<ActivityLogModel>()
+        whenever(activityLogSqlUtils.getActivityByRewindId(rewindId)).thenReturn(activityLogModel)
+
+        val returnedItem = activityLogStore.getActivityLogItemByRewindId(rewindId)
+
+        assertEquals(activityLogModel, returnedItem)
+        verify(activityLogSqlUtils).getActivityByRewindId(rewindId)
+    }
+
+    @Test
+    fun returnsActivityLogItemFromDbByActivityId() {
+        val rewindId = "activityId"
+        val activityLogModel = mock<ActivityLogModel>()
+        whenever(activityLogSqlUtils.getActivityByActivityId(rewindId)).thenReturn(activityLogModel)
+
+        val returnedItem = activityLogStore.getActivityLogItemByActivityId(rewindId)
+
+        assertEquals(activityLogModel, returnedItem)
+        verify(activityLogSqlUtils).getActivityByActivityId(rewindId)
     }
 }
