@@ -225,26 +225,28 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        final PostModel post = mPostStore.
-                                                 getPostByLocalPostId(
-                                                         data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+        int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+        final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-        if ((post == null)
-                && !data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.LONG);
+        if (post == null) {
+            if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
+                ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.LONG);
+            }
             return;
         }
 
         UploadUtils.handleEditPostResultSnackbars(getActivity(),
-                                                  getActivity().findViewById(R.id.coordinator), resultCode, data, post,
-                                                  mSite,
-                                                  new View.OnClickListener() {
-                                                      @Override
-                                                      public void onClick(View v) {
-                                                          UploadUtils
-                                                                  .publishPost(getActivity(), post, mSite, mDispatcher);
-                                                      }
-                                                  });
+                getActivity().findViewById(R.id.coordinator),
+                data,
+                post,
+                mSite,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UploadUtils
+                                .publishPost(getActivity(), post, mSite, mDispatcher);
+                    }
+                });
     }
 
     private void initSwipeToRefreshHelper(View view) {
@@ -560,7 +562,7 @@ public class PostsListFragment extends Fragment
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                     builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
                             .setMessage(message)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -574,7 +576,7 @@ public class PostsListFragment extends Fragment
                     builder.create().show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                     builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
                             .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -593,7 +595,7 @@ public class PostsListFragment extends Fragment
 
     private void showPublishConfirmationDialog(final PostModel post) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
                .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                                    : getString(R.string.dialog_confirm_publish_message_post))

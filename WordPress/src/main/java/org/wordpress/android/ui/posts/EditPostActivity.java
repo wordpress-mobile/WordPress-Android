@@ -309,6 +309,7 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
+        mHandler = new Handler();
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -568,7 +569,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mHandler = new Handler();
 
         EventBus.getDefault().register(this);
 
@@ -615,8 +615,6 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        mHandler = null;
-
         EventBus.getDefault().unregister(this);
     }
 
@@ -624,6 +622,10 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mSave);
+            mHandler = null;
+        }
         cancelAddMediaListThread();
         removePostOpenInEditorStickyEvent();
         if (mEditorFragment instanceof AztecEditorFragment) {
@@ -1255,14 +1257,8 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                final String newContent;
-                if (mEditorFragment.shouldLoadContentFromEditor()) {
-                    newContent = (String) mEditorFragment.getContent();
-                } else {
-                    newContent = mPost.getContent();
-                }
-                postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(), newContent);
+                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                        (String) mEditorFragment.getContent());
             } else {
                 // TODO: Remove when legacy editor is dropped
                 postTitleOrContentChanged = updatePostContent(isAutosave);
@@ -1663,7 +1659,7 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
         removeFailedUploadsDialog.initialize(
                 TAG_REMOVE_FAILED_UPLOADS_DIALOG,
-                null,
+                "",
                 getString(R.string.editor_toast_failed_uploads),
                 getString(R.string.editor_remove_failed_uploads),
                 getString(android.R.string.cancel),
@@ -1844,12 +1840,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
                     mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, new Observer<Editable>() {
                         @Override public void onChanged(@Nullable Editable editable) {
-                            mHandler.removeCallbacks(mSave);
-                            if (mDebounceCounter < MAX_UNSAVED_POSTS) {
-                                mDebounceCounter++;
-                                mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
-                            } else {
-                                mHandler.post(mSave);
+                            if (mHandler != null) {
+                                mHandler.removeCallbacks(mSave);
+                                if (mDebounceCounter < MAX_UNSAVED_POSTS) {
+                                    mDebounceCounter++;
+                                    mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
+                                } else {
+                                    mHandler.post(mSave);
+                                }
                             }
                         }
                     });

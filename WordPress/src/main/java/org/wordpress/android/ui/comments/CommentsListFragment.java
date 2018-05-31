@@ -419,7 +419,7 @@ public class CommentsListFragment extends Fragment {
     private void confirmDeleteComments() {
         if (mCommentStatusFilter == CommentStatusCriteria.TRASH) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
             int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments
                     : R.string.dlg_sure_to_delete_comment;
@@ -435,7 +435,7 @@ public class CommentsListFragment extends Fragment {
             dialogBuilder.create().show();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setMessage(R.string.dlg_confirm_trash_comments);
             builder.setTitle(R.string.trash);
             builder.setCancelable(true);

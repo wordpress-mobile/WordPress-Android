@@ -71,7 +71,6 @@ import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
-import org.wordpress.aztec.AztecText.EditorHasChanges;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.IHistoryListener;
@@ -676,7 +675,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void checkForFailedUploadAndSwitchToHtmlMode() {
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
-            new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog))
+            new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert))
                     .setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1049,10 +1048,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
-    }
-
-    @Override public boolean shouldLoadContentFromEditor() {
-        return mContent.hasChanges() != EditorHasChanges.NO_CHANGES;
     }
 
     @Override
@@ -1563,7 +1558,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             case ATTR_STATUS_UPLOADING:
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(
-                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                                           new DialogInterface.OnClickListener() {

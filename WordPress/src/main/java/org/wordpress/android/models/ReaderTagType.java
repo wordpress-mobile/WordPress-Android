@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 public enum ReaderTagType {
     FOLLOWED,
     DEFAULT,
+    BOOKMARKED,
     RECOMMENDED,
     CUSTOM_LIST,
     SEARCH;
@@ -12,6 +13,8 @@ public enum ReaderTagType {
     private static final int INT_RECOMMENDED = 2;
     private static final int INT_CUSTOM_LIST = 3;
     private static final int INT_SEARCH = 4;
+    private static final int INT_BOOKMARKED = 5;
+
 
     public static ReaderTagType fromInt(int value) {
         switch (value) {
@@ -23,6 +26,8 @@ public enum ReaderTagType {
                 return CUSTOM_LIST;
             case INT_SEARCH:
                 return SEARCH;
+            case INT_BOOKMARKED:
+                return BOOKMARKED;
             default:
                 return DEFAULT;
         }
@@ -38,6 +43,9 @@ public enum ReaderTagType {
                 return INT_CUSTOM_LIST;
             case SEARCH:
                 return INT_SEARCH;
+            case BOOKMARKED:
+                return INT_BOOKMARKED;
+            case DEFAULT:
             default:
                 return INT_DEFAULT;
         }

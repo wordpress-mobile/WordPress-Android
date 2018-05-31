@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public class ReaderTag implements Serializable, FilterCriteria {
     private static final String TAG_TITLE_DISCOVER = "Discover";
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public static final String TAG_SLUG_BOOKMARKED = "bookmarked-posts";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
 
     private String mTagSlug; // tag for API calls
@@ -29,7 +30,9 @@ public class ReaderTag implements Serializable, FilterCriteria {
         // we need a slug since it's used to uniquely ID the tag (including setting it as the
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
-            if (!TextUtils.isEmpty(title)) {
+            if (tagType == ReaderTagType.BOOKMARKED) {
+                setTagSlug(TAG_SLUG_BOOKMARKED);
+            } else if (!TextUtils.isEmpty(title)) {
                 setTagSlug(ReaderUtils.sanitizeWithDashes(title));
             } else {
                 setTagSlug(getTagSlugFromEndpoint(endpoint));
@@ -89,6 +92,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
         String tagSlug = getTagSlug();
         if (tagType == ReaderTagType.DEFAULT) {
             return tagSlug;
+        } else if (tagType == ReaderTagType.BOOKMARKED) {
+            return ReaderTagType.BOOKMARKED.name();
         } else if (tagSlug.length() >= 6) {
             return tagSlug.substring(0, 3) + "...";
         } else if (tagSlug.length() >= 4) {
@@ -103,7 +108,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
     /*
      * used to ensure a tag name is valid before adding it
      */
-    private static final Pattern INVALID_CHARS = Pattern.compile("^.*[~#@*+%{}<>\\[\\]|\"\\_].*$");
+    @SuppressWarnings("RegExpRedundantEscape") private static final Pattern INVALID_CHARS =
+            Pattern.compile("^.*[~#@*+%{}<>\\[\\]|\"\\_].*$");
 
     public static boolean isValidTagName(String tagName) {
         return !TextUtils.isEmpty(tagName)
@@ -138,11 +144,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
-        if (tag1 == null || tag2 == null) {
-            return false;
-        }
-        return tag1.tagType == tag2.tagType
-               && tag1.getTagSlug().equalsIgnoreCase(tag2.getTagSlug());
+        return tag1 != null && tag2 != null && tag1.tagType == tag2.tagType && tag1.getTagSlug()
+                                                                                   .equalsIgnoreCase(tag2.getTagSlug());
     }
 
     public boolean isPostsILike() {
@@ -151,6 +154,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
 
     public boolean isFollowedSites() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
+    }
+
+    public boolean isBookmarked() {
+        return tagType == ReaderTagType.BOOKMARKED;
     }
 
     public boolean isDiscover() {

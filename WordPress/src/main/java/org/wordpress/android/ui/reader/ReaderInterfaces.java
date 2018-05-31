@@ -39,6 +39,14 @@ public class ReaderInterfaces {
      */
     public interface OnFollowListener {
         void onFollowTapped(View view, String blogName, long blogId);
+
         void onFollowingTapped();
+    }
+
+    /*
+     * used by adapters to notify when post bookmarked state has changed
+     */
+    public interface OnPostBookmarkedListener {
+        void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId, boolean isCachingActionRequired);
     }
 }

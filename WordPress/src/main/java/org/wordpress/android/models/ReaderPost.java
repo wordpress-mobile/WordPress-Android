@@ -56,6 +56,7 @@ public class ReaderPost {
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
+    public boolean isBookmarked;
     public boolean isCommentsOpen;
     public boolean isExternal;
     public boolean isPrivate;
