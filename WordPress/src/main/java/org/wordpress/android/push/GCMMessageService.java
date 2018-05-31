@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -45,10 +44,10 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Collections;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -78,6 +77,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TYPE = "type";
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
+    private static final String PUSH_ARG_ZENDESK_REQUEST_ID = "zendesk_sdk_request_id";
     public static final String PUSH_ARG_NOTE_ID = "note_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
@@ -126,8 +126,15 @@ public class GCMMessageService extends GcmListenerService {
 
         // Handle Zendesk PNs
         if (TextUtils.equals(data.getString("type"), "zendesk")) {
-            // TODO: show notification that with a button that opens the ticket
-            ZendeskHelper.handlePush(this, data, zendeskNotificationBackStack(this));
+            Intent resultIntent = new Intent(this, WPMainActivity.class);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            resultIntent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_ME);
+
+            String title = data.getString(PUSH_ARG_TITLE);
+            String message = data.getString(PUSH_ARG_MSG);
+            // TODO: figure out a proper pushId
+            int pushId = Integer.parseInt(new SimpleDateFormat("ddHHmmss", Locale.US).format(new Date()));
+            NOTIFICATION_HELPER.showSimpleNotification(this, title, message, resultIntent, pushId);
             return;
         }
 
@@ -308,15 +315,6 @@ public class GCMMessageService extends GcmListenerService {
         ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }
 
-    // TODO: What if the user is logged out? Instead of this, can we use the current back stack?
-    private static List<Intent> zendeskNotificationBackStack(Context context) {
-        Intent main = new Intent(context, WPMainActivity.class);
-        main.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        main.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_ME);
-
-        return Collections.singletonList(main);
-    }
-
     private static class NotificationHelper {
         private void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
             String pushUserId = data.getString(PUSH_ARG_USER);
@@ -448,6 +446,12 @@ public class GCMMessageService extends GcmListenerService {
             // Also add a group summary notification, which is required for non-wearable devices
             // Do not need to play the sound again. We've already played it in the individual builder.
             showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
+        }
+
+        private void showSimpleNotification(Context context, String title, String message, Intent resultIntent,
+                                            int pushId) {
+            NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
+            showNotificationForBuilder(builder, context, resultIntent, pushId, true);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder,
@@ -683,12 +687,12 @@ public class GCMMessageService extends GcmListenerService {
                         .setContentText(subject)
                         .setStyle(inboxStyle);
 
-                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
+                showWPComNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true)
                         .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
-                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
+                showWPComNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             }
         }
 
@@ -703,12 +707,12 @@ public class GCMMessageService extends GcmListenerService {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
 
-            showNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser);
+            showWPComNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser);
         }
 
         // Displays a notification to the user
-        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
-                                                String wpcomNoteID, int pushId, boolean notifyUser) {
+        private void showWPComNotificationForBuilder(NotificationCompat.Builder builder, Context context,
+                                                     String wpcomNoteID, int pushId, boolean notifyUser) {
             if (builder == null || context == null) {
                 return;
             }
@@ -721,6 +725,11 @@ public class GCMMessageService extends GcmListenerService {
             resultIntent.addCategory("android.intent.category.LAUNCHER");
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
 
+            showNotificationForBuilder(builder, context, resultIntent, pushId, notifyUser);
+        }
+
+        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
+                                                Intent resultIntent, int pushId, boolean notifyUser) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             boolean shouldReceiveNotifications =
                     prefs.getBoolean(context.getString(R.string.wp_pref_notifications_master), true);
@@ -732,11 +741,12 @@ public class GCMMessageService extends GcmListenerService {
                     boolean shouldBlinkLight = prefs.getBoolean(
                             context.getString(R.string.wp_pref_notification_light), true);
                     String notificationSound = prefs.getString(
-                       context.getString(R.string.wp_pref_custom_notification_sound),
-                       context.getString(R.string.notification_settings_item_sights_and_sounds_choose_sound_default));
+                            context.getString(R.string.wp_pref_custom_notification_sound),
+                            context.getString(
+                                    R.string.notification_settings_item_sights_and_sounds_choose_sound_default));
 
                     if (!TextUtils.isEmpty(notificationSound)
-                            && !notificationSound.trim().toLowerCase(Locale.ROOT).startsWith("file://")) {
+                        && !notificationSound.trim().toLowerCase(Locale.ROOT).startsWith("file://")) {
                         builder.setSound(Uri.parse(notificationSound));
                     }
 
@@ -764,8 +774,7 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
 
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
-                                                                        PendingIntent.FLAG_CANCEL_CURRENT
-                                                                        | PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
                 builder.setContentIntent(pendingIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.notify(pushId, builder.build());

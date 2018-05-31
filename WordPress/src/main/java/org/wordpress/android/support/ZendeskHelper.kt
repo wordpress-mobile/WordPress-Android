@@ -3,13 +3,10 @@
 package org.wordpress.android.support
 
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
-import android.os.Bundle
 import android.preference.PreferenceManager
 import android.telephony.TelephonyManager
 import com.zendesk.logger.Logger
-import com.zendesk.sdk.deeplinking.ZendeskDeepLinking
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
 import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
 import com.zendesk.sdk.model.access.AnonymousIdentity
@@ -47,7 +44,6 @@ val isZendeskEnabled: Boolean
     get() = zendeskInstance.isInitialized
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
-private const val zendeskPushNotificationKeyTicketId = "zendesk_sdk_request_id"
 
 fun setupZendesk(context: Context, deviceLocale: Locale) {
     require(!isZendeskEnabled) {
@@ -139,27 +135,6 @@ fun showAllTickets(
         configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
         RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
     }
-}
-
-fun handlePush(context: Context, bundle: Bundle, backStackActivities: List<Intent>) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
-    }
-    val (zendeskUrl, applicationId, oauthClientId) = zendeskCredentials()
-    if (zendeskUrl.isEmpty() || applicationId.isEmpty() || oauthClientId.isEmpty()) {
-        return
-    }
-    val supportEmail = AppPrefs.getSupportEmail()
-    if (supportEmail.isNullOrEmpty()) {
-        // we don't have a valid Zendesk identity to show the ticket for
-        return
-    }
-    zendeskInstance.setIdentity(zendeskIdentity(supportEmail, AppPrefs.getSupportName()))
-
-    val requestId = bundle.getString(zendeskPushNotificationKeyTicketId)
-    val intent = ZendeskDeepLinking.INSTANCE.getRequestIntent(context, requestId, ZendeskConstants.ticketSubject,
-            ArrayList(backStackActivities), null, zendeskUrl, applicationId, oauthClientId)
-    context.sendBroadcast(intent)
 }
 
 // Helpers
