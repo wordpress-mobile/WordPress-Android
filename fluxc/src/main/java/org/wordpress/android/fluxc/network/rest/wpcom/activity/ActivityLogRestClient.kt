@@ -268,14 +268,14 @@ constructor(
         )
 
         data class Rewind(
-            val rewind_id: String?,
-            val restore_id: Long?,
             val site_id: String?,
-            val status: String,
-            val progress: Int,
+            val status: String?,
+            val restore_id: Long?,
+            val rewind_id: String?,
+            val progress: Int?,
             val reason: String?
         )
     }
 
-    class RewindResponse(val restore_id: String)
+    class RewindResponse(val restore_id: Long)
 }

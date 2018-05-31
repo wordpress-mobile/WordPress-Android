@@ -137,7 +137,7 @@ class ActivityLogStore
 
     data class OnRewind(
         val rewindId: String,
-        val restoreId: String? = null,
+        val restoreId: Long? = null,
         var causeOfChange: ActivityLogAction
     ) : Store.OnChanged<RewindError>() {
         constructor(rewindId: String, error: RewindError, causeOfChange: ActivityLogAction) :
@@ -185,7 +185,7 @@ class ActivityLogStore
 
     class RewindResultPayload(
         val rewindId: String,
-        val restoreId: String? = null,
+        val restoreId: Long? = null,
         val site: SiteModel
     ) : Payload<RewindError>() {
         constructor(error: RewindError, rewindId: String, site: SiteModel) : this(rewindId = rewindId, site = site) {
