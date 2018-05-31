@@ -45,11 +45,16 @@ val isZendeskEnabled: Boolean
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
 
-fun setupZendesk(context: Context, deviceLocale: Locale) {
+fun setupZendesk(
+    context: Context,
+    zendeskUrl: String,
+    applicationId: String,
+    oauthClientId: String,
+    deviceLocale: Locale
+) {
     require(!isZendeskEnabled) {
         "Zendesk shouldn't be initialized more than once!"
     }
-    val (zendeskUrl, applicationId, oauthClientId) = zendeskCredentials()
     if (zendeskUrl.isEmpty() || applicationId.isEmpty() || oauthClientId.isEmpty()) {
         return
     }
@@ -138,9 +143,6 @@ fun showAllTickets(
 }
 
 // Helpers
-
-private fun zendeskCredentials(): Triple<String, String, String> =
-        Triple(BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID, BuildConfig.ZENDESK_OAUTH_CLIENT_ID)
 
 private fun configureZendesk(
     context: Context,
