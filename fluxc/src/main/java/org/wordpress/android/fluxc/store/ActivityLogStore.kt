@@ -219,6 +219,7 @@ class ActivityLogStore
 
     enum class RewindErrorType {
         GENERIC_ERROR,
+        API_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
         MISSING_STATE
