@@ -110,6 +110,7 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
+    public static final String ARG_ME = "show_me";
 
     private WPMainNavigationView mBottomNav;
     private Toolbar mToolbar;
@@ -290,6 +291,9 @@ public class WPMainActivity extends AppCompatActivity
             switch (pagePosition) {
                 case ARG_NOTIFICATIONS:
                     mBottomNav.setCurrentPosition(PAGE_NOTIFS);
+                    break;
+                case ARG_ME:
+                    mBottomNav.setCurrentPosition(PAGE_ME);
                     break;
             }
         } else {

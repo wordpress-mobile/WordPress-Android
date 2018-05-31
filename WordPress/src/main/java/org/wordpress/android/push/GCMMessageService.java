@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -44,8 +45,10 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -121,10 +124,10 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        // Handle helpshift PNs
-        if (TextUtils.equals(data.getString("origin"), "helpshift")) {
-            // TODO: Handle Zendesk PNs instead
-//            HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
+        // Handle Zendesk PNs
+        if (TextUtils.equals(data.getString("type"), "zendesk")) {
+            // TODO: show notification that with a button that opens the ticket
+            ZendeskHelper.handlePush(this, data, zendeskNotificationBackStack(this));
             return;
         }
 
@@ -303,6 +306,15 @@ public class GCMMessageService extends GcmListenerService {
 
     private static void addAuthPushNotificationToNotificationMap(Bundle data) {
         ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, data);
+    }
+
+    // TODO: What if the user is logged out? Instead of this, can we use the current back stack?
+    private static List<Intent> zendeskNotificationBackStack(Context context) {
+        Intent main = new Intent(context, WPMainActivity.class);
+        main.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        main.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_ME);
+
+        return Collections.singletonList(main);
     }
 
     private static class NotificationHelper {

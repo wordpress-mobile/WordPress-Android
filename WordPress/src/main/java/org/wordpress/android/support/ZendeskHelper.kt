@@ -3,10 +3,13 @@
 package org.wordpress.android.support
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
+import android.os.Bundle
 import android.preference.PreferenceManager
 import android.telephony.TelephonyManager
 import com.zendesk.logger.Logger
+import com.zendesk.sdk.deeplinking.ZendeskDeepLinking
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
 import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
 import com.zendesk.sdk.model.access.AnonymousIdentity
@@ -20,12 +23,12 @@ import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -44,17 +47,13 @@ val isZendeskEnabled: Boolean
     get() = zendeskInstance.isInitialized
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
+private const val zendeskPushNotificationKeyTicketId = "zendesk_sdk_request_id"
 
-fun setupZendesk(
-    context: Context,
-    zendeskUrl: String,
-    applicationId: String,
-    oauthClientId: String,
-    deviceLocale: Locale
-) {
+fun setupZendesk(context: Context, deviceLocale: Locale) {
     require(!isZendeskEnabled) {
         "Zendesk shouldn't be initialized more than once!"
     }
+    val (zendeskUrl, applicationId, oauthClientId) = zendeskCredentials()
     if (zendeskUrl.isEmpty() || applicationId.isEmpty() || oauthClientId.isEmpty()) {
         return
     }
@@ -142,7 +141,31 @@ fun showAllTickets(
     }
 }
 
+fun handlePush(context: Context, bundle: Bundle, backStackActivities: List<Intent>) {
+    require(isZendeskEnabled) {
+        zendeskNeedsToBeEnabledError
+    }
+    val (zendeskUrl, applicationId, oauthClientId) = zendeskCredentials()
+    if (zendeskUrl.isEmpty() || applicationId.isEmpty() || oauthClientId.isEmpty()) {
+        return
+    }
+    val supportEmail = AppPrefs.getSupportEmail()
+    if (supportEmail.isNullOrEmpty()) {
+        // we don't have a valid Zendesk identity to show the ticket for
+        return
+    }
+    zendeskInstance.setIdentity(zendeskIdentity(supportEmail, AppPrefs.getSupportName()))
+
+    val requestId = bundle.getString(zendeskPushNotificationKeyTicketId)
+    val intent = ZendeskDeepLinking.INSTANCE.getRequestIntent(context, requestId, ZendeskConstants.ticketSubject,
+            ArrayList(backStackActivities), null, zendeskUrl, applicationId, oauthClientId)
+    context.sendBroadcast(intent)
+}
+
 // Helpers
+
+private fun zendeskCredentials(): Triple<String, String, String> =
+        Triple(BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID, BuildConfig.ZENDESK_OAUTH_CLIENT_ID)
 
 private fun configureZendesk(
     context: Context,

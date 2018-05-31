@@ -273,8 +273,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
-        ZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
-                BuildConfig.ZENDESK_OAUTH_CLIENT_ID, LocaleManager.getSafeLocale(this));
+        ZendeskHelper.setupZendesk(this, LocaleManager.getSafeLocale(this));
 
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
