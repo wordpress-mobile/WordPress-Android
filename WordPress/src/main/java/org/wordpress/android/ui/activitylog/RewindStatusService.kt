@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
+import java.util.Date
 import javax.inject.Inject
 
 class RewindStatusService
@@ -32,27 +34,27 @@ constructor(
     private val mutableRewindError = MutableLiveData<RewindError>()
     private val mutableRewindStatusFetchError = MutableLiveData<RewindStatusError>()
     private val mutableRewindState = MutableLiveData<Rewind>()
+    private val mutableRewindProgress = MutableLiveData<RewindProgress>()
     private var site: SiteModel? = null
 
     val rewindAvailable: LiveData<Boolean> = mutableRewindAvailable
     val rewindError: LiveData<RewindError> = mutableRewindError
     val rewindStatusFetchError: LiveData<RewindStatusError> = mutableRewindStatusFetchError
     val rewindState: LiveData<Rewind> = mutableRewindState
+    val rewindProgress: LiveData<RewindProgress> = mutableRewindProgress
 
     fun rewind(rewindId: String, site: SiteModel) {
         dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))
         mutableRewindAvailable.postValue(false)
         mutableRewindError.postValue(null)
         mutableRewindState.postValue(null)
+        mutableRewindProgress.postValue(null)
     }
 
     fun start(site: SiteModel) {
         this.site = site
         dispatcher.register(this)
-        val state = activityLogStore.getRewindStatusForSite(site)
-        if (state != null) {
-            updateRewindStatus(state)
-        } else {
+        if (!reloadRewindStatus()) {
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
         }
     }
@@ -62,59 +64,82 @@ constructor(
         site = null
     }
 
+    private fun reloadRewindStatus(): Boolean {
+        site?.let {
+            val state = activityLogStore.getRewindStatusForSite(it)
+            state?.let {
+                updateRewindStatus(state)
+                return true
+            }
+        }
+        return false
+    }
+
     private fun updateRewindStatus(rewindStatus: RewindStatusModel?) {
         mutableRewindAvailable.postValue(
                 rewindStatus != null &&
                         rewindStatus.state == ACTIVE &&
                         rewindStatus.rewind?.status != RUNNING
         )
-        mutableRewindState.postValue(rewindStatus?.rewind)
+        val rewind = rewindStatus?.rewind
+        mutableRewindState.postValue(rewind)
+        if (rewind != null) {
+            rewind.rewindId?.let { rewindId ->
+                updateRewindProgress(rewindId, rewind.progress, rewind.status, rewind.reason)
+            }
+            if (rewind.status != RUNNING) {
+                workerController.cancelWorker()
+            }
+        } else {
+            mutableRewindProgress.postValue(null)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onRewindStatusFetched(event: OnRewindStatusFetched) {
+        mutableRewindStatusFetchError.postValue(event.error)
         if (event.isError) {
-            event.error?.let {
-                mutableRewindStatusFetchError.postValue(it)
-            }
             workerController.cancelWorker()
-        } else {
-            mutableRewindStatusFetchError.postValue(null)
         }
-        site?.let {
-            val rewindStatusForSite = activityLogStore.getRewindStatusForSite(it)
-            rewindStatusForSite?.let {
-                updateRewindStatus(it)
-                it.rewind?.let {
-                    if (it.status != RUNNING) {
-                        workerController.cancelWorker()
-                    }
-                }
-            }
-        }
+        reloadRewindStatus()
     }
 
     @Subscribe(threadMode = BACKGROUND)
     @SuppressWarnings("unused")
     fun onRewind(event: OnRewind) {
+        mutableRewindError.postValue(event.error)
         if (event.isError) {
-            event.error?.let {
-                mutableRewindError.postValue(it)
-            }
             mutableRewindAvailable.postValue(true)
             workerController.cancelWorker()
-            site?.let {
-                val state = activityLogStore.getRewindStatusForSite(it)
-                if (state != null) {
-                    updateRewindStatus(state)
-                }
-            }
+            reloadRewindStatus()
         }
+        val rewindStatus = if (event.isError) Status.FAILED else Status.RUNNING
+        updateRewindProgress(event.rewindId, 0, rewindStatus, event.error?.message)
         site?.let {
             event.restoreId?.let { restoreId ->
                 workerController.startWorker(it, restoreId.toLong())
             }
         }
     }
+
+    private fun updateRewindProgress(
+        rewindId: String,
+        progress: Int,
+        rewindStatus: Rewind.Status,
+        rewindError: String?
+    ) {
+        activityLogStore.getActivityLogItemByRewindId(rewindId)?.let {
+            val rewindProgress = RewindProgress(it.activityID, progress, it.published, rewindStatus, rewindError)
+            mutableRewindProgress.postValue(rewindProgress)
+        }
+    }
+
+    data class RewindProgress(
+        val activityId: String,
+        val progress: Int,
+        val date: Date,
+        val failure: Rewind.Status,
+        val failureReason: String? = null
+    )
 }
