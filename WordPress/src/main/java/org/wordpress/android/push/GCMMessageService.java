@@ -77,7 +77,6 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TYPE = "type";
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
-    private static final String PUSH_ARG_ZENDESK_REQUEST_ID = "zendesk_sdk_request_id";
     public static final String PUSH_ARG_NOTE_ID = "note_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
@@ -125,7 +124,9 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         // Handle Zendesk PNs
+        // TODO: Move the contents of this to a helper
         if (TextUtils.equals(data.getString("type"), "zendesk")) {
+            // TODO: Is it possible to keep the current `WPMainActivity`? App opening animation can be distracting
             Intent resultIntent = new Intent(this, WPMainActivity.class);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             resultIntent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_ME);
