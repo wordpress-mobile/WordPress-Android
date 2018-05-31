@@ -148,6 +148,7 @@ class ActivityLogSqlUtils
                 reason = this.reason,
                 canAutoconfigure = this.canAutoconfigure,
                 rewindId = this.rewind?.rewindId,
+                restoreId = this.rewind?.restoreId,
                 rewindStatus = this.rewind?.status?.value,
                 rewindProgress = this.rewind?.progress,
                 rewindReason = this.rewind?.reason
