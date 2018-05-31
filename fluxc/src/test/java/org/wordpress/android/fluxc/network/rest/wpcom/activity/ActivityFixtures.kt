@@ -26,8 +26,8 @@ val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse.ActivityRespons
 val ACTIVITY_RESPONSE_PAGE = ActivityLogRestClient.ActivitiesResponse.Page(listOf(ACTIVITY_RESPONSE))
 val REWIND_RESPONSE = ActivityLogRestClient.RewindStatusResponse.Rewind(rewind_id = "123",
         status = RewindStatusModel.Rewind.Status.RUNNING.value,
-        progress = 10,
-        reason = "nit",
+        progress = null,
+        reason = null,
         site_id = null,
         restore_id = 5)
 val REWIND_STATUS_RESPONSE = ActivityLogRestClient.RewindStatusResponse(
