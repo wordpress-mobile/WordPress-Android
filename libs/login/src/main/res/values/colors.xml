@@ -40,6 +40,8 @@
     <color name="grey_dark">#2e4453</color>
     <color name="grey_disabled">@color/grey_darken_10</color>
 
+    <color name="grey_text_min">#537994</color>
+
     <!-- Secondary Greys -->
     <color name="grey_lighten_30">#e9eff3</color>
     <color name="grey_lighten_20">#c8d7e1</color>
@@ -102,15 +104,15 @@
     <color name="login_secondary_button_text_color">@color/blue_wordpress</color>
     <color name="login_google_button_text_color">@color/blue_wordpress</color>
     <color name="login_text_label_text_color">@color/grey_dark</color>
-    <color name="login_input_label_static_text_color">@color/grey</color>
-    <color name="login_edit_text_color_control_normal">@color/grey</color>
+    <color name="login_input_label_static_text_color">@color/grey_text_min</color>
+    <color name="login_edit_text_color_control_normal">@color/grey_text_min</color>
     <color name="login_edit_text_color_control_activated">@color/blue_medium</color>
     <color name="login_edit_text_color_control_highlight">@color/blue_medium</color>
     <color name="login_edit_text_text_color">@color/grey_dark</color>
-    <color name="login_edit_text_text_hint_color">@color/grey</color>
-    <color name="login_heading_text_color">@color/grey_darken_10</color>
+    <color name="login_edit_text_text_hint_color">@color/grey_text_min</color>
+    <color name="login_heading_text_color">@color/grey_text_min</color>
     <color name="login_subhead_text_color">@color/grey_dark</color>
-    <color name="login_username_text_color">@color/grey_darken_10</color>
+    <color name="login_username_text_color">@color/grey_text_min</color>
     <color name="login_footnote_text_color">@color/grey_dark</color>
 
     <color name="login_input_icon_color">@color/grey_lighten_10</color>

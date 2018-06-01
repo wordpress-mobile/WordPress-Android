@@ -49,15 +49,6 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     public static final String TAG = "login_site_address_fragment_tag";
 
-    private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION = "10";
-    private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID = "102";
-
-    private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_SECTION = "10";
-    private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID = "11";
-
-    private static final String NO_SITE_HELPSHIFT_FAQ_SECTION = "10";
-    private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; // Using the same as in INVALID URL
-
     private WPLoginInputRow mSiteAddressInput;
 
     private String mRequestedSiteAddress;
@@ -156,7 +147,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
 
         if (TextUtils.isEmpty(mSiteAddressInput.getEditText().getText())) {
-            showError(R.string.login_empty_site_url, null, null);
+            showError(R.string.login_empty_site_url);
             return;
         }
 
@@ -188,12 +179,10 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mSiteAddressInput.setError(null);
-        mLoginListener.setHelpContext(null, null);
     }
 
-    private void showError(int messageId, String faqId, String faqSection) {
+    private void showError(int messageId) {
         mSiteAddressInput.setError(getString(messageId));
-        mLoginListener.setHelpContext(faqId, faqSection);
     }
 
     @Override
@@ -227,26 +216,23 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 askForHttpAuthCredentials(failedEndpoint);
                 break;
             case NO_SITE_ERROR:
-                showError(R.string.no_site_error, NO_SITE_HELPSHIFT_FAQ_ID, NO_SITE_HELPSHIFT_FAQ_SECTION);
+                showError(R.string.no_site_error);
                 break;
             case INVALID_URL:
-                showError(R.string.invalid_site_url_message, null, null);
+                showError(R.string.invalid_site_url_message);
                 mAnalyticsListener.trackInsertedInvalidUrl();
                 break;
             case MISSING_XMLRPC_METHOD:
-                showError(R.string.xmlrpc_missing_method_error,
-                        MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID, MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_SECTION);
+                showError(R.string.xmlrpc_missing_method_error);
                 break;
             case XMLRPC_BLOCKED:
-                showError(R.string.xmlrpc_post_blocked_error,
-                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID, XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);
+                showError(R.string.xmlrpc_post_blocked_error);
                 break;
             case XMLRPC_FORBIDDEN:
-                showError(R.string.xmlrpc_endpoint_forbidden_error,
-                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID, XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);
+                showError(R.string.xmlrpc_endpoint_forbidden_error);
                 break;
             case GENERIC_ERROR:
-                showError(R.string.error_generic, null, null);
+                showError(R.string.error_generic);
                 break;
         }
     }
@@ -285,7 +271,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         if (event.isError()) {
             // Not a WordPress.com or Jetpack site
             if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
-                showError(R.string.enter_wpcom_or_jetpack_site, null, null);
+                showError(R.string.enter_wpcom_or_jetpack_site);
                 endProgress();
             } else {
                 // Start the discovery process

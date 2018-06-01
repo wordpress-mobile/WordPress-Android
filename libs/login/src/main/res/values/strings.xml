@@ -55,6 +55,7 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_google_button_prefix">Or you can</string>
@@ -136,4 +137,10 @@
     This resource will be automatically overwritten in the host project with the real value from google-services.json. -->
     <string name="default_web_client_id">placeholder</string>
 
+    <!-- Placeholder for notification channel to be used by login service notification.
+     This resource must be overwritten in the host project with a real notification channel id it has configured. -->
+    <string name="login_notification_channel_id">placeholder</string>
+
+    <!-- Image Descriptions for Accessibility -->
+    <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 </resources>

@@ -24,6 +24,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadFlow;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadSource;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthEmailSent;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -35,11 +37,15 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class SignupMagicLinkFragment extends Fragment {
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
+    private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
 
     public static final String TAG = "signup_magic_link_fragment_tag";
 
     private Button mOpenMailButton;
     private ProgressDialog mProgressDialog;
+    private String mJetpackConnectSource;
+    private boolean mIsJetpackConnect;
 
     @Inject protected Dispatcher mDispatcher;
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
@@ -47,10 +53,13 @@ public class SignupMagicLinkFragment extends Fragment {
     protected String mEmail;
     protected boolean mInProgress;
 
-    public static SignupMagicLinkFragment newInstance(String email) {
+    public static SignupMagicLinkFragment newInstance(String email, boolean isJetpackConnect,
+                                                      String jetpackConnectSource) {
         SignupMagicLinkFragment fragment = new SignupMagicLinkFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
+        args.putBoolean(ARG_IS_JETPACK_CONNECT, isJetpackConnect);
+        args.putString(ARG_JETPACK_CONNECT_SOURCE, jetpackConnectSource);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,10 +84,15 @@ public class SignupMagicLinkFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mLoginListener != null) {
-                    mLoginListener.openEmailClient();
+                    mLoginListener.openEmailClient(false);
                 }
             }
         });
+
+        if (getArguments() != null) {
+            mIsJetpackConnect = getArguments().getBoolean(ARG_IS_JETPACK_CONNECT);
+            mJetpackConnectSource = getArguments().getString(ARG_JETPACK_CONNECT_SOURCE);
+        }
 
         if (savedInstanceState == null) {
             sendMagicLinkEmail();
@@ -180,8 +194,24 @@ public class SignupMagicLinkFragment extends Fragment {
     protected void sendMagicLinkEmail() {
         if (NetworkUtils.checkConnection(getActivity())) {
             startProgress(getString(R.string.signup_magic_link_progress));
-            AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, true, null, null);
+            AuthEmailPayloadSource source = getAuthEmailPayloadSource();
+            AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, true,
+                    mIsJetpackConnect ? AuthEmailPayloadFlow.JETPACK : null, source);
             mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(authEmailPayload));
+        }
+    }
+
+    private AuthEmailPayloadSource getAuthEmailPayloadSource() {
+        if (mJetpackConnectSource != null) {
+            if (mJetpackConnectSource.equalsIgnoreCase(AuthEmailPayloadSource.NOTIFICATIONS.toString())) {
+                return AuthEmailPayloadSource.NOTIFICATIONS;
+            } else if (mJetpackConnectSource.equalsIgnoreCase(AuthEmailPayloadSource.STATS.toString())) {
+                return AuthEmailPayloadSource.STATS;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
