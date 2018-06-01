@@ -27,6 +27,7 @@ import zendesk.support.Support
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.request.RequestUiConfig
+import zendesk.support.requestlist.RequestListActivity
 import java.util.Locale
 
 private val zendeskInstance: Zendesk
@@ -72,7 +73,6 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
  */
 fun showZendeskHelpCenter(
     context: Context,
-    accountStore: AccountStore?,
     siteStore: SiteStore,
     origin: Origin?,
     selectedSite: SiteModel?,
@@ -96,7 +96,7 @@ fun showZendeskHelpCenter(
             .withShowConversationsMenuButton(isIdentityAvailable)
 
     if (isIdentityAvailable) {
-        builder.show(context, config(context, accountStore, siteStore, origin, selectedSite, extraTags).config())
+        builder.show(context, config(context, siteStore, origin, selectedSite, extraTags).config())
     } else {
         builder.show(context)
     }
@@ -114,10 +114,11 @@ fun createNewTicket(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-//    getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-//        zendeskInstance.setIdentity(zendeskIdentity(email, name))
-//        ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
-//    }
+    getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
+        zendeskInstance.setIdentity(zendeskIdentity(email, name))
+        RequestActivity.builder()
+                .show(context, config(context, siteStore, origin, selectedSite, extraTags).config())
+    }
 }
 
 fun showAllTickets(
@@ -133,7 +134,8 @@ fun showAllTickets(
     }
     getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
         zendeskInstance.setIdentity(zendeskIdentity(email, name))
-        config(context, accountStore, siteStore, origin, selectedSite, extraTags).show(context)
+        RequestListActivity.builder()
+                .show(context, config(context, siteStore, origin, selectedSite, extraTags).config())
     }
 }
 
@@ -141,17 +143,15 @@ fun showAllTickets(
 
 private fun config(
     context: Context,
-    accountStore: AccountStore?,
     siteStore: SiteStore,
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null
 ): RequestUiConfig.Builder {
     return RequestActivity.builder()
-//            .withTicketForm(TicketFieldIds.form, null)
+            .withTicketForm(TicketFieldIds.form, customFields(context, siteStore, selectedSite))
             .withRequestSubject(ZendeskConstants.ticketSubject)
             .withTags(zendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
-            .withCustomFields(customFields(context, siteStore, selectedSite))
 }
 
 private fun customFields(context: Context, siteStore: SiteStore, selectedSite: SiteModel?): List<CustomField> {
