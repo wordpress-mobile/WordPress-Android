@@ -60,7 +60,18 @@ class RewindStatusServiceTest {
     private val rewindId = "10"
     private val activityID = "activityId"
     private val published = Date()
-    private val activityLogModel = ActivityLogModel(activityID, "summary", "text", null, null, null, null, null, rewindId, published)
+    private val activityLogModel = ActivityLogModel(
+            activityID,
+            "summary",
+            "text",
+            null,
+            null,
+            null,
+            null,
+            null,
+            rewindId,
+            published
+    )
 
     private val activeRewindStatusModel = RewindStatusModel(
             state = ACTIVE,
