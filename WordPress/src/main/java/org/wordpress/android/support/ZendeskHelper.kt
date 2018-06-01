@@ -26,6 +26,7 @@ import zendesk.support.CustomField
 import zendesk.support.Support
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
+import zendesk.support.request.RequestUiConfig
 import java.util.Locale
 
 private val zendeskInstance: Zendesk
@@ -81,20 +82,24 @@ fun showZendeskHelpCenter(
         zendeskNeedsToBeEnabledError
     }
     val supportEmail = AppPrefs.getSupportEmail()
-    val isIdentityAvailable = false // !supportEmail.isNullOrEmpty()
+    val supportName = AppPrefs.getSupportName()
+    val isIdentityAvailable = !supportEmail.isNullOrEmpty()
     if (isIdentityAvailable) {
-        val supportName = AppPrefs.getSupportName()
-//        configureZendesk(context, supportEmail, supportName, accountStore, siteStore, selectedSite)
+        zendeskInstance.setIdentity(zendeskIdentity(supportEmail, supportName))
     } else {
         zendeskInstance.setIdentity(zendeskIdentity(null, null))
     }
-    HelpCenterActivity.builder()
+    val builder = HelpCenterActivity.builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
             .withContactUsButtonVisible(isIdentityAvailable)
             .withLabelNames(ZendeskConstants.articleLabel)
             .withShowConversationsMenuButton(isIdentityAvailable)
-            .show(context)
-//            .withContactConfiguration(zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+
+    if (isIdentityAvailable) {
+        builder.show(context, config(context, accountStore, siteStore, origin, selectedSite, extraTags).config())
+    } else {
+        builder.show(context)
+    }
 }
 
 @JvmOverloads
@@ -110,7 +115,7 @@ fun createNewTicket(
         zendeskNeedsToBeEnabledError
     }
 //    getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-//        configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
+//        zendeskInstance.setIdentity(zendeskIdentity(email, name))
 //        ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
 //    }
 }
@@ -127,24 +132,26 @@ fun showAllTickets(
         zendeskNeedsToBeEnabledError
     }
     getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
-        configureZendesk(email, name)
-        RequestActivity.builder()
-//                .withTicketForm(TicketFieldIds.form, null)
-                .withRequestSubject(ZendeskConstants.ticketSubject)
-                .withTags(zendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
-                .withCustomFields(customFields(context, siteStore, selectedSite))
-                .show(context)
-//        startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+        zendeskInstance.setIdentity(zendeskIdentity(email, name))
+        config(context, accountStore, siteStore, origin, selectedSite, extraTags).show(context)
     }
 }
 
 // Helpers
 
-private fun configureZendesk(
-    email: String,
-    name: String
-) {
-    zendeskInstance.setIdentity(zendeskIdentity(email, name))
+private fun config(
+    context: Context,
+    accountStore: AccountStore?,
+    siteStore: SiteStore,
+    origin: Origin?,
+    selectedSite: SiteModel? = null,
+    extraTags: List<String>? = null
+): RequestUiConfig.Builder {
+    return RequestActivity.builder()
+//            .withTicketForm(TicketFieldIds.form, null)
+            .withRequestSubject(ZendeskConstants.ticketSubject)
+            .withTags(zendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
+            .withCustomFields(customFields(context, siteStore, selectedSite))
 }
 
 private fun customFields(context: Context, siteStore: SiteStore, selectedSite: SiteModel?): List<CustomField> {
