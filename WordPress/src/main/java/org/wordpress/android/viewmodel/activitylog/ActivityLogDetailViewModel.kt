@@ -71,6 +71,11 @@ class ActivityLogDetailViewModel
                             }
             )
         }
+        rewindStatusService.start(site)
+    }
+
+    fun stop() {
+        rewindStatusService.stop()
     }
 
     private fun onRewindClicked() {
