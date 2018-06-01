@@ -1258,14 +1258,8 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                final String newContent;
-                if (mEditorFragment.shouldLoadContentFromEditor()) {
-                    newContent = (String) mEditorFragment.getContent();
-                } else {
-                    newContent = mPost.getContent();
-                }
-                postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(), newContent);
+                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                        (String) mEditorFragment.getContent());
             } else {
                 // TODO: Remove when legacy editor is dropped
                 postTitleOrContentChanged = updatePostContent(isAutosave);
@@ -1578,7 +1572,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                     account.getEmail());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
@@ -1661,7 +1655,7 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
         removeFailedUploadsDialog.initialize(
                 TAG_REMOVE_FAILED_UPLOADS_DIALOG,
-                null,
+                "",
                 getString(R.string.editor_toast_failed_uploads),
                 getString(R.string.editor_remove_failed_uploads),
                 getString(android.R.string.cancel),
@@ -2933,7 +2927,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
