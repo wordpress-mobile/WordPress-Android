@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class RewindStateProgressWorkerController
 @Inject
-constructor() {
+constructor(val activityLogStore: ActivityLogStore, val siteStore: SiteStore, val dispatcher: Dispatcher) {
     fun startWorker(site: SiteModel, restoreId: Long) {
         val workManager = WorkManager.getInstance()
         if (workManager.getStatusesByTag(TAG).value != null) {
@@ -56,22 +56,17 @@ constructor() {
             const val RESTORE_ID_KEY = "RESTORE_ID"
         }
 
-        @Inject lateinit var activityLogStore: ActivityLogStore
-        @Inject lateinit var siteStore: SiteStore
-        @Inject lateinit var dispatcher: Dispatcher
-
         override fun doWork(): WorkerResult {
-            try {
-                (applicationContext as WordPress).component().inject(this)
-            } catch (e: IllegalStateException) {
+            val controller = (applicationContext as WordPress).rewindStateProgressWorkerController
+            if (controller == null) {
                 AppLog.d(ACTIVITY_LOG, "Trying to start worker before the app is initialized")
                 return RETRY
             }
             val siteId = inputData.getInt(SITE_ID_KEY, -1)
             val restoreId = inputData.getLong(RESTORE_ID_KEY, -1L)
             if (siteId != -1 && restoreId != -1L) {
-                val site = siteStore.getSiteByLocalId(siteId)
-                val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
+                val site = controller.siteStore.getSiteByLocalId(siteId)
+                val rewindStatusForSite = controller.activityLogStore.getRewindStatusForSite(site)
                 val rewind = rewindStatusForSite?.rewind
                 rewind?.let {
                     if (rewind.status == FINISHED && rewind.restoreId == restoreId) {
@@ -80,7 +75,8 @@ constructor() {
                         return FAILURE
                     }
                 }
-                dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
+                val action = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site))
+                controller.dispatcher.dispatch(action)
                 return RETRY
             }
             return FAILURE
