@@ -57,7 +57,7 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        initHelpshiftLayout();
+        setContentView(R.layout.help_activity);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -67,37 +67,6 @@ public class HelpActivity extends AppCompatActivity {
             actionBar.setElevation(0); // remove shadow
             actionBar.setDisplayShowTitleEnabled(false);
         }
-
-        // Init common elements
-        WPTextView version = findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
-
-        WPTextView appLogButton = findViewById(R.id.applog_button);
-        appLogButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ActivityId.trackLastActivity(ActivityId.HELP_SCREEN);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void initHelpshiftLayout() {
-        setContentView(R.layout.help_activity_with_helpshift);
 
         WPTextView version = findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
@@ -123,6 +92,29 @@ public class HelpActivity extends AppCompatActivity {
                 showZendeskTickets();
             }
         });
+
+        WPTextView appLogButton = findViewById(R.id.applog_button);
+        appLogButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ActivityId.trackLastActivity(ActivityId.HELP_SCREEN);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void createNewZendeskTicket() {
@@ -136,7 +128,8 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void showZendeskFaq() {
-        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore, getSelectedSiteFromExtras());
+        ZendeskHelper.showZendeskHelpCenter(this, mAccountStore, mSiteStore, getOriginFromExtras(),
+                getSelectedSiteFromExtras(), getExtraTagsFromExtras());
     }
 
     private Origin getOriginFromExtras() {

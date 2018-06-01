@@ -5,6 +5,7 @@ package org.wordpress.android.support
 import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
+import com.zendesk.logger.Logger
 import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
 import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
 import com.zendesk.sdk.model.access.AnonymousIdentity
@@ -12,12 +13,15 @@ import com.zendesk.sdk.model.access.Identity
 import com.zendesk.sdk.model.request.CustomField
 import com.zendesk.sdk.network.impl.ZendeskConfig
 import com.zendesk.sdk.requests.RequestActivity
+import com.zendesk.sdk.support.ContactUsButtonVisibility
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
@@ -48,6 +52,7 @@ fun setupZendesk(
         return
     }
     zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
+    Logger.setLoggable(BuildConfig.DEBUG)
     updateZendeskDeviceLocale(deviceLocale)
 }
 
@@ -60,14 +65,38 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
     zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
-fun showZendeskHelpCenter(context: Context, accountStore: AccountStore, selectedSite: SiteModel? = null) {
+/**
+ * We don't force a valid identity for Help Center. If the identity is already there, we use it to enable the
+ * contact us button on the Help Center, if it's not, we give the option to the user to browse the FAQ without
+ * setting an email.
+ */
+fun showZendeskHelpCenter(
+    context: Context,
+    accountStore: AccountStore?,
+    siteStore: SiteStore,
+    origin: Origin?,
+    selectedSite: SiteModel?,
+    extraTags: List<String>? = null
+) {
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
+    val supportEmail = AppPrefs.getSupportEmail()
+    val isIdentityAvailable = !supportEmail.isNullOrEmpty()
+    if (isIdentityAvailable) {
+        val supportName = AppPrefs.getSupportName()
+        configureZendesk(context, supportEmail, supportName, accountStore, siteStore, selectedSite)
+    } else {
+        zendeskInstance.setIdentity(zendeskIdentity(null, null))
+    }
+    val contactUsButtonVisibility = if (isIdentityAvailable)
+        ContactUsButtonVisibility.ARTICLE_LIST_AND_ARTICLE else ContactUsButtonVisibility.OFF
     SupportActivity.Builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
             .withLabelNames(ZendeskConstants.articleLabel)
+            .showConversationsMenuButton(isIdentityAvailable)
+            .withContactUsButtonVisibility(contactUsButtonVisibility)
+            .withContactConfiguration(zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
             .show(context)
 }
 
@@ -83,8 +112,10 @@ fun createNewTicket(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore, selectedSite)
-    ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
+        configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
+        ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    }
 }
 
 fun showAllTickets(
@@ -98,19 +129,23 @@ fun showAllTickets(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    configureZendesk(context, accountStore, siteStore, selectedSite)
-    RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
+        configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
+        RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+    }
 }
 
 // Helpers
 
 private fun configureZendesk(
     context: Context,
+    email: String,
+    name: String,
     accountStore: AccountStore?,
     siteStore: SiteStore,
     selectedSite: SiteModel?
 ) {
-    zendeskInstance.setIdentity(zendeskIdentity(accountStore, selectedSite))
+    zendeskInstance.setIdentity(zendeskIdentity(email, name))
     zendeskInstance.ticketFormId = TicketFieldIds.form
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
@@ -137,21 +172,6 @@ private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Ori
                 return zendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags) as MutableList<String>
             }
         }
-
-private fun zendeskIdentity(accountStore: AccountStore?, selectedSite: SiteModel?): Identity {
-    val currentAccount = accountStore?.account
-    var email: String? = null
-    var name: String? = null
-    if (currentAccount != null) {
-        email = currentAccount.email
-        name = currentAccount.displayName
-    } else {
-        // TODO: Implement for self-hosted sites using `selectedSite`
-        // We can get the selected site and figure out the email/username from there. We can save the details
-        // in preferences so that the Zendesk tickets will remain after a site change
-    }
-    return zendeskIdentity(email, name)
-}
 
 private fun zendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
