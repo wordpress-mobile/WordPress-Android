@@ -62,7 +62,7 @@ fun showSupportEmailInputDialog(
 ) {
     var email = AppPrefs.getSupportEmail()
     if (email.isNullOrEmpty()) {
-        val (emailSuggestion, _) = supportEmailAndNameSuggestion(account, selectedSite)
+        val (emailSuggestion, _) = getSupportEmailAndNameSuggestion(account, selectedSite)
         email = emailSuggestion
     }
     showSupportIdentityInputDialog(context, email, null, true) { selectedEmail, _ ->
