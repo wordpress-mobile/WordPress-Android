@@ -679,4 +679,19 @@
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
+    <!--Help Activity Styles-->
+    <style name="HelpActivitySingleText">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="HelpActivityDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+    </style>
 </resources>

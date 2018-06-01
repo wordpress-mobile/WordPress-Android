@@ -46,6 +46,32 @@ fun getSupportIdentity(
 }
 
 /**
+ * This function is used to update the support email address. It'll pre-populate the email input field with either
+ * the support email from AppPrefs or with a suggestion from [account] or [selectedSite].
+ *
+ * @param context Context the dialog will be showed from
+ * @param account WordPress.com account to be used for email suggestion
+ * @param selectedSite Selected site to be used for email suggestion in case the user is not logged in
+ * @param emailSelected Function to run with the selected email from the dialog
+ */
+fun showSupportEmailInputDialog(
+    context: Context,
+    account: AccountModel?,
+    selectedSite: SiteModel?,
+    emailSelected: (String) -> Unit
+) {
+    var email = AppPrefs.getSupportEmail()
+    if (email.isNullOrEmpty()) {
+        val (emailSuggestion, _) = getSupportEmailAndNameSuggestion(account, selectedSite)
+        email = emailSuggestion
+    }
+    showSupportIdentityInputDialog(context, email, null, true) { selectedEmail, _ ->
+        AppPrefs.setSupportEmail(selectedEmail)
+        emailSelected(selectedEmail)
+    }
+}
+
+/**
  * This is a helper function that shows the support identity input dialog and runs the provided function with the input
  * from it.
  *
@@ -57,7 +83,7 @@ fun getSupportIdentity(
  * [isNameInputHidden] parameter is true, the input in the name field will be provided and it's up to the caller to
  * ignore the name parameter.
  */
-fun showSupportIdentityInputDialog(
+private fun showSupportIdentityInputDialog(
     context: Context,
     email: String?,
     name: String?,
