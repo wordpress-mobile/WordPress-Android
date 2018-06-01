@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.MutableLiveData
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.never
@@ -21,9 +22,11 @@ import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
 
@@ -33,22 +36,25 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var rewindStatusService: RewindStatusService
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
     private var events: MutableList<List<ActivityLogListItemViewModel>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
+    private var rewindState = MutableLiveData<Rewind>()
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogViewModel(dispatcher, store)
+        viewModel = ActivityLogViewModel(dispatcher, store, rewindStatusService)
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
+        whenever(rewindStatusService.rewindState).thenReturn(rewindState)
     }
 
     @Test
@@ -65,6 +71,7 @@ class ActivityLogViewModelTest {
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.FETCHING)
 
         assertFetchEvents()
+        verify(rewindStatusService).start(site)
     }
 
     @Test

@@ -110,9 +110,9 @@ class ActivityLogListFragment : Fragment() {
             return
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
-        swipeToRefreshHelper.isRefreshing = eventListStatus === FETCHING
+        swipeToRefreshHelper.isRefreshing = eventListStatus == FETCHING
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
-        val showLoadMore = eventListStatus === LOADING_MORE
+        val showLoadMore = eventListStatus == LOADING_MORE
         activityLogListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
 
         emptyView.visibility = if (viewModel.events.value?.isNotEmpty() == false &&

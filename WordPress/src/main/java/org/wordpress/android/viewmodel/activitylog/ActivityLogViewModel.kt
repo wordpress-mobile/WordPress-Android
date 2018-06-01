@@ -3,21 +3,21 @@ package org.wordpress.android.viewmodel.activitylog
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.util.AppLog
-import javax.inject.Inject
-import android.arch.lifecycle.Transformations
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import javax.inject.Inject
 
 class ActivityLogViewModel @Inject constructor(
     val dispatcher: Dispatcher,
@@ -53,12 +53,12 @@ class ActivityLogViewModel @Inject constructor(
     private val isRewindInProgress: Boolean
         get() = Transformations.map(
                     rewindStatusService.rewindState,
-                    { state -> state.status === RUNNING })
+                    { state -> state.status == RUNNING })
                 .value ?: false
 
     private val isLoadingInProgress: Boolean
-        get() = eventListStatus === ActivityLogListStatus.LOADING_MORE ||
-                eventListStatus === ActivityLogListStatus.FETCHING
+        get() = eventListStatus.value == ActivityLogListStatus.LOADING_MORE ||
+                eventListStatus.value == ActivityLogListStatus.FETCHING
 
     private val rewindStateObserver = Observer<RewindStatusModel.Rewind> { state ->
         when (state?.status) {
