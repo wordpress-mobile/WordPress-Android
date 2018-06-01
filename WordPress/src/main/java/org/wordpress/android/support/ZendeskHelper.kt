@@ -16,7 +16,6 @@ import com.zendesk.sdk.requests.RequestActivity
 import com.zendesk.sdk.support.ContactUsButtonVisibility
 import com.zendesk.sdk.support.SupportActivity
 import com.zendesk.sdk.util.NetworkUtils
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -113,7 +112,7 @@ fun createNewTicket(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    showSupportIdentityInputDialogAndRunWithEmailAndName(context, accountStore?.account, selectedSite) { email, name ->
+    getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
         configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
         ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
     }
@@ -130,7 +129,7 @@ fun showAllTickets(
     require(isZendeskEnabled) {
         zendeskNeedsToBeEnabledError
     }
-    showSupportIdentityInputDialogAndRunWithEmailAndName(context, accountStore.account, selectedSite) { email, name ->
+    getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
         configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
         RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
     }
@@ -155,7 +154,7 @@ private fun configureZendesk(
     }
     zendeskInstance.customFields = listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites, accountStore?.account)),
+            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites)),
             CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
@@ -177,9 +176,9 @@ private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Ori
 private fun zendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
-private fun blogInformation(allSites: List<SiteModel>?, account: AccountModel?): String {
+private fun blogInformation(allSites: List<SiteModel>?): String {
     allSites?.let {
-        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation(account) }
+        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation }
     }
     return ZendeskConstants.noneValue
 }

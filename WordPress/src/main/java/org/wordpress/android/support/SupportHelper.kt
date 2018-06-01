@@ -26,7 +26,7 @@ import org.wordpress.android.util.validateEmail
  * @param selectedSite Selected site to be used for email and name suggestion in case the user is not logged in
  * @param emailAndNameSelected Function to run with the email and name from AppPrefs or the input dialog
  */
-fun showSupportIdentityInputDialogAndRunWithEmailAndName(
+fun getSupportIdentity(
     context: Context,
     account: AccountModel?,
     selectedSite: SiteModel?,
@@ -36,7 +36,7 @@ fun showSupportIdentityInputDialogAndRunWithEmailAndName(
     if (!currentEmail.isNullOrEmpty()) {
         emailAndNameSelected(currentEmail, AppPrefs.getSupportName())
     } else {
-        val (emailSuggestion, nameSuggestion) = supportEmailAndNameSuggestion(account, selectedSite)
+        val (emailSuggestion, nameSuggestion) = getSupportEmailAndNameSuggestion(account, selectedSite)
         showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion, false) { email, name ->
             AppPrefs.setSupportEmail(email)
             AppPrefs.setSupportName(name)
@@ -159,7 +159,7 @@ private fun supportIdentityInputDialogLayout(
  *
  * @return a Pair with email and name suggestion
  */
-private fun supportEmailAndNameSuggestion(
+private fun getSupportEmailAndNameSuggestion(
     account: AccountModel?,
     selectedSite: SiteModel?
 ): Pair<String?, String?> {
