@@ -1,7 +1,9 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -35,8 +37,20 @@ class ActivityLogDetailViewModel
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
 
+    private val mediatorRewindAvailable = MediatorLiveData<Boolean>()
+
     val rewindAvailable: LiveData<Boolean>
-        get() = rewindStatusService.rewindAvailable
+        get() = mediatorRewindAvailable
+
+    init {
+        val itemRewindAvailable = Transformations.map(_item) { it?.isRewindButtonVisible ?: false }
+        mediatorRewindAvailable.addSource(itemRewindAvailable) {
+            mediatorRewindAvailable.value = it == true && mediatorRewindAvailable.value != false
+        }
+        mediatorRewindAvailable.addSource(rewindStatusService.rewindAvailable) {
+            mediatorRewindAvailable.value = it == true && mediatorRewindAvailable.value != false
+        }
+    }
 
     fun start(site: SiteModel, activityLogId: String) {
         this.site = site

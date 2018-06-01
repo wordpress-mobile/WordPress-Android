@@ -70,8 +70,7 @@ class ActivityLogDetailFragment : Fragment() {
         })
 
         viewModel.rewindAvailable.observe(this, Observer { available ->
-            val isButtonVisible = viewModel.activityLogItem.value?.isRewindButtonVisible ?: false
-            activityRewindButton.visibility = if (available == true && isButtonVisible) View.VISIBLE else View.GONE
+            activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
         })
 
         viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> {
