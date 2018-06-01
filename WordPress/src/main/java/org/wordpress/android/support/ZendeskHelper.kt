@@ -28,7 +28,6 @@ import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.request.RequestUiConfig
 import zendesk.support.requestlist.RequestListActivity
-import java.util.Locale
 
 private val zendeskInstance: Zendesk
     get() = Zendesk.INSTANCE
@@ -42,8 +41,7 @@ fun setupZendesk(
     context: Context,
     zendeskUrl: String,
     applicationId: String,
-    oauthClientId: String,
-    deviceLocale: Locale
+    oauthClientId: String
 ) {
     require(!isZendeskEnabled) {
         "Zendesk shouldn't be initialized more than once!"
@@ -53,17 +51,7 @@ fun setupZendesk(
     }
     zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
     Logger.setLoggable(BuildConfig.DEBUG)
-    updateZendeskDeviceLocale(deviceLocale)
     Support.INSTANCE.init(zendeskInstance)
-}
-
-// TODO("Make sure changing the language of the app updates the locale for Zendesk")
-fun updateZendeskDeviceLocale(deviceLocale: Locale) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
-    }
-    // TODO ("find out if this is actually necessary")
-//    zendeskInstance.setDeviceLocale(deviceLocale)
 }
 
 /**

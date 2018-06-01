@@ -274,7 +274,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         ZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
-                BuildConfig.ZENDESK_OAUTH_CLIENT_ID, LocaleManager.getSafeLocale(this));
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
 
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
