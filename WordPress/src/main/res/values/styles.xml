@@ -452,6 +452,55 @@
         <item name="android:background">@color/me_divider</item>
     </style>
 
+    <!--Quick Start Styles-->
+    <style name="QuickStartLayout">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="QuickStartIcon">
+        <item name="android:layout_marginEnd">32dp</item>
+        <item name="android:layout_marginRight">32dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:tint">@color/grey_darken_30</item>
+    </style>
+
+    <style name="QuickStartTitle" parent="android:TextAppearance.Widget.TextView">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="QuickStartSubtitle" parent="android:TextAppearance.Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="QuickStartDone">
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:tint">@color/blue_medium</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="QuickStartDivider">
+        <item name="android:background">@color/grey_lighten_20</item>
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
     <!--People Management Styles-->
     <style name="PersonAvatar">
         <item name="android:layout_width">@dimen/people_avatar_sz</item>
