@@ -5,8 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.view.View
-import android.widget.TextView
+import kotlinx.android.synthetic.main.help_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -54,22 +53,15 @@ class HelpActivity : AppCompatActivity() {
             actionBar.elevation = 0f // remove shadow
         }
 
-        val contactUsButton = findViewById<TextView>(R.id.contact_us_button)
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
-
-        val faqButton = findViewById<TextView>(R.id.faq_button)
         faqButton.setOnClickListener { showZendeskFaq() }
-
-        val myTicketsButton = findViewById<TextView>(R.id.my_tickets_button)
         myTicketsButton.setOnClickListener { showZendeskTickets() }
+        applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
+        applicationLogButton.setOnClickListener { v ->
+            startActivity(Intent(v.context, AppLogViewerActivity::class.java))
+        }
 
-        val appLogButton = findViewById<TextView>(R.id.application_log_button)
-        appLogButton.setOnClickListener { v -> startActivity(Intent(v.context, AppLogViewerActivity::class.java)) }
-
-        val version = findViewById<TextView>(R.id.application_version)
-        version.text = getString(R.string.version_with_name_param, WordPress.versionName)
-
-        findViewById<View>(R.id.contact_email_container).setOnClickListener {
+        contactEmailContainer.setOnClickListener {
             showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { _ ->
                 refreshContactEmailText()
             }
@@ -108,7 +100,7 @@ class HelpActivity : AppCompatActivity() {
     private fun refreshContactEmailText() {
         val supportEmail = AppPrefs.getSupportEmail()
         if (!supportEmail.isNullOrEmpty()) {
-            findViewById<TextView>(R.id.contact_email_address).text = supportEmail
+            contactEmailAddress.text = supportEmail
         }
     }
 

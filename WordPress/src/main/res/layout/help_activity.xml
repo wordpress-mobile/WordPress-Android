@@ -11,34 +11,34 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/contact_us_button"
+            android:id="@+id/contactUsButton"
             style="@style/HelpActivitySingleText"
             android:text="@string/contact_us"/>
 
         <TextView
-            android:id="@+id/faq_button"
+            android:id="@+id/faqButton"
             style="@style/HelpActivitySingleText"
             android:text="@string/browse_our_faq_button"/>
 
         <TextView
-            android:id="@+id/my_tickets_button"
+            android:id="@+id/myTicketsButton"
             style="@style/HelpActivitySingleText"
             android:text="@string/my_tickets"/>
 
         <TextView
-            android:id="@+id/application_log_button"
+            android:id="@+id/applicationLogButton"
             style="@style/HelpActivitySingleText"
             android:text="@string/application_log_button"/>
 
         <TextView
-            android:id="@+id/application_version"
+            android:id="@+id/applicationVersion"
             style="@style/HelpActivitySingleText"
             android:textColor="@color/grey_darken_10"/>
 
         <View style="@style/HelpActivityDivider"/>
 
         <LinearLayout
-            android:id="@+id/contact_email_container"
+            android:id="@+id/contactEmailContainer"
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:textSize="@dimen/text_sz_large"/>
 
             <TextView
-                android:id="@+id/contact_email_address"
+                android:id="@+id/contactEmailAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/support_contact_email_not_set"
