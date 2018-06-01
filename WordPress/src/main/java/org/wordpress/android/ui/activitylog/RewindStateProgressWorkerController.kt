@@ -20,6 +20,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker.Companion.RESTORE_ID_KEY
 import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker.Companion.SITE_ID_KEY
 import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker.Companion.TAG
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
 
@@ -59,7 +61,12 @@ constructor() {
         @Inject lateinit var dispatcher: Dispatcher
 
         override fun doWork(): WorkerResult {
-            (applicationContext as WordPress).component().inject(this)
+            try {
+                (applicationContext as WordPress).component().inject(this)
+            } catch (e: IllegalStateException) {
+                AppLog.d(ACTIVITY_LOG, "Trying to start worker before the app is initialized")
+                return RETRY
+            }
             val siteId = inputData.getInt(SITE_ID_KEY, -1)
             val restoreId = inputData.getLong(RESTORE_ID_KEY, -1L)
             if (siteId != -1 && restoreId != -1L) {
