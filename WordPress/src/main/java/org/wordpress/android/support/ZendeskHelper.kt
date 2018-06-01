@@ -24,9 +24,9 @@ import zendesk.core.Identity
 import zendesk.core.Zendesk
 import zendesk.support.CustomField
 import zendesk.support.Support
+import zendesk.support.UiConfig
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
-import zendesk.support.request.RequestUiConfig
 import zendesk.support.requestlist.RequestListActivity
 
 private val zendeskInstance: Zendesk
@@ -84,7 +84,7 @@ fun showZendeskHelpCenter(
             .withShowConversationsMenuButton(isIdentityAvailable)
 
     if (isIdentityAvailable) {
-        builder.show(context, config(context, siteStore, origin, selectedSite, extraTags).config())
+        builder.show(context, zendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     } else {
         builder.show(context)
     }
@@ -105,7 +105,7 @@ fun createNewTicket(
     getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
         zendeskInstance.setIdentity(zendeskIdentity(email, name))
         RequestActivity.builder()
-                .show(context, config(context, siteStore, origin, selectedSite, extraTags).config())
+                .show(context, zendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     }
 }
 
@@ -123,23 +123,24 @@ fun showAllTickets(
     getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
         zendeskInstance.setIdentity(zendeskIdentity(email, name))
         RequestListActivity.builder()
-                .show(context, config(context, siteStore, origin, selectedSite, extraTags).config())
+                .show(context, zendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     }
 }
 
 // Helpers
 
-private fun config(
+private fun zendeskConfig(
     context: Context,
     siteStore: SiteStore,
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null
-): RequestUiConfig.Builder {
+): UiConfig {
     return RequestActivity.builder()
             .withTicketForm(TicketFieldIds.form, customFields(context, siteStore, selectedSite))
             .withRequestSubject(ZendeskConstants.ticketSubject)
             .withTags(zendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
+            .config()
 }
 
 private fun customFields(context: Context, siteStore: SiteStore, selectedSite: SiteModel?): List<CustomField> {
