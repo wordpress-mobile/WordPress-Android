@@ -489,7 +489,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return getString(R.string.plugins);
     }
 
-    void trackPluginListOpened(PluginListType listType) {
+    private void trackPluginListOpened(PluginListType listType) {
         if (listType == PluginListType.SEARCH) {
             // Although it's named as "search performed" we are actually only tracking the first search
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_SEARCH_PERFORMED, mViewModel.getSite());

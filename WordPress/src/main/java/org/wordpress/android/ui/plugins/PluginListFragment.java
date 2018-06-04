@@ -51,11 +51,11 @@ public class PluginListFragment extends Fragment {
 
     private static final String ARG_LIST_TYPE = "list_type";
 
-    protected PluginBrowserViewModel mViewModel;
+    private PluginBrowserViewModel mViewModel;
 
-    protected RecyclerView mRecycler;
-    protected PluginListType mListType;
-    protected SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private RecyclerView mRecycler;
+    private PluginListType mListType;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
@@ -187,7 +187,7 @@ public class PluginListFragment extends Fragment {
         refreshProgressBars(listState);
     }
 
-    protected void refreshProgressBars(@Nullable ListState listState) {
+    private void refreshProgressBars(@Nullable ListState listState) {
         if (!isAdded() || getView() == null || listState == null) {
             return;
         }
@@ -198,7 +198,7 @@ public class PluginListFragment extends Fragment {
                 listState.isLoadingMore() ? View.VISIBLE : View.GONE);
     }
 
-    void showEmptyView(boolean show) {
+    private void showEmptyView(boolean show) {
         if (isAdded() && getView() != null) {
             getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
         }
@@ -220,7 +220,7 @@ public class PluginListFragment extends Fragment {
             diffResult.dispatchUpdatesTo(this);
         }
 
-        protected @Nullable Object getItem(int position) {
+        private @Nullable Object getItem(int position) {
             return mItems.getItem(position);
         }
 
