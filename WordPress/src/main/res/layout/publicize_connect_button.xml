@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground">
+    android:layout_width="wrap_content" >
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_connect"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_large"
         android:textAllCaps="true"
         android:textColor="@color/blue_wordpress"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
-        tools:text="text_connect" />
+        tools:text="Connect" >
+    </org.wordpress.android.widgets.WPTextView>
 
 </FrameLayout>
