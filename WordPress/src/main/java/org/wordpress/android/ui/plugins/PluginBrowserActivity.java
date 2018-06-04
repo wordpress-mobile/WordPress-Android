@@ -246,7 +246,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
+        PluginListFragment currentFragment = getCurrentFragment();
+        if (currentFragment != null && currentFragment.getListType() == PluginListType.SEARCH) {
             mSearchMenuItem.expandActionView();
             mSearchView.setQuery(mViewModel.getSearchQuery(), false);
             mSearchView.setOnQueryTextListener(this);
@@ -332,6 +333,10 @@ public class PluginBrowserActivity extends AppCompatActivity
                                    .commit();
         mViewModel.setTitle(getTitleForListType(listType));
         trackPluginListOpened(listType);
+    }
+
+    private @Nullable PluginListFragment getCurrentFragment() {
+        return (PluginListFragment) getSupportFragmentManager().findFragmentByTag(PluginListFragment.TAG);
     }
 
     private void hideListFragment() {

@@ -172,6 +172,10 @@ public class PluginListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    public PluginListType getListType() {
+        return mListType;
+    }
+
     private void refreshPluginsAndProgressBars(@Nullable ListState<ImmutablePluginModel> listState) {
         if (listState == null) {
             return;
