@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -50,7 +50,7 @@ public class RelatedPostsDialog extends DialogFragment
      */
     public static final String SHOW_IMAGES_KEY = "show-images";
 
-    private Switch mShowRelatedPosts;
+    private SwitchCompat mShowRelatedPosts;
     private CheckBox mShowHeader;
     private CheckBox mShowImages;
     private TextView mPreviewHeader;
@@ -65,7 +65,7 @@ public class RelatedPostsDialog extends DialogFragment
         //noinspection InflateParams
         View v = inflater.inflate(R.layout.related_posts_dialog, null);
 
-        mShowRelatedPosts = (Switch) v.findViewById(R.id.toggle_related_posts_switch);
+        mShowRelatedPosts = (SwitchCompat) v.findViewById(R.id.toggle_related_posts_switch);
         mShowHeader = (CheckBox) v.findViewById(R.id.show_header_checkbox);
         mShowImages = (CheckBox) v.findViewById(R.id.show_images_checkbox);
         mPreviewHeader = (TextView) v.findViewById(R.id.preview_header);

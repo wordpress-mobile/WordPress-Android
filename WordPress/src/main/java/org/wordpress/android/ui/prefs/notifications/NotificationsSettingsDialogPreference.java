@@ -4,13 +4,13 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -131,7 +131,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                     summary.setText(summaryText);
                 }
 
-                final Switch toggleSwitch = (Switch) commentsSetting.findViewById(R.id.notifications_switch);
+                final SwitchCompat toggleSwitch = (SwitchCompat) commentsSetting.findViewById(R.id.notifications_switch);
                 toggleSwitch.setChecked(JSONUtils.queryJSON(settingsJson, settingValue, true));
                 toggleSwitch.setTag(settingValue);
                 toggleSwitch.setOnCheckedChangeListener(mOnCheckedChangedListener);

@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -39,7 +39,7 @@ public class NumberPickerDialog extends DialogFragment
     private static final int DEFAULT_MIN_VALUE = 0;
     private static final int DEFAULT_MAX_VALUE = 99;
 
-    private Switch mSwitch;
+    private SwitchCompat mSwitch;
     private TextView mHeaderText;
     private NumberPicker mNumberPicker;
     private NumberPicker.Formatter mFormat;
@@ -58,7 +58,7 @@ public class NumberPickerDialog extends DialogFragment
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         TextView switchText = (TextView) view.findViewById(R.id.number_picker_text);
-        mSwitch = (Switch) view.findViewById(R.id.number_picker_switch);
+        mSwitch = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
         mHeaderText = (TextView) view.findViewById(R.id.number_picker_header);
         mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
         int value = mMinValue;
