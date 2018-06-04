@@ -1097,14 +1097,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             return false;
         }
 
-        String pluginName = mPlugin.getName();
         // Disable removing jetpack as the site will stop working in the client
-        if (pluginName == null || pluginName.equals("jetpack/jetpack")) {
+        if (PluginUtils.isJetpack(mPlugin)) {
             return false;
         }
-        // Disable removing akismet and vaultpress for AT sites
-        return !mSite.isAutomatedTransfer()
-               || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
+        // Disable removing for auto-managed AT sites
+        return !PluginUtils.isAutoManaged(mSite, mPlugin);
     }
 
     // only show settings for active plugins on .org sites
