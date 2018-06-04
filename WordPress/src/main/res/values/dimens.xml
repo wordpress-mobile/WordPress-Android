@@ -199,8 +199,9 @@
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
     <!-- my site -->
+    <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_list_row_padding_left">8dp</dimen>
+    <dimen name="my_site_list_row_padding_left">12dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">16dp</dimen>
     <dimen name="my_site_switch_site_button_padding_top">15dp</dimen>
