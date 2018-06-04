@@ -67,7 +67,7 @@ public class PluginUtils {
             return false;
         }
         boolean isAutoManaged = false;
-        for (String pluginName: AUTO_MANAGED_PLUGINS) {
+        for (String pluginName : AUTO_MANAGED_PLUGINS) {
             isAutoManaged = isAutoManaged || checkNameOfPlugin(plugin, pluginName);
         }
         return isAutoManaged;
