@@ -101,6 +101,7 @@ public class ReaderStore extends Store {
     public static class ReaderError implements OnChangedError {
         public ReaderErrorType type;
         public String message;
+
         public ReaderError(ReaderErrorType type, String message) {
             this.type = type;
             this.message = message;
@@ -114,14 +115,15 @@ public class ReaderStore extends Store {
         public int offset;
 
         public OnReaderSitesSearched(@NonNull List<ReaderFeedModel> feeds,
-                                       @NonNull String searchTerm,
-                                       int offset,
-                                       boolean canLoadMore) {
+                                     @NonNull String searchTerm,
+                                     int offset,
+                                     boolean canLoadMore) {
             this.feeds = feeds;
             this.searchTerm = searchTerm;
             this.canLoadMore = canLoadMore;
             this.offset = offset;
         }
+
         public OnReaderSitesSearched(@NonNull ReaderError error, @NonNull String searchTerm) {
             this.error = error;
             this.searchTerm = searchTerm;
