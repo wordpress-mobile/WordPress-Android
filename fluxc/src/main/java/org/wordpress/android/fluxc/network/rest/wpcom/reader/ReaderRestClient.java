@@ -28,6 +28,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ReaderRestClient extends BaseWPComRestClient {
+    public static final int NUM_SEARCH_RESULTS = 20;
+
     public ReaderRestClient(Context appContext, Dispatcher dispatcher,
                             RequestQueue requestQueue,
                             AccessToken accessToken,
@@ -42,6 +44,7 @@ public class ReaderRestClient extends BaseWPComRestClient {
         params.put("offset", Integer.toString(offset));
         params.put("exclude_followed", Boolean.toString(true));
         params.put("sort", "relevance");
+        params.put("number", Integer.toString(NUM_SEARCH_RESULTS));
         params.put("q", UrlUtils.urlEncode(searchTerm));
 
         WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, params, ReaderSearchSitesResponse.class,
