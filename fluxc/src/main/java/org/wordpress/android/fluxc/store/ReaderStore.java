@@ -9,11 +9,14 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.ReaderAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.ReaderFeedsModel;
+import org.wordpress.android.fluxc.model.ReaderFeedModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -63,12 +66,12 @@ public class ReaderStore extends Store {
     }
 
     public static class ReaderSearchSitesResponsePayload extends Payload<ReaderError> {
-        public @NonNull ReaderFeedsModel feeds;
+        public @NonNull List<ReaderFeedModel> feeds;
         public @NonNull String searchTerm;
         public int offset;
         public boolean canLoadMore;
 
-        public ReaderSearchSitesResponsePayload(@NonNull ReaderFeedsModel feeds,
+        public ReaderSearchSitesResponsePayload(@NonNull List<ReaderFeedModel> feeds,
                                                 @NonNull String searchTerm,
                                                 int offset,
                                                 boolean canLoadMore) {
@@ -81,7 +84,7 @@ public class ReaderStore extends Store {
         public ReaderSearchSitesResponsePayload(@NonNull ReaderError error, @NonNull String searchTerm) {
             this.searchTerm = searchTerm;
             this.error = error;
-            this.feeds = new ReaderFeedsModel();
+            this.feeds = new ArrayList<>();
         }
     }
 
