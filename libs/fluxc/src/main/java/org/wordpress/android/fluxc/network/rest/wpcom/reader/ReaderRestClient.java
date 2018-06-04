@@ -35,32 +35,6 @@ public class ReaderRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    /*
-    {
-    "algorithm": "reader/manage/search:0",
-    "feeds": [
-        {
-            "feed_ID": "46238560",
-            "meta": {
-                "links": {
-                    "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/46238560"
-                }
-            },
-            "railcar": {
-                "fetch_algo": "reader/manage/search:0",
-                "fetch_lang": "en",
-                "fetch_position": 0,
-                "fetch_query": "yoga",
-                "railcar": "8&6VDLsINQLj",
-                "rec_feed_id": 46238560
-            },
-            "subscribe_URL": "http://theyogalunchbox.co.nz/feed",
-            "subscribers_count": 167,
-            "title": "The Yoga Lunchbox",
-            "URL": "https://theyogalunchbox.co.nz/"
-        },
-     */
-
     public void searchReaderSites(@NonNull final String searchTerm, final int offset) {
         String url = WPCOMREST.read.feed.getUrlV1_1();
 
@@ -76,7 +50,7 @@ public class ReaderRestClient extends BaseWPComRestClient {
                     public void onResponse(ReaderSearchSitesResponse response) {
                         ReaderSearchSitesResponsePayload payload =
                                 new ReaderSearchSitesResponsePayload(
-                                        response.sites,
+                                        response.feeds,
                                         searchTerm,
                                         offset,
                                         response.canLoadMore);
