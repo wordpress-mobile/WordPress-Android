@@ -69,5 +69,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = 'd4e583f21840111065f12e743cbf31de4307266b'
+    fluxCVersion = '0ec093b27bba1bcdbddaa928c1a5b0a91d5e52e3' // cherry-pick/wp10.1-crash-subscription-error
 }
