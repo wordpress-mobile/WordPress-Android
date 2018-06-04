@@ -94,18 +94,19 @@ public class PluginBrowserActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if (savedInstanceState == null) {
-            mViewModel.setSite((SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
-        } else {
-            mViewModel.readFromBundle(savedInstanceState);
-        }
-        mViewModel.start();
-
-        if (mViewModel.getSite() == null) {
+        SiteModel siteModel = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        if (siteModel == null) {
             ToastUtils.showToast(this, R.string.blog_not_found);
             finish();
             return;
         }
+
+        if (savedInstanceState == null) {
+            mViewModel.setSite(siteModel);
+        } else {
+            mViewModel.readFromBundle(savedInstanceState);
+        }
+        mViewModel.start();
 
         // site plugin list
         findViewById(R.id.text_manage).setOnClickListener(new View.OnClickListener() {
