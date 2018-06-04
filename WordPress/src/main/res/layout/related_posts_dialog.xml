@@ -30,6 +30,7 @@
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             android:textAlignment="viewStart"
+            android:theme="@style/WPPrefSwitch"
             android:gravity="start"/>
 
         <org.wordpress.android.widgets.WPTextView

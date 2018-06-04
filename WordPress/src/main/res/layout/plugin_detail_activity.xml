@@ -246,6 +246,7 @@
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/plugin_state_active"
+                            android:theme="@style/WPPrefSwitch"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
 
@@ -259,6 +260,7 @@
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
+                            android:theme="@style/WPPrefSwitch"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
                 </LinearLayout>

@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
+            android:theme="@style/WPPrefSwitch"
             tools:checked="true" />
     </LinearLayout>
 
