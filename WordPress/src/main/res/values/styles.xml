@@ -350,11 +350,6 @@
         <item name="android:tint">@color/grey_darken_30</item>
     </style>
 
-    <style name="MySiteListHeaderLayout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="MySiteListHeader">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:layout_centerVertical">true</item>
@@ -366,17 +361,6 @@
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
         <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
-    <style name="MySiteListSectionDividerView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_large</item>
-        <item name="android:background">@color/grey_lighten_20</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MeListRowLayout">
