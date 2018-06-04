@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.ReaderAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.model.ReaderFeedsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.util.AppLog;
@@ -63,16 +63,16 @@ public class ReaderStore extends Store {
     }
 
     public static class ReaderSearchSitesResponsePayload extends Payload<ReaderError> {
-        public @NonNull SitesModel sites;
+        public @NonNull ReaderFeedsModel feeds;
         public @NonNull String searchTerm;
         public int offset;
         public boolean canLoadMore;
 
-        public ReaderSearchSitesResponsePayload(@NonNull SitesModel sites,
+        public ReaderSearchSitesResponsePayload(@NonNull ReaderFeedsModel feeds,
                                                 @NonNull String searchTerm,
                                                 int offset,
                                                 boolean canLoadMore) {
-            this.sites = sites;
+            this.feeds = feeds;
             this.searchTerm = searchTerm;
             this.offset = offset;
             this.canLoadMore = canLoadMore;
@@ -81,7 +81,7 @@ public class ReaderStore extends Store {
         public ReaderSearchSitesResponsePayload(@NonNull ReaderError error, @NonNull String searchTerm) {
             this.searchTerm = searchTerm;
             this.error = error;
-            this.sites = new SitesModel();
+            this.feeds = new ReaderFeedsModel();
         }
     }
 
