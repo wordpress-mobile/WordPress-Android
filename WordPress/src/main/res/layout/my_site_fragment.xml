@@ -194,7 +194,7 @@
             <!--Publish-->
             <org.wordpress.android.widgets.WPTextView
                 android:text="@string/my_site_header_publish"
-                style="@style/MySiteListHeaderTextView" >
+                style="@style/MySiteListHeader" >
             </org.wordpress.android.widgets.WPTextView>
 
             <!--Pages-->
@@ -278,7 +278,7 @@
             <!--Look and Feel-->
             <org.wordpress.android.widgets.WPTextView
                 android:text="@string/my_site_header_look_and_feel"
-                style="@style/MySiteListHeaderTextView" >
+                style="@style/MySiteListHeader" >
             </org.wordpress.android.widgets.WPTextView>
 
             <!--Themes-->
@@ -302,7 +302,7 @@
             <!--Configuration-->
             <org.wordpress.android.widgets.WPTextView
                 android:text="@string/my_site_header_configuration"
-                style="@style/MySiteListHeaderTextView" >
+                style="@style/MySiteListHeader" >
             </org.wordpress.android.widgets.WPTextView>
 
             <!--People-->
@@ -380,7 +380,7 @@
             <!--External-->
             <org.wordpress.android.widgets.WPTextView
                 android:text="@string/my_site_header_external"
-                style="@style/MySiteListHeaderTextView" >
+                style="@style/MySiteListHeader" >
             </org.wordpress.android.widgets.WPTextView>
 
             <!--View Site-->
