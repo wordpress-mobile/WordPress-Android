@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
-            android:theme="@style/WPPrefSwitch"
+            android:theme="@style/SwitchBlueWordPress"
             tools:checked="true" />
     </LinearLayout>
 

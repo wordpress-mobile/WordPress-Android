@@ -469,12 +469,12 @@
     <!-- Plans Styles -->
     <style name="PlansProgressBar" parent="@android:style/Widget.Holo.ProgressBar" />
 
-    <style name="WPPrefSwitch">
-        <item name="colorControlActivated">@color/blue_wordpress</item>
+    <style name="SwitchBlueLight">
+        <item name="colorControlActivated">@color/blue_light</item>
     </style>
 
-    <style name="WPToolbarSwitch">
-        <item name="colorControlActivated">@color/blue_light</item>
+    <style name="SwitchBlueWordPress">
+        <item name="colorControlActivated">@color/blue_wordpress</item>
     </style>
 
     <!--Post Settings Styles-->
