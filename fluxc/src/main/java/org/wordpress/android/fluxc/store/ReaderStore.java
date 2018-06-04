@@ -45,8 +45,10 @@ public class ReaderStore extends Store {
         }
         switch ((ReaderAction) actionType) {
             case READER_SEARCH_SITES:
+                performReaderSearchSites((ReaderSearchSitesPayload) action.getPayload());
                 break;
             case READER_SEARCHED_SITES:
+                handleReaderSearcbSites((ReaderSearchSitesResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -125,5 +127,25 @@ public class ReaderStore extends Store {
             this.searchTerm = searchTerm;
             this.feeds = new ArrayList<>();
         }
+    }
+
+    private void performReaderSearchSites(ReaderSearchSitesPayload payload) {
+        mReaderRestClient.searchReaderSites(payload.searchTerm, payload.offset);
+    }
+
+    private void handleReaderSearcbSites(@NonNull ReaderSearchSitesResponsePayload payload) {
+        OnReaderSitesSearched onReaderSitesSearched;
+
+        if (payload.isError()) {
+            onReaderSitesSearched = new OnReaderSitesSearched(payload.error, payload.searchTerm);
+        } else {
+            onReaderSitesSearched = new OnReaderSitesSearched(
+                    payload.feeds,
+                    payload.searchTerm,
+                    payload.offset,
+                    payload.canLoadMore);
+        }
+
+        emitChange(onReaderSitesSearched);
     }
 }
