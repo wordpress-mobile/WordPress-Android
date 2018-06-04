@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
+import android.support.annotation.NonNull;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -10,7 +12,6 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
-import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -48,36 +49,56 @@ public class ReaderStore extends Store {
     }
 
     public static class ReaderSearchSitesPayload extends Payload<BaseNetworkError> {
-        public String searchTerm;
+        public @NonNull String searchTerm;
         public int offset;
 
-        public ReaderSearchSitesPayload(String searchTerm) {
+        public ReaderSearchSitesPayload(@NonNull String searchTerm) {
             this.searchTerm = searchTerm;
         }
 
-        public ReaderSearchSitesPayload(String searchTerm, int offset) {
+        public ReaderSearchSitesPayload(@NonNull String searchTerm, int offset) {
             this(searchTerm);
             this.offset = offset;
         }
     }
 
-    public static class ReaderSearchSitesResponsePayload extends Payload<PostError> {
-        public SitesModel sites;
-        public String searchTerm;
-        public boolean loadedMore;
+    public static class ReaderSearchSitesResponsePayload extends Payload<ReaderError> {
+        public @NonNull SitesModel sites;
+        public @NonNull String searchTerm;
+        public int offset;
         public boolean canLoadMore;
 
-        public ReaderSearchSitesResponsePayload(SitesModel sites, String searchTerm,
-                                                boolean loadedMore, boolean canLoadMore) {
+        public ReaderSearchSitesResponsePayload(@NonNull SitesModel sites,
+                                                @NonNull String searchTerm,
+                                                int offset,
+                                                boolean canLoadMore) {
             this.sites = sites;
             this.searchTerm = searchTerm;
-            this.loadedMore = loadedMore;
+            this.offset = offset;
             this.canLoadMore = canLoadMore;
         }
 
-        public ReaderSearchSitesResponsePayload(String searchTerm, PostError error) {
+        public ReaderSearchSitesResponsePayload(@NonNull ReaderError error, @NonNull String searchTerm) {
             this.searchTerm = searchTerm;
             this.error = error;
+            this.sites = new SitesModel();
+        }
+    }
+
+    public enum ReaderErrorType {
+        GENERIC_ERROR;
+
+        public static ReaderErrorType fromBaseNetworkError(BaseNetworkError baseError) {
+            return ReaderErrorType.GENERIC_ERROR;
+        }
+    }
+
+    public static class ReaderError implements OnChangedError {
+        public ReaderErrorType type;
+        public String message;
+        public ReaderError(ReaderErrorType type, String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 }
