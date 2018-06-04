@@ -351,6 +351,7 @@
     </style>
 
     <style name="MySiteListHeader">
+        <item name="android:ellipsize">end</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_height">wrap_content</item>
