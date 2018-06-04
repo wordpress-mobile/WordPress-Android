@@ -416,7 +416,12 @@ public class PluginBrowserActivity extends AppCompatActivity
                 @StringRes int textResId;
                 @ColorRes int colorResId;
                 @DrawableRes int drawableResId;
-                if (PluginUtils.isUpdateAvailable(plugin)) {
+                boolean isAutoManaged = PluginUtils.isAutoManaged(mViewModel.getSite(), plugin);
+                if (isAutoManaged) {
+                    textResId = R.string.plugin_auto_managed;
+                    colorResId = R.color.alert_green;
+                    drawableResId = R.color.transparent;
+                } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
                     colorResId = R.color.alert_yellow;
                     drawableResId = R.drawable.plugin_update_available_icon;
@@ -431,6 +436,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 }
                 holder.mStatusText.setText(textResId);
                 holder.mStatusText.setTextColor(getResources().getColor(colorResId));
+                holder.mStatusIcon.setVisibility(isAutoManaged ? View.GONE : View.VISIBLE);
                 holder.mStatusIcon.setImageResource(drawableResId);
                 holder.mStatusContainer.setVisibility(View.VISIBLE);
                 holder.mRatingBar.setVisibility(View.GONE);

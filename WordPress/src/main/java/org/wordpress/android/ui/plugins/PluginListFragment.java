@@ -260,7 +260,11 @@ public class PluginListFragment extends Fragment {
                 @StringRes int textResId;
                 @ColorRes int colorResId;
                 @DrawableRes int drawableResId;
-                if (PluginUtils.isUpdateAvailable(plugin)) {
+                if (PluginUtils.isAutoManaged(mViewModel.getSite(), plugin)) {
+                    textResId = R.string.plugin_auto_managed;
+                    colorResId = R.color.alert_green;
+                    drawableResId = R.color.transparent;
+                } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
                     colorResId = R.color.alert_yellow;
                     drawableResId = R.drawable.plugin_update_available_icon;
