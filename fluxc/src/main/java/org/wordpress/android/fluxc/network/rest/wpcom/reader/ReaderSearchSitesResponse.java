@@ -10,7 +10,6 @@ import java.util.List;
 
 @JsonAdapter(ReaderSearchSitesDeserializer.class)
 public class ReaderSearchSitesResponse {
-    public boolean canLoadMore;
     public int offset;
     public @NonNull List<ReaderFeedModel> feeds;
 }
