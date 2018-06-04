@@ -65,12 +65,12 @@ public class RelatedPostsDialog extends DialogFragment
         //noinspection InflateParams
         View v = inflater.inflate(R.layout.related_posts_dialog, null);
 
-        mShowRelatedPosts = (SwitchCompat) v.findViewById(R.id.toggle_related_posts_switch);
-        mShowHeader = (CheckBox) v.findViewById(R.id.show_header_checkbox);
-        mShowImages = (CheckBox) v.findViewById(R.id.show_images_checkbox);
-        mPreviewHeader = (TextView) v.findViewById(R.id.preview_header);
-        mRelatedPostsListHeader = (TextView) v.findViewById(R.id.related_posts_list_header);
-        mRelatedPostsList = (LinearLayout) v.findViewById(R.id.related_posts_list);
+        mShowRelatedPosts = v.findViewById(R.id.toggle_related_posts_switch);
+        mShowHeader = v.findViewById(R.id.show_header_checkbox);
+        mShowImages = v.findViewById(R.id.show_images_checkbox);
+        mPreviewHeader = v.findViewById(R.id.preview_header);
+        mRelatedPostsListHeader = v.findViewById(R.id.related_posts_list_header);
+        mRelatedPostsList = v.findViewById(R.id.related_posts_list);
 
         mPreviewImages = new ArrayList<>();
         mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image1));
@@ -97,7 +97,7 @@ public class RelatedPostsDialog extends DialogFragment
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         //noinspection InflateParams
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
-        TextView titleText = ((TextView) titleView.findViewById(R.id.title));
+        TextView titleText = titleView.findViewById(R.id.title);
         titleText.setText(R.string.site_settings_related_posts_title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                                                                   RelativeLayout.LayoutParams.WRAP_CONTENT));
