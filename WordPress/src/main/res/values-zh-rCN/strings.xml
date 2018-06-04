@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-15 10:54:08+0000
+Translation-Revision-Date: 2018-05-30 08:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">新文章。撰写新文章。</string>
+    <string name="my_site_icon_content_description">更改站点图标</string>
+    <string name="my_site_icon_dialog_cancel_button">取消</string>
+    <string name="my_site_icon_dialog_remove_button">删除</string>
+    <string name="my_site_icon_dialog_change_button">更改</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">您没有编辑站点图标的权限。</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">您没有添加站点图标的权限。</string>
+    <string name="my_site_icon_dialog_change_message">您希望如何编辑该图标？</string>
+    <string name="my_site_icon_dialog_add_message">是否要添加一个站点图标？</string>
+    <string name="my_site_icon_dialog_title">站点图标</string>
+    <string name="reader_followed_blog_notifications_this">此站点</string>
+    <string name="reader_followed_blog_notifications_action">启用</string>
+    <string name="reader_followed_blog_notifications">是否为 %1$s%2$s%3$s 启用通知？</string>
+    <string name="reader_btn_notifications_on">打开站点通知</string>
+    <string name="reader_btn_notifications_off">关闭站点通知</string>
+    <string name="activity_log_jetpack_icon">Jetpack 图标</string>
+    <string name="rewind">还原</string>
+    <string name="activity_log_event">事件</string>
+    <string name="activity_log_icon">活动图标</string>
+    <string name="activity_log">活动日志</string>
+    <string name="activity">活动</string>
+    <string name="privacy_policy_read">阅读隐私政策</string>
+    <string name="third_party_policy_learn_more_caption">我们使用其他跟踪工具，其中包括来自第三方的工具。了解这些工具及其使用方法。</string>
+    <string name="third_party_policy_learn_more_header">第三方政策</string>
+    <string name="privacy_policy_learn_more_caption">该信息有助于我们改善产品、开展与您更加相关的营销活动、个性化您的 WordPress.com 体验等，请参阅隐私政策以了解详情。</string>
+    <string name="privacy_policy_learn_more_header">隐私政策</string>
+    <string name="cookie_policy_learn_more_caption">登录到您的 WordPress.com 帐户时，使用分析工具共享关于您使用服务的信息。</string>
+    <string name="cookie_policy_learn_more_header">Cookie 政策</string>
+    <string name="preference_privacy_settings">隐私设置</string>
+    <string name="preference_collect_information">收集信息</string>
+    <string name="post_submitted">文章已提交</string>
+    <string name="write_post">写文章</string>
     <string name="login_email_button_signup">还没有帐户？%1$s注册%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">使用插件功能需要站点具有良好的信誉。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">使用插件功能需要具有与该用户关联的主域订阅。</string>
@@ -76,7 +108,6 @@ Language: zh_CN
     <string name="stats_tab_tap_content_description">显示 %s</string>
     <string name="stats_legend">统计图图例</string>
     <string name="fab_create_desc">创建</string>
-    <string name="fab_create_post_desc">创建文章</string>
     <string name="fab_add_tag_desc">创建标签</string>
     <string name="stats_bar_week_desc">%s 周</string>
     <string name="stats_bar_date_value_desc">%s，%d 次浏览</string>
@@ -262,6 +293,7 @@ Language: zh_CN
     <string name="signup_with_email_button">使用电子邮件注册</string>
     <string name="signup_user_exists">电子邮件已注册 WordPress.com。\n继续登录。</string>
     <string name="signup_updating_account">正在更新帐户…</string>
+    <string name="signup_terms_of_service_text">注册即表示您同意我们的%1$s服务条款%2$s。</string>
     <string name="signup_magic_link_progress">正在发送电子邮件</string>
     <string name="signup_magic_link_message">我们向您发送了一个免密注册链接！请在该设备上检查电子邮件，并轻点电子邮件中的免密注册链接以完成注册。</string>
     <string name="signup_magic_link_error_button_positive">重试</string>
@@ -842,7 +874,6 @@ Language: zh_CN
     <string name="invite_names_title">用户名或电子邮件地址</string>
     <string name="invite_people">邀请用户</string>
     <string name="my_site_header_external">外部</string>
-    <string name="send_link">发送链接</string>
     <string name="label_clear_search_history">清除搜索历史记录</string>
     <string name="dlg_confirm_clear_search_history">清除搜索历史记录？</string>
     <string name="reader_empty_posts_in_search_description">未找到与您的语言对应的符合「%s」搜索条件的文章</string>
@@ -868,12 +899,8 @@ Language: zh_CN
     <string name="error_locating_image">查找已裁剪的图片时出错</string>
     <string name="error_cropping_image">裁剪图片时出错</string>
     <string name="checking_email">检查电子邮件地址</string>
-    <string name="launch_your_email_app">启动电子邮件应用程序</string>
-    <string name="check_your_email">检查电子邮件</string>
     <string name="magic_link_unavailable_error_message">目前不可用。请输入密码</string>
     <string name="logging_in">正在登录</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">通过邮箱获取可直接登录的链接</string>
-    <string name="enter_your_password_instead">改为输入密码</string>
     <string name="web_address_dialog_hint">公开显示您的评论。</string>
     <string name="new_editor_reflection_error">可视化编辑器与您的设备不兼容。已\n自动停用。</string>
     <string name="stats_insights_latest_post_no_title">（无标题）</string>
@@ -1343,7 +1370,6 @@ Language: zh_CN
     <string name="create_new_blog_wpcom">创建 WordPress.com 博客</string>
     <string name="nux_help_description">访问帮助中心，以获取常见问题的答案；或访问论坛，以提出新问题。</string>
     <string name="browse_our_faq_button">浏览我们的常见问题解答</string>
-    <string name="faq_button">常见问题解答</string>
     <string name="reader_empty_posts_liked">您尚未给任何文章点赞</string>
     <string name="reader_empty_followed_blogs_title">您尚未关注任何博客。</string>
     <string name="reader_menu_block_blog">阻止此博客</string>
@@ -1356,8 +1382,6 @@ Language: zh_CN
     <string name="hs__new_conversation_header">支持聊天</string>
     <string name="hs__conversation_detail_error">描述您所遇到的问题</string>
     <string name="contact_us">联系我们</string>
-    <string name="preference_send_usage_stats_summary">自动发送使用统计数据以帮助我们改进 Android 版 WordPress</string>
-    <string name="preference_send_usage_stats">发送统计数据</string>
     <string name="schedule_verb">计划</string>
     <string name="update_verb">更新</string>
     <string name="reader_empty_recommended_blogs">没有推荐的博客</string>
@@ -1483,7 +1507,6 @@ Language: zh_CN
     <string name="pick_photo">选择图片</string>
     <string name="reader_empty_followed_blogs_description">别担心，点击右上角的图标即可开始浏览！</string>
     <string name="reader_likes_you_and_one">你和另一个人喜欢</string>
-    <string name="nux_tutorial_get_started_title">开始!</string>
     <string name="reader_empty_followed_tags">您没有关注任何标签</string>
     <string name="reader_toast_err_url_intent">无法打开 %s</string>
     <string name="reader_toast_err_view_image">无法查看图片</string>
