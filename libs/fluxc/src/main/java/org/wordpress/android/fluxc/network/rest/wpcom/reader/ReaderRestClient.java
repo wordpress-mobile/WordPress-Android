@@ -51,12 +51,13 @@ public class ReaderRestClient extends BaseWPComRestClient {
                 new Response.Listener<ReaderSearchSitesResponse>() {
                     @Override
                     public void onResponse(ReaderSearchSitesResponse response) {
+                        boolean canLoadMore = response.feeds.size() == NUM_SEARCH_RESULTS;
                         ReaderSearchSitesResponsePayload payload =
                                 new ReaderSearchSitesResponsePayload(
                                         response.feeds,
                                         searchTerm,
                                         offset,
-                                        response.canLoadMore);
+                                        canLoadMore);
                         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchedSitesAction(payload));
                     }
                 }, new WPComErrorListener() {
