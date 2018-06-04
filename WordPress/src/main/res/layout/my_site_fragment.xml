@@ -277,6 +277,7 @@
 
             <!--Look and Feel-->
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/my_site_look_and_feel_header"
                 android:text="@string/my_site_header_look_and_feel"
                 style="@style/MySiteListHeader" >
             </org.wordpress.android.widgets.WPTextView>
@@ -301,6 +302,7 @@
 
             <!--Configuration-->
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/my_site_configuration_header"
                 android:text="@string/my_site_header_configuration"
                 style="@style/MySiteListHeader" >
             </org.wordpress.android.widgets.WPTextView>
