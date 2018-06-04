@@ -63,6 +63,9 @@ public class PluginUtils {
         if (!site.isAutomatedTransfer()) {
             return false;
         }
+        if (!plugin.isInstalled()) {
+            return false;
+        }
         boolean isAutoManaged = false;
         for (String pluginName: AUTO_MANAGED_PLUGINS) {
             isAutoManaged = isAutoManaged || checkNameOfPlugin(plugin, pluginName);
