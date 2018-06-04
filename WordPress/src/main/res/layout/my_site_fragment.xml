@@ -105,6 +105,7 @@
                         android:layout_below="@id/top_container"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
+                        android:minHeight="@dimen/min_touch_target_sz"
                         android:orientation="horizontal"
                         android:paddingLeft="@dimen/my_site_list_row_padding_left"
                         android:paddingStart="@dimen/my_site_list_row_padding_left"
