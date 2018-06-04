@@ -57,10 +57,10 @@ public class NumberPickerDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-        TextView switchText = (TextView) view.findViewById(R.id.number_picker_text);
-        mSwitch = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
-        mHeaderText = (TextView) view.findViewById(R.id.number_picker_header);
-        mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        TextView switchText = view.findViewById(R.id.number_picker_text);
+        mSwitch = view.findViewById(R.id.number_picker_switch);
+        mHeaderText = view.findViewById(R.id.number_picker_header);
+        mNumberPicker = view.findViewById(R.id.number_picker);
         int value = mMinValue;
 
         Bundle args = getArguments();
@@ -151,7 +151,7 @@ public class NumberPickerDialog extends DialogFragment
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         @SuppressLint("InflateParams")
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
-        TextView titleText = ((TextView) titleView.findViewById(R.id.title));
+        TextView titleText = titleView.findViewById(R.id.title);
         titleText.setText(title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
