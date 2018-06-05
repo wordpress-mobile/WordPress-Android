@@ -19,11 +19,11 @@
         android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_other" >
 
-        <PreferenceScreen
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/pref_notification_other_blogs"
             android:title="@string/notification_settings_item_other_comments_other_blogs" />
 
-        <SwitchPreference
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/pref_key_notification_pending_drafts"
             android:defaultValue="true"
             android:title="@string/notification_settings_item_other_pending_drafts" />
@@ -42,13 +42,12 @@
             android:showDefault="true"
             android:title="@string/notification_settings_item_sights_and_sounds_choose_sound" />
 
-        <SwitchPreference
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/wp_pref_notification_vibrate"
             android:defaultValue="false"
             android:title="@string/notification_settings_item_sights_and_sounds_vibrate_device" />
 
-        <SwitchPreference
-            android:widgetLayout="@layout/wp_preference_switch"
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/wp_pref_notification_light"
             android:defaultValue="true"
             android:title="@string/notification_settings_item_sights_and_sounds_blink_light" />
