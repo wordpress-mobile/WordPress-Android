@@ -901,7 +901,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         bookmarkButton.setImageResource(post.isBookmarked ? R.drawable.ic_bookmark_18dp
                 : R.drawable.ic_bookmark_outline_18dp);
-        ReaderUtils.setBackgroundToRoundRipple(bookmarkButton);
         if (post.isBookmarked) {
             bookmarkButton.setContentDescription(context.getString(R.string.reader_remove_bookmark));
         } else {

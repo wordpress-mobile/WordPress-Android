@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 /*
  * used when showing comment + comment count, like + like count
@@ -71,8 +70,6 @@ public class ReaderIconCountView extends LinearLayout {
             int margin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_small);
             params.topMargin = margin;
         }
-
-        ReaderUtils.setBackgroundToRoundRipple(mImageView);
     }
 
     public ImageView getImageView() {
