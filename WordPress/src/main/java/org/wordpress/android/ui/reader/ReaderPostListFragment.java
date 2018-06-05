@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabLayout.OnTabSelectedListener;
+import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
@@ -113,7 +115,9 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener {
-    private static final int NUM_SITE_SEARCH_RESULTS = 3;
+    private static final int TAB_POSTS = 0;
+    private static final int TAB_SITES = 1;
+
     private ReaderPostAdapter mPostAdapter;
     private ReaderSiteSearchAdapter mSiteSearchAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
@@ -725,7 +729,7 @@ public class ReaderPostListFragment extends Fragment
         // search for matching sites as well
         ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
                 mCurrentSearchQuery,
-                NUM_SITE_SEARCH_RESULTS,
+                ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
                 0);
         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
 
@@ -742,7 +746,6 @@ public class ReaderPostListFragment extends Fragment
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
         if (!event.isError()) {
-            mRecyclerView.setAdapter(adapter);
             adapter.setFeedList(event.feeds);
         } else {
             adapter.clear();
@@ -773,12 +776,32 @@ public class ReaderPostListFragment extends Fragment
     private void showSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() != View.VISIBLE) {
             AniUtils.animateTopBar(mSearchTabs, true);
+            mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
+                @Override public void onTabSelected(Tab tab) {
+                    if (tab.getPosition() == TAB_POSTS) {
+                        mRecyclerView.setAdapter(getPostAdapter());
+                    } else if (tab.getPosition() == TAB_SITES) {
+                        mRecyclerView.setAdapter(getSiteSearchAdapter());
+                    }
+                }
+                @Override public void onTabUnselected(Tab tab) {
+
+                }
+                @Override public void onTabReselected(Tab tab) {
+
+                }
+            });
         }
     }
 
     private void hideSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() == View.VISIBLE) {
             AniUtils.animateTopBar(mSearchTabs, false);
+            mSearchTabs.clearOnTabSelectedListeners();
+            if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
+                mSearchTabs.getTabAt(TAB_POSTS).select();
+            }
+            mRecyclerView.setAdapter(getPostAdapter());
         }
     }
 
