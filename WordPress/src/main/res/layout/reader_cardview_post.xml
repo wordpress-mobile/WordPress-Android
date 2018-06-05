@@ -290,8 +290,7 @@
                 android:layout_toStartOf="@id/count_comments"
                 android:minWidth="@dimen/reader_icon_minimum_height"
                 android:padding="@dimen/margin_medium"
-                android:tint="@color/grey_text_min"
-                app:srcCompat="@drawable/ic_bookmark_18dp" >
+                app:srcCompat="@drawable/ic_bookmark_selector_18dp" >
             </ImageView>
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
