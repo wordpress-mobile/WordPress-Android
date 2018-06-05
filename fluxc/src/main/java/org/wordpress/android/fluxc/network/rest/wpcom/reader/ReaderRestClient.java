@@ -43,6 +43,7 @@ public class ReaderRestClient extends BaseWPComRestClient {
         params.put("exclude_followed", Boolean.toString(true));
         params.put("sort", "relevance");
         params.put("number", Integer.toString(count));
+        params.put("meta", "site");
         params.put("q", UrlUtils.urlEncode(searchTerm));
 
         WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, params, ReaderSearchSitesResponse.class,
