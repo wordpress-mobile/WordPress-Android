@@ -785,10 +785,10 @@ public class ReaderPostListFragment extends Fragment
                     }
                 }
                 @Override public void onTabUnselected(Tab tab) {
-
+                    // noop
                 }
                 @Override public void onTabReselected(Tab tab) {
-
+                    // noop
                 }
             });
         }
