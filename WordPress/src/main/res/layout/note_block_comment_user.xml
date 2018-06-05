@@ -116,6 +116,23 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@drawable/notifications_list_divider_full_width" />
+
+    <Button
+        android:id="@+id/btn_read_source_post"
+        android:textColor="@color/blue_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end|center_vertical"
+        android:layout_gravity="end"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:text="@string/comment_read_source_post"/>
+
+    <View
+        android:id="@+id/btn_source_divider_view"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/notifications_list_divider_full_width" />
 </LinearLayout>
 
 
