@@ -55,14 +55,12 @@ public class ReaderStore extends Store {
 
     public static class ReaderSearchSitesPayload extends Payload<BaseNetworkError> {
         public @NonNull String searchTerm;
+        public int count;
         public int offset;
 
-        public ReaderSearchSitesPayload(@NonNull String searchTerm) {
+        public ReaderSearchSitesPayload(@NonNull String searchTerm, int count, int offset) {
             this.searchTerm = searchTerm;
-        }
-
-        public ReaderSearchSitesPayload(@NonNull String searchTerm, int offset) {
-            this(searchTerm);
+            this.count = count;
             this.offset = offset;
         }
     }
@@ -132,7 +130,7 @@ public class ReaderStore extends Store {
     }
 
     private void performReaderSearchSites(ReaderSearchSitesPayload payload) {
-        mReaderRestClient.searchReaderSites(payload.searchTerm, payload.offset);
+        mReaderRestClient.searchReaderSites(payload.searchTerm, payload.count, payload.offset);
     }
 
     private void handleReaderSearcbSites(@NonNull ReaderSearchSitesResponsePayload payload) {

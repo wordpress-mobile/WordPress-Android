@@ -28,8 +28,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ReaderRestClient extends BaseWPComRestClient {
-    public static final int NUM_SEARCH_RESULTS = 20;
-
     public ReaderRestClient(Context appContext, Dispatcher dispatcher,
                             RequestQueue requestQueue,
                             AccessToken accessToken,
@@ -37,21 +35,21 @@ public class ReaderRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    public void searchReaderSites(@NonNull final String searchTerm, final int offset) {
+    public void searchReaderSites(@NonNull final String searchTerm, final int count, final int offset) {
         String url = WPCOMREST.read.feed.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
         params.put("offset", Integer.toString(offset));
         params.put("exclude_followed", Boolean.toString(true));
         params.put("sort", "relevance");
-        params.put("number", Integer.toString(NUM_SEARCH_RESULTS));
+        params.put("number", Integer.toString(count));
         params.put("q", UrlUtils.urlEncode(searchTerm));
 
         WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, params, ReaderSearchSitesResponse.class,
                 new Response.Listener<ReaderSearchSitesResponse>() {
                     @Override
                     public void onResponse(ReaderSearchSitesResponse response) {
-                        boolean canLoadMore = response.feeds.size() == NUM_SEARCH_RESULTS;
+                        boolean canLoadMore = response.feeds.size() == count;
                         ReaderSearchSitesResponsePayload payload =
                                 new ReaderSearchSitesResponsePayload(
                                         response.feeds,
