@@ -32,6 +32,7 @@ class ReaderSearchSitesDeserializer implements JsonDeserializer<ReaderSearchSite
         if (jsonFeedsList != null) {
             for (JsonElement jsonFeed : jsonFeedsList) {
                 ReaderFeedModel feed = new ReaderFeedModel();
+                feed.setSiteId(getJsonLong(jsonFeed, "blog_ID"));
                 feed.setFeedId(getJsonLong(jsonFeed, "feed_ID"));
                 feed.setSubscribeUrl(getJsonString(jsonFeed, "subscribe_URL"));
                 feed.setSubscriberCount(getJsonInt(jsonFeed, "subscribers_count"));
