@@ -101,6 +101,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_TAG_HEADER = 3;
     private static final int VIEW_TYPE_GAP_MARKER = 4;
     private static final int VIEW_TYPE_REMOVED_POST = 5;
+    private static final int VIEW_TYPE_SITE_SEARCH = 6;
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;

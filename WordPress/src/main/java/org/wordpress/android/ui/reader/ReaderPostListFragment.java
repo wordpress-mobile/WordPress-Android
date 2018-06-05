@@ -45,10 +45,13 @@ import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
+import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
+import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -107,6 +110,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener {
+    private static final int NUM_SITE_SEARCH_RESULTS = 3;
     private ReaderPostAdapter mPostAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
@@ -709,12 +713,28 @@ public class ReaderPostListFragment extends Fragment
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
 
+        // search for matching sites as well
+        ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
+                mCurrentSearchQuery,
+                NUM_SITE_SEARCH_RESULTS,
+                0);
+        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
+
         // track that the user performed a search
         if (!trimQuery.equals("")) {
             Map<String, Object> properties = new HashMap<>();
             properties.put("query", trimQuery);
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReaderSitesSearched(OnReaderSitesSearched event) {
+        if (event.isError()) {
+            return;
+        }
+        AppLog.d(T.READER, "sites searched");
     }
 
     /*
