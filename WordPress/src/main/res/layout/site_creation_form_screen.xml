@@ -15,7 +15,6 @@
         app:contentInsetLeft="@dimen/toolbar_content_offset"
         app:contentInsetStart="@dimen/toolbar_content_offset"
         app:titleTextColor="@color/white"
-        app:theme="@style/LoginTheme.Toolbar"
         tools:targetApi="LOLLIPOP"/>
 
     <ViewStub
