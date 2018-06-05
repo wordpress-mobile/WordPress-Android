@@ -40,8 +40,8 @@ public class ReaderIconCountView extends LinearLayout {
     private void initView(Context context, AttributeSet attrs) {
         inflate(context, R.layout.reader_icon_count_view, this);
 
-        mImageView = (ImageView) findViewById(R.id.image_count);
-        mTextCount = (TextView) findViewById(R.id.text_count);
+        mImageView = findViewById(R.id.image_count);
+        mTextCount = findViewById(R.id.text_count);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
