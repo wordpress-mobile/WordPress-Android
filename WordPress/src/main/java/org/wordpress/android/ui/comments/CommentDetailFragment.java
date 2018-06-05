@@ -17,7 +17,6 @@ import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -129,7 +128,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private View mBtnSpamComment;
     private TextView mBtnSpamCommentText;
     private View mBtnTrashComment;
-    private View mBtnReadPostSource;
     private TextView mBtnTrashCommentText;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
@@ -258,7 +256,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamCommentText = mLayoutButtons.findViewById(R.id.btn_spam_text);
         mBtnTrashComment = mLayoutButtons.findViewById(R.id.btn_trash);
         mBtnTrashCommentText = mLayoutButtons.findViewById(R.id.btn_trash_text);
-        mBtnReadPostSource = mLayoutButtons.findViewById(R.id.btn_read_source_post);
 
         // As we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
         // CommentDetailFragment itself:
@@ -796,25 +793,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 });
             }
 
-            OnClickListener clickListener = new OnClickListener() {
+            txtPostTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnPostClickListener != null) {
                         mOnPostClickListener.onPostClicked(getNote(), site.getSiteId(),
-                                (int) mComment.getRemotePostId());
+                                                           (int) mComment.getRemotePostId());
                     } else {
                         // right now this will happen from notifications
                         AppLog.i(T.COMMENTS, "comment detail > no post click listener");
                         ReaderActivityLauncher.showReaderPostDetail(getActivity(), site.getSiteId(),
-                                mComment.getRemotePostId());
+                                                                    mComment.getRemotePostId());
                     }
                 }
-            };
-            txtPostTitle.setOnClickListener(clickListener);
-            if (mBtnReadPostSource != null) {
-                mBtnReadPostSource.setVisibility(View.VISIBLE);
-                mBtnReadPostSource.setOnClickListener(clickListener);
-            }
+            });
         }
     }
 
