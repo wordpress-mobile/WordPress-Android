@@ -1003,7 +1003,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void addBookmarkImageSpan(SpannableStringBuilder ssb, int imagePlaceholderPosition) {
-        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_outline_18dp);
+        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_grey_min_18dp);
         d.setBounds(0, 0, (int) (d.getIntrinsicWidth() * 1.2), (int) (d.getIntrinsicHeight() * 1.2));
         ssb.setSpan(new ImageSpan(d), imagePlaceholderPosition, imagePlaceholderPosition + 2,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
