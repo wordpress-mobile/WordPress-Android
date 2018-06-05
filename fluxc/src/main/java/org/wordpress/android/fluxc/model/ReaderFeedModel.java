@@ -5,10 +5,13 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
 public class ReaderFeedModel extends Payload<BaseNetworkError> {
     private long mFeedId;
-    public int mSubscriberCount;
+    private int mSubscriberCount;
+    private boolean mIsFollowing;
     private String mSubscribeUrl;
     private String mTitle;
+    private String mDescription;
     private String mUrl;
+    private String mIconUrl;
 
     public long getFeedId() {
         return mFeedId;
@@ -48,5 +51,29 @@ public class ReaderFeedModel extends Payload<BaseNetworkError> {
 
     public void setUrl(String url) {
         this.mUrl = url;
+    }
+
+    public boolean isFollowing() {
+        return mIsFollowing;
+    }
+
+    public void setFollowing(boolean following) {
+        mIsFollowing = following;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public String getIconUrl() {
+        return mIconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        mIconUrl = iconUrl;
     }
 }
