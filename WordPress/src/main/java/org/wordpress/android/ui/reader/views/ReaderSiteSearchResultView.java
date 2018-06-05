@@ -8,9 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.model.ReaderFeedModel;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.NetworkUtils;
@@ -24,8 +22,7 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
  */
 public class ReaderSiteSearchResultView extends LinearLayout {
     private ReaderFollowButton mFollowButton;
-    private ReaderFeedModel mFeed;
-    private OnFollowListener mFollowListener;
+    private ReaderFeedModel mSite;
 
     public ReaderSiteSearchResultView(Context context) {
         this(context, null);
@@ -41,40 +38,35 @@ public class ReaderSiteSearchResultView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_site_header_view, this);
+        View view = inflate(context, R.layout.reader_site_search_result, this);
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(params);
         mFollowButton = view.findViewById(R.id.follow_button);
+        mFollowButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                toggleFollowStatus();
+            }
+        });
     }
 
-    public void setOnFollowListener(OnFollowListener listener) {
-        mFollowListener = listener;
-    }
-
-    public void setFeed(@NonNull ReaderFeedModel feed) {
-        mFeed = feed;
+    public void setSite(@NonNull ReaderFeedModel site) {
+        mSite = site;
 
         TextView txtTitle = findViewById(R.id.text_title);
         TextView txtUrl = findViewById(R.id.text_url);
         WPNetworkImageView imgBlavatar = findViewById(R.id.image_blavatar);
 
-        txtTitle.setText(feed.getTitle());
-        txtUrl.setText(UrlUtils.getHost(feed.getUrl()));
-        imgBlavatar.setImageUrl(feed.getIconUrl(), ImageType.BLAVATAR);
+        txtTitle.setText(site.getTitle());
+        txtUrl.setText(UrlUtils.getHost(site.getUrl()));
+        imgBlavatar.setImageUrl(site.getIconUrl(), ImageType.BLAVATAR);
     }
 
-    private void toggleFollowStatus(final View followButton) {
+    private void toggleFollowStatus() {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
 
-        final boolean isAskingToFollow = !ReaderBlogTable.isFollowedFeed(mFeed.getFeedId());
-        if (mFollowListener != null) {
-            if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(followButton, mFeed.getTitle(), mFeed.getFeedId());
-            } else {
-                mFollowListener.onFollowingTapped();
-            }
-        }
-
+        final boolean isAskingToFollow = !mSite.isFollowing();
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -87,6 +79,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
                             : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
+                    mSite.setFollowing(!isAskingToFollow);
                 }
             }
         };
@@ -94,9 +87,10 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         // disable follow button until API call returns
         mFollowButton.setEnabled(false);
 
-        boolean result = ReaderBlogActions.followFeedById(mFeed.getFeedId(), isAskingToFollow, listener);
+        boolean result = ReaderBlogActions.followFeedById(mSite.getFeedId(), isAskingToFollow, listener);
         if (result) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+            mSite.setFollowing(isAskingToFollow);
         }
     }
 }

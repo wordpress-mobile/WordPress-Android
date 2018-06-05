@@ -2,18 +2,12 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.ReaderFeedModel;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
-import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,36 +56,27 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mSites.get(position).getFeedId();
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.reader_site_search_result, parent, false);
+    @NonNull @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ReaderSiteSearchResultView view = new ReaderSiteSearchResultView(parent.getContext());
         return new SiteViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ReaderFeedModel feed = mSites.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (!isValidPosition(position)) {
+            return;
+        }
         SiteViewHolder siteHolder = (SiteViewHolder) holder;
-        siteHolder.mTxtTitle.setText(feed.getTitle());
-        siteHolder.mTxtUrl.setText(UrlUtils.getHost(feed.getUrl()));
-        siteHolder.mImgBlavatar.setImageUrl(feed.getIconUrl(), ImageType.BLAVATAR);
-        siteHolder.mFollowButton.setIsFollowed(feed.isFollowing());
+        siteHolder.mSearchResultView.setSite(mSites.get(position));
     }
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mTxtTitle;
-        private final TextView mTxtUrl;
-        private ReaderFollowButton mFollowButton;
-        private final WPNetworkImageView mImgBlavatar;
+        private final ReaderSiteSearchResultView mSearchResultView;
 
         SiteViewHolder(View view) {
             super(view);
-            mTxtTitle = view.findViewById(R.id.text_title);
-            mTxtUrl = view.findViewById(R.id.text_url);
-            mFollowButton = view.findViewById(R.id.follow_button);
-            mImgBlavatar = view.findViewById(R.id.image_blavatar);
-
+            mSearchResultView = (ReaderSiteSearchResultView) view;
             view.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
                     int position = getAdapterPosition();
