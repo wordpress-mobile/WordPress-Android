@@ -19,7 +19,7 @@
         android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_other" >
 
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
+        <PreferenceScreen
             android:key="@string/pref_notification_other_blogs"
             android:title="@string/notification_settings_item_other_comments_other_blogs" />
 
