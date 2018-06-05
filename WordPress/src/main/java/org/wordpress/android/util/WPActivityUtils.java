@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.List;
 
@@ -30,9 +31,10 @@ public class WPActivityUtils {
             return;
         }
 
-        View dialogContainerView = DialogExtensionsKt.getContainerView(dialog);
+        View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
 
         if (dialogContainerView == null) {
+            AppLog.e(T.SETTINGS, "Preference Dialog View was null when adding Toolbar");
             return;
         }
 
@@ -76,9 +78,10 @@ public class WPActivityUtils {
             return;
         }
 
-        View dialogContainerView = DialogExtensionsKt.getContainerView(dialog);
+        View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
 
         if (dialogContainerView == null) {
+            AppLog.e(T.SETTINGS, "Preference Dialog View was null when removing Toolbar");
             return;
         }
 
