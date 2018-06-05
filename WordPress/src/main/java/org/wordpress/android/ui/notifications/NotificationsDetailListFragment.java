@@ -6,6 +6,7 @@ package org.wordpress.android.ui.notifications;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -28,8 +29,10 @@ import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.FooterNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.GeneratedNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
+import org.wordpress.android.ui.notifications.blocks.NoteBlock.OnNoteBlockTextClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -316,7 +319,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             requestReaderContentForNote();
-
             JSONArray bodyArray = mNote.getBody();
             final List<NoteBlock> noteList = new ArrayList<>();
 
@@ -335,6 +337,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 noteList.add(headerNoteBlock);
             }
 
+            boolean isPingback = isPingback(mNote);
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i = 0; i < bodyArray.length(); i++) {
                     try {
@@ -399,6 +402,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             noteBlock.setIsBadge();
                         }
 
+                        if (isPingback) {
+                            noteBlock.setIsPingback();
+                        }
+
                         noteList.add(noteBlock);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.NOTIFS, "Invalid note data, could not parse.");
@@ -406,7 +413,45 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 }
             }
 
+            if (isPingback) {
+                // Remove this when we start receiving "Read more block" from the backend
+                NoteBlock generatedBlock =
+                        buildGeneratedLinkBlock(getActivity(), new JSONObject(), mOnNoteBlockTextClickListener);
+                generatedBlock.setIsPingback();
+                noteList.add(generatedBlock);
+            }
+
             return noteList;
+        }
+
+        private boolean isPingback(Note note) {
+            boolean hasRangeOfTypeSite = false;
+            boolean hasRangeOfTypePost = false;
+
+            JSONArray rangesArray = note.getSubject().optJSONArray("ranges");
+            if (rangesArray != null) {
+                for (int i = 0; i < rangesArray.length(); i++) {
+                    JSONObject rangeObject = rangesArray.optJSONObject(i);
+                    if (rangeObject == null) {
+                        continue;
+                    }
+                    if ("site".equals(rangeObject.optString("type"))) {
+                        hasRangeOfTypeSite = true;
+                    } else if ("post".equals(rangeObject.optString("type"))) {
+                        hasRangeOfTypePost = true;
+                    }
+                }
+            }
+            return hasRangeOfTypePost && hasRangeOfTypeSite;
+        }
+
+        private NoteBlock buildGeneratedLinkBlock(FragmentActivity activity,
+                                                  JSONObject noteObject,
+                                                  OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+            return new GeneratedNoteBlock(
+                    activity.getString(R.string.comment_read_source_post),
+                    noteObject,
+                    onNoteBlockTextClickListener);
         }
 
         @Override

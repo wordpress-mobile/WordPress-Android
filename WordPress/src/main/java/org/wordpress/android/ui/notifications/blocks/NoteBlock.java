@@ -6,9 +6,11 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +43,7 @@ public class NoteBlock {
     private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     private JSONObject mMediaItem;
     private boolean mIsBadge;
+    private boolean mIsPingback;
     private boolean mHasAnimatedBadge;
     private int mBackgroundColor;
 
@@ -86,6 +89,13 @@ public class NoteBlock {
 
     String getMetaSiteUrl() {
         return JSONUtils.queryJSON(mNoteData, "meta.links.home", "");
+    }
+
+    private boolean isPingBack() {
+        return mIsPingback;
+    }
+    public void setIsPingback() {
+        mIsPingback = true;
     }
 
     JSONObject getNoteMediaItem() {
@@ -181,25 +191,42 @@ public class NoteBlock {
         }
 
         // Note text
-        if (!TextUtils.isEmpty(getNoteText())) {
-            if (mIsBadge) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                params.gravity = Gravity.CENTER_HORIZONTAL;
-                noteBlockHolder.getTextView().setLayoutParams(params);
-                noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
-                noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
-
-                if (AccessibilityUtils.isAccessibilityEnabled(noteBlockHolder.getTextView().getContext())) {
-                    noteBlockHolder.getTextView().setClickable(false);
-                    noteBlockHolder.getTextView().setLongClickable(false);
-                }
+        Spannable noteText = getNoteText();
+        if (!TextUtils.isEmpty(noteText)) {
+            if (isPingBack()) {
+                noteBlockHolder.getTextView().setVisibility(View.GONE);
+                noteBlockHolder.getDivider().setVisibility(View.VISIBLE);
+                noteBlockHolder.getButton().setVisibility(View.VISIBLE);
+                noteBlockHolder.getButton().setText(noteText.toString());
+                noteBlockHolder.getButton().setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (getOnNoteBlockTextClickListener() != null) {
+                            getOnNoteBlockTextClickListener().showSitePreview(getMetaSiteId(), getMetaSiteUrl());
+                        }
+                    }
+                });
             } else {
-                noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
-                noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
+                if (mIsBadge) {
+                    LinearLayout.LayoutParams params =
+                            new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.MATCH_PARENT);
+                    params.gravity = Gravity.CENTER_HORIZONTAL;
+                    noteBlockHolder.getTextView().setLayoutParams(params);
+                    noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
+                    noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
+
+                    if (AccessibilityUtils.isAccessibilityEnabled(noteBlockHolder.getTextView().getContext())) {
+                        noteBlockHolder.getTextView().setClickable(false);
+                        noteBlockHolder.getTextView().setLongClickable(false);
+                    }
+                } else {
+                    noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
+                    noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
+                }
+                noteBlockHolder.getTextView().setText(noteText);
+                noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
             }
-            noteBlockHolder.getTextView().setText(getNoteText());
-            noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
         }
@@ -217,18 +244,30 @@ public class NoteBlock {
     static class BasicNoteBlockHolder {
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
+        private final Button mButton;
+        private final View mDivider;
 
         private ImageView mImageView;
         private VideoView mVideoView;
 
         BasicNoteBlockHolder(View view) {
             mRootLayout = (LinearLayout) view;
-            mTextView = (WPTextView) view.findViewById(R.id.note_text);
+            mTextView = view.findViewById(R.id.note_text);
             mTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
+            mButton = view.findViewById(R.id.note_button);
+            mDivider = view.findViewById(R.id.divider_view);
         }
 
         public WPTextView getTextView() {
             return mTextView;
+        }
+
+        public Button getButton() {
+            return mButton;
+        }
+
+        public View getDivider() {
+            return mDivider;
         }
 
         public ImageView getImageView() {
