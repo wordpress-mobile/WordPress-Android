@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
@@ -122,6 +123,7 @@ public class ReaderPostListFragment extends Fragment
     private View mEmptyView;
     private View mEmptyViewBoxImages;
     private ProgressBar mProgress;
+    private TabLayout mSearchTabs;
 
     private SearchView mSearchView;
     private MenuItem mSettingsMenuItem;
@@ -592,6 +594,8 @@ public class ReaderPostListFragment extends Fragment
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
+        mSearchTabs = rootView.findViewById(R.id.tab_layout_search_results);
+
         return rootView;
     }
 
@@ -651,6 +655,7 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 hideSearchMessage();
+                hideSearchTabs();
                 resetSearchSuggestionAdapter();
                 mSettingsMenuItem.setVisible(true);
                 mCurrentSearchQuery = null;
@@ -752,10 +757,23 @@ public class ReaderPostListFragment extends Fragment
 
         setEmptyTitleAndDescription(false);
         showEmptyView();
+        hideSearchTabs();
     }
 
     private void hideSearchMessage() {
         hideEmptyView();
+    }
+
+    private void showSearchTabs() {
+        if (isAdded() && mSearchTabs.getVisibility() != View.VISIBLE) {
+            AniUtils.animateTopBar(mSearchTabs, true);
+        }
+    }
+
+    private void hideSearchTabs() {
+        if (isAdded() && mSearchTabs.getVisibility() == View.VISIBLE) {
+            AniUtils.animateTopBar(mSearchTabs, false);
+        }
     }
 
     /*
@@ -832,6 +850,9 @@ public class ReaderPostListFragment extends Fragment
             && getPostListType() == ReaderPostListType.SEARCH_RESULTS
             && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
+            showSearchTabs();
+        } else {
+            hideSearchTabs();
         }
     }
 
