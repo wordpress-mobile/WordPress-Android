@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/selectableItemBackground"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:minHeight="@dimen/reader_icon_minimum_height"
+    android:orientation="horizontal"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_medium" >
 
     <ImageView
         android:id="@+id/image_count"
-        android:layout_width="@dimen/reader_count_icon"
-        android:layout_height="@dimen/reader_count_icon"
-        android:layout_gravity="center_vertical"
         android:contentDescription="@null"
-        tools:src="@drawable/reader_button_comment" />
+        android:layout_gravity="center_vertical"
+        android:layout_height="@dimen/reader_count_icon"
+        android:layout_width="@dimen/reader_count_icon"
+        tools:src="@drawable/ic_comment_grey_min_18dp" >
+    </ImageView>
 
     <!--Set appropriate verbose content description to whole layout programmatically ex. "321 people liked this"-->
     <TextView
         android:id="@+id/text_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/margin_extra_small"
         android:importantForAccessibility="no"
-        android:textColor="@color/reader_count_text"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_extra_small"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:layout_width="wrap_content"
+        android:textColor="@color/grey_text_min"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="2"
-        android:layout_marginStart="@dimen/margin_extra_small"/>
+        tools:text="2" >
+    </TextView>
 
 </LinearLayout>
