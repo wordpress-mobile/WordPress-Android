@@ -78,7 +78,7 @@ public class EndpointProcessor extends AbstractProcessor {
                 generateXMLRPCEndpointFile();
                 generateWPAPIEndpointFile();
                 generateWPORGAPIEndpointFile();
-            } else if (outputPath.contains("/plugins/woocommerce/build/")) {
+            } else if (outputPath.contains(fs + "plugins" + fs + "woocommerce" + fs + "build" + fs)) {
                 generateWCWPAPIPluginEndpointFile();
             }
         } catch (IOException e) {
