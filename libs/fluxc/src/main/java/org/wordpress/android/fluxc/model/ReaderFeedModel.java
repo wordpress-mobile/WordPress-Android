@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
 public class ReaderFeedModel extends Payload<BaseNetworkError> {
+    private long mSiteId;
     private long mFeedId;
     private int mSubscriberCount;
     private boolean mIsFollowing;
@@ -12,6 +13,14 @@ public class ReaderFeedModel extends Payload<BaseNetworkError> {
     private String mDescription;
     private String mUrl;
     private String mIconUrl;
+
+    public long getSiteId() {
+        return mSiteId;
+    }
+
+    public void setSiteId(long siteId) {
+        mSiteId = siteId;
+    }
 
     public long getFeedId() {
         return mFeedId;
