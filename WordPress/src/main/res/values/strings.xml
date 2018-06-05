@@ -49,6 +49,7 @@
 
     <!-- general strings -->
     <string name="posts">Posts</string>
+    <string name="sites">Sites</string>
     <string name="media">Media</string>
     <string name="video">Video</string>
     <string name="themes">Themes</string>

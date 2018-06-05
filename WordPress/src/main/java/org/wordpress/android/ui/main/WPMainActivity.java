@@ -484,10 +484,7 @@ public class WPMainActivity extends AppCompatActivity
 
     @Override
     public void onRequestHideBottomNavigation() {
-        // we only hide the bottom navigation when there's not a hardware keyboard present
-        if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
-            showBottomNav(false);
-        }
+        showBottomNav(false);
     }
 
     private void showBottomNav(boolean show) {
