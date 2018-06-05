@@ -3,8 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
+import android.os.Build;
 import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -53,7 +52,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         }
 
         // style custom switch preference
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Switch switchControl = getSwitch((ViewGroup) view);
             if (switchControl != null) {
                 switchControl.setThumbTintList(ContextCompat.getColorStateList(this.getContext(),
