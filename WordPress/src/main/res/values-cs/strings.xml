@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-16 16:33:20+0000
+Translation-Revision-Date: 2018-05-31 14:09:15+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Nový příspěvek. Napište nový příspěvek.</string>
+    <string name="my_site_icon_content_description">Změnit ikonu webu</string>
+    <string name="my_site_icon_dialog_cancel_button">Zrušit</string>
+    <string name="my_site_icon_dialog_remove_button">Odstranit</string>
+    <string name="my_site_icon_dialog_change_button">Změnit</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Nemáte oprávnění editovat ikonu webu</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Nemáte oprávnění přidat ikonu webu.</string>
+    <string name="my_site_icon_dialog_change_message">Jak byste chtěli upravit ikonu?</string>
+    <string name="my_site_icon_dialog_add_message">Chcete přidat ikonu webu?</string>
+    <string name="my_site_icon_dialog_title">Ikona webu</string>
+    <string name="reader_followed_blog_notifications_this">tento web</string>
+    <string name="reader_followed_blog_notifications_action">Zapnout</string>
+    <string name="reader_followed_blog_notifications">Zapnout notifikace pro %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Zapnout notifikace</string>
+    <string name="reader_btn_notifications_off">Vypnout notifikace</string>
+    <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
+    <string name="rewind">Přetočit</string>
+    <string name="activity_log_event">Událost</string>
+    <string name="activity_log_icon">Ikona aktivit</string>
+    <string name="activity_log">Activity Log</string>
+    <string name="activity">Aktivity</string>
+    <string name="privacy_policy_read">Přečtěte si zásady ochrany soukromí</string>
+    <string name="third_party_policy_learn_more_caption">Používáme další nástroje pro měření, včetně některých nástrojů od třetích stran. Přečtěte si více o těchto nástrojích a jak je ovládat.</string>
+    <string name="third_party_policy_learn_more_header">Zásady třetích stran</string>
+    <string name="privacy_policy_learn_more_caption">Tyto informace nám pomáhají vylepšovat naše produkty, činit marketing relevantnějším, zlepšit zkušenosti se službou WordPress.com a podrobněji popsané v našich zásadách ochrany osobních údajů.</string>
+    <string name="privacy_policy_learn_more_header">Zásady ochrany osobních údajů</string>
+    <string name="cookie_policy_learn_more_caption">Sdílejte informace o využívání služeb s našim analytickým nástrojem jak využíváte naše služby</string>
+    <string name="cookie_policy_learn_more_header">Cookie Policy</string>
+    <string name="preference_privacy_settings">Nastavení ochrany osobních údajů</string>
+    <string name="preference_collect_information">Sbírat informace</string>
+    <string name="post_submitted">Příspěvek odeslán</string>
+    <string name="write_post">Napsat příspěvek</string>
     <string name="login_email_button_signup">Ještě nemáte svůj účet? %1$sRegistrujte se%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funkce pluginu vyžaduje, aby stránka byla v dobrém stavu.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkce tohoto pluginu vyžadují, aby byl tento uživatel přiřazen k odběru primární domény.</string>
@@ -76,7 +108,6 @@ Language: cs_CZ
     <string name="stats_tab_tap_content_description">zobrazování %s</string>
     <string name="stats_legend">legenda grafu statistik</string>
     <string name="fab_create_desc">vytvořit</string>
-    <string name="fab_create_post_desc">vytvořit příspěvek</string>
     <string name="fab_add_tag_desc">vytvořit štítek</string>
     <string name="stats_bar_week_desc">Týden z %s</string>
     <string name="stats_bar_date_value_desc">%s, %d zobrazení</string>
@@ -855,7 +886,6 @@ Language: cs_CZ
     <string name="invite_names_title">Uživatelská jména nebo emaily</string>
     <string name="invite_people">Přidat uživatele</string>
     <string name="my_site_header_external">Externí</string>
-    <string name="send_link">Poslat URL</string>
     <string name="label_clear_search_history">Smazat historii prohlížení</string>
     <string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
     <string name="reader_empty_posts_in_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
@@ -881,12 +911,8 @@ Language: cs_CZ
     <string name="error_locating_image">Chyba při umístění oříznutého obrázku</string>
     <string name="error_cropping_image">Chyba při oříznutí obrázku</string>
     <string name="checking_email">Ověřuji email</string>
-    <string name="launch_your_email_app">Zapněte vaší emailovou aplikaci</string>
-    <string name="check_your_email">Zkontroluj svůj email</string>
     <string name="magic_link_unavailable_error_message">Momentálně nedostupné. Prosím zadejte své heslo</string>
     <string name="logging_in">Přihlašování</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Odkaz byl zaslán na váš email, přihlašte se co nejdříve</string>
-    <string name="enter_your_password_instead">Zadejte vaše heslo místo tohoto</string>
     <string name="web_address_dialog_hint">Veřejně se zobrazí při komentování.</string>
     <string name="new_editor_reflection_error">Vizuální editor není kompatibilní s vaším zařízením.\n        Proto byl automaticky zakázán.</string>
     <string name="stats_insights_latest_post_no_title">(žádný nadpis)</string>
@@ -1359,7 +1385,6 @@ Language: cs_CZ
     <string name="create_new_blog_wpcom">Vytvořit web na WordPress.com</string>
     <string name="nux_help_description">Pro odpovědi na časté dotazy navštivte naše centrum nápovědy nebo fórum</string>
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
-    <string name="faq_button">Časté dotazy</string>
     <string name="reader_empty_posts_liked">Žádné příspěvky jste neoznačili jako \"to se mi líbí\"</string>
     <string name="reader_empty_followed_blogs_title">Zatím nesledujete žádné weby</string>
     <string name="reader_menu_block_blog">Zablokovat tento web</string>
@@ -1372,8 +1397,6 @@ Language: cs_CZ
     <string name="hs__new_conversation_header">Chat podpory</string>
     <string name="hs__conversation_detail_error">Popište problém, který vidíte</string>
     <string name="contact_us">Kontaktujte nás</string>
-    <string name="preference_send_usage_stats_summary">Automaticky odesílat statistiky používání pro zlepšení WordPressu pro Android</string>
-    <string name="preference_send_usage_stats">Odesílat statistiky</string>
     <string name="schedule_verb">Rozvrh</string>
     <string name="update_verb">Aktualizovat</string>
     <string name="reader_empty_recommended_blogs">Nejsou k dispozici žádné doporučené weby</string>
@@ -1501,7 +1524,6 @@ Language: cs_CZ
     <string name="pick_photo">Vyberte fotku</string>
     <string name="reader_empty_followed_blogs_description">Ale nebojte se, klepněte jen na ikonu v pravém horním rohu, a začněte poznávat!</string>
     <string name="reader_likes_you_and_one">To se líbí vám a jedné další osobě</string>
-    <string name="nux_tutorial_get_started_title">Můžeme začít!</string>
     <string name="reader_empty_followed_tags">Nesledujete žádné štítky</string>
     <string name="reader_toast_err_url_intent">Nelze otevřít %s</string>
     <string name="reader_toast_err_view_image">Nelze zobrazit obrázek</string>
