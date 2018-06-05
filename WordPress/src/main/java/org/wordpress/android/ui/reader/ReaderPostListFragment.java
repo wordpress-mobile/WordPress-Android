@@ -115,6 +115,7 @@ public class ReaderPostListFragment extends Fragment
         WPMainActivity.OnScrollToTopListener {
     private static final int NUM_SITE_SEARCH_RESULTS = 3;
     private ReaderPostAdapter mPostAdapter;
+    private ReaderSiteSearchAdapter mSiteSearchAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
     private FilteredRecyclerView mRecyclerView;
@@ -739,13 +740,13 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
-        if (event.isError()) {
-            return;
+        ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
+        if (!event.isError()) {
+            mRecyclerView.setAdapter(adapter);
+            adapter.setFeedList(event.feeds);
+        } else {
+            adapter.clear();
         }
-
-        ReaderSiteSearchAdapter adapter = new ReaderSiteSearchAdapter();
-        mRecyclerView.setAdapter(adapter);
-        adapter.setFeedList(event.feeds);
     }
 
     /*
@@ -756,8 +757,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // clear posts so only the empty view is visible
+        // clear posts and sites so only the empty view is visible
         getPostAdapter().clear();
+        getSiteSearchAdapter().clear();
 
         setEmptyTitleAndDescription(false);
         showEmptyView();
@@ -1241,6 +1243,13 @@ public class ReaderPostListFragment extends Fragment
             }
         }
         return mPostAdapter;
+    }
+
+    private ReaderSiteSearchAdapter getSiteSearchAdapter() {
+        if (mSiteSearchAdapter == null) {
+            mSiteSearchAdapter = new ReaderSiteSearchAdapter();
+        }
+        return mSiteSearchAdapter;
     }
 
     private boolean hasPostAdapter() {

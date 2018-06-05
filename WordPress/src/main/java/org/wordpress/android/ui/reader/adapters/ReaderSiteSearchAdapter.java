@@ -38,6 +38,13 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        if (mSites.size() > 0) {
+            mSites.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     public boolean isEmpty() {
         return (getItemCount() == 0);
     }
