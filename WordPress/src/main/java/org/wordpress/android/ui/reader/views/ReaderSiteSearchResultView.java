@@ -17,6 +17,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 /**
  * single feed search result
@@ -55,11 +56,9 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         TextView txtUrl = findViewById(R.id.text_url);
         WPNetworkImageView imgBlavatar = findViewById(R.id.image_blavatar);
 
-        // TODO: remove this and show the blavatar once it's returned by the backend
-        imgBlavatar.showDefaultBlavatarImageAndNullifyUrl();
-
         txtTitle.setText(feed.getTitle());
         txtUrl.setText(UrlUtils.getHost(feed.getUrl()));
+        imgBlavatar.setImageUrl(feed.getIconUrl(), ImageType.BLAVATAR);
     }
 
     private void toggleFollowStatus(final View followButton) {

@@ -73,6 +73,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -741,7 +742,10 @@ public class ReaderPostListFragment extends Fragment
         if (event.isError()) {
             return;
         }
-        AppLog.d(T.READER, "sites searched");
+
+        ReaderSiteSearchAdapter adapter = new ReaderSiteSearchAdapter();
+        mRecyclerView.setAdapter(adapter);
+        adapter.setFeedList(event.feeds);
     }
 
     /*
