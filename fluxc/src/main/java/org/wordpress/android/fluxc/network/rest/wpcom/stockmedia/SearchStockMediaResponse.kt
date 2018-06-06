@@ -6,7 +6,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.annotations.JsonAdapter
-import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.StockMediaModel
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.network.utils.getJsonObject
@@ -44,8 +43,8 @@ private class SearchStockMediaDeserializer : JsonDeserializer<SearchStockMediaRe
 
     private fun getStockMedia(jsonMedia: JsonObject): StockMediaModel {
         val media = StockMediaModel()
-        media.name = StringEscapeUtils.unescapeHtml4(jsonMedia.getString("name"))
-        media.title = StringEscapeUtils.unescapeHtml4(jsonMedia.getString("title"))
+        media.name = jsonMedia.getString("name", unescapeHtml4 = true)
+        media.title = jsonMedia.getString("title", unescapeHtml4 = true)
         media.date = jsonMedia.getString("date")
         media.extension = jsonMedia.getString("extension")
         media.file = jsonMedia.getString("file")
