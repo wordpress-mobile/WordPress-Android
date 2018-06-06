@@ -103,7 +103,7 @@
 
             <org.wordpress.android.ui.publicize.ConnectButton
                 android:id="@+id/button_connect"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
