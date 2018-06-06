@@ -2,7 +2,7 @@ package org.wordpress.android.ui.reader;
 
 public class ReaderConstants {
     public static final int READER_MAX_POSTS_TO_REQUEST = 20; // max # posts to request when updating posts
-    public static final int READER_MAX_SEARCH_POSTS_TO_REQUEST = 10;
+    public static final int READER_MAX_SEARCH_POSTS_TO_REQUEST = 20;
             // max # posts to request when searching posts
     public static final int READER_MAX_POSTS_TO_DISPLAY = 200; // max # posts to display
     public static final int READER_MAX_COMMENTS_TO_REQUEST = 20;
