@@ -125,4 +125,18 @@
         <attr name="wpErrorImageDrawable" format="reference"/>
     </declare-styleable>
 
+    <!--
+        FilteredRecyclerView
+    -->
+    <declare-styleable name="FilteredRecyclerView">
+        <!-- Optional: Layout resource id for the Filter Spinner main TextView -->
+        <attr name="wpSpinnerItemView" format="reference"/>
+
+        <!-- Optional: Layout resource id for the Filter Spinner dropdown TextView -->
+        <attr name="wpSpinnerDropDownItemView" format="reference"/>
+
+        <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
+        <attr name="wpToolbarVisibilityLock" format="boolean"/>
+    </declare-styleable>
+
 </resources>
