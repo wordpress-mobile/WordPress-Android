@@ -750,7 +750,6 @@ public class ReaderPostListFragment extends Fragment
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
         if (event.isError()) {
             adapter.clear();
-            return;
         } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
             if (event.offset == 0) {
                 adapter.setSiteList(event.sites);

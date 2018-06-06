@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -9,7 +10,12 @@
         android:id="@+id/tab_layout_search_results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/tab_background"
+        android:elevation="@dimen/tabs_elevation"
         android:visibility="gone"
+        app:tabIndicatorColor="@color/tab_indicator"
+        app:tabSelectedTextColor="@color/blue_light"
+        app:tabTextColor="@color/white"
         tools:visibility="visible">
 
         <android.support.design.widget.TabItem
