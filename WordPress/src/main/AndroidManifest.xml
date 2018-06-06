@@ -671,10 +671,9 @@
             android:exported="false" />
 
         <service
-            android:name=".push.GCMMessageService"
-            android:exported="false">
+            android:name=".push.GCMMessageService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service

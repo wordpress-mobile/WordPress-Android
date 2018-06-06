@@ -16,7 +16,8 @@ import android.support.v4.app.RemoteInput;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -38,7 +39,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -55,7 +55,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class GCMMessageService extends GcmListenerService {
+public class GCMMessageService extends FirebaseMessagingService {
     private static final ArrayMap<Integer, Bundle> ACTIVE_NOTIFICATIONS_MAP = new ArrayMap<>();
     private static final NotificationHelper NOTIFICATION_HELPER = new NotificationHelper();
 
@@ -106,15 +106,26 @@ public class GCMMessageService extends GcmListenerService {
     private static final String[] PROPERTIES_TO_COPY_INTO_ANALYTICS =
             {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id"};
 
-    private void synchronizedHandleDefaultPush(@NonNull Bundle data) {
+    private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
         synchronized (GCMMessageService.class) {
-            NOTIFICATION_HELPER.handleDefaultPush(this, data, mAccountStore.getAccount().getUserId());
+            NOTIFICATION_HELPER.handleDefaultPush(
+                    this, convertMapToBundle(data), mAccountStore.getAccount().getUserId());
         }
     }
 
+    // convert FCM RemoteMessage's Map into legacy GCM Bundle to keep code changes to a minimum
+    private Bundle convertMapToBundle(@NonNull Map<String, String> data) {
+        Bundle bundle = new Bundle();
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
+        }
+        return bundle;
+    }
+
     @Override
-    public void onMessageReceived(String from, Bundle data) {
+    public void onMessageReceived(RemoteMessage message) {
+        Map data = message.getData();
         AppLog.v(T.NOTIFS, "Received Message");
 
         if (data == null) {
@@ -123,8 +134,9 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         // Handle helpshift PNs
-        if (TextUtils.equals(data.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
+        if (TextUtils.equals((String) data.get("origin"), "helpshift")) {
+            // FIXME: implement Helpshift Firebase FCM handler
+            // HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
             return;
         }
 
