@@ -11,8 +11,6 @@ import com.google.gson.JsonParseException;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,8 +18,8 @@ import java.util.ArrayList;
 class ReaderSearchSitesDeserializer implements JsonDeserializer<ReaderSearchSitesResponse> {
     @Override
     public ReaderSearchSitesResponse deserialize(JsonElement json,
-                                                Type typeOfT,
-                                                JsonDeserializationContext context) throws JsonParseException {
+                                                 Type typeOfT,
+                                                 JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         ReaderSearchSitesResponse response = new ReaderSearchSitesResponse();
 
@@ -44,21 +42,20 @@ class ReaderSearchSitesDeserializer implements JsonDeserializer<ReaderSearchSite
                 }
 
                 // parse the site meta data
-                try {
-                    JsonElement jsonMetaSite = jsonFeed.getAsJsonObject()
-                                                       .getAsJsonObject("meta")
-                                                       .getAsJsonObject("data")
-                                                       .getAsJsonObject("site");
-                    site.setFollowing(getJsonBoolean(jsonMetaSite, "is_following"));
-                    String description = getJsonString(jsonMetaSite, "description");
+                JsonObject jsonMeta = jsonFeed.getAsJsonObject().getAsJsonObject("meta");
+                JsonObject jsonData = jsonMeta != null ? jsonMeta.getAsJsonObject("data") : null;
+                JsonObject jsonSite = jsonData != null ? jsonData.getAsJsonObject("site") : null;
+                if (jsonSite != null) {
+                    site.setFollowing(getJsonBoolean(jsonSite, "is_following"));
+                    String description = getJsonString(jsonSite, "description");
                     if (description != null) {
                         site.setDescription(StringEscapeUtils.unescapeHtml4(description));
                     }
 
-                    JsonElement jsonIcon = jsonMetaSite.getAsJsonObject().getAsJsonObject("icon");
-                    site.setIconUrl(getJsonString(jsonIcon, "ico"));
-                } catch (NullPointerException e) {
-                    AppLog.e(T.API, "NPE parsing reader site metadata", e);
+                    JsonElement jsonIcon = jsonSite.getAsJsonObject().getAsJsonObject("icon");
+                    if (jsonIcon != null) {
+                        site.setIconUrl(getJsonString(jsonIcon, "ico"));
+                    }
                 }
 
                 response.sites.add(site);
