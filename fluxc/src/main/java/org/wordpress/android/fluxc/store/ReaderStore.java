@@ -57,11 +57,13 @@ public class ReaderStore extends Store {
         public @NonNull String searchTerm;
         public int count;
         public int offset;
+        public boolean excludeFollowed;
 
-        public ReaderSearchSitesPayload(@NonNull String searchTerm, int count, int offset) {
+        public ReaderSearchSitesPayload(@NonNull String searchTerm, int count, int offset, boolean excludeFollowed) {
             this.searchTerm = searchTerm;
             this.count = count;
             this.offset = offset;
+            this.excludeFollowed = excludeFollowed;
         }
     }
 
@@ -130,7 +132,7 @@ public class ReaderStore extends Store {
     }
 
     private void performReaderSearchSites(ReaderSearchSitesPayload payload) {
-        mReaderRestClient.searchReaderSites(payload.searchTerm, payload.count, payload.offset);
+        mReaderRestClient.searchReaderSites(payload.searchTerm, payload.count, payload.offset, payload.excludeFollowed);
     }
 
     private void handleReaderSearcbSites(@NonNull ReaderSearchSitesResponsePayload payload) {
