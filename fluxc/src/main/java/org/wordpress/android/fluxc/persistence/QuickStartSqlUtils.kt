@@ -28,25 +28,25 @@ class QuickStartSqlUtils
                 .asModel.size
     }
 
-    fun getTasks(siteId: Long, task: QuickStartTask): List<QuickStartModel> {
+    private fun getTask(siteId: Long, task: QuickStartTask): QuickStartModel? {
         return WellSql.select(QuickStartModel::class.java)
                 .where().beginGroup()
                 .equals(QuickStartModelTable.SITE_ID, siteId)
                 .equals(QuickStartModelTable.TASK_NAME, task.toString())
                 .endGroup().endWhere()
-                .asModel
+                .asModel.firstOrNull()
     }
 
     fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
-        return getTasks(siteId, task).firstOrNull()?.isDone ?: false
+        return getTask(siteId, task)?.isDone ?: false
     }
 
     fun hasShownTask(siteId: Long, task: QuickStartTask): Boolean {
-        return getTasks(siteId, task).firstOrNull()?.isShown ?: false
+        return getTask(siteId, task)?.isShown ?: false
     }
 
     private fun insertOrUpdateQuickStartModel(newModel: QuickStartModel) {
-        val oldModel = getTasks(newModel.siteId, QuickStartTask.fromString(newModel.taskName)).firstOrNull()
+        val oldModel = getTask(newModel.siteId, QuickStartTask.fromString(newModel.taskName))
         oldModel?.let {
             WellSql.update(QuickStartModel::class.java)
                     .whereId(it.id)
