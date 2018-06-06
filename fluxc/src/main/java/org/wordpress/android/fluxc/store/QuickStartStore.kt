@@ -24,6 +24,18 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
         override fun toString(): String {
             return string
         }
+
+        companion object {
+            fun fromString(string: String?): QuickStartTask {
+                for (value in QuickStartTask.values()) {
+                    if (string.equals(value.toString(), true)) {
+                        return value
+                    }
+                }
+
+                return CHOOSE_THEME
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
