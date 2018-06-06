@@ -302,8 +302,8 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/my_site_list_row_icon_margin_right</item>
+        <item name="android:layout_marginRight">@dimen/my_site_list_row_icon_margin_right</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -320,11 +320,8 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
-        <item name="android:paddingLeft">@dimen/margin_extra_large</item>
         <item name="android:paddingRight">0dp</item>
-        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
         <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">0dp</item>
-
     </style>
 
     <style name="MySiteListRowSecondaryElement">

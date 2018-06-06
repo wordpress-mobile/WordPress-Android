@@ -193,6 +193,7 @@ public class ReaderPostListFragment extends Fragment
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
+        fragment.trackTagLoaded(tag);
 
         return fragment;
     }
@@ -1669,8 +1670,11 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void trackTagLoaded(ReaderTag tag) {
-        AnalyticsTracker.Stat stat = null;
+        if (tag == null) {
+            return;
+        }
 
+        AnalyticsTracker.Stat stat;
         if (tag.isDiscover()) {
             stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
         } else if (tag.isTagTopic()) {
@@ -1679,9 +1683,7 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
         } else if (tag.isBookmarked()) {
             stat = AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_FILTER;
-        }
-
-        if (stat == null) {
+        } else {
             return;
         }
 

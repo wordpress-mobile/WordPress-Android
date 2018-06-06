@@ -215,7 +215,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         if (fragment != null) {
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
+                    .replace(R.id.fragment_container, fragment, getTagForPosition(position))
                     .commit()
         }
     }
@@ -261,6 +261,15 @@ class WPMainNavigationView @JvmOverloads constructor(
             else -> R.string.tabbar_accessibility_label_notifications
         }
         return context.getString(idRes)
+    }
+
+    private fun getTagForPosition(position: Int): String {
+        return when (position) {
+            PAGE_MY_SITE -> TAG_MY_SITE
+            PAGE_READER -> TAG_READER
+            PAGE_ME -> TAG_ME
+            else -> TAG_NOTIFS
+        }
     }
 
     private fun getTitleViewForPosition(position: Int): TextView? {
@@ -330,10 +339,16 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         internal fun getFragment(position: Int): Fragment? {
-            return if (isValidPosition(position) && mFragments.get(position) != null) {
-                mFragments.get(position)
+            if (isValidPosition(position) && mFragments.get(position) != null) {
+                return mFragments.get(position)
+            }
+
+            val fragment = fragmentManager.findFragmentByTag(getTagForPosition(position))
+            if (fragment != null) {
+                mFragments.put(position, fragment)
+                return fragment
             } else {
-                createFragment(position)
+                return createFragment(position)
             }
         }
     }
@@ -346,5 +361,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         internal const val PAGE_NEW_POST = 2
         internal const val PAGE_ME = 3
         internal const val PAGE_NOTIFS = 4
+
+        private const val TAG_MY_SITE = "tag-mysite"
+        private const val TAG_READER = "tag-reader"
+        private const val TAG_ME = "tag-me"
+        private const val TAG_NOTIFS = "tag-notifs"
     }
 }

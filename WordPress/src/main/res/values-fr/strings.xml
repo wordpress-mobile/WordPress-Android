@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-15 19:54:07+0000
+Translation-Revision-Date: 2018-05-29 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Nouvel article. Rédigez un nouvel article.</string>
+    <string name="my_site_icon_content_description">Modifier l\'icône du site</string>
+    <string name="my_site_icon_dialog_cancel_button">Annuler</string>
+    <string name="my_site_icon_dialog_remove_button">Supprimer</string>
+    <string name="my_site_icon_dialog_change_button">Modifier</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Vous n\'avez pas les droits suffisants pour modifier l\'icône du site.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Vous n\'avez pas les droits suffisants pour ajouter une icône de site.</string>
+    <string name="my_site_icon_dialog_change_message">Comment souhaitez–vous modifier l\'icône ?</string>
+    <string name="my_site_icon_dialog_add_message">Souhaitez–vous ajouter une icône de site ?</string>
+    <string name="my_site_icon_dialog_title">Icône de site</string>
+    <string name="reader_followed_blog_notifications_this">ce site</string>
+    <string name="reader_followed_blog_notifications_action">Activer</string>
+    <string name="reader_followed_blog_notifications">Activer les notifications pour %1$s%2$s%3$s ?</string>
+    <string name="reader_btn_notifications_on">Activer les notifications de site</string>
+    <string name="reader_btn_notifications_off">Désactiver les notifications de site</string>
+    <string name="activity_log_jetpack_icon">Icône Jetpack</string>
+    <string name="rewind">Rembobiner</string>
+    <string name="activity_log_event">Événement</string>
+    <string name="activity_log_icon">Icône d\'activité</string>
+    <string name="activity_log">Journal d\'activités</string>
+    <string name="activity">Activité</string>
+    <string name="privacy_policy_read">Lire la politique de confidentialité</string>
+    <string name="third_party_policy_learn_more_caption">Nous utilisons d\'autres outils de suivi, notamment des outils provenant de tiers. Découvrez–les et apprenez à les contrôler.</string>
+    <string name="third_party_policy_learn_more_header">Politique de tiers</string>
+    <string name="privacy_policy_learn_more_caption">Ces informations nous permettent d\'améliorer nos produits, de mieux cibler nos campagnes marketing, de personnaliser votre expérience WordPress.com et plus encore, comme indiqué dans notre politique de confidentialité.</string>
+    <string name="privacy_policy_learn_more_header">Politique de confidentialité</string>
+    <string name="cookie_policy_learn_more_caption">Partagez les informations concernant votre utilisation des services avec notre outil d\'analyse tout en étant connecté à votre compte WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">Politique relative aux cookies</string>
+    <string name="preference_privacy_settings">Paramètres de confidentialité</string>
+    <string name="preference_collect_information">Collecter des informations</string>
+    <string name="post_submitted">Article envoyé</string>
+    <string name="write_post">Écrire un article</string>
     <string name="login_email_button_signup">Vous n\'avez pas encore de compte ? %1$sS\'inscrire%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">La fonctionnalité d\'extension requiert un site en règle.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">La fonctionnalité d\'extension requiert qu\'un abonnement à un domaine principal soit associé à cet utilisateur.</string>
@@ -76,7 +108,6 @@ Language: fr
     <string name="stats_tab_tap_content_description">Affichage de %s</string>
     <string name="stats_legend">légende du graphique des statistiques</string>
     <string name="fab_create_desc">créer</string>
-    <string name="fab_create_post_desc">créer un article</string>
     <string name="fab_add_tag_desc">créer une étiquette</string>
     <string name="stats_bar_week_desc">Semaine de %s</string>
     <string name="stats_bar_date_value_desc">%s, %d vues</string>
@@ -854,7 +885,6 @@ Language: fr
     <string name="invite_names_title">Noms d\'utilisateurs ou adresses de messagerie</string>
     <string name="invite_people">Inviter des personnes</string>
     <string name="my_site_header_external">Externe</string>
-    <string name="send_link">Envoyer le lien</string>
     <string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
     <string name="reader_empty_posts_in_search_description">Aucune article trouvé pour %s dans votre langue</string>
@@ -880,12 +910,8 @@ Language: fr
     <string name="error_locating_image">Erreur de la localisation de l\'image recadrée</string>
     <string name="error_cropping_image">Erreur lors du recadrage de l\'image</string>
     <string name="checking_email">Vérification de l\'adresse e–mail</string>
-    <string name="launch_your_email_app">Lancez votre application d\'e–mail</string>
-    <string name="check_your_email">Vérifiez vos e–mails</string>
     <string name="magic_link_unavailable_error_message">Actuellement indisponible. Veuillez saisir votre mot de passe</string>
     <string name="logging_in">Connexion</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Faites-vous envoyer par e–mail un lien pour vous connecter instantanément</string>
-    <string name="enter_your_password_instead">Saisissez votre mot de passe à la place</string>
     <string name="web_address_dialog_hint">Affiché publiquement quand vous commentez.</string>
     <string name="new_editor_reflection_error">L\'éditeur visuel n\'est pas compatible avec votre appareil.\nIl a été automatiquement désactivé.</string>
     <string name="stats_insights_latest_post_no_title">(pas de titre)</string>
@@ -1358,7 +1384,6 @@ Language: fr
     <string name="create_new_blog_wpcom">Créer votre blog WordPress.com</string>
     <string name="nux_help_description">Visitez le centre d\'aide pour obtenir des réponses aux questions les plus communes ou bien visitez le forum pour en poser de nouvelles.</string>
     <string name="browse_our_faq_button">Feuilleter notre FAQ</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">Vous n\'aimez aucun article</string>
     <string name="reader_empty_followed_blogs_title">Vous ne suivez aucun site pour le moment</string>
     <string name="reader_menu_block_blog">Bloquer ce blog</string>
@@ -1371,8 +1396,6 @@ Language: fr
     <string name="hs__new_conversation_header">Discussion support</string>
     <string name="hs__conversation_detail_error">Décrivez le problème rencontré</string>
     <string name="contact_us">Contactez nous</string>
-    <string name="preference_send_usage_stats_summary">Envoyer automatiquement des statistiques d\'utilisation pour nous aider à améliorer WordPress pour Android</string>
-    <string name="preference_send_usage_stats">Envoyer statistiques</string>
     <string name="schedule_verb">Programmer</string>
     <string name="update_verb">Mettre à jour</string>
     <string name="reader_empty_recommended_blogs">Pas de blogs recommandés</string>
@@ -1500,7 +1523,6 @@ Language: fr
     <string name="pick_photo">Sélectionner une photo</string>
     <string name="reader_empty_followed_blogs_description">Mais ne vous inquiétez pas, appuyer sur l\'icône en haut à droite pour commencer a explorer!</string>
     <string name="reader_likes_you_and_one">Vous et un autre avez aimé ceci</string>
-    <string name="nux_tutorial_get_started_title">Démarrez!</string>
     <string name="reader_empty_followed_tags">Vous ne suivez aucun tag</string>
     <string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
     <string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
