@@ -1280,7 +1280,7 @@ public class ReaderPostListFragment extends Fragment
             mSiteSearchAdapter = new ReaderSiteSearchAdapter(new SiteSearchAdapterListener() {
                 @Override
                 public void onSiteClicked(ReaderSiteModel site) {
-                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId());
+                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId(), site.getFeedId());
                 }
                 @Override
                 public void onLoadMore(int offset) {

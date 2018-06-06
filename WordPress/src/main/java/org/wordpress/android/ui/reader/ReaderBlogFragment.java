@@ -235,10 +235,6 @@ public class ReaderBlogFragment extends Fragment
             return;
         }
 
-        if (feedId != 0) {
-            ReaderActivityLauncher.showReaderFeedPreview(getActivity(), feedId);
-        } else if (blogId != 0) {
-            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
-        }
+        ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, feedId);
     }
 }
