@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.persistence
 
-import android.content.ContentValues
 import com.wellsql.generated.QuickStartModelTable
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.QuickStartModel
@@ -46,51 +45,31 @@ class QuickStartSqlUtils
         return getTasks(siteId, task).firstOrNull()?.isShown ?: false
     }
 
-    fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
-        val tasks = getTasks(siteId, task)
-
-        if (tasks.isEmpty()) { // Insert task into database.
-            val model = QuickStartModel()
-            model.siteId = siteId
-            model.taskName = task.toString()
-            model.isDone = isDone
-            WellSql.insert(model).execute()
-        } else { // Update task in database.
+    private fun insertOrUpdateQuickStartModel(newModel: QuickStartModel) {
+        val oldModel = getTasks(newModel.siteId, QuickStartTask.fromString(newModel.taskName)).firstOrNull()
+        oldModel?.let {
             WellSql.update(QuickStartModel::class.java)
-                    .where()
-                    .equals(QuickStartModelTable.SITE_ID, siteId)
-                    .equals(QuickStartModelTable.TASK_NAME, task.toString())
-                    .endWhere()
-                    .put(isDone, { item ->
-                        val values = ContentValues()
-                        values.put(QuickStartModelTable.IS_DONE, item)
-                        values
-                    })
+                    .whereId(it.id)
+                    .put(newModel, UpdateAllExceptId(QuickStartModel::class.java))
                     .execute()
+            return
         }
+        WellSql.insert(newModel).execute()
+    }
+
+    fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
+        val model = QuickStartModel()
+        model.siteId = siteId
+        model.taskName = task.toString()
+        model.isDone = isDone
+        insertOrUpdateQuickStartModel(model)
     }
 
     fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
-        val tasks = getTasks(siteId, task)
-
-        if (tasks.isEmpty()) { // Insert task into database.
-            val model = QuickStartModel()
-            model.siteId = siteId
-            model.taskName = task.toString()
-            model.isShown = isShown
-            WellSql.insert(model).execute()
-        } else { // Update task in database.
-            WellSql.update(QuickStartModel::class.java)
-                    .where()
-                    .equals(QuickStartModelTable.SITE_ID, siteId)
-                    .equals(QuickStartModelTable.TASK_NAME, task.toString())
-                    .endWhere()
-                    .put(isShown, { item ->
-                        val values = ContentValues()
-                        values.put(QuickStartModelTable.IS_SHOWN, item)
-                        values
-                    })
-                    .execute()
-        }
+        val model = QuickStartModel()
+        model.siteId = siteId
+        model.taskName = task.toString()
+        model.isShown = isShown
+        insertOrUpdateQuickStartModel(model)
     }
 }
