@@ -40,7 +40,7 @@ class WPOrgPluginResponse (
     val errorMessage: String? = null
 )
 
-class WPOrgPluginDeserializer : JsonDeserializer<WPOrgPluginResponse> {
+private class WPOrgPluginDeserializer : JsonDeserializer<WPOrgPluginResponse> {
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type,
