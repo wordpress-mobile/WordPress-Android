@@ -35,12 +35,15 @@ public class ReaderRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    public void searchReaderSites(@NonNull final String searchTerm, final int count, final int offset) {
+    public void searchReaderSites(@NonNull final String searchTerm,
+                                  final int count,
+                                  final int offset,
+                                  boolean excludeFollowed) {
         String url = WPCOMREST.read.feed.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
         params.put("offset", Integer.toString(offset));
-        params.put("exclude_followed", Boolean.toString(true));
+        params.put("exclude_followed", Boolean.toString(excludeFollowed));
         params.put("sort", "relevance");
         params.put("number", Integer.toString(count));
         params.put("meta", "site");
