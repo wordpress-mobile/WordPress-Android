@@ -567,8 +567,8 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
-                getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
+                getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
 
         // add a menu to the filtered recycler's toolbar
         if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
