@@ -66,6 +66,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         txtTitle.setText(site.getTitle());
         txtUrl.setText(UrlUtils.getHost(site.getUrl()));
         imgBlavatar.setImageUrl(site.getIconUrl(), ImageType.BLAVATAR);
+        mFollowButton.setIsFollowed(site.isFollowing());
     }
 
     private void toggleFollowStatus() {
