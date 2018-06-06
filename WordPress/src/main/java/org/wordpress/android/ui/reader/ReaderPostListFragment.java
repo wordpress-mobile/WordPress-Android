@@ -77,7 +77,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteClickListener;
+import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -748,7 +748,12 @@ public class ReaderPostListFragment extends Fragment
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
         if (!event.isError()) {
-            adapter.setSiteList(event.sites);
+            if (event.offset == 0) {
+                adapter.setSiteList(event.sites);
+            } else {
+                adapter.addSiteList(event.sites);
+                showLoadingProgress(false);
+            }
         } else {
             adapter.clear();
         }
@@ -1272,11 +1277,19 @@ public class ReaderPostListFragment extends Fragment
 
     private ReaderSiteSearchAdapter getSiteSearchAdapter() {
         if (mSiteSearchAdapter == null) {
-            mSiteSearchAdapter = new ReaderSiteSearchAdapter();
-            mSiteSearchAdapter.setSiteClickListener(new SiteClickListener() {
+            mSiteSearchAdapter = new ReaderSiteSearchAdapter(new SiteSearchAdapterListener() {
                 @Override
                 public void onSiteClicked(ReaderSiteModel site) {
                     ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId());
+                }
+                @Override
+                public void onLoadMore(int offset) {
+                    showLoadingProgress(true);
+                    ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
+                            mCurrentSearchQuery,
+                            ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
+                            offset);
+                    mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
                 }
             });
         }

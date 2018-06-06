@@ -16,24 +16,29 @@ import java.util.List;
  * adapter which shows the results of a reader site search
  */
 public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public interface SiteClickListener {
+    public interface SiteSearchAdapterListener {
         void onSiteClicked(ReaderSiteModel site);
+        void onLoadMore(int offset);
     }
 
-    private SiteClickListener mClickListener;
+    private final SiteSearchAdapterListener mListener;
     private final List<ReaderSiteModel> mSites = new ArrayList<>();
+    private boolean mCanLoadMore = true;
 
-    public ReaderSiteSearchAdapter() {
+    public ReaderSiteSearchAdapter(@NonNull SiteSearchAdapterListener listener) {
         super();
+        mListener = listener;
         setHasStableIds(true);
-    }
-
-    public void setSiteClickListener(SiteClickListener listener) {
-        mClickListener = listener;
     }
 
     public void setSiteList(@NonNull List<ReaderSiteModel> sites) {
         mSites.clear();
+        mSites.addAll(sites);
+        mCanLoadMore = true;
+        notifyDataSetChanged();
+    }
+
+    public void addSiteList(@NonNull List<ReaderSiteModel> sites) {
         mSites.addAll(sites);
         notifyDataSetChanged();
     }
@@ -43,6 +48,10 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
             mSites.clear();
             notifyDataSetChanged();
         }
+    }
+
+    public void setCanLoadMore(boolean canLoadMore) {
+        mCanLoadMore = canLoadMore;
     }
 
     public boolean isEmpty() {
@@ -75,8 +84,13 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (!isValidPosition(position)) {
             return;
         }
+
         SiteViewHolder siteHolder = (SiteViewHolder) holder;
         siteHolder.mSearchResultView.setSite(mSites.get(position));
+
+        if (mCanLoadMore && position >= getItemCount() - 1) {
+            mListener.onLoadMore(getItemCount() - 1);
+        }
     }
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
@@ -88,9 +102,9 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
             view.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position) && mClickListener != null) {
+                    if (isValidPosition(position) && mListener != null) {
                         ReaderSiteModel site = mSites.get(position);
-                        mClickListener.onSiteClicked(site);
+                        mListener.onSiteClicked(site);
                     }
                 }
             });
