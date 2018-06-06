@@ -5,6 +5,6 @@
 
     <item android:color="@color/grey_400" android:state_enabled="false" />
     <item android:color="@color/grey_200" android:state_checked="false" />
-    <item android:color="@color/blue_medium" android:state_checked="true" />
+    <item android:color="@color/switch_tint" android:state_checked="true" />
 
 </selector>
