@@ -145,6 +145,7 @@ public class ReaderPostListFragment extends Fragment
     private long mCurrentFeedId;
     private String mCurrentSearchQuery;
     private ReaderPostListType mPostListType;
+    private ReaderSiteModel mLastTappedSiteSearchResult;
 
     private int mRestorePosition;
 
@@ -321,6 +322,12 @@ public class ReaderPostListFragment extends Fragment
             // so the user can see the search keyword they entered
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
                 mRecyclerView.showToolbar();
+                // if the user tapped a site to show site preview, it's possible they also changed the follow
+                // status so tell the search adapter to check whether it has the correct follow status
+                if (mLastTappedSiteSearchResult != null) {
+                    getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
+                    mLastTappedSiteSearchResult = null;
+                }
             }
         }
     }
@@ -807,12 +814,13 @@ public class ReaderPostListFragment extends Fragment
 
     private void hideSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() == View.VISIBLE) {
-            AniUtils.animateTopBar(mSearchTabs, false);
+            mSearchTabs.setVisibility(View.GONE);
             mSearchTabs.clearOnTabSelectedListeners();
             if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
                 mSearchTabs.getTabAt(TAB_POSTS).select();
             }
             mRecyclerView.setAdapter(getPostAdapter());
+            mLastTappedSiteSearchResult = null;
         }
     }
 
@@ -1284,6 +1292,7 @@ public class ReaderPostListFragment extends Fragment
             mSiteSearchAdapter = new ReaderSiteSearchAdapter(new SiteSearchAdapterListener() {
                 @Override
                 public void onSiteClicked(@NonNull ReaderSiteModel site) {
+                    mLastTappedSiteSearchResult = site;
                     ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId(), site.getFeedId());
                 }
                 @Override

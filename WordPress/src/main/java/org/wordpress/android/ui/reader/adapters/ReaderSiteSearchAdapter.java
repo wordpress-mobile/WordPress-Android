@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 
@@ -113,6 +114,16 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                 break;
             }
         }
+    }
+
+    public void checkFollowStatusForSite(@NonNull ReaderSiteModel site) {
+        boolean isFollowed;
+        if (site.getSiteId() != 0) {
+            isFollowed = ReaderBlogTable.isFollowedBlog(site.getSiteId());
+        } else {
+            isFollowed = ReaderBlogTable.isFollowedFeed(site.getFeedId());
+        }
+        setSiteFollowed(site, isFollowed);
     }
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
