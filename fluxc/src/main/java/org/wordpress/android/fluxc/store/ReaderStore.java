@@ -48,7 +48,7 @@ public class ReaderStore extends Store {
                 performReaderSearchSites((ReaderSearchSitesPayload) action.getPayload());
                 break;
             case READER_SEARCHED_SITES:
-                handleReaderSearcbSites((ReaderSearchSitesResponsePayload) action.getPayload());
+                handleReaderSearchedSites((ReaderSearchSitesResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -83,8 +83,9 @@ public class ReaderStore extends Store {
             this.canLoadMore = canLoadMore;
         }
 
-        public ReaderSearchSitesResponsePayload(@NonNull ReaderError error, @NonNull String searchTerm) {
+        public ReaderSearchSitesResponsePayload(@NonNull ReaderError error, @NonNull String searchTerm, int offset) {
             this.searchTerm = searchTerm;
+            this.offset = offset;
             this.error = error;
             this.sites = new ArrayList<>();
         }
@@ -124,9 +125,10 @@ public class ReaderStore extends Store {
             this.offset = offset;
         }
 
-        public OnReaderSitesSearched(@NonNull ReaderError error, @NonNull String searchTerm) {
+        public OnReaderSitesSearched(@NonNull ReaderError error, @NonNull String searchTerm, int offset) {
             this.error = error;
             this.searchTerm = searchTerm;
+            this.offset = offset;
             this.sites = new ArrayList<>();
         }
     }
@@ -135,11 +137,11 @@ public class ReaderStore extends Store {
         mReaderRestClient.searchReaderSites(payload.searchTerm, payload.count, payload.offset, payload.excludeFollowed);
     }
 
-    private void handleReaderSearcbSites(@NonNull ReaderSearchSitesResponsePayload payload) {
+    private void handleReaderSearchedSites(@NonNull ReaderSearchSitesResponsePayload payload) {
         OnReaderSitesSearched onReaderSitesSearched;
 
         if (payload.isError()) {
-            onReaderSitesSearched = new OnReaderSitesSearched(payload.error, payload.searchTerm);
+            onReaderSitesSearched = new OnReaderSitesSearched(payload.error, payload.searchTerm, payload.offset);
         } else {
             onReaderSitesSearched = new OnReaderSitesSearched(
                     payload.sites,
