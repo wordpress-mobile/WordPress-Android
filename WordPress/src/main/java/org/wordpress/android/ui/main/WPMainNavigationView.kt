@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main
 import android.annotation.SuppressLint
 import android.app.Fragment
 import android.app.FragmentManager
-import android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -217,7 +216,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
-                    .setTransition(TRANSIT_FRAGMENT_FADE)
                     .commit()
         }
     }
