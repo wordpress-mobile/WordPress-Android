@@ -16,12 +16,11 @@
         android:key="@string/pref_key_privacy_settings"
         android:title="@string/preference_privacy_settings">
 
-        <SwitchPreference
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_key_send_usage"
             android:layout="@layout/wp_preference_layout"
             android:title="@string/preference_collect_information"
-            android:widgetLayout="@layout/wp_preference_switch"
             android:icon="@drawable/ic_stats_grey_min_24dp"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
@@ -75,8 +74,7 @@
             android:key="@string/pref_key_optimize_image"
             android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_images_summary"
-            android:title="@string/site_settings_optimize_images"
-            android:widgetLayout="@layout/wp_preference_switch"/>
+            android:title="@string/site_settings_optimize_images"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_image_width"
@@ -101,8 +99,7 @@
             android:key="@string/pref_key_optimize_video"
             android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_video_summary"
-            android:title="@string/site_settings_optimize_videos"
-            android:widgetLayout="@layout/wp_preference_switch"/>
+            android:title="@string/site_settings_optimize_videos"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_video_size"
@@ -135,8 +132,7 @@
             android:key="@string/pref_key_passcode_toggle"
             android:layout="@layout/wp_preference_layout"
             android:persistent="false"
-            android:title="@string/passcode_turn_on"
-            android:widgetLayout="@layout/wp_preference_switch"/>
+            android:title="@string/passcode_turn_on"/>
 
         <Preference
             android:key="@string/pref_key_change_passcode"
