@@ -122,17 +122,17 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(getContext(), 1);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_with_spinner);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        mToolbar = findViewById(R.id.toolbar_with_spinner);
+        mAppBarLayout = findViewById(R.id.app_bar_layout);
 
-        mEmptyView = (TextView) findViewById(R.id.empty_view);
+        mEmptyView = findViewById(R.id.empty_view);
 
         // progress bar that appears when loading more items
-        mProgressLoadMore = (ProgressBar) findViewById(R.id.progress_loading);
+        mProgressLoadMore = findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
@@ -158,7 +158,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         );
 
         if (mSpinner == null) {
-            mSpinner = (Spinner) findViewById(R.id.filter_spinner);
+            mSpinner = findViewById(R.id.filter_spinner);
         }
     }
 
@@ -172,7 +172,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                 @Override
                 public void onFilterCriteriasLoaded(List<FilterCriteria> criteriaList) {
                     if (criteriaList != null) {
-                        mFilterCriteriaOptions = new ArrayList<FilterCriteria>();
+                        mFilterCriteriaOptions = new ArrayList<>();
                         mFilterCriteriaOptions.addAll(criteriaList);
                         initSpinnerAdapter();
                         setCurrentFilter(mFilterListener.onRecallSelection());
@@ -240,7 +240,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     public void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView == null) return;
 
-        if ((hasAdapter() && mAdapter.getItemCount() == 0) || !hasAdapter()) {
+        if (!hasAdapter() || mAdapter.getItemCount() == 0) {
             if (mFilterListener != null) {
                 if (mCustomEmptyView == null) {
                     String msg = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
@@ -404,7 +404,7 @@ public class FilteredRecyclerView extends RelativeLayout {
             if (convertView == null) {
                 view = mInflater.inflate(R.layout.filter_spinner_item, parent, false);
 
-                final TextView text = (TextView) view.findViewById(R.id.text);
+                final TextView text = view.findViewById(R.id.text);
                 FilterCriteria selectedCriteria = (FilterCriteria) getItem(position);
                 text.setText(selectedCriteria.getLabel());
                 if (mSpinnerTextColor != 0) {
@@ -443,7 +443,7 @@ public class FilteredRecyclerView extends RelativeLayout {
             private final TextView mTextView;
 
             TagViewHolder(View view) {
-                mTextView = (TextView) view.findViewById(R.id.text);
+                mTextView = view.findViewById(R.id.text);
             }
         }
 
