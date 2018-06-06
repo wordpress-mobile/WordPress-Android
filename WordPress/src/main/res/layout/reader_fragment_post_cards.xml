@@ -14,6 +14,7 @@
         android:elevation="@dimen/tabs_elevation"
         android:visibility="gone"
         app:tabIndicatorColor="@color/tab_indicator"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/blue_light"
         app:tabTextColor="@color/white"
         tools:visibility="visible">

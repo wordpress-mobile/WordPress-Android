@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public interface SiteSearchAdapterListener {
-        void onSiteClicked(ReaderSiteModel site);
+        void onSiteClicked(@NonNull ReaderSiteModel site);
+        void onSiteFollowingChanged(@NonNull ReaderSiteModel site);
         void onLoadMore(int offset);
     }
 
@@ -69,7 +70,7 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public long getItemId(int position) {
-        // note that we use the feedId because the siteId may be 0 for feeds
+        // note that we use the feedId because the siteId may be 0 (non-wp)
         return mSites.get(position).getFeedId();
     }
 

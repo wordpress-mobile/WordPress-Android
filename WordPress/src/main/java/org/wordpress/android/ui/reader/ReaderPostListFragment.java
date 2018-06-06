@@ -751,6 +751,7 @@ public class ReaderPostListFragment extends Fragment
         if (event.isError()) {
             adapter.clear();
         } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
+            adapter.setCanLoadMore(event.canLoadMore);
             if (event.offset == 0) {
                 adapter.setSiteList(event.sites);
             } else {
@@ -784,6 +785,7 @@ public class ReaderPostListFragment extends Fragment
     private void showSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() != View.VISIBLE) {
             AniUtils.animateTopBar(mSearchTabs, true);
+
             mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
                 @Override public void onTabSelected(Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
@@ -1280,8 +1282,12 @@ public class ReaderPostListFragment extends Fragment
         if (mSiteSearchAdapter == null) {
             mSiteSearchAdapter = new ReaderSiteSearchAdapter(new SiteSearchAdapterListener() {
                 @Override
-                public void onSiteClicked(ReaderSiteModel site) {
+                public void onSiteClicked(@NonNull ReaderSiteModel site) {
                     ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId(), site.getFeedId());
+                }
+                @Override
+                public void onSiteFollowingChanged(@NonNull ReaderSiteModel site) {
+                    // TODO
                 }
                 @Override
                 public void onLoadMore(int offset) {
