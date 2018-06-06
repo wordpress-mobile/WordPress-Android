@@ -25,9 +25,11 @@ class SearchStockMediaResponse (
 
 private class SearchStockMediaDeserializer : JsonDeserializer<SearchStockMediaResponse> {
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement,
+    override fun deserialize(
+        json: JsonElement,
         typeOfT: Type,
-        context: JsonDeserializationContext): SearchStockMediaResponse {
+        context: JsonDeserializationContext
+    ): SearchStockMediaResponse {
         val jsonObject = json.asJsonObject
         val found = jsonObject.getInt("found")
         val mediaList = jsonObject.getAsJsonArray("media")?.map { getStockMedia(it.asJsonObject) } ?: ArrayList()
