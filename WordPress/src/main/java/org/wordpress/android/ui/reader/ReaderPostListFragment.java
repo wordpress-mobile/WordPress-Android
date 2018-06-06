@@ -93,6 +93,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -747,15 +748,16 @@ public class ReaderPostListFragment extends Fragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
-        if (!event.isError()) {
+        if (event.isError()) {
+            adapter.clear();
+            return;
+        } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
             if (event.offset == 0) {
                 adapter.setSiteList(event.sites);
             } else {
                 adapter.addSiteList(event.sites);
                 showLoadingProgress(false);
             }
-        } else {
-            adapter.clear();
         }
     }
 
