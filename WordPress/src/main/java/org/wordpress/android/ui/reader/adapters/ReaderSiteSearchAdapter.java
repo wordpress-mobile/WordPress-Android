@@ -15,10 +15,11 @@ import java.util.List;
 /*
  * adapter which shows the results of a reader site search
  */
-public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements ReaderSiteSearchResultView.OnSiteFollowedListener {
     public interface SiteSearchAdapterListener {
         void onSiteClicked(@NonNull ReaderSiteModel site);
-        void onSiteFollowingChanged(@NonNull ReaderSiteModel site);
+
         void onLoadMore(int offset);
     }
 
@@ -87,10 +88,30 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         SiteViewHolder siteHolder = (SiteViewHolder) holder;
-        siteHolder.mSearchResultView.setSite(mSites.get(position));
+        siteHolder.mSearchResultView.setSite(mSites.get(position), this);
 
         if (mCanLoadMore && position >= getItemCount() - 1) {
             mListener.onLoadMore(getItemCount() - 1);
+        }
+    }
+
+    @Override
+    public void onSiteFollowed(@NonNull ReaderSiteModel site) {
+        setSiteFollowed(site, true);
+    }
+
+    @Override
+    public void onSiteUnFollowed(@NonNull ReaderSiteModel site) {
+        setSiteFollowed(site, false);
+    }
+
+    private void setSiteFollowed(@NonNull ReaderSiteModel site, boolean isFollowed) {
+        for (int position = 0; position < mSites.size(); position++) {
+            if (mSites.get(position).getFeedId() == site.getFeedId()) {
+                mSites.get(position).setFollowing(isFollowed);
+                notifyItemChanged(position);
+                break;
+            }
         }
     }
 

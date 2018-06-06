@@ -733,7 +733,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
                 mCurrentSearchQuery,
                 ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
-                0);
+                0,
+                false);
         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
 
         // track that the user performed a search
@@ -1286,16 +1287,13 @@ public class ReaderPostListFragment extends Fragment
                     ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId(), site.getFeedId());
                 }
                 @Override
-                public void onSiteFollowingChanged(@NonNull ReaderSiteModel site) {
-                    // TODO
-                }
-                @Override
                 public void onLoadMore(int offset) {
                     showLoadingProgress(true);
                     ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
                             mCurrentSearchQuery,
                             ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
-                            offset);
+                            offset,
+                            false);
                     mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
                 }
             });

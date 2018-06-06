@@ -21,8 +21,14 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
  * single feed search result
  */
 public class ReaderSiteSearchResultView extends LinearLayout {
+    public interface OnSiteFollowedListener {
+        void onSiteFollowed(@NonNull ReaderSiteModel site);
+        void onSiteUnFollowed(@NonNull ReaderSiteModel site);
+    }
+
     private ReaderFollowButton mFollowButton;
     private ReaderSiteModel mSite;
+    private OnSiteFollowedListener mFollowListener;
 
     public ReaderSiteSearchResultView(Context context) {
         this(context, null);
@@ -49,8 +55,9 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         });
     }
 
-    public void setSite(@NonNull ReaderSiteModel site) {
+    public void setSite(@NonNull ReaderSiteModel site, @NonNull OnSiteFollowedListener followListener) {
         mSite = site;
+        mFollowListener = followListener;
 
         TextView txtTitle = findViewById(R.id.text_title);
         TextView txtUrl = findViewById(R.id.text_url);
@@ -91,6 +98,11 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         if (result) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
             mSite.setFollowing(isAskingToFollow);
+            if (isAskingToFollow) {
+                mFollowListener.onSiteFollowed(mSite);
+            } else {
+                mFollowListener.onSiteUnFollowed(mSite);
+            }
         }
     }
 }
