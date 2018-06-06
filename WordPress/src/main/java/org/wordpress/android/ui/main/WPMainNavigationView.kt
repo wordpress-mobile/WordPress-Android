@@ -53,7 +53,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
-        set(position) = setCurrentPosition(position, true)
+        set(position) = updateCurrentPosition(position)
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
@@ -130,7 +130,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             handlePostButtonClicked()
             false
         } else {
-            setCurrentPosition(position, false)
+            currentPosition = position
             pageListener.onPageChanged(position)
             true
         }
@@ -185,7 +185,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
     }
 
-    private fun setCurrentPosition(position: Int, ensureSelected: Boolean) {
+    private fun updateCurrentPosition(position: Int) {
         // new post page can't be selected, only tapped
         if (position == PAGE_NEW_POST) {
             return
@@ -204,14 +204,12 @@ class WPMainNavigationView @JvmOverloads constructor(
         AppPrefs.setMainPageIndex(position)
         prevPosition = position
 
-        if (ensureSelected) {
-            // temporarily disable the nav listeners so they don't fire when we change the selected page
-            assignNavigationListeners(false)
-            try {
-                selectedItemId = getItemIdForPosition(position)
-            } finally {
-                assignNavigationListeners(true)
-            }
+        // temporarily disable the nav listeners so they don't fire when we change the selected page
+        assignNavigationListeners(false)
+        try {
+            selectedItemId = getItemIdForPosition(position)
+        } finally {
+            assignNavigationListeners(true)
         }
 
         val fragment = navAdapter.getFragment(position)
