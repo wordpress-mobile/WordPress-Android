@@ -679,9 +679,9 @@
         </service>
         <service
             android:name=".push.InstanceIDService"
-            android:exported="false">
+            >
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
