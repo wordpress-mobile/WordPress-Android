@@ -69,7 +69,7 @@ public class ReaderRestClient extends BaseWPComRestClient {
                         ReaderError readerError = new ReaderError(
                                 ReaderErrorType.fromBaseNetworkError(error), error.message);
                         ReaderSearchSitesResponsePayload payload =
-                                new ReaderSearchSitesResponsePayload(readerError, searchTerm);
+                                new ReaderSearchSitesResponsePayload(readerError, searchTerm, offset);
                         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchedSitesAction(payload));
                     }
                 }
