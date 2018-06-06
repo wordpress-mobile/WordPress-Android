@@ -60,7 +60,8 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public long getItemId(int position) {
-        return mSites.get(position).getSiteId();
+        // note that we use the feedId because the siteId may be 0 for feeds
+        return mSites.get(position).getFeedId();
     }
 
     @NonNull @Override
