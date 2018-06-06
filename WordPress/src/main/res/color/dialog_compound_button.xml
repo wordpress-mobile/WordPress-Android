@@ -3,12 +3,8 @@
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:color="@color/blue_medium"
-        android:state_checked="true" />
-
-    <item
-        android:color="@color/grey_lighten_20"
-        android:state_checked="false" />
+    <item android:color="@color/grey_400" android:state_enabled="false" />
+    <item android:color="@color/grey_200" android:state_checked="false" />
+    <item android:color="@color/blue_wordpress" android:state_checked="true" />
 
 </selector>
