@@ -239,7 +239,7 @@
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:minHeight="@dimen/reader_icon_minimum_height"
+                android:minHeight="@dimen/reader_button_minimum_height"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
@@ -288,7 +288,7 @@
                 android:layout_width="wrap_content"
                 android:layout_toLeftOf="@id/count_comments"
                 android:layout_toStartOf="@id/count_comments"
-                android:minWidth="@dimen/reader_icon_minimum_height"
+                android:minWidth="@dimen/reader_button_minimum_height"
                 android:padding="@dimen/margin_medium"
                 app:srcCompat="@drawable/ic_bookmark_selector_18dp" >
             </ImageView>

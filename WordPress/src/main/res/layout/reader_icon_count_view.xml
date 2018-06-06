@@ -6,7 +6,7 @@
     android:background="?attr/selectableItemBackground"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
-    android:minHeight="@dimen/reader_icon_minimum_height"
+    android:minHeight="@dimen/reader_button_minimum_height"
     android:orientation="horizontal"
     android:paddingEnd="@dimen/margin_medium"
     android:paddingLeft="@dimen/margin_medium"
