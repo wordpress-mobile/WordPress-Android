@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -20,7 +22,8 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 135;
+    private static final int DB_VERSION = 137;
+    private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
      * version history
@@ -88,6 +91,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 133 - no schema changes, simply clearing to accommodate video card_type
      * 134 - added tbl_posts.use_excerpt
      * 135 - added tbl_blog_info.is_notifications_enabled in ReaderBlogTable
+     * 136 - added tbl_posts.is_bookmarked
+     * 137 - added support for migration scripts
      */
 
     /*
@@ -128,10 +133,27 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     /*
      * resets (clears) the reader database
      */
-    public static void reset() {
+    public static void reset(boolean retainBookmarkedPosts) {
         // note that we must call getWritableDb() before getDatabase() in case the database
         // object hasn't been created yet
         SQLiteDatabase db = getWritableDb();
+
+        if (retainBookmarkedPosts && ReaderPostTable.hasBookmarkedPosts()) {
+            ReaderTagList tags = ReaderTagTable.getBookmarkTags();
+            if (!tags.isEmpty()) {
+                ReaderPostList bookmarkedPosts = ReaderPostTable.getPostsWithTag(tags.get(0), 0, false);
+                db.beginTransaction();
+                try {
+                    getDatabase().reset(db);
+                    ReaderPostTable.addOrUpdatePosts(tags.get(0), bookmarkedPosts);
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                return;
+            }
+        }
+
         getDatabase().reset(db);
     }
 
@@ -144,12 +166,29 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         createAllTables(db);
     }
 
+    @SuppressWarnings({"FallThrough"})
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // for now just reset the db when upgrading, future versions may want to avoid this
-        // and modify table structures, etc., on upgrade while preserving data
-        AppLog.i(T.READER, "Upgrading database from version " + oldVersion + " to version " + newVersion);
-        reset(db);
+        AppLog.i(T.READER,
+                "Upgrading database from version " + oldVersion + " to version " + newVersion + " IN PROGRESS");
+        int currentVersion = oldVersion;
+        if (currentVersion <= DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT) {
+            // versions 0 - 136 didn't support migration scripts, so we can safely drop and recreate all tables
+            reset(db);
+            currentVersion = DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT;
+        }
+
+        switch (currentVersion) {
+            case 136:
+                // no-op
+                currentVersion++;
+        }
+        if (currentVersion != newVersion) {
+            throw new RuntimeException(
+                    "Migration from version " + oldVersion + " to version " + newVersion + " FAILED. ");
+        }
+        AppLog.i(T.READER,
+                "Upgrading database from version " + oldVersion + " to version " + newVersion + " SUCCEEDED");
     }
 
     @Override

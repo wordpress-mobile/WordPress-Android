@@ -131,7 +131,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         setContentView(R.layout.reader_activity_post_pager);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -140,8 +140,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
-        mProgress = (ProgressBar) findViewById(R.id.progress_loading);
+        mViewPager = findViewById(R.id.viewpager);
+        mProgress = findViewById(R.id.progress_loading);
 
         if (savedInstanceState != null) {
             mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
@@ -611,7 +611,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (fragment != null && fragment.isCustomViewShowing()) {
             // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
-        } else if (fragment != null && fragment.goBackInPostHistory()) {
+        } else //noinspection StatementWithEmptyBody
+            if (fragment != null && fragment.goBackInPostHistory()) {
             // noop - fragment moved back to a previous post
         } else {
             super.onBackPressed();
@@ -674,6 +675,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         case BLOG_PREVIEW:
                             idList = ReaderPostTable.getBlogIdPostIdsInBlog(blogId, maxPosts);
                             break;
+                        case SEARCH_RESULTS:
                         default:
                             return;
                     }
@@ -917,7 +919,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public @NonNull Object instantiateItem(ViewGroup container, int position) {
             Object item = super.instantiateItem(container, position);
             if (item instanceof Fragment) {
                 mFragmentMap.put(position, (Fragment) item);

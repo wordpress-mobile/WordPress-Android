@@ -108,7 +108,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     protected void showDialog(Bundle state) {
         Context context = getContext();
         Resources res = context.getResources();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_Dialog_Alert);
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
 

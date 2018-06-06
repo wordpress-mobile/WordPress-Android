@@ -22,7 +22,7 @@
         <item name="colorButtonNormal">@color/light_gray</item>
 
         <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
-        <item name="android:alertDialogTheme">@style/Calypso.Dialog</item>
+        <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
 
@@ -262,7 +262,7 @@
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">@color/grey_darken_30</item>
+        <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">16dp</item>

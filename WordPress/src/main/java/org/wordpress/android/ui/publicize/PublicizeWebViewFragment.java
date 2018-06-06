@@ -171,7 +171,8 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
                     // "denied" param will appear on failure or cancellation
                     String denied = uri.getQueryParameter("denied");
                     if (!TextUtils.isEmpty(denied)) {
-                        EventBus.getDefault().post(new PublicizeEvents.ActionCompleted(false, ConnectAction.CONNECT));
+                        EventBus.getDefault().post(new PublicizeEvents.ActionCompleted(false,
+                                ConnectAction.CONNECT, mServiceId));
                         return;
                     }
 

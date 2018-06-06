@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
@@ -61,11 +63,13 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -110,6 +114,7 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
+    public static final String ARG_READER = "show_reader";
 
     private WPMainNavigationView mBottomNav;
     private Toolbar mToolbar;
@@ -251,18 +256,13 @@ public class WPMainActivity extends AppCompatActivity
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                                               getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showSignupEpilogue(this,
-                                                getIntent().getStringExtra(
-                                                        SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
-                                                getIntent().getStringExtra(
-                                                        SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
-                                                getIntent()
-                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                                                getIntent()
-                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
-                                                false);
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
     }
 
@@ -291,6 +291,9 @@ public class WPMainActivity extends AppCompatActivity
                 case ARG_NOTIFICATIONS:
                     mBottomNav.setCurrentPosition(PAGE_NOTIFS);
                     break;
+                case ARG_READER:
+                    mBottomNav.setCurrentPosition(PAGE_READER);
+                    break;
             }
         } else {
             AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
@@ -310,29 +313,31 @@ public class WPMainActivity extends AppCompatActivity
             GCMMessageService.remove2FANotification(this);
 
             NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(
-                getIntent(),
-                new NotificationsUtils.TwoFactorAuthCallback() {
-                    @Override
-                    public void onTokenValid(String token, String title, String message) {
-                        // we do this here instead of using the service in the background so we make sure
-                        // the user opens the app by using an activity (and thus unlocks the screen if locked,
-                        // for security).
-                        String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
-                        if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
-                            // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                            NotificationsUtils.sendTwoFactorAuthToken(token);
-                        } else {
-                            NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                    getIntent(),
+                    new NotificationsUtils.TwoFactorAuthCallback() {
+                        @Override
+                        public void onTokenValid(String token, String title, String message) {
+                            // we do this here instead of using the service in the background so we make sure
+                            // the user opens the app by using an activity (and thus unlocks the screen if locked,
+                            // for security).
+                            String actionType =
+                                    getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+                            if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                                // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                                NotificationsUtils.sendTwoFactorAuthToken(token);
+                            } else {
+                                NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onTokenInvalid() {
-                        // Show a toast if the user took too long to open the notification
-                        ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                    }
-                });
+                        @Override
+                        public void onTokenInvalid() {
+                            // Show a toast if the user took too long to open the notification
+                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired,
+                                    ToastUtils.Duration.LONG);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                        }
+                    });
         }
 
         // Then hit the server
@@ -530,7 +535,7 @@ public class WPMainActivity extends AppCompatActivity
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
-                                                        getSelectedSite());
+                            getSelectedSite());
                 }
                 break;
             case PAGE_READER:
@@ -562,7 +567,7 @@ public class WPMainActivity extends AppCompatActivity
         if (resolveInfo != null && !getPackageName().equals(resolveInfo.activityInfo.name)) {
             // not set as default handler so, track this to evaluate. Note, a resolver/chooser might be the default.
             AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDLER,
-                                                       resolveInfo.activityInfo.name);
+                    resolveInfo.activityInfo.name);
         }
     }
 
@@ -588,13 +593,29 @@ public class WPMainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
-                MySiteFragment mySiteFragment = getMySiteFragment();
-                if (mySiteFragment != null) {
-                    mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
+                    return;
+                }
+                int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                final SiteModel site = getSelectedSite();
+                final PostModel post = mPostStore.getPostByLocalPostId(localId);
+                if (site != null && post != null) {
+                    UploadUtils.handleEditPostResultSnackbars(
+                            this,
+                            findViewById(R.id.coordinator),
+                            data,
+                            post,
+                            site,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
+                                }
+                            });
                 }
                 break;
             case RequestCodes.CREATE_SITE:
-                mySiteFragment = getMySiteFragment();
+                MySiteFragment mySiteFragment = getMySiteFragment();
                 if (mySiteFragment != null) {
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
@@ -846,6 +867,23 @@ public class WPMainActivity extends AppCompatActivity
         }
 
         // Else no site selected
+    }
+
+    // FluxC events
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(OnPostUploaded event) {
+        SiteModel site = getSelectedSite();
+        if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+            UploadUtils.onPostUploadedSnackbarHandler(
+                    this,
+                    findViewById(R.id.coordinator),
+                    event.isError(),
+                    event.post,
+                    null,
+                    site,
+                    mDispatcher);
+        }
     }
 
     @SuppressWarnings("unused")

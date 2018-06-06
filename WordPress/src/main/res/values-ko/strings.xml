@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-15 09:54:08+0000
+Translation-Revision-Date: 2018-05-30 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">새 글입니다. 새 글을 작성합니다.</string>
+    <string name="my_site_icon_content_description">사이트 아이콘 변경</string>
+    <string name="my_site_icon_dialog_cancel_button">취소</string>
+    <string name="my_site_icon_dialog_remove_button">제거</string>
+    <string name="my_site_icon_dialog_change_button">변경</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">사이트 아이콘을 편집할 권한이 없습니다.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">사이트 아이콘을 추가할 권한이 없습니다.</string>
+    <string name="my_site_icon_dialog_change_message">아이콘을 어떻게 편집하고 싶으신가요?</string>
+    <string name="my_site_icon_dialog_add_message">사이트 아이콘을 추가하고 싶으신가요?</string>
+    <string name="my_site_icon_dialog_title">사이트 아이콘</string>
+    <string name="reader_followed_blog_notifications_this">이 사이트</string>
+    <string name="reader_followed_blog_notifications_action">활성화</string>
+    <string name="reader_followed_blog_notifications">%1$s%2$s%3$s에 대한 알림을 활성화하시겠습니까?</string>
+    <string name="reader_btn_notifications_on">사이트 알림 켜기</string>
+    <string name="reader_btn_notifications_off">사이트 알림 끄기</string>
+    <string name="activity_log_jetpack_icon">젯팩 아이콘</string>
+    <string name="rewind">되돌리기</string>
+    <string name="activity_log_event">이벤트</string>
+    <string name="activity_log_icon">활동 아이콘</string>
+    <string name="activity_log">활동 로그</string>
+    <string name="activity">활동</string>
+    <string name="privacy_policy_read">개인정보 취급방침 읽기</string>
+    <string name="third_party_policy_learn_more_caption">워드프레스는 타사 제품을 포함한 다른 추적 도구를 사용합니다. 이 도구에 대해 읽고 제어하는 방법에 대해 알아보세요.</string>
+    <string name="third_party_policy_learn_more_header">타사 정책</string>
+    <string name="privacy_policy_learn_more_caption">이 정보는 개인정보 취급방침에 명시된 것처럼 제품을 개선하고, 보다 관련된 마케팅을 제공하며, 워드프레스닷컴 환경을 개인 설정하는 데 도움을 줍니다.</string>
+    <string name="privacy_policy_learn_more_header">개인정보 취급방침</string>
+    <string name="cookie_policy_learn_more_caption">워드프레스닷컴 계정에 로그인되어 있는 동안 이용하는 서비스에 대한 정보를 워드프레스의 분석 도구와 공유합니다.</string>
+    <string name="cookie_policy_learn_more_header">쿠키 정책</string>
+    <string name="preference_privacy_settings">개인 정보 설정</string>
+    <string name="preference_collect_information">정보 수집</string>
+    <string name="post_submitted">글이 제출됨</string>
+    <string name="write_post">글 작성</string>
     <string name="login_email_button_signup">아직 계정이 없으신가요? %1$s가입하세요.%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">플러그인 기능을 사용하려면 사이트가 양호한 상태여야 합니다.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">플러그인 기능을 사용하려면 이 사용자와 연결된 기본 도메인 구독이 필요합니다.</string>
@@ -76,7 +108,6 @@ Language: ko_KR
     <string name="stats_tab_tap_content_description">%s 표시</string>
     <string name="stats_legend">통계 그래프 범례</string>
     <string name="fab_create_desc">작성</string>
-    <string name="fab_create_post_desc">글 작성</string>
     <string name="fab_add_tag_desc">태그 작성</string>
     <string name="stats_bar_week_desc">%s 주</string>
     <string name="stats_bar_date_value_desc">%s, %d번 조회</string>
@@ -841,7 +872,6 @@ Language: ko_KR
     <string name="invite_names_title">사용자명 또는 이메일</string>
     <string name="invite_people">사용자 초대</string>
     <string name="my_site_header_external">외부</string>
-    <string name="send_link">링크 전송</string>
     <string name="label_clear_search_history">검색 내역 지우기</string>
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
     <string name="reader_empty_posts_in_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
@@ -867,12 +897,8 @@ Language: ko_KR
     <string name="error_locating_image">잘린 이미지를 찾는 중 오류가 발생했습니다.</string>
     <string name="error_cropping_image">이미지를 자르는 중 오류가 발생했습니다.</string>
     <string name="checking_email">이메일 확인 중</string>
-    <string name="launch_your_email_app">이메일 앱 시작</string>
-    <string name="check_your_email">이메일을 확인하세요.</string>
     <string name="magic_link_unavailable_error_message">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
     <string name="logging_in">로그인 중</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">즉시로그인을 위해 이메일로 링크 받기</string>
-    <string name="enter_your_password_instead">비밀번호를 대신 입력하세요.</string>
     <string name="web_address_dialog_hint">댓글을 달 때 공개적으로 표시합니다.</string>
     <string name="new_editor_reflection_error">비주얼 편집기가 장치와 호환되지 않습니다. 자동으로\n 사용 중지되었습니다.</string>
     <string name="stats_insights_latest_post_no_title">(제목 없음)</string>
@@ -1336,7 +1362,6 @@ Language: ko_KR
     <string name="create_new_blog_wpcom">WordPress.com 블로그 만들기</string>
     <string name="nux_help_description">일반적인 질문에 대한 답변을 얻으려면 도움말 센터를 방문하고 새로운 질문을 하려면 포럼을 방문하세요.</string>
     <string name="browse_our_faq_button">FAQ 찾아보기</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">좋아하는 게시물이 없군요.</string>
     <string name="reader_empty_followed_blogs_title">아직 팔로우하는 블로그가 없습니다.</string>
     <string name="reader_menu_block_blog">이 블로그 차단</string>
@@ -1349,8 +1374,6 @@ Language: ko_KR
     <string name="hs__new_conversation_header">지원 채팅</string>
     <string name="hs__conversation_detail_error">나타나는 문제점을 설명해주세요</string>
     <string name="contact_us">문의하기</string>
-    <string name="preference_send_usage_stats_summary">사용 통계를 자동으로 보내면 안드로이드용 워드프레스를 개선하는데 도움이 됩니다.</string>
-    <string name="preference_send_usage_stats">통계 보내기</string>
     <string name="schedule_verb">예약</string>
     <string name="update_verb">업데이트</string>
     <string name="reader_empty_recommended_blogs">추천 블로그가 없습니다.</string>
@@ -1474,7 +1497,6 @@ Language: ko_KR
     <string name="pick_photo">이미지를 선택</string>
     <string name="reader_empty_followed_blogs_description">걱정하지 마세요. 둘러보려면 태그 아이콘을 누르세요!</string>
     <string name="reader_likes_you_and_one">당신과 다른 1명이 \"좋아요\"를 눌렀습니다.</string>
-    <string name="nux_tutorial_get_started_title">시작 하자</string>
     <string name="reader_empty_followed_tags">태그를 팔로우하지 않습니다.</string>
     <string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
     <string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>

@@ -152,7 +152,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (mAccountStore.hasAccessToken() && NetworkUtils.isNetworkAvailable(getActivity())) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }

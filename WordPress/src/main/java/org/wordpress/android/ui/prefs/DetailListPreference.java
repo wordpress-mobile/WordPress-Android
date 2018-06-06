@@ -85,7 +85,7 @@ public class DetailListPreference extends ListPreference
     protected void showDialog(Bundle state) {
         Context context = getContext();
         Resources res = context.getResources();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_Dialog_Alert);
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(android.R.string.ok, this);

@@ -18,7 +18,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Singleton
 @Component(modules = {
         ApplicationModule.class,
-        AppSecretsModule.class,
+        AppConfigModule.class,
         ReleaseBaseModule.class,
         DebugOkHttpClientModule.class,
         InterceptorModule.class,

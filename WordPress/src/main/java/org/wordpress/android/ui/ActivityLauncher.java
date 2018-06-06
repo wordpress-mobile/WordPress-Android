@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginMode;
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
@@ -159,6 +161,19 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        context.startActivity(intent);
+    }
+
+    public static void viewSavedPostsListInReader(Context context) {
+        // Easiest way to show reader with saved posts filter is to update the "last used filter" preference and make
+        // WPMainActivity restart itself with Intent.FLAG_ACTIVITY_CLEAR_TOP
+        if (!ReaderTagTable.getBookmarkTags().isEmpty()) {
+            AppPrefs.setReaderTag(ReaderTagTable.getBookmarkTags().get(0));
+        }
+
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
@@ -457,10 +472,10 @@ public class ActivityLauncher {
         }
 
         StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),
-                                                           String.valueOf(post.getRemotePostId()), post.getTitle(),
-                                                           post.getLink(),
-                                                           isPage ? StatsConstants.ITEM_TYPE_PAGE
-                                                                   : StatsConstants.ITEM_TYPE_POST);
+                String.valueOf(post.getRemotePostId()), post.getTitle(),
+                post.getLink(),
+                isPage ? StatsConstants.ITEM_TYPE_PAGE
+                        : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, statsPostModel);
     }
 

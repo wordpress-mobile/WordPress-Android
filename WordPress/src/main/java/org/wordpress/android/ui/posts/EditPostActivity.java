@@ -1258,14 +1258,8 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                final String newContent;
-                if (mEditorFragment.shouldLoadContentFromEditor()) {
-                    newContent = (String) mEditorFragment.getContent();
-                } else {
-                    newContent = mPost.getContent();
-                }
-                postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(), newContent);
+                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                        (String) mEditorFragment.getContent());
             } else {
                 // TODO: Remove when legacy editor is dropped
                 postTitleOrContentChanged = updatePostContent(isAutosave);
@@ -1662,7 +1656,7 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
         removeFailedUploadsDialog.initialize(
                 TAG_REMOVE_FAILED_UPLOADS_DIALOG,
-                null,
+                "",
                 getString(R.string.editor_toast_failed_uploads),
                 getString(R.string.editor_remove_failed_uploads),
                 getString(android.R.string.cancel),
