@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-import org.wordpress.android.fluxc.model.ReaderFeedModel;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 
 import java.util.ArrayList;
@@ -17,11 +17,11 @@ import java.util.List;
  */
 public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public interface SiteClickListener {
-        void onSiteClicked(ReaderFeedModel site);
+        void onSiteClicked(ReaderSiteModel site);
     }
 
     private SiteClickListener mClickListener;
-    private final List<ReaderFeedModel> mSites = new ArrayList<>();
+    private final List<ReaderSiteModel> mSites = new ArrayList<>();
 
     public ReaderSiteSearchAdapter() {
         super();
@@ -32,9 +32,9 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         mClickListener = listener;
     }
 
-    public void setFeedList(@NonNull List<ReaderFeedModel> feeds) {
+    public void setSiteList(@NonNull List<ReaderSiteModel> sites) {
         mSites.clear();
-        mSites.addAll(feeds);
+        mSites.addAll(sites);
         notifyDataSetChanged();
     }
 
@@ -60,7 +60,7 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public long getItemId(int position) {
-        return mSites.get(position).getFeedId();
+        return mSites.get(position).getSiteId();
     }
 
     @NonNull @Override
@@ -88,7 +88,7 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position) && mClickListener != null) {
-                        ReaderFeedModel site = mSites.get(position);
+                        ReaderSiteModel site = mSites.get(position);
                         mClickListener.onSiteClicked(site);
                     }
                 }

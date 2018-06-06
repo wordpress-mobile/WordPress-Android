@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.fluxc.model.ReaderFeedModel;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.NetworkUtils;
@@ -22,7 +22,7 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
  */
 public class ReaderSiteSearchResultView extends LinearLayout {
     private ReaderFollowButton mFollowButton;
-    private ReaderFeedModel mSite;
+    private ReaderSiteModel mSite;
 
     public ReaderSiteSearchResultView(Context context) {
         this(context, null);
@@ -49,7 +49,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         });
     }
 
-    public void setSite(@NonNull ReaderFeedModel site) {
+    public void setSite(@NonNull ReaderSiteModel site) {
         mSite = site;
 
         TextView txtTitle = findViewById(R.id.text_title);

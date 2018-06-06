@@ -49,6 +49,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
@@ -76,6 +77,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteClickListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -746,7 +748,7 @@ public class ReaderPostListFragment extends Fragment
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
         if (!event.isError()) {
-            adapter.setFeedList(event.feeds);
+            adapter.setSiteList(event.sites);
         } else {
             adapter.clear();
         }
@@ -1271,6 +1273,12 @@ public class ReaderPostListFragment extends Fragment
     private ReaderSiteSearchAdapter getSiteSearchAdapter() {
         if (mSiteSearchAdapter == null) {
             mSiteSearchAdapter = new ReaderSiteSearchAdapter();
+            mSiteSearchAdapter.setSiteClickListener(new SiteClickListener() {
+                @Override
+                public void onSiteClicked(ReaderSiteModel site) {
+                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId());
+                }
+            });
         }
         return mSiteSearchAdapter;
     }
