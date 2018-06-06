@@ -29,35 +29,25 @@ class QuickStartSqlUtils
                 .asModel.size
     }
 
-    fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
-        val model = WellSql.select(QuickStartModel::class.java)
+    fun getTasks(siteId: Long, task: QuickStartTask): List<QuickStartModel> {
+        return WellSql.select(QuickStartModel::class.java)
                 .where().beginGroup()
                 .equals(QuickStartModelTable.SITE_ID, siteId)
                 .equals(QuickStartModelTable.TASK_NAME, task.toString())
                 .endGroup().endWhere()
-                .asModel.firstOrNull()
+                .asModel
+    }
 
-        return model?.isDone ?: false
+    fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
+        return getTasks(siteId, task).firstOrNull()?.isDone ?: false
     }
 
     fun hasShownTask(siteId: Long, task: QuickStartTask): Boolean {
-        val model = WellSql.select(QuickStartModel::class.java)
-                .where().beginGroup()
-                .equals(QuickStartModelTable.SITE_ID, siteId)
-                .equals(QuickStartModelTable.TASK_NAME, task.toString())
-                .endGroup().endWhere()
-                .asModel.firstOrNull()
-
-        return model?.isShown ?: false
+        return getTasks(siteId, task).firstOrNull()?.isShown ?: false
     }
 
     fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
-        val tasks = WellSql.select(QuickStartModel::class.java)
-                .where()
-                .equals(QuickStartModelTable.SITE_ID, siteId)
-                .equals(QuickStartModelTable.TASK_NAME, task.toString())
-                .endWhere()
-                .asModel
+        val tasks = getTasks(siteId, task)
 
         if (tasks.isEmpty()) { // Insert task into database.
             val model = QuickStartModel()
@@ -81,12 +71,7 @@ class QuickStartSqlUtils
     }
 
     fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
-        val tasks = WellSql.select(QuickStartModel::class.java)
-                .where()
-                .equals(QuickStartModelTable.SITE_ID, siteId)
-                .equals(QuickStartModelTable.TASK_NAME, task.toString())
-                .endWhere()
-                .asModel
+        val tasks = getTasks(siteId, task)
 
         if (tasks.isEmpty()) { // Insert task into database.
             val model = QuickStartModel()
