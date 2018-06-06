@@ -246,7 +246,7 @@
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/plugin_state_active"
-                            android:theme="@style/SwitchBlueWordPress"
+                            android:theme="@style/SwitchBlueMedium"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
 
@@ -260,7 +260,7 @@
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
-                            android:theme="@style/SwitchBlueWordPress"
+                            android:theme="@style/SwitchBlueMedium"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
                 </LinearLayout>

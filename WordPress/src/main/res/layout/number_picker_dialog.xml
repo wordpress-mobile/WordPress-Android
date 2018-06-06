@@ -16,7 +16,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:textAlignment="viewStart"
-        android:theme="@style/SwitchBlueWordPress"
+        android:theme="@style/SwitchBlueMedium"
         android:gravity="start"/>
 
     <org.wordpress.android.widgets.WPTextView

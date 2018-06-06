@@ -473,8 +473,8 @@
         <item name="colorControlActivated">@color/blue_light</item>
     </style>
 
-    <style name="SwitchBlueWordPress">
-        <item name="colorControlActivated">@color/blue_wordpress</item>
+    <style name="SwitchBlueMedium">
+        <item name="colorControlActivated">@color/blue_medium</item>
     </style>
 
     <!--Post Settings Styles-->

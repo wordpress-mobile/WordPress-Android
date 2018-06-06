@@ -34,7 +34,7 @@
             android:textAlignment="viewStart"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            android:theme="@style/SwitchBlueWordPress"
+            android:theme="@style/SwitchBlueMedium"
             tools:checked="true"
             style="@style/TextAppearance.AppCompat.Body2" >
         </android.support.v7.widget.SwitchCompat>
@@ -70,7 +70,7 @@
             android:textAlignment="viewStart"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            android:theme="@style/SwitchBlueWordPress"
+            android:theme="@style/SwitchBlueMedium"
             tools:checked="true"
             style="@style/TextAppearance.AppCompat.Body2" >
         </android.support.v7.widget.SwitchCompat>
@@ -152,7 +152,7 @@
             android:textAlignment="viewStart"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            android:theme="@style/SwitchBlueWordPress"
+            android:theme="@style/SwitchBlueMedium"
             style="@style/TextAppearance.AppCompat.Body2" >
         </android.support.v7.widget.SwitchCompat>
 
