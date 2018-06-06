@@ -114,7 +114,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
     @Nullable
     private Toolbar mToolbar = null;
-    private String mToolbarTitle = null;
+    private String mToolbarTitle;
 
     private int mBlavatarSz;
 
