@@ -68,51 +68,40 @@ class WPOrgPluginDeserializer : JsonDeserializer<WPOrgPluginResponse> {
         response.version = jsonObject.getString("version")
 
         // Sections
-        val sections = jsonObject.getJsonObject("sections")
-        response.descriptionAsHtml = sections?.getString("description")
-        response.faqAsHtml = sections?.getString("faq")
-        response.installationInstructionsAsHtml = sections?.getString("installation")
-        response.whatsNewAsHtml = sections?.getString("changelog")
+        jsonObject.getJsonObject("sections")?.let { sections ->
+            response.descriptionAsHtml = sections.getString("description")
+            response.faqAsHtml = sections.getString("faq")
+            response.installationInstructionsAsHtml = sections.getString("installation")
+            response.whatsNewAsHtml = sections.getString("changelog")
+        }
 
         // Ratings
         response.numberOfRatings = jsonObject.getInt("num_ratings")
-        val ratings = jsonObject.getJsonObject("ratings")
-        response.numberOfRatingsOfOne = ratings?.getInt("1") ?: 0
-        response.numberOfRatingsOfTwo = ratings?.getInt("2") ?: 0
-        response.numberOfRatingsOfThree = ratings?.getInt("3") ?: 0
-        response.numberOfRatingsOfFour = ratings?.getInt("4") ?: 0
-        response.numberOfRatingsOfFive = ratings?.getInt("5") ?: 0
+        jsonObject.getJsonObject("ratings")?.let { ratings ->
+            response.numberOfRatingsOfOne = ratings.getInt("1")
+            response.numberOfRatingsOfTwo = ratings.getInt("2")
+            response.numberOfRatingsOfThree = ratings.getInt("3")
+            response.numberOfRatingsOfFour = ratings.getInt("4")
+            response.numberOfRatingsOfFive = ratings.getInt("5")
+        }
 
         return response
     }
 
     private fun getBannerFromJson(jsonObject: JsonObject): String? {
-        if (jsonObject.has("banners") && jsonObject.get("banners").isJsonObject) {
-            val banners = jsonObject.get("banners").asJsonObject
-            if (banners.has("high")) {
-                val bannerUrlHigh = banners.get("high").asString
-                // When high version is not available API returns `false` instead of `null`
-                if (!bannerUrlHigh.equals("false", ignoreCase = true)) {
-                    return bannerUrlHigh
-                }
-            }
-            // High version wasn't available
-            if (banners.has("low")) {
-                return banners.get("low").asString
+        val banners = jsonObject.getJsonObject("banners")
+        banners?.getString("high")?.let { bannerUrlHigh ->
+            // When high version is not available API returns `false` instead of `null`
+            if (!bannerUrlHigh.equals("false", ignoreCase = true)) {
+                return bannerUrlHigh
             }
         }
-        return null
+        // High version wasn't available
+        return banners?.getString("low")
     }
 
     private fun getIconFromJson(jsonObject: JsonObject): String? {
-        if (jsonObject.has("icons") && jsonObject.get("icons").isJsonObject) {
-            val icons = jsonObject.get("icons").asJsonObject
-            if (icons.has("2x")) {
-                return icons.get("2x").asString
-            } else if (icons.has("1x")) {
-                return icons.get("1x").asString
-            }
-        }
-        return null
+        val icons = jsonObject.getJsonObject("icons")
+        return icons?.getString("2x") ?: icons?.getString("1x")
     }
 }
