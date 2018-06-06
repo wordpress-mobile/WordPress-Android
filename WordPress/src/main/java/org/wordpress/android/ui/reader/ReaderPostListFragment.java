@@ -795,7 +795,7 @@ public class ReaderPostListFragment extends Fragment
     private void showSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() != View.VISIBLE) {
             hideToolbarShadow();
-            AniUtils.animateTopBar(mSearchTabs, true);
+            mSearchTabs.setVisibility(View.VISIBLE);
 
             mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
                 @Override public void onTabSelected(Tab tab) {
