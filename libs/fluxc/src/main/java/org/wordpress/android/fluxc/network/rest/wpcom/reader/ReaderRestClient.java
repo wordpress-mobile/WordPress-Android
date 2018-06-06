@@ -73,7 +73,7 @@ public class ReaderRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchedSitesAction(payload));
                     }
                 }
-                                                                   );
+        );
         add(request);
     }
 }
