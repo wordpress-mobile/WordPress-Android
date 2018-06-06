@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.wordpress.android.fluxc.model.ReaderFeedModel;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -26,21 +26,21 @@ class ReaderSearchSitesDeserializer implements JsonDeserializer<ReaderSearchSite
         ReaderSearchSitesResponse response = new ReaderSearchSitesResponse();
 
         response.offset = getJsonInt(json, "offset");
-        response.feeds = new ArrayList<ReaderFeedModel>();
+        response.sites = new ArrayList<>();
 
-        JsonArray jsonFeedsList = jsonObject.getAsJsonArray("feeds");
+        JsonArray jsonFeedsList = jsonObject.getAsJsonArray("sites");
         if (jsonFeedsList != null) {
             for (JsonElement jsonFeed : jsonFeedsList) {
-                ReaderFeedModel feed = new ReaderFeedModel();
-                feed.setSiteId(getJsonLong(jsonFeed, "blog_ID"));
-                feed.setFeedId(getJsonLong(jsonFeed, "feed_ID"));
-                feed.setSubscribeUrl(getJsonString(jsonFeed, "subscribe_URL"));
-                feed.setSubscriberCount(getJsonInt(jsonFeed, "subscribers_count"));
-                feed.setUrl(getJsonString(jsonFeed, "URL"));
+                ReaderSiteModel site = new ReaderSiteModel();
+                site.setSiteId(getJsonLong(jsonFeed, "blog_ID"));
+                site.setFeedId(getJsonLong(jsonFeed, "feed_ID"));
+                site.setSubscribeUrl(getJsonString(jsonFeed, "subscribe_URL"));
+                site.setSubscriberCount(getJsonInt(jsonFeed, "subscribers_count"));
+                site.setUrl(getJsonString(jsonFeed, "URL"));
 
                 String title = getJsonString(jsonFeed, "title");
                 if (title != null) {
-                    feed.setTitle(StringEscapeUtils.unescapeHtml4(title));
+                    site.setTitle(StringEscapeUtils.unescapeHtml4(title));
                 }
 
                 // parse the site meta data
@@ -49,19 +49,19 @@ class ReaderSearchSitesDeserializer implements JsonDeserializer<ReaderSearchSite
                                                        .getAsJsonObject("meta")
                                                        .getAsJsonObject("data")
                                                        .getAsJsonObject("site");
-                    feed.setFollowing(getJsonBoolean(jsonMetaSite, "is_following"));
+                    site.setFollowing(getJsonBoolean(jsonMetaSite, "is_following"));
                     String description = getJsonString(jsonMetaSite, "description");
                     if (description != null) {
-                        feed.setDescription(StringEscapeUtils.unescapeHtml4(description));
+                        site.setDescription(StringEscapeUtils.unescapeHtml4(description));
                     }
 
                     JsonElement jsonIcon = jsonMetaSite.getAsJsonObject().getAsJsonObject("icon");
-                    feed.setIconUrl(getJsonString(jsonIcon, "ico"));
+                    site.setIconUrl(getJsonString(jsonIcon, "ico"));
                 } catch (NullPointerException e) {
                     AppLog.e(T.API, "NPE parsing reader site metadata", e);
                 }
 
-                response.feeds.add(feed);
+                response.sites.add(site);
             }
         }
 

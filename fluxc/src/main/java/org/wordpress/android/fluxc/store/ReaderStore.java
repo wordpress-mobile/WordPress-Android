@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.ReaderAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.ReaderFeedModel;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.util.AppLog;
@@ -66,16 +66,16 @@ public class ReaderStore extends Store {
     }
 
     public static class ReaderSearchSitesResponsePayload extends Payload<ReaderError> {
-        public @NonNull List<ReaderFeedModel> feeds;
+        public @NonNull List<ReaderSiteModel> sites;
         public @NonNull String searchTerm;
         public int offset;
         public boolean canLoadMore;
 
-        public ReaderSearchSitesResponsePayload(@NonNull List<ReaderFeedModel> feeds,
+        public ReaderSearchSitesResponsePayload(@NonNull List<ReaderSiteModel> sites,
                                                 @NonNull String searchTerm,
                                                 int offset,
                                                 boolean canLoadMore) {
-            this.feeds = feeds;
+            this.sites = sites;
             this.searchTerm = searchTerm;
             this.offset = offset;
             this.canLoadMore = canLoadMore;
@@ -84,7 +84,7 @@ public class ReaderStore extends Store {
         public ReaderSearchSitesResponsePayload(@NonNull ReaderError error, @NonNull String searchTerm) {
             this.searchTerm = searchTerm;
             this.error = error;
-            this.feeds = new ArrayList<>();
+            this.sites = new ArrayList<>();
         }
     }
 
@@ -108,15 +108,15 @@ public class ReaderStore extends Store {
 
     public static class OnReaderSitesSearched extends OnChanged<ReaderError> {
         @NonNull public String searchTerm;
-        @NonNull public List<ReaderFeedModel> feeds;
+        @NonNull public List<ReaderSiteModel> sites;
         public boolean canLoadMore;
         public int offset;
 
-        public OnReaderSitesSearched(@NonNull List<ReaderFeedModel> feeds,
+        public OnReaderSitesSearched(@NonNull List<ReaderSiteModel> sites,
                                      @NonNull String searchTerm,
                                      int offset,
                                      boolean canLoadMore) {
-            this.feeds = feeds;
+            this.sites = sites;
             this.searchTerm = searchTerm;
             this.canLoadMore = canLoadMore;
             this.offset = offset;
@@ -125,7 +125,7 @@ public class ReaderStore extends Store {
         public OnReaderSitesSearched(@NonNull ReaderError error, @NonNull String searchTerm) {
             this.error = error;
             this.searchTerm = searchTerm;
-            this.feeds = new ArrayList<>();
+            this.sites = new ArrayList<>();
         }
     }
 
@@ -140,7 +140,7 @@ public class ReaderStore extends Store {
             onReaderSitesSearched = new OnReaderSitesSearched(payload.error, payload.searchTerm);
         } else {
             onReaderSitesSearched = new OnReaderSitesSearched(
-                    payload.feeds,
+                    payload.sites,
                     payload.searchTerm,
                     payload.offset,
                     payload.canLoadMore);

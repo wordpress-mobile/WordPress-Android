@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.JsonAdapter;
 
-import org.wordpress.android.fluxc.model.ReaderFeedModel;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 
 import java.util.List;
 
 @JsonAdapter(ReaderSearchSitesDeserializer.class)
 public class ReaderSearchSitesResponse {
     public int offset;
-    public @NonNull List<ReaderFeedModel> feeds;
+    public @NonNull List<ReaderSiteModel> sites;
 }

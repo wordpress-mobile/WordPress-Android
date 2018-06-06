@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.model;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
-public class ReaderFeedModel extends Payload<BaseNetworkError> {
+public class ReaderSiteModel extends Payload<BaseNetworkError> {
     private long mSiteId;
     private long mFeedId;
     private int mSubscriberCount;

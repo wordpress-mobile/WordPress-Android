@@ -50,10 +50,10 @@ public class ReaderRestClient extends BaseWPComRestClient {
                 new Response.Listener<ReaderSearchSitesResponse>() {
                     @Override
                     public void onResponse(ReaderSearchSitesResponse response) {
-                        boolean canLoadMore = response.feeds.size() == count;
+                        boolean canLoadMore = response.sites.size() == count;
                         ReaderSearchSitesResponsePayload payload =
                                 new ReaderSearchSitesResponsePayload(
-                                        response.feeds,
+                                        response.sites,
                                         searchTerm,
                                         offset,
                                         canLoadMore);
