@@ -809,7 +809,7 @@ public class ReaderPostListFragment extends Fragment
                     // noop
                 }
                 @Override public void onTabReselected(Tab tab) {
-                    // noop
+                    mRecyclerView.smoothScrollToPosition(0);
                 }
             });
         }
