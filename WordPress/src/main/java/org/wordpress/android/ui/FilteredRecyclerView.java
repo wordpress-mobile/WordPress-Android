@@ -63,8 +63,8 @@ public class FilteredRecyclerView extends RelativeLayout {
     private AppLog.T mTAG;
 
     private boolean mToolbarVisibilityLock = false;
-    @LayoutRes int mSpinnerItemView = 0;
-    @LayoutRes int mSpinnerDropDownItemView = 0;
+    @LayoutRes private int mSpinnerItemView = 0;
+    @LayoutRes private int mSpinnerDropDownItemView = 0;
 
     public FilteredRecyclerView(Context context) {
         this(context, null);
@@ -134,7 +134,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                     R.styleable.FilteredRecyclerView,
                     0, 0);
             try {
-                mToolbarVisibilityLock = a.getBoolean(R.styleable.FilteredRecyclerView_wpToolbarVisibilityLock, true);
+                mToolbarVisibilityLock = a.getBoolean(R.styleable.FilteredRecyclerView_wpToolbarVisibilityLock, false);
                 mSpinnerItemView = a.getResourceId(R.styleable.FilteredRecyclerView_wpSpinnerItemView, 0);
                 mSpinnerDropDownItemView = a.getResourceId(
                         R.styleable.FilteredRecyclerView_wpSpinnerDropDownItemView, 0);
