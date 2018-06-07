@@ -39,6 +39,7 @@ import android.widget.TextView.BufferType;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -69,6 +70,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.BottomNavController;
+import org.wordpress.android.ui.main.ToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -119,7 +121,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnPostPopupListener,
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener {
+        WPMainActivity.OnScrollToTopListener,
+        ToolbarFragment {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
 
@@ -434,6 +437,11 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
     }
 
+    @Override
+    public void setTitle(@NotNull String title) {
+        // Do nothing - no title for this toolbar
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
@@ -583,12 +591,12 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.blue_medium));
+        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.color_primary));
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
-                getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
+                getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
 
         // add a menu to the filtered recycler's toolbar
         if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED

@@ -3,8 +3,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tab_background"
+        android:elevation="@dimen/tabs_elevation"
+        android:visibility="gone"
+        app:tabIndicatorColor="@color/tab_indicator"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/blue_light"
+        app:tabTextColor="@color/white"
+        tools:visibility="visible">
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_posts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/posts"/>
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_sites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sites"/>
+    </android.support.design.widget.TabLayout>
 
     <org.wordpress.android.ui.FilteredRecyclerView
         android:id="@+id/reader_recycler_view"
