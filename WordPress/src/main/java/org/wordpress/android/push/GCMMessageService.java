@@ -39,6 +39,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -135,8 +136,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
         // Handle helpshift PNs
         if (TextUtils.equals((String) data.get("origin"), "helpshift")) {
-            // FIXME: implement Helpshift Firebase FCM handler
-            // HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
+            HelpshiftHelper.getInstance().handlePush(this, data);
             return;
         }
 
