@@ -2109,7 +2109,8 @@ public class EditPostActivity extends AppCompatActivity implements
             } catch (RuntimeException e) {
                 // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
                 // See https://code.google.com/p/android/issues/detail?id=5164
-                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent(null)));
+                postContent = new SpannableStringBuilder(
+                        StringUtils.notNullStr((String) mEditorFragment.getContent(null)));
             }
         } else {
             postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent(null)));
