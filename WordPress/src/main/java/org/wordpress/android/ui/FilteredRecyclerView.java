@@ -2,8 +2,6 @@ package org.wordpress.android.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
@@ -400,20 +398,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         mAppBarLayout.setExpanded(true, true);
     }
 
-    /*
-     * shows or hides the shadow that appears between the toolbar and the search tabs
-     */
-    public void showToolbarShadow() {
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            float elevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
-            mAppBarLayout.setElevation(elevation);
-        }
-    }
-
-    public void hideToolbarShadow() {
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            mAppBarLayout.setElevation(0);
-        }
+    public AppBarLayout getAppBar() {
+        return mAppBarLayout;
     }
 
     /*

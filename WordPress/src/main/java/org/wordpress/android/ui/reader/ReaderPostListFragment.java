@@ -619,7 +619,10 @@ public class ReaderPostListFragment extends Fragment
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
+        // move the search tabs below the recycler's filter toolbar
         mSearchTabs = rootView.findViewById(R.id.tab_layout_search_results);
+        rootView.removeView(mSearchTabs);
+        mRecyclerView.getAppBar().addView(mSearchTabs);
 
         return rootView;
     }
@@ -801,7 +804,6 @@ public class ReaderPostListFragment extends Fragment
 
     private void showSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() != View.VISIBLE) {
-            mRecyclerView.hideToolbarShadow();
             mSearchTabs.setVisibility(View.VISIBLE);
 
             mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
@@ -825,7 +827,6 @@ public class ReaderPostListFragment extends Fragment
     private void hideSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() == View.VISIBLE) {
             mSearchTabs.setVisibility(View.GONE);
-            mRecyclerView.showToolbarShadow();
             mSearchTabs.clearOnTabSelectedListeners();
             if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
                 mSearchTabs.getTabAt(TAB_POSTS).select();
