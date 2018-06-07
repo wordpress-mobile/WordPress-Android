@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 /*
  * used when showing comment + comment count, like + like count
@@ -41,8 +40,8 @@ public class ReaderIconCountView extends LinearLayout {
     private void initView(Context context, AttributeSet attrs) {
         inflate(context, R.layout.reader_icon_count_view, this);
 
-        mImageView = (ImageView) findViewById(R.id.image_count);
-        mTextCount = (TextView) findViewById(R.id.text_count);
+        mImageView = findViewById(R.id.image_count);
+        mTextCount = findViewById(R.id.text_count);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -68,11 +67,8 @@ public class ReaderIconCountView extends LinearLayout {
         // move the comment icon down a bit so it aligns with the text baseline
         if (mIconType == ICON_COMMENT) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
-            int margin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_small);
-            params.topMargin = margin;
+            params.topMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_small);
         }
-
-        ReaderUtils.setBackgroundToRoundRipple(mImageView);
     }
 
     public ImageView getImageView() {
