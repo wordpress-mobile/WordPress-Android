@@ -114,16 +114,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         mIsReaderSwipeToNavigateShown = AppPrefs.isReaderSwipeToNavigateShown();
 
+        Note note = NotificationsTable.getNoteById(mNoteId);
+        updateUIAndNote(note == null);
+
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-        Note note = NotificationsTable.getNoteById(mNoteId);
-        updateUIAndNote(note == null);
     }
 
     private void updateUIAndNote(boolean doRefresh) {
