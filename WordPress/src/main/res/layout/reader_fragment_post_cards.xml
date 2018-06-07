@@ -1,46 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout_search_results"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/tab_background"
-        android:elevation="@dimen/tabs_elevation"
-        android:visibility="gone"
-        app:tabIndicatorColor="@color/tab_indicator"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/blue_light"
-        app:tabTextColor="@color/white"
-        tools:visibility="visible">
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/tab_posts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/posts"/>
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/tab_sites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sites"/>
-    </android.support.design.widget.TabLayout>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:wp="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <org.wordpress.android.ui.FilteredRecyclerView
         android:id="@+id/reader_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tab_layout_search_results"/>
+        wp:wpSpinnerItemView="@layout/toolbar_main_spinner_item"
+        wp:wpToolbarVisibilityLock="true"/>
 
     <include
         android:id="@+id/empty_custom_view"
-        layout="@layout/reader_empty_view"/>
+        layout="@layout/reader_empty_view" />
 
     <LinearLayout
         android:id="@+id/layout_new_posts"
@@ -53,28 +28,28 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_large"
-        android:paddingEnd="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:paddingStart="24dp"
         android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
         tools:targetApi="LOLLIPOP"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp">
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reader_label_new_posts"
             android:textColor="@color/grey_lighten_30"
-            android:textSize="@dimen/text_sz_large"/>
+            android:textSize="@dimen/text_sz_large" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reader_label_new_posts_subtitle"
             android:textColor="@color/grey_lighten_30"
-            android:textSize="@dimen/text_sz_small"/>
+            android:textSize="@dimen/text_sz_small" />
     </LinearLayout>
 
     <ProgressBar
@@ -83,8 +58,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

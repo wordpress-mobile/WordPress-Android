@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -117,7 +116,6 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_READER = "show_reader";
 
     private WPMainNavigationView mBottomNav;
-    private Toolbar mToolbar;
 
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
@@ -162,10 +160,6 @@ public class WPMainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
-        mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setTitle(R.string.app_title);
-        setSupportActionBar(mToolbar);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getFragmentManager(), this);
@@ -511,9 +505,10 @@ public class WPMainActivity extends AppCompatActivity
 
     private void updateTitle(int position) {
         if (position == PAGE_MY_SITE && mSelectedSite != null) {
-            mToolbar.setTitle(mSelectedSite.getName());
+            ((ToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedSite.getName());
         } else {
-            mToolbar.setTitle(mBottomNav.getTitleForPosition(position));
+            ((ToolbarFragment) mBottomNav.getActiveFragment())
+                    .setTitle(mBottomNav.getTitleForPosition(position).toString());
         }
     }
 

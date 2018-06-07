@@ -102,6 +102,11 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
+    <style name="FilteredRecyclerViewFilterTextView.WordPress.MainToolbar">
+        <item name="android:textSize">@null</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title</item>
+    </style>
+
     <style name="DialogTheme.WordPress" parent="android:Theme.Material.Dialog">
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
