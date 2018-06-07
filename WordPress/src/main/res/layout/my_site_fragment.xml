@@ -199,16 +199,11 @@
 
             </LinearLayout>
 
-            <!--PUBLISH-->
-            <LinearLayout style="@style/MySiteListHeaderLayout">
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListHeaderTextView"
-                    android:text="@string/my_site_header_publish"/>
-
-                <View style="@style/MySiteListSectionDividerView"/>
-
-            </LinearLayout>
+            <!--Publish-->
+            <org.wordpress.android.widgets.WPTextView
+                android:text="@string/my_site_header_publish"
+                style="@style/MySiteListHeader" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <!--Pages-->
             <LinearLayout
@@ -288,18 +283,12 @@
 
             </LinearLayout>
 
-            <!--Look & Feel-->
-            <LinearLayout
+            <!--Look and Feel-->
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/my_site_look_and_feel_header"
-                style="@style/MySiteListHeaderLayout">
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListHeaderTextView"
-                    android:text="@string/my_site_header_look_and_feel"/>
-
-                <View style="@style/MySiteListSectionDividerView"/>
-
-            </LinearLayout>
+                android:text="@string/my_site_header_look_and_feel"
+                style="@style/MySiteListHeader" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <!--Themes-->
             <LinearLayout
@@ -320,17 +309,11 @@
             </LinearLayout>
 
             <!--Configuration-->
-            <LinearLayout
-                android:id="@+id/row_configuration"
-                style="@style/MySiteListHeaderLayout">
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListHeaderTextView"
-                    android:text="@string/my_site_header_configuration"/>
-
-                <View style="@style/MySiteListSectionDividerView"/>
-
-            </LinearLayout>
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/my_site_configuration_header"
+                android:text="@string/my_site_header_configuration"
+                style="@style/MySiteListHeader" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <!--People-->
             <LinearLayout
@@ -404,17 +387,11 @@
 
             </LinearLayout>
 
-            <!--EXTERNAL-->
-
-            <LinearLayout style="@style/MySiteListHeaderLayout">
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListHeaderTextView"
-                    android:text="@string/my_site_header_external"/>
-
-                <View style="@style/MySiteListSectionDividerView"/>
-
-            </LinearLayout>
+            <!--External-->
+            <org.wordpress.android.widgets.WPTextView
+                android:text="@string/my_site_header_external"
+                style="@style/MySiteListHeader" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <!--View Site-->
             <LinearLayout
