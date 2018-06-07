@@ -542,6 +542,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mSource.setCalypsoMode(true);
         }
 
+        mSource.displayStyledAndFormattedHtml(postContent);
         mContent.fromHtml(postContent);
 
         updateFailedAndUploadingMedia();
