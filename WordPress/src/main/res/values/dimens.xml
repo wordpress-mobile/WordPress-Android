@@ -208,7 +208,9 @@
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
+    <dimen name="me_content_margin">@dimen/margin_large</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
+    <dimen name="me_list_row_padding_horizontal">@dimen/me_content_margin</dimen>
 
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
