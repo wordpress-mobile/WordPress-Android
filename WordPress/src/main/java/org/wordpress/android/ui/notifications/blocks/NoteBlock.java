@@ -87,7 +87,7 @@ public class NoteBlock {
         return JSONUtils.queryJSON(mNoteData, "meta.ids.site", -1);
     }
 
-    String getMetaSiteUrl() {
+    public String getMetaSiteUrl() {
         return JSONUtils.queryJSON(mNoteData, "meta.links.home", "");
     }
 

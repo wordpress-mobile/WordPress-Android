@@ -6,7 +6,6 @@ package org.wordpress.android.ui.notifications;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -336,6 +335,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 headerNoteBlock.setIsComment(mNote.isCommentType());
                 noteList.add(headerNoteBlock);
             }
+            String pingbackUrl = null;
 
             boolean isPingback = isPingback(mNote);
             if (bodyArray != null && bodyArray.length() > 0) {
@@ -368,6 +368,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener
                                 );
+                                pingbackUrl = noteBlock.getMetaSiteUrl();
 
                                 // Set listener for comment status changes, so we can update bg and text colors
                                 CommentUserNoteBlock commentUserNoteBlock = (CommentUserNoteBlock) noteBlock;
@@ -416,7 +417,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (isPingback) {
                 // Remove this when we start receiving "Read more block" from the backend
                 NoteBlock generatedBlock =
-                        buildGeneratedLinkBlock(getActivity(), new JSONObject(), mOnNoteBlockTextClickListener);
+                        buildGeneratedLinkBlock(mOnNoteBlockTextClickListener, pingbackUrl,
+                                getActivity().getString(R.string.comment_read_source_post));
                 generatedBlock.setIsPingback();
                 noteList.add(generatedBlock);
             }
@@ -445,13 +447,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             return hasRangeOfTypePost && hasRangeOfTypeSite;
         }
 
-        private NoteBlock buildGeneratedLinkBlock(FragmentActivity activity,
-                                                  JSONObject noteObject,
-                                                  OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+        private NoteBlock buildGeneratedLinkBlock(OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                                  String pingbackUrl,
+                                                  String message) {
             return new GeneratedNoteBlock(
-                    activity.getString(R.string.comment_read_source_post),
-                    noteObject,
-                    onNoteBlockTextClickListener);
+                    message,
+                    onNoteBlockTextClickListener,
+                    pingbackUrl);
         }
 
         @Override

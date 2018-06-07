@@ -8,26 +8,24 @@ import android.text.style.StyleSpan
 import android.view.View
 import org.json.JSONObject
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.notifications.blocks.BlockType.UNKNOWN
+import org.wordpress.android.ui.notifications.blocks.BlockType.BASIC
 
+@Deprecated("This should be removed once we receive a Pingback notification from the backend")
 class GeneratedNoteBlock(
     val text: String,
-    noteObject: JSONObject,
-    onNoteBlockTextClickListener: OnNoteBlockTextClickListener
-) : NoteBlock(noteObject, onNoteBlockTextClickListener) {
+    val clickListener: OnNoteBlockTextClickListener,
+    val pingbackUrl: String
+) : NoteBlock(JSONObject(), clickListener) {
     override fun getNoteText(): Spannable {
         val spannableStringBuilder = SpannableStringBuilder(text)
-        val shouldLink = onNoteBlockTextClickListener != null
 
         // Process Ranges to add links and text formatting
-        val map = mapOf("url" to metaSiteUrl)
+        val map = mapOf("url" to pingbackUrl)
         val rangeObject = JSONObject(map)
         val clickableSpan = object : NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
-                shouldLink, false) {
+                true, false) {
             override fun onClick(widget: View) {
-                if (onNoteBlockTextClickListener != null) {
-                    onNoteBlockTextClickListener.onNoteBlockTextClicked(this)
-                }
+                clickListener.onNoteBlockTextClicked(this)
             }
         }
 
@@ -38,11 +36,9 @@ class GeneratedNoteBlock(
                     .setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE)
 
             // Add additional styling if the range wants it
-            if (clickableSpan.spanStyle != Typeface.NORMAL) {
-                val styleSpan = StyleSpan(clickableSpan.spanStyle)
-                spannableStringBuilder
-                        .setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            }
+            val styleSpan = StyleSpan(Typeface.ITALIC)
+            spannableStringBuilder
+                    .setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE)
         }
 
         return spannableStringBuilder
@@ -53,6 +49,6 @@ class GeneratedNoteBlock(
     }
 
     override fun getBlockType(): BlockType {
-        return UNKNOWN
+        return BASIC
     }
 }
