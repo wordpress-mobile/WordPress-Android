@@ -108,8 +108,8 @@
                         android:layout_width="match_parent"
                         android:minHeight="@dimen/min_touch_target_sz"
                         android:orientation="horizontal"
-                        android:paddingLeft="@dimen/my_site_list_row_padding_left"
-                        android:paddingStart="@dimen/my_site_list_row_padding_left"
+                        android:paddingLeft="@dimen/my_site_list_row_padding_left_switch"
+                        android:paddingStart="@dimen/my_site_list_row_padding_left_switch"
                         tools:ignore="RtlSymmetry" >
 
                         <ImageView
