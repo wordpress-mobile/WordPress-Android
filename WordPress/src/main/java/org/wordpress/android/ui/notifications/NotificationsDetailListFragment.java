@@ -415,7 +415,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             if (isPingback) {
-                // Remove this when we start receiving "Read more block" from the backend
+                // Remove this when we start receiving "Read the source post block" from the backend
                 NoteBlock generatedBlock =
                         buildGeneratedLinkBlock(mOnNoteBlockTextClickListener, pingbackUrl,
                                 getActivity().getString(R.string.comment_read_source_post));

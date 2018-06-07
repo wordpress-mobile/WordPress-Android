@@ -10,7 +10,7 @@ import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.notifications.blocks.BlockType.BASIC
 
-@Deprecated("This should be removed once we receive a Pingback notification from the backend")
+@Deprecated("This should be removed once we start receiving Read the source block from the backend")
 class GeneratedNoteBlock(
     val text: String,
     val clickListener: OnNoteBlockTextClickListener,
