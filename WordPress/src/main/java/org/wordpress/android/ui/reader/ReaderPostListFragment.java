@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -803,7 +801,7 @@ public class ReaderPostListFragment extends Fragment
 
     private void showSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() != View.VISIBLE) {
-            hideToolbarShadow();
+            mRecyclerView.hideToolbarShadow();
             mSearchTabs.setVisibility(View.VISIBLE);
 
             mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
@@ -827,31 +825,13 @@ public class ReaderPostListFragment extends Fragment
     private void hideSearchTabs() {
         if (isAdded() && mSearchTabs.getVisibility() == View.VISIBLE) {
             mSearchTabs.setVisibility(View.GONE);
-            showToolbarShadow();
+            mRecyclerView.showToolbarShadow();
             mSearchTabs.clearOnTabSelectedListeners();
             if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
                 mSearchTabs.getTabAt(TAB_POSTS).select();
             }
             mRecyclerView.setAdapter(getPostAdapter());
             mLastTappedSiteSearchResult = null;
-        }
-    }
-
-    /*
-     * shows or hides the shadow that appears between the toolbar and the search tabs
-     */
-    private void showToolbarShadow() {
-        if (isAdded() && VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            View toolbar = getActivity().findViewById(R.id.toolbar);
-            float elevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
-            toolbar.setElevation(elevation);
-        }
-    }
-
-    private void hideToolbarShadow() {
-        if (isAdded() && VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            View toolbar = getActivity().findViewById(R.id.toolbar);
-            toolbar.setElevation(0);
         }
     }
 
