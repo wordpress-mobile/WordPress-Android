@@ -71,22 +71,22 @@
                             tools:visibility="visible"/>
                     </FrameLayout>
 
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/change_photo"
-                        android:background="?attr/selectableItemBackground"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_below="@id/frame_avatar"
-                        android:textColor="@color/grey_darken_10"
-                        android:padding="8dp"
-                        android:textAllCaps="true"
-                        android:textSize="10sp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:text="@string/change_photo"
-                        tools:text="Change photo"
-                        tools:ignore="SmallSp"/>
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/change_photo"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/frame_avatar"
+                    android:textColor="@color/blue_wordpress"
+                    android:padding="8dp"
+                    android:textAllCaps="true"
+                    android:textSize="10sp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="@string/change_photo"
+                    tools:text="Change photo"
+                    tools:ignore="SmallSp"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/me_display_name"
