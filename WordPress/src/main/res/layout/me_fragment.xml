@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/frame_avatar"
-                    android:textColor="@color/grey_darken_10"
+                    android:textColor="@color/blue_wordpress"
                     android:padding="8dp"
                     android:textAllCaps="true"
                     android:textSize="10sp"
