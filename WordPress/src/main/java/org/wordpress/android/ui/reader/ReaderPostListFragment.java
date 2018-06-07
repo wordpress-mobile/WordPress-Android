@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -26,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -112,6 +115,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static android.support.design.widget.TabLayout.MODE_FIXED;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
 public class ReaderPostListFragment extends Fragment
@@ -619,11 +623,6 @@ public class ReaderPostListFragment extends Fragment
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
-        // move the search tabs below the recycler's filter toolbar
-        mSearchTabs = rootView.findViewById(R.id.tab_layout_search_results);
-        rootView.removeView(mSearchTabs);
-        mRecyclerView.getAppBar().addView(mSearchTabs);
-
         return rootView;
     }
 
@@ -802,8 +801,43 @@ public class ReaderPostListFragment extends Fragment
         hideEmptyView();
     }
 
+    /*
+      * create the TabLayout that separates search results between POSTS and SITES and place it below
+      * the FilteredRecyclerView's toolbar
+      */
+    private void createSearchTabs() {
+        if (mSearchTabs == null) {
+            mSearchTabs = new TabLayout(getActivity());
+            mSearchTabs.setLayoutParams(new ViewGroup.LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
+            mSearchTabs.setVisibility(View.GONE);
+            mSearchTabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.tab_indicator));
+            mSearchTabs.setTabMode(MODE_FIXED);
+            mSearchTabs.setTabTextColors(
+                    getResources().getColor(R.color.blue_light),
+                    getResources().getColor(R.color.white));
+
+            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.posts));
+            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.sites));
+
+            if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+                float elevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
+                mSearchTabs.setElevation(elevation);
+            }
+
+            mRecyclerView.getAppBar().addView(mSearchTabs);
+        }
+    }
+
     private void showSearchTabs() {
-        if (isAdded() && mSearchTabs.getVisibility() != View.VISIBLE) {
+        if (!isAdded()) {
+            return;
+        }
+        if (mSearchTabs == null) {
+            createSearchTabs();
+        }
+        if (mSearchTabs.getVisibility() != View.VISIBLE) {
             mSearchTabs.setVisibility(View.VISIBLE);
 
             mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
@@ -825,7 +859,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void hideSearchTabs() {
-        if (isAdded() && mSearchTabs.getVisibility() == View.VISIBLE) {
+        if (isAdded() && mSearchTabs != null && mSearchTabs.getVisibility() == View.VISIBLE) {
             mSearchTabs.setVisibility(View.GONE);
             mSearchTabs.clearOnTabSelectedListeners();
             if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
@@ -833,6 +867,7 @@ public class ReaderPostListFragment extends Fragment
             }
             mRecyclerView.setAdapter(getPostAdapter());
             mLastTappedSiteSearchResult = null;
+            showLoadingProgress(false);
         }
     }
 
