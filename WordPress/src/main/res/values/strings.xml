@@ -1952,12 +1952,18 @@
     <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 
     <!-- Login -->
+    <!-- If any of these appear unused, be sure to check the same string in the login library -
+    it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
     <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
     <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
     <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="send_link">Send link</string>
+    <string name="enter_your_password_instead">Enter your password instead</string>
+    <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
@@ -2006,6 +2012,13 @@
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <!-- Screen titles -->
+    <string name="email_address_login_title">Email address login</string>
+    <string name="site_address_login_title">Site address login</string>
+    <string name="magic_link_login_title">Magic link login</string>
+    <string name="magic_link_sent_login_title">Magic link sent</string>
+    <string name="selfhosted_site_login_title">Login credentials</string>
+    <string name="verification_2fa_screen_title">Code verification</string>
 
     <!-- Signup -->
     <string name="sign_up">Sign Up for WordPress.com</string>
@@ -2033,6 +2046,9 @@
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
     <string name="content_description_add_avatar">Add avatar</string>
+    <!-- Screen titles -->
+    <string name="signup_email_screen_title">Email signup</string>
+    <string name="signup_magic_link_title">Magic link sent</string>
 
     <string name="username_changer_action">Save</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>
