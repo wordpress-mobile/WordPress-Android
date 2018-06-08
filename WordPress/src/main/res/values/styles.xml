@@ -121,7 +121,6 @@
     </style>
 
     <style name="FilteredRecyclerViewToolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:elevation">@dimen/filter_subbar_elevation</item>
         <item name="android:theme">@style/FilteredRecyclerViewToolbar.Theme</item>
     </style>
 

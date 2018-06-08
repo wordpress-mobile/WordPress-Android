@@ -57,10 +57,6 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         mCanLoadMore = canLoadMore;
     }
 
-    public boolean isEmpty() {
-        return (getItemCount() == 0);
-    }
-
     private boolean isValidPosition(int position) {
         return position >= 0 && position < getItemCount();
     }

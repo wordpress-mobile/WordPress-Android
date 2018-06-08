@@ -16,7 +16,6 @@
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">4dp</dimen>
-    <dimen name="filter_subbar_elevation">@dimen/appbar_elevation</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>

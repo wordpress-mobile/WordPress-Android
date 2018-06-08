@@ -399,7 +399,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         mAppBarLayout.setExpanded(true, true);
     }
 
-    public AppBarLayout getAppBar() {
+    public AppBarLayout getAppBarLayout() {
         return mAppBarLayout;
     }
 

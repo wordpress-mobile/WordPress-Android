@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -63,7 +64,11 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         TextView txtUrl = findViewById(R.id.text_url);
         WPNetworkImageView imgBlavatar = findViewById(R.id.image_blavatar);
 
-        txtTitle.setText(site.getTitle());
+        if (!TextUtils.isEmpty(site.getTitle())) {
+            txtTitle.setText(site.getTitle());
+        } else {
+            txtTitle.setText(R.string.untitled_in_parentheses);
+        }
         txtUrl.setText(UrlUtils.getHost(site.getUrl()));
         imgBlavatar.setImageUrl(site.getIconUrl(), ImageType.BLAVATAR);
         mFollowButton.setIsFollowed(site.isFollowing());

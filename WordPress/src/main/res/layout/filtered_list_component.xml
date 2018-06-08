@@ -16,7 +16,6 @@
             style="@style/FilteredRecyclerViewToolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
-            android:elevation="0dp"
             android:focusableInTouchMode="true"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"

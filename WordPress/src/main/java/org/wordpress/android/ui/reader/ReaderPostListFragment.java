@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -40,7 +38,6 @@ import android.widget.TextView.BufferType;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -440,7 +437,7 @@ private static class HistoryStack extends Stack<String> {
     }
 
     @Override
-    public void setTitle(@NotNull String title) {
+    public void setTitle(@NonNull String title) {
         // Do nothing - no title for this toolbar
     }
 
@@ -802,7 +799,7 @@ private static class HistoryStack extends Stack<String> {
     }
 
     /*
-     * create the TabLayout that separates search results between POSTS and SITES and place it below
+     * create the TabLayout that separates search results between POSTS and SITES and places it below
      * the FilteredRecyclerView's toolbar
      */
     private void createSearchTabs() {
@@ -811,22 +808,19 @@ private static class HistoryStack extends Stack<String> {
             mSearchTabs.setLayoutParams(new ViewGroup.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
+            int indicatorColor = ContextCompat.getColor(getActivity(), R.color.tab_indicator);
+            int textColor = ContextCompat.getColor(getActivity(), R.color.blue_light);
+            int selectedTextColor = ContextCompat.getColor(getActivity(), R.color.white);
+
             mSearchTabs.setVisibility(View.GONE);
-            mSearchTabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.tab_indicator));
+            mSearchTabs.setSelectedTabIndicatorColor(indicatorColor);
             mSearchTabs.setTabMode(MODE_FIXED);
-            mSearchTabs.setTabTextColors(
-                    getResources().getColor(R.color.blue_light),
-                    getResources().getColor(R.color.white));
+            mSearchTabs.setTabTextColors(textColor, selectedTextColor);
 
             mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.posts));
             mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.sites));
 
-            if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-                float elevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
-                mSearchTabs.setElevation(elevation);
-            }
-
-            mRecyclerView.getAppBar().addView(mSearchTabs);
+            mRecyclerView.getAppBarLayout().addView(mSearchTabs);
         }
     }
 
