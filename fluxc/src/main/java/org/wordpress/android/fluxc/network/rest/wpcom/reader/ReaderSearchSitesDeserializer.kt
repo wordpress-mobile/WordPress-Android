@@ -21,7 +21,6 @@ class ReaderSearchSitesDeserializer : JsonDeserializer<ReaderSearchSitesResponse
     ): ReaderSearchSitesResponse {
         val jsonObject = json.asJsonObject
 
-        val offset = jsonObject.getInt("offset")
         val sites = jsonObject.getAsJsonArray("feeds").map {
             val jsonFeed = it.asJsonObject
             val site = ReaderSiteModel()
@@ -41,6 +40,6 @@ class ReaderSearchSitesDeserializer : JsonDeserializer<ReaderSearchSitesResponse
             site
         }
 
-        return ReaderSearchSitesResponse(offset = offset, sites = sites)
+        return ReaderSearchSitesResponse(sites)
     }
 }
