@@ -722,6 +722,18 @@ private static class HistoryStack extends Stack<String> {
         ReaderSearchServiceStarter.startService(getActivity(), mCurrentSearchQuery, offset);
     }
 
+    /*
+     * start a search for reader sites matching the current search query
+     */
+    private void updateSitesInCurrentSearch(int offset) {
+        ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
+                mCurrentSearchQuery,
+                ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
+                offset,
+                false);
+        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
+    }
+
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) {
             return;
@@ -742,14 +754,7 @@ private static class HistoryStack extends Stack<String> {
         mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
-
-        // search for matching sites as well
-        ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
-                mCurrentSearchQuery,
-                ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
-                0,
-                false);
-        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
+        updateSitesInCurrentSearch(0);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
@@ -1357,12 +1362,7 @@ private static class HistoryStack extends Stack<String> {
                 @Override
                 public void onLoadMore(int offset) {
                     showLoadingProgress(true);
-                    ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
-                            mCurrentSearchQuery,
-                            ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
-                            offset,
-                            false);
-                    mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
+                    updateSitesInCurrentSearch(offset);
                 }
             });
         }
