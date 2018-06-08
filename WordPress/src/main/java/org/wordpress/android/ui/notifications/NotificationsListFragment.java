@@ -234,7 +234,8 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         mShouldRefreshNotifications = true;
     }
