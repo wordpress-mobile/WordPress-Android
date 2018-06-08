@@ -5,9 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabLayout.OnTabSelectedListener;
+import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -34,6 +40,7 @@ import android.widget.TextView.BufferType;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -45,10 +52,15 @@ import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
+import org.wordpress.android.fluxc.store.ReaderStore;
+import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
+import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -69,6 +81,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -84,6 +98,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -100,6 +115,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static android.support.design.widget.TabLayout.MODE_FIXED;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
 public class ReaderPostListFragment extends Fragment
@@ -109,69 +125,76 @@ public class ReaderPostListFragment extends Fragment
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
         MainToolbarFragment {
-    private ReaderPostAdapter mPostAdapter;
-    private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
+private static final int TAB_POSTS = 0;
+private static final int TAB_SITES = 1;
 
-    private FilteredRecyclerView mRecyclerView;
-    private boolean mFirstLoad = true;
+private ReaderPostAdapter mPostAdapter;
+private ReaderSiteSearchAdapter mSiteSearchAdapter;
+private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
-    private View mNewPostsBar;
-    private View mEmptyView;
-    private View mEmptyViewBoxImages;
-    private ProgressBar mProgress;
+private FilteredRecyclerView mRecyclerView;
+private boolean mFirstLoad = true;
 
-    private SearchView mSearchView;
-    private MenuItem mSettingsMenuItem;
-    private MenuItem mSearchMenuItem;
+private View mNewPostsBar;
+private View mEmptyView;
+private View mEmptyViewBoxImages;
+private ProgressBar mProgress;
+private TabLayout mSearchTabs;
 
-    private BottomNavController mBottonNavController;
+private SearchView mSearchView;
+private MenuItem mSettingsMenuItem;
+private MenuItem mSearchMenuItem;
 
-    private ReaderTag mCurrentTag;
-    private long mCurrentBlogId;
-    private long mCurrentFeedId;
-    private String mCurrentSearchQuery;
-    private ReaderPostListType mPostListType;
+private BottomNavController mBottomNavController;
 
-    private int mRestorePosition;
+private ReaderTag mCurrentTag;
+private long mCurrentBlogId;
+private long mCurrentFeedId;
+private String mCurrentSearchQuery;
+private ReaderPostListType mPostListType;
+private ReaderSiteModel mLastTappedSiteSearchResult;
 
-    private boolean mIsUpdating;
-    private boolean mWasPaused;
-    private boolean mHasUpdatedPosts;
-    private boolean mIsAnimatingOutNewPostsBar;
+private int mRestorePosition;
 
-    private static boolean mHasPurgedReaderDb;
-    private static Date mLastAutoUpdateDt;
+private boolean mIsUpdating;
+private boolean mWasPaused;
+private boolean mHasUpdatedPosts;
+private boolean mIsAnimatingOutNewPostsBar;
 
-    private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
+private static boolean mHasPurgedReaderDb;
+private static Date mLastAutoUpdateDt;
 
-    @Inject AccountStore mAccountStore;
-    @Inject Dispatcher mDispatcher;
+private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
-    private static class HistoryStack extends Stack<String> {
-        private final String mKeyName;
+@Inject AccountStore mAccountStore;
+@Inject ReaderStore mReaderStore;
+@Inject Dispatcher mDispatcher;
 
-        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
-            mKeyName = keyName;
-        }
+private static class HistoryStack extends Stack<String> {
+    private final String mKeyName;
 
-        void restoreInstance(Bundle bundle) {
-            clear();
-            if (bundle.containsKey(mKeyName)) {
-                ArrayList<String> history = bundle.getStringArrayList(mKeyName);
-                if (history != null) {
-                    this.addAll(history);
-                }
-            }
-        }
+    HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
+        mKeyName = keyName;
+    }
 
-        void saveInstance(Bundle bundle) {
-            if (!isEmpty()) {
-                ArrayList<String> history = new ArrayList<>();
-                history.addAll(this);
-                bundle.putStringArrayList(mKeyName, history);
+    void restoreInstance(Bundle bundle) {
+        clear();
+        if (bundle.containsKey(mKeyName)) {
+            ArrayList<String> history = bundle.getStringArrayList(mKeyName);
+            if (history != null) {
+                this.addAll(history);
             }
         }
     }
+
+    void saveInstance(Bundle bundle) {
+        if (!isEmpty()) {
+            ArrayList<String> history = new ArrayList<>();
+            history.addAll(this);
+            bundle.putStringArrayList(mKeyName, history);
+        }
+    }
+}
 
     public static ReaderPostListFragment newInstance() {
         ReaderTag tag = AppPrefs.getReaderTag();
@@ -307,6 +330,12 @@ public class ReaderPostListFragment extends Fragment
             // so the user can see the search keyword they entered
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
                 mRecyclerView.showToolbar();
+                // if the user tapped a site to show site preview, it's possible they also changed the follow
+                // status so tell the search adapter to check whether it has the correct follow status
+                if (mLastTappedSiteSearchResult != null) {
+                    getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
+                    mLastTappedSiteSearchResult = null;
+                }
             }
         }
     }
@@ -348,14 +377,14 @@ public class ReaderPostListFragment extends Fragment
         // detect the bottom nav controller when this fragment is hosted in the main activity - this is used to
         // hide the bottom nav when the user searches from the reader
         if (context instanceof BottomNavController) {
-            mBottonNavController = (BottomNavController) context;
+            mBottomNavController = (BottomNavController) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mBottonNavController = null;
+        mBottomNavController = null;
     }
 
     @Override
@@ -379,11 +408,6 @@ public class ReaderPostListFragment extends Fragment
         super.onStop();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void setTitle(String title) {
-        // Do nothing - no title for this toolbar
     }
 
     /*
@@ -413,6 +437,11 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setAdapter(null);
         mRecyclerView.setAdapter(getPostAdapter());
         mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
+    }
+
+    @Override
+    public void setTitle(@NotNull String title) {
+        // Do nothing - no title for this toolbar
     }
 
     @SuppressWarnings("unused")
@@ -643,8 +672,8 @@ public class ReaderPostListFragment extends Fragment
                 mSettingsMenuItem.setVisible(false);
 
                 // hide the bottom navigation when search is active
-                if (mBottonNavController != null) {
-                    mBottonNavController.onRequestHideBottomNavigation();
+                if (mBottomNavController != null) {
+                    mBottomNavController.onRequestHideBottomNavigation();
                 }
 
                 return true;
@@ -653,12 +682,13 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 hideSearchMessage();
+                hideSearchTabs();
                 resetSearchSuggestionAdapter();
                 mSettingsMenuItem.setVisible(true);
                 mCurrentSearchQuery = null;
 
-                if (mBottonNavController != null) {
-                    mBottonNavController.onRequestShowBottomNavigation();
+                if (mBottomNavController != null) {
+                    mBottomNavController.onRequestShowBottomNavigation();
                 }
 
                 // return to the followed tag that was showing prior to searching
@@ -717,11 +747,36 @@ public class ReaderPostListFragment extends Fragment
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
 
+        // search for matching sites as well
+        ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
+                mCurrentSearchQuery,
+                ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
+                0,
+                false);
+        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
+
         // track that the user performed a search
         if (!trimQuery.equals("")) {
             Map<String, Object> properties = new HashMap<>();
             properties.put("query", trimQuery);
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReaderSitesSearched(OnReaderSitesSearched event) {
+        ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
+        if (event.isError()) {
+            adapter.clear();
+        } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
+            adapter.setCanLoadMore(event.canLoadMore);
+            if (event.offset == 0) {
+                adapter.setSiteList(event.sites);
+            } else {
+                adapter.addSiteList(event.sites);
+                showLoadingProgress(false);
+            }
         }
     }
 
@@ -733,15 +788,87 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // clear posts so only the empty view is visible
+        // clear posts and sites so only the empty view is visible
         getPostAdapter().clear();
+        getSiteSearchAdapter().clear();
 
         setEmptyTitleAndDescription(false);
         showEmptyView();
+        hideSearchTabs();
     }
 
     private void hideSearchMessage() {
         hideEmptyView();
+    }
+
+    /*
+     * create the TabLayout that separates search results between POSTS and SITES and place it below
+     * the FilteredRecyclerView's toolbar
+     */
+    private void createSearchTabs() {
+        if (mSearchTabs == null) {
+            mSearchTabs = new TabLayout(getActivity());
+            mSearchTabs.setLayoutParams(new ViewGroup.LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
+            mSearchTabs.setVisibility(View.GONE);
+            mSearchTabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.tab_indicator));
+            mSearchTabs.setTabMode(MODE_FIXED);
+            mSearchTabs.setTabTextColors(
+                    getResources().getColor(R.color.blue_light),
+                    getResources().getColor(R.color.white));
+
+            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.posts));
+            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.sites));
+
+            if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+                float elevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
+                mSearchTabs.setElevation(elevation);
+            }
+
+            mRecyclerView.getAppBar().addView(mSearchTabs);
+        }
+    }
+
+    private void showSearchTabs() {
+        if (!isAdded()) {
+            return;
+        }
+        if (mSearchTabs == null) {
+            createSearchTabs();
+        }
+        if (mSearchTabs.getVisibility() != View.VISIBLE) {
+            mSearchTabs.setVisibility(View.VISIBLE);
+
+            mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
+                @Override public void onTabSelected(Tab tab) {
+                    if (tab.getPosition() == TAB_POSTS) {
+                        mRecyclerView.setAdapter(getPostAdapter());
+                    } else if (tab.getPosition() == TAB_SITES) {
+                        mRecyclerView.setAdapter(getSiteSearchAdapter());
+                    }
+                }
+                @Override public void onTabUnselected(Tab tab) {
+                    // noop
+                }
+                @Override public void onTabReselected(Tab tab) {
+                    mRecyclerView.smoothScrollToPosition(0);
+                }
+            });
+        }
+    }
+
+    private void hideSearchTabs() {
+        if (isAdded() && mSearchTabs != null && mSearchTabs.getVisibility() == View.VISIBLE) {
+            mSearchTabs.setVisibility(View.GONE);
+            mSearchTabs.clearOnTabSelectedListeners();
+            if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
+                mSearchTabs.getTabAt(TAB_POSTS).select();
+            }
+            mRecyclerView.setAdapter(getPostAdapter());
+            mLastTappedSiteSearchResult = null;
+            showLoadingProgress(false);
+        }
     }
 
     /*
@@ -818,6 +945,9 @@ public class ReaderPostListFragment extends Fragment
             && getPostListType() == ReaderPostListType.SEARCH_RESULTS
             && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
+            showSearchTabs();
+        } else {
+            hideSearchTabs();
         }
     }
 
@@ -1204,6 +1334,29 @@ public class ReaderPostListFragment extends Fragment
         return mPostAdapter;
     }
 
+    private ReaderSiteSearchAdapter getSiteSearchAdapter() {
+        if (mSiteSearchAdapter == null) {
+            mSiteSearchAdapter = new ReaderSiteSearchAdapter(new SiteSearchAdapterListener() {
+                @Override
+                public void onSiteClicked(@NonNull ReaderSiteModel site) {
+                    mLastTappedSiteSearchResult = site;
+                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId(), site.getFeedId());
+                }
+                @Override
+                public void onLoadMore(int offset) {
+                    showLoadingProgress(true);
+                    ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
+                            mCurrentSearchQuery,
+                            ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
+                            offset,
+                            false);
+                    mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
+                }
+            });
+        }
+        return mSiteSearchAdapter;
+    }
+
     private boolean hasPostAdapter() {
         return (mPostAdapter != null);
     }
@@ -1278,10 +1431,10 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-    * when previewing posts with a specific tag, a history of previewed tags is retained so
-    * the user can navigate back through them - this is faster and requires less memory
-    * than creating a new fragment for each previewed tag
-    */
+     * when previewing posts with a specific tag, a history of previewed tags is retained so
+     * the user can navigate back through them - this is faster and requires less memory
+     * than creating a new fragment for each previewed tag
+     */
     private boolean goBackInTagHistory() {
         if (mTagPreviewHistory.empty()) {
             return false;
@@ -1458,8 +1611,8 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-    * show/hide progress bar which appears at the bottom of the activity when loading more posts
-    */
+     * show/hide progress bar which appears at the bottom of the activity when loading more posts
+     */
     private void showLoadingProgress(boolean showProgress) {
         if (isAdded() && mProgress != null) {
             if (showProgress) {
@@ -1778,17 +1931,17 @@ public class ReaderPostListFragment extends Fragment
                 : blogName;
 
         Snackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                        "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
+                "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                    new View.OnClickListener() {
-                        @Override public void onClick(View view) {
-                            AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                            AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                    String.valueOf(blogId), SubscriptionAction.NEW);
-                            mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
-                        }
-                    })
+                        new View.OnClickListener() {
+                            @Override public void onClick(View view) {
+                                AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                        String.valueOf(blogId), SubscriptionAction.NEW);
+                                mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
+                            }
+                        })
                 .setActionTextColor(getResources().getColor(R.color.color_accent))
                 .show();
     }
@@ -1803,7 +1956,7 @@ public class ReaderPostListFragment extends Fragment
     public void onSubscriptionUpdated(OnSubscriptionUpdated event) {
         if (event.isError()) {
             AppLog.e(T.API, ReaderPostListFragment.class.getSimpleName() + ".onSubscriptionUpdated: "
-                          + event.error.type + " - " + event.error.message);
+                            + event.error.type + " - " + event.error.message);
         } else {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
@@ -1870,29 +2023,29 @@ public class ReaderPostListFragment extends Fragment
         mLastAutoUpdateDt = null;
     }
 
-    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
-        private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
+private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
+    private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
-        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-            mFilterCriteriaLoaderListener = listener;
-        }
+    LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+        mFilterCriteriaLoaderListener = listener;
+    }
 
-        @Override
-        protected ReaderTagList doInBackground(Void... voids) {
-            ReaderTagList tagList = ReaderTagTable.getDefaultTags();
-            tagList.addAll(ReaderTagTable.getCustomListTags());
-            tagList.addAll(ReaderTagTable.getFollowedTags());
-            tagList.addAll(ReaderTagTable.getBookmarkTags());
-            return tagList;
-        }
+    @Override
+    protected ReaderTagList doInBackground(Void... voids) {
+        ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+        tagList.addAll(ReaderTagTable.getCustomListTags());
+        tagList.addAll(ReaderTagTable.getFollowedTags());
+        tagList.addAll(ReaderTagTable.getBookmarkTags());
+        return tagList;
+    }
 
-        @Override
-        protected void onPostExecute(ReaderTagList tagList) {
-            if (mFilterCriteriaLoaderListener != null) {
-                //noinspection unchecked
-                mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
-            }
+    @Override
+    protected void onPostExecute(ReaderTagList tagList) {
+        if (mFilterCriteriaLoaderListener != null) {
+            //noinspection unchecked
+            mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
         }
     }
+}
 }
 
