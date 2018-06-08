@@ -726,6 +726,13 @@ private static class HistoryStack extends Stack<String> {
      * start a search for reader sites matching the current search query
      */
     private void updateSitesInCurrentSearch(int offset) {
+        if (isSearchTabsShowing() && mSearchTabs.getSelectedTabPosition() == TAB_SITES) {
+            if (offset == 0) {
+                mRecyclerView.setRefreshing(true);
+            } else {
+                showLoadingProgress(true);
+            }
+        }
         ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
                 mCurrentSearchQuery,
                 ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
@@ -772,12 +779,20 @@ private static class HistoryStack extends Stack<String> {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (isSearchTabsShowing() && mSearchTabs.getSelectedTabPosition() == TAB_SITES) {
+            mRecyclerView.setRefreshing(false);
+            showLoadingProgress(false);
+        }
+
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
         if (event.isError()) {
             adapter.clear();
         } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
             adapter.setCanLoadMore(event.canLoadMore);
-            showLoadingProgress(false);
             if (event.offset == 0) {
                 adapter.setSiteList(event.sites);
             } else {
@@ -862,7 +877,6 @@ private static class HistoryStack extends Stack<String> {
                             mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
                         }
                         if (getSiteSearchAdapter().isEmpty() && !TextUtils.isEmpty(mCurrentSearchQuery)) {
-                            showLoadingProgress(true);
                             updateSitesInCurrentSearch(0);
                         }
                     }
