@@ -61,6 +61,10 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         return position >= 0 && position < getItemCount();
     }
 
+    public boolean isEmpty() {
+        return mSites.size() == 0;
+    }
+
     @Override
     public int getItemCount() {
         return mSites.size();

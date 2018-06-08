@@ -754,7 +754,12 @@ private static class HistoryStack extends Stack<String> {
         mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
-        updateSitesInCurrentSearch(0);
+
+        // only submit a site search if the sites tab is active - otherwise we'll delay the site search
+        // until the user taps the sites tab
+        if (isSearchTabsShowing() && mSearchTabs.getSelectedTabPosition() == TAB_SITES) {
+            updateSitesInCurrentSearch(0);
+        }
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
@@ -772,11 +777,11 @@ private static class HistoryStack extends Stack<String> {
             adapter.clear();
         } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
             adapter.setCanLoadMore(event.canLoadMore);
+            showLoadingProgress(false);
             if (event.offset == 0) {
                 adapter.setSiteList(event.sites);
             } else {
                 adapter.addSiteList(event.sites);
-                showLoadingProgress(false);
             }
         }
     }
@@ -855,6 +860,10 @@ private static class HistoryStack extends Stack<String> {
                         mRecyclerView.setAdapter(getSiteSearchAdapter());
                         if (mSiteSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
+                        }
+                        if (getSiteSearchAdapter().isEmpty() && !TextUtils.isEmpty(mCurrentSearchQuery)) {
+                            showLoadingProgress(true);
+                            updateSitesInCurrentSearch(0);
                         }
                     }
                 }
