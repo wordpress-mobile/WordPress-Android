@@ -152,6 +152,8 @@ private ReaderPostListType mPostListType;
 private ReaderSiteModel mLastTappedSiteSearchResult;
 
 private int mRestorePosition;
+int mPostSearchAdapterPos;
+int mSiteSearchAdapterPos;
 
 private boolean mIsUpdating;
 private boolean mWasPaused;
@@ -834,16 +836,29 @@ private static class HistoryStack extends Stack<String> {
         if (mSearchTabs.getVisibility() != View.VISIBLE) {
             mSearchTabs.setVisibility(View.VISIBLE);
 
+            mPostSearchAdapterPos = 0;
+            mSiteSearchAdapterPos = 0;
+
             mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
                 @Override public void onTabSelected(Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
                         mRecyclerView.setAdapter(getPostAdapter());
+                        if (mPostSearchAdapterPos > 0) {
+                            mRecyclerView.scrollRecycleViewToPosition(mPostSearchAdapterPos);
+                        }
                     } else if (tab.getPosition() == TAB_SITES) {
                         mRecyclerView.setAdapter(getSiteSearchAdapter());
+                        if (mSiteSearchAdapterPos > 0) {
+                            mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
+                        }
                     }
                 }
                 @Override public void onTabUnselected(Tab tab) {
-                    // noop
+                    if (tab.getPosition() == TAB_POSTS) {
+                        mPostSearchAdapterPos = mRecyclerView.getCurrentPosition();
+                    } else if (tab.getPosition() == TAB_SITES) {
+                        mSiteSearchAdapterPos = mRecyclerView.getCurrentPosition();
+                    }
                 }
                 @Override public void onTabReselected(Tab tab) {
                     mRecyclerView.smoothScrollToPosition(0);
