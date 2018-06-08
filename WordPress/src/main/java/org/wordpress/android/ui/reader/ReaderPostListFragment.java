@@ -122,6 +122,8 @@ public class ReaderPostListFragment extends Fragment
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
         MainToolbarFragment {
+private static final String KEY_SEARCH_TABS_POSITION = "search_tabs_position";
+
 private static final int TAB_POSTS = 0;
 private static final int TAB_SITES = 1;
 
@@ -152,8 +154,8 @@ private ReaderPostListType mPostListType;
 private ReaderSiteModel mLastTappedSiteSearchResult;
 
 private int mRestorePosition;
-int mPostSearchAdapterPos;
-int mSiteSearchAdapterPos;
+private int mPostSearchAdapterPos;
+private int mSiteSearchAdapterPos;
 
 private boolean mIsUpdating;
 private boolean mWasPaused;
@@ -319,22 +321,18 @@ private static class HistoryStack extends Stack<String> {
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
+
             if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
             } else {
                 refreshPosts();
             }
 
-            // if the user was searching, make sure the filter toolbar is showing
-            // so the user can see the search keyword they entered
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                mRecyclerView.showToolbar();
-                // if the user tapped a site to show site preview, it's possible they also changed the follow
-                // status so tell the search adapter to check whether it has the correct follow status
-                if (mLastTappedSiteSearchResult != null) {
-                    getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
-                    mLastTappedSiteSearchResult = null;
-                }
+            // if the user tapped a site to show site preview, it's possible they also changed the follow
+            // status so tell the search adapter to check whether it has the correct follow status
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && mLastTappedSiteSearchResult != null) {
+                getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
+                mLastTappedSiteSearchResult = null;
             }
         }
     }
@@ -487,6 +485,10 @@ private static class HistoryStack extends Stack<String> {
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
+        if (isSearchTabsShowing()) {
+            outState.putInt(KEY_SEARCH_TABS_POSITION, mSearchTabs.getSelectedTabPosition());
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -621,6 +623,14 @@ private static class HistoryStack extends Stack<String> {
         // progress bar that appears when loading more posts
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
+
+        // make sure search tabs are showing if user was searching previously
+        if (savedInstanceState != null
+            && getPostListType() == ReaderPostListType.SEARCH_RESULTS
+            && !TextUtils.isEmpty(mCurrentSearchQuery)) {
+            int position = savedInstanceState.getInt(KEY_SEARCH_TABS_POSITION);
+            showSearchTabs(position);
+        }
 
         return rootView;
     }
@@ -826,7 +836,15 @@ private static class HistoryStack extends Stack<String> {
         }
     }
 
+    private boolean isSearchTabsShowing() {
+        return mSearchTabs != null && mSearchTabs.getVisibility() == View.VISIBLE;
+    }
+
     private void showSearchTabs() {
+        showSearchTabs(-1);
+    }
+
+    private void showSearchTabs(int position) {
         if (!isAdded()) {
             return;
         }
@@ -864,6 +882,10 @@ private static class HistoryStack extends Stack<String> {
                     mRecyclerView.smoothScrollToPosition(0);
                 }
             });
+
+            if (position > -1 && position < mSearchTabs.getTabCount()) {
+                mSearchTabs.getTabAt(position).select();
+            }
         }
     }
 
@@ -2022,7 +2044,6 @@ private static class HistoryStack extends Stack<String> {
     public void onScrollToTop() {
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
-            mRecyclerView.showToolbar();
         }
     }
 
