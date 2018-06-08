@@ -18,6 +18,7 @@
 /me/social-login/connect/
 /me/username/
 
+/read/feed/
 /read/feed/$feed_url_or_id#long,String
 /read/following/mine
 /read/site/$site#String/comment_email_subscriptions/$action#String
