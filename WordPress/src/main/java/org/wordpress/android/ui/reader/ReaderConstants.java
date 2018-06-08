@@ -1,18 +1,24 @@
 package org.wordpress.android.ui.reader;
 
 public class ReaderConstants {
-    public static final int READER_MAX_POSTS_TO_REQUEST = 20; // max # posts to request when updating posts
+    // max # posts to request when updating posts
+    public static final int READER_MAX_POSTS_TO_REQUEST = 20;
+
+    // max # results to request when searching posts & sites
     public static final int READER_MAX_SEARCH_RESULTS_TO_REQUEST = 20;
-            // max # posts to request when searching posts
-    public static final int READER_MAX_POSTS_TO_DISPLAY = 200; // max # posts to display
+
+    // max # posts to display
+    public static final int READER_MAX_POSTS_TO_DISPLAY = 200;
+
+    // max # top-level comments to request when updating comments
     public static final int READER_MAX_COMMENTS_TO_REQUEST = 20;
-            // max # top-level comments to request when updating comments
+
     public static final int READER_MAX_USERS_TO_DISPLAY = 500; // max # users to show in ReaderUserListActivity
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 10; // 10 minute delay between automatic updates
     public static final int READER_MAX_RECOMMENDED_TO_REQUEST = 20; // max # of recommended blogs to request
 
+    // min width for an image to be suitable featured image
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;
-            // min width for an image to be suitable featured image
 
     public static final long DISCOVER_SITE_ID = 53424024; // site id for discover.wordpress.com
 
@@ -20,10 +26,8 @@ public class ReaderConstants {
     // the Calypso web reader
     public static final int MIN_GALLERY_IMAGE_WIDTH = 144;
 
+    // referrer url for reader posts opened in a browser
     public static final String HTTP_REFERER_URL = "https://wordpress.com";
-            // referrer url for reader posts opened in a browser
-
-    public static final String UNICODE_BULLET_WITH_SPACE = " \u2022 ";
 
     // intent arguments / keys
     static final String ARG_TAG = "tag";
