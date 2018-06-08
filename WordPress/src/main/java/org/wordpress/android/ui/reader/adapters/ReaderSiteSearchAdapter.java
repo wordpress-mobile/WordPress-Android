@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 
 import java.util.ArrayList;
@@ -20,13 +21,13 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         implements ReaderSiteSearchResultView.OnSiteFollowedListener {
     public interface SiteSearchAdapterListener {
         void onSiteClicked(@NonNull ReaderSiteModel site);
-
         void onLoadMore(int offset);
     }
 
     private final SiteSearchAdapterListener mListener;
     private final List<ReaderSiteModel> mSites = new ArrayList<>();
     private boolean mCanLoadMore = true;
+    private boolean mIsLoadingMore;
 
     public ReaderSiteSearchAdapter(@NonNull SiteSearchAdapterListener listener) {
         super();
@@ -38,18 +39,31 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         mSites.clear();
         mSites.addAll(sites);
         mCanLoadMore = true;
+        mIsLoadingMore = false;
         notifyDataSetChanged();
     }
 
     public void addSiteList(@NonNull List<ReaderSiteModel> sites) {
         mSites.addAll(sites);
+        mIsLoadingMore = false;
         notifyDataSetChanged();
     }
 
     public void clear() {
+        mIsLoadingMore = false;
         if (mSites.size() > 0) {
             mSites.clear();
             notifyDataSetChanged();
+        }
+    }
+
+    private void checkLoadMore(int position) {
+        if (mCanLoadMore
+            && !mIsLoadingMore
+            && position >= getItemCount() - 1
+            && getItemCount() >= ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST) {
+            mIsLoadingMore = true;
+            mListener.onLoadMore(getItemCount() - 1);
         }
     }
 
@@ -94,9 +108,7 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
         SiteViewHolder siteHolder = (SiteViewHolder) holder;
         siteHolder.mSearchResultView.setSite(mSites.get(position), this);
 
-        if (mCanLoadMore && position >= getItemCount() - 1) {
-            mListener.onLoadMore(getItemCount() - 1);
-        }
+        checkLoadMore(position);
     }
 
     @Override
