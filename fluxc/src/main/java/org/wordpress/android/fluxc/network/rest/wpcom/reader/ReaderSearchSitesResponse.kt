@@ -6,6 +6,5 @@ import org.wordpress.android.fluxc.model.ReaderSiteModel
 
 @JsonAdapter(ReaderSearchSitesDeserializer::class)
 class ReaderSearchSitesResponse (
-    val offset: Int,
     val sites: List<ReaderSiteModel>
 )
