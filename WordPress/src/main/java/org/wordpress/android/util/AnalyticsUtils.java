@@ -12,8 +12,10 @@ import android.webkit.MimeTypeMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -51,6 +53,7 @@ public class AnalyticsUtils {
     private static final String INTENT_DATA = "intent_data";
     private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
+    private static final String STORED_SIGNUP_EMAIL_KEY = "STORED_SIGNUP_EMAIL_KEY";
 
     public static void updateAnalyticsPreference(Context ctx,
                                                  Dispatcher mDispatcher,
@@ -432,5 +435,52 @@ public class AnalyticsUtils {
         if (!isWpcomLogin) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
+    }
+
+    public static void trackAnalyticsAccountCreated() {
+        AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
+    }
+
+    public static void trackAnalyticsAccountCreatedRefreshingMetadata(AccountStore accountStore) {
+        Context ctx = WordPress.getContext();
+        String username = accountStore.getAccount().getUserName();
+        String email = accountStore.getAccount().getEmail();
+        if (email.isEmpty()) {
+            // See if there is a saved signup email in SharedPreferences.
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            email = prefs.getString(STORED_SIGNUP_EMAIL_KEY, "");
+        }
+        if (!email.isEmpty()) {
+            if (username.isEmpty()) {
+                username = email;
+            }
+        }
+        clearSignupEmail();
+
+        if (!email.isEmpty()) {
+            // Refresh if we have a usable values.
+            // Note: There are cases where this will set an email address for the
+            // analytics metadata's username property. This is fine, as Tracks will
+            // correctly identify the user with either value.
+            refreshMetadataNewUser(username, email);
+        }
+
+        trackAnalyticsAccountCreated();
+    }
+
+    public static void storeSignupEmail(String email) {
+        Context ctx = WordPress.getContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(STORED_SIGNUP_EMAIL_KEY, email);
+        editor.apply();
+    }
+
+    public static void clearSignupEmail() {
+        Context ctx = WordPress.getContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(STORED_SIGNUP_EMAIL_KEY);
+        editor.apply();
     }
 }
