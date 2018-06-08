@@ -5,14 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.TabLayout.OnTabSelectedListener;
-import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -40,7 +34,6 @@ import android.widget.TextView.BufferType;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -52,15 +45,10 @@ import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
-import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
-import org.wordpress.android.fluxc.store.ReaderStore;
-import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
-import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -71,7 +59,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.BottomNavController;
-import org.wordpress.android.ui.main.ToolbarFragment;
+import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -81,8 +69,6 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -98,7 +84,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -115,7 +100,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static android.support.design.widget.TabLayout.MODE_FIXED;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
 public class ReaderPostListFragment extends Fragment
@@ -124,12 +108,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
-        ToolbarFragment {
-    private static final int TAB_POSTS = 0;
-    private static final int TAB_SITES = 1;
-
+        MainToolbarFragment {
     private ReaderPostAdapter mPostAdapter;
-    private ReaderSiteSearchAdapter mSiteSearchAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
     private FilteredRecyclerView mRecyclerView;
@@ -139,7 +119,6 @@ public class ReaderPostListFragment extends Fragment
     private View mEmptyView;
     private View mEmptyViewBoxImages;
     private ProgressBar mProgress;
-    private TabLayout mSearchTabs;
 
     private SearchView mSearchView;
     private MenuItem mSettingsMenuItem;
@@ -152,7 +131,6 @@ public class ReaderPostListFragment extends Fragment
     private long mCurrentFeedId;
     private String mCurrentSearchQuery;
     private ReaderPostListType mPostListType;
-    private ReaderSiteModel mLastTappedSiteSearchResult;
 
     private int mRestorePosition;
 
@@ -167,7 +145,6 @@ public class ReaderPostListFragment extends Fragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     @Inject AccountStore mAccountStore;
-    @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
 
     private static class HistoryStack extends Stack<String> {
@@ -330,12 +307,6 @@ public class ReaderPostListFragment extends Fragment
             // so the user can see the search keyword they entered
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
                 mRecyclerView.showToolbar();
-                // if the user tapped a site to show site preview, it's possible they also changed the follow
-                // status so tell the search adapter to check whether it has the correct follow status
-                if (mLastTappedSiteSearchResult != null) {
-                    getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
-                    mLastTappedSiteSearchResult = null;
-                }
             }
         }
     }
@@ -410,6 +381,11 @@ public class ReaderPostListFragment extends Fragment
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void setTitle(String title) {
+        // Do nothing - no title for this toolbar
+    }
+
     /*
      * ensures the adapter is created and posts are updated if they haven't already been
      */
@@ -437,11 +413,6 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setAdapter(null);
         mRecyclerView.setAdapter(getPostAdapter());
         mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
-    }
-
-    @Override
-    public void setTitle(@NotNull String title) {
-        // Do nothing - no title for this toolbar
     }
 
     @SuppressWarnings("unused")
@@ -682,7 +653,6 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 hideSearchMessage();
-                hideSearchTabs();
                 resetSearchSuggestionAdapter();
                 mSettingsMenuItem.setVisible(true);
                 mCurrentSearchQuery = null;
@@ -747,36 +717,11 @@ public class ReaderPostListFragment extends Fragment
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
 
-        // search for matching sites as well
-        ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
-                mCurrentSearchQuery,
-                ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
-                0,
-                false);
-        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
-
         // track that the user performed a search
         if (!trimQuery.equals("")) {
             Map<String, Object> properties = new HashMap<>();
             properties.put("query", trimQuery);
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReaderSitesSearched(OnReaderSitesSearched event) {
-        ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
-        if (event.isError()) {
-            adapter.clear();
-        } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
-            adapter.setCanLoadMore(event.canLoadMore);
-            if (event.offset == 0) {
-                adapter.setSiteList(event.sites);
-            } else {
-                adapter.addSiteList(event.sites);
-                showLoadingProgress(false);
-            }
         }
     }
 
@@ -788,87 +733,15 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // clear posts and sites so only the empty view is visible
+        // clear posts so only the empty view is visible
         getPostAdapter().clear();
-        getSiteSearchAdapter().clear();
 
         setEmptyTitleAndDescription(false);
         showEmptyView();
-        hideSearchTabs();
     }
 
     private void hideSearchMessage() {
         hideEmptyView();
-    }
-
-    /*
-      * create the TabLayout that separates search results between POSTS and SITES and place it below
-      * the FilteredRecyclerView's toolbar
-      */
-    private void createSearchTabs() {
-        if (mSearchTabs == null) {
-            mSearchTabs = new TabLayout(getActivity());
-            mSearchTabs.setLayoutParams(new ViewGroup.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-
-            mSearchTabs.setVisibility(View.GONE);
-            mSearchTabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.tab_indicator));
-            mSearchTabs.setTabMode(MODE_FIXED);
-            mSearchTabs.setTabTextColors(
-                    getResources().getColor(R.color.blue_light),
-                    getResources().getColor(R.color.white));
-
-            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.posts));
-            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.sites));
-
-            if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-                float elevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
-                mSearchTabs.setElevation(elevation);
-            }
-
-            mRecyclerView.getAppBar().addView(mSearchTabs);
-        }
-    }
-
-    private void showSearchTabs() {
-        if (!isAdded()) {
-            return;
-        }
-        if (mSearchTabs == null) {
-            createSearchTabs();
-        }
-        if (mSearchTabs.getVisibility() != View.VISIBLE) {
-            mSearchTabs.setVisibility(View.VISIBLE);
-
-            mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
-                @Override public void onTabSelected(Tab tab) {
-                    if (tab.getPosition() == TAB_POSTS) {
-                        mRecyclerView.setAdapter(getPostAdapter());
-                    } else if (tab.getPosition() == TAB_SITES) {
-                        mRecyclerView.setAdapter(getSiteSearchAdapter());
-                    }
-                }
-                @Override public void onTabUnselected(Tab tab) {
-                    // noop
-                }
-                @Override public void onTabReselected(Tab tab) {
-                    mRecyclerView.smoothScrollToPosition(0);
-                }
-            });
-        }
-    }
-
-    private void hideSearchTabs() {
-        if (isAdded() && mSearchTabs != null && mSearchTabs.getVisibility() == View.VISIBLE) {
-            mSearchTabs.setVisibility(View.GONE);
-            mSearchTabs.clearOnTabSelectedListeners();
-            if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
-                mSearchTabs.getTabAt(TAB_POSTS).select();
-            }
-            mRecyclerView.setAdapter(getPostAdapter());
-            mLastTappedSiteSearchResult = null;
-            showLoadingProgress(false);
-        }
     }
 
     /*
@@ -945,9 +818,6 @@ public class ReaderPostListFragment extends Fragment
             && getPostListType() == ReaderPostListType.SEARCH_RESULTS
             && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
-            showSearchTabs();
-        } else {
-            hideSearchTabs();
         }
     }
 
@@ -1332,29 +1202,6 @@ public class ReaderPostListFragment extends Fragment
             }
         }
         return mPostAdapter;
-    }
-
-    private ReaderSiteSearchAdapter getSiteSearchAdapter() {
-        if (mSiteSearchAdapter == null) {
-            mSiteSearchAdapter = new ReaderSiteSearchAdapter(new SiteSearchAdapterListener() {
-                @Override
-                public void onSiteClicked(@NonNull ReaderSiteModel site) {
-                    mLastTappedSiteSearchResult = site;
-                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId(), site.getFeedId());
-                }
-                @Override
-                public void onLoadMore(int offset) {
-                    showLoadingProgress(true);
-                    ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
-                            mCurrentSearchQuery,
-                            ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
-                            offset,
-                            false);
-                    mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
-                }
-            });
-        }
-        return mSiteSearchAdapter;
     }
 
     private boolean hasPostAdapter() {

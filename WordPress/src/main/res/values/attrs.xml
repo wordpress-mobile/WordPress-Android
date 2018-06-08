@@ -136,7 +136,7 @@
         <attr name="wpSpinnerDropDownItemView" format="reference"/>
 
         <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
-        <attr name="wpToolbarVisibilityLock" format="boolean"/>
+        <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
     </declare-styleable>
 
 </resources>

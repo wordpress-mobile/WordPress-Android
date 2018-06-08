@@ -77,6 +77,13 @@
                     android:gravity="center"
                     android:enabled="false"
                     android:text="@string/site_creation_creating_preparing_frontend"/>
+
+                <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin_extra_large"/>
+
             </LinearLayout>
 
             <LinearLayout
