@@ -1489,8 +1489,8 @@
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
-    <string name="reader_empty_posts_in_search_title">No posts found</string>
-    <string name="reader_empty_posts_in_search_description">No posts found for %s for your language</string>
+    <string name="reader_empty_search_title">No results found</string>
+    <string name="reader_empty_search_description">No results found for %s for your language</string>
 
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="label_clear_search_history">Clear search history</string>

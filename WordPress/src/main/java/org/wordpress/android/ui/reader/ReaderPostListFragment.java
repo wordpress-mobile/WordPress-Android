@@ -726,7 +726,7 @@ private static class HistoryStack extends Stack<String> {
      * start a search for reader sites matching the current search query
      */
     private void updateSitesInCurrentSearch(int offset) {
-        if (isSearchTabsShowing() && mSearchTabs.getSelectedTabPosition() == TAB_SITES) {
+        if (getSearchTabsPosition() == TAB_SITES) {
             if (offset == 0) {
                 mRecyclerView.setRefreshing(true);
             } else {
@@ -764,7 +764,7 @@ private static class HistoryStack extends Stack<String> {
 
         // only submit a site search if the sites tab is active - otherwise we'll delay the site search
         // until the user taps the sites tab
-        if (isSearchTabsShowing() && mSearchTabs.getSelectedTabPosition() == TAB_SITES) {
+        if (getSearchTabsPosition() == TAB_SITES) {
             updateSitesInCurrentSearch(0);
         }
 
@@ -783,7 +783,7 @@ private static class HistoryStack extends Stack<String> {
             return;
         }
 
-        if (isSearchTabsShowing() && mSearchTabs.getSelectedTabPosition() == TAB_SITES) {
+        if (getSearchTabsPosition() == TAB_SITES) {
             mRecyclerView.setRefreshing(false);
             showLoadingProgress(false);
         }
@@ -906,6 +906,10 @@ private static class HistoryStack extends Stack<String> {
             mLastTappedSiteSearchResult = null;
             showLoadingProgress(false);
         }
+    }
+
+    private int getSearchTabsPosition() {
+        return isSearchTabsShowing() ? mSearchTabs.getSelectedTabPosition() : -1;
     }
 
     /*
@@ -1140,9 +1144,9 @@ private static class HistoryStack extends Stack<String> {
                     } else if (isUpdating()) {
                         title = getString(R.string.reader_label_post_search_running);
                     } else {
-                        title = getString(R.string.reader_empty_posts_in_search_title);
+                        title = getString(R.string.reader_empty_search_title);
                         String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
-                        description = String.format(getString(R.string.reader_empty_posts_in_search_description),
+                        description = String.format(getString(R.string.reader_empty_search_description),
                                 formattedQuery);
                     }
                     break;
