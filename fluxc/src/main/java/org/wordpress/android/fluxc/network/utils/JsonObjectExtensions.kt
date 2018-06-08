@@ -11,7 +11,13 @@ fun JsonObject?.getString(property: String, unescapeHtml4: Boolean = false): Str
     } else str
 }
 
+fun JsonObject?.getBoolean(property: String, defaultValue: Boolean = false) =
+        checkAndGet(property)?.asBoolean ?: defaultValue
+
 fun JsonObject?.getInt(property: String, defaultValue: Int = 0): Int = checkAndGet(property)?.asInt ?: defaultValue
+
+fun JsonObject?.getLong(property: String, defaultValue: Long = 0L) =
+        checkAndGet(property)?.asLong ?: defaultValue
 
 fun JsonObject?.getJsonObject(property: String): JsonObject? {
     val obj = checkAndGet(property)

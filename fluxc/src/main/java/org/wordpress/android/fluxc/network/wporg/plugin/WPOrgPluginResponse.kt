@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
 import com.google.gson.annotations.JsonAdapter
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.network.utils.getJsonObject
@@ -41,6 +42,7 @@ class WPOrgPluginResponse (
 )
 
 private class WPOrgPluginDeserializer : JsonDeserializer<WPOrgPluginResponse> {
+    @Throws(JsonParseException::class)
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type,
