@@ -1389,7 +1389,8 @@ private static class HistoryStack extends Stack<String> {
                 @Override
                 public void onSiteClicked(@NonNull ReaderSiteModel site) {
                     mLastTappedSiteSearchResult = site;
-                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), site.getSiteId(), site.getFeedId());
+                    ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                            getActivity(), site.getSiteId(), site.getFeedId());
                 }
                 @Override
                 public void onLoadMore(int offset) {

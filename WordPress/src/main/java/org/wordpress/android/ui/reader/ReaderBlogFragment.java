@@ -221,20 +221,12 @@ public class ReaderBlogFragment extends Fragment
 
     @Override
     public void onBlogClicked(Object item) {
-        long blogId;
-        long feedId;
         if (item instanceof ReaderRecommendedBlog) {
             ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
-            blogId = blog.blogId;
-            feedId = 0;
+            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blog.blogId);
         } else if (item instanceof ReaderBlog) {
             ReaderBlog blog = (ReaderBlog) item;
-            blogId = blog.blogId;
-            feedId = blog.feedId;
-        } else {
-            return;
+            ReaderActivityLauncher.showReaderBlogOrFeedPreview(getActivity(), blog.blogId, blog.feedId);
         }
-
-        ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, feedId);
     }
 }
