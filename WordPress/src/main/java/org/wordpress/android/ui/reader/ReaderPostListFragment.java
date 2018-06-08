@@ -876,7 +876,10 @@ private static class HistoryStack extends Stack<String> {
                         if (mSiteSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
                         }
-                        if (getSiteSearchAdapter().isEmpty() && !TextUtils.isEmpty(mCurrentSearchQuery)) {
+                        // perform a site search if the user switched to the site tab and results aren't already showing
+                        if (getSiteSearchAdapter().isEmpty()
+                            && !TextUtils.isEmpty(mCurrentSearchQuery)
+                            && !isEmptyViewShowing()) {
                             updateSitesInCurrentSearch(0);
                         }
                     }
@@ -1221,6 +1224,10 @@ private static class HistoryStack extends Stack<String> {
         if (isAdded()) {
             mEmptyView.setVisibility(View.GONE);
         }
+    }
+
+    private boolean isEmptyViewShowing() {
+        return isAdded() && mEmptyView.getVisibility() == View.VISIBLE;
     }
 
     /*
