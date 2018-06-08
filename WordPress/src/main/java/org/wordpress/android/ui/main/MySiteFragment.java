@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +80,7 @@ import de.greenrobot.event.EventBus;
 public class MySiteFragment extends Fragment implements SiteSettingsListener,
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface {
+        BasicFragmentDialog.BasicDialogNegativeClickInterface, MainToolbarFragment {
     private static final long ALERT_ANIM_OFFSET_MS = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
@@ -110,6 +111,10 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
+
+    @Nullable
+    private Toolbar mToolbar = null;
+    private String mToolbarTitle;
 
     private int mBlavatarSz;
 
@@ -348,6 +353,9 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                                            mAccountStore.getAccount().getUserName());
             }
         });
+
+        mToolbar = rootView.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
 
         return rootView;
     }
@@ -655,6 +663,13 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    public void setTitle(final String title) {
+        mToolbarTitle = title;
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
+        }
+    }
 
     /**
      * We can't just use fluxc OnSiteChanged event, as the order of events is not guaranteed -> getSelectedSite()
