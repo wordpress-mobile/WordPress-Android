@@ -23,7 +23,6 @@ class ReaderSearchSitesDeserializer implements JsonDeserializer<ReaderSearchSite
         JsonObject jsonObject = json.getAsJsonObject();
         ReaderSearchSitesResponse response = new ReaderSearchSitesResponse();
 
-        response.offset = getJsonInt(json, "offset");
         response.sites = new ArrayList<>();
 
         JsonArray jsonFeedsList = jsonObject.getAsJsonArray("feeds");
