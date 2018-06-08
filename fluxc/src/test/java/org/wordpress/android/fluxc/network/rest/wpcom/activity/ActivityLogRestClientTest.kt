@@ -227,9 +227,6 @@ class ActivityLogRestClientTest {
                 assertNotNull(this.rewind)
                 this.rewind?.apply {
                     assertEquals(this.status.value, REWIND_RESPONSE.status)
-                    assertEquals(this.progress, REWIND_RESPONSE.progress)
-                    assertEquals(this.rewindId, REWIND_RESPONSE.rewind_id)
-                    assertEquals(this.reason, REWIND_RESPONSE.reason)
                 }
             }
         }
@@ -298,8 +295,8 @@ class ActivityLogRestClientTest {
 
         verify(requestQueue).add(any<WPComGsonRequest<RewindResponse>>())
 
-        val restoreId = "restoreId"
-        rewindSuccessMethodCaptor.firstValue.invoke(RewindResponse(restoreId))
+        val restoreId = 10L
+        rewindSuccessMethodCaptor.firstValue.invoke(RewindResponse(restoreId, true, null))
 
         verify(dispatcher).dispatch(mRewindActionCaptor.capture())
         assertEquals(restoreId, mRewindActionCaptor.firstValue.payload.restoreId)
@@ -314,6 +311,21 @@ class ActivityLogRestClientTest {
         verify(requestQueue).add(any<WPComGsonRequest<RewindResponse>>())
 
         errorMethodCaptor.firstValue.invoke(WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
+
+        verify(dispatcher).dispatch(mRewindActionCaptor.capture())
+        assertTrue(mRewindActionCaptor.firstValue.payload.isError)
+    }
+
+    @Test
+    fun postRewindApiError() {
+        initPostRewind()
+
+        activityRestClient.rewind(site, "rewindId")
+
+        verify(requestQueue).add(any<WPComGsonRequest<RewindResponse>>())
+
+        val restoreId = 10L
+        rewindSuccessMethodCaptor.firstValue.invoke(RewindResponse(restoreId, false, "error"))
 
         verify(dispatcher).dispatch(mRewindActionCaptor.capture())
         assertTrue(mRewindActionCaptor.firstValue.payload.isError)
