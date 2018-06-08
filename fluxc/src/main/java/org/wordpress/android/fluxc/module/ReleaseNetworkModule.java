@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
@@ -255,5 +256,13 @@ public class ReleaseNetworkModule {
     @Provides
     public MemorizingTrustManager provideMemorizingTrustManager(Context appContext) {
         return new MemorizingTrustManager(appContext);
+    }
+
+    @Singleton
+    @Provides
+    public ReaderRestClient provideReaderRestClient(Context appContext, Dispatcher dispatcher,
+                                                     @Named("regular") RequestQueue requestQueue,
+                                                     AccessToken token, UserAgent userAgent) {
+        return new ReaderRestClient(appContext, dispatcher, requestQueue, token, userAgent);
     }
 }
