@@ -542,6 +542,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mSource.setCalypsoMode(true);
         }
 
+        // Initialize both editors (visual, source) with the same content. Need to do that so the starting point used in
+        //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
         mSource.displayStyledAndFormattedHtml(postContent);
         mContent.fromHtml(postContent);
 
