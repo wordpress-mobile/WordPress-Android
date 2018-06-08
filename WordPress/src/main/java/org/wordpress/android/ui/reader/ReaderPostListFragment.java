@@ -783,10 +783,8 @@ private static class HistoryStack extends Stack<String> {
             return;
         }
 
-        if (getSearchTabsPosition() == TAB_SITES) {
-            mRecyclerView.setRefreshing(false);
-            showLoadingProgress(false);
-        }
+        mRecyclerView.setRefreshing(false);
+        showLoadingProgress(false);
 
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
         if (event.isError()) {
