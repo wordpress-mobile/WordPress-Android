@@ -122,8 +122,6 @@ public class ReaderPostListFragment extends Fragment
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
         MainToolbarFragment {
-private static final String KEY_SEARCH_TABS_POSITION = "search_tabs_position";
-
 private static final int TAB_POSTS = 0;
 private static final int TAB_SITES = 1;
 
@@ -485,10 +483,6 @@ private static class HistoryStack extends Stack<String> {
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
-        if (isSearchTabsShowing()) {
-            outState.putInt(KEY_SEARCH_TABS_POSITION, mSearchTabs.getSelectedTabPosition());
-        }
-
         super.onSaveInstanceState(outState);
     }
 
@@ -624,14 +618,6 @@ private static class HistoryStack extends Stack<String> {
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
-        // make sure search tabs are showing if user was searching previously
-        if (savedInstanceState != null
-            && getPostListType() == ReaderPostListType.SEARCH_RESULTS
-            && !TextUtils.isEmpty(mCurrentSearchQuery)) {
-            int position = savedInstanceState.getInt(KEY_SEARCH_TABS_POSITION);
-            showSearchTabs(position);
-        }
-
         return rootView;
     }
 
@@ -718,6 +704,7 @@ private static class HistoryStack extends Stack<String> {
                                                public boolean onQueryTextChange(String newText) {
                                                    if (TextUtils.isEmpty(newText)) {
                                                        showSearchMessage();
+                                                       hideSearchTabs();
                                                    } else {
                                                        populateSearchSuggestionAdapter(newText);
                                                    }
@@ -803,7 +790,6 @@ private static class HistoryStack extends Stack<String> {
 
         setEmptyTitleAndDescription(false);
         showEmptyView();
-        hideSearchTabs();
     }
 
     private void hideSearchMessage() {
@@ -841,10 +827,6 @@ private static class HistoryStack extends Stack<String> {
     }
 
     private void showSearchTabs() {
-        showSearchTabs(-1);
-    }
-
-    private void showSearchTabs(int position) {
         if (!isAdded()) {
             return;
         }
@@ -882,10 +864,6 @@ private static class HistoryStack extends Stack<String> {
                     mRecyclerView.smoothScrollToPosition(0);
                 }
             });
-
-            if (position > -1 && position < mSearchTabs.getTabCount()) {
-                mSearchTabs.getTabAt(position).select();
-            }
         }
     }
 
@@ -1234,6 +1212,9 @@ private static class HistoryStack extends Stack<String> {
                 if (mRestorePosition > 0) {
                     AppLog.d(T.READER, "reader post list > restoring position");
                     mRecyclerView.scrollRecycleViewToPosition(mRestorePosition);
+                }
+                if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && !isSearchTabsShowing()) {
+                    showSearchTabs();
                 }
             }
             mRestorePosition = 0;
