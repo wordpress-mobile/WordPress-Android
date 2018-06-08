@@ -137,6 +137,9 @@
 
         <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
         <attr name="wpToolbarVisibilityLock" format="boolean"/>
+
+        <!-- Optional: Default is 0. Sets the elevation of the toolbar -->
+        <attr name="wpToolbarElevation" format="reference|dimension"/>
     </declare-styleable>
 
 </resources>

@@ -63,6 +63,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private AppLog.T mTAG;
 
     private boolean mToolbarVisibilityLock = false;
+    private float mToolbarElevation = 0F;
     @LayoutRes private int mSpinnerItemView = 0;
     @LayoutRes private int mSpinnerDropDownItemView = 0;
 
@@ -135,6 +136,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                     0, 0);
             try {
                 mToolbarVisibilityLock = a.getBoolean(R.styleable.FilteredRecyclerView_wpToolbarVisibilityLock, false);
+                mToolbarElevation = a.getDimension(R.styleable.FilteredRecyclerView_wpToolbarElevation, 0F);
                 mSpinnerItemView = a.getResourceId(R.styleable.FilteredRecyclerView_wpSpinnerItemView, 0);
                 mSpinnerDropDownItemView = a.getResourceId(
                         R.styleable.FilteredRecyclerView_wpSpinnerDropDownItemView, 0);
@@ -152,6 +154,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         mToolbar = findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = findViewById(R.id.app_bar_layout);
 
+        // Style the toolbar
+        ViewCompat.setElevation(mToolbar, mToolbarElevation);
         if (mToolbarVisibilityLock) {
             // Prevent the toolbar from auto-hide/reveal while scrolling, and disable swipe to
             // hide toolbar.

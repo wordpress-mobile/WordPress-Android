@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         wp:wpSpinnerItemView="@layout/toolbar_main_spinner_item"
-        wp:wpToolbarVisibilityLock="true"/>
+        wp:wpToolbarVisibilityLock="true"
+        wp:wpToolbarElevation="@dimen/appbar_elevation"/>
 
     <include
         android:id="@+id/empty_custom_view"
