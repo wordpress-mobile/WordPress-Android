@@ -68,8 +68,11 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public long getItemId(int position) {
-        // note that we use the feedId because the siteId may be 0 (non-wp)
-        return mSites.get(position).getFeedId();
+        if (!isValidPosition(position)) {
+            return -1;
+        }
+        ReaderSiteModel site = mSites.get(position);
+        return site.getFeedId() != 0 ? site.getFeedId() : site.getSiteId();
     }
 
     @NonNull @Override
