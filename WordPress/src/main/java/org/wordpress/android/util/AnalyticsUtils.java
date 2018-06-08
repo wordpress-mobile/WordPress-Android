@@ -437,7 +437,8 @@ public class AnalyticsUtils {
         }
     }
 
-    public static void trackAnalyticsAccountCreated() {
+    public static void trackAnalyticsAccountCreated(String username, String email) {
+        refreshMetadataNewUser(username, email);
         AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
     }
 
@@ -457,15 +458,16 @@ public class AnalyticsUtils {
         }
         clearSignupEmail();
 
-        if (!email.isEmpty()) {
-            // Refresh if we have a usable values.
-            // Note: There are cases where this will set an email address for the
-            // analytics metadata's username property. This is fine, as Tracks will
-            // correctly identify the user with either value.
-            refreshMetadataNewUser(username, email);
+        if (email.isEmpty()) {
+            // We can't refresh meta data but we still want to bump the stat.
+            AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
+            return;
         }
 
-        trackAnalyticsAccountCreated();
+        // Note: There are cases where this will set an email address for the
+        // analytics metadata's username property. This is fine, as Tracks will
+        // correctly identify the user with either value.
+        trackAnalyticsAccountCreated(username, email);
     }
 
     public static void storeSignupEmail(String email) {

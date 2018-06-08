@@ -24,8 +24,8 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackCreatedAccount() {
-        AnalyticsUtils.trackAnalyticsAccountCreated();
+    public void trackCreatedAccount(String username, String email) {
+        AnalyticsUtils.trackAnalyticsAccountCreated(username, email);
     }
 
     @Override
