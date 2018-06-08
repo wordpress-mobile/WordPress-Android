@@ -735,7 +735,7 @@ private static class HistoryStack extends Stack<String> {
         }
         ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
                 mCurrentSearchQuery,
-                ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST,
+                ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST,
                 offset,
                 false);
         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
