@@ -13,13 +13,19 @@ import javax.inject.Singleton;
 @Singleton
 public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
-    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin) {
-        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcomLogin);
+    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcom) {
+        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcom);
+        AnalyticsUtils.clearSignupEmail();
+    }
+
+    @Override
+    public void trackAnalyticsAccountCreatedRefreshingMetadata(AccountStore accountStore) {
+        AnalyticsUtils.trackAnalyticsAccountCreatedRefreshingMetadata(accountStore);
     }
 
     @Override
     public void trackCreatedAccount() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
+        AnalyticsUtils.trackAnalyticsAccountCreated();
     }
 
     @Override
@@ -148,8 +154,9 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackSignupMagicLinkSent() {
+    public void trackSignupMagicLinkSent(String email) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SENT);
+        AnalyticsUtils.storeSignupEmail(email);
     }
 
     @Override

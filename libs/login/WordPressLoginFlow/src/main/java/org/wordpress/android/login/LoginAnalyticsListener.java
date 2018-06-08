@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface LoginAnalyticsListener {
     void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
+    void trackAnalyticsAccountCreatedRefreshingMetadata(AccountStore accountStore);
     void trackCreatedAccount();
     void trackEmailFormViewed();
     void trackInsertedInvalidUrl();
@@ -33,7 +34,7 @@ public interface LoginAnalyticsListener {
     void trackSignupMagicLinkFailed();
     void trackSignupMagicLinkOpened();
     void trackSignupMagicLinkOpenEmailClientClicked();
-    void trackSignupMagicLinkSent();
+    void trackSignupMagicLinkSent(String email);
     void trackSignupMagicLinkSucceeded();
     void trackSignupSocialAccountsNeedConnecting();
     void trackSignupSocialButtonFailure();
