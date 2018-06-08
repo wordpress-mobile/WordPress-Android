@@ -104,13 +104,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.mAvatarImageView.setContentDescription(null);
         }
 
-        noteBlockHolder.mCommentTextView.setText(
-                NotificationsUtils.getSpannableContentForRanges(
-                        getNoteData().optJSONObject("comment_text"),
-                        noteBlockHolder.mCommentTextView,
-                        getOnNoteBlockTextClickListener(),
-                        false)
-                                                );
+        String replacedString = removeExtraNewlineForLists(NotificationsUtils.getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"), noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false));
+        noteBlockHolder.mCommentTextView.setText(replacedString);
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -160,6 +155,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
 
         return view;
+    }
+
+    private String removeExtraNewlineForLists(CharSequence noteString) {
+        return noteString.toString().replace("\n\t\n\t", "\t");
     }
 
     private long getTimestamp() {
