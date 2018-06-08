@@ -508,9 +508,9 @@ public class WPMainActivity extends AppCompatActivity
 
     private void updateTitle(int position) {
         if (position == PAGE_MY_SITE && mSelectedSite != null) {
-            ((ToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedSite.getName());
+            ((MainToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedSite.getName());
         } else {
-            ((ToolbarFragment) mBottomNav.getActiveFragment())
+            ((MainToolbarFragment) mBottomNav.getActiveFragment())
                     .setTitle(mBottomNav.getTitleForPosition(position).toString());
         }
     }

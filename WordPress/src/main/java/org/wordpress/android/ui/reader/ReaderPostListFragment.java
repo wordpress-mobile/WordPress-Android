@@ -59,7 +59,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.BottomNavController;
-import org.wordpress.android.ui.main.ToolbarFragment;
+import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -108,7 +108,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
-        ToolbarFragment {
+        MainToolbarFragment {
     private ReaderPostAdapter mPostAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 

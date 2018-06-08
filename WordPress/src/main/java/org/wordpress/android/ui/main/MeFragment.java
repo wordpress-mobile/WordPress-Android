@@ -66,7 +66,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MeFragment extends Fragment implements ToolbarFragment {
+public class MeFragment extends Fragment implements MainToolbarFragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
 
