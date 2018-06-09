@@ -724,7 +724,7 @@ public class WPMainActivity extends AppCompatActivity
 
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
-                    mLoginAnalyticsListener.trackAnalyticsAccountCreatedRefreshingMetadata(mAccountStore);
+                    mLoginAnalyticsListener.trackCreatedAccount(mAccountStore);
                     mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
 
                     if (mJetpackConnectSource != null) {

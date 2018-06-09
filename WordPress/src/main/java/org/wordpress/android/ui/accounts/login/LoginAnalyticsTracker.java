@@ -19,8 +19,8 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackAnalyticsAccountCreatedRefreshingMetadata(AccountStore accountStore) {
-        AnalyticsUtils.trackAnalyticsAccountCreatedRefreshingMetadata(accountStore);
+    public void trackCreatedAccount(AccountStore accountStore) {
+        AnalyticsUtils.trackAnalyticsAccountCreated(accountStore);
     }
 
     @Override

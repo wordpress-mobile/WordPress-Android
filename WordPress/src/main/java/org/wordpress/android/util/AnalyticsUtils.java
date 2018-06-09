@@ -442,7 +442,7 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
     }
 
-    public static void trackAnalyticsAccountCreatedRefreshingMetadata(AccountStore accountStore) {
+    public static void trackAnalyticsAccountCreated(AccountStore accountStore) {
         Context ctx = WordPress.getContext();
         String username = accountStore.getAccount().getUserName();
         String email = accountStore.getAccount().getEmail();
