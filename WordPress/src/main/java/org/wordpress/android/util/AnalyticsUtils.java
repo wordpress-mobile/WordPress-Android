@@ -437,11 +437,30 @@ public class AnalyticsUtils {
         }
     }
 
+    /**
+     * Refreshes analytics metadata with the supplied username and email address, then
+     * bumps the account created stat.
+     *
+     * @param username
+     * @param email
+     */
     public static void trackAnalyticsAccountCreated(String username, String email) {
         refreshMetadataNewUser(username, email);
         AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
     }
 
+    /**
+     * Attempts to retrive a valid username and email address for signup from
+     * the passed accountStore, or if necessary from SharedPreferences, to use
+     * to refresh analytics meta data before bumping the account created stat.
+     *
+     * In the case of a new sign up, a retrieved email address will also be passed
+     * as the email address as either can be used  by tracks to identify a user.
+     *
+     * The stat is bumped regardless.
+     *
+     * @param accountStore
+     */
     public static void trackAnalyticsAccountCreated(AccountStore accountStore) {
         Context ctx = WordPress.getContext();
         String username = accountStore.getAccount().getUserName();
@@ -459,14 +478,11 @@ public class AnalyticsUtils {
         clearSignupEmail();
 
         if (email.isEmpty()) {
-            // We can't refresh meta data but we still want to bump the stat.
+            // We can't refresh meta data. Bump the stat anyway.
             AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
             return;
         }
 
-        // Note: There are cases where this will set an email address for the
-        // analytics metadata's username property. This is fine, as Tracks will
-        // correctly identify the user with either value.
         trackAnalyticsAccountCreated(username, email);
     }
 
