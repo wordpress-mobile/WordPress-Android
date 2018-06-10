@@ -53,7 +53,7 @@ public class AnalyticsUtils {
     private static final String INTENT_DATA = "intent_data";
     private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
-    private static final String STORED_SIGNUP_EMAIL_KEY = "STORED_SIGNUP_EMAIL_KEY";
+    private static final String STORED_MAGICLINK_SIGNUP_EMAIL_KEY = "STORED_MAGICLINK_SIGNUP_EMAIL_KEY";
 
     public static void updateAnalyticsPreference(Context ctx,
                                                  Dispatcher mDispatcher,
@@ -435,6 +435,9 @@ public class AnalyticsUtils {
         if (!isWpcomLogin) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
+        // Just in case a user attempted a magic link signin, but then changed their
+        // mind and logged in with a different account, clear any stored email.
+        AnalyticsUtils.clearMagicLinkSignupEmail();
     }
 
     /**
@@ -454,7 +457,7 @@ public class AnalyticsUtils {
             // SharedPrefs
             Context ctx = WordPress.getContext();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            email = prefs.getString(STORED_SIGNUP_EMAIL_KEY, "");
+            email = prefs.getString(STORED_MAGICLINK_SIGNUP_EMAIL_KEY, "");
         }
 
         if (!email.isEmpty()) {
@@ -466,7 +469,7 @@ public class AnalyticsUtils {
         }
 
         // Clean up any stored magic link signup email.
-        clearSignupEmail();
+        clearMagicLinkSignupEmail();
 
         if (!username.isEmpty()) {
             // We at least have a good value for username so go ahead and refresh tracker metadata.
@@ -478,19 +481,19 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
     }
 
-    public static void storeSignupEmail(String email) {
+    public static void storeMagicLinkSignupEmail(String email) {
         Context ctx = WordPress.getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(STORED_SIGNUP_EMAIL_KEY, email);
+        editor.putString(STORED_MAGICLINK_SIGNUP_EMAIL_KEY, email);
         editor.apply();
     }
 
-    public static void clearSignupEmail() {
+    public static void clearMagicLinkSignupEmail() {
         Context ctx = WordPress.getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(STORED_SIGNUP_EMAIL_KEY);
+        editor.remove(STORED_MAGICLINK_SIGNUP_EMAIL_KEY);
         editor.apply();
     }
 }

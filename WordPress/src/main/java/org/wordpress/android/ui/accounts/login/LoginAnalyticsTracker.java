@@ -15,7 +15,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcom) {
         AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcom);
-        AnalyticsUtils.clearSignupEmail();
     }
 
     @Override
@@ -151,7 +150,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupMagicLinkSent(String email) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SENT);
-        AnalyticsUtils.storeSignupEmail(email);
+        AnalyticsUtils.storeMagicLinkSignupEmail(email);
     }
 
     @Override
