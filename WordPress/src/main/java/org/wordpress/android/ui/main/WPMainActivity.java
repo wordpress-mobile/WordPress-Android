@@ -26,6 +26,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -724,7 +725,8 @@ public class WPMainActivity extends AppCompatActivity
 
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
-                    mLoginAnalyticsListener.trackCreatedAccount(mAccountStore);
+                    AccountModel account = mAccountStore.getAccount();
+                    mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
                     mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
 
                     if (mJetpackConnectSource != null) {

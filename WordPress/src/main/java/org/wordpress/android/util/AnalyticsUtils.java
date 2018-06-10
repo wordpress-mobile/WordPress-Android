@@ -438,52 +438,44 @@ public class AnalyticsUtils {
     }
 
     /**
-     * Refreshes analytics metadata with the supplied username and email address, then
-     * bumps the account created stat.
+     * Refreshes analytics metadata and bumps the account created stat.
+     *
+     * Analytics tracker meta data is refreshed in order to properly identify
+     * events to the newly created user.  If the username and email is empty then
+     * the stored magic link email is used for both (if it exists).  No valid values are
+     * found then we skip refreshing metadata but still bump the stat.
      *
      * @param username
      * @param email
      */
     public static void trackAnalyticsAccountCreated(String username, String email) {
-        refreshMetadataNewUser(username, email);
-        AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
-    }
-
-    /**
-     * Attempts to retrive a valid username and email address for signup from
-     * the passed accountStore, or if necessary from SharedPreferences, to use
-     * to refresh analytics meta data before bumping the account created stat.
-     *
-     * In the case of a new sign up, a retrieved email address will also be passed
-     * as the email address as either can be used  by tracks to identify a user.
-     *
-     * The stat is bumped regardless.
-     *
-     * @param accountStore
-     */
-    public static void trackAnalyticsAccountCreated(AccountStore accountStore) {
-        Context ctx = WordPress.getContext();
-        String username = accountStore.getAccount().getUserName();
-        String email = accountStore.getAccount().getEmail();
         if (email.isEmpty()) {
-            // See if there is a saved signup email in SharedPreferences.
+            // Email was empty. See if there is a saved magic link signup email in
+            // SharedPrefs
+            Context ctx = WordPress.getContext();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             email = prefs.getString(STORED_SIGNUP_EMAIL_KEY, "");
         }
+
         if (!email.isEmpty()) {
+            // If the username is empty, assign it the same value as the email.
+            // Tracker metadata can use either value to identify a user.
             if (username.isEmpty()) {
                 username = email;
             }
         }
+
+        // Clean up any stored magic link signup email.
         clearSignupEmail();
 
-        if (email.isEmpty()) {
-            // We can't refresh meta data. Bump the stat anyway.
-            AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
+        if (!username.isEmpty()) {
+            // We at least have a good value for username so go ahead and refresh tracker metadata.
+            refreshMetadataNewUser(username, email);
             return;
         }
 
-        trackAnalyticsAccountCreated(username, email);
+        // Finally bump the stat.
+        AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
     }
 
     public static void storeSignupEmail(String email) {
