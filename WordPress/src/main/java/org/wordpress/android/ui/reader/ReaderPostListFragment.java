@@ -84,8 +84,8 @@ import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarte
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSearchTabLayout;
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -152,6 +152,7 @@ public class ReaderPostListFragment extends Fragment
     private int mRestorePosition;
     private int mPostSearchAdapterPos;
     private int mSiteSearchAdapterPos;
+    private int mSearchTabsPos = -1;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -292,6 +293,9 @@ public class ReaderPostListFragment extends Fragment
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
                         (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            if (savedInstanceState.containsKey(ReaderConstants.KEY_ACTIVE_SEARCH_TAB)) {
+                mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB);
             }
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
@@ -480,6 +484,10 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+
+        if (isSearchTabsShowing()) {
+            outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, getSearchTabsPosition());
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -877,6 +885,14 @@ public class ReaderPostListFragment extends Fragment
                     mRecyclerView.smoothScrollToPosition(0);
                 }
             });
+
+            if (mSearchTabsPos > -1 && mSearchTabsPos != mSearchTabs.getSelectedTabPosition()) {
+                Tab tab = mSearchTabs.getTabAt(mSearchTabsPos);
+                if (tab != null) {
+                    tab.select();
+                }
+                mSearchTabsPos = -1;
+            }
         }
     }
 
