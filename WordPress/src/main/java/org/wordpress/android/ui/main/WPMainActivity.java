@@ -714,6 +714,9 @@ public class WPMainActivity extends AppCompatActivity
         if (mAccountStore.hasAccessToken()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
 
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
+
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
                     mLoginAnalyticsListener.trackCreatedAccount();
