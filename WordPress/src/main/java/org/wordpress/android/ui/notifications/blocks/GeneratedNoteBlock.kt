@@ -29,17 +29,13 @@ class GeneratedNoteBlock(
             }
         }
 
-        val indices = arrayOf(0, spannableStringBuilder.length)
-        if (indices.size == 2 && indices[0] <= spannableStringBuilder.length
-                && indices[1] <= spannableStringBuilder.length) {
-            spannableStringBuilder
-                    .setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+        val start = 0
+        val end = spannableStringBuilder.length
+        spannableStringBuilder.setSpan(clickableSpan, start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
 
-            // Add additional styling if the range wants it
-            val styleSpan = StyleSpan(Typeface.ITALIC)
-            spannableStringBuilder
-                    .setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-        }
+        // Add additional styling if the range wants it
+        val styleSpan = StyleSpan(Typeface.ITALIC)
+        spannableStringBuilder.setSpan(styleSpan, start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
 
         return spannableStringBuilder
     }
