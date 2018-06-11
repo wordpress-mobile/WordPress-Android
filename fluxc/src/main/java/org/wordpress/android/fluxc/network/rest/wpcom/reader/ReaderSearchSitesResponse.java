@@ -10,6 +10,5 @@ import java.util.List;
 
 @JsonAdapter(ReaderSearchSitesDeserializer.class)
 public class ReaderSearchSitesResponse {
-    public int offset;
     public @NonNull List<ReaderSiteModel> sites;
 }
