@@ -81,6 +81,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     private long mRestoredScrollNoteID;
     private boolean mIsAnimatingOutNewNotificationsBar;
+    private boolean mShouldRefreshNotifications;
 
     @Inject AccountStore mAccountStore;
 
@@ -99,6 +100,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mShouldRefreshNotifications = true;
     }
 
     @Override
@@ -208,11 +210,14 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            String noteId = data.getStringExtra(NOTE_MODERATE_ID_EXTRA);
-            String newStatus = data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA);
-            if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
-                updateNote(noteId, CommentStatus.fromString(newStatus));
+        if (requestCode == RequestCodes.NOTE_DETAIL) {
+            mShouldRefreshNotifications = false;
+            if (resultCode == RESULT_OK) {
+                String noteId = data.getStringExtra(NOTE_MODERATE_ID_EXTRA);
+                String newStatus = data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA);
+                if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
+                    updateNote(noteId, CommentStatus.fromString(newStatus));
+                }
             }
         }
     }
@@ -233,7 +238,16 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             mFilterRadioGroup.setVisibility(View.GONE);
         } else {
             getNotesAdapter().reloadNotesFromDBAsync();
+            if (mShouldRefreshNotifications) {
+                fetchNotesFromRemote();
+            }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mShouldRefreshNotifications = true;
     }
 
     @Override
