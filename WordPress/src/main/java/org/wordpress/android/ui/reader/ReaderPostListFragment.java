@@ -120,78 +120,78 @@ public class ReaderPostListFragment extends Fragment
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
         MainToolbarFragment {
-private static final int TAB_POSTS = 0;
-private static final int TAB_SITES = 1;
+    private static final int TAB_POSTS = 0;
+    private static final int TAB_SITES = 1;
 
-private ReaderPostAdapter mPostAdapter;
-private ReaderSiteSearchAdapter mSiteSearchAdapter;
-private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
+    private ReaderPostAdapter mPostAdapter;
+    private ReaderSiteSearchAdapter mSiteSearchAdapter;
+    private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
-private FilteredRecyclerView mRecyclerView;
-private boolean mFirstLoad = true;
+    private FilteredRecyclerView mRecyclerView;
+    private boolean mFirstLoad = true;
 
-private View mNewPostsBar;
-private View mEmptyView;
-private View mEmptyViewBoxImages;
-private ProgressBar mProgress;
-private ReaderSearchTabLayout mSearchTabs;
+    private View mNewPostsBar;
+    private View mEmptyView;
+    private View mEmptyViewBoxImages;
+    private ProgressBar mProgress;
+    private ReaderSearchTabLayout mSearchTabs;
 
-private SearchView mSearchView;
-private MenuItem mSettingsMenuItem;
-private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
+    private MenuItem mSettingsMenuItem;
+    private MenuItem mSearchMenuItem;
 
-private BottomNavController mBottomNavController;
+    private BottomNavController mBottomNavController;
 
-private ReaderTag mCurrentTag;
-private long mCurrentBlogId;
-private long mCurrentFeedId;
-private String mCurrentSearchQuery;
-private ReaderPostListType mPostListType;
-private ReaderSiteModel mLastTappedSiteSearchResult;
+    private ReaderTag mCurrentTag;
+    private long mCurrentBlogId;
+    private long mCurrentFeedId;
+    private String mCurrentSearchQuery;
+    private ReaderPostListType mPostListType;
+    private ReaderSiteModel mLastTappedSiteSearchResult;
 
-private int mRestorePosition;
-private int mPostSearchAdapterPos;
-private int mSiteSearchAdapterPos;
+    private int mRestorePosition;
+    private int mPostSearchAdapterPos;
+    private int mSiteSearchAdapterPos;
 
-private boolean mIsUpdating;
-private boolean mWasPaused;
-private boolean mHasUpdatedPosts;
-private boolean mIsAnimatingOutNewPostsBar;
+    private boolean mIsUpdating;
+    private boolean mWasPaused;
+    private boolean mHasUpdatedPosts;
+    private boolean mIsAnimatingOutNewPostsBar;
 
-private static boolean mHasPurgedReaderDb;
-private static Date mLastAutoUpdateDt;
+    private static boolean mHasPurgedReaderDb;
+    private static Date mLastAutoUpdateDt;
 
-private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
+    private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
-@Inject AccountStore mAccountStore;
-@Inject ReaderStore mReaderStore;
-@Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+    @Inject ReaderStore mReaderStore;
+    @Inject Dispatcher mDispatcher;
 
-private static class HistoryStack extends Stack<String> {
-    private final String mKeyName;
+    private static class HistoryStack extends Stack<String> {
+        private final String mKeyName;
 
-    HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
-        mKeyName = keyName;
-    }
+        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
+            mKeyName = keyName;
+        }
 
-    void restoreInstance(Bundle bundle) {
-        clear();
-        if (bundle.containsKey(mKeyName)) {
-            ArrayList<String> history = bundle.getStringArrayList(mKeyName);
-            if (history != null) {
-                this.addAll(history);
+        void restoreInstance(Bundle bundle) {
+            clear();
+            if (bundle.containsKey(mKeyName)) {
+                ArrayList<String> history = bundle.getStringArrayList(mKeyName);
+                if (history != null) {
+                    this.addAll(history);
+                }
+            }
+        }
+
+        void saveInstance(Bundle bundle) {
+            if (!isEmpty()) {
+                ArrayList<String> history = new ArrayList<>();
+                history.addAll(this);
+                bundle.putStringArrayList(mKeyName, history);
             }
         }
     }
-
-    void saveInstance(Bundle bundle) {
-        if (!isEmpty()) {
-            ArrayList<String> history = new ArrayList<>();
-            history.addAll(this);
-            bundle.putStringArrayList(mKeyName, history);
-        }
-    }
-}
 
     public static ReaderPostListFragment newInstance() {
         ReaderTag tag = AppPrefs.getReaderTag();
@@ -2051,29 +2051,29 @@ private static class HistoryStack extends Stack<String> {
         mLastAutoUpdateDt = null;
     }
 
-private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
-    private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
+    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
+        private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
-    LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-        mFilterCriteriaLoaderListener = listener;
-    }
+        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+            mFilterCriteriaLoaderListener = listener;
+        }
 
-    @Override
-    protected ReaderTagList doInBackground(Void... voids) {
-        ReaderTagList tagList = ReaderTagTable.getDefaultTags();
-        tagList.addAll(ReaderTagTable.getCustomListTags());
-        tagList.addAll(ReaderTagTable.getFollowedTags());
-        tagList.addAll(ReaderTagTable.getBookmarkTags());
-        return tagList;
-    }
+        @Override
+        protected ReaderTagList doInBackground(Void... voids) {
+            ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+            tagList.addAll(ReaderTagTable.getCustomListTags());
+            tagList.addAll(ReaderTagTable.getFollowedTags());
+            tagList.addAll(ReaderTagTable.getBookmarkTags());
+            return tagList;
+        }
 
-    @Override
-    protected void onPostExecute(ReaderTagList tagList) {
-        if (mFilterCriteriaLoaderListener != null) {
-            //noinspection unchecked
-            mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
+        @Override
+        protected void onPostExecute(ReaderTagList tagList) {
+            if (mFilterCriteriaLoaderListener != null) {
+                //noinspection unchecked
+                mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
+            }
         }
     }
-}
 }
 
