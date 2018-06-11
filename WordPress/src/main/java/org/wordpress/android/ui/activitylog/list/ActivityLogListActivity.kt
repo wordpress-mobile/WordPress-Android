@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.activitylog.list
 
 import android.content.Intent
 import android.os.Bundle

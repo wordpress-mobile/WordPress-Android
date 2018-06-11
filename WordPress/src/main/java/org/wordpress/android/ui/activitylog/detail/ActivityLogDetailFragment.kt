@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.activitylog.detail
 
 import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.activitylog.detail
 
 data class ActivityLogDetailModel(
     val activityID: String,

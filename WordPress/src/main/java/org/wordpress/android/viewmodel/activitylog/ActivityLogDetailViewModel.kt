@@ -9,9 +9,10 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
-import org.wordpress.android.ui.activitylog.ActivityLogDetailModel
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.text.DateFormat
 import java.util.Date
@@ -77,7 +78,7 @@ class ActivityLogDetailViewModel
                                             { this.onRewindClicked() }
                                         } ?: {
                                             AppLog.e(
-                                                    AppLog.T.ACTIVITY_LOG,
+                                                    ACTIVITY_LOG,
                                                     "Trying to rewind activity without rewind ID"
                                             )
                                         }

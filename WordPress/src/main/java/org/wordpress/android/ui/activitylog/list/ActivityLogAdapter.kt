@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.activitylog.list
 
 import android.content.Context
 import android.support.v7.util.DiffUtil
