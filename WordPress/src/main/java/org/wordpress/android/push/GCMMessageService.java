@@ -108,10 +108,12 @@ public class GCMMessageService extends FirebaseMessagingService {
 
     private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START);
         synchronized (GCMMessageService.class) {
             NOTIFICATION_HELPER.handleDefaultPush(
                     this, convertMapToBundle(data), mAccountStore.getAccount().getUserId());
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END);
     }
 
     // convert FCM RemoteMessage's Map into legacy GCM Bundle to keep code changes to a minimum
