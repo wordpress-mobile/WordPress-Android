@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.content.ContextCompat;
@@ -26,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -87,6 +85,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderSearchTabLayout;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -112,7 +111,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static android.support.design.widget.TabLayout.MODE_FIXED;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
 public class ReaderPostListFragment extends Fragment
@@ -136,7 +134,7 @@ private View mNewPostsBar;
 private View mEmptyView;
 private View mEmptyViewBoxImages;
 private ProgressBar mProgress;
-private TabLayout mSearchTabs;
+private ReaderSearchTabLayout mSearchTabs;
 
 private SearchView mSearchView;
 private MenuItem mSettingsMenuItem;
@@ -825,22 +823,8 @@ private static class HistoryStack extends Stack<String> {
      */
     private void createSearchTabs() {
         if (mSearchTabs == null) {
-            mSearchTabs = new TabLayout(getActivity());
-            mSearchTabs.setLayoutParams(new ViewGroup.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-
-            int indicatorColor = ContextCompat.getColor(getActivity(), R.color.tab_indicator);
-            int textColor = ContextCompat.getColor(getActivity(), R.color.blue_light);
-            int selectedTextColor = ContextCompat.getColor(getActivity(), R.color.white);
-
+            mSearchTabs = new ReaderSearchTabLayout(getActivity());
             mSearchTabs.setVisibility(View.GONE);
-            mSearchTabs.setSelectedTabIndicatorColor(indicatorColor);
-            mSearchTabs.setTabMode(MODE_FIXED);
-            mSearchTabs.setTabTextColors(textColor, selectedTextColor);
-
-            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.posts));
-            mSearchTabs.addTab(mSearchTabs.newTab().setText(R.string.sites));
-
             mRecyclerView.getAppBarLayout().addView(mSearchTabs);
         }
     }
