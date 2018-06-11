@@ -122,6 +122,7 @@ public class ReaderPostListFragment extends Fragment
         MainToolbarFragment {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
+    private static final int NO_POSITION = -1;
 
     private ReaderPostAdapter mPostAdapter;
     private ReaderSiteSearchAdapter mSiteSearchAdapter;
@@ -152,7 +153,7 @@ public class ReaderPostListFragment extends Fragment
     private int mRestorePosition;
     private int mPostSearchAdapterPos;
     private int mSiteSearchAdapterPos;
-    private int mSearchTabsPos = -1;
+    private int mSearchTabsPos = NO_POSITION;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -294,9 +295,6 @@ public class ReaderPostListFragment extends Fragment
                 mPostListType =
                         (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            if (savedInstanceState.containsKey(ReaderConstants.KEY_ACTIVE_SEARCH_TAB)) {
-                mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB);
-            }
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
@@ -304,6 +302,7 @@ public class ReaderPostListFragment extends Fragment
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
+            mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
         }
     }
 
@@ -886,12 +885,12 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            if (mSearchTabsPos > -1 && mSearchTabsPos != mSearchTabs.getSelectedTabPosition()) {
+            if (mSearchTabsPos != NO_POSITION && mSearchTabsPos != mSearchTabs.getSelectedTabPosition()) {
                 Tab tab = mSearchTabs.getTabAt(mSearchTabsPos);
                 if (tab != null) {
                     tab.select();
                 }
-                mSearchTabsPos = -1;
+                mSearchTabsPos = NO_POSITION;
             }
         }
     }
