@@ -88,9 +88,6 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog or feed
      */
-    public static void showReaderBlogPreview(Context context, long siteId) {
-        showReaderBlogOrFeedPreview(context, siteId, 0);
-    }
     public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId) {
         if (siteId == 0 && feedId == 0) {
             return;
@@ -115,6 +112,10 @@ public class ReaderActivityLauncher {
             return;
         }
         showReaderBlogOrFeedPreview(context, post.blogId, post.feedId);
+    }
+
+    public static void showReaderBlogPreview(Context context, long siteId) {
+        showReaderBlogOrFeedPreview(context, siteId, 0);
     }
 
     /*
