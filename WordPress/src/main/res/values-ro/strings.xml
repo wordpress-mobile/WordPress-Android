@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 12:27:01+0000
+Translation-Revision-Date: 2018-05-28 11:21:43+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Articol nou. Scrie un articol nou.</string>
+    <string name="my_site_icon_content_description">Schimbă iconul sitului</string>
+    <string name="my_site_icon_dialog_cancel_button">Anulează</string>
+    <string name="my_site_icon_dialog_remove_button">Înlătură</string>
+    <string name="my_site_icon_dialog_change_button">Schimbă</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Nu ai permisiunea să editezi iconul sitului.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Nu ai permisiunea să adaugi un icon sit.</string>
+    <string name="my_site_icon_dialog_change_message">Cum ai vrea să editezi iconul?</string>
+    <string name="my_site_icon_dialog_add_message">Cum ai vrea să adaugi un icon pentru sit?</string>
+    <string name="my_site_icon_dialog_title">Icon sit</string>
+    <string name="reader_followed_blog_notifications_this">acest sit</string>
+    <string name="reader_followed_blog_notifications_action">Activează</string>
+    <string name="reader_followed_blog_notifications">Activezi notificările pentru %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Activează notificările pe sit</string>
+    <string name="reader_btn_notifications_off">Dezactivează notificările pe sit</string>
+    <string name="activity_log_jetpack_icon">Icon Jetpack</string>
+    <string name="rewind">Derulează înapoi</string>
+    <string name="activity_log_event">Eveniment</string>
+    <string name="activity_log_icon">Icon activități</string>
+    <string name="activity_log">Jurnal de activități</string>
+    <string name="activity">Activitate</string>
+    <string name="privacy_policy_read">Citește politica de confidențialitate</string>
+    <string name="third_party_policy_learn_more_caption">Folosim și alte instrumente de urmărire, inclusiv unele de la terți. Citește despre ele și despre cum le controlăm.</string>
+    <string name="third_party_policy_learn_more_header">Politică părți terțe</string>
+    <string name="privacy_policy_learn_more_caption">Aceste informații ne ajută să ne îmbunătățim produsele, să facem un marketing mai relevant pentru tine, să–ți personalizăm experiența WordPress.com și altele, așa cum am detaliat în politica noastră de confidențialitate.</string>
+    <string name="privacy_policy_learn_more_header">Politică de confidențialitate</string>
+    <string name="cookie_policy_learn_more_caption">Partajează informații cu instrumentul nostru de analitice despre utilizarea serviciilor în timp ce ești autentificat în contul tău WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">Politică cookie–uri</string>
+    <string name="preference_privacy_settings">Setări confidențialitate</string>
+    <string name="preference_collect_information">Colectează informații</string>
+    <string name="post_submitted">Articol trimis</string>
+    <string name="write_post">Scrie un articol</string>
+    <string name="login_email_button_signup">Nu ai un cont? %1$sÎnregistrează–te%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Funcționalitatea modulului necesită ca situl să fie în stare bună.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Funcționalitatea modulului necesită ca abonamentul domeniul principal să fie asociat acestui utilizator.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Funcționalitatea modulului necesită privilegii de administrator.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Modulul nu poate fi instalat pe situri VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Modulul nu poate fi instalat din cauza limitărilor de spațiu pe disc.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Funcționalitatea modulului necesită o adresă de email verificată.</string>
+    <string name="plugin_install_site_ineligible_site_private">Funcționalitatea modulului necesită ca situl să fie public.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Funcționalitatea modulului necesită un plan Business.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Funcționalitatea modulului necesită un domeniu personalizat.</string>
+    <string name="plugin_install_site_ineligible_default_error">Funcționalitatea modulului nu este disponibilă pentru acest sit.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Facem inițializarea finală – este aproape gata…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Instalez modulul…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalează</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalarea primului modul pe situl tău poate dura până la 1 minut. În acest timp nu vei putea face modificări în situl tău.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Instalează modulul</string>
+    <string name="notification_settings_followed_dialog_title">Notificări</string>
+    <string name="notification_settings_followed_dialog_email_comments">Trimite–mi email la comentarii noi</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Săptămânal</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Imediat</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Zilnic</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Articole noi</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Primești notificări la articole noi pe acest sit</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Trimite–mi email la articole noi</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Toate siturile mele urmărite</string>
+    <string name="notification_settings_category_followed_sites">Situri urmărite</string>
+    <string name="content_description_person_reading_device_notification">Persoană care citește un dispozitiv cu notificări</string>
+    <string name="content_description_people_looking_charts">Oameni care se uită la grafice și diagrame</string>
+    <string name="comment_title">%s pe %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Sigur vrei să ștergi definitiv această pagină?</string>
+    <string name="dialog_confirm_delete_permanently_post">Sigur vrei să ștergi definitiv acest articol?</string>
     <string name="notification_site_creation_title_in_progress">Creez situl… Poate dura câteva minute.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: ro
     <string name="stats_tab_tap_content_description">arăt %s</string>
     <string name="stats_legend">legendă grafică statistici</string>
     <string name="fab_create_desc">creează</string>
-    <string name="fab_create_post_desc">creează articol</string>
     <string name="fab_add_tag_desc">creează etichetă</string>
     <string name="stats_bar_week_desc">Săptămâna de %s</string>
     <string name="stats_bar_date_value_desc">%s, %d vizualizări</string>
@@ -80,7 +142,6 @@ Language: ro
     <string name="profile_picture">poza de profil a lui %s</string>
     <string name="comment_checkmark_desc">bifează marcajul</string>
     <string name="signup_with_google_progress">Înregistrare cu Google…</string>
-    <string name="editor_toast_no_action_taken">A apărut o eroare. N–am făcut nimic.</string>
     <string name="jetpack_connection_failed_with_reason">Conectarea la Jetpack a eșuat: %s</string>
     <string name="jetpack_already_connected_toast">Ești deja conectat la Jetpack</string>
     <string name="menu_undo_snackbar_action">REVENIRE</string>
@@ -375,7 +436,7 @@ Language: ro
     <string name="uploading_subtitle_media_only">%1$d din %2$d fișiere rămase</string>
     <string name="uploading_subtitle_posts_only_one">Un articol rămas</string>
     <string name="uploading_title">Încarc…</string>
-    <string name="media_files_uploaded_write_post">Scrie articol</string>
+    <string name="media_files_uploaded_write_post">Scrie un articol</string>
     <string name="media_all_files_uploaded_successfully">%d fișiere încărcate cu succes</string>
     <string name="media_files_uploaded_successfully">, %d încărcate cu succes</string>
     <string name="media_file_uploaded">1 fișier încărcat</string>
@@ -825,7 +886,6 @@ Language: ro
     <string name="invite_names_title">Nume de utilizatori sau emailuri</string>
     <string name="invite_people">Invită persoane</string>
     <string name="my_site_header_external">Extern</string>
-    <string name="send_link">Trimite legătura</string>
     <string name="label_clear_search_history">Șterge istoric căutări</string>
     <string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
     <string name="reader_empty_posts_in_search_description">Nu s–a găsit niciun articol a lui %s în limba ta</string>
@@ -851,12 +911,8 @@ Language: ro
     <string name="error_locating_image">Eroare de poziționare a imaginii decupate</string>
     <string name="error_cropping_image">Eroare la decuparea imaginii</string>
     <string name="checking_email">Verificarea emailului</string>
-    <string name="launch_your_email_app">Lansează–ți aplicația de email</string>
-    <string name="check_your_email">Verifică–ți emailul</string>
     <string name="magic_link_unavailable_error_message">În prezent indisponibilă. Te rog să–ți introduci parola</string>
     <string name="logging_in">Autentificat</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Obții o legătură trimisă pe emailul tău pentru autentificare instantanee</string>
-    <string name="enter_your_password_instead">Introdu–ți parola în schimb</string>
     <string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
     <string name="new_editor_reflection_error">Editorul vizual nu este compatibil cu dispozitivul tău. A fost\n        dezactivat automat.</string>
     <string name="stats_insights_latest_post_no_title">(fără titlu)</string>
@@ -1329,7 +1385,6 @@ Language: ro
     <string name="create_new_blog_wpcom">Crează un blog la WordPress.com</string>
     <string name="nux_help_description">Vizitează centrul de ajutor pentru a primi răspunsuri la întrebările obișnuite sau vizitează forumurile pentru a pune unele noi</string>
     <string name="browse_our_faq_button">Răsfoiește Î&amp;R noastre</string>
-    <string name="faq_button">Întrebări frecvente</string>
     <string name="reader_empty_posts_liked">Nu ți–a plăcut niciun articol</string>
     <string name="reader_empty_followed_blogs_title">Încă nu urmărești niciun sit</string>
     <string name="reader_menu_block_blog">Blochează acest blog</string>
@@ -1342,8 +1397,6 @@ Language: ro
     <string name="hs__new_conversation_header">Chat cu suportul</string>
     <string name="hs__conversation_detail_error">Descrie problema pe care o ai</string>
     <string name="contact_us">Contactează–ne</string>
-    <string name="preference_send_usage_stats_summary">Trimite automat statistici pentru a ajuta la îmbunătățirea aplicației WordPress pentru Android</string>
-    <string name="preference_send_usage_stats">Trimite statistici</string>
     <string name="schedule_verb">Programare</string>
     <string name="update_verb">Actualizează</string>
     <string name="reader_empty_recommended_blogs">Niciun blog recomandat</string>
@@ -1380,7 +1433,7 @@ Language: ro
     <string name="notifications_empty_list">Nicio notificare</string>
     <string name="invalid_url_message">Verifică dacă URL–ul introdus este valid</string>
     <string name="stats_bar_graph_empty">Nicio statistică disponibilă</string>
-    <string name="stats_empty_comments">Niciun comentariu deocamdată</string>
+    <string name="stats_empty_comments">Niciun comentariu până acum</string>
     <string name="sdcard_message">Este necesar un card SD montat pentru a încărca media</string>
     <string name="cat_name_required">Câmpul cu numele categoriei este obligatoriu</string>
     <string name="adding_cat_success">Categoria a fost adăugată cu succes</string>
@@ -1471,7 +1524,6 @@ Language: ro
     <string name="pick_photo">Selectare fotografie</string>
     <string name="reader_empty_followed_blogs_description">Dar nu–ți fă griji, trebuie doar să atingi iconul din dreapta sus pentru a începe explorarea!</string>
     <string name="reader_likes_you_and_one">Tu și încă unul apreciați asta</string>
-    <string name="nux_tutorial_get_started_title">Poți începe!</string>
     <string name="reader_empty_followed_tags">Nu urmărești nicio etichetă</string>
     <string name="reader_toast_err_url_intent">Nu pot deschide %s</string>
     <string name="reader_toast_err_view_image">Nu pot vedea imaginea</string>

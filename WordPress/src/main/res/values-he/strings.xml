@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-01 10:54:07+0000
+Translation-Revision-Date: 2018-05-29 18:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">פוסט חדש. כתיבת פוסט חדש.</string>
+    <string name="my_site_icon_content_description">שינוי סמל אתר</string>
+    <string name="my_site_icon_dialog_cancel_button">ביטול</string>
+    <string name="my_site_icon_dialog_remove_button">מחיקה</string>
+    <string name="my_site_icon_dialog_change_button">שינוי</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">אין לך הרשאה לערוך את סמל האתר.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">אין לך הרשאה להוסיף סמל לאתר.</string>
+    <string name="my_site_icon_dialog_change_message">אילו שינויים ברצונך לבצע בסמל האתר?</string>
+    <string name="my_site_icon_dialog_add_message">האם ברצונך להוסיף סמל לאתר?</string>
+    <string name="my_site_icon_dialog_title">סמל אתר</string>
+    <string name="reader_followed_blog_notifications_this">האתר הזה</string>
+    <string name="reader_followed_blog_notifications_action">הפעלה</string>
+    <string name="reader_followed_blog_notifications">האם להפעיל התראות עבור %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">הפעלת הודעות אתר</string>
+    <string name="reader_btn_notifications_off">השבתת הודעות אתר</string>
+    <string name="activity_log_jetpack_icon">סמל Jetpack</string>
+    <string name="rewind">שחזור לגרסה קודמת</string>
+    <string name="activity_log_event">אירוע</string>
+    <string name="activity_log_icon">סמל פעילות</string>
+    <string name="activity_log">יומן פעילות</string>
+    <string name="activity">פעילות</string>
+    <string name="privacy_policy_read">עיון במדיניות פרטיות</string>
+    <string name="third_party_policy_learn_more_caption">אנחנו משתמשים בכלים למעקב, כולל כלים של צד שלישי. אפשר לקרוא פרטים על אלו על אלו ועל אופן השליטה בהם.</string>
+    <string name="third_party_policy_learn_more_header">מדיניות של צד שלישי</string>
+    <string name="privacy_policy_learn_more_caption">המידע הזה עוזר לנו לשפר את המוצרים שלנו, להציג שיווק רלוונטי יותר, לספק לך חוויית שימוש אישית ב–WordPress.com ועוד, כפי שמפורט במדיניות הפרטיות שלנו.</string>
+    <string name="privacy_policy_learn_more_header">מדיניות פרטיות</string>
+    <string name="cookie_policy_learn_more_caption">שיתוף של פרטי השימוש שלך בשירותים השונים עם כלי הניתוח שלנו לאחר ההתחברות לחשבון שלך ב–WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">מדיניות קובצי ה–Cookie</string>
+    <string name="preference_privacy_settings">הגדרות פרטיות</string>
+    <string name="preference_collect_information">איסוף מידע</string>
+    <string name="post_submitted">הפוסט נשלח</string>
+    <string name="write_post">כתיבת פוסט</string>
+    <string name="login_email_button_signup">אין לך חשבון עדיין? %1$sהרשמה%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">כדי להוסיף את התוסף, האתר חייב להיות יציב.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">כדי להוסיף את התוסף, הרישום לעדכונים בדומיין חייב להיות משויך למשתמש זה.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">כדי להוסיף את התוסף, יש לאפשר הרשאות של מנהל מערכת.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">לא ניתן להתקין את התוסף באתרי VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">לא ניתן להתקין את התוסף עקב מגבלות שטח בדיסק.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">כדי להוסיף את התוסף, יש לספק כתובת אימייל מאומתת.</string>
+    <string name="plugin_install_site_ineligible_site_private">כדי להוסיף את התוסף, האתר חייב להיות ציבורי.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">כדי להוסיף את התוסף, יש להתחבר לתוכנית לעסקים.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">כדי להוסיף את התוסף, יש להגדיר דומיין אישי.</string>
+    <string name="plugin_install_site_ineligible_default_error">לא ניתן להגדיר את התוסף עבור האתר הזה.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">אנחנו מחילים את ההגדרות הסופיות – תכף נסיים…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">מתקין תוסף…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">התקנה</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">ההתקנה של התוסף הראשון באתר עשויה לארוך כדקה. במהלך ההתקנה, לא תהיה לך אפשרות לבצע שינויים באתר.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">התקנת תוסף</string>
+    <string name="notification_settings_followed_dialog_title">הודעות</string>
+    <string name="notification_settings_followed_dialog_email_comments">שלחו לי אימייל על תגובות חדשות</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">פעם בשבוע</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">מייד</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">פעם ביום</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">פוסטים חדשים</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">קבלת הודעות על פוסטים חדשים שיפורסמו באתר זה</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">שלח לי אימייל על פוסטים חדשים</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">כל האתרים שנמצאים אצלי במעקב</string>
+    <string name="notification_settings_category_followed_sites">אתרים במעקב</string>
+    <string name="content_description_person_reading_device_notification">קריאת מכשיר עם הודעות</string>
+    <string name="content_description_people_looking_charts">אנשים מסתכלים על גרפים ותרשימים</string>
+    <string name="comment_title">%s ב–%s</string>
+    <string name="dialog_confirm_delete_permanently_page">האם ברצונך למחוק את העמוד לצמיתות?</string>
+    <string name="dialog_confirm_delete_permanently_post">האם ברצונך למחוק את הפוסט לצמיתות?</string>
     <string name="notification_site_creation_title_in_progress">יוצר את האתר… הפעולה תימשך מספר דקות.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: he_IL
     <string name="stats_tab_tap_content_description">מציג %s</string>
     <string name="stats_legend">מקרא של גרף הנתונים הסטטיסטיים</string>
     <string name="fab_create_desc">יצירה</string>
-    <string name="fab_create_post_desc">יצירת פוסט</string>
     <string name="fab_add_tag_desc">יצירת תגית</string>
     <string name="stats_bar_week_desc">שבוע מתוך %s</string>
     <string name="stats_bar_date_value_desc">%s, %d צפיות</string>
@@ -79,7 +141,6 @@ Language: he_IL
     <string name="profile_picture">תמונת הפרופיל של %s</string>
     <string name="comment_checkmark_desc">סימן ביקורת</string>
     <string name="signup_with_google_progress">מתחבר ל–Google…</string>
-    <string name="editor_toast_no_action_taken">אירעה שגיאה. לא בוצעה פעולה.</string>
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל–Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב–Jetpack כבר מחובר</string>
     <string name="menu_undo_snackbar_action">ביטול פעולה אחרונה</string>
@@ -272,7 +333,6 @@ Language: he_IL
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack ימטב את התמונות שלך ויציג אותן ממיקום השרת הקרוב ביותר למבקרים שלך. שימוש ברשת שליחת התוכן העולמית שלנו ישפר את מהירות הטעינה של האתר שלך.</string>
     <string name="site_settings_serve_images_from_our_servers">הצגת תמונות מהשרתים שלנו</string>
     <string name="site_settings_speed_up_your_site">הגברת המהירות של האתר שלך</string>
-    <string name="stats_jetpack_connection_setup_info">כדי להשתמש בנתונים סטטיסטיים באתר שלך ב–WordPress, עליך להתקין את התוסף של Jetpack. רוצה להגדיר את Jetpack?</string>
     <string name="stats_jetpack_connection_setup">הגדרת Jetpack</string>
     <string name="plugin_chevron_icon_content_description">החלפה בין המלל</string>
     <string name="plugin_info_your_version">הגרסה של WordPress שמותקנת אצלך</string>
@@ -813,7 +873,6 @@ Language: he_IL
     <string name="invite">הזמנה</string>
     <string name="invite_names_title">שמות משתמש או אימיילים</string>
     <string name="my_site_header_external">חיצוני</string>
-    <string name="send_link">שלח קישור</string>
     <string name="invite_people">הזמנת אנשים</string>
     <string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
@@ -839,13 +898,9 @@ Language: he_IL
     <string name="error_locating_image">שגיאה באיתור התמונה החתוכה</string>
     <string name="error_refreshing_gravatar">שגיאה בטעינה מחדש של ה–gravatar שלך</string>
     <string name="error_cropping_image">שגיאה בחיתוך בתמונה</string>
-    <string name="launch_your_email_app">הפעלת אפליקציית האימייל</string>
     <string name="checking_email">בודק אימייל</string>
     <string name="magic_link_unavailable_error_message">לא זמין כרגע. יש להזין סיסמה</string>
-    <string name="check_your_email">יש לבדוק אימייל</string>
     <string name="logging_in">נכנס</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">קבלת קישור להתחברות מיידית באימייל</string>
-    <string name="enter_your_password_instead">במקום זאת יש להזין סיסמה</string>
     <string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
     <string name="new_editor_reflection_error">עורך ויזואלי לא תואם למכשיר שלך. הוא\n הושבת אוטומטית.</string>
     <string name="stats_insights_latest_post_no_title">(חסרה כותרת)</string>
@@ -1290,7 +1345,6 @@ Language: he_IL
     <string name="ssl_certificate_details">פרטים</string>
     <string name="cab_selected">%d נבחרו</string>
     <string name="stats_no_blog">לא ניתן לטעון את הנתונים הסטטיסטיים עבור האתר הדרוש</string>
-    <string name="faq_button">שאלות נפוצות</string>
     <string name="reader_empty_comments">אין תגובות עדיין</string>
     <string name="reader_empty_posts_in_tag">אין פוסטים עם התגית הזו</string>
     <string name="reader_label_view_original">לצפות בפוסט המקורי</string>
@@ -1328,8 +1382,6 @@ Language: he_IL
     <string name="hs__conversation_header">צ׳אט תמיכה</string>
     <string name="hs__username_blank_error">נא להזין שם</string>
     <string name="hs__invalid_email_error">נא להזין כתובת אימייל</string>
-    <string name="preference_send_usage_stats">שליחת סטטיסטיקות</string>
-    <string name="preference_send_usage_stats_summary">שליחת נתוני שימוש סטטיסטיים שיאפשרו לנו לשפר את WordPress לאנדרויד</string>
     <string name="update_verb">עדכן</string>
     <string name="schedule_verb">תזמן</string>
     <string name="reader_toast_err_unfollow_blog">לא ניתן לבטל את המעקב אחר אתר זה</string>
@@ -1471,7 +1523,6 @@ Language: he_IL
     <string name="reader_toast_err_share_intent">לא ניתן לשתף</string>
     <string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
     <string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
-    <string name="nux_tutorial_get_started_title">צא לדרך!</string>
     <string name="reader_empty_followed_tags">אין מעקב אחר שום תגית</string>
     <string name="themes">ערכות עיצוב</string>
     <string name="stats_view_tags_and_categories">תגים וקטגוריות</string>

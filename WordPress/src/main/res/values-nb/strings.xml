@@ -498,7 +498,6 @@ Language: nb_NO
     <string name="invite_names_title">Brukernavn eller E–poster</string>
     <string name="invite_people">Inviter folk</string>
     <string name="my_site_header_external">Eksternt</string>
-    <string name="send_link">Send lenke</string>
     <string name="label_clear_search_history">Slett søkehistorien</string>
     <string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
     <string name="reader_empty_posts_in_search_description">Ingen innlegg ble funnet for %s på språket ditt</string>
@@ -524,12 +523,8 @@ Language: nb_NO
     <string name="error_locating_image">Feil under oppsøking av det beskjærte bildet</string>
     <string name="error_cropping_image">Feil under beskjæring av bildet</string>
     <string name="checking_email">Sjekker E–posten</string>
-    <string name="launch_your_email_app">Start opp E–postappen din</string>
-    <string name="check_your_email">Sjekk E–posten din</string>
     <string name="magic_link_unavailable_error_message">Ikke tilgjengelig for øyeblikket. Vennligst skriv inn passordet ditt</string>
     <string name="logging_in">Logger inn</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Få en lenke sendt til E–postkontoen din for å logge inn umiddelbart</string>
-    <string name="enter_your_password_instead">Skriv inn passordet ditt istedet</string>
     <string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
     <string name="new_editor_reflection_error">Den visuelle redigereren er ikke kompatibel med\n   enheten din. Den ble automatisk skrudd av.</string>
     <string name="stats_insights_latest_post_no_title">(ingen tittel)</string>
@@ -999,7 +994,6 @@ Language: nb_NO
     <string name="create_new_blog_wpcom">Lag en WordPress.com–blogg</string>
     <string name="nux_help_description">Besøk hjelpesenteret vårt for å få svar på vanlige spørsmål, eller besøk forumet vårt for å stille nye spørsmål.</string>
     <string name="browse_our_faq_button">Bla gjennom vår FAQ</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">Du har ikke likt noen innlegg</string>
     <string name="reader_empty_followed_blogs_title">Du følger ikke noen sider ennå</string>
     <string name="reader_menu_block_blog">Blokker denne bloggen.</string>
@@ -1012,8 +1006,6 @@ Language: nb_NO
     <string name="hs__new_conversation_header">Kundestøtte–chat</string>
     <string name="hs__conversation_detail_error">Beskriv problemet du opplever</string>
     <string name="contact_us">Kontakt oss</string>
-    <string name="preference_send_usage_stats_summary">Send automatisk brukerdata for å hjelpe oss å forbedre WordPress for Android</string>
-    <string name="preference_send_usage_stats">Send statistikk</string>
     <string name="schedule_verb">Publiser</string>
     <string name="update_verb">Oppdater</string>
     <string name="reader_empty_recommended_blogs">Ingen anbefalte blogger</string>
@@ -1138,7 +1130,6 @@ Language: nb_NO
     <string name="pick_photo">Velg bilde</string>
     <string name="reader_empty_followed_blogs_description">Men ikke vær redd, bare trykk på ikonet øverst til høyre for å begynne å utforske!</string>
     <string name="reader_likes_you_and_one">Du og en annen har likt dette</string>
-    <string name="nux_tutorial_get_started_title">Kom igang!</string>
     <string name="reader_empty_followed_tags">Du følger ingen stikkord</string>
     <string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
     <string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>

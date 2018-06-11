@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -50,7 +50,7 @@ public class RelatedPostsDialog extends DialogFragment
      */
     public static final String SHOW_IMAGES_KEY = "show-images";
 
-    private Switch mShowRelatedPosts;
+    private SwitchCompat mShowRelatedPosts;
     private CheckBox mShowHeader;
     private CheckBox mShowImages;
     private TextView mPreviewHeader;
@@ -65,12 +65,12 @@ public class RelatedPostsDialog extends DialogFragment
         //noinspection InflateParams
         View v = inflater.inflate(R.layout.related_posts_dialog, null);
 
-        mShowRelatedPosts = (Switch) v.findViewById(R.id.toggle_related_posts_switch);
-        mShowHeader = (CheckBox) v.findViewById(R.id.show_header_checkbox);
-        mShowImages = (CheckBox) v.findViewById(R.id.show_images_checkbox);
-        mPreviewHeader = (TextView) v.findViewById(R.id.preview_header);
-        mRelatedPostsListHeader = (TextView) v.findViewById(R.id.related_posts_list_header);
-        mRelatedPostsList = (LinearLayout) v.findViewById(R.id.related_posts_list);
+        mShowRelatedPosts = v.findViewById(R.id.toggle_related_posts_switch);
+        mShowHeader = v.findViewById(R.id.show_header_checkbox);
+        mShowImages = v.findViewById(R.id.show_images_checkbox);
+        mPreviewHeader = v.findViewById(R.id.preview_header);
+        mRelatedPostsListHeader = v.findViewById(R.id.related_posts_list_header);
+        mRelatedPostsList = v.findViewById(R.id.related_posts_list);
 
         mPreviewImages = new ArrayList<>();
         mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image1));
@@ -94,10 +94,10 @@ public class RelatedPostsDialog extends DialogFragment
         toggleViews(mShowRelatedPosts.isChecked());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         //noinspection InflateParams
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
-        TextView titleText = ((TextView) titleView.findViewById(R.id.title));
+        TextView titleText = titleView.findViewById(R.id.title);
         titleText.setText(R.string.site_settings_related_posts_title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                                                                   RelativeLayout.LayoutParams.WRAP_CONTENT));

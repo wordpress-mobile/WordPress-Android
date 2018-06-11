@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-01 10:54:09+0000
+Translation-Revision-Date: 2018-05-31 07:03:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Nieuw bericht. Een nieuw bericht opstellen.</string>
+    <string name="my_site_icon_content_description">Favicon wijzigen</string>
+    <string name="my_site_icon_dialog_cancel_button">Annuleren</string>
+    <string name="my_site_icon_dialog_remove_button">Verwijderen</string>
+    <string name="my_site_icon_dialog_change_button">Wijzigen</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Je hebt geen toestemming om de favicon te bewerken.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Je hebt geen toestemming om een favicon toe te voegen.</string>
+    <string name="my_site_icon_dialog_change_message">Hoe wil je de favicon bewerken?</string>
+    <string name="my_site_icon_dialog_add_message">Wil je een favicon toevoegen?</string>
+    <string name="my_site_icon_dialog_title">Favicon</string>
+    <string name="reader_followed_blog_notifications_this">deze site</string>
+    <string name="reader_followed_blog_notifications_action">Inschakelen</string>
+    <string name="reader_followed_blog_notifications">Meldingen voor %1$s%2$s%3$s inschakelen?</string>
+    <string name="reader_btn_notifications_on">Sitemeldingen inschakelen</string>
+    <string name="reader_btn_notifications_off">Sitemeldingen uitschakelen</string>
+    <string name="activity_log_jetpack_icon">Jetpack–pictogram</string>
+    <string name="rewind">Terugzetten</string>
+    <string name="activity_log_event">Gebeurtenis</string>
+    <string name="activity_log_icon">Activiteitenpictogram</string>
+    <string name="activity_log">Activiteitenlog</string>
+    <string name="activity">Activiteit</string>
+    <string name="privacy_policy_read">Privacybeleid lezen</string>
+    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere tracking–tools, waaronder een aantal van derden. Bekijk meer informatie over deze tools en hoe je ze kunt beheren.</string>
+    <string name="third_party_policy_learn_more_header">Beleid van derden</string>
+    <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons onze producten te verbeteren, marketing relevanter te maken en de WordPress.com–ervaring op je af te stemmen. Je vindt hierover meer informatie in ons privacybeleid.</string>
+    <string name="privacy_policy_learn_more_header">Privacybeleid</string>
+    <string name="cookie_policy_learn_more_caption">Deel informatie met onze analysetool over hoe je services gebruikt terwijl je bent ingelogd op je WordPress.com–account.</string>
+    <string name="cookie_policy_learn_more_header">Cookiebeleid</string>
+    <string name="preference_privacy_settings">Privacyinstellingen</string>
+    <string name="preference_collect_information">Gegevens verzamelen</string>
+    <string name="post_submitted">Bericht geplaatst</string>
+    <string name="write_post">Bericht opstellen</string>
+    <string name="login_email_button_signup">Heb je nog geen account? %1$sRegistreren%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Voor deze plugin–functie moet de site in goede staat zijn.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Voor deze plugin–functie moet het abonnement op het primaire domein aan deze gebruiker zijn gekoppeld.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Voor deze plugin–functie zijn beheerdersrechten vereist.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Deze plugin kan niet op VIP–sites geïnstalleerd worden.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Deze plugin kan niet geïnstalleerd worden vanwege begrenzingen van de schijfruimte.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Voor deze plugin-functie moet een e–mailadres geverifieerd zijn.</string>
+    <string name="plugin_install_site_ineligible_site_private">Voor deze plugin–functie moet de site openbaar zijn.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Voor deze plugin–functie moet je een Business abonnement hebben.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Voor deze plugin–functie moet je een aangepast domein hebben.</string>
+    <string name="plugin_install_site_ineligible_default_error">Deze plugin–functie is niet beschikbaar voor deze site.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">We voeren de laatste instellingen door, nog even geduld …</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wordt geïnstalleerd …</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installeren</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Het installeren van de eerste plugin op je site kan maximaal een minuut duren. Terwijl dit gebeurt, kun je geen wijzigingen aan je site aanbrengen.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Plugin installeren</string>
+    <string name="notification_settings_followed_dialog_title">Meldingen</string>
+    <string name="notification_settings_followed_dialog_email_comments">Stuur me nieuwe reacties via e–mail</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Wekelijks</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Direct</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Dagelijks</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Nieuwe berichten</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Ontvang meldingen voor nieuwe berichten op deze site</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Stuur me nieuwe berichten via e–mail</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Al mijn gevolgde sites</string>
+    <string name="notification_settings_category_followed_sites">Gevolgde sites</string>
+    <string name="content_description_person_reading_device_notification">Persoon die naar een apparaat met meldingen kijkt</string>
+    <string name="content_description_people_looking_charts">Mensen die naar grafieken en tabellen kijken</string>
+    <string name="comment_title">%s op %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Weet je zeker dat je deze pagina permanent wilt verwijderen?</string>
+    <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wilt verwijderen?</string>
     <string name="notification_site_creation_title_in_progress">Site wordt aangemaakt. Dit kan een paar minuten duren.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: nl
     <string name="stats_tab_tap_content_description">%s wordt getoond</string>
     <string name="stats_legend">legenda statistiekengrafiek</string>
     <string name="fab_create_desc">aanmaken</string>
-    <string name="fab_create_post_desc">bericht aanmaken</string>
     <string name="fab_add_tag_desc">tag aanmaken</string>
     <string name="stats_bar_week_desc">Week van %s</string>
     <string name="stats_bar_date_value_desc">%s, %d weergaven</string>
@@ -80,7 +142,6 @@ Language: nl
     <string name="profile_picture">profielfoto van %s\'</string>
     <string name="comment_checkmark_desc">vinkje</string>
     <string name="signup_with_google_progress">Inschrijven bij Google …</string>
-    <string name="editor_toast_no_action_taken">Er is een fout opgetreden. Geen actie ondernomen.</string>
     <string name="jetpack_connection_failed_with_reason">Verbinden met Jetpack mislukt: %s</string>
     <string name="jetpack_already_connected_toast">Je bent al verbonden met Jetpack</string>
     <string name="menu_undo_snackbar_action">ONGEDAAN MAKEN</string>
@@ -184,8 +245,14 @@ Language: nl
     <string name="site_creation_epilogue_write">Schrijf eerste bericht</string>
     <string name="site_creation_epilogue_configure">Configureer</string>
     <string name="site_creation_epilogue_congrats">Gefeliciteerd!\nJouw site is klaar.</string>
+    <string name="site_creation_creating_modal">Een moment geduld tot de site creatie voltooid is. </string>
     <string name="site_creation_creating_retry">Probeer opnieuw</string>
     <string name="site_creation_creating_failed">Er ging iets mis…</string>
+    <string name="site_creation_creating_preparing_frontend">Frontend voorbereiden…</string>
+    <string name="site_creation_creating_configuring_theme">Site stijl configureren…</string>
+    <string name="site_creation_creating_configuring_content">site content configureren…</string>
+    <string name="site_creation_creating_fetching_info">Ophalen van site informatie…</string>
+    <string name="site_creation_creating_laying_foundation">Site fundament storten…</string>
     <string name="site_creation_empty_site_title">Vul een site titel in</string>
     <string name="site_creation_title_hint">Site titel</string>
     <string name="site_creation_domain_finish_button">Creëer site </string>
@@ -221,7 +288,6 @@ Language: nl
     <string name="plugin_install">Installeer</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor jouw bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
-    <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack-plugin om statistieken voor je WordPress–site te gebruiken. Wil je Jetpack instellen?</string>
     <string name="stats_jetpack_connection_setup">Jetpack instellen</string>
     <string name="plugin_chevron_icon_content_description">Tekst in–/uitschakelen</string>
     <string name="plugin_info_your_version">Jouw WordPress versie</string>
@@ -769,7 +835,6 @@ Language: nl
     <string name="invite_names_title">Gebruikersnamen of e–mails</string>
     <string name="invite_people">Mensen uitnodigen</string>
     <string name="my_site_header_external">Extern</string>
-    <string name="send_link">Stuur link</string>
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
     <string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
@@ -795,12 +860,8 @@ Language: nl
     <string name="error_locating_image">Fout bij het vinden van de bij te snijden afbeelding</string>
     <string name="error_cropping_image">Fout bij het bijsnijden van de afbeelding</string>
     <string name="checking_email">E–mail wordt gecontroleerd</string>
-    <string name="launch_your_email_app">Start je e–mailapp op</string>
-    <string name="check_your_email">Controleer je e–mail</string>
     <string name="magic_link_unavailable_error_message">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
     <string name="logging_in">Inloggen</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Ontvang een link die wordt verzonden naar je e–mail om je meteen aan te melden.</string>
-    <string name="enter_your_password_instead">Voer je wachtwoord in</string>
     <string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
     <string name="new_editor_reflection_error">Visual Editor is niet compatibel met uw apparaat. Het is\n automatisch uitgeschakeld.</string>
     <string name="stats_insights_latest_post_no_title">(geen titel)</string>
@@ -1273,7 +1334,6 @@ Language: nl
     <string name="create_new_blog_wpcom">Creëer WordPress.com blog</string>
     <string name="nux_help_description">Bezoek het help centrum voor antwoorden op algemene vragen or bezoek de forums om nieuwe te stellen</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">Je hebt nog geen enkel bericht geliked</string>
     <string name="reader_empty_followed_blogs_title">Je volgt nog geen sites</string>
     <string name="reader_menu_block_blog">Blokkeer deze blog</string>
@@ -1286,8 +1346,6 @@ Language: nl
     <string name="hs__new_conversation_header">Ondersteuning chat</string>
     <string name="hs__conversation_detail_error">Beschrijf het probleem dat je ziet</string>
     <string name="contact_us">Contact</string>
-    <string name="preference_send_usage_stats_summary">Stuur automatisch gebruiksstatistieken om ons te helpen WordPress voor Android te verbeteren</string>
-    <string name="preference_send_usage_stats">Verstuur statistieken</string>
     <string name="schedule_verb">Inplannen</string>
     <string name="update_verb">Bijwerken</string>
     <string name="reader_empty_recommended_blogs">Geen aanbevolen blogs</string>
@@ -1415,7 +1473,6 @@ Language: nl
     <string name="pick_photo">Selecteer foto</string>
     <string name="reader_empty_followed_blogs_description">Geen zorgen, tap het tag icoon om te beginnen.</string>
     <string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
-    <string name="nux_tutorial_get_started_title">Begin!</string>
     <string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
     <string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>
     <string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>

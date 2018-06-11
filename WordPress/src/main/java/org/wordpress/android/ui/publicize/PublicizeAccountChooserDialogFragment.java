@@ -49,7 +49,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
         View view = inflater.inflate(R.layout.publicize_account_chooser_dialog, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         configureAlertDialog(view, builder);
         configureRecyclerViews(view);
 
@@ -103,7 +103,9 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
-                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId));
+                String service = mNotConnectedAccounts.get(mSelectedIndex).getService();
+                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId,
+                        service));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

@@ -244,8 +244,9 @@
                             style="@style/PluginCardViewPrimaryText"
                             android:text="@string/plugin_detail_label_state_active" />
 
-                        <Switch
+                        <android.support.v7.widget.SwitchCompat
                             android:id="@+id/plugin_state_active"
+                            android:theme="@style/SwitchBlueMedium"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
 
@@ -257,8 +258,9 @@
                             style="@style/PluginCardViewPrimaryText"
                             android:text="@string/plugin_detail_label_state_autoupdates" />
 
-                        <Switch
+                        <android.support.v7.widget.SwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
+                            android:theme="@style/SwitchBlueMedium"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
                 </LinearLayout>

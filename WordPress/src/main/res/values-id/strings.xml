@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 07:54:07+0000
+Translation-Revision-Date: 2018-05-30 07:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Pos baru. Tulis pos baru.</string>
+    <string name="my_site_icon_content_description">Ubah ikon situs</string>
+    <string name="my_site_icon_dialog_cancel_button">Batalkan</string>
+    <string name="my_site_icon_dialog_remove_button">Buang</string>
+    <string name="my_site_icon_dialog_change_button">Ubah</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Anda tidak memiliki izin untuk menyunting ikon situs.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Anda tidak memiliki izin untuk menambahkan ikon situs.</string>
+    <string name="my_site_icon_dialog_change_message">Bagaimana Anda ingin menyunting ikon?</string>
+    <string name="my_site_icon_dialog_add_message">Apakah Anda ingin menambahkan ikon situs?</string>
+    <string name="my_site_icon_dialog_title">Ikon Situs</string>
+    <string name="reader_followed_blog_notifications_this">situs ini</string>
+    <string name="reader_followed_blog_notifications_action">Aktifkan</string>
+    <string name="reader_followed_blog_notifications">Aktifkan pemberitahuan untuk %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Aktifkan pemberitahuan situs</string>
+    <string name="reader_btn_notifications_off">Nonaktifkan pemberitahuan situs</string>
+    <string name="activity_log_jetpack_icon">Ikon Jetpack</string>
+    <string name="rewind">Putar Balik</string>
+    <string name="activity_log_event">Peristiwa</string>
+    <string name="activity_log_icon">Ikon aktivitas</string>
+    <string name="activity_log">Log Aktivitas</string>
+    <string name="activity">Aktivitas</string>
+    <string name="privacy_policy_read">Baca kebijakan privasi</string>
+    <string name="third_party_policy_learn_more_caption">Kami menggunakan alat pelacakan lainnya, termasuk beberapa dari pihak ketiga. Baca tentang hal ini dan cara mengontrolnya.</string>
+    <string name="third_party_policy_learn_more_header">Kebijakan Pihak Ketiga</string>
+    <string name="privacy_policy_learn_more_caption">Informasi ini membantu kami menyempurnakan produk, membuat pemasaran kepada Anda jadi lebih relevan, menyesuaikan pengalaman WordPress.com Anda, dan lainnya seperti yang dijelaskan dalam kebijakan privasi kami.</string>
+    <string name="privacy_policy_learn_more_header">Kebijakan Privasi</string>
+    <string name="cookie_policy_learn_more_caption">Berbagi informasi dengan alat analitik kami tentang penggunaan layanan Anda saat sudah login ke akun WordPress.com Anda.</string>
+    <string name="cookie_policy_learn_more_header">Kebijakan Cookie</string>
+    <string name="preference_privacy_settings">Pengaturan privasi</string>
+    <string name="preference_collect_information">Kumpulkan informasi</string>
+    <string name="post_submitted">Pos telah dikirim</string>
+    <string name="write_post">Tulis Pos</string>
+    <string name="login_email_button_signup">Belum memiliki akun? %1$sDaftar%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Fitur plugin memerlukan situs dalam reputasi yang baik.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Fitur plugin memerlukan langganan domain utama untuk dikaitkan dengan pengguna ini.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Fitur plugin memerlukan hak akses admin.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Plugin tidak dapat diinstal dalam situs VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Plugin tidak dapat diinstal karena keterbatasan ruang disk.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Fitur plugin memerlukan alamat email yang terverifikasi.</string>
+    <string name="plugin_install_site_ineligible_site_private">Fitur plugin memerlukan situs berstatus publik.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Fitur plugin memerlukan paket bisnis.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Fitur plugin memerlukan domain kustom.</string>
+    <string name="plugin_install_site_ineligible_default_error">Fitur plugin tidak tersedia untuk situs ini.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Kami sedang mengerjakan penyiapan akhir — hampir selesai…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Menginstal plugin…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instal</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Menginstal plugin pertama pada situs Anda dapat memakan waktu hingga 1 menit. Selama penginstalan, Anda tidak akan dapat membuat perubahan pada situs Anda.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Instal plugin</string>
+    <string name="notification_settings_followed_dialog_title">Pemberitahuan</string>
+    <string name="notification_settings_followed_dialog_email_comments">Kirimi saya email ketika ada komentar baru</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Mingguan</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Secara langsung</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Harian</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Pos baru</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Menerima pemberitahuan pos baru dari situs ini</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Kirimi saya email ketika ada pos baru</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Semua Situs yang Saya Ikuti</string>
+    <string name="notification_settings_category_followed_sites">Situs yang Diikuti</string>
+    <string name="content_description_person_reading_device_notification">Orang membaca perangkat saat ada pemberitahuan</string>
+    <string name="content_description_people_looking_charts">Orang–orang melihat grafik dan bagan</string>
+    <string name="comment_title">%s pada %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Anda yakin ingin menghapus halaman ini secara permanen?</string>
+    <string name="dialog_confirm_delete_permanently_post">Anda yakin ingin menghapus pos ini secara permanen?</string>
     <string name="notification_site_creation_title_in_progress">Membuat situs… Hal ini mungkin memerlukan beberapa menit.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: id
     <string name="stats_tab_tap_content_description">menampilkan %s</string>
     <string name="stats_legend">riwayat grafik statistik</string>
     <string name="fab_create_desc">buat</string>
-    <string name="fab_create_post_desc">buat pos</string>
     <string name="fab_add_tag_desc">buat tag</string>
     <string name="stats_bar_week_desc">Minggu dari %s</string>
     <string name="stats_bar_date_value_desc">%s, %d tampilan</string>
@@ -79,7 +141,6 @@ Language: id
     <string name="profile_picture">Foto profil %s</string>
     <string name="comment_checkmark_desc">tanda cek</string>
     <string name="signup_with_google_progress">Mendaftar dengan Google…</string>
-    <string name="editor_toast_no_action_taken">Terjadi error. Belum ada tindakan.</string>
     <string name="jetpack_connection_failed_with_reason">Koneksi ke Jetpack gagal: %s</string>
     <string name="jetpack_already_connected_toast">Anda sudah terhubung dengan Jetpack!</string>
     <string name="menu_undo_snackbar_action">URUNGKAN</string>
@@ -787,7 +848,6 @@ Language: id
     <string name="invite_names_title">Nama pengguna atau Email</string>
     <string name="invite_people">Undang Orang–orang</string>
     <string name="my_site_header_external">Eksternal</string>
-    <string name="send_link">Kirim tautan</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
     <string name="reader_empty_posts_in_search_description">Tak ditemukan pos untuk %s dalam bahasa Anda</string>
@@ -813,12 +873,8 @@ Language: id
     <string name="error_locating_image">Terjadi galat saat mencari gambar yang dipangkas</string>
     <string name="error_cropping_image">Terjadi galat saat memangkas gambar</string>
     <string name="checking_email">Memeriksa surat elektronik</string>
-    <string name="launch_your_email_app">Luncurkan aplikasi surat elektronik</string>
-    <string name="check_your_email">Periksa surat elektronik Anda</string>
     <string name="magic_link_unavailable_error_message">Saat ini tidak tersedia. Masukkan kata sandi Anda</string>
     <string name="logging_in">Proses masuk</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Klik tautan yang dikirimkan ke email Anda untuk langsung log in</string>
-    <string name="enter_your_password_instead">Sebaiknya masukkan kata sandi Anda</string>
     <string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
     <string name="new_editor_reflection_error">Visual editor tidak kompatibel dengan perangkat Anda. Ini\n dinonaktifkan secara otomatis.</string>
     <string name="stats_insights_latest_post_no_title">(tanpa judul)</string>
@@ -1282,7 +1338,6 @@ Language: id
     <string name="create_new_blog_wpcom">Buat blog WordPress.com</string>
     <string name="nux_help_description">Kunjungi pusat bantuan untuk mendapatkan jawaban atas pertanyaan umum, atau kunjungi forum untuk mengajukan pertanyaan baru</string>
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
-    <string name="faq_button">Tanya Jawab Umum</string>
     <string name="reader_empty_posts_liked">Anda belum menyukai pos sama sekali</string>
     <string name="reader_empty_followed_blogs_title">Anda belum mengikuti situs apapun</string>
     <string name="reader_menu_block_blog">Blokir blog ini</string>
@@ -1295,8 +1350,6 @@ Language: id
     <string name="hs__new_conversation_header">Chat dukungan</string>
     <string name="hs__conversation_detail_error">Uraikan permasalahan yang Anda hadapi</string>
     <string name="contact_us">Hubungi kami</string>
-    <string name="preference_send_usage_stats_summary">Secara otomatis mengirim statistik penggunaan untuk membantu kami meningkatkan WordPress untuk Android</string>
-    <string name="preference_send_usage_stats">Kirim statistik</string>
     <string name="schedule_verb">Jadwalkan</string>
     <string name="update_verb">Mutakhirkan</string>
     <string name="reader_empty_recommended_blogs">Tak ada blog yang direkomendasikan</string>
@@ -1420,7 +1473,6 @@ Language: id
     <string name="pick_photo">Pilih foto</string>
     <string name="reader_empty_followed_blogs_description">Tapi jangan khawatir, cukup ketuk ikon di kanan atas untuk mulai menjelajah!</string>
     <string name="reader_likes_you_and_one">Anda dan satu orang lainnya menyukai ini</string>
-    <string name="nux_tutorial_get_started_title">Memulai!</string>
     <string name="reader_empty_followed_tags">Anda belum mengikuti satupun tag</string>
     <string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>

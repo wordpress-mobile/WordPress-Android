@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 15:54:07+0000
+Translation-Revision-Date: 2018-05-30 07:54:10+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Yeni gönderi. Yeni bir gönderi yazın.</string>
+    <string name="my_site_icon_content_description">Site simgesini değiştir</string>
+    <string name="my_site_icon_dialog_cancel_button">İptal</string>
+    <string name="my_site_icon_dialog_remove_button">Kaldır</string>
+    <string name="my_site_icon_dialog_change_button">Değiştir</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Site simgesini düzenleme izniniz yok.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Site simgesi ekleme izniniz yok.</string>
+    <string name="my_site_icon_dialog_change_message">Simgeyi nasıl düzenlemek istiyorsunuz?</string>
+    <string name="my_site_icon_dialog_add_message">Site simgesi eklemek istiyor musunuz?</string>
+    <string name="my_site_icon_dialog_title">Site Simgesi</string>
+    <string name="reader_followed_blog_notifications_this">bu site</string>
+    <string name="reader_followed_blog_notifications_action">Etkinleştir</string>
+    <string name="reader_followed_blog_notifications">%1$s%2$s%3$s için bildirimler etkinleştirilsin mi?</string>
+    <string name="reader_btn_notifications_on">Site bildirimlerini aç</string>
+    <string name="reader_btn_notifications_off">Site bildirimlerini kapat</string>
+    <string name="activity_log_jetpack_icon">Jetpack simgesi</string>
+    <string name="rewind">Geri Yükle</string>
+    <string name="activity_log_event">İşlem</string>
+    <string name="activity_log_icon">Etkinlik simgesi</string>
+    <string name="activity_log">Etkinlik Günlüğü</string>
+    <string name="activity">Etkinlik</string>
+    <string name="privacy_policy_read">Gizlilik politikasını okuyun</string>
+    <string name="third_party_policy_learn_more_caption">Üçüncü taraflara ait olanlar dahil diğer izleme araçlarını kullanıyoruz. Bunlar ve nasıl kontrol edilecekleri hakkında bilgi alın.</string>
+    <string name="third_party_policy_learn_more_header">Üçüncü Taraf Politikası</string>
+    <string name="privacy_policy_learn_more_caption">Bu bilgiler, ürünlerimizi geliştirmemize, pazarlamayı sizin için daha alakalı hale getirmemize, WordPress.com deneyiminizi kişiselleştirmemize ve ayrıntılı olarak gizlilik politikamızda belirttiğimiz şekilde daha fazlasına yardımcı olur.</string>
+    <string name="privacy_policy_learn_more_header">Gizlilik Politikası</string>
+    <string name="cookie_policy_learn_more_caption">WordPress.com hesabınızda oturum açmış durumdayken hizmetlerini kullanımınız hakkında bilgileri analiz aracımızla paylaşın.</string>
+    <string name="cookie_policy_learn_more_header">Çerez Politikası</string>
+    <string name="preference_privacy_settings">Gizlilik ayarları</string>
+    <string name="preference_collect_information">Bilgi topla</string>
+    <string name="post_submitted">Gönderi gönderildi</string>
+    <string name="write_post">Gönderi Yaz</string>
+    <string name="login_email_button_signup">Hesabınız yok mu? %1$sKaydolun%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Eklenti özelliği sitenin olumlu itibara sahip olmasını gerektirir.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Eklenti özelliği birincil alan adı aboneliğinin bu kullanıcıyla ilişkilendirilmesini gerektirir.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Eklenti özelliği yönetici ayrıcalıkları gerektirir.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Eklenti, VIP sitelere yüklenemez.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Eklenti, disk alanı kısıtlamaları nedeniyle yüklenemiyor.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Eklenti özelliği doğrulanmış bir e–posta adresi gerektirir.</string>
+    <string name="plugin_install_site_ineligible_site_private">Eklenti özelliği sitenin herkese açık olmasını gerektirir.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Eklenti özelliği business paket gerektirir.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Eklenti özelliği özel alan adı gerektirir.</string>
+    <string name="plugin_install_site_ineligible_default_error">Eklenti özelliği bu site için kullanılamaz.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Son kurulumu yapıyoruz — neredeyse bitti…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Eklenti yükleniyor…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Yükle</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Sitenize ilk eklentinin yüklenmesi 1 dakikaya kadar sürebilir. Bu sırada sitenizde değişiklik yapamayacaksınız.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Eklentiyi yükle</string>
+    <string name="notification_settings_followed_dialog_title">Bildirimler</string>
+    <string name="notification_settings_followed_dialog_email_comments">Yeni yorumlar hakkında bana e–posta gönder</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Haftalık</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Anında</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Günlük</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Yeni gönderiler</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Bu sitedeki yeni gönderiler için bildirim alın</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Yeni gönderiler hakkında bana e–posta gönder</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Tüm Takip Ettiğim Siteler</string>
+    <string name="notification_settings_category_followed_sites">Takip Edilen Siteler</string>
+    <string name="content_description_person_reading_device_notification">Cihaz bildirimlerini okuyan kişi</string>
+    <string name="content_description_people_looking_charts">Grafiklere ve çizelgelere bakan kişiler</string>
+    <string name="comment_title">%s, %s üzerinde</string>
+    <string name="dialog_confirm_delete_permanently_page">Bu sayfayı kalıcı olarak silmek istediğinizden emin misiniz?</string>
+    <string name="dialog_confirm_delete_permanently_post">Bu gönderiyi kalıcı olarak silmek istediğinizden emin misiniz?</string>
     <string name="notification_site_creation_title_in_progress">Site oluşturuluyor… Bu işlem birkaç dakika sürebilir.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: tr
     <string name="stats_tab_tap_content_description">%s gösteriliyor</string>
     <string name="stats_legend">istatistik grafik göstergesi</string>
     <string name="fab_create_desc">oluşturun</string>
-    <string name="fab_create_post_desc">gönderi oluşturun</string>
     <string name="fab_add_tag_desc">etiket oluşturun</string>
     <string name="stats_bar_week_desc">%s haftası</string>
     <string name="stats_bar_date_value_desc">%s, %d görüntüleme</string>
@@ -61,6 +123,7 @@ Language: tr
     <string name="reader_list_item_suggestion_remove_desc">silin</string>
     <string name="photo_picker_thumbnail_desc">Video oynatın</string>
     <string name="reader_cardview_post_play_video_desc">öne çıkan videoyu oynatın</string>
+    <string name="post_cardview_featured_desc">öne çıkan görsel</string>
     <string name="plugin_detail_logo_desc">eklenti logosu</string>
     <string name="plugin_detail_banner_desc">eklenti başlığı</string>
     <string name="photo_picker_wpmedia_desc">WordPress ortamları arasından seçim yapın</string>
@@ -79,7 +142,6 @@ Language: tr
     <string name="profile_picture">%s adlı kullanıcının profil resmi</string>
     <string name="comment_checkmark_desc">onay işareti</string>
     <string name="signup_with_google_progress">Google ile kaydolunuyor…</string>
-    <string name="editor_toast_no_action_taken">Bir hata oluştu. İşlem yapılmadı.</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack’e bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack’e zaten bağlısınız</string>
     <string name="menu_undo_snackbar_action">GERİ AL</string>
@@ -275,7 +337,7 @@ Language: tr
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack resimlerinizi optimize eder ve bunları ziyaretçilerinize en yakın sunucu konumundan sunar. Global içerik sağlama ağımızı kullanmak sitenizin yüklenme hızını artıracak.</string>
     <string name="site_settings_serve_images_from_our_servers">Resimleri sunucularımızdan sunun</string>
     <string name="site_settings_speed_up_your_site">Sitenizi hızlandırın</string>
-    <string name="stats_jetpack_connection_setup_info">WordPress sitenizde İstatistikleri kullanmak için, Jetpack eklentisini yüklemelisiniz. Jetpack’i kurmak istiyor musunuz?</string>
+    <string name="stats_jetpack_connection_setup_info">WordPress sitenizde İstatistikleri kullanmak için, Jetpack eklentisini yüklemelisiniz. Jetpack’i kurmak ister misiniz?</string>
     <string name="stats_jetpack_connection_setup">Jetpack\'i Kur</string>
     <string name="plugin_chevron_icon_content_description">Değiştir metni</string>
     <string name="plugin_info_your_version">WordPress sürümünüz</string>
@@ -824,7 +886,6 @@ Language: tr
     <string name="invite_names_title">Kullanıcı adları ya da e–postalar</string>
     <string name="invite_people">İnsanları davet et</string>
     <string name="my_site_header_external">Harici</string>
-    <string name="send_link">Bağlantı gönder</string>
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_posts_in_search_description">Dilinizde %s için hiç yazı bulunamadı</string>
@@ -850,12 +911,8 @@ Language: tr
     <string name="error_locating_image">Kırpılmış görseli konumlandırırken hata oluştu</string>
     <string name="error_cropping_image">Görsel kırpılırken hata oluştu</string>
     <string name="checking_email">E–posta kontrol ediliyor</string>
-    <string name="launch_your_email_app">E–posta uygulamanızı başlatın</string>
-    <string name="check_your_email">E–postanızı kontrol edin</string>
     <string name="magic_link_unavailable_error_message">Şu an uygun değil. Lütfen parolanızı girin</string>
     <string name="logging_in">Giriş yapılıyor</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Anında giriş için e–postanıza bir bağlantı gönderilmesini sağlayın</string>
-    <string name="enter_your_password_instead">Bunun yerine parola gir</string>
     <string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
     <string name="new_editor_reflection_error">Görsel düzenleyici cihazınız ile uyumsuz. Otomatik\n olarak etkisizleştirildi.</string>
     <string name="stats_insights_latest_post_no_title">(başlıksız)</string>
@@ -1328,7 +1385,6 @@ Language: tr
     <string name="create_new_blog_wpcom">WordPress.com blogu oluştur</string>
     <string name="nux_help_description">Sık sorulan sorulara yanıt bulmak için yardım merkezini, yeni sorular sormak için forumları ziyaret edin</string>
     <string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
-    <string name="faq_button">SSS</string>
     <string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
     <string name="reader_empty_followed_blogs_title">Henüz herhangi bir site takip etmiyorsunuz.</string>
     <string name="reader_menu_block_blog">Bu blogu engelleyin</string>
@@ -1341,8 +1397,6 @@ Language: tr
     <string name="hs__new_conversation_header">Destek sohbeti</string>
     <string name="hs__conversation_detail_error">Karşılaştığınız problemi açıklayın</string>
     <string name="contact_us">İletişim kurun</string>
-    <string name="preference_send_usage_stats_summary">Android için WordPress\'i geliştirmemize yardımcı olmak için bize otomatik olarak kullanım istatistiklerini gönderin. </string>
-    <string name="preference_send_usage_stats">Kullanım istatistiklerini gönder</string>
     <string name="schedule_verb">Zamanla</string>
     <string name="update_verb">Güncelle</string>
     <string name="reader_empty_recommended_blogs">Önerilen blog yok</string>
@@ -1470,7 +1524,6 @@ Language: tr
     <string name="pick_photo">Fotoğraf seçin</string>
     <string name="reader_empty_followed_blogs_description">Kaygılanmayın, keşfetmeye başlamak için sağ üstteki simgeye dokunmanız yeterli!</string>
     <string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
-    <string name="nux_tutorial_get_started_title">Başlayın!</string>
     <string name="reader_empty_followed_tags">Herhangi bir etiketi takip etmiyorsunuz</string>
     <string name="reader_toast_err_url_intent">%s açılamadı</string>
     <string name="reader_toast_err_view_image">Imaj görüntülenemedi</string>

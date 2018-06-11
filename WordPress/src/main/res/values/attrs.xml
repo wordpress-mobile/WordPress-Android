@@ -29,6 +29,10 @@
     <declare-styleable name="LearnMorePreference">
         <attr name="url" format="string" />
         <attr name="caption" format="string" />
+        <attr name="button" format="string" />
+        <attr name="icon" format="reference" />
+        <attr name="layout" format="reference" />
+        <attr name="openInDialog" format="boolean" />
         <attr name="useCustomJsFormatting" format="boolean" />
     </declare-styleable>
 
@@ -119,6 +123,20 @@
     <declare-styleable name="wpNetworkImageView">
         <attr name="wpDefaultImageDrawable" format="reference"/>
         <attr name="wpErrorImageDrawable" format="reference"/>
+    </declare-styleable>
+
+    <!--
+        FilteredRecyclerView
+    -->
+    <declare-styleable name="FilteredRecyclerView">
+        <!-- Optional: Layout resource id for the Filter Spinner main TextView -->
+        <attr name="wpSpinnerItemView" format="reference"/>
+
+        <!-- Optional: Layout resource id for the Filter Spinner dropdown TextView -->
+        <attr name="wpSpinnerDropDownItemView" format="reference"/>
+
+        <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
+        <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
     </declare-styleable>
 
 </resources>

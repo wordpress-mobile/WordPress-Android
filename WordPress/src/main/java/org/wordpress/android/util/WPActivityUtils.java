@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.ComponentName;
@@ -20,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.List;
 
@@ -31,23 +31,21 @@ public class WPActivityUtils {
             return;
         }
 
-        Toolbar toolbar;
-        if (dialog.findViewById(android.R.id.list) == null
-            && dialog.findViewById(android.R.id.list_container) == null) {
+        View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
+
+        if (dialogContainerView == null) {
+            AppLog.e(T.SETTINGS, "Preference Dialog View was null when adding Toolbar");
             return;
         }
 
-        @SuppressLint("InlinedApi") View child = dialog.findViewById(android.R.id.list_container);
-        if (child == null) {
-            child = dialog.findViewById(android.R.id.list);
-            if (child == null) {
-                return;
-            }
+        // find the root view, then make sure the toolbar doesn't already exist
+        ViewGroup root = (ViewGroup) dialogContainerView.getParent();
+        if (root.findViewById(R.id.toolbar) != null) {
+            return;
         }
 
-        ViewGroup root = (ViewGroup) child.getParent();
-        toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
-                                          .inflate(org.wordpress.android.R.layout.toolbar, root, false);
+        Toolbar toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
+                                                  .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
@@ -80,7 +78,15 @@ public class WPActivityUtils {
             return;
         }
 
-        ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
+        View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
+
+        if (dialogContainerView == null) {
+            AppLog.e(T.SETTINGS, "Preference Dialog View was null when removing Toolbar");
+            return;
+        }
+
+        ViewGroup root = (ViewGroup) dialogContainerView.getParent();
+
         if (root.getChildAt(0) instanceof Toolbar) {
             root.removeViewAt(0);
         }
@@ -128,12 +134,12 @@ public class WPActivityUtils {
     public static void disableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(new ComponentName(context, klass),
-                                      PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
     public static void enableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(new ComponentName(context, klass),
-                                      PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 07:54:07+0000
+Translation-Revision-Date: 2018-05-30 06:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">新文章。撰寫新文章。</string>
+    <string name="my_site_icon_content_description">變更網站圖示</string>
+    <string name="my_site_icon_dialog_cancel_button">取消</string>
+    <string name="my_site_icon_dialog_remove_button">移除</string>
+    <string name="my_site_icon_dialog_change_button">變更</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">你沒有編輯網站圖示的權限。</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">你沒有新增網站圖示的權限。</string>
+    <string name="my_site_icon_dialog_change_message">你想要如何編輯圖示？</string>
+    <string name="my_site_icon_dialog_add_message">要新增網站圖示嗎？</string>
+    <string name="my_site_icon_dialog_title">網站圖示</string>
+    <string name="reader_followed_blog_notifications_this">此網站</string>
+    <string name="reader_followed_blog_notifications_action">啓用</string>
+    <string name="reader_followed_blog_notifications">要啟用 %1$s%2$s%3$s 的通知？</string>
+    <string name="reader_btn_notifications_on">開啟網站通知</string>
+    <string name="reader_btn_notifications_off">關閉網站通知</string>
+    <string name="activity_log_jetpack_icon">Jetpack 圖示</string>
+    <string name="rewind">還原</string>
+    <string name="activity_log_event">事件</string>
+    <string name="activity_log_icon">活動圖示</string>
+    <string name="activity_log">活動記錄</string>
+    <string name="activity">活動</string>
+    <string name="privacy_policy_read">閱讀隱私權政策</string>
+    <string name="third_party_policy_learn_more_caption">我們會使用其他的追蹤工具，包括由第三方所提供的追蹤工具。瞭解相關資訊及其控制方式。</string>
+    <string name="third_party_policy_learn_more_header">第三方政策</string>
+    <string name="privacy_policy_learn_more_caption">這類資訊有助我們改進產品、提供與你更加相關的行銷活動、帶來更為個人化的 WordPress.com 使用體驗；若要瞭解更多詳細內容，請參見我們的「隱私權政策」。</string>
+    <string name="privacy_policy_learn_more_header">隱私權政策</string>
+    <string name="cookie_policy_learn_more_caption">在登入你的 WordPress.com 帳號時，請將你的服務使用情況相關資訊與我們的分析工具分享。</string>
+    <string name="cookie_policy_learn_more_header">Cookie 政策</string>
+    <string name="preference_privacy_settings">隱私權設定</string>
+    <string name="preference_collect_information">收集資訊</string>
+    <string name="post_submitted">文章已提交。</string>
+    <string name="write_post">撰寫文章</string>
+    <string name="login_email_button_signup">還沒有帳號？%1$s註冊%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">外掛功能需要該網站具有良好聲譽。</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">外掛功能需要主要網域訂閱與此名使用者相關聯。</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">外掛功能需要管理員權限。</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">外掛程式無法安裝於 VIP 網站。</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">由於磁碟空間的限制，無法安裝外掛程式。</string>
+    <string name="plugin_install_site_ineligible_email_unverified">外掛功能需要通過驗證的電子郵件地址。</string>
+    <string name="plugin_install_site_ineligible_site_private">外掛功能需要該網站為公開網站。</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">外掛功能需要有商務版方案。</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">外掛功能需要有自訂網域。</string>
+    <string name="plugin_install_site_ineligible_default_error">外掛功能不適用於此網站。</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">我們正在進行最後的設定，作業即將完成……</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">正在安裝外掛程式……</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">安裝</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">在你的網站上安裝第一個外掛程式，可能需要 1 分鐘的時間。在此期間，你無法對你的網站進行任何變更。</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">安裝外掛程式</string>
+    <string name="notification_settings_followed_dialog_title">通知</string>
+    <string name="notification_settings_followed_dialog_email_comments">新留言的電子郵件</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">每週</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">即時</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">每天</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">新文章</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">接收來自此網站的新文章通知</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">有新文章時透過電子郵件通知我</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">我關注的所有網站</string>
+    <string name="notification_settings_category_followed_sites">關注的網站</string>
+    <string name="content_description_person_reading_device_notification">正在讀取通知裝置的使用者</string>
+    <string name="content_description_people_looking_charts">正在查看圖表的使用者</string>
+    <string name="comment_title">%s 於 %s</string>
+    <string name="dialog_confirm_delete_permanently_page">確定要永久刪除此頁面？</string>
+    <string name="dialog_confirm_delete_permanently_post">確定要永久刪除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在建立網站… 可能需要一點時間。</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: zh_TW
     <string name="stats_tab_tap_content_description">顯示 %s</string>
     <string name="stats_legend">統計圖形圖例</string>
     <string name="fab_create_desc">建立</string>
-    <string name="fab_create_post_desc">建立文章</string>
     <string name="fab_add_tag_desc">建立標籤</string>
     <string name="stats_bar_week_desc">第 %s 週</string>
     <string name="stats_bar_date_value_desc">%s，%d 次瀏覽</string>
@@ -79,7 +141,6 @@ Language: zh_TW
     <string name="profile_picture">%s 的個人檔案照片</string>
     <string name="comment_checkmark_desc">檢查標記</string>
     <string name="signup_with_google_progress">透過 Google 註冊…</string>
-    <string name="editor_toast_no_action_taken">發生錯誤。未採取動作。</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_undo_snackbar_action">復原</string>
@@ -233,6 +294,7 @@ Language: zh_TW
     <string name="signup_user_exists">電子郵件已存在於 WordPress.com。\n繼續登入。</string>
     <string name="signup_updating_account">正在更新帳號……</string>
     <string name="signup_magic_link_progress">正在傳送電子郵件</string>
+    <string name="signup_terms_of_service_text">註冊即代表你同意我們的%1$s服務條款%2$s。</string>
     <string name="signup_magic_link_message">我們已將神奇註冊連結寄給你！用此裝置查看電子郵件，點選電子郵件中的連結就能完成註冊。</string>
     <string name="signup_magic_link_error_button_positive">重試</string>
     <string name="signup_magic_link_error_button_negative">關閉</string>
@@ -271,7 +333,6 @@ Language: zh_TW
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack 會最佳化你的圖片，並從與訪客距離最近的伺服器提供圖片。使用我們的全球內容傳遞網路可大幅提升網站的載入速度。</string>
     <string name="site_settings_serve_images_from_our_servers">由我們的伺服器提供圖片</string>
     <string name="site_settings_speed_up_your_site">加快網站的速度</string>
-    <string name="stats_jetpack_connection_setup_info">若要使用你 WordPress 網站的「統計」功能，必須安裝 Jetpack 外掛程式。是否要設定 Jetpack？</string>
     <string name="stats_jetpack_connection_setup">設定 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切換文字</string>
     <string name="plugin_info_your_version">你的 WordPress 版本</string>
@@ -807,7 +868,6 @@ Language: zh_TW
     <string name="invite_message_title">自訂訊息</string>
     <string name="invite">邀請</string>
     <string name="invite_names_title">使用者名稱或電子郵件</string>
-    <string name="send_link">傳送連結</string>
     <string name="my_site_header_external">外部</string>
     <string name="invite_people">邀請他人</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
@@ -834,13 +894,9 @@ Language: zh_TW
     <string name="error_locating_image">尋找裁切的圖片時發生錯誤</string>
     <string name="error_refreshing_gravatar">重新載入你的 Gravatar 時發生錯誤</string>
     <string name="error_cropping_image">裁切圖片時發生錯誤</string>
-    <string name="launch_your_email_app">啟動你的電子郵件應用程式</string>
     <string name="checking_email">正在檢查電子郵件</string>
     <string name="magic_link_unavailable_error_message">目前無法使用。請輸入你的密碼</string>
-    <string name="check_your_email">檢查你的電子郵件</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">取得傳送至你電子郵件的連結以立即登入</string>
     <string name="logging_in">正在登入</string>
-    <string name="enter_your_password_instead">改為輸入你的密碼</string>
     <string name="web_address_dialog_hint">當你留言時公開顯示。</string>
     <string name="new_editor_reflection_error">視覺化編輯器與你的裝置不相容，已\n自動停用。</string>
     <string name="stats_insights_latest_post_no_title">(無標題)</string>
@@ -1280,7 +1336,6 @@ Language: zh_TW
     <string name="ssl_certificate_details">詳細資料</string>
     <string name="cab_selected">已選取：%d</string>
     <string name="reader_empty_posts_liked">你未對任何文章按讚</string>
-    <string name="faq_button">常見問題集</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
     <string name="nux_help_description">造訪說明中心以取得常見問題的解答，或前往論壇提出新問題</string>
     <string name="create_new_blog_wpcom">建立 WordPress.com 網誌</string>
@@ -1318,8 +1373,6 @@ Language: zh_TW
     <string name="hs__conversation_header">支援交談</string>
     <string name="hs__username_blank_error">輸入有效的名稱</string>
     <string name="hs__invalid_email_error">輸入有效的電子郵件地址</string>
-    <string name="preference_send_usage_stats">傳送統計資料</string>
-    <string name="preference_send_usage_stats_summary">自動傳送使用統計資料，協助我們改善 Android 版 WordPress</string>
     <string name="update_verb">更新</string>
     <string name="schedule_verb">排程</string>
     <string name="reader_title_subs">標籤和網誌</string>
@@ -1458,7 +1511,6 @@ Language: zh_TW
     <string name="reader_toast_err_tag_invalid">這並非有效的標籤</string>
     <string name="reader_toast_err_share_intent">無法分享</string>
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
-    <string name="nux_tutorial_get_started_title">開始使用！</string>
     <string name="reader_empty_followed_tags">你未關注任何標籤</string>
     <string name="reader_hint_comment_on_comment">回應評論</string>
     <string name="themes">佈景主題</string>

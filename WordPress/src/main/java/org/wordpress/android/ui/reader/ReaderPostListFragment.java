@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +13,10 @@ import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -50,9 +55,11 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.BottomNavController;
+import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -100,7 +107,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnPostPopupListener,
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener {
+        WPMainActivity.OnScrollToTopListener,
+        MainToolbarFragment {
     private ReaderPostAdapter mPostAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
@@ -185,6 +193,7 @@ public class ReaderPostListFragment extends Fragment
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
+        fragment.trackTagLoaded(tag);
 
         return fragment;
     }
@@ -372,6 +381,11 @@ public class ReaderPostListFragment extends Fragment
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void setTitle(String title) {
+        // Do nothing - no title for this toolbar
+    }
+
     /*
      * ensures the adapter is created and posts are updated if they haven't already been
      */
@@ -550,12 +564,12 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.blue_medium));
+        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.color_primary));
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
-                getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
+                getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
 
         // add a menu to the filtered recycler's toolbar
         if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
@@ -873,10 +887,22 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         };
-        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked),
+        Snackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked),
                 AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(R.string.undo, undoListener)
                 .show();
+    }
+
+    /*
+     * returns the parent view for snackbars - if this fragment is hosted in the main activity we want the
+     * parent to be the main activity's CoordinatorLayout
+     */
+    private View getSnackbarParent() {
+        View coordinator = getActivity().findViewById(R.id.coordinator);
+        if (coordinator != null) {
+            return coordinator;
+        }
+        return getView();
     }
 
     /*
@@ -908,7 +934,10 @@ public class ReaderPostListFragment extends Fragment
         String title;
         String description = null;
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
+            setEmptyTitleAndDescriptionForBookmarksList();
+            return;
+        } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
             title = getString(R.string.reader_empty_posts_request_failed);
@@ -947,10 +976,10 @@ public class ReaderPostListFragment extends Fragment
                         title = getString(R.string.reader_empty_posts_in_search_title);
                         String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
                         description = String.format(getString(R.string.reader_empty_posts_in_search_description),
-                                                    formattedQuery);
+                                formattedQuery);
                     }
                     break;
-
+                case TAG_PREVIEW:
                 default:
                     title = getString(R.string.reader_empty_posts_in_tag);
                     break;
@@ -958,6 +987,34 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setEmptyTitleAndDescription(title, description);
+    }
+
+    private void setEmptyTitleAndDescriptionForBookmarksList() {
+        // only local bookmarks are currently supported, so if there are no data in the local database we can
+        // show an empty view
+        TextView titleView = mEmptyView.findViewById(R.id.title_empty);
+        TextView descriptionView = mEmptyView.findViewById(R.id.description_empty);
+
+        // replace %s placeholder with bookmark outline icon
+        String description = getString(R.string.reader_empty_saved_posts_description);
+        SpannableStringBuilder ssb = new SpannableStringBuilder(description);
+        int imagePlaceholderPosition = description.indexOf("%s");
+        addBookmarkImageSpan(ssb, imagePlaceholderPosition);
+
+        titleView.setText(getString(R.string.reader_empty_saved_posts_title));
+        descriptionView.setText(ssb, BufferType.SPANNABLE);
+        descriptionView.setContentDescription(String.format(description, getString(R.string.reader_add_bookmark)));
+
+        titleView.setVisibility(View.VISIBLE);
+        descriptionView.setVisibility(View.VISIBLE);
+        mEmptyViewBoxImages.setVisibility(View.GONE);
+    }
+
+    private void addBookmarkImageSpan(SpannableStringBuilder ssb, int imagePlaceholderPosition) {
+        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_grey_min_18dp);
+        d.setBounds(0, 0, (int) (d.getIntrinsicWidth() * 1.2), (int) (d.getIntrinsicHeight() * 1.2));
+        ssb.setSpan(new ImageSpan(d), imagePlaceholderPosition, imagePlaceholderPosition + 2,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void setEmptyTitleAndDescription(@NonNull String title, String description) {
@@ -1022,6 +1079,56 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
+    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
+            new ReaderInterfaces.OnPostBookmarkedListener() {
+                @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
+                                                               boolean isCachingActionRequired) {
+                    if (!isAdded()) {
+                        return;
+                    }
+
+                    String tag = Long.toString(blogId) + Long.toString(postId);
+
+                    if (NetworkUtils.isNetworkAvailable(getActivity())
+                        && isCachingActionRequired && isBookmarked
+                        && getFragmentManager().findFragmentByTag(tag) == null) {
+                        getFragmentManager().beginTransaction()
+                                            .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                                            .commit();
+                    }
+
+                    // show snackbar when not in saved posts list
+                    if (isBookmarked && !isBookmarksList()) {
+                        showBookmarkSnackbar();
+                    }
+                }
+            };
+
+    private boolean isBookmarksList() {
+        return getPostListType() == ReaderPostListType.TAG_FOLLOWED
+               && (mCurrentTag != null && mCurrentTag.isBookmarked());
+    }
+
+    private void showBookmarkSnackbar() {
+        if (!isAdded()) {
+            return;
+        }
+
+        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
+                new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        AnalyticsTracker
+                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                        if (getActivity() instanceof WPMainActivity) {
+                            getActivity().overridePendingTransition(0, 0);
+                        }
+                    }
+                })
+                .show();
+    }
+
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
@@ -1081,6 +1188,7 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
+            mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
@@ -1164,7 +1272,9 @@ public class ReaderPostListFragment extends Fragment
         if (isSearchViewExpanded()) {
             mSearchMenuItem.collapseActionView();
             return true;
-        } else return goBackInTagHistory();
+        } else {
+            return goBackInTagHistory();
+        }
     }
 
     /*
@@ -1311,7 +1421,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         AppLog.d(T.READER,
-                 "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
+                "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
         ReaderPostServiceStarter.startServiceForTag(getActivity(), tag, updateAction);
     }
 
@@ -1483,6 +1593,14 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
+        if (post.isBookmarked) {
+            if (isBookmarksList()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST);
+            } else {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST);
+            }
+        }
+
         // "discover" posts that highlight another post should open the original (source) post when tapped
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
@@ -1541,6 +1659,10 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || isCurrentTag(tag)) {
             return;
         }
+        // clear 'post removed from saved posts' undo items
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
+            ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
+        }
 
         trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
@@ -1548,17 +1670,20 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void trackTagLoaded(ReaderTag tag) {
-        AnalyticsTracker.Stat stat = null;
+        if (tag == null) {
+            return;
+        }
 
+        AnalyticsTracker.Stat stat;
         if (tag.isDiscover()) {
             stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
         } else if (tag.isTagTopic()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
-        }
-
-        if (stat == null) {
+        } else if (tag.isBookmarked()) {
+            stat = AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_FILTER;
+        } else {
             return;
         }
 
@@ -1652,7 +1777,7 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
-        Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+        Snackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
                         "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                     new View.OnClickListener() {
@@ -1757,6 +1882,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderTagList tagList = ReaderTagTable.getDefaultTags();
             tagList.addAll(ReaderTagTable.getCustomListTags());
             tagList.addAll(ReaderTagTable.getFollowedTags());
+            tagList.addAll(ReaderTagTable.getBookmarkTags());
             return tagList;
         }
 

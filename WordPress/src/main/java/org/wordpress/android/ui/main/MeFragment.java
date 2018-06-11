@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -64,7 +66,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MeFragment extends Fragment {
+public class MeFragment extends Fragment implements MainToolbarFragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
 
@@ -80,6 +82,10 @@ public class MeFragment extends Fragment {
     private View mNotificationsView;
     private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
+
+    @Nullable
+    private Toolbar mToolbar = null;
+    private String mToolbarTitle;
 
     // setUserVisibleHint is not available so we need to manually handle the UserVisibleHint state
     private boolean mIsUserVisible;
@@ -195,6 +201,9 @@ public class MeFragment extends Fragment {
             }
         }
 
+        mToolbar = rootView.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
+
         return rootView;
     }
 
@@ -213,6 +222,14 @@ public class MeFragment extends Fragment {
         super.onStart();
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        mToolbarTitle = title;
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
+        }
     }
 
     @Override
@@ -324,7 +341,7 @@ public class MeFragment extends Fragment {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
                                        mAccountStore.getAccount().getUserName());
 
-        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog))
+        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert))
                 .setMessage(message)
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {

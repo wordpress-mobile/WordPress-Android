@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -419,7 +419,7 @@ public class CommentsListFragment extends Fragment {
     private void confirmDeleteComments() {
         if (mCommentStatusFilter == CommentStatusCriteria.TRASH) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
             int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments
                     : R.string.dlg_sure_to_delete_comment;
@@ -435,7 +435,7 @@ public class CommentsListFragment extends Fragment {
             dialogBuilder.create().show();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setMessage(R.string.dlg_confirm_trash_comments);
             builder.setTitle(R.string.trash);
             builder.setCancelable(true);

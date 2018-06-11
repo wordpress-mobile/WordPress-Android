@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-02 18:54:09+0000
+Translation-Revision-Date: 2018-05-30 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Nuovo articolo. Scrivi un nuovo articolo.</string>
+    <string name="my_site_icon_content_description">Cambia l\'icona del sito</string>
+    <string name="my_site_icon_dialog_cancel_button">Annulla</string>
+    <string name="my_site_icon_dialog_remove_button">Rimuovi</string>
+    <string name="my_site_icon_dialog_change_button">Modifica</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Non disponi dell\'autorizzazione per modificare l’icona del sito.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Non disponi dell\'autorizzazione per aggiungi un\'icona di sito.</string>
+    <string name="my_site_icon_dialog_change_message">Come desideri modificare l’icona?</string>
+    <string name="my_site_icon_dialog_add_message">Desideri aggiungere un\'icona di sito?</string>
+    <string name="my_site_icon_dialog_title">Icona di sito</string>
+    <string name="reader_followed_blog_notifications_this">questo sito</string>
+    <string name="reader_followed_blog_notifications_action">Abilita</string>
+    <string name="reader_followed_blog_notifications">Attiva notifiche per %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Attiva notifiche sito</string>
+    <string name="reader_btn_notifications_off">Disattiva notifiche sito</string>
+    <string name="activity_log_jetpack_icon">Icona Jetpack</string>
+    <string name="rewind">Ripristina</string>
+    <string name="activity_log_event">Evento</string>
+    <string name="activity_log_icon">Icona attività</string>
+    <string name="activity_log">Log attività</string>
+    <string name="activity">Attività</string>
+    <string name="privacy_policy_read">Leggi l’informativa sulla privacy</string>
+    <string name="third_party_policy_learn_more_caption">Utilizziamo altri strumenti di tracciamento, compresi alcuni di terzi. Leggi le informazioni sugli strumenti e come controllarli.</string>
+    <string name="third_party_policy_learn_more_header">Informativa sulla privacy di terze parti</string>
+    <string name="privacy_policy_learn_more_caption">Queste informazioni ci aiutano a migliorare i prodotti, offrire proposte di marketing più pertinenti, personalizzare l’esperienza WordPress.com e molto altro, come indicato nel dettaglio nella nostra informativa sulla privacy.</string>
+    <string name="privacy_policy_learn_more_header">Informativa sulla privacy</string>
+    <string name="cookie_policy_learn_more_caption">Condividi informazioni con il nostro strumento di analisi relativamente al tuo uso dei servizi mentre sei connesso con il tuo account WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">Informativa sui cookie</string>
+    <string name="preference_privacy_settings">Impostazioni della privacy</string>
+    <string name="preference_collect_information">Raccogli informazioni</string>
+    <string name="post_submitted">Articolo inviato</string>
+    <string name="write_post">Scrivi articolo</string>
+    <string name="login_email_button_signup">Non hai un account? %1$sRegistrati%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">La funzionalità di plugin richiede che il sito sia in regola.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">La funzionalità di plugin richiede che l\'abbonamento di dominio principale sia associato a questo utente.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">La funzionalità di plugin richiede privilegi di amministratore.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Il plugin non può essere installato su siti VIP.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Il plugin non può essere installato a causa di limitazioni di spazio del disco.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">La funzionalità di plugin richiede un indirizzo e–mail verificato.</string>
+    <string name="plugin_install_site_ineligible_site_private">La funzionalità di plugin richiede che il sito sia pubblico.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">La funzionalità di plugin richiede un piano Business.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">La funzionalità di plugin richiede un dominio personalizzato.</string>
+    <string name="plugin_install_site_ineligible_default_error">La funzionalità di plugin non è disponibile per questo sito.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Stiamo eseguendo la configurazione finale, abbiamo quasi finito…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installazione del plugin in corso…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installa</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">L\'installazione del primo plugin sul tuo sito può richiedere fino a 1 minuto. In questo periodo di tempo non potrai apportare modifiche al sito.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Installa plugin</string>
+    <string name="notification_settings_followed_dialog_title">Notifiche</string>
+    <string name="notification_settings_followed_dialog_email_comments">Inviami i nuovi commenti per e–mail</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Settimanalmente</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Immediatamente</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Giornalmente</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Nuovi articoli</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Ricevi notifiche per i nuovi articoli da questo sito</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Inviami i nuovi articoli per e–mail</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Tutti i miei siti seguiti</string>
+    <string name="notification_settings_category_followed_sites">Siti seguiti</string>
+    <string name="content_description_person_reading_device_notification">Persona che legge dispositivo con notifiche</string>
+    <string name="content_description_people_looking_charts">Persone che guardano grafici e mappe</string>
+    <string name="comment_title">%s su %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Desideri eliminare in modo permanente questa pagina?</string>
+    <string name="dialog_confirm_delete_permanently_post">Desideri eliminare in modo permanente questo articolo?</string>
     <string name="notification_site_creation_title_in_progress">Creazione del sito… Questa operazione potrebbe richiedere qualche minuto.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: it
     <string name="stats_tab_tap_content_description">mostra %s</string>
     <string name="stats_legend">legenda grafico statistiche</string>
     <string name="fab_create_desc">crea</string>
-    <string name="fab_create_post_desc">crea post</string>
     <string name="fab_add_tag_desc">crea tag</string>
     <string name="stats_bar_week_desc">Settimana di %s</string>
     <string name="stats_bar_date_value_desc">%s, %d visite</string>
@@ -58,8 +120,10 @@ Language: it
     <string name="show_more_desc">mostra altro</string>
     <string name="stats_list_cell_chevron_expand_desc">espandi</string>
     <string name="reader_photo_view_desc">foto</string>
+    <string name="reader_list_item_suggestion_remove_desc">elimina</string>
     <string name="photo_picker_thumbnail_desc">Riproduci video</string>
     <string name="reader_cardview_post_play_video_desc">riproduci video in primo piano</string>
+    <string name="post_cardview_featured_desc">immagine in evidenza</string>
     <string name="plugin_detail_logo_desc">logo plugin</string>
     <string name="plugin_detail_banner_desc">banner plugin</string>
     <string name="photo_picker_wpmedia_desc">scegli tra i contenuti multimediali WordPress</string>
@@ -78,7 +142,6 @@ Language: it
     <string name="profile_picture">immagine del profilo di %s</string>
     <string name="comment_checkmark_desc">segno di spunta</string>
     <string name="signup_with_google_progress">Registrazione con Google…</string>
-    <string name="editor_toast_no_action_taken">Si è verificato un errore. Nessuna azione intrapresa.</string>
     <string name="jetpack_connection_failed_with_reason">Connessione a Jetpack non riuscita: %s</string>
     <string name="jetpack_already_connected_toast">Sei già connesso a Jetpack</string>
     <string name="menu_undo_snackbar_action">ANNULLA</string>
@@ -134,6 +197,7 @@ Language: it
     <string name="sharing_disabled_description">Non puoi accedere alle impostazioni di condivisione poiché il modulo Condivisione Jetpack è disabilitato.</string>
     <string name="sharing_disabled">Modulo di condivisione disabilitato</string>
     <string name="version_with_name_param">Versione %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Editore: %s</string>
     <string name="async_promo_publish_now">Pubblica ora</string>
     <string name="notification_sound_has_invalid_path">Il suono scelto ha un percorso non valido. Scegline un altro.</string>
@@ -176,6 +240,8 @@ Language: it
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post con 1 file non caricato</string>
     <string name="untitled_in_parentheses">(Senza titolo)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_epilogue_write">Scrivi il primo articolo</string>
     <string name="site_creation_epilogue_configure">Configura</string>
     <string name="site_creation_epilogue_congrats">Complimenti!\nIl tuo sito è pronto.</string>
@@ -271,7 +337,6 @@ Language: it
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack ottimizzerà le tue immagini e le servirà dalla posizione del server più vicina ai visitatori. L\'utilizzo della nostra rete di distribuzione dei contenuti migliorerà la velocità di caricamento del tuo sito.</string>
     <string name="site_settings_serve_images_from_our_servers">Servi le immagini dai nostri server</string>
     <string name="site_settings_speed_up_your_site">Velocizza il tuo sito</string>
-    <string name="stats_jetpack_connection_setup_info">Per utilizzare le Statistiche sul tuo sito WordPress, sarà necessario installare il plugin di Jetpack. Desideri configurare Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Configura Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Attiva/Disattiva testo</string>
     <string name="plugin_info_your_version">La tua versione di WordPress</string>
@@ -298,17 +363,31 @@ Language: it
     <string name="plugin_byline">di %s</string>
     <string name="change_photo">Cambia foto</string>
     <string name="plugin_fetch_error">Impossibile caricare i plugin</string>
+    <string name="my_site_btn_site_pages">Pagine del sito</string>
+    <string name="site_settings_tags_hint">Gestisci i tag del tuo sito</string>
+    <string name="dlg_saving_tag">Salvataggio</string>
+    <string name="dlg_deleting_tag">Cancellazione</string>
+    <string name="dlg_confirm_delete_tag">Eliminare \'%s\' definitivamente?</string>
     <string name="error_tag_exists">Esiste già un tag con questo nome</string>
     <string name="add_new_tag">Aggiungi nuovo tag</string>
+    <string name="tag_description_hint">Descrizione</string>
+    <string name="tag_name_hint">Tag</string>
     <string name="site_settings_amp_summary">Il sito WordPress.com supporta l\'utilizzo di Accelerated Mobile Pages, un\'iniziativa introdotta da Google che migliora sensibilmente la velocità di caricamento su dispositivi mobili</string>
+    <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_timezones_error">Impossibile caricare i fusi orario</string>
     <string name="site_settings_format_help">Scopri di più sulla formattazione di data e ora</string>
+    <string name="site_settings_format_hint_custom">Formato personalizzato</string>
     <string name="site_settings_format_entry_custom">Clientela</string>
+    <string name="site_settings_posts_per_page_title">Articoli per pagina</string>
     <string name="site_settings_timezone_subtitle">Seleziona una città che rientra nel tuo fuso orario</string>
+    <string name="site_settings_timezone_title">Fuso orario</string>
     <string name="site_settings_time_format_title">Formato ora</string>
     <string name="site_settings_date_format_title">Formato data</string>
     <string name="site_settings_week_start_title">La settimana inizia il</string>
     <string name="site_settings_tags_title">Tag</string>
+    <string name="site_settings_traffic_header">Traffico</string>
+    <string name="delete_no">Non eliminare</string>
+    <string name="delete_yes">Elimina</string>
     <string name="plugin_external_link_icon_content_description">Link esterno</string>
     <string name="plugin_icon_content_description">Icona del plugin</string>
     <string name="plugin_home_page">Homepage del plugin</string>
@@ -332,14 +411,27 @@ Language: it
     <string name="my_site_btn_plugins">Plugin</string>
     <string name="media_edit_link_hint">Apri il link in una nuova finestra/scheda</string>
     <string name="media_edit_link_text">Link a</string>
+    <string name="notification_login_failed">Si è verificato un errore.</string>
+    <string name="notification_2fa_needed">Fornisci un codice di autenticazione per continuare.</string>
+    <string name="notification_error_wrong_password">Controlla due volte la tua password per continuare.</string>
+    <string name="notification_login_title_stopped">Accesso interrotto</string>
+    <string name="notification_logging_in">Attendi mentre stai effettuando l\'accesso.</string>
+    <string name="notification_login_title_in_progress">Accesso in corso…</string>
+    <string name="notification_logged_in">Tocca per continuare.</string>
+    <string name="notification_login_title_success">Accesso effettuato!</string>
+    <string name="login_error_generic_start">Il login tramite Google non può essere inizializzato.</string>
     <string name="login_empty_password">Inserisci una password</string>
     <string name="login_text_otp_another">Inviami invece un messaggio con un altro codice.</string>
     <string name="enter_verification_code_sms">Abbiamo inviato un messaggio di testo al numero di telefono che termina in %s. Inserisci il codice di verifica contenuto nell\'SMS.</string>
+    <string name="error_generic_error">Impossibile eseguire l\'operazione</string>
     <string name="error_media_recover_page">Impossibile caricare il contenuto multimediale di questa pagina</string>
     <string name="error_media_recover_post">Impossibile caricare il contenuto multimediale di questo articolo</string>
     <string name="size_full">Dimensione reale</string>
+    <string name="size_large">Grande</string>
     <string name="size_medium">Media</string>
     <string name="size_thumbnail">Miniatura</string>
+    <string name="image_size">Dimensione</string>
+    <string name="uploading_subtitle_media_only_one">1 file rimanente</string>
     <string name="uploading_subtitle_media_only">%1$d di %2$d file rimanenti</string>
     <string name="uploading_subtitle_posts_only_one">1 post rimanente</string>
     <string name="uploading_title">Caricamento in corso…</string>
@@ -366,6 +458,8 @@ Language: it
     <string name="login_log_in_for_share_intent">Accedi a WordPress.com per condividere il contenuto.</string>
     <string name="enter_site_address_share_intent">Immetti l\'indirizzo del tuo sito WordPress sul quale desideri condividere il contenuto.</string>
     <string name="jetpack_disconnect_error_toast">Errore durante la disconnessione del sito</string>
+    <string name="jetpack_disconnect_success_toast">Sito disconnesso</string>
+    <string name="jetpack_disconnect_confirm">Disconnetti</string>
     <string name="jetpack_disconnect_confirmation_message">Desideri disconnettere Jetpack dal sito?</string>
     <string name="jetpack_disconnect_pref_title">\"Esegui la disconnessione da WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">Puoi includere nella lista bianca un indirizzo IP o serie di indirizzi per evitare che vengano bloccati da Jetpack. Sono accettati indirizzi IPv4 e IPv6. Per specificare un intervallo, inserisci il valore minimo e il valore massimo separati da un trattino. Esempio: 12.12.12.1–12.12.12.100</string>
@@ -376,6 +470,7 @@ Language: it
     <string name="jetpack_brute_force_whitelist_title">Indirizzi IP inclusi nella lista bianca</string>
     <string name="jetpack_prevent_brute_force_title">Blocca i tentativi di accesso dannosi</string>
     <string name="jetpack_prevent_brute_force_category_title">Protezione dagli attacchi di forza bruta</string>
+    <string name="jetpack_send_wp_notifications_title">Invia notifiche push</string>
     <string name="jetpack_send_email_notifications_title">Invia notifiche via e–mail</string>
     <string name="jetpack_monitor_uptime_title">Monitora i tempi di disponibilità del tuo sito</string>
     <string name="jetpack_security_setting_title">Sicurezza</string>
@@ -434,11 +529,15 @@ Language: it
     <string name="error_please_choose_browser">Si è verificato un errore durante l\'apertura di un browser web di base. Scegli un\'altra applicazione:</string>
     <string name="cant_open_url">Impossibile aprire il link</string>
     <string name="error_unknown_post">Non è stato possibile trovare l\'articolo sul server</string>
+    <string name="error_post_does_not_exist">Questo articolo non è più disponibile</string>
     <string name="error_media_canceled">Caricamento file multimediali annullato</string>
+    <string name="error_upload_page_media_param">Si è verificato un errore nel caricamento del media in questa pagina:  %s.</string>
+    <string name="error_upload_page_param">Si è verificato un errore nel caricamento di questa pagina: %s. </string>
     <string name="async_promo_link">Come funziona?</string>
     <string name="async_promo_description">Ora puoi lasciare che l\'editor e il tuo articolo salvino e pubblichino da soli! Provaci!</string>
     <string name="async_promo_title">Pubblica con Confidence</string>
     <string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
+    <string name="uploading_media">Caricamento del media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Sei sicuro? Cancellando questo articolo annullerai anche il caricamento del file multimediale.</string>
     <string name="page_scheduled">Pagina programmata</string>
     <string name="post_scheduled">Articolo programmata</string>
@@ -643,6 +742,7 @@ Language: it
     <string name="media_encoder_quality_85">Media</string>
     <string name="media_encoder_quality_80">Bassa</string>
     <string name="media_upload_state_uploaded">Caricato</string>
+    <string name="media_upload_state_failed">Caricamento fallito</string>
     <string name="media_upload_state_deleted">Eliminato</string>
     <string name="media_upload_state_deleting">Eliminazione in corso</string>
     <string name="media_upload_state_uploading">Caricamento in corso</string>
@@ -667,6 +767,7 @@ Language: it
     <string name="media_upload_error">Si è verificato un errore durante il caricamento dei media</string>
     <string name="retry">Riprova</string>
     <string name="confirm">Conferma</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Non è possibile connettersi. Abbiamo ricevuto un messaggio di errore 403 durante il tentativo di accedere\n all\'endpoint XMLRPC del tuo sito. Per l\'app questo è necessario per comunicare con il tuo sito. Contatta il tuo host per risolvere\n questo problema.</string>
     <string name="xmlrpc_post_blocked_error">Non è possibile connettersi. Il tuo host sta bloccando le richieste POST ma queste sono necessarie al corretto funzionamento dell\'app\n per comunicare con il tuo sito. Contatta il tuo fornitore del servizio di hosting per risolvere questo problema.</string>
     <string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
     <string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
@@ -784,7 +885,6 @@ Language: it
     <string name="invite_names_title">Nomi utente o email</string>
     <string name="invite_people">Invita delle persone</string>
     <string name="my_site_header_external">Esterno</string>
-    <string name="send_link">Invia link</string>
     <string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
     <string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
     <string name="reader_empty_posts_in_search_description">Nessun articolo trovato riguardo %s per la tua lingua</string>
@@ -810,12 +910,8 @@ Language: it
     <string name="error_locating_image">Errore nella localizzazione dell\'immagine ritagliata</string>
     <string name="error_cropping_image">Errore nel ritaglio dell\'immagine</string>
     <string name="checking_email">Verifica della email</string>
-    <string name="launch_your_email_app">Esegui la tua app email</string>
-    <string name="check_your_email">Controlla la tua email</string>
     <string name="magic_link_unavailable_error_message">Attualmente non disponibile. Inserisci la tua password</string>
     <string name="logging_in">Sto entrando</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Ottieni un link inviato alla tua email per autenticarti istantaneamente</string>
-    <string name="enter_your_password_instead">Oppure inserisci la tua password</string>
     <string name="web_address_dialog_hint">Mostrato pubblicamente quando si commenta.</string>
     <string name="new_editor_reflection_error">L\'editor visuale non è compatibile con il tuo device. &amp;Egrave; stato automaticamente disabilitato.</string>
     <string name="stats_insights_latest_post_no_title">(nessun titolo)</string>
@@ -920,6 +1016,7 @@ Language: it
     <string name="error_post_account_settings">Impossibile salvare le impostazioni del tuo account</string>
     <string name="error_fetch_account_settings">Impossibile recuperare le impostazioni dell\'account</string>
     <string name="error_fetch_my_profile">Impossibile recuperare il profilo</string>
+    <string name="stats_widget_promo_ok_btn_label">OK, ricevuto</string>
     <string name="stats_widget_promo_desc">Aggiungi il widget alla schermata Home per accedere alle tue statistiche con un clic.</string>
     <string name="stats_widget_promo_title">Widget delle statistiche della schermata Home</string>
     <string name="site_settings_unknown_language_code_error">Codice lingua non riconosciuto</string>
@@ -1032,6 +1129,7 @@ Language: it
     <string name="reader_err_get_post_generic">Impossibile recuperare questo articolo</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">I siti che segui non hanno pubblicato nulla recentemente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Nessun articolo recente</string>
+    <string name="media_edit_copy_url_toast">URL copiato negli appunti</string>
     <string name="selected_theme">Tema selezionato</string>
     <string name="could_not_load_theme">Impossibile caricare il tema</string>
     <string name="theme_activation_error">Qualche cosa è andato storto. Impossibile attivare il tema.</string>
@@ -1107,6 +1205,7 @@ Language: it
     <string name="email">E–mail</string>
     <string name="notifications_tab">Scheda Notifiche</string>
     <string name="app_notifications">Notifiche della app</string>
+    <string name="notification_settings_item_other_account_emails_summary">Invieremo sempre email importanti riguardanti il tuo account, ma potresti ricevere anche altre utili informazioni.</string>
     <string name="stats_insights_latest_post_trend">Sono passati %1$s dalla pubblicazione di %2$s. Ecco com\'è andato finora l\'articolo…</string>
     <string name="stats_insights_latest_post_summary">Riassunto ultimo articolo</string>
     <string name="button_revert">Riconverti</string>
@@ -1147,8 +1246,10 @@ Language: it
     <string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
     <string name="me_btn_support">Aiuto e supporto</string>
     <string name="account_settings">Impostazioni account</string>
+    <string name="site_picker_create_wpcom">Crea un sito su WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostra/nascondi siti</string>
     <string name="site_picker_add_self_hosted">Aggiungi un sito self–hosted</string>
+    <string name="site_picker_add_site">Aggiungi nuovo sito</string>
     <string name="my_site_btn_switch_site">Cambia sito</string>
     <string name="site_picker_title">Seleziona un sito</string>
     <string name="my_site_btn_view_site">Visualizza il sito</string>
@@ -1283,7 +1384,6 @@ Language: it
     <string name="create_new_blog_wpcom">Crea un blog su WordPress.com</string>
     <string name="nux_help_description">Visita il nostro centro assistenza per ottenere le risposte alle domande più frequenti o visita il forum per porne di nuove</string>
     <string name="browse_our_faq_button">Scorri le nostre FAQ</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">Non hai ancora fatto un like ad un articolo</string>
     <string name="reader_empty_followed_blogs_title">Non stai ancora seguendo alcun sito</string>
     <string name="reader_menu_block_blog">Blocca questo blog</string>
@@ -1296,8 +1396,6 @@ Language: it
     <string name="hs__new_conversation_header">Chat di supporto</string>
     <string name="hs__conversation_detail_error">Descrivi il problema che si è presentato</string>
     <string name="contact_us">Contattaci</string>
-    <string name="preference_send_usage_stats_summary">Invia automaticamente le statistiche di utilizzo per aiutarci a migliorare WordPress per Android</string>
-    <string name="preference_send_usage_stats">Invia le statistiche</string>
     <string name="schedule_verb">Pianifica</string>
     <string name="update_verb">Aggiorna</string>
     <string name="reader_empty_recommended_blogs">Nessun blog consigliato</string>
@@ -1330,6 +1428,7 @@ Language: it
     <string name="error_refresh_comments">Impossibile aggiornare i commenti al momento</string>
     <string name="error_refresh_pages">Impossibile aggiornare le pagine al momento</string>
     <string name="error_refresh_posts">Impossibile aggiornare gli articoli al momento</string>
+    <string name="error_deleting_post">Si è verificato un errore durante l\'eliminazione dell\'articolo</string>
     <string name="notifications_empty_list">Nessuna notifica</string>
     <string name="invalid_url_message">Verifica la validità dell\'URL inserita</string>
     <string name="stats_bar_graph_empty">Nessuna statistica disponibile</string>
@@ -1392,7 +1491,10 @@ Language: it
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_unapproved">In attesa</string>
     <string name="comment_status_approved">Approvato</string>
+    <string name="delete_page">Eliminare la pagina?</string>
+    <string name="delete_post">Eliminare l\'articolo?</string>
     <string name="post_settings">Impostazioni articolo</string>
+    <string name="file_not_found">Impossibile trovare il file da caricare. È stato eliminato o spostato?</string>
     <string name="horizontal_alignment">Allineamento orizzontale</string>
     <string name="local_draft">Bozza locale</string>
     <string name="page_settings">Impostazioni pagina</string>
@@ -1421,7 +1523,6 @@ Language: it
     <string name="pick_photo">Seleziona foto</string>
     <string name="reader_empty_followed_blogs_description">Ma non preoccuparti, fai un tap sull\'icona in alto a destra per iniziare ad esplorare!</string>
     <string name="reader_likes_you_and_one">Piace a te e a un\'altra persona</string>
-    <string name="nux_tutorial_get_started_title">Inizia!</string>
     <string name="reader_empty_followed_tags">Non stai seguendo alcun tag</string>
     <string name="reader_toast_err_url_intent">Impossibile aprire %s</string>
     <string name="reader_toast_err_view_image">Impossibile visualizzare l\'immagine</string>

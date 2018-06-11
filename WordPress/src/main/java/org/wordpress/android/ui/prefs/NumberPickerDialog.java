@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -39,7 +39,7 @@ public class NumberPickerDialog extends DialogFragment
     private static final int DEFAULT_MIN_VALUE = 0;
     private static final int DEFAULT_MAX_VALUE = 99;
 
-    private Switch mSwitch;
+    private SwitchCompat mSwitch;
     private TextView mHeaderText;
     private NumberPicker mNumberPicker;
     private NumberPicker.Formatter mFormat;
@@ -55,12 +55,12 @@ public class NumberPickerDialog extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-        TextView switchText = (TextView) view.findViewById(R.id.number_picker_text);
-        mSwitch = (Switch) view.findViewById(R.id.number_picker_switch);
-        mHeaderText = (TextView) view.findViewById(R.id.number_picker_header);
-        mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        TextView switchText = view.findViewById(R.id.number_picker_text);
+        mSwitch = view.findViewById(R.id.number_picker_switch);
+        mHeaderText = view.findViewById(R.id.number_picker_header);
+        mNumberPicker = view.findViewById(R.id.number_picker);
         int value = mMinValue;
 
         Bundle args = getArguments();
@@ -151,7 +151,7 @@ public class NumberPickerDialog extends DialogFragment
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         @SuppressLint("InflateParams")
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
-        TextView titleText = ((TextView) titleView.findViewById(R.id.title));
+        TextView titleText = titleView.findViewById(R.id.title);
         titleText.setText(title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,

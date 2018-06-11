@@ -111,7 +111,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);
@@ -126,7 +126,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         for (int i = 0; i < mEntries.length; i++) {
             RadioButton radio = new RadioButton(getActivity());
             CompoundButtonCompat.setButtonTintList(radio,
-                    getResources().getColorStateList(R.color.dialog_compound_button));
+                    getResources().getColorStateList(R.color.dialog_compound_button_thumb));
             radio.setText(mEntries[i]);
             radio.setId(i);
             mRadioGroup.addView(radio);

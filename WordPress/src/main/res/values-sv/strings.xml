@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-24 20:05:42+0000
+Translation-Revision-Date: 2018-05-24 12:59:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Nytt inlägg. Skriv ett nytt inlägg.</string>
+    <string name="my_site_icon_content_description">Byt webbplatsikon</string>
+    <string name="my_site_icon_dialog_cancel_button">Avbryt</string>
+    <string name="my_site_icon_dialog_remove_button">Ta bort</string>
+    <string name="my_site_icon_dialog_change_button">Ändra</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Du har inte behörighet att redigera webbplatsikonen.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Du har inte behörighet att lägga till webbplatsikon.</string>
+    <string name="my_site_icon_dialog_change_message">Hur vill du redigera ikonen?</string>
+    <string name="my_site_icon_dialog_add_message">Vill du lägga till en webbplatsikon?</string>
+    <string name="my_site_icon_dialog_title">Webbplatsikon</string>
+    <string name="reader_followed_blog_notifications_this">denna webbplats</string>
+    <string name="reader_followed_blog_notifications_action">Aktivera</string>
+    <string name="reader_followed_blog_notifications">Aktivera notiser för %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Slå på webbplatsnotiser</string>
+    <string name="reader_btn_notifications_off">Stäng av webbplatsnotiser</string>
+    <string name="activity_log_jetpack_icon">Jetpack–ikon</string>
+    <string name="rewind">Spola tillbaka</string>
+    <string name="activity_log_event">Händelse</string>
+    <string name="activity_log_icon">Aktivitetsikon</string>
+    <string name="activity_log">Aktivitetslogg</string>
+    <string name="activity">Aktivitet</string>
+    <string name="privacy_policy_read">Läs integritetspolicy</string>
+    <string name="third_party_policy_learn_more_caption">Vi använder spårningsverktyg, inklusive vissa från tredje part. Läs mer om dessa och hur du styr dem.</string>
+    <string name="third_party_policy_learn_more_header">Policyer från tredje part</string>
+    <string name="privacy_policy_learn_more_caption">Denna information hjälper oss att förbättra våra produkter, visa dig marknadsinformation som är mer relevant, anpassa din upplevelse av WordPress.com och annat som finns beskrivet i vår integritetspolicy.</string>
+    <string name="privacy_policy_learn_more_header">Integritetspolicy</string>
+    <string name="cookie_policy_learn_more_caption">Dela information till vårt analysverktyg om din användning av tjänster medan du är inloggad på ditt konto på WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">Cookie–policy</string>
+    <string name="preference_privacy_settings">Integritetsinställningar</string>
+    <string name="preference_collect_information">Samla in information</string>
+    <string name="post_submitted">Inlägget har skickats</string>
+    <string name="write_post">Skriv inlägg</string>
+    <string name="login_email_button_signup">Har du inget konto? %1$sRegistrera dig%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Funktionen för tillägg kräver att webbplatsen har gott anseende.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Funktionen för tillägg kräver att domänens abonnemang är kopplat till denna användare.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Funktionen med tillägg kräver administratörsbehörighet.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Tillägg kan inte installeras på VIP–webbplatser.</string>
+    <string name="plugin_install_site_ineligible_excessive_disk_space">Det går inte att installera tillägget på grund av begränsat lagringsutrymme.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">För funktionen med tillägg måste e–postadressen vara bekräftad.</string>
+    <string name="plugin_install_site_ineligible_site_private">För funktionen med tillägg krävs att webbplatsen är publik.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">För funktionen med tillägg krävs ett business–konto.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">För funktionen med tillägg krävs ett anpassat domännamn.</string>
+    <string name="plugin_install_site_ineligible_default_error">Funktionen med tillägg är inte tillgänglig för denna webbplats.</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Vi genomför de sista förberedelserna – nästan klart…</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installerar tillägget…</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installera</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installationen av det första tillägget på din webbplats kan ta upp till 1 minut. Under denna tid kan du inte ändra något på webbplatsen.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_title">Installera tillägget</string>
+    <string name="notification_settings_followed_dialog_title">Notiser</string>
+    <string name="notification_settings_followed_dialog_email_comments">Skicka kommentarer till mig via e–post</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">En gång i veckan</string>
+    <string name="notification_settings_followed_dialog_email_posts_instantly">Omedelbart</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">Dagligen</string>
+    <string name="notification_settings_followed_dialog_notification_posts_switch">Nya inlägg</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Få notiser om nya inlägg från denna webbplats</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Skicka mig nya inlägg via e–post</string>
+    <string name="notification_settings_item_your_sites_all_followed_sites">Alla webbplatser jag följer</string>
+    <string name="notification_settings_category_followed_sites">Följda webbplatser</string>
+    <string name="content_description_person_reading_device_notification">Person som läser en mobil enhet med notiser</string>
+    <string name="content_description_people_looking_charts">Personers som studerar diagram och tabeller</string>
+    <string name="comment_title">%s om %s</string>
+    <string name="dialog_confirm_delete_permanently_page">Är du säker på att du vill radera denna sida permanent?</string>
+    <string name="dialog_confirm_delete_permanently_post">Är du säker på att du vill radera detta inlägg permanent?</string>
     <string name="notification_site_creation_title_in_progress">Skapar webbplatsen… Det kan ta några minuter.</string>
     <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
@@ -45,7 +108,6 @@ Language: sv_SE
     <string name="stats_tab_tap_content_description">visar %s</string>
     <string name="stats_legend">beskrivning av statistikdiagram</string>
     <string name="fab_create_desc">skapa</string>
-    <string name="fab_create_post_desc">skapa inlägg</string>
     <string name="fab_add_tag_desc">skapa etikett</string>
     <string name="stats_bar_week_desc">Veckan med %s</string>
     <string name="stats_bar_date_value_desc">%s, %d visningar</string>
@@ -80,7 +142,6 @@ Language: sv_SE
     <string name="profile_picture">profilbild för %s</string>
     <string name="comment_checkmark_desc">förbockningsmärke</string>
     <string name="signup_with_google_progress">Registrering via Google…</string>
-    <string name="editor_toast_no_action_taken">Ett fel har inträffat. Ingen åtgärd vidtogs.</string>
     <string name="jetpack_connection_failed_with_reason">Anslutningen till Jetpack fungerade inte: %s</string>
     <string name="jetpack_already_connected_toast">DU är redan ansluten till Jetpack</string>
     <string name="menu_undo_snackbar_action">ÅNGRA</string>
@@ -276,7 +337,7 @@ Language: sv_SE
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack kommer att optimera dina bilder och leverera dem från den server som finns närmast dina besökare. Användningen av vårt globala nätverk för innehållsdistribution får din webbplats att laddas snabbare.</string>
     <string name="site_settings_serve_images_from_our_servers">Leverera bilder från våra servrar</string>
     <string name="site_settings_speed_up_your_site">Snabba upp din webbplats</string>
-    <string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
+    <string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress–webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Konfigurera Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Text på/av</string>
     <string name="plugin_info_your_version">Din WordPress–version</string>
@@ -825,7 +886,6 @@ Language: sv_SE
     <string name="invite_names_title">Användarnamn eller e‑postmeddelanden</string>
     <string name="invite_people">Bjud in personer</string>
     <string name="my_site_header_external">Externt</string>
-    <string name="send_link">Skicka länk</string>
     <string name="label_clear_search_history">Rensa sökhistoriken</string>
     <string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
     <string name="reader_empty_posts_in_search_description">Inga inlägg hittade för %s på ditt språk</string>
@@ -851,12 +911,8 @@ Language: sv_SE
     <string name="error_locating_image">Det gick inte att hitta den beskurna bilden</string>
     <string name="error_cropping_image">Det gick inte att beskära bilden</string>
     <string name="checking_email">Kontrollerar e–post</string>
-    <string name="launch_your_email_app">Starta din e‑postapp</string>
-    <string name="check_your_email">Kolla din e–post</string>
     <string name="magic_link_unavailable_error_message">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
     <string name="logging_in">Loggar in</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Få en länk skickad till din e–post för att logga in direkt</string>
-    <string name="enter_your_password_instead">Ange ditt lösenord istället</string>
     <string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
     <string name="new_editor_reflection_error">Den visuella redigeraren är inte kompatibel med din enhet. Den\n inaktiverades automatiskt.</string>
     <string name="stats_insights_latest_post_no_title">(ingen rubrik)</string>
@@ -1329,7 +1385,6 @@ Language: sv_SE
     <string name="create_new_blog_wpcom">Skapa en blogg på WordPress.com</string>
     <string name="nux_help_description">Besök hjälpsektionen för att få svar på vanliga frågor eller besök forumet för att ställa nya frågor</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
-    <string name="faq_button">Vanliga frågor</string>
     <string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
     <string name="reader_empty_followed_blogs_title">Du följer inga webbplatser än</string>
     <string name="reader_menu_block_blog">Blockera denna blogg</string>
@@ -1342,8 +1397,6 @@ Language: sv_SE
     <string name="hs__new_conversation_header">Supportchatt</string>
     <string name="hs__conversation_detail_error">Beskriv problemet du upplever</string>
     <string name="contact_us">Kontakta oss</string>
-    <string name="preference_send_usage_stats_summary">Skicka automatiskt användarstatistik för att hjälpa oss förbättra WordPress för Android</string>
-    <string name="preference_send_usage_stats">Skicka statistik</string>
     <string name="schedule_verb">Tidinställ</string>
     <string name="update_verb">Uppdatera</string>
     <string name="reader_empty_recommended_blogs">Inga rekommenderade bloggar</string>
@@ -1471,7 +1524,6 @@ Language: sv_SE
     <string name="pick_photo">Välj bild</string>
     <string name="reader_empty_followed_blogs_description">Inget att oroa sig för, peka på ikonen uppe till höger för att börja utforska!</string>
     <string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
-    <string name="nux_tutorial_get_started_title">Kom igång!</string>
     <string name="reader_empty_followed_tags">Du följer inga ämnen</string>
     <string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
     <string name="reader_toast_err_view_image">Kunde inte visa bild</string>

@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -31,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -124,8 +124,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mInstalledText;
     private AppCompatButton mUpdateButton;
     private AppCompatButton mInstallButton;
-    private Switch mSwitchActive;
-    private Switch mSwitchAutoupdates;
+    private SwitchCompat mSwitchActive;
+    private SwitchCompat mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
     private ProgressDialog mAutomatedTransferProgressDialog;
 
@@ -653,7 +653,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 from,
                 to);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setCancelable(true);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
@@ -687,7 +687,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void confirmRemovePlugin() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
         String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
                 mPlugin.getDisplayName(),
@@ -1128,7 +1128,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * UI for it, so we get a confirmation first in this step.
      */
     private void confirmInstallPluginForAutomatedTransfer() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setTitle(getResources().getText(R.string.plugin_install_first_plugin_confirmation_dialog_title));
         builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
         builder.setPositiveButton(R.string.plugin_install_first_plugin_confirmation_dialog_install_btn,

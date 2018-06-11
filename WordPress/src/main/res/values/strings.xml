@@ -59,6 +59,7 @@
     <string name="keep_editing">Keep editing</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
+    <string name="removed">Removed</string>
     <string name="search">Search</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
@@ -715,8 +716,15 @@
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
-    <string name="preference_send_usage_stats">Send statistics</string>
-    <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
+    <string name="preference_collect_information">Collect information</string>
+    <string name="preference_privacy_settings">Privacy settings</string>
+    <string name="cookie_policy_learn_more_header">Cookie Policy</string>
+    <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
+    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
+    <string name="privacy_policy_learn_more_caption">This information helps us improve our products, make marketing to you more relevant, personalize your WordPress.com experience, and more as detailed in our privacy policy.</string>
+    <string name="third_party_policy_learn_more_header">Third Party Policy</string>
+    <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
+    <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
 
@@ -751,6 +759,7 @@
     <string name="activity_log_event">Event</string>
     <string name="rewind">Rewind</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
+    <string name="activity_log_empty_list">No events recorded yet</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -1321,6 +1330,7 @@
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
     <string name="passcodelock_prompt_message">Enter your PIN</string>
+    <!--suppress CheckTagEmptyBody -->
     <string name="passcodelock_hint"></string>
 
     <!--
@@ -1337,6 +1347,7 @@
     <!--
       reader strings
     -->
+    <string name="reader_save_for_later_title">Saved posts</string>
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now">now</string>
 
@@ -1368,6 +1379,12 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_add_bookmark">Add to saved posts</string>
+    <string name="reader_remove_bookmark">Remove from saved posts</string>
+    <string name="reader_btn_bookmark">Save</string>
+    <string name="reader_btn_bookmarked">Saved</string>
+    <string name="reader_bookmark_snack_btn">View All</string>
+    <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
 
@@ -1467,6 +1484,8 @@
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+    <string name="reader_empty_saved_posts_title">No posts saved \u2014 yet!</string>
+    <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
     <string name="reader_empty_posts_in_search_title">No posts found</string>
