@@ -70,7 +70,4 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
         quickStartSqlUtils.setShownTask(siteId, task, isShown)
     }
 
-    fun showQuickStart(siteId: Long): Boolean {
-        return hasDoneTask(siteId, QuickStartTask.CREATE_SITE)
-    }
 }
