@@ -188,7 +188,9 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
     }
 
-    implementation group: 'com.zendesk', name: 'support', version: '2.0.0'
+    implementation (group: 'com.zendesk', name: 'support', version: '2.0.0') {
+        exclude group: 'com.google.dagger'
+    }
 
     lintChecks 'org.wordpress:lint:1.0.1'
 
