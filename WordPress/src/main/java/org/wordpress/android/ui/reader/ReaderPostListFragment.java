@@ -802,6 +802,11 @@ public class ReaderPostListFragment extends Fragment
                 adapter.addSiteList(event.sites);
             }
         }
+
+        if (getSearchTabsPosition() == TAB_SITES && adapter.isEmpty()) {
+            setEmptyTitleAndDescription(event.isError());
+            showEmptyView();
+        }
     }
 
     /*
@@ -1111,7 +1116,11 @@ public class ReaderPostListFragment extends Fragment
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
-            title = getString(R.string.reader_empty_posts_request_failed);
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                title = getString(R.string.reader_empty_search_request_failed);
+            } else {
+                title = getString(R.string.reader_empty_posts_request_failed);
+            }
         } else if (isUpdating() && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             title = getString(R.string.reader_empty_posts_in_tag_updating);
         } else {
