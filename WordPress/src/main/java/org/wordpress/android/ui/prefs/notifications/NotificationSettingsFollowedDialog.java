@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
@@ -46,9 +46,9 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
     private RadioButton mRadioButtonFrequencyWeekly;
     private RadioGroup mRadioGroupEmailPosts;
     private String mRadioButtonSelected;
-    private Switch mSwitchEmailComments;
-    private Switch mSwitchEmailPosts;
-    private Switch mSwitchNotificationPosts;
+    private SwitchCompat mSwitchEmailComments;
+    private SwitchCompat mSwitchEmailPosts;
+    private SwitchCompat mSwitchNotificationPosts;
     private boolean mConfirmed;
 
     @Override

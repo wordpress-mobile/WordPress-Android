@@ -8,10 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.text.TextUtils;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -42,13 +40,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         try {
-            InstanceID instanceID = InstanceID.getInstance(this);
-            String gcmId = BuildConfig.GCM_ID;
-            if (TextUtils.isEmpty(gcmId)) {
-                AppLog.e(T.NOTIFS, "GCM_ID must be configured in gradle.properties");
-                return;
-            }
-            String token = instanceID.getToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+            String token = FirebaseInstanceId.getInstance().getToken();
             sendRegistrationToken(token);
         } catch (Exception e) {
             // SecurityException can happen on some devices without Google services (these devices probably strip

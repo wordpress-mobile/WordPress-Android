@@ -334,7 +334,6 @@ Language: th
     <string name="older_month">เก่ากว่าหนึ่งเดือน</string>
     <string name="more">กว่า</string>
     <string name="reader_empty_posts_liked">คุณยังไม่ได้ชื่นชอบเรื่องใด ๆ</string>
-    <string name="faq_button">คำถามที่พบบ่อย</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
     <string name="nux_help_description">เยี่ยมชมศูนย์กลางช่วยเหลือเพื่อหาคำตอบของคำถามทั่ว ๆ ไป หรือเยี่ยมชมฟอรั่มเพื่อตั้งคำถามใหม่</string>
     <string name="create_new_blog_wpcom">สร้างบล็อก WordPress.com</string>
@@ -355,8 +354,6 @@ Language: th
     <string name="hs__conversation_header">การคุยช่วยเหลือ</string>
     <string name="hs__username_blank_error">ใส่ชื่อที่ใช้งานได้</string>
     <string name="hs__invalid_email_error">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
-    <string name="preference_send_usage_stats">ส่งสถิติ</string>
-    <string name="preference_send_usage_stats_summary">ส่งข้อมูลการใช้งานอัตโนมัติเพื่อช่วยเราในการปรับปรุงเวิร์ดเพรสสำหรับแอนดรอยด์</string>
     <string name="update_verb">อัปเดต</string>
     <string name="schedule_verb">ตารางงาน</string>
     <string name="reader_title_subs">ป้ายกำกับและบล็อก</string>
@@ -476,7 +473,6 @@ Language: th
     <string name="reader_toast_err_get_post">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
     <string name="reader_likes_you_and_one">คุณและอีกหนึ่งคนชอบสิ่งนี้</string>
     <string name="reader_empty_followed_blogs_description">ไม่ต้องเป็นห่วง เพียงแตะที่ไอคอนที่ด้านบนขวาเพื่อเริ่มการค้นหา</string>
-    <string name="nux_tutorial_get_started_title">เริ่มใช้งาน</string>
     <string name="reader_toast_err_view_image">ไม่สามารถดูรูปได้</string>
     <string name="reader_toast_err_url_intent">ไม่สามารถเปิด %s</string>
     <string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>

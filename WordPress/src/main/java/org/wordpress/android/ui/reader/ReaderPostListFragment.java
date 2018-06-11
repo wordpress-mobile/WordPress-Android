@@ -59,6 +59,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.BottomNavController;
+import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -106,7 +107,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnPostPopupListener,
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener {
+        WPMainActivity.OnScrollToTopListener,
+        MainToolbarFragment {
     private ReaderPostAdapter mPostAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
@@ -191,6 +193,7 @@ public class ReaderPostListFragment extends Fragment
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
+        fragment.trackTagLoaded(tag);
 
         return fragment;
     }
@@ -378,6 +381,11 @@ public class ReaderPostListFragment extends Fragment
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void setTitle(String title) {
+        // Do nothing - no title for this toolbar
+    }
+
     /*
      * ensures the adapter is created and posts are updated if they haven't already been
      */
@@ -556,12 +564,12 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.blue_medium));
+        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.color_primary));
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
-                getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
+                getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
 
         // add a menu to the filtered recycler's toolbar
         if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
@@ -1003,7 +1011,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void addBookmarkImageSpan(SpannableStringBuilder ssb, int imagePlaceholderPosition) {
-        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_outline_18dp);
+        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_grey_min_18dp);
         d.setBounds(0, 0, (int) (d.getIntrinsicWidth() * 1.2), (int) (d.getIntrinsicHeight() * 1.2));
         ssb.setSpan(new ImageSpan(d), imagePlaceholderPosition, imagePlaceholderPosition + 2,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1662,8 +1670,11 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void trackTagLoaded(ReaderTag tag) {
-        AnalyticsTracker.Stat stat = null;
+        if (tag == null) {
+            return;
+        }
 
+        AnalyticsTracker.Stat stat;
         if (tag.isDiscover()) {
             stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
         } else if (tag.isTagTopic()) {
@@ -1672,9 +1683,7 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
         } else if (tag.isBookmarked()) {
             stat = AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_FILTER;
-        }
-
-        if (stat == null) {
+        } else {
             return;
         }
 

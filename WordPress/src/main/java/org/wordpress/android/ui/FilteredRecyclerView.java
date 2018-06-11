@@ -1,8 +1,14 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.AppBarLayout.Behavior.DragCallback;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,19 +62,21 @@ public class FilteredRecyclerView extends RelativeLayout {
     private int mSpinnerDrawableRight;
     private AppLog.T mTAG;
 
+    private boolean mToolbarDisableScrollGestures = false;
+    @LayoutRes private int mSpinnerItemView = 0;
+    @LayoutRes private int mSpinnerDropDownItemView = 0;
+
     public FilteredRecyclerView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public FilteredRecyclerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public FilteredRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context, attrs);
     }
 
     public void setRefreshing(boolean refreshing) {
@@ -117,22 +125,54 @@ public class FilteredRecyclerView extends RelativeLayout {
         mCustomEmptyView = v;
     }
 
-    private void init() {
+    private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         inflate(getContext(), R.layout.filtered_list_component, this);
+
+        if (attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(
+                    attrs,
+                    R.styleable.FilteredRecyclerView,
+                    0, 0);
+            try {
+                mToolbarDisableScrollGestures = a.getBoolean(
+                        R.styleable.FilteredRecyclerView_wpToolbarDisableScrollGestures, false);
+                mSpinnerItemView = a.getResourceId(R.styleable.FilteredRecyclerView_wpSpinnerItemView, 0);
+                mSpinnerDropDownItemView = a.getResourceId(
+                        R.styleable.FilteredRecyclerView_wpSpinnerDropDownItemView, 0);
+            } finally {
+                a.recycle();
+            }
+        }
 
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(getContext(), 1);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_with_spinner);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        mToolbar = findViewById(R.id.toolbar_with_spinner);
+        mAppBarLayout = findViewById(R.id.app_bar_layout);
 
-        mEmptyView = (TextView) findViewById(R.id.empty_view);
+        if (mToolbarDisableScrollGestures) {
+            // Prevent the toolbar from auto-hide/reveal while scrolling, and disable swipe to
+            // hide toolbar.
+            ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+            if (params.getBehavior() == null) {
+                params.setBehavior(new AppBarLayout.Behavior());
+            }
+            AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+            behavior.setDragCallback(new DragCallback() {
+                @Override public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                    return false;
+                }
+            });
+        }
+
+        mEmptyView = findViewById(R.id.empty_view);
 
         // progress bar that appears when loading more items
-        mProgressLoadMore = (ProgressBar) findViewById(R.id.progress_loading);
+        mProgressLoadMore = findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
@@ -158,7 +198,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         );
 
         if (mSpinner == null) {
-            mSpinner = (Spinner) findViewById(R.id.filter_spinner);
+            mSpinner = findViewById(R.id.filter_spinner);
         }
     }
 
@@ -172,7 +212,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                 @Override
                 public void onFilterCriteriasLoaded(List<FilterCriteria> criteriaList) {
                     if (criteriaList != null) {
-                        mFilterCriteriaOptions = new ArrayList<FilterCriteria>();
+                        mFilterCriteriaOptions = new ArrayList<>();
                         mFilterCriteriaOptions.addAll(criteriaList);
                         initSpinnerAdapter();
                         setCurrentFilter(mFilterListener.onRecallSelection());
@@ -186,7 +226,8 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     private void initSpinnerAdapter() {
-        mSpinnerAdapter = new SpinnerAdapter(getContext(), mFilterCriteriaOptions);
+        mSpinnerAdapter = new SpinnerAdapter(getContext(),
+                mFilterCriteriaOptions, mSpinnerItemView, mSpinnerDropDownItemView);
 
         mSelectingRememberedFilterOnCreate = true;
         mSpinner.setAdapter(mSpinnerAdapter);
@@ -240,7 +281,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     public void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView == null) return;
 
-        if ((hasAdapter() && mAdapter.getItemCount() == 0) || !hasAdapter()) {
+        if (!hasAdapter() || mAdapter.getItemCount() == 0) {
             if (mFilterListener != null) {
                 if (mCustomEmptyView == null) {
                     String msg = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
@@ -376,11 +417,28 @@ public class FilteredRecyclerView extends RelativeLayout {
     private class SpinnerAdapter extends BaseAdapter {
         private final List<FilterCriteria> mFilterValues;
         private final LayoutInflater mInflater;
+        @LayoutRes private final int mItemView;
+        @LayoutRes private final int mDropDownItemView;
 
-        SpinnerAdapter(Context context, List<FilterCriteria> filterValues) {
+        SpinnerAdapter(Context context,
+                       List<FilterCriteria> filterValues,
+                       @LayoutRes int itemView,
+                       @LayoutRes int dropDownItemView) {
             super();
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mFilterValues = filterValues;
+
+            if (itemView == 0) {
+                mItemView = R.layout.filter_spinner_item;
+            } else {
+                mItemView = itemView;
+            }
+
+            if (dropDownItemView == 0) {
+                mDropDownItemView = R.layout.toolbar_spinner_dropdown_item;
+            } else {
+                mDropDownItemView = dropDownItemView;
+            }
         }
 
         @Override
@@ -402,9 +460,9 @@ public class FilteredRecyclerView extends RelativeLayout {
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
-                view = mInflater.inflate(R.layout.filter_spinner_item, parent, false);
+                view = mInflater.inflate(mItemView, parent, false);
 
-                final TextView text = (TextView) view.findViewById(R.id.text);
+                final TextView text = view.findViewById(R.id.text);
                 FilterCriteria selectedCriteria = (FilterCriteria) getItem(position);
                 text.setText(selectedCriteria.getLabel());
                 if (mSpinnerTextColor != 0) {
@@ -428,7 +486,7 @@ public class FilteredRecyclerView extends RelativeLayout {
             final TagViewHolder holder;
 
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.toolbar_spinner_dropdown_item, parent, false);
+                convertView = mInflater.inflate(mDropDownItemView, parent, false);
                 holder = new TagViewHolder(convertView);
                 convertView.setTag(holder);
             } else {
@@ -443,7 +501,7 @@ public class FilteredRecyclerView extends RelativeLayout {
             private final TextView mTextView;
 
             TagViewHolder(View view) {
-                mTextView = (TextView) view.findViewById(R.id.text);
+                mTextView = view.findViewById(R.id.text);
             }
         }
 
