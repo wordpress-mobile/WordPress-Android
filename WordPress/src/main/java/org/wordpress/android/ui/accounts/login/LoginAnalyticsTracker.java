@@ -148,7 +148,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackSignupMagicLinkSent(String email) {
+    public void trackSignupMagicLinkSent() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SENT);
     }
 
