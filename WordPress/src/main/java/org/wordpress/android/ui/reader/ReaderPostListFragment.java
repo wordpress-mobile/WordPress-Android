@@ -471,13 +471,18 @@ public class ReaderPostListFragment extends Fragment
         if (mCurrentTag != null) {
             outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag);
         }
+
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             mTagPreviewHistory.saveInstance(outState);
+        } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS
+                   && mSearchView != null
+                   && mSearchView.getQuery() != null) {
+            String query = mSearchView.getQuery().toString();
+            outState.putString(ReaderConstants.ARG_SEARCH_QUERY, query);
         }
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
-        outState.putString(ReaderConstants.ARG_SEARCH_QUERY, mCurrentSearchQuery);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
