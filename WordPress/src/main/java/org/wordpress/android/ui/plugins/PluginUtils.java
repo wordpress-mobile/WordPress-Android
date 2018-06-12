@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.Arrays;
@@ -56,7 +57,7 @@ public class PluginUtils {
     }
 
     public static boolean isJetpack(@NonNull ImmutablePluginModel plugin) {
-        return checkNameOfPlugin(plugin, "jetpack/jetpack");
+        return StringUtils.equals(plugin.getName(), JETPACK_PLUGIN_NAME);
     }
 
     public static boolean isAutoManaged(@NonNull SiteModel site, @NonNull ImmutablePluginModel plugin) {
@@ -68,13 +69,8 @@ public class PluginUtils {
         }
         boolean isAutoManaged = false;
         for (String pluginName : AUTO_MANAGED_PLUGINS) {
-            isAutoManaged = isAutoManaged || checkNameOfPlugin(plugin, pluginName);
+            isAutoManaged = isAutoManaged || StringUtils.equals((plugin.getName(), pluginName);
         }
         return isAutoManaged;
-    }
-
-    private static boolean checkNameOfPlugin(@NonNull ImmutablePluginModel plugin, @NonNull String name) {
-        String pluginName = plugin.getName();
-        return pluginName != null && pluginName.equals(name);
     }
 }
