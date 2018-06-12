@@ -1,5 +1,6 @@
 package org.wordpress.android.push;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
 
@@ -68,7 +70,9 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_DRAFT_PENDING_DISMISS = "action_draft_pending_dismiss";
     public static final String ARG_ACTION_DRAFT_PENDING_IGNORE = "action_draft_pending_ignore";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
+    public static final String ARG_ACTION_NOTIFICATION_DISMISS = "action_dismiss";
     public static final String ARG_NOTE_ID = "note_id";
+    public static final String ARG_PUSH_ID = "notificationId";
 
     // bundle and push ID, as they are held in the system dashboard
     public static final String ARG_NOTE_BUNDLE = "note_bundle";
@@ -108,6 +112,14 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(ARG_NOTE_ID, noteId);
         intent.putExtra(ARG_ACTION_REPLY_TEXT, replyToComment);
         context.startService(intent);
+    }
+
+    public static PendingIntent getPendingIntentForNotificationDismiss(Context context, int pushId) {
+        Intent intent = new Intent(context, NotificationsProcessingService.class);
+        intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_NOTIFICATION_DISMISS);
+        intent.putExtra(ARG_PUSH_ID, pushId);
+        intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
+        return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     public static void stopService(Context context) {
@@ -185,6 +197,22 @@ public class NotificationsProcessingService extends Service {
                     GCMMessageService.removeNotification(GCMMessageService.AUTH_PUSH_NOTIFICATION_ID);
 
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+                    return;
+                }
+
+                // check notification dismissed pending intent
+                if (mActionType.equals(ARG_ACTION_NOTIFICATION_DISMISS)) {
+                    int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
+                    if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
+                        GCMMessageService.clearNotifications();
+                    } else {
+                        GCMMessageService.removeNotification(notificationId);
+                        // Dismiss the grouped notification if a user dismisses all notifications from a wear device
+                        if (!GCMMessageService.hasNotifications()) {
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
+                            notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
+                        }
+                    }
                     return;
                 }
 

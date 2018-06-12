@@ -661,6 +661,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_upload_post_error_retry";
             case NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY:
                 return "notifications_upload_media_error_retry";
+            case NOTIFICATION_RECEIVED_PROCESSING_START:
+                return "notifications_received_processing_start";
+            case NOTIFICATION_RECEIVED_PROCESSING_END:
+                return "notifications_received_processing_end";
             case OPENED_POSTS:
                 return "site_menu_opened";
             case OPENED_PAGES:
