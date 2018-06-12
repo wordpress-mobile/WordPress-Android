@@ -725,11 +725,11 @@ public class WPMainActivity extends AppCompatActivity
 
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
-                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-                    // While unlikely, its possible the app could be closed before the onAccountChanged event is
-                    // handled. Setting this flag lets us dispatch the event the next time the app opens.
+                    // Sets a flag that we need to track a magic link sign up.
+                    // We'll handle it in onAccountChanged so we know we have
+                    // updated account info.
                     AppPrefs.setShouldTrackMagicLinkSignup(true);
-
+                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
                     } else {
@@ -756,15 +756,24 @@ public class WPMainActivity extends AppCompatActivity
         if (mAccountStore.hasAccessToken()) {
             mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
             if (AppPrefs.getShouldTrackMagicLinkSignup()) {
-                AccountModel account = mAccountStore.getAccount();
-                if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
-                    mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
-                    mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
-                    AppPrefs.removeShouldTrackMagicLinkSignup();
-                }
+                trackMagicLinkSignupIfNeeded();
             }
         }
     }
+
+    /**
+     * Bumps stats related to a magic link sign up provided the account has been updated with
+     * the username and email address needed to refresh analytics meta data.
+     */
+    private void trackMagicLinkSignupIfNeeded() {
+        AccountModel account = mAccountStore.getAccount();
+        if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
+            mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
+            mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
+            AppPrefs.removeShouldTrackMagicLinkSignup();
+        }
+    }
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
