@@ -893,7 +893,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ImageView bookmarkButton = holder.mBtnBookmark;
         Context context = holder.mBtnBookmark.getContext();
 
-        boolean canBookmarkPost = (post.isWP() || post.isJetpack) && !post.isDiscoverPost();
+        boolean canBookmarkPost = !post.isDiscoverPost();
         if (canBookmarkPost) {
             bookmarkButton.setVisibility(View.VISIBLE);
         } else {
