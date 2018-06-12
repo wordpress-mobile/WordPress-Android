@@ -1735,6 +1735,7 @@
     <string name="plugin_version">Version %s</string>
     <string name="plugin_installed_version">Version %s installed</string>
     <string name="plugin_installed">Installed</string>
+    <string name="plugin_auto_managed">Auto-managed</string>
     <string name="plugin_install">Install</string>
     <string name="plugin_available_version">Version %s is available</string>
     <string name="plugin_updated_successfully">Successfully updated %s</string>

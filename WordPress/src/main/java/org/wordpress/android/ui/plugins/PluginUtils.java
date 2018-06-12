@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plugins;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -8,9 +9,17 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.Version;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class PluginUtils {
+    private static final String JETPACK_PLUGIN_NAME = "jetpack/jetpack";
+    private static final List<String> AUTO_MANAGED_PLUGINS = Arrays.asList(JETPACK_PLUGIN_NAME,
+            "akismet/akismet", "vaultpress/vaultpress");
+
     public static boolean isPluginFeatureAvailable(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
@@ -45,5 +54,23 @@ public class PluginUtils {
             // values for the site plugin and wporg plugin are not the same
             return !installedVersionStr.equalsIgnoreCase(availableVersionStr);
         }
+    }
+
+    public static boolean isJetpack(@NonNull ImmutablePluginModel plugin) {
+        return StringUtils.equals(plugin.getName(), JETPACK_PLUGIN_NAME);
+    }
+
+    public static boolean isAutoManaged(@NonNull SiteModel site, @NonNull ImmutablePluginModel plugin) {
+        if (!site.isAutomatedTransfer()) {
+            return false;
+        }
+        if (!plugin.isInstalled()) {
+            return false;
+        }
+        boolean isAutoManaged = false;
+        for (String pluginName : AUTO_MANAGED_PLUGINS) {
+            isAutoManaged = isAutoManaged || StringUtils.equals(plugin.getName(), pluginName);
+        }
+        return isAutoManaged;
     }
 }

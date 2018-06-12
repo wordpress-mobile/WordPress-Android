@@ -20,7 +20,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -94,18 +93,19 @@ public class PluginBrowserActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if (savedInstanceState == null) {
-            mViewModel.setSite((SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
-        } else {
-            mViewModel.readFromBundle(savedInstanceState);
-        }
-        mViewModel.start();
-
-        if (mViewModel.getSite() == null) {
+        SiteModel siteModel = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        if (siteModel == null) {
             ToastUtils.showToast(this, R.string.blog_not_found);
             finish();
             return;
         }
+
+        if (savedInstanceState == null) {
+            mViewModel.setSite(siteModel);
+        } else {
+            mViewModel.readFromBundle(savedInstanceState);
+        }
+        mViewModel.start();
 
         // site plugin list
         findViewById(R.id.text_manage).setOnClickListener(new View.OnClickListener() {
@@ -246,7 +246,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
+        PluginListFragment currentFragment = getCurrentFragment();
+        if (currentFragment != null && currentFragment.getListType() == PluginListType.SEARCH) {
             mSearchMenuItem.expandActionView();
             mSearchView.setQuery(mViewModel.getSearchQuery(), false);
             mSearchView.setOnQueryTextListener(this);
@@ -334,6 +335,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         trackPluginListOpened(listType);
     }
 
+    private @Nullable PluginListFragment getCurrentFragment() {
+        return (PluginListFragment) getSupportFragmentManager().findFragmentByTag(PluginListFragment.TAG);
+    }
+
     private void hideListFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             onBackPressed();
@@ -411,7 +416,12 @@ public class PluginBrowserActivity extends AppCompatActivity
                 @StringRes int textResId;
                 @ColorRes int colorResId;
                 @DrawableRes int drawableResId;
-                if (PluginUtils.isUpdateAvailable(plugin)) {
+                boolean isAutoManaged = PluginUtils.isAutoManaged(mViewModel.getSite(), plugin);
+                if (isAutoManaged) {
+                    textResId = R.string.plugin_auto_managed;
+                    colorResId = R.color.alert_green;
+                    drawableResId = R.color.transparent;
+                } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
                     colorResId = R.color.alert_yellow;
                     drawableResId = R.drawable.plugin_update_available_icon;
@@ -426,6 +436,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 }
                 holder.mStatusText.setText(textResId);
                 holder.mStatusText.setTextColor(getResources().getColor(colorResId));
+                holder.mStatusIcon.setVisibility(isAutoManaged ? View.GONE : View.VISIBLE);
                 holder.mStatusIcon.setImageResource(drawableResId);
                 holder.mStatusContainer.setVisibility(View.VISIBLE);
                 holder.mRatingBar.setVisibility(View.GONE);
@@ -489,7 +500,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return getString(R.string.plugins);
     }
 
-    void trackPluginListOpened(PluginListType listType) {
+    private void trackPluginListOpened(PluginListType listType) {
         if (listType == PluginListType.SEARCH) {
             // Although it's named as "search performed" we are actually only tracking the first search
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_SEARCH_PERFORMED, mViewModel.getSite());
