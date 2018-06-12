@@ -78,7 +78,8 @@ class ActivityLogListFragment : Fragment() {
                     viewModel.onRewindConfirmed(ActivityLogListItem.Progress(
                             getString(R.string.activity_log_currently_restoring_title),
                             getString(R.string.activity_log_currently_restoring_message,
-                            item.formattedDate, item.formattedTime)), item.rewindId)
+                            item.formattedDate, item.formattedTime),
+                            getString(R.string.now)), item.rewindId)
                 }
         }
     }

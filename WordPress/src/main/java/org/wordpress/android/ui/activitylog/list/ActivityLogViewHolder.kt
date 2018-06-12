@@ -27,10 +27,14 @@ class ActivityLogViewHolder(
 
     fun bind(activity: ActivityLogListItem, previous: ActivityLogListItem?, next: ActivityLogListItem?) {
         this.activity = activity
+        this.activity.previousItem = previous
+        this.activity.nextItem = next
+        previous?.nextItem = activity
+        next?.previousItem = activity
 
         summary.text = activity.title
         text.text = activity.description
-        header.text = activity.formattedDate
+        header.text = activity.header
 
         progressBarContainer.visibility = if (activity.isProgressBarVisible) View.VISIBLE else View.GONE
         header.visibility = if (activity.isHeaderVisible) View.VISIBLE else View.GONE

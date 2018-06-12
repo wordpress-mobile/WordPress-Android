@@ -18,6 +18,8 @@ sealed class ActivityLogListItem(
     var previousItem: ActivityLogListItem?,
     var nextItem: ActivityLogListItem?
 ) {
+    abstract val header: String
+
     var isHeaderVisible: Boolean = false
         get() = isHeaderVisible(previousItem)
 
@@ -31,7 +33,7 @@ sealed class ActivityLogListItem(
 
     private fun isHeaderVisible(previous: ActivityLogListItem?): Boolean {
         return if (previous != null) {
-            formattedDate != previous.formattedDate
+            header != previous.header
         } else {
             true
         }
@@ -57,11 +59,14 @@ sealed class ActivityLogListItem(
 
         constructor(model: ActivityLogModel) : this(model.activityID, model.summary, model.text, model.gridicon,
                 model.status, model.rewindable ?: false, model.rewindID, model.published)
+
+        override val header = formattedDate
     }
 
     data class Progress(
         private val progressTitle: String,
         private val message: String,
+        override val header: String,
         private val next: ActivityLogListItem? = null)
         : ActivityLogListItem(message, progressTitle, Icon.NOTICE_OUTLINE, Status.INFO, Date(),false,
             true, null, next) {
