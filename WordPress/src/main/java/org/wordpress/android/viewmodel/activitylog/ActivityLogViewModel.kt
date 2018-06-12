@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Statu
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.RewindStatusService
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -34,20 +35,20 @@ class ActivityLogViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private val _events = MutableLiveData<List<ActivityLogListItemViewModel>>()
-    val events: LiveData<List<ActivityLogListItemViewModel>>
+    private val _events = MutableLiveData<List<ActivityLogListItem>>()
+    val events: LiveData<List<ActivityLogListItem>>
         get() = _events
 
     private val _eventListStatus = MutableLiveData<ActivityLogListStatus>()
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    private val _showRewindDialog = SingleLiveEvent<ActivityLogListItemViewModel>()
-    val showRewindDialog: LiveData<ActivityLogListItemViewModel>
+    private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
+    val showRewindDialog: LiveData<ActivityLogListItem>
         get() = _showRewindDialog
 
-    private val _showItemDetail = SingleLiveEvent<ActivityLogListItemViewModel>()
-    val showItemDetail: LiveData<ActivityLogListItemViewModel>
+    private val _showItemDetail = SingleLiveEvent<ActivityLogListItem>()
+    val showItemDetail: LiveData<ActivityLogListItem>
         get() = _showItemDetail
 
     private val isRewindInProgress: Boolean
@@ -101,7 +102,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun reloadEvents() {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
-        val items = eventList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+        val items = eventList.map { model -> ActivityLogListItem.Event(model) }
         _events.postValue(items)
     }
 
@@ -109,24 +110,24 @@ class ActivityLogViewModel @Inject constructor(
         fetchEvents(false)
     }
 
-    fun onItemClicked(item: ActivityLogListItemViewModel) {
+    fun onItemClicked(item: ActivityLogListItem) {
         if (!isRewindInProgress) {
             _showItemDetail.postValue(item)
         }
     }
 
-    fun onRewindButtonClicked(item: ActivityLogListItemViewModel) {
+    fun onRewindButtonClicked(item: ActivityLogListItem) {
         if (!isRewindInProgress) {
             _showRewindDialog.postValue(item)
         }
     }
 
-    fun onRewindConfirmed(rewindActivity: ActivityLogListItemViewModel) {
+    fun onRewindConfirmed(rewindActivity: ActivityLogListItem.Progress, rewindId: String) {
         insertProgressListItem(rewindActivity)
-        rewindStatusService.rewind(rewindActivity.rewindId!!, site)
+        rewindStatusService.rewind(rewindId, site)
     }
 
-    private fun insertProgressListItem(rewindActivity: ActivityLogListItemViewModel) {
+    private fun insertProgressListItem(rewindActivity: ActivityLogListItem) {
         val newEvents = ArrayList(_events.value!!)
         newEvents.add(0, rewindActivity)
         _events.postValue(newEvents)
@@ -166,7 +167,7 @@ class ActivityLogViewModel @Inject constructor(
 
         if (event.rowsAffected > 0) {
             val eventList = activityLogStore.getActivityLogForSite(site, false)
-            val items = eventList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+            val items = eventList.map { ActivityLogListItem.Event(it) }
             _events.postValue(items)
         }
 

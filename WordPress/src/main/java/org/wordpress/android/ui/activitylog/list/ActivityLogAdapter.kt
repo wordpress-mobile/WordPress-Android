@@ -6,23 +6,24 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.wordpress.android.R.layout
-import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 
 class ActivityLogAdapter(
     context: Context,
     private val viewModel: ActivityLogViewModel,
-    private val itemClickListener: (ActivityLogListItemViewModel) -> Unit,
-    private val rewindClickListener: (ActivityLogListItemViewModel) -> Unit
+    private val itemClickListener: (ActivityLogListItem) -> Unit,
+    private val rewindClickListener: (ActivityLogListItem) -> Unit
 ) : Adapter<ActivityLogViewHolder>() {
-    private val list = mutableListOf<ActivityLogListItemViewModel>()
+    private val list = mutableListOf<ActivityLogListItem>()
     private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, getItem(position - 1))
+        getItem(position)?.let { current ->
+            holder.bind(current, getItem(position - 1), getItem(position + 1))
 
-        if (position == itemCount - 1) {
-            viewModel.loadMore()
+            if (position == itemCount - 1) {
+                viewModel.loadMore()
+            }
         }
     }
 
@@ -30,7 +31,7 @@ class ActivityLogAdapter(
         setHasStableIds(true)
     }
 
-    internal fun updateList(items: List<ActivityLogListItemViewModel>) {
+    internal fun updateList(items: List<ActivityLogListItem>) {
         val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list, items))
         list.clear()
         list.addAll(items)
@@ -38,8 +39,8 @@ class ActivityLogAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun getItem(position: Int): ActivityLogListItemViewModel? {
-        return if (position < 0) null else list[position]
+    private fun getItem(position: Int): ActivityLogListItem? {
+        return if (position < 0 || position >= list.size) null else list[position]
     }
 
     override fun getItemCount(): Int {
@@ -47,7 +48,10 @@ class ActivityLogAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return list[position].activityId.hashCode().toLong()
+        return if (list[position] is ActivityLogListItem.Event)
+            (list[position] as ActivityLogListItem.Event).activityId.hashCode().toLong()
+        else
+            list[position].hashCode().toLong()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {

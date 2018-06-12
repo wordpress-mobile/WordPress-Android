@@ -19,7 +19,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
@@ -70,15 +69,22 @@ class ActivityLogListFragment : Fragment() {
     }
 
     fun onRewindConfirmed(activityId: String) {
-        viewModel.events.value?.firstOrNull { it.activityId == activityId }?.let { item ->
-            viewModel.onRewindConfirmed(ActivityLogListItemViewModel.makeRewindItem(
-                    getString(R.string.activity_log_currently_restoring_title),
-                    getString(R.string.activity_log_currently_restoring_message, item.date, item.time)))
+        viewModel.events.value
+            ?.filter { it is ActivityLogListItem.Event }
+            ?.map { it as ActivityLogListItem.Event }
+            ?.firstOrNull { it.activityId == activityId }
+            ?.let { item ->
+                item.rewindId?.let {
+                    viewModel.onRewindConfirmed(ActivityLogListItem.Progress(
+                            getString(R.string.activity_log_currently_restoring_title),
+                            getString(R.string.activity_log_currently_restoring_message,
+                            item.formattedDate, item.formattedTime)), item.rewindId)
+                }
         }
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(this, Observer<List<ActivityLogListItemViewModel>> {
+        viewModel.events.observe(this, Observer<List<ActivityLogListItem>> {
             reloadEvents()
         })
 
@@ -86,20 +92,24 @@ class ActivityLogListFragment : Fragment() {
             refreshProgressBars(listStatus)
         })
 
-        viewModel.showItemDetail.observe(this, Observer<ActivityLogListItemViewModel> {
-            ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it?.activityId)
+        viewModel.showItemDetail.observe(this, Observer<ActivityLogListItem> {
+            if (it is ActivityLogListItem.Event) {
+                ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
+            }
         })
 
-        viewModel.showRewindDialog.observe(this, Observer<ActivityLogListItemViewModel> {
-            displayRewindDialog(it)
+        viewModel.showRewindDialog.observe(this, Observer<ActivityLogListItem> {
+            if (it is ActivityLogListItem.Event) {
+                displayRewindDialog(it)
+            }
         })
     }
 
-    private fun displayRewindDialog(it: ActivityLogListItemViewModel?) {
+    private fun displayRewindDialog(it: ActivityLogListItem.Event) {
         val dialog = BasicFragmentDialog()
-        dialog.initialize(it!!.activityId,
+        dialog.initialize(it.activityId,
                 getString(string.activity_log_rewind_site),
-                getString(string.activity_log_rewind_dialog_message, it.date, it.time),
+                getString(string.activity_log_rewind_dialog_message, it.formattedDate, it.formattedTime),
                 getString(string.activity_log_rewind_site),
                 getString(string.cancel))
         dialog.show(fragmentManager, it.activityId)
@@ -124,15 +134,15 @@ class ActivityLogListFragment : Fragment() {
         setEvents(viewModel.events.value ?: emptyList())
     }
 
-    private fun onItemClicked(item: ActivityLogListItemViewModel) {
+    private fun onItemClicked(item: ActivityLogListItem) {
         viewModel.onItemClicked(item)
     }
 
-    private fun onRewindButtonClicked(item: ActivityLogListItemViewModel) {
+    private fun onRewindButtonClicked(item: ActivityLogListItem) {
         viewModel.onRewindButtonClicked(item)
     }
 
-    private fun setEvents(events: List<ActivityLogListItemViewModel>) {
+    private fun setEvents(events: List<ActivityLogListItem>) {
         context?.let {
             val adapter: ActivityLogAdapter
             if (activityLogList.adapter == null) {

@@ -8,12 +8,11 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 
 class ActivityLogViewHolder(
     parent: ViewGroup,
-    private val itemClickListener: (ActivityLogListItemViewModel) -> Unit,
-    private val rewindClickListener: (ActivityLogListItemViewModel) -> Unit
+    private val itemClickListener: (ActivityLogListItem) -> Unit,
+    private val rewindClickListener: (ActivityLogListItem) -> Unit
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.activity_log_list_item, parent, false)) {
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
@@ -24,21 +23,21 @@ class ActivityLogViewHolder(
     private val rewindButton: ImageButton = itemView.findViewById(R.id.rewind_button)
     private val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
-    private lateinit var activity: ActivityLogListItemViewModel
+    private lateinit var activity: ActivityLogListItem
 
-    fun bind(activity: ActivityLogListItemViewModel, previous: ActivityLogListItemViewModel?) {
+    fun bind(activity: ActivityLogListItem, previous: ActivityLogListItem?, next: ActivityLogListItem?) {
         this.activity = activity
 
-        summary.text = activity.summary
-        text.text = activity.text
-        header.text = activity.header
+        summary.text = activity.title
+        text.text = activity.description
+        header.text = activity.formattedDate
 
-        progressBarContainer.visibility = if (activity.isRewindInProgress) View.VISIBLE else View.GONE
-        header.visibility = if (activity.isHeaderVisible(previous)) View.VISIBLE else View.GONE
-        rewindButton.visibility = if (activity.isRewindable) View.VISIBLE else View.GONE
+        progressBarContainer.visibility = if (activity.isProgressBarVisible) View.VISIBLE else View.GONE
+        header.visibility = if (activity.isHeaderVisible) View.VISIBLE else View.GONE
+        rewindButton.visibility = if (activity.isButtonVisible) View.VISIBLE else View.GONE
 
-        thumbnail.setImageResource(activity.icon)
-        thumbnail.setBackgroundResource(activity.background)
+        thumbnail.setImageResource(activity.icon.drawable)
+        thumbnail.setBackgroundResource(activity.status.color)
         container.setOnClickListener {
             itemClickListener(activity)
         }

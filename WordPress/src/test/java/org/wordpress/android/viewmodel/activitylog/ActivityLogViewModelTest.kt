@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.RewindStatusService
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
 
@@ -39,7 +40,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var rewindStatusService: RewindStatusService
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
-    private var events: MutableList<List<ActivityLogListItemViewModel>?> = mutableListOf()
+    private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
@@ -66,7 +67,7 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+                activityLogList.map { ActivityLogListItem.Event(it) }
         )
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.FETCHING)
 
@@ -99,7 +100,7 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+                activityLogList.map { ActivityLogListItem.Event(it) }
         )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
@@ -122,7 +123,7 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                activityLogList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
+                activityLogList.map { ActivityLogListItem.Event(it) }
         )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
@@ -151,9 +152,9 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onActivityLogFetched(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
-        assertTrue(events.last()?.get(0)?.isHeaderVisible(null) == true)
-        assertTrue(events.last()?.get(1)?.isHeaderVisible(events.last()?.get(0)) == false)
-        assertTrue(events.last()?.get(2)?.isHeaderVisible(events.last()?.get(1)) == true)
+        assertTrue(events.last()?.get(0)?.isHeaderVisible == true)
+        assertTrue(events.last()?.get(1)?.isHeaderVisible == false)
+        assertTrue(events.last()?.get(2)?.isHeaderVisible == true)
     }
 
     private fun assertFetchEvents(canLoadMore: Boolean = false) {

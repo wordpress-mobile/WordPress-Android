@@ -1,14 +1,19 @@
 package org.wordpress.android.ui.activitylog.list
 
 import android.support.v7.util.DiffUtil
-import org.wordpress.android.viewmodel.activitylog.ActivityLogListItemViewModel
 
 class ActivityLogDiffCallback(
-    private val oldList: List<ActivityLogListItemViewModel>,
-    private val newList: List<ActivityLogListItemViewModel>
+    private val oldList: List<ActivityLogListItem>,
+    private val newList: List<ActivityLogListItem>
 ) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].activityId == newList[newItemPosition].activityId
+        val oldItem = oldList[oldItemPosition] as? ActivityLogListItem.Event
+        val newItem = newList[newItemPosition] as? ActivityLogListItem.Event
+        return if (oldItem != null && newItem != null) {
+            oldItem.activityId == newItem.activityId
+        } else {
+            oldItem == newItem
+        }
     }
 
     override fun getOldListSize(): Int {
