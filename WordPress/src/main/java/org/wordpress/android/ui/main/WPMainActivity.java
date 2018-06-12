@@ -727,7 +727,7 @@ public class WPMainActivity extends AppCompatActivity
                 if (mIsMagicLinkSignup) {
                     mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                     // While unlikely, its possible the app could be closed before the onAccountChanged event is
-                    // handled. Setting this flag let's us dispatch the event the next time the app opens.
+                    // handled. Setting this flag lets us dispatch the event the next time the app opens.
                     AppPrefs.setShouldTrackMagicLinkSignup(true);
 
                     if (mJetpackConnectSource != null) {
