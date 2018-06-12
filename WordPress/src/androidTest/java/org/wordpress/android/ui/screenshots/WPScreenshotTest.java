@@ -12,6 +12,7 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.test.espresso.util.TreeIterables;
+import android.support.test.filters.SdkSuppress;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.AndroidTestCase;
@@ -29,6 +30,7 @@ import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.BeforeClass;
 import org.wordpress.android.R;
@@ -45,9 +47,9 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/*import tools.fastlane.screengrab.FalconScreenshotStrategy;
+import tools.fastlane.screengrab.FalconScreenshotStrategy;
 import tools.fastlane.screengrab.Screengrab;
-import tools.fastlane.screengrab.locale.LocaleTestRule;*/
+import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -61,14 +63,18 @@ public class WPScreenshotTest {
 
     private static final int ATTEMPTS = 20;
     private static final int WAITING_TIME = 300;
-/*
-    @ClassRule
-    public static final LocaleTestRule localeTestRule = new LocaleTestRule();*/
 
-    @BeforeClass
-    public static void setUpClass() {
-      // TODO: Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
+    @ClassRule
+    public static final LocaleTestRule localeTestRule = new LocaleTestRule();
+
+    @Before public void setUp() {
+        Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
     }
+
+   /* @BeforeClass
+    public void setUpClass() {
+      Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
+    }*/
 
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
@@ -167,7 +173,7 @@ public class WPScreenshotTest {
             e.printStackTrace();
         }
 
-        // TODO: Screengrab.screenshot("screenshot_1");
+        Screengrab.screenshot("screenshot_1");
     }
 
     private void createBlogPost() {

@@ -167,6 +167,9 @@ dependencies {
     }
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestCompile 'tools.fastlane:screengrab:1.2.0', {
+        exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
+    }
 
     // Provided by the WordPress-Android Repository
     implementation 'org.wordpress:passcodelock:1.5.1'
