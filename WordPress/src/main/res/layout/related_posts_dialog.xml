@@ -22,7 +22,7 @@
         android:orientation="vertical"
         android:background="@color/white">
 
-        <Switch
+        <android.support.v7.widget.SwitchCompat
             android:id="@+id/toggle_related_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,6 +30,7 @@
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             android:textAlignment="viewStart"
+            android:theme="@style/SwitchBlueMedium"
             android:gravity="start"/>
 
         <org.wordpress.android.widgets.WPTextView
