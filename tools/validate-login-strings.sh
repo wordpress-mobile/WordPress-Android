@@ -20,7 +20,7 @@ done <loginstrings.txt
 rm loginstrings.txt
 
 if [ "$found_missing_string" = true ] ; then
-  printf "The following string resources are defined in the login library but are missing or modified in the base app's strings.xml:\n\n"
+  printf "The following string resources are defined in the login library but are missing in (or differ from) the base app's strings.xml:\n\n"
   printf '%s\n' "${string_array[@]}"
   # Exit with error if any strings were missing
   exit 1
