@@ -53,7 +53,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private val isRewindInProgress: Boolean
         get() = Transformations.map(
-                    rewindStatusService.rewindState,
+                    rewindStatusService.rewindProgress,
                     { state -> state.status == RUNNING })
                 .value ?: false
 
