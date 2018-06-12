@@ -10,14 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -26,8 +24,6 @@ import android.widget.ScrollView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -35,12 +31,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -51,7 +45,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -87,7 +80,7 @@ import de.greenrobot.event.EventBus;
 public class MySiteFragment extends Fragment implements SiteSettingsListener,
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface {
+        BasicFragmentDialog.BasicDialogNegativeClickInterface, MainToolbarFragment {
     private static final long ALERT_ANIM_OFFSET_MS = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
@@ -102,14 +95,14 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     private ProgressBar mBlavatarProgressBar;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
-    private LinearLayout mLookAndFeelHeader;
+    private WPTextView mLookAndFeelHeader;
     private LinearLayout mThemesContainer;
     private LinearLayout mPeopleView;
     private LinearLayout mPageView;
     private LinearLayout mPlanContainer;
     private LinearLayout mPluginsContainer;
     private LinearLayout mActivityLogContainer;
-    private View mConfigurationHeader;
+    private WPTextView mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
     private LinearLayout mNoSiteView;
@@ -118,6 +111,10 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
+
+    @Nullable
+    private Toolbar mToolbar = null;
+    private String mToolbarTitle;
 
     private int mBlavatarSz;
 
@@ -142,13 +139,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        mDispatcher.unregister(this);
-        super.onDestroy();
     }
 
     @Override
@@ -200,7 +190,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
         mPlanContainer = rootView.findViewById(R.id.row_plan);
         mPluginsContainer = rootView.findViewById(R.id.row_plugins);
         mActivityLogContainer = rootView.findViewById(R.id.row_activity_log);
-        mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
+        mConfigurationHeader = rootView.findViewById(R.id.my_site_configuration_header);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
         mAdminView = rootView.findViewById(R.id.row_admin);
@@ -364,6 +354,9 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             }
         });
 
+        mToolbar = rootView.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
+
         return rootView;
     }
 
@@ -426,36 +419,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                 if (resultCode == Activity.RESULT_OK) {
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
-                }
-                break;
-            case RequestCodes.EDIT_POST:
-                if (resultCode != Activity.RESULT_OK || data == null || !isAdded()) {
-                    return;
-                }
-                // if user returned from adding a post and it was saved as a local draft,
-                // briefly animate the background of the "Blog posts" view to give the
-                // user a cue as to where to go to return to that post
-                if (getView() != null && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
-                    showAlert(getView().findViewById(R.id.postsGlowBackground));
-                }
-
-                final PostModel post = mPostStore.
-                                                         getPostByLocalPostId(
-                                                                 data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID,
-                                                                                  0));
-
-                if (post != null) {
-                    final SiteModel site = getSelectedSite();
-                    UploadUtils.handleEditPostResultSnackbars(getActivity(),
-                                                              getActivity().findViewById(R.id.coordinator), resultCode,
-                                                              data, post, site,
-                                                              new View.OnClickListener() {
-                                                                  @Override
-                                                                  public void onClick(View v) {
-                                                                      UploadUtils.publishPost(getActivity(), post, site,
-                                                                                              mDispatcher);
-                                                                  }
-                                                              });
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
@@ -583,35 +546,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
              .start(getActivity(), this);
     }
 
-    private void showAlert(View view) {
-        if (isAdded() && view != null) {
-            Animation highlightAnimation = new AlphaAnimation(0.0f, 1.0f);
-            highlightAnimation.setInterpolator(new Interpolator() {
-                private float bounce(float t) {
-                    return t * t * 24.0f;
-                }
-
-                public float getInterpolation(float t) {
-                    t *= 1.1226f;
-                    if (t < 0.184f) {
-                        return bounce(t);
-                    } else if (t < 0.545f) {
-                        return bounce(t - 0.40719f);
-                    } else if (t < 0.7275f) {
-                        return -bounce(t - 0.6126f) + 1.0f;
-                    } else {
-                        return 0.0f;
-                    }
-                }
-            });
-            highlightAnimation.setStartOffset(ALERT_ANIM_OFFSET_MS);
-            highlightAnimation.setRepeatCount(1);
-            highlightAnimation.setRepeatMode(Animation.RESTART);
-            highlightAnimation.setDuration(ALERT_ANIM_DURATION_MS);
-            view.startAnimation(highlightAnimation);
-        }
-    }
-
     private void refreshSelectedSiteDetails(SiteModel site) {
         if (!isAdded()) {
             return;
@@ -729,6 +663,13 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    public void setTitle(final String title) {
+        mToolbarTitle = title;
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
+        }
+    }
 
     /**
      * We can't just use fluxc OnSiteChanged event, as the order of events is not guaranteed -> getSelectedSite()
@@ -787,22 +728,6 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
                     UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                             getActivity().findViewById(R.id.coordinator), false,
                             event.mediaModelList, site, event.successMessage);
-                }
-            }
-        }
-    }
-
-    // FluxC events
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostUploaded(OnPostUploaded event) {
-        if (isAdded() && event.post != null) {
-            SiteModel site = getSelectedSite();
-            if (site != null) {
-                if (event.post.getLocalSiteId() == site.getId()) {
-                    UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator),
-                            event.isError(), event.post, null, site, mDispatcher);
                 }
             }
         }

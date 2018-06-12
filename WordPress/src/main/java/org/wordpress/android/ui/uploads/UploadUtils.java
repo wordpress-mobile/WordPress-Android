@@ -95,13 +95,12 @@ public class UploadUtils {
         return uploadError != null && uploadError.mediaError != null;
     }
 
-    public static void handleEditPostResultSnackbars(final Activity activity, View snackbarAttachView,
-                                                     int resultCode, Intent data,
-                                                     final PostModel post, final SiteModel site,
+    public static void handleEditPostResultSnackbars(@NonNull final Activity activity,
+                                                     @NonNull View snackbarAttachView,
+                                                     @NonNull Intent data,
+                                                     @NonNull final PostModel post,
+                                                     @NonNull final SiteModel site,
                                                      View.OnClickListener publishPostListener) {
-        if (resultCode != Activity.RESULT_OK || data == null) {
-            return;
-        }
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
@@ -128,7 +127,9 @@ public class UploadUtils {
             return;
         }
 
-        boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+        PostStatus postStatus = PostStatus.fromPost(post);
+
+        boolean isScheduledPost = postStatus == PostStatus.SCHEDULED;
         if (isScheduledPost) {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
@@ -138,7 +139,7 @@ public class UploadUtils {
             return;
         }
 
-        boolean isPublished = post != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED;
+        boolean isPublished = postStatus == PostStatus.PUBLISHED;
         if (isPublished) {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
@@ -150,7 +151,7 @@ public class UploadUtils {
             return;
         }
 
-        boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
+        boolean isDraft = postStatus == PostStatus.DRAFT;
         if (isDraft) {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button

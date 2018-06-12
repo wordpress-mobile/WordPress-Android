@@ -4,13 +4,13 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -120,18 +120,18 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 }
 
                 View commentsSetting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
-                TextView title = (TextView) commentsSetting.findViewById(R.id.notifications_switch_title);
+                TextView title = commentsSetting.findViewById(R.id.notifications_switch_title);
                 title.setText(settingName);
 
                 // Add special summary text for the WPCOM section
                 if (mChannel == Channel.WPCOM && i < summaryArray.length) {
                     String summaryText = summaryArray[i];
-                    TextView summary = (TextView) commentsSetting.findViewById(R.id.notifications_switch_summary);
+                    TextView summary = commentsSetting.findViewById(R.id.notifications_switch_summary);
                     summary.setVisibility(View.VISIBLE);
                     summary.setText(summaryText);
                 }
 
-                final Switch toggleSwitch = (Switch) commentsSetting.findViewById(R.id.notifications_switch);
+                final SwitchCompat toggleSwitch = commentsSetting.findViewById(R.id.notifications_switch);
                 toggleSwitch.setChecked(JSONUtils.queryJSON(settingsJson, settingValue, true));
                 toggleSwitch.setTag(settingValue);
                 toggleSwitch.setOnCheckedChangeListener(mOnCheckedChangedListener);

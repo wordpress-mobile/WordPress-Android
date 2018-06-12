@@ -279,7 +279,6 @@ Language: bg
     <string name="invite_names_title">Имена или имейл адреси</string>
     <string name="invite_people">Покана</string>
     <string name="my_site_header_external">Външна</string>
-    <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_empty_posts_in_search_description">Няма намерени публикации за %s на вашия език</string>
@@ -305,12 +304,8 @@ Language: bg
     <string name="error_locating_image">Неуспешно откриване на изрязаното изображение</string>
     <string name="error_cropping_image">Грешка при изрязване на изображението</string>
     <string name="checking_email">Проверяване на имейл</string>
-    <string name="launch_your_email_app">Пускане на имейл приложението</string>
-    <string name="check_your_email">Проверете вашия имейл</string>
     <string name="magic_link_unavailable_error_message">В момента не е налично. Въведете вашата парола</string>
     <string name="logging_in">Влизане</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Изпратете си връзка по имейл, за да влезете веднага.</string>
-    <string name="enter_your_password_instead">Въведете паролата си</string>
     <string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
     <string name="new_editor_reflection_error">Визуалният редактор не е съвместим с устройството ви. \n        Беше изключен автоматично.</string>
     <string name="stats_insights_latest_post_no_title">(без заглавие)</string>
@@ -780,7 +775,6 @@ Language: bg
     <string name="create_new_blog_wpcom">Създаване блог в WordPress.com</string>
     <string name="nux_help_description">Посете помощния център за да намерите отговор на често задавани въпроси или посете форума за да зададете нови</string>
     <string name="browse_our_faq_button">Преглед на секцията за ЧЗВ</string>
-    <string name="faq_button">ЧЗВ</string>
     <string name="reader_empty_posts_liked">Не сте харесали нито една публикация</string>
     <string name="reader_empty_followed_blogs_title">Все още не следвате блогове</string>
     <string name="reader_menu_block_blog">Блокиране на този блог</string>
@@ -793,8 +787,6 @@ Language: bg
     <string name="hs__new_conversation_header">Чат за поддръжка</string>
     <string name="hs__conversation_detail_error">Опишете проблема</string>
     <string name="contact_us">Връзка с нас</string>
-    <string name="preference_send_usage_stats_summary">Автоматично изпращане на статистика за ползването, за да помогнете на развитието на WordPress за Android</string>
-    <string name="preference_send_usage_stats">Изпращане на статистика</string>
     <string name="schedule_verb">Планиране</string>
     <string name="update_verb">Актуализиране</string>
     <string name="reader_empty_recommended_blogs">Няма препоръчани блогове</string>
@@ -917,7 +909,6 @@ Language: bg
     <string name="pick_photo">Избор на снимка</string>
     <string name="reader_empty_followed_blogs_description">Без притеснения! Просто натиснете върху иконата горе вдясно, за да започнете да разглеждате.</string>
     <string name="reader_likes_you_and_one">Вие и още някой харесвате това.</string>
-    <string name="nux_tutorial_get_started_title">Начало!</string>
     <string name="reader_empty_followed_tags">Вие не следвате етикети</string>
     <string name="reader_toast_err_url_intent">%s не може да се отвори</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>

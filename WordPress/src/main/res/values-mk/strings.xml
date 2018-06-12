@@ -76,7 +76,6 @@ Language: mk
     <string name="ssl_certificate_details">Детали</string>
     <string name="cab_selected">%d слекетирано</string>
     <string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
-    <string name="faq_button">ЧПП</string>
     <string name="nux_help_description">Посети го центарот за помош за да добиеш одговори на веќе поставени прашања или посети го форумот за да поставиш нови</string>
     <string name="browse_our_faq_button">Разгледи наши ЧПП</string>
     <string name="create_new_blog_wpcom">Создади WordPress.com блог</string>
@@ -111,8 +110,6 @@ Language: mk
     <string name="hs__username_blank_error">Воведи валидно име</string>
     <string name="hs__invalid_email_error">Воведи валидна е–адреса</string>
     <string name="contact_us">Контактирај нè</string>
-    <string name="preference_send_usage_stats">Испрати статистика</string>
-    <string name="preference_send_usage_stats_summary">Автоматски испраќај статистика од употребата да ни помогнеш да го подобриме WordPress за Андроид</string>
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Закажи</string>
     <string name="reader_title_subs">Ознаки и Блогови</string>
@@ -236,7 +233,6 @@ Language: mk
     <string name="reader_toast_err_view_image">Неможе да се види сликата</string>
     <string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
     <string name="reader_empty_followed_tags">Вие не следите ниту едно обележување</string>
-    <string name="nux_tutorial_get_started_title">Започнете!</string>
     <string name="reader_btn_unfollow">Следење</string>
     <string name="reader_label_added_tag">Додадено %s</string>
     <string name="reader_likes_one">На едно лице му се допаѓа ова</string>
