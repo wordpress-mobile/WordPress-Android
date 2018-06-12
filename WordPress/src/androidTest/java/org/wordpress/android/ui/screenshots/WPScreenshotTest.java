@@ -182,7 +182,7 @@ public class WPScreenshotTest {
                 allOf(withId(R.id.nav_sites), childAtPosition(
                         childAtPosition(withId(R.id.bottom_navigation),0),0)));
         waitForElementUntilDisplayed(blogNavBar).perform(click());
-        // TODO: Screengrab.screenshot("screenshot_3");
+        Screengrab.screenshot("screenshot_3");
 
         // Blog posts button
         ViewInteraction blogPostsButton = onView(
@@ -221,7 +221,7 @@ public class WPScreenshotTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // TODO: Screengrab.screenshot("screenshot_2");
+        Screengrab.screenshot("screenshot_2");
 
         // Clear the text
         editTextWithKeyBackListener.perform(scrollTo(), replaceText(""), closeSoftKeyboard());
@@ -246,7 +246,7 @@ public class WPScreenshotTest {
                 allOf(withId(R.id.nav_notifications), childAtPosition(
                         childAtPosition(withId(R.id.bottom_navigation),0),4)));
         waitForElementUntilDisplayed(notificationButton).perform(click());
-        // TODO: Screengrab.screenshot("screenshot_4");
+        Screengrab.screenshot("screenshot_4");
     }
 
     private void navigateStats() {
@@ -278,7 +278,7 @@ public class WPScreenshotTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // TODO: Screengrab.screenshot("screenshot_5");
+        Screengrab.screenshot("screenshot_5");
 
         // Navigate up
         ViewInteraction navUpButton = onView(allOf(childAtPosition(allOf(withId(R.id.toolbar),

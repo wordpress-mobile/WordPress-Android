@@ -1,0 +1,68 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Build and capture screenshots"
+  lane :screenshots do
+    gradle(task: "assembleVanillaDebug assembleVanillaDebugAndroidTest")
+    take_screenshots
+  end
+
+  desc "Capture screenshots"
+  lane :take_screenshots do |options|
+    devs = adb_devices()
+    check_devices(devs: devs)
+    
+    device = devs[0]
+    demo_mode_enter(device_serial: device.serial)
+
+    capture_android_screenshots(app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
+      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk", 
+      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
+      clear_previous_screenshots: true, 
+      device_type: options[:device]
+      )
+
+    demo_mode_exit(device_serial: device.serial)
+  end
+
+  # Screenshot helpers
+  private_lane :check_devices do |options|
+    devs = options[:devs]
+    if devs.count == 0 then
+      UI.user_error!("No devices detected. Please, connect one device")
+    end
+    
+    if devs.count > 1 then
+      UI.user_error!("Too many devices detected. Please, connect one device")
+    end
+  end
+
+  private_lane :demo_mode_enter do |options|
+    # Setup device for demo
+    adb(command: "shell settings put global sysui_demo_allowed 1", serial: options[:device_serial])
+    # Disable system notifications
+    adb(command: "shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false", serial: options[:device_serial])
+    # Enjoy lunch while browsing the Play Store
+    adb(command: "shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 1337", serial: options[:device_serial])
+  end
+
+  private_lane :demo_mode_exit do |options|
+    # Exit demo mode
+    adb(command: "shell am broadcast -a com.android.systemui.demo -e command exit", serial: options[:device_serial])
+  end
+end
