@@ -725,9 +725,10 @@ public class WPMainActivity extends AppCompatActivity
 
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
-                    AccountModel account = mAccountStore.getAccount();
-                    mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
-                    mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
+                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+                    // While unlikely, its possible the app could be closed before the onAccountChanged event is
+                    // handled. Setting this flag let's us dispatch the event the next time the app opens.
+                    AppPrefs.setShouldTrackMagicLinkSignup(true);
 
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
@@ -754,6 +755,14 @@ public class WPMainActivity extends AppCompatActivity
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (AppPrefs.getShouldTrackMagicLinkSignup()) {
+                AccountModel account = mAccountStore.getAccount();
+                if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
+                    mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
+                    mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
+                    AppPrefs.removeShouldTrackMagicLinkSignup();
+                }
+            }
         }
     }
 

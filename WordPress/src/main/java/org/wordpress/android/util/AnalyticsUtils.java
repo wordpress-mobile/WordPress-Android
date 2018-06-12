@@ -12,7 +12,6 @@ import android.webkit.MimeTypeMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -53,7 +52,6 @@ public class AnalyticsUtils {
     private static final String INTENT_DATA = "intent_data";
     private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
-    private static final String STORED_MAGICLINK_SIGNUP_EMAIL_KEY = "STORED_MAGICLINK_SIGNUP_EMAIL_KEY";
 
     public static void updateAnalyticsPreference(Context ctx,
                                                  Dispatcher mDispatcher,
@@ -435,65 +433,16 @@ public class AnalyticsUtils {
         if (!isWpcomLogin) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
-        // Just in case a user attempted a magic link signin, but then changed their
-        // mind and logged in with a different account, clear any stored email.
-        AnalyticsUtils.clearMagicLinkSignupEmail();
     }
 
     /**
      * Refreshes analytics metadata and bumps the account created stat.
      *
-     * Analytics tracker meta data is refreshed in order to properly identify
-     * events to the newly created user.  If the username and email is empty then
-     * the stored magic link email is used for both (if it exists).  No valid values are
-     * found then we skip refreshing metadata but still bump the stat.
-     *
      * @param username
      * @param email
      */
     public static void trackAnalyticsAccountCreated(String username, String email) {
-        if (email.isEmpty()) {
-            // Email was empty. See if there is a saved magic link signup email in
-            // SharedPrefs
-            Context ctx = WordPress.getContext();
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            email = prefs.getString(STORED_MAGICLINK_SIGNUP_EMAIL_KEY, "");
-        }
-
-        if (!email.isEmpty()) {
-            // If the username is empty, assign it the same value as the email.
-            // Tracker metadata can use either value to identify a user.
-            if (username.isEmpty()) {
-                username = email;
-            }
-        }
-
-        // Clean up any stored magic link signup email.
-        clearMagicLinkSignupEmail();
-
-        if (!username.isEmpty()) {
-            // We at least have a good value for username so go ahead and refresh tracker metadata.
-            refreshMetadataNewUser(username, email);
-            return;
-        }
-
-        // Finally bump the stat.
+        AnalyticsUtils.refreshMetadataNewUser(username, email);
         AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
-    }
-
-    public static void storeMagicLinkSignupEmail(String email) {
-        Context ctx = WordPress.getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(STORED_MAGICLINK_SIGNUP_EMAIL_KEY, email);
-        editor.apply();
-    }
-
-    public static void clearMagicLinkSignupEmail() {
-        Context ctx = WordPress.getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(STORED_MAGICLINK_SIGNUP_EMAIL_KEY);
-        editor.apply();
     }
 }
