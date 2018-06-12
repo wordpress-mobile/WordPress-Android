@@ -33,7 +33,7 @@ public interface LoginAnalyticsListener {
     void trackSignupMagicLinkFailed();
     void trackSignupMagicLinkOpened();
     void trackSignupMagicLinkOpenEmailClientClicked();
-    void trackSignupMagicLinkSent(String email);
+    void trackSignupMagicLinkSent();
     void trackSignupMagicLinkSucceeded();
     void trackSignupSocialAccountsNeedConnecting();
     void trackSignupSocialButtonFailure();
