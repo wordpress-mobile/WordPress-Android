@@ -1572,7 +1572,7 @@
 
     <!--Support strings-->
     <string name="support_identity_input_dialog_enter_email_and_name">To continue please enter your email address and name</string>
-    <string name="support_identity_input_dialog_enter_email">To continue please enter your email address</string>
+    <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
 
     <!-- Helpshift overridden strings -->
