@@ -94,7 +94,7 @@ class ActivityLogDetailViewModel
     }
 
     private fun onRewindClicked() {
-        _showRewindDialog.postValue(_item.value!!)
+        _item.value?.let { _showRewindDialog.postValue(it) }
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {

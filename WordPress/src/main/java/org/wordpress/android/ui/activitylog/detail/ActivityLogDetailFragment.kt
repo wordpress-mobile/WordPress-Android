@@ -37,47 +37,49 @@ class ActivityLogDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
+        activity?.let {
+            viewModel = ViewModelProviders.of(it, viewModelFactory)
+                    .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
 
-        val intent = activity?.intent
-        val (site, activityLogId) = when {
-            savedInstanceState != null -> {
-                val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-                val activityLogId = savedInstanceState.getString(ACTIVITY_LOG_ID_KEY)
-                site to activityLogId
+            val intent = it.intent
+            val (site, activityLogId) = when {
+                savedInstanceState != null -> {
+                    val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+                    val activityLogId = savedInstanceState.getString(ACTIVITY_LOG_ID_KEY)
+                    site to activityLogId
+                }
+                intent != null -> {
+                    val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+                    val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY)
+                    site to activityLogId
+                }
+                else -> throw Throwable("Couldn't initialize Activity Log view model")
             }
-            intent != null -> {
-                val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-                val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY)
-                site to activityLogId
-            }
-            else -> throw Throwable("Couldn't initialize Activity Log view model")
+
+            viewModel.activityLogItem.observe(this, Observer { activityLogModel ->
+                setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
+                activityActorName.setTextOrHide(activityLogModel?.actorName)
+                activityActorRole.setTextOrHide(activityLogModel?.actorRole)
+
+                activityMessage.setTextOrHide(activityLogModel?.text)
+                activityType.setTextOrHide(activityLogModel?.summary)
+
+                activityCreatedDate.text = activityLogModel?.createdDate
+                activityCreatedTime.text = activityLogModel?.createdTime
+
+                activityRewindButton.setOnClickListener(activityLogModel?.rewindAction)
+            })
+
+            viewModel.rewindAvailable.observe(this, Observer { available ->
+                activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
+            })
+
+            viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> {
+                it?.let { onRewindButtonClicked(it) }
+            })
+
+            viewModel.start(site, activityLogId)
         }
-
-        viewModel.activityLogItem.observe(this, Observer { activityLogModel ->
-            setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
-            activityActorName.setTextOrHide(activityLogModel?.actorName)
-            activityActorRole.setTextOrHide(activityLogModel?.actorRole)
-
-            activityMessage.setTextOrHide(activityLogModel?.text)
-            activityType.setTextOrHide(activityLogModel?.summary)
-
-            activityCreatedDate.text = activityLogModel?.createdDate
-            activityCreatedTime.text = activityLogModel?.createdTime
-
-            activityRewindButton.setOnClickListener(activityLogModel?.rewindAction)
-        })
-
-        viewModel.rewindAvailable.observe(this, Observer { available ->
-            activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
-        })
-
-        viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> {
-            onRewindButtonClicked(it!!)
-        })
-
-        viewModel.start(site, activityLogId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

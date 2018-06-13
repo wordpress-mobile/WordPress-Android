@@ -128,9 +128,11 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun insertProgressListItem(rewindActivity: ActivityLogListItem) {
-        val newEvents = ArrayList(_events.value!!)
-        newEvents.add(0, rewindActivity)
-        _events.postValue(newEvents)
+        _events.value?.let {
+            val newEvents = ArrayList(it)
+            newEvents.add(0, rewindActivity)
+            _events.postValue(newEvents)
+        }
     }
 
     private fun fetchEvents(loadMore: Boolean) {
