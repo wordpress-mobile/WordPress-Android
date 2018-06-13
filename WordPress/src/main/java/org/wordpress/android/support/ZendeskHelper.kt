@@ -1,5 +1,3 @@
-@file:JvmName("ZendeskHelper")
-
 package org.wordpress.android.support
 
 import android.content.Context
@@ -31,11 +29,9 @@ import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
 
-val zendeskHelperInstance: ZendeskHelperInterface = object : ZendeskHelperInterface {}
-
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
 
-interface ZendeskHelperInterface {
+interface ZendeskHelper {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
 

@@ -136,6 +136,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
+    @Inject ZendeskHelper mZendeskHelper;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -273,9 +274,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
-        ZendeskHelper.getZendeskHelperInstance()
-                     .setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
-                             BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
+        mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
 
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);

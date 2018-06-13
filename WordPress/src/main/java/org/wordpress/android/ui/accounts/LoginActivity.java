@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject ZendeskHelper mZendeskHelper;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -562,8 +563,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
-        ZendeskHelper.getZendeskHelperInstance()
-                     .createNewTicket(this, null, siteStore, Origin.LOGIN_SITE_ADDRESS, null, null);
+        mZendeskHelper.createNewTicket(this, null, siteStore, Origin.LOGIN_SITE_ADDRESS, null, null);
     }
 
     @Override

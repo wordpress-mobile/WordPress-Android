@@ -30,7 +30,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
-        LoginServiceModule.class
+        LoginServiceModule.class,
+        ZendeskModule.class
 })
 public interface AppComponentDebug extends AppComponent {
     @Component.Builder
