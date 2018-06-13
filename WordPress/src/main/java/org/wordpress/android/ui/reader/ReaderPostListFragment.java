@@ -1111,9 +1111,8 @@ public class ReaderPostListFragment extends Fragment
 
     private void showBookmarksSavedLocallyDialog() {
         mBookmarksSavedLocallyDialog = new AlertDialog.Builder(getActivity())
-                .setTitle("Save Posts for Later")
-                .setMessage("You can now save posts for later! For this version, saved posts are only saved to "
-                            + "this device, but we are working on adding cross-device syncing!")
+                .setTitle(getString(R.string.reader_save_posts_locally_dialog_title))
+                .setMessage(getString(R.string.reader_save_posts_locally_dialog_message))
                 .setPositiveButton(R.string.dialog_button_ok, new OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         showBookmarkSnackbar();

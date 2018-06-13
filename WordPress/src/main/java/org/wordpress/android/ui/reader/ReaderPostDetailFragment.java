@@ -547,9 +547,9 @@ public class ReaderPostDetailFragment extends Fragment
 
     private void showBookmarksSavedLocallyDialog() {
         BasicFragmentDialog basicFragmentDialog = new BasicFragmentDialog();
-        basicFragmentDialog.initialize(BOOKMARKS_SAVED_LOCALLY_DIALOG, "Save Posts for Later",
-                "You can now save posts for later! For this version, saved posts are only saved to "
-                + "this device, but we are working on adding cross-device syncing!",
+        basicFragmentDialog.initialize(BOOKMARKS_SAVED_LOCALLY_DIALOG,
+                getString(R.string.reader_save_posts_locally_dialog_title),
+                getString(R.string.reader_save_posts_locally_dialog_message),
                 getString(R.string.dialog_button_ok),
                 null, null);
         basicFragmentDialog.show(getFragmentManager(), BOOKMARKS_SAVED_LOCALLY_DIALOG);
