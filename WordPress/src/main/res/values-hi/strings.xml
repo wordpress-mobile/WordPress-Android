@@ -256,8 +256,6 @@ Language: hi_IN
     <string name="hs__invalid_email_error">मान्य ईमेल पता दर्ज करें</string>
     <string name="hs__conversation_detail_error">आप जो समस्या देख रहे है उसका वर्णन करें</string>
     <string name="contact_us">हमसे संपर्क करें</string>
-    <string name="preference_send_usage_stats">आंकड़े भेजें</string>
-    <string name="preference_send_usage_stats_summary">स्वचालित रूप से उपयोग के आंकड़े भेज कर हमें एंड्रॉयड के लिए वर्डप्रेस को बेहतर बनाने में मदद करे\n\n</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>
     <string name="reader_label_followed_blog">अनुसरण किये गए ब्लॉग</string>
@@ -390,7 +388,6 @@ Language: hi_IN
     <string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
     <string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
     <string name="empty_list_default">इस सूची खाली है</string>
-    <string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
     <string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
     <string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे…</string>
     <string name="stats_entry_country">देश</string>

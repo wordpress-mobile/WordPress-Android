@@ -13,44 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- like and moderate buttons don't use a compound drawable so the icon can be animated when tapped -->
-        <LinearLayout
-            android:id="@+id/btn_like"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/moderate_button_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:paddingStart="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_medium">
-
-            <ImageView
-                android:id="@+id/btn_like_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:paddingBottom="0dp"
-                android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
-                android:paddingStart="@dimen/margin_medium"
-                android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_star_outline_grey_min_24dp"/>
-
-            <org.wordpress.android.util.widgets.AutoResizeTextView
-                android:id="@+id/btn_like_text"
-                style="@style/CommentActionLabel"
-                android:text="@string/reader_label_like"/>
-
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/btn_moderate"
             android:layout_width="0dp"
@@ -89,7 +51,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/btn_edit"
+            android:id="@+id/btn_spam"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -107,7 +69,7 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/btn_edit_icon"
+                android:id="@+id/btn_spam_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
@@ -117,12 +79,12 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_pencil_grey_min_24dp"/>
+                app:srcCompat="@drawable/ic_spam_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
-                android:id="@+id/btn_edit_text"
+                android:id="@+id/btn_spam_text"
                 style="@style/CommentActionLabel"
-                android:text="@string/edit"/>
+                android:text="@string/mnu_comment_spam"/>
 
         </LinearLayout>
 
@@ -164,8 +126,46 @@
 
         </LinearLayout>
 
+        <!-- like and moderate buttons don't use a compound drawable so the icon can be animated when tapped -->
         <LinearLayout
-            android:id="@+id/btn_spam"
+            android:id="@+id/btn_like"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/moderate_button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_medium">
+
+            <ImageView
+                android:id="@+id/btn_like_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingBottom="0dp"
+                android:paddingEnd="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingTop="0dp"
+                app:srcCompat="@drawable/ic_star_outline_grey_min_24dp"/>
+
+            <org.wordpress.android.util.widgets.AutoResizeTextView
+                android:id="@+id/btn_like_text"
+                style="@style/CommentActionLabel"
+                android:text="@string/reader_label_like"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -183,7 +183,7 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/btn_spam_icon"
+                android:id="@+id/btn_edit_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
@@ -193,12 +193,12 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_spam_grey_min_24dp"/>
+                app:srcCompat="@drawable/ic_pencil_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
-                android:id="@+id/btn_spam_text"
+                android:id="@+id/btn_edit_text"
                 style="@style/CommentActionLabel"
-                android:text="@string/mnu_comment_spam"/>
+                android:text="@string/edit"/>
 
         </LinearLayout>
 

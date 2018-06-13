@@ -166,7 +166,6 @@ Language: is
     <string name="invite">Bjóða</string>
     <string name="invite_names_title">Notendanöfn eða netföng</string>
     <string name="invite_people">Bjóða fólki</string>
-    <string name="send_link">Senda tengil</string>
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
@@ -193,12 +192,8 @@ Language: is
     <string name="error_refreshing_gravatar">Villa kom upp við að endurfríska þinn Gravatar</string>
     <string name="error_cropping_image">Villa kom upp við skurð á mynd</string>
     <string name="checking_email">Athuga tölvupóst</string>
-    <string name="launch_your_email_app">Opna tölvupóstforritið þitt</string>
-    <string name="check_your_email">Athugaðu í tölvupóstinn þinn</string>
     <string name="magic_link_unavailable_error_message">Ekki tiltækt í augnablikinu. Vinsamlegast sláðu inn lykilorðið þitt.</string>
     <string name="logging_in">Skrá inn</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Fáðu tengil sendan til þín í tölvupósti til þess að skrá þig inn þegar í stað</string>
-    <string name="enter_your_password_instead">Sláðu inn lykilorðið þitt í staðinn</string>
     <string name="web_address_dialog_hint">Birt öllum þegar þú skrifar athugasemd.</string>
     <string name="new_editor_reflection_error">Sjónrænn ritill er ekki samhæfður þínu tæki. Hann var\n    sjálfvirkt gerður óvirkur.</string>
     <string name="stats_insights_latest_post_no_title">(án titils)</string>
@@ -638,7 +633,6 @@ Language: is
     <string name="ssl_certificate_details">Upplýsingar</string>
     <string name="cab_selected">%d valið</string>
     <string name="comment_reply_to_user">Svara %s</string>
-    <string name="faq_button">SOS</string>
     <string name="more">Meira</string>
     <string name="comment_trashed">Athugasemd fleygt í ruslið</string>
     <string name="comment">Athugasemd</string>
@@ -676,8 +670,6 @@ Language: is
     <string name="hs__invalid_email_error">Sláðu inn gilt netfang</string>
     <string name="hs__new_conversation_header">Hjálparspjall</string>
     <string name="hs__username_blank_error">Sláðu inn gilt nafn</string>
-    <string name="preference_send_usage_stats_summary">Sjálfkrafa senda notkunarupplýsingar til að hjálpa okkur að bæta WordPress fyrir Android</string>
-    <string name="preference_send_usage_stats">Senda tölfræði</string>
     <string name="update_verb">Uppfæra</string>
     <string name="schedule_verb">Tímaáætla</string>
     <string name="reader_label_followed_blog">Bloggum fylgst með</string>
@@ -812,7 +804,6 @@ Language: is
     <string name="reader_toast_err_tag_invalid">Þetta er ekki gilt merki</string>
     <string name="reader_toast_err_url_intent">Gat ekki opnað %s</string>
     <string name="reader_toast_err_view_image">Gat ekki skoðað mynd</string>
-    <string name="nux_tutorial_get_started_title">Hefjast handa!</string>
     <string name="reader_label_removed_tag">Fjarlægja %s</string>
     <string name="reader_empty_followed_tags">Þú fylgir engum merkjum</string>
     <string name="reader_toast_err_comment_failed">Gat ekki birt athugasemdina þína</string>

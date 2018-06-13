@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-10 17:36:14+0000
+Translation-Revision-Date: 2018-05-24 20:55:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="tabbar_accessibility_label_write">Nueva entrada. Escribe una nueva entrada.</string>
+    <string name="my_site_icon_content_description">Cambiar icono del sitio</string>
+    <string name="my_site_icon_dialog_cancel_button">Cancelar</string>
+    <string name="my_site_icon_dialog_remove_button">Eliminar</string>
+    <string name="my_site_icon_dialog_change_button">Cambiar</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">No tienes permiso para editar el icono del sitio.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">No tienes permiso para añadir un icono al sitio.</string>
+    <string name="my_site_icon_dialog_change_message">¿Cómo te gustaría editar el icono?</string>
+    <string name="my_site_icon_dialog_add_message">¿Te gustaría añadir un icono de sitio?</string>
+    <string name="my_site_icon_dialog_title">Icono del sitio</string>
+    <string name="reader_followed_blog_notifications_this">este sitio</string>
+    <string name="reader_followed_blog_notifications_action">Activar</string>
+    <string name="reader_followed_blog_notifications">¿Activar avisos para %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Activar los avisos del sitio</string>
+    <string name="reader_btn_notifications_off">Desactivar los avisos del sitio</string>
+    <string name="activity_log_jetpack_icon">Icono de Jetpack</string>
+    <string name="rewind">Rebobinar</string>
+    <string name="activity_log_event">Evento</string>
+    <string name="activity_log_icon">Icono de actividad</string>
+    <string name="activity_log">Registro de actividad</string>
+    <string name="activity">Actividad</string>
+    <string name="privacy_policy_read">Lee la política de privacidad</string>
+    <string name="third_party_policy_learn_more_caption">Usamos otras herramientas de seguimiento, incluidas algunas de terceros. Lee acerca de estas y cómo controlarlas.</string>
+    <string name="third_party_policy_learn_more_header">Política de terceros</string>
+    <string name="privacy_policy_learn_more_caption">Esta información nos ayuda a mejorar nuestros productos, hacer que el marketing sea más relevante, personalizar tu experiencia en WordPress.com y más, tal como se detalla en nuestra política de privacidad.</string>
+    <string name="privacy_policy_learn_more_header">Política de privacidad</string>
+    <string name="cookie_policy_learn_more_caption">Comparte información con nuestra herramienta de análisis acerca del uso que haces de los servicios mientras estás conectado a tu cuenta de WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">Política de cookies</string>
+    <string name="preference_privacy_settings">Ajustes de privacidad</string>
+    <string name="preference_collect_information">Recopilar información</string>
+    <string name="post_submitted">Entrada enviada</string>
+    <string name="write_post">Escribir entrada</string>
     <string name="login_email_button_signup">¿No tienes una cuenta? %1$s Regístrate %2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Una característica del plugin requiere que el sitio esté en buen estado.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Una característica del plugin necesita que la suscripción principal del dominio esté asociada con este usuario.</string>
@@ -76,7 +108,6 @@ Language: es
     <string name="stats_tab_tap_content_description">mostrando %s</string>
     <string name="stats_legend">leyenda del gráfico de estadísticas</string>
     <string name="fab_create_desc">crear</string>
-    <string name="fab_create_post_desc">crear entrada</string>
     <string name="fab_add_tag_desc">crear etiqueta</string>
     <string name="stats_bar_week_desc">Semana de %s</string>
     <string name="stats_bar_date_value_desc">%s, %d vistas</string>
@@ -855,7 +886,6 @@ Language: es
     <string name="invite_names_title">Nombres de usuario o correos electrónicos</string>
     <string name="invite_people">Invitar a gente</string>
     <string name="my_site_header_external">Externo</string>
-    <string name="send_link">Enviar enlace</string>
     <string name="label_clear_search_history">Borrar historial de búsqueda</string>
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_posts_in_search_description">No se han encontrado entradas con %s para tu idioma</string>
@@ -881,12 +911,8 @@ Language: es
     <string name="error_locating_image">Error al localizar la imagen recortada</string>
     <string name="error_cropping_image">Error al recortar la imagen</string>
     <string name="checking_email">Comprobando correo electrónico</string>
-    <string name="launch_your_email_app">Abre tu app de correo electrónico</string>
-    <string name="check_your_email">Comprueba tu correo electrónico</string>
     <string name="magic_link_unavailable_error_message">Actualmente no disponible. Por favor, introduce tu contraseña</string>
     <string name="logging_in">Accediendo</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Haz que se envíe un enlace a tu correo electrónico inmediatamente</string>
-    <string name="enter_your_password_instead">Introduce tu contraseña</string>
     <string name="web_address_dialog_hint">Cuando comentes se hará público</string>
     <string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
     <string name="stats_insights_latest_post_no_title">(sin título)</string>
@@ -1359,7 +1385,6 @@ Language: es
     <string name="create_new_blog_wpcom">Crear un blog de WordPress.com</string>
     <string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
-    <string name="faq_button">Preguntas frecuentes</string>
     <string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
     <string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
     <string name="reader_menu_block_blog">Bloquear este blog</string>
@@ -1372,8 +1397,6 @@ Language: es
     <string name="hs__new_conversation_header">Chat de soporte</string>
     <string name="hs__conversation_detail_error">Describe el problema que estás teniendo</string>
     <string name="contact_us">Contacta con nosotros</string>
-    <string name="preference_send_usage_stats_summary">Enviar automáticamente estadísticas de uso para ayudarnos a mejorar WordPress para Android</string>
-    <string name="preference_send_usage_stats">Enviar estadísticas</string>
     <string name="schedule_verb">Programación</string>
     <string name="update_verb">Actualizar</string>
     <string name="reader_empty_recommended_blogs">Sin blogs recomendados</string>
@@ -1501,7 +1524,6 @@ Language: es
     <string name="pick_photo">Elige una foto</string>
     <string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
-    <string name="nux_tutorial_get_started_title">¡Empezar!</string>
     <string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
