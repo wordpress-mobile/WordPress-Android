@@ -6,6 +6,8 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import com.zendesk.logger.Logger
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -82,7 +84,7 @@ fun showZendeskHelpCenter(
             .withContactUsButtonVisible(isIdentityAvailable)
             .withLabelNames(ZendeskConstants.articleLabel)
             .withShowConversationsMenuButton(isIdentityAvailable)
-
+    AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     if (isIdentityAvailable) {
         builder.show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     } else {

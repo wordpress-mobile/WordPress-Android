@@ -393,7 +393,8 @@ public final class AnalyticsTracker {
         AUTOMATED_TRANSFER_STATUS_FAILED,
         AUTOMATED_TRANSFER_FLOW_COMPLETE,
         PUBLICIZE_SERVICE_CONNECTED,
-        PUBLICIZE_SERVICE_DISCONNECTED
+        PUBLICIZE_SERVICE_DISCONNECTED,
+        SUPPORT_HELP_CENTER_VIEWED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
