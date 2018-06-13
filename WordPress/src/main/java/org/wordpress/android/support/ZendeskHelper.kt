@@ -31,7 +31,7 @@ import zendesk.support.requestlist.RequestListActivity
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
 
-interface ZendeskHelper {
+class ZendeskHelper(private val supportHelper: SupportHelper) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
 
@@ -102,7 +102,7 @@ interface ZendeskHelper {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
+        supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
@@ -120,7 +120,7 @@ interface ZendeskHelper {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
+        supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))

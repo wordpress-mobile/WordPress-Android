@@ -1,5 +1,3 @@
-@file:JvmName("SupportHelper")
-
 package org.wordpress.android.support
 
 import android.content.Context
@@ -15,59 +13,61 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.validateEmail
 
-/**
- * This function will check whether there is a support email saved in the AppPrefs and use the saved email and name
- * to run the provided function, most likely a support request. If there is no saved support email, it'll trigger a
- * function to show a dialog with email and name input fields which then it'll save to AppPrefs and run the provided
- * function.
- *
- * @param context Context the dialog will be showed from
- * @param account WordPress.com account to be used for email and name suggestion in the input dialog
- * @param selectedSite Selected site to be used for email and name suggestion in case the user is not logged in
- * @param emailAndNameSelected Function to run with the email and name from AppPrefs or the input dialog
- */
-fun getSupportIdentity(
-    context: Context,
-    account: AccountModel?,
-    selectedSite: SiteModel?,
-    emailAndNameSelected: (String, String) -> Unit
-) {
-    val currentEmail = AppPrefs.getSupportEmail()
-    if (!currentEmail.isNullOrEmpty()) {
-        emailAndNameSelected(currentEmail, AppPrefs.getSupportName())
-    } else {
-        val (emailSuggestion, nameSuggestion) = getSupportEmailAndNameSuggestion(account, selectedSite)
-        showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion, false) { email, name ->
-            AppPrefs.setSupportEmail(email)
-            AppPrefs.setSupportName(name)
-            emailAndNameSelected(email, name)
+class SupportHelper {
+    /**
+     * This function will check whether there is a support email saved in the AppPrefs and use the saved email and name
+     * to run the provided function, most likely a support request. If there is no saved support email, it'll trigger a
+     * function to show a dialog with email and name input fields which then it'll save to AppPrefs and run the provided
+     * function.
+     *
+     * @param context Context the dialog will be showed from
+     * @param account WordPress.com account to be used for email and name suggestion in the input dialog
+     * @param selectedSite Selected site to be used for email and name suggestion in case the user is not logged in
+     * @param emailAndNameSelected Function to run with the email and name from AppPrefs or the input dialog
+     */
+    fun getSupportIdentity(
+        context: Context,
+        account: AccountModel?,
+        selectedSite: SiteModel?,
+        emailAndNameSelected: (String, String) -> Unit
+    ) {
+        val currentEmail = AppPrefs.getSupportEmail()
+        if (!currentEmail.isNullOrEmpty()) {
+            emailAndNameSelected(currentEmail, AppPrefs.getSupportName())
+        } else {
+            val (emailSuggestion, nameSuggestion) = getSupportEmailAndNameSuggestion(account, selectedSite)
+            showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion, false) { email, name ->
+                AppPrefs.setSupportEmail(email)
+                AppPrefs.setSupportName(name)
+                emailAndNameSelected(email, name)
+            }
         }
     }
-}
 
-/**
- * This function is used to update the support email address. It'll pre-populate the email input field with either
- * the support email from AppPrefs or with a suggestion from [account] or [selectedSite].
- *
- * @param context Context the dialog will be showed from
- * @param account WordPress.com account to be used for email suggestion
- * @param selectedSite Selected site to be used for email suggestion in case the user is not logged in
- * @param emailSelected Function to run with the selected email from the dialog
- */
-fun showSupportEmailInputDialog(
-    context: Context,
-    account: AccountModel?,
-    selectedSite: SiteModel?,
-    emailSelected: (String) -> Unit
-) {
-    var email = AppPrefs.getSupportEmail()
-    if (email.isNullOrEmpty()) {
-        val (emailSuggestion, _) = getSupportEmailAndNameSuggestion(account, selectedSite)
-        email = emailSuggestion
-    }
-    showSupportIdentityInputDialog(context, email, null, true) { selectedEmail, _ ->
-        AppPrefs.setSupportEmail(selectedEmail)
-        emailSelected(selectedEmail)
+    /**
+     * This function is used to update the support email address. It'll pre-populate the email input field with either
+     * the support email from AppPrefs or with a suggestion from [account] or [selectedSite].
+     *
+     * @param context Context the dialog will be showed from
+     * @param account WordPress.com account to be used for email suggestion
+     * @param selectedSite Selected site to be used for email suggestion in case the user is not logged in
+     * @param emailSelected Function to run with the selected email from the dialog
+     */
+    fun showSupportEmailInputDialog(
+        context: Context,
+        account: AccountModel?,
+        selectedSite: SiteModel?,
+        emailSelected: (String) -> Unit
+    ) {
+        var email = AppPrefs.getSupportEmail()
+        if (email.isNullOrEmpty()) {
+            val (emailSuggestion, _) = getSupportEmailAndNameSuggestion(account, selectedSite)
+            email = emailSuggestion
+        }
+        showSupportIdentityInputDialog(context, email, null, true) { selectedEmail, _ ->
+            AppPrefs.setSupportEmail(selectedEmail)
+            emailSelected(selectedEmail)
+        }
     }
 }
 

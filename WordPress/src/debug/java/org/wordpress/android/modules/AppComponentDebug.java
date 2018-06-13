@@ -31,7 +31,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
         LoginServiceModule.class,
-        ZendeskModule.class
+        SupportModule.class
 })
 public interface AppComponentDebug extends AppComponent {
     @Component.Builder
