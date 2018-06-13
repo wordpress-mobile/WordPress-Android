@@ -52,6 +52,7 @@ public class ReaderConstants {
     static final String KEY_ALREADY_UPDATED = "already_updated";
     static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION = "restore_position";
+    static final String KEY_SITE_SEARCH_RESTORE_POSITION = "site_search_restore_position";
     static final String KEY_WAS_PAUSED = "was_paused";
     static final String KEY_ERROR_MESSAGE = "error_message";
     static final String KEY_FIRST_LOAD = "first_load";

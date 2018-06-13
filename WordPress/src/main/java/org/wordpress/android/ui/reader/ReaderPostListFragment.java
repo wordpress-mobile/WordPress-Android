@@ -151,6 +151,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderSiteModel mLastTappedSiteSearchResult;
 
     private int mRestorePosition;
+    private int mSiteSearchRestorePosition;
     private int mPostSearchAdapterPos;
     private int mSiteSearchAdapterPos;
     private int mSearchTabsPos = NO_POSITION;
@@ -299,6 +300,7 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
+            mSiteSearchRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
@@ -490,7 +492,9 @@ public class ReaderPostListFragment extends Fragment
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         if (isSearchTabsShowing()) {
-            outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, getSearchTabsPosition());
+            int position = getSearchTabsPosition();
+            outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, position);
+            outState.putInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION, mSiteSearchAdapterPos);
         }
 
         super.onSaveInstanceState(outState);
@@ -806,12 +810,17 @@ public class ReaderPostListFragment extends Fragment
             } else {
                 adapter.addSiteList(event.sites);
             }
+            if (mSiteSearchRestorePosition > 0) {
+                mRecyclerView.scrollRecycleViewToPosition(mSiteSearchRestorePosition);
+            }
         }
 
         if (getSearchTabsPosition() == TAB_SITES && adapter.isEmpty()) {
             setEmptyTitleAndDescription(event.isError());
             showEmptyView();
         }
+
+        mSiteSearchRestorePosition = 0;
     }
 
     /*
