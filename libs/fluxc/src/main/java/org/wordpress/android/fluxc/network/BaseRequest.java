@@ -53,6 +53,7 @@ public abstract class BaseRequest<T> extends Request<T> {
     protected final Map<String, String> mHeaders = new HashMap<>(2);
     private BaseErrorListener mErrorListener;
 
+    private boolean mResetCache;
     private int mCacheTtl;
     private int mCacheSoftTtl;
 
@@ -174,6 +175,20 @@ public abstract class BaseRequest<T> extends Request<T> {
         setShouldCache(true);
         mCacheTtl = timeToLive;
         mCacheSoftTtl = softTimeToLive;
+    }
+
+    /**
+     * Reset the cache for this request, to force an update over the network.
+     */
+    public void setShouldForceUpdate() {
+        mResetCache = true;
+    }
+
+    /**
+     * Returns true if this request should ignore the cache and force a fresh update over the network.
+     */
+    public boolean shouldForceUpdate() {
+        return mResetCache;
     }
 
     @Override
