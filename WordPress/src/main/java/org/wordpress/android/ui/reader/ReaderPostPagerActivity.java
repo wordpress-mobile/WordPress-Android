@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -31,6 +32,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -74,7 +76,8 @@ import de.greenrobot.event.EventBus;
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
-        implements ReaderInterfaces.AutoHideToolbarListener {
+        implements ReaderInterfaces.AutoHideToolbarListener,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface {
     /**
      * Type of URL intercepted
      */
@@ -964,6 +967,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
             mBackFromLogin = true;
+        }
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
+        ReaderPostDetailFragment fragment = getActiveDetailFragment();
+        if (fragment != null) {
+            fragment.onPositiveClicked(instanceTag);
         }
     }
 }
