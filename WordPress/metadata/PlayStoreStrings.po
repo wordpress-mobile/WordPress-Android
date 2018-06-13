@@ -1,0 +1,61 @@
+# Translation of Release Notes & Play Store Descriptions in English (US)
+# This file is distributed under the same license as the Release Notes & Play Store Descriptions package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2018-05-23 11:49:24+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: VsCode\n"
+"Project-Id-Version: Release Notes & Play Store Descriptions\n"
+
+msgctxt "release_note_102"
+msgid ""
+"10.2:\n"
+"* NEW: Something there caught your eye? Read it any time with Save for later! Even when you're offline!\n"
+"* Various bugfixes.\n"
+msgstr ""
+
+msgctxt "release_note_101"
+msgid ""
+"10.1:\n"
+"* NEW: now you can get notifications for new posts of blogs you follow! Stay up to date with this new cool feature.\n"
+"* NEW: we now offer bottom navigation on the main screen! Thumbs up on that! ;).\n"
+"* NEW: Activity Log added! You can see all that has been going on with your site with this new feature.\n"
+"* Added site icon editing.\n"
+"* Bugfixes.\n"
+msgstr ""
+
+msgctxt "sample_post_content"
+msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."
+msgstr ""
+
+msgctxt "sample_post_title"
+msgid "Best moment of any trip"
+msgstr ""
+
+msgctxt "release_generic_bugfixes"
+msgid "* Bug fixes release\n"
+msgstr ""
+
+msgctxt "release_note_footer_v2"
+msgid "As always, we thank you for using WordPress for Android. We value your feedback on the app, so please take a moment to write a review."
+msgstr ""
+
+msgctxt "release_note_footer"
+msgid "If you enjoy using the WordPress Android app, please take a moment to write a review — your input is invaluable to us."
+msgstr ""
+
+msgctxt "play_store_promo"
+msgid "Write new posts, edit content, and manage comments on your WordPress blog."
+msgstr ""
+
+msgctxt "play_store_desc"
+msgid ""
+"WordPress for Android puts the power of publishing in your hands, making it easy to create and consume content. Write, edit, and publish posts to your site, check stats, and get inspired with great posts in the Reader. What’s more? It’s open source.\n"
+"\n"
+"WordPress for Android supports WordPress.com and self-hosted WordPress.org sites running WordPress 3.7 or higher.\n"
+"\n"
+"Visit the forums to get help with the app: http://android.forums.wordpress.org"
+msgstr ""
