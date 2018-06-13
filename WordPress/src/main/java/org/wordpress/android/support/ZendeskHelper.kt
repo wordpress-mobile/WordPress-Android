@@ -6,16 +6,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import com.zendesk.logger.Logger
-import com.zendesk.sdk.feedback.BaseZendeskFeedbackConfiguration
-import com.zendesk.sdk.feedback.ui.ContactZendeskActivity
-import com.zendesk.sdk.model.access.AnonymousIdentity
-import com.zendesk.sdk.model.access.Identity
-import com.zendesk.sdk.model.request.CustomField
-import com.zendesk.sdk.network.impl.ZendeskConfig
-import com.zendesk.sdk.requests.RequestActivity
-import com.zendesk.sdk.support.ContactUsButtonVisibility
-import com.zendesk.sdk.support.SupportActivity
-import com.zendesk.sdk.util.NetworkUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -24,14 +14,23 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.logInformation
 import org.wordpress.android.util.stateLogInformation
-import java.util.Locale
+import zendesk.core.AnonymousIdentity
+import zendesk.core.Identity
+import zendesk.core.Zendesk
+import zendesk.support.CustomField
+import zendesk.support.Support
+import zendesk.support.UiConfig
+import zendesk.support.guide.HelpCenterActivity
+import zendesk.support.request.RequestActivity
+import zendesk.support.requestlist.RequestListActivity
 
-private val zendeskInstance: ZendeskConfig
-    get() = ZendeskConfig.INSTANCE
+private val zendeskInstance: Zendesk
+    get() = Zendesk.INSTANCE
 
 val isZendeskEnabled: Boolean
     get() = zendeskInstance.isInitialized
@@ -42,8 +41,7 @@ fun setupZendesk(
     context: Context,
     zendeskUrl: String,
     applicationId: String,
-    oauthClientId: String,
-    deviceLocale: Locale
+    oauthClientId: String
 ) {
     require(!isZendeskEnabled) {
         "Zendesk shouldn't be initialized more than once!"
@@ -53,16 +51,7 @@ fun setupZendesk(
     }
     zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
     Logger.setLoggable(BuildConfig.DEBUG)
-    updateZendeskDeviceLocale(deviceLocale)
-}
-
-// TODO("Make sure changing the language of the app updates the locale for Zendesk")
-fun updateZendeskDeviceLocale(deviceLocale: Locale) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
-    }
-    // TODO ("find out if this is actually necessary")
-    zendeskInstance.setDeviceLocale(deviceLocale)
+    Support.INSTANCE.init(zendeskInstance)
 }
 
 /**
@@ -72,7 +61,6 @@ fun updateZendeskDeviceLocale(deviceLocale: Locale) {
  */
 fun showZendeskHelpCenter(
     context: Context,
-    accountStore: AccountStore?,
     siteStore: SiteStore,
     origin: Origin?,
     selectedSite: SiteModel?,
@@ -82,22 +70,24 @@ fun showZendeskHelpCenter(
         zendeskNeedsToBeEnabledError
     }
     val supportEmail = AppPrefs.getSupportEmail()
+    val supportName = AppPrefs.getSupportName()
     val isIdentityAvailable = !supportEmail.isNullOrEmpty()
     if (isIdentityAvailable) {
-        val supportName = AppPrefs.getSupportName()
-        configureZendesk(context, supportEmail, supportName, accountStore, siteStore, selectedSite)
+        zendeskInstance.setIdentity(createZendeskIdentity(supportEmail, supportName))
     } else {
-        zendeskInstance.setIdentity(zendeskIdentity(null, null))
+        zendeskInstance.setIdentity(createZendeskIdentity(null, null))
     }
-    val contactUsButtonVisibility = if (isIdentityAvailable)
-        ContactUsButtonVisibility.ARTICLE_LIST_AND_ARTICLE else ContactUsButtonVisibility.OFF
-    SupportActivity.Builder()
+    val builder = HelpCenterActivity.builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
+            .withContactUsButtonVisible(isIdentityAvailable)
             .withLabelNames(ZendeskConstants.articleLabel)
-            .showConversationsMenuButton(isIdentityAvailable)
-            .withContactUsButtonVisibility(contactUsButtonVisibility)
-            .withContactConfiguration(zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
-            .show(context)
+            .withShowConversationsMenuButton(isIdentityAvailable)
+
+    if (isIdentityAvailable) {
+        builder.show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+    } else {
+        builder.show(context)
+    }
 }
 
 @JvmOverloads
@@ -113,8 +103,9 @@ fun createNewTicket(
         zendeskNeedsToBeEnabledError
     }
     getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-        configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
-        ContactZendeskActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+        zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+        RequestActivity.builder()
+                .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     }
 }
 
@@ -130,60 +121,59 @@ fun showAllTickets(
         zendeskNeedsToBeEnabledError
     }
     getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
-        configureZendesk(context, email, name, accountStore, siteStore, selectedSite)
-        RequestActivity.startActivity(context, zendeskFeedbackConfiguration(siteStore.sites, origin, extraTags))
+        zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+        RequestListActivity.builder()
+                .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     }
 }
 
 // Helpers
 
-private fun configureZendesk(
+private fun buildZendeskConfig(
     context: Context,
-    email: String,
-    name: String,
-    accountStore: AccountStore?,
+    siteStore: SiteStore,
+    origin: Origin?,
+    selectedSite: SiteModel? = null,
+    extraTags: List<String>? = null
+): UiConfig {
+    return RequestActivity.builder()
+            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, siteStore, selectedSite))
+            .withRequestSubject(ZendeskConstants.ticketSubject)
+            .withTags(buildZendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
+            .config()
+}
+
+private fun buildZendeskCustomFields(
+    context: Context,
     siteStore: SiteStore,
     selectedSite: SiteModel?
-) {
-    zendeskInstance.setIdentity(zendeskIdentity(email, name))
-    zendeskInstance.ticketFormId = TicketFieldIds.form
+): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
     } else {
         "not_selected"
     }
-    zendeskInstance.customFields = listOf(
+    return listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites)),
+            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(siteStore.sites)),
             CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
-            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context))
+            CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context))
     )
 }
 
-private fun zendeskFeedbackConfiguration(allSites: List<SiteModel>?, origin: Origin?, extraTags: List<String>?) =
-        object : BaseZendeskFeedbackConfiguration() {
-            override fun getRequestSubject(): String {
-                return ZendeskConstants.ticketSubject
-            }
-
-            override fun getTags(): MutableList<String> {
-                return zendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags) as MutableList<String>
-            }
-        }
-
-private fun zendeskIdentity(email: String?, name: String?): Identity =
+private fun createZendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
-private fun blogInformation(allSites: List<SiteModel>?): String {
+private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String {
     allSites?.let {
         return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation }
     }
     return ZendeskConstants.noneValue
 }
 
-private fun zendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
+private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -208,7 +198,7 @@ private fun zendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: L
     return tags
 }
 
-private fun zendeskNetworkInformation(context: Context): String {
+private fun getNetworkInformation(context: Context): String {
     val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
         ConnectivityManager.TYPE_WIFI -> ZendeskConstants.networkWifi
         ConnectivityManager.TYPE_MOBILE -> ZendeskConstants.networkWWAN
