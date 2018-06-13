@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -141,6 +144,8 @@ public class ReaderPostListFragment extends Fragment
     private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
+
+    private AlertDialog mBookmarksSavedLocallyDialog;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -283,6 +288,9 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
+        if (mBookmarksSavedLocallyDialog != null) {
+            mBookmarksSavedLocallyDialog.dismiss();
+        }
         mWasPaused = true;
     }
 
@@ -1089,12 +1097,32 @@ public class ReaderPostListFragment extends Fragment
                                             .commit();
                     }
 
-                    // show snackbar when not in saved posts list
                     if (isBookmarked && !isBookmarksList()) {
-                        showBookmarkSnackbar();
+                        if (AppPrefs.shouldShowBookmarksSavedLocallyDialog()) {
+                            AppPrefs.setBookmarksSavedLocallyDialogShown();
+                            showBookmarksSavedLocallyDialog();
+                        } else {
+                            // show snackbar when not in saved posts list
+                            showBookmarkSnackbar();
+                        }
                     }
                 }
             };
+
+    private void showBookmarksSavedLocallyDialog() {
+        mBookmarksSavedLocallyDialog = new AlertDialog.Builder(getActivity())
+                .setTitle("Save Posts for Later")
+                .setMessage("You can now save posts for later! For this version, saved posts are only saved to "
+                            + "this device, but we are working on adding cross-device syncing!")
+                .setPositiveButton(R.string.dialog_button_ok, new OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        showBookmarkSnackbar();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        mBookmarksSavedLocallyDialog.show();
+    }
 
     private boolean isBookmarksList() {
         return getPostListType() == ReaderPostListType.TAG_FOLLOWED
