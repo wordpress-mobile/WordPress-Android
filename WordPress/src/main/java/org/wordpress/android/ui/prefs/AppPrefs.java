@@ -94,6 +94,9 @@ public class AppPrefs {
         VIDEO_OPTIMIZE_ENABLED,
         VIDEO_OPTIMIZE_WIDTH,
         VIDEO_OPTIMIZE_QUALITY, // Encoder max bitrate
+
+        // Used to flag the account created stat needs to be bumped after account information is synced.
+        SHOULD_TRACK_MAGIC_LINK_SIGNUP,
     }
 
     /**
@@ -671,5 +674,17 @@ public class AppPrefs {
 
     public static void setLastWpComThemeSync(long time) {
         setLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC, time);
+    }
+
+    public static void setShouldTrackMagicLinkSignup(Boolean shouldTrack) {
+        setBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, shouldTrack);
+    }
+
+    public static boolean getShouldTrackMagicLinkSignup() {
+        return getBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, false);
+    }
+
+    public static void removeShouldTrackMagicLinkSignup() {
+        remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 }
