@@ -202,7 +202,7 @@ public class NoteBlock {
                     @Override
                     public void onClick(View v) {
                         if (getOnNoteBlockTextClickListener() != null) {
-                            getOnNoteBlockTextClickListener().showSitePreview(getMetaSiteId(), getMetaSiteUrl());
+                            getOnNoteBlockTextClickListener().showSitePreview(0, getMetaSiteUrl());
                         }
                     }
                 });

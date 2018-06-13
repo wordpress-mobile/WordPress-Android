@@ -40,6 +40,10 @@ class GeneratedNoteBlock(
         return spannableStringBuilder
     }
 
+    override fun getMetaSiteUrl(): String {
+        return pingbackUrl
+    }
+
     override fun hasImageMediaItem(): Boolean {
         return false
     }
