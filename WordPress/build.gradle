@@ -128,7 +128,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
 
-    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha01"
+    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha02"
 
     implementation 'com.google.android.gms:play-services-gcm:12.0.1'
     implementation 'com.google.android.gms:play-services-auth:12.0.1'
