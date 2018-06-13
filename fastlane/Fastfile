@@ -29,11 +29,11 @@ platform :android do
     
     device = devs[0]
     demo_mode_enter(device_serial: device.serial)
-
+    
     capture_android_screenshots(app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
       tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk", 
-      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
-      clear_previous_screenshots: true, 
+      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest", 
+      reinstall_app: true,
       device_type: options[:device]
       )
 

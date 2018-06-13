@@ -67,20 +67,18 @@ public class WPScreenshotTest {
     @ClassRule
     public static final LocaleTestRule localeTestRule = new LocaleTestRule();
 
-    @Before public void setUp() {
+    /*@Before public void setUp() {
         Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
-    }
-
-   /* @BeforeClass
-    public void setUpClass() {
-      Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
     }*/
 
     @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class, false, false);
     
     @Test
     public void wPScreenshotTest() {
+        mActivityTestRule.launchActivity(null);
+        Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
+
         wPLogin();
         navigateReader();
         createBlogPost();
