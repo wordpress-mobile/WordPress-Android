@@ -492,9 +492,10 @@ public class ReaderPostListFragment extends Fragment
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         if (isSearchTabsShowing()) {
-            int position = getSearchTabsPosition();
-            outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, position);
-            outState.putInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION, mSiteSearchAdapterPos);
+            int tabPosition = getSearchTabsPosition();
+            outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, tabPosition);
+            int siteSearchPosition = tabPosition == TAB_SITES ? getCurrentPosition() : mSiteSearchAdapterPos;
+            outState.putInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION, siteSearchPosition);
         }
 
         super.onSaveInstanceState(outState);
