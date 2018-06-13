@@ -121,7 +121,6 @@
     </style>
 
     <style name="FilteredRecyclerViewToolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:elevation">@dimen/filter_subbar_elevation</item>
         <item name="android:theme">@style/FilteredRecyclerViewToolbar.Theme</item>
     </style>
 
@@ -664,6 +663,18 @@
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
+    <style name="WordPress.TransparentToolbarTheme" parent="WordPress">
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="WordPress.TransparentToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
 </resources>

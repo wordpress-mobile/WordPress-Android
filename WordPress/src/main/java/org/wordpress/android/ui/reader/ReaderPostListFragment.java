@@ -8,6 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabLayout.OnTabSelectedListener;
+import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
@@ -45,10 +48,15 @@ import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
+import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
+import org.wordpress.android.fluxc.store.ReaderStore;
+import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
+import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -69,6 +77,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -84,6 +94,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -109,7 +120,12 @@ public class ReaderPostListFragment extends Fragment
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
         MainToolbarFragment {
+    private static final int TAB_POSTS = 0;
+    private static final int TAB_SITES = 1;
+    private static final int NO_POSITION = -1;
+
     private ReaderPostAdapter mPostAdapter;
+    private ReaderSiteSearchAdapter mSiteSearchAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
     private FilteredRecyclerView mRecyclerView;
@@ -119,20 +135,26 @@ public class ReaderPostListFragment extends Fragment
     private View mEmptyView;
     private View mEmptyViewBoxImages;
     private ProgressBar mProgress;
+    private TabLayout mSearchTabs;
 
     private SearchView mSearchView;
     private MenuItem mSettingsMenuItem;
     private MenuItem mSearchMenuItem;
 
-    private BottomNavController mBottonNavController;
+    private BottomNavController mBottomNavController;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
     private String mCurrentSearchQuery;
     private ReaderPostListType mPostListType;
+    private ReaderSiteModel mLastTappedSiteSearchResult;
 
     private int mRestorePosition;
+    private int mSiteSearchRestorePosition;
+    private int mPostSearchAdapterPos;
+    private int mSiteSearchAdapterPos;
+    private int mSearchTabsPos = NO_POSITION;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -145,6 +167,7 @@ public class ReaderPostListFragment extends Fragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     @Inject AccountStore mAccountStore;
+    @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
 
     private static class HistoryStack extends Stack<String> {
@@ -277,9 +300,11 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
+            mSiteSearchRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
+            mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
         }
     }
 
@@ -297,16 +322,18 @@ public class ReaderPostListFragment extends Fragment
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
+
             if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
             } else {
                 refreshPosts();
             }
 
-            // if the user was searching, make sure the filter toolbar is showing
-            // so the user can see the search keyword they entered
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                mRecyclerView.showToolbar();
+            // if the user tapped a site to show site preview, it's possible they also changed the follow
+            // status so tell the search adapter to check whether it has the correct follow status
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && mLastTappedSiteSearchResult != null) {
+                getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
+                mLastTappedSiteSearchResult = null;
             }
         }
     }
@@ -348,14 +375,14 @@ public class ReaderPostListFragment extends Fragment
         // detect the bottom nav controller when this fragment is hosted in the main activity - this is used to
         // hide the bottom nav when the user searches from the reader
         if (context instanceof BottomNavController) {
-            mBottonNavController = (BottomNavController) context;
+            mBottomNavController = (BottomNavController) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mBottonNavController = null;
+        mBottomNavController = null;
     }
 
     @Override
@@ -379,11 +406,6 @@ public class ReaderPostListFragment extends Fragment
         super.onStop();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void setTitle(String title) {
-        // Do nothing - no title for this toolbar
     }
 
     /*
@@ -413,6 +435,11 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setAdapter(null);
         mRecyclerView.setAdapter(getPostAdapter());
         mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
+    }
+
+    @Override
+    public void setTitle(@NonNull String title) {
+        // Do nothing - no title for this toolbar
     }
 
     @SuppressWarnings("unused")
@@ -446,18 +473,30 @@ public class ReaderPostListFragment extends Fragment
         if (mCurrentTag != null) {
             outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag);
         }
+
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             mTagPreviewHistory.saveInstance(outState);
+        } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS
+                   && mSearchView != null
+                   && mSearchView.getQuery() != null) {
+            String query = mSearchView.getQuery().toString();
+            outState.putString(ReaderConstants.ARG_SEARCH_QUERY, query);
         }
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
-        outState.putString(ReaderConstants.ARG_SEARCH_QUERY, mCurrentSearchQuery);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+
+        if (isSearchTabsShowing()) {
+            int tabPosition = getSearchTabsPosition();
+            outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, tabPosition);
+            int siteSearchPosition = tabPosition == TAB_SITES ? getCurrentPosition() : mSiteSearchAdapterPos;
+            outState.putInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION, siteSearchPosition);
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -643,8 +682,8 @@ public class ReaderPostListFragment extends Fragment
                 mSettingsMenuItem.setVisible(false);
 
                 // hide the bottom navigation when search is active
-                if (mBottonNavController != null) {
-                    mBottonNavController.onRequestHideBottomNavigation();
+                if (mBottomNavController != null) {
+                    mBottomNavController.onRequestHideBottomNavigation();
                 }
 
                 return true;
@@ -653,12 +692,13 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 hideSearchMessage();
+                hideSearchTabs();
                 resetSearchSuggestionAdapter();
                 mSettingsMenuItem.setVisible(true);
                 mCurrentSearchQuery = null;
 
-                if (mBottonNavController != null) {
-                    mBottonNavController.onRequestShowBottomNavigation();
+                if (mBottomNavController != null) {
+                    mBottomNavController.onRequestShowBottomNavigation();
                 }
 
                 // return to the followed tag that was showing prior to searching
@@ -679,6 +719,7 @@ public class ReaderPostListFragment extends Fragment
                                                public boolean onQueryTextChange(String newText) {
                                                    if (TextUtils.isEmpty(newText)) {
                                                        showSearchMessage();
+                                                       hideSearchTabs();
                                                    } else {
                                                        populateSearchSuggestionAdapter(newText);
                                                    }
@@ -694,6 +735,25 @@ public class ReaderPostListFragment extends Fragment
      */
     private void updatePostsInCurrentSearch(int offset) {
         ReaderSearchServiceStarter.startService(getActivity(), mCurrentSearchQuery, offset);
+    }
+
+    /*
+     * start a search for reader sites matching the current search query
+     */
+    private void updateSitesInCurrentSearch(int offset) {
+        if (getSearchTabsPosition() == TAB_SITES) {
+            if (offset == 0) {
+                mRecyclerView.setRefreshing(true);
+            } else {
+                showLoadingProgress(true);
+            }
+        }
+        ReaderSearchSitesPayload payload = new ReaderSearchSitesPayload(
+                mCurrentSearchQuery,
+                ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST,
+                offset,
+                false);
+        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
     }
 
     private void submitSearchQuery(@NonNull String query) {
@@ -717,12 +777,51 @@ public class ReaderPostListFragment extends Fragment
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
 
+        // only submit a site search if the sites tab is active - otherwise we'll delay the site search
+        // until the user taps the sites tab
+        if (getSearchTabsPosition() == TAB_SITES) {
+            updateSitesInCurrentSearch(0);
+        }
+
         // track that the user performed a search
         if (!trimQuery.equals("")) {
             Map<String, Object> properties = new HashMap<>();
             properties.put("query", trimQuery);
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReaderSitesSearched(OnReaderSitesSearched event) {
+        if (!isAdded()) {
+            return;
+        }
+
+        mRecyclerView.setRefreshing(false);
+        showLoadingProgress(false);
+
+        ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
+        if (event.isError()) {
+            adapter.clear();
+        } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
+            adapter.setCanLoadMore(event.canLoadMore);
+            if (event.offset == 0) {
+                adapter.setSiteList(event.sites);
+            } else {
+                adapter.addSiteList(event.sites);
+            }
+            if (mSiteSearchRestorePosition > 0) {
+                mRecyclerView.scrollRecycleViewToPosition(mSiteSearchRestorePosition);
+            }
+        }
+
+        if (getSearchTabsPosition() == TAB_SITES && adapter.isEmpty()) {
+            setEmptyTitleAndDescription(event.isError());
+            showEmptyView();
+        }
+
+        mSiteSearchRestorePosition = 0;
     }
 
     /*
@@ -733,8 +832,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // clear posts so only the empty view is visible
+        // clear posts and sites so only the empty view is visible
         getPostAdapter().clear();
+        getSiteSearchAdapter().clear();
 
         setEmptyTitleAndDescription(false);
         showEmptyView();
@@ -742,6 +842,96 @@ public class ReaderPostListFragment extends Fragment
 
     private void hideSearchMessage() {
         hideEmptyView();
+    }
+
+    /*
+     * create the TabLayout that separates search results between POSTS and SITES and places it below
+     * the FilteredRecyclerView's toolbar
+     */
+    private void createSearchTabs() {
+        if (mSearchTabs == null) {
+            ViewGroup rootView = getView().findViewById(android.R.id.content);
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            mSearchTabs = (TabLayout) inflater.inflate(R.layout.reader_search_tabs, rootView);
+            mSearchTabs.setVisibility(View.GONE);
+            mRecyclerView.getAppBarLayout().addView(mSearchTabs);
+        }
+    }
+
+    private boolean isSearchTabsShowing() {
+        return mSearchTabs != null && mSearchTabs.getVisibility() == View.VISIBLE;
+    }
+
+    private void showSearchTabs() {
+        if (!isAdded()) {
+            return;
+        }
+        if (mSearchTabs == null) {
+            createSearchTabs();
+        }
+        if (mSearchTabs.getVisibility() != View.VISIBLE) {
+            mSearchTabs.setVisibility(View.VISIBLE);
+
+            mPostSearchAdapterPos = 0;
+            mSiteSearchAdapterPos = 0;
+
+            mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
+                @Override public void onTabSelected(Tab tab) {
+                    if (tab.getPosition() == TAB_POSTS) {
+                        mRecyclerView.setAdapter(getPostAdapter());
+                        if (mPostSearchAdapterPos > 0) {
+                            mRecyclerView.scrollRecycleViewToPosition(mPostSearchAdapterPos);
+                        }
+                    } else if (tab.getPosition() == TAB_SITES) {
+                        mRecyclerView.setAdapter(getSiteSearchAdapter());
+                        if (mSiteSearchAdapterPos > 0) {
+                            mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
+                        }
+                        // perform a site search if the user switched to the site tab and results aren't already showing
+                        if (getSiteSearchAdapter().isEmpty()
+                            && !TextUtils.isEmpty(mCurrentSearchQuery)
+                            && !isEmptyViewShowing()) {
+                            updateSitesInCurrentSearch(0);
+                        }
+                    }
+                }
+                @Override public void onTabUnselected(Tab tab) {
+                    if (tab.getPosition() == TAB_POSTS) {
+                        mPostSearchAdapterPos = mRecyclerView.getCurrentPosition();
+                    } else if (tab.getPosition() == TAB_SITES) {
+                        mSiteSearchAdapterPos = mRecyclerView.getCurrentPosition();
+                    }
+                }
+                @Override public void onTabReselected(Tab tab) {
+                    mRecyclerView.smoothScrollToPosition(0);
+                }
+            });
+
+            if (mSearchTabsPos != NO_POSITION && mSearchTabsPos != mSearchTabs.getSelectedTabPosition()) {
+                Tab tab = mSearchTabs.getTabAt(mSearchTabsPos);
+                if (tab != null) {
+                    tab.select();
+                }
+                mSearchTabsPos = NO_POSITION;
+            }
+        }
+    }
+
+    private void hideSearchTabs() {
+        if (isAdded() && mSearchTabs != null && mSearchTabs.getVisibility() == View.VISIBLE) {
+            mSearchTabs.setVisibility(View.GONE);
+            mSearchTabs.clearOnTabSelectedListeners();
+            if (mSearchTabs.getSelectedTabPosition() != TAB_POSTS) {
+                mSearchTabs.getTabAt(TAB_POSTS).select();
+            }
+            mRecyclerView.setAdapter(getPostAdapter());
+            mLastTappedSiteSearchResult = null;
+            showLoadingProgress(false);
+        }
+    }
+
+    private int getSearchTabsPosition() {
+        return isSearchTabsShowing() ? mSearchTabs.getSelectedTabPosition() : -1;
     }
 
     /*
@@ -818,6 +1008,9 @@ public class ReaderPostListFragment extends Fragment
             && getPostListType() == ReaderPostListType.SEARCH_RESULTS
             && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
+            showSearchTabs();
+        } else {
+            hideSearchTabs();
         }
     }
 
@@ -940,7 +1133,11 @@ public class ReaderPostListFragment extends Fragment
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
-            title = getString(R.string.reader_empty_posts_request_failed);
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                title = getString(R.string.reader_empty_search_request_failed);
+            } else {
+                title = getString(R.string.reader_empty_posts_request_failed);
+            }
         } else if (isUpdating() && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             title = getString(R.string.reader_empty_posts_in_tag_updating);
         } else {
@@ -973,9 +1170,9 @@ public class ReaderPostListFragment extends Fragment
                     } else if (isUpdating()) {
                         title = getString(R.string.reader_label_post_search_running);
                     } else {
-                        title = getString(R.string.reader_empty_posts_in_search_title);
+                        title = getString(R.string.reader_empty_search_title);
                         String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
-                        description = String.format(getString(R.string.reader_empty_posts_in_search_description),
+                        description = String.format(getString(R.string.reader_empty_search_description),
                                 formattedQuery);
                     }
                     break;
@@ -1052,6 +1249,10 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    private boolean isEmptyViewShowing() {
+        return isAdded() && mEmptyView.getVisibility() == View.VISIBLE;
+    }
+
     /*
      * called by post adapter when data has been loaded
      */
@@ -1073,6 +1274,9 @@ public class ReaderPostListFragment extends Fragment
                 if (mRestorePosition > 0) {
                     AppLog.d(T.READER, "reader post list > restoring position");
                     mRecyclerView.scrollRecycleViewToPosition(mRestorePosition);
+                }
+                if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && !isSearchTabsShowing()) {
+                    showSearchTabs();
                 }
             }
             mRestorePosition = 0;
@@ -1204,6 +1408,25 @@ public class ReaderPostListFragment extends Fragment
         return mPostAdapter;
     }
 
+    private ReaderSiteSearchAdapter getSiteSearchAdapter() {
+        if (mSiteSearchAdapter == null) {
+            mSiteSearchAdapter = new ReaderSiteSearchAdapter(new SiteSearchAdapterListener() {
+                @Override
+                public void onSiteClicked(@NonNull ReaderSiteModel site) {
+                    mLastTappedSiteSearchResult = site;
+                    ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                            getActivity(), site.getSiteId(), site.getFeedId());
+                }
+                @Override
+                public void onLoadMore(int offset) {
+                    showLoadingProgress(true);
+                    updateSitesInCurrentSearch(offset);
+                }
+            });
+        }
+        return mSiteSearchAdapter;
+    }
+
     private boolean hasPostAdapter() {
         return (mPostAdapter != null);
     }
@@ -1278,10 +1501,10 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-    * when previewing posts with a specific tag, a history of previewed tags is retained so
-    * the user can navigate back through them - this is faster and requires less memory
-    * than creating a new fragment for each previewed tag
-    */
+     * when previewing posts with a specific tag, a history of previewed tags is retained so
+     * the user can navigate back through them - this is faster and requires less memory
+     * than creating a new fragment for each previewed tag
+     */
     private boolean goBackInTagHistory() {
         if (mTagPreviewHistory.empty()) {
             return false;
@@ -1458,8 +1681,8 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-    * show/hide progress bar which appears at the bottom of the activity when loading more posts
-    */
+     * show/hide progress bar which appears at the bottom of the activity when loading more posts
+     */
     private void showLoadingProgress(boolean showProgress) {
         if (isAdded() && mProgress != null) {
             if (showProgress) {
@@ -1778,17 +2001,17 @@ public class ReaderPostListFragment extends Fragment
                 : blogName;
 
         Snackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                        "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
+                "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                    new View.OnClickListener() {
-                        @Override public void onClick(View view) {
-                            AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                            AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                    String.valueOf(blogId), SubscriptionAction.NEW);
-                            mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
-                        }
-                    })
+                        new View.OnClickListener() {
+                            @Override public void onClick(View view) {
+                                AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                        String.valueOf(blogId), SubscriptionAction.NEW);
+                                mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
+                            }
+                        })
                 .setActionTextColor(getResources().getColor(R.color.color_accent))
                 .show();
     }
@@ -1803,7 +2026,7 @@ public class ReaderPostListFragment extends Fragment
     public void onSubscriptionUpdated(OnSubscriptionUpdated event) {
         if (event.isError()) {
             AppLog.e(T.API, ReaderPostListFragment.class.getSimpleName() + ".onSubscriptionUpdated: "
-                          + event.error.type + " - " + event.error.message);
+                            + event.error.type + " - " + event.error.message);
         } else {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
@@ -1860,7 +2083,6 @@ public class ReaderPostListFragment extends Fragment
     public void onScrollToTop() {
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
-            mRecyclerView.showToolbar();
         }
     }
 

@@ -25,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -478,10 +479,7 @@ public class WPMainActivity extends AppCompatActivity
 
     @Override
     public void onRequestHideBottomNavigation() {
-        // we only hide the bottom navigation when there's not a hardware keyboard present
-        if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
-            showBottomNav(false);
-        }
+        showBottomNav(false);
     }
 
     private void showBottomNav(boolean show) {
@@ -717,11 +715,16 @@ public class WPMainActivity extends AppCompatActivity
         if (mAccountStore.hasAccessToken()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
 
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
+
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
-                    mLoginAnalyticsListener.trackCreatedAccount();
-                    mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
-
+                    // Sets a flag that we need to track a magic link sign up.
+                    // We'll handle it in onAccountChanged so we know we have
+                    // updated account info.
+                    AppPrefs.setShouldTrackMagicLinkSignup(true);
+                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
                     } else {
@@ -747,8 +750,25 @@ public class WPMainActivity extends AppCompatActivity
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (AppPrefs.getShouldTrackMagicLinkSignup()) {
+                trackMagicLinkSignupIfNeeded();
+            }
         }
     }
+
+    /**
+     * Bumps stats related to a magic link sign up provided the account has been updated with
+     * the username and email address needed to refresh analytics meta data.
+     */
+    private void trackMagicLinkSignupIfNeeded() {
+        AccountModel account = mAccountStore.getAccount();
+        if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
+            mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
+            mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
+            AppPrefs.removeShouldTrackMagicLinkSignup();
+        }
+    }
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {

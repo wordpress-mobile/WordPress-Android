@@ -49,6 +49,7 @@
 
     <!-- general strings -->
     <string name="posts">Posts</string>
+    <string name="sites">Sites</string>
     <string name="media">Media</string>
     <string name="video">Video</string>
     <string name="themes">Themes</string>
@@ -1357,12 +1358,12 @@
     <!-- activity titles -->
     <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
-    <string name="reader_title_blog_preview">Reader Blog</string>
+    <string name="reader_title_blog_preview">Reader Site</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
-    <string name="reader_title_subs">Tags &amp; Blogs</string>
+    <string name="reader_title_subs">Tags &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
 
@@ -1372,8 +1373,8 @@
     <string name="reader_page_recommended_blogs">Sites you may like</string>
 
     <!-- menu text -->
-    <string name="reader_menu_tags">Edit tags and blogs</string>
-    <string name="reader_menu_block_blog">Block this blog</string>
+    <string name="reader_menu_tags">Edit tags and sites</string>
+    <string name="reader_menu_block_blog">Block this site</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -1396,7 +1397,7 @@
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
-    <string name="reader_hint_post_search">Search WordPress.com</string>
+    <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
     <!-- TextView labels -->
@@ -1405,13 +1406,13 @@
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reply">Reply</string>
-    <string name="reader_label_followed_blog">Blog followed</string>
+    <string name="reader_label_followed_blog">Site followed</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_follow_count">%,d followers</string>
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
-    <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
+    <string name="reader_label_post_search_explainer">Search WordPress\nfor a site or post</string>
     <string name="reader_label_post_search_running">Searching…</string>
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
@@ -1445,14 +1446,14 @@
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
-    <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
-    <string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
-    <string name="reader_toast_err_follow_blog_not_found">This blog could not be found</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this blog</string>
-    <string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
-    <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
-    <string name="reader_toast_err_block_blog">Unable to block this blog</string>
+    <string name="reader_toast_err_get_blog_info">Unable to show this site</string>
+    <string name="reader_toast_err_already_follow_blog">You already follow this site</string>
+    <string name="reader_toast_err_follow_blog">Unable to follow this site</string>
+    <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this site</string>
+    <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
+    <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
+    <string name="reader_toast_err_block_blog">Unable to block this site</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
@@ -1477,7 +1478,7 @@
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
-    <string name="reader_empty_recommended_blogs">No recommended blogs</string>
+    <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
     <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
@@ -1487,9 +1488,10 @@
     <string name="reader_empty_saved_posts_title">No posts saved \u2014 yet!</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
-    <string name="reader_empty_posts_in_blog">This blog is empty</string>
-    <string name="reader_empty_posts_in_search_title">No posts found</string>
-    <string name="reader_empty_posts_in_search_description">No posts found for %s for your language</string>
+    <string name="reader_empty_posts_in_blog">This site is empty</string>
+    <string name="reader_empty_search_title">No results found</string>
+    <string name="reader_empty_search_description">No results found for %s for your language</string>
+    <string name="reader_empty_search_request_failed">Unable to perform search</string>
 
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="label_clear_search_history">Clear search history</string>
@@ -1735,6 +1737,7 @@
     <string name="plugin_version">Version %s</string>
     <string name="plugin_installed_version">Version %s installed</string>
     <string name="plugin_installed">Installed</string>
+    <string name="plugin_auto_managed">Auto-managed</string>
     <string name="plugin_install">Install</string>
     <string name="plugin_available_version">Version %s is available</string>
     <string name="plugin_updated_successfully">Successfully updated %s</string>
@@ -1952,12 +1955,18 @@
     <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 
     <!-- Login -->
+    <!-- If any of these appear unused, be sure to check the same string in the login library -
+    it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
     <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
     <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
     <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="send_link">Send link</string>
+    <string name="enter_your_password_instead">Enter your password instead</string>
+    <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
@@ -2006,6 +2015,13 @@
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <!-- Screen titles -->
+    <string name="email_address_login_title">Email address login</string>
+    <string name="site_address_login_title">Site address login</string>
+    <string name="magic_link_login_title">Magic link login</string>
+    <string name="magic_link_sent_login_title">Magic link sent</string>
+    <string name="selfhosted_site_login_title">Login credentials</string>
+    <string name="verification_2fa_screen_title">Code verification</string>
 
     <!-- Signup -->
     <string name="sign_up">Sign Up for WordPress.com</string>
@@ -2021,7 +2037,7 @@
     <string name="signup_epilogue_hint_password">Password (optional)</string>
     <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_username">Username</string>
-    <string name="signup_magic_link_error">There was some trouble sending the email.  You can retry now or close and try again later.</string>
+    <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
@@ -2033,6 +2049,9 @@
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
     <string name="content_description_add_avatar">Add avatar</string>
+    <!-- Screen titles -->
+    <string name="signup_email_screen_title">Email signup</string>
+    <string name="signup_magic_link_title">Magic link sent</string>
 
     <string name="username_changer_action">Save</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>

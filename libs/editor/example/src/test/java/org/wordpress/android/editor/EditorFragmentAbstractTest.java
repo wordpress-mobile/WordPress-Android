@@ -57,7 +57,7 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
-        public CharSequence getContent() {
+        public CharSequence getContent(CharSequence originalContent) {
             return null;
         }
 

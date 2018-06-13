@@ -966,12 +966,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         return StringUtils.notNullStr(mTitle.replaceAll("&nbsp;$", ""));
     }
 
+    public CharSequence getContent() throws EditorFragmentNotAddedException {
+        return getContent(null);
+    }
+
     /**
      * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
      * where possible.
      */
     @Override
-    public CharSequence getContent() throws EditorFragmentNotAddedException {
+    public CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException {
         if (!isAdded()) {
             throw new EditorFragmentNotAddedException();
         }

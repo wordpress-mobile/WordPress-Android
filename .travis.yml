@@ -1,6 +1,7 @@
 language: android
 jdk: oraclejdk8
 sudo: required
+rvm: 2.0.0
 
 notifications:
   # Slack notification on failure (secured token).
@@ -33,4 +34,7 @@ install:
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 script:
+  - ./tools/validate-login-strings.sh
   - ./gradlew -PdisablePreDex checkstyle ktlint assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+  - bundle install
+  - bundle exec danger --fail-on-errors=true  

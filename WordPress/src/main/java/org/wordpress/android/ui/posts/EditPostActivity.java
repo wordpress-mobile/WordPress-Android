@@ -1258,8 +1258,9 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
-                        (String) mEditorFragment.getContent());
+                postTitleOrContentChanged =
+                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                                (String) mEditorFragment.getContent(mPost.getContent()));
             } else {
                 // TODO: Remove when legacy editor is dropped
                 postTitleOrContentChanged = updatePostContent(isAutosave);
@@ -2108,10 +2109,11 @@ public class EditPostActivity extends AppCompatActivity implements
             } catch (RuntimeException e) {
                 // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
                 // See https://code.google.com/p/android/issues/detail?id=5164
-                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+                postContent = new SpannableStringBuilder(
+                        StringUtils.notNullStr((String) mEditorFragment.getContent(null)));
             }
         } else {
-            postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+            postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent(null)));
         }
 
         String content;

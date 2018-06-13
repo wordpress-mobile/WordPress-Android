@@ -7,8 +7,6 @@ import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.AppBarLayout.Behavior.DragCallback;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -153,20 +151,12 @@ public class FilteredRecyclerView extends RelativeLayout {
         mToolbar = findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = findViewById(R.id.app_bar_layout);
 
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
         if (mToolbarDisableScrollGestures) {
-            // Prevent the toolbar from auto-hide/reveal while scrolling, and disable swipe to
-            // hide toolbar.
-            ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
-            if (params.getBehavior() == null) {
-                params.setBehavior(new AppBarLayout.Behavior());
-            }
-            AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-            behavior.setDragCallback(new DragCallback() {
-                @Override public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                    return false;
-                }
-            });
+            params.setScrollFlags(0);
+        } else {
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                  | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
         }
 
         mEmptyView = findViewById(R.id.empty_view);
@@ -391,12 +381,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public void hideToolbar() {
-        mAppBarLayout.setExpanded(false, true);
-    }
-
-    public void showToolbar() {
-        mAppBarLayout.setExpanded(true, true);
+    public AppBarLayout getAppBarLayout() {
+        return mAppBarLayout;
     }
 
     /*
