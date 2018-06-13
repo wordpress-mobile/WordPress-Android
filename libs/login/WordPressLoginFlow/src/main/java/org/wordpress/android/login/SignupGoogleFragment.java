@@ -168,7 +168,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                     "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
             // Continue with signup since account was created.
         } else if (event.createdAccount) {
-            mAnalyticsListener.trackCreatedAccount();
+            mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail);
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
             // Continue with login since existing account was selected.
         } else {

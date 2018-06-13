@@ -1432,7 +1432,7 @@ public class ReaderPostDetailFragment extends Fragment
      * can we show the footer bar which contains the like & comment counts?
      */
     private boolean canShowFooter() {
-        return canShowLikeCount() || canShowCommentCount();
+        return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton();
     }
 
     private boolean canShowCommentCount() {
@@ -1448,7 +1448,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private boolean canShowBookmarkButton() {
-        return hasPost() && (mPost.isWP() || mPost.isJetpack) && !mPost.isDiscoverPost();
+        return hasPost() && !mPost.isDiscoverPost();
     }
 
     private boolean canShowLikeCount() {

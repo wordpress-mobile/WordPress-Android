@@ -142,7 +142,7 @@
         <activity
             android:name=".ui.prefs.AboutActivity"
             android:label="@string/about_the_app"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/WordPress.TransparentToolbarTheme" />
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
@@ -646,7 +646,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.StatsWidgetProvider"

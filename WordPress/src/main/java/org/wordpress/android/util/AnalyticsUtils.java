@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -432,5 +433,16 @@ public class AnalyticsUtils {
         if (!isWpcomLogin) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
+    }
+
+    /**
+     * Refreshes analytics metadata and bumps the account created stat.
+     *
+     * @param username
+     * @param email
+     */
+    public static void trackAnalyticsAccountCreated(String username, String email) {
+        AnalyticsUtils.refreshMetadataNewUser(username, email);
+        AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
     }
 }
