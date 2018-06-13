@@ -47,8 +47,8 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import tools.fastlane.screengrab.FalconScreenshotStrategy;
 import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 import static org.hamcrest.Matchers.allOf;
@@ -67,18 +67,16 @@ public class WPScreenshotTest {
     @ClassRule
     public static final LocaleTestRule localeTestRule = new LocaleTestRule();
 
-    /*@Before public void setUp() {
-        Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
-    }*/
+    @BeforeClass
+    public static void beforeAll() {
+        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
+    }
 
     @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class, false, false);
+    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
     
     @Test
     public void wPScreenshotTest() {
-        mActivityTestRule.launchActivity(null);
-        Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
-
         wPLogin();
         navigateReader();
         createBlogPost();
