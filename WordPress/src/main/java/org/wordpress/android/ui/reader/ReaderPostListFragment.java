@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.content.ContextCompat;
@@ -84,7 +85,6 @@ import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarte
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.views.ReaderSearchTabLayout;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -135,7 +135,7 @@ public class ReaderPostListFragment extends Fragment
     private View mEmptyView;
     private View mEmptyViewBoxImages;
     private ProgressBar mProgress;
-    private ReaderSearchTabLayout mSearchTabs;
+    private TabLayout mSearchTabs;
 
     private SearchView mSearchView;
     private MenuItem mSettingsMenuItem;
@@ -840,7 +840,9 @@ public class ReaderPostListFragment extends Fragment
      */
     private void createSearchTabs() {
         if (mSearchTabs == null) {
-            mSearchTabs = new ReaderSearchTabLayout(getActivity());
+            ViewGroup rootView = getView().findViewById(android.R.id.content);
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            mSearchTabs = (TabLayout) inflater.inflate(R.layout.reader_search_tabs, rootView);
             mSearchTabs.setVisibility(View.GONE);
             mRecyclerView.getAppBarLayout().addView(mSearchTabs);
         }
