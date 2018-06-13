@@ -59,7 +59,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
     @Override
     public boolean onStopCurrentWork() {
         // if this job is stopped, we really need this to be re-scheduled and re-register the token with
-        // our servers and Helpshift in order to keep receiving notifications, so let's just return `true`.
+        // our servers in order to keep receiving notifications, so let's just return `true`.
         return true;
     }
 
@@ -80,8 +80,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
             }
 
             // Register to other kind of notifications
-            // TODO: Handle Zendesk PNs instead
-//            HelpshiftHelper.getInstance().registerDeviceToken(this, gcmToken);
+            // TODO: Handle Zendesk PNs
             AnalyticsTracker.registerPushNotificationToken(gcmToken);
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");

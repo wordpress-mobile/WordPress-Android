@@ -121,12 +121,7 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        // Handle helpshift PNs
-        if (TextUtils.equals(data.getString("origin"), "helpshift")) {
-            // TODO: Handle Zendesk PNs instead
-//            HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
-            return;
-        }
+        // TODO: Handle Zendesk PNs instead
 
         if (!mAccountStore.hasAccessToken()) {
             return;
