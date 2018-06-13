@@ -52,9 +52,9 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.wordpress:utils:1.18.1'
 
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:efd43ed795f4c321590f1f7ff720eb1c4d4390a7')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:efd43ed795f4c321590f1f7ff720eb1c4d4390a7')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:efd43ed795f4c321590f1f7ff720eb1c4d4390a7')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:7eeb8663f806b9307bd695c9de5fc7a030a0f2bc')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:7eeb8663f806b9307bd695c9de5fc7a030a0f2bc')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:7eeb8663f806b9307bd695c9de5fc7a030a0f2bc')
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
