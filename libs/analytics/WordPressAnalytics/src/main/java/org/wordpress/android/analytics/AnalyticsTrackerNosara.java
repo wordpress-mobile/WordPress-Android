@@ -514,6 +514,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
                 return "editor_upload_media_retried";
+            case EDITOR_OPEN_ABOUT_TO_LOAD_GUTENBERG_POST:
+                return "editor_about_load_gutenberg_post";
+            case EDITOR_OPEN_ABOUT_TO_LOAD_NORMAL_POST:
+                return "editor_about_load_normal_post";
             case EDITOR_CLOSED:
                 return "editor_closed";
             case EDITOR_ADDED_PHOTO_NEW:
