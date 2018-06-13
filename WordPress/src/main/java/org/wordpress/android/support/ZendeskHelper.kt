@@ -73,9 +73,9 @@ fun showZendeskHelpCenter(
     val supportName = AppPrefs.getSupportName()
     val isIdentityAvailable = !supportEmail.isNullOrEmpty()
     if (isIdentityAvailable) {
-        zendeskInstance.setIdentity(zendeskIdentity(supportEmail, supportName))
+        zendeskInstance.setIdentity(createZendeskIdentity(supportEmail, supportName))
     } else {
-        zendeskInstance.setIdentity(zendeskIdentity(null, null))
+        zendeskInstance.setIdentity(createZendeskIdentity(null, null))
     }
     val builder = HelpCenterActivity.builder()
             .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
@@ -84,7 +84,7 @@ fun showZendeskHelpCenter(
             .withShowConversationsMenuButton(isIdentityAvailable)
 
     if (isIdentityAvailable) {
-        builder.show(context, zendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+        builder.show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     } else {
         builder.show(context)
     }
@@ -103,9 +103,9 @@ fun createNewTicket(
         zendeskNeedsToBeEnabledError
     }
     getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-        zendeskInstance.setIdentity(zendeskIdentity(email, name))
+        zendeskInstance.setIdentity(createZendeskIdentity(email, name))
         RequestActivity.builder()
-                .show(context, zendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+                .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     }
 }
 
@@ -121,15 +121,15 @@ fun showAllTickets(
         zendeskNeedsToBeEnabledError
     }
     getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
-        zendeskInstance.setIdentity(zendeskIdentity(email, name))
+        zendeskInstance.setIdentity(createZendeskIdentity(email, name))
         RequestListActivity.builder()
-                .show(context, zendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+                .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
     }
 }
 
 // Helpers
 
-private fun zendeskConfig(
+private fun buildZendeskConfig(
     context: Context,
     siteStore: SiteStore,
     origin: Origin?,
@@ -137,13 +137,17 @@ private fun zendeskConfig(
     extraTags: List<String>? = null
 ): UiConfig {
     return RequestActivity.builder()
-            .withTicketForm(TicketFieldIds.form, customFields(context, siteStore, selectedSite))
+            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, siteStore, selectedSite))
             .withRequestSubject(ZendeskConstants.ticketSubject)
-            .withTags(zendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
+            .withTags(buildZendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
             .config()
 }
 
-private fun customFields(context: Context, siteStore: SiteStore, selectedSite: SiteModel?): List<CustomField> {
+private fun buildZendeskCustomFields(
+    context: Context,
+    siteStore: SiteStore,
+    selectedSite: SiteModel?
+): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
     } else {
@@ -151,25 +155,25 @@ private fun customFields(context: Context, siteStore: SiteStore, selectedSite: S
     }
     return listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, blogInformation(siteStore.sites)),
+            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(siteStore.sites)),
             CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
-            CustomField(TicketFieldIds.networkInformation, zendeskNetworkInformation(context))
+            CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context))
     )
 }
 
-private fun zendeskIdentity(email: String?, name: String?): Identity =
+private fun createZendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
-private fun blogInformation(allSites: List<SiteModel>?): String {
+private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String {
     allSites?.let {
         return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation }
     }
     return ZendeskConstants.noneValue
 }
 
-private fun zendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
+private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -194,7 +198,7 @@ private fun zendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: L
     return tags
 }
 
-private fun zendeskNetworkInformation(context: Context): String {
+private fun getNetworkInformation(context: Context): String {
     val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
         ConnectivityManager.TYPE_WIFI -> ZendeskConstants.networkWifi
         ConnectivityManager.TYPE_MOBILE -> ZendeskConstants.networkWWAN
