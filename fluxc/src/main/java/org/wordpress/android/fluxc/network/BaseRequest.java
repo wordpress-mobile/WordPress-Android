@@ -6,13 +6,16 @@ import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.wordpress.android.fluxc.FluxCError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
@@ -27,6 +30,10 @@ import javax.net.ssl.SSLHandshakeException;
 public abstract class BaseRequest<T> extends Request<T> {
     public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
     public static final int UPLOAD_REQUEST_READ_TIMEOUT = 60000;
+
+    // Only used when enabledCaching is called - caching is off by default for all requests
+    public static final int DEFAULT_CACHE_LIFETIME = 10 * 60 * 1000;
+
     public Uri mUri;
 
     public interface OnAuthFailedListener {
@@ -45,6 +52,9 @@ public abstract class BaseRequest<T> extends Request<T> {
     protected OnParseErrorListener mOnParseErrorListener;
     protected final Map<String, String> mHeaders = new HashMap<>(2);
     private BaseErrorListener mErrorListener;
+
+    private int mCacheTtl;
+    private int mCacheSoftTtl;
 
     public static class BaseNetworkError implements FluxCError {
         public GenericErrorType type;
@@ -139,6 +149,33 @@ public abstract class BaseRequest<T> extends Request<T> {
         mUri = builder.build();
     }
 
+    /**
+     * Enable caching for this request. The {@code timeToLive} param corresponds to the
+     * {@code ttl} field in {@link Cache}.
+     *
+     * Disables soft expiry, which is when the cached result is returned, but a network request is also dispatched
+     * to update the cache.
+     *
+     * @param timeToLive the amount of time before the cache expires
+     */
+    public void enableCaching(int timeToLive) {
+        enableCaching(timeToLive, timeToLive);
+    }
+
+    /**
+     * Enable caching for this request. The {@code timeToLive} and {@code softTimeToLive} params correspond to the
+     * {@code ttl} and {@code softTtl} fields in {@link Cache}.
+     *
+     * @param timeToLive the amount of time before the cache expires
+     * @param softTimeToLive the amount of time before the cache soft expires (the cached result is returned,
+     *                       but a network request is also dispatched to update the cache)
+     */
+    public void enableCaching(int timeToLive, int softTimeToLive) {
+        setShouldCache(true);
+        mCacheTtl = timeToLive;
+        mCacheSoftTtl = softTimeToLive;
+    }
+
     @Override
     public Map<String, String> getHeaders() {
         return mHeaders;
@@ -174,6 +211,45 @@ public abstract class BaseRequest<T> extends Request<T> {
      */
     public void disableRetries() {
         setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
+    /**
+     * Generate a cache entry for this request.
+     *
+     * If caching has been enabled through {@link BaseRequest#enableCaching(int, int)}, the expiry parameters that were
+     * given are used to configure the cache entry.
+     *
+     * Otherwise, just generate a cache entry from the response's cache headers (default behaviour).
+     */
+    protected Cache.Entry createCacheEntry(NetworkResponse response) {
+        Cache.Entry cacheEntry = HttpHeaderParser.parseCacheHeaders(response);
+
+        if (!shouldCache()) {
+            return cacheEntry;
+        }
+
+        if (cacheEntry == null) {
+            cacheEntry = new Cache.Entry();
+        }
+
+        cacheEntry.data = response.data;
+
+        long now = System.currentTimeMillis();
+        cacheEntry.ttl = now + mCacheTtl;
+        cacheEntry.softTtl = now + mCacheSoftTtl;
+
+        String headerValue = response.headers.get("Date");
+        if (headerValue != null) {
+            cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+        }
+
+        headerValue = response.headers.get("Last-Modified");
+        if (headerValue != null) {
+            cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue);
+        }
+
+        cacheEntry.responseHeaders = response.headers;
+        return cacheEntry;
     }
 
     @NonNull

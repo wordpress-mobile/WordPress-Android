@@ -59,7 +59,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
             String data = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
             Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
-            return Response.success(obj, HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(obj, createCacheEntry(response));
         } catch (XMLRPCFault e) {
             return Response.error(new VolleyError(e));
         } catch (UnsupportedEncodingException e) {
