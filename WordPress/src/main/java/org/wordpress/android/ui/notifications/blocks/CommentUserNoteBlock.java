@@ -60,7 +60,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         noteBlockHolder.mNameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
-                                                                                 WordPress.getContext()));
+                WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.mBulletTextView.setVisibility(View.VISIBLE);
             noteBlockHolder.mSiteTextView.setVisibility(View.VISIBLE);
@@ -157,7 +157,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
-        String commentText = NotificationsUtils.getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"), noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
+        String commentText = NotificationsUtils
+                .getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"),
+                        noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
 
         return getStringWithNewlineInListsRemoved(commentText);
     }
@@ -166,7 +168,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         if (noteString == null) {
             return "";
         }
-        
+
         return noteString.replace("\n\t\n\t", "\t");
     }
 
