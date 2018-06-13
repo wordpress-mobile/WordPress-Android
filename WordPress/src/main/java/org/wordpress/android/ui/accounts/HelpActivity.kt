@@ -11,10 +11,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.support.createNewTicket
-import org.wordpress.android.support.showAllTickets
 import org.wordpress.android.support.showSupportEmailInputDialog
-import org.wordpress.android.support.showZendeskHelpCenter
+import org.wordpress.android.support.zendeskHelperInstance
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -83,17 +81,17 @@ class HelpActivity : AppCompatActivity() {
     }
 
     private fun createNewZendeskTicket() {
-        createNewTicket(this, accountStore, siteStore, originFromExtras,
+        zendeskHelperInstance.createNewTicket(this, accountStore, siteStore, originFromExtras,
                 selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun showZendeskTickets() {
-        showAllTickets(this, accountStore, siteStore, originFromExtras,
+        zendeskHelperInstance.showAllTickets(this, accountStore, siteStore, originFromExtras,
                 selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun showZendeskFaq() {
-        showZendeskHelpCenter(this, siteStore, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+        zendeskHelperInstance.showZendeskHelpCenter(this, siteStore, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun refreshContactEmailText() {
