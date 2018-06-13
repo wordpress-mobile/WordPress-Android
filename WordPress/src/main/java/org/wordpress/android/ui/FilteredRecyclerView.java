@@ -381,12 +381,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public void hideToolbar() {
-        mAppBarLayout.setExpanded(false, true);
-    }
-
-    public void showToolbar() {
-        mAppBarLayout.setExpanded(true, true);
+    public AppBarLayout getAppBarLayout() {
+        return mAppBarLayout;
     }
 
     /*
