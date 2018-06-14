@@ -125,6 +125,8 @@ public class AppPrefs {
         // When we need to show the async promo dialog
         ASYNC_PROMO_REQUIRED,
 
+        BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
+
         // When we need to show the new image optimize promo dialog
         IMAGE_OPTIMIZE_PROMO_REQUIRED,
 
@@ -462,6 +464,14 @@ public class AppPrefs {
 
     public static void setAsyncPromoRequired(boolean required) {
         setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
+    }
+
+    public static boolean shouldShowBookmarksSavedLocallyDialog() {
+        return getBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, true);
+    }
+
+    public static void setBookmarksSavedLocallyDialogShown() {
+        setBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, false);
     }
 
     public static boolean isImageOptimizePromoRequired() {

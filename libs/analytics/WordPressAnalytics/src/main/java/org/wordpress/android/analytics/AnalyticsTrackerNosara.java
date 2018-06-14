@@ -516,6 +516,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_retried";
             case EDITOR_CLOSED:
                 return "editor_closed";
+            case POST_LIST_BUTTON_PRESSED:
+                return "post_list_button_pressed";
+            case EDITOR_OPENED:
+                return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
                 return "editor_photo_added";
             case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
