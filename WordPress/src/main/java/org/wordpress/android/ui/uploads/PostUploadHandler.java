@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -558,7 +559,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             if (isFirstTimePublish) {
                 if (sCurrentUploadingPostAnalyticsProperties != null) {
                     sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
+                } else {
+                    sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
                 }
+                sCurrentUploadingPostAnalyticsProperties.put("has_gutenberg_blocks", PostUtils
+                        .contentContainsGutenbergBlocks(event.post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
                                                     mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
                                                     sCurrentUploadingPostAnalyticsProperties);
