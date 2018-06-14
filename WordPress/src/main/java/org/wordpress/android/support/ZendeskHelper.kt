@@ -38,11 +38,17 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     private val isZendeskEnabled: Boolean
         get() = zendeskInstance.isInitialized
 
+    /**
+     * This function sets up the Zendesk singleton instance with the passed in credentials. This step is required
+     * for the rest of Zendesk functions to work and it should only be called once, probably during the Application
+     * setup. It'll also enable Zendesk logs for DEBUG builds.
+     */
     fun setupZendesk(
         context: Context,
         zendeskUrl: String,
         applicationId: String,
-        oauthClientId: String
+        oauthClientId: String,
+        enableLogs: Boolean = BuildConfig.DEBUG
     ) {
         require(!isZendeskEnabled) {
             "Zendesk shouldn't be initialized more than once!"
@@ -51,14 +57,15 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
             return
         }
         zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
-        Logger.setLoggable(BuildConfig.DEBUG)
+        Logger.setLoggable(enableLogs)
         Support.INSTANCE.init(zendeskInstance)
     }
 
     /**
-     * We don't force a valid identity for Help Center. If the identity is already there, we use it to enable the
-     * contact us button on the Help Center, if it's not, we give the option to the user to browse the FAQ without
-     * setting an email.
+     * This function shows the Zendesk Help Center. It doesn't require a valid identity. If the support identity is
+     * available it'll be used and the "New Ticket" button will be available, if not, it'll work with an anonymous
+     * identity. The configuration will only be passed in if the identity is available, as it's only required if
+     * the user contacts us through it.
      */
     fun showZendeskHelpCenter(
         context: Context,
@@ -91,6 +98,11 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
+    /**
+     * This function creates a new ticket. It'll force a valid identity, so if the user doesn't have one set, a dialog
+     * will be shown where the user will need to enter an email and a name. If they cancel the dialog, the ticket
+     * creation will be canceled as well. A Zendesk configuration is passed in as it's required for ticket creation.
+     */
     @JvmOverloads
     fun createNewTicket(
         context: Context,
@@ -110,6 +122,11 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
+    /**
+     * This function shows the user's ticket list. It'll force a valid identity, so if the user doesn't have one set,
+     * a dialog will be shown where the user will need to enter an email and a name. If they cancel the dialog,
+     * ticket list will not be shown. A Zendesk configuration is passed in as it's required for ticket creation.
+     */
     fun showAllTickets(
         context: Context,
         accountStore: AccountStore,
@@ -131,6 +148,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
 
 // Helpers
 
+/**
+ * This is a helper function which builds a `UiConfig` through helpers to be used during ticket creation.
+ */
 private fun buildZendeskConfig(
     context: Context,
     siteStore: SiteStore,
@@ -145,6 +165,10 @@ private fun buildZendeskConfig(
             .config()
 }
 
+/**
+ * This is a helper function which builds a list of `CustomField`s which will be used during ticket creation. They
+ * will be used to fill the custom fields we have setup in Zendesk UI for Happiness Engineers.
+ */
 private fun buildZendeskCustomFields(
     context: Context,
     siteStore: SiteStore,
@@ -165,9 +189,25 @@ private fun buildZendeskCustomFields(
     )
 }
 
+/**
+ * This is a helper function which creates an anonymous Zendesk identity with the email and name passed in. They can
+ * both be `null` as they are not required for a valid identity.
+ *
+ * An important thing to note is that whenever a different set of values are passed in, a different identity will be
+ * created which will reset the ticket list for the user. So, for example, even if the passed in email is the same,
+ * if the name is different, it'll reset Zendesk's local DB.
+ *
+ * This is currently the way we handle identity for Zendesk, but it's possible that we may switch to a JWT based
+ * authentication which will avoid the resetting issue, but will mean that we'll need to involve our own servers in the
+ * authentication. More information can be found in their documentation:
+ * https://developer.zendesk.com/embeddables/docs/android-support-sdk/sdk_set_identity#setting-a-unique-identity
+ */
 private fun createZendeskIdentity(email: String?, name: String?): Identity =
         AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
 
+/**
+ * This is a small helper function which just joins the `logInformation` of all the sites passed in with a separator.
+ */
 private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String {
     allSites?.let {
         return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation }
@@ -175,6 +215,10 @@ private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String
     return ZendeskConstants.noneValue
 }
 
+/**
+ * This is a helper function which returns a set of pre-defined tags depending on some conditions. It accepts a list of
+ * custom tags to be added for special cases.
+ */
 private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
@@ -200,6 +244,10 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
     return tags
 }
 
+/**
+ * This is a helper function which returns information about the network state of the app to be sent to Zendesk, which
+ * could prove useful for the Happiness Engineers while debugging the users' issues.
+ */
 private fun getNetworkInformation(context: Context): String {
     val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
         ConnectivityManager.TYPE_WIFI -> ZendeskConstants.networkWifi
