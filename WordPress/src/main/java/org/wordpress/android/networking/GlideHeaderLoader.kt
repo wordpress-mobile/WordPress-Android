@@ -25,7 +25,8 @@ class GlideHeaderLoader @Inject constructor(
     modelLoader: ModelLoader<GlideUrl, InputStream>,
     private val mAccessToken: AccessToken,
     private val mHttpAuthManager: HTTPAuthManager,
-    private val mUserAgent: UserAgent) : BaseGlideUrlLoader<GlideUrl>(modelLoader) {
+    private val mUserAgent: UserAgent
+) : BaseGlideUrlLoader<GlideUrl>(modelLoader) {
     override fun getHeaders(url: GlideUrl?, width: Int, height: Int, options: Options?): Headers? {
         var headerBuilder = Builder()
 

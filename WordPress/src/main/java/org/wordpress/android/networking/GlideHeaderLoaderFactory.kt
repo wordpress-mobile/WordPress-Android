@@ -13,7 +13,8 @@ import java.io.InputStream
 class GlideHeaderLoaderFactory(
     private val accessToken: AccessToken,
     private val httpAuthManager: HTTPAuthManager,
-    private val userAgent: UserAgent) : ModelLoaderFactory<GlideUrl, InputStream> {
+    private val userAgent: UserAgent
+) : ModelLoaderFactory<GlideUrl, InputStream> {
     override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<GlideUrl, InputStream> {
         val loader = multiFactory.build(GlideUrl::class.java, InputStream::class.java)
         return GlideHeaderLoader(loader, accessToken, httpAuthManager, userAgent)
