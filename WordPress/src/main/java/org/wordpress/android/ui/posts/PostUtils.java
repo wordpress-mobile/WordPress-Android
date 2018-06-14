@@ -120,6 +120,7 @@ public class PostUtils {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
+                    properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadHandler
@@ -128,6 +129,7 @@ public class PostUtils {
             case SCHEDULED:
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
+                    properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));

@@ -536,7 +536,7 @@ public class PostsListFragment extends Fragment
                 properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, mSite,
                         properties);
-                
+
                 if (UploadService.isPostUploadingOrQueued(post)) {
                     // If the post is uploading media, allow the media to continue uploading, but don't upload the
                     // post itself when they finish (since we're about to edit it again)
