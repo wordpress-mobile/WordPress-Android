@@ -83,7 +83,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
                 val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
                 txtLabel.text = getTitleForPosition(i)
-                txtLabel.contentDescription = getContentDescriptionForPosition(i)
+                customView.contentDescription = getContentDescriptionForPosition(i)
                 imgIcon.setImageResource(getDrawableResForPosition(i))
             }
 
