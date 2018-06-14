@@ -45,6 +45,9 @@ public abstract class BaseXMLRPCClient {
     }
 
     protected Request add(XMLRPCRequest request) {
+        if (request.shouldCache() && request.shouldForceUpdate()) {
+            mRequestQueue.getCache().invalidate(request.mUri.toString(), true);
+        }
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
