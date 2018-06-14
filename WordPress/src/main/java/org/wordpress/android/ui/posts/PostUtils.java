@@ -149,6 +149,16 @@ public class PostUtils {
         }
     }
 
+    public static void trackOpenPostAnalytics(PostModel post, SiteModel site) {
+        Map<String, Object> properties = new HashMap<>();
+        if (!post.isLocalDraft()) {
+            properties.put("post_id", post.getRemotePostId());
+        }
+        properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,
+                properties);
+    }
+
     public static void showCustomDialog(Activity activity, String title, String message,
                                         String positiveButton, String negativeButton, String tag) {
         FragmentManager fm = activity.getFragmentManager();

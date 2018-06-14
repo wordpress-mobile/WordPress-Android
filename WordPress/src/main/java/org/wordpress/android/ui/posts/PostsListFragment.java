@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -53,6 +54,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -64,7 +66,9 @@ import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -523,12 +527,23 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
+                // track event
+                Map<String, Object> properties = new HashMap<>();
+                properties.put("button", "edit");
+                if (!post.isLocalDraft()) {
+                    properties.put("post_id", post.getRemotePostId());
+                }
+                properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, mSite,
+                        properties);
+                
                 if (UploadService.isPostUploadingOrQueued(post)) {
                     // If the post is uploading media, allow the media to continue uploading, but don't upload the
                     // post itself when they finish (since we're about to edit it again)
                     UploadService.cancelQueuedPostUpload(post);
                 }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+
                 break;
             case PostListButton.BUTTON_RETRY:
                 // restart the UploadService with retry parameters
