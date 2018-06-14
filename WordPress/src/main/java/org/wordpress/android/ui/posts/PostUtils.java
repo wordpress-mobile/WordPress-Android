@@ -134,6 +134,7 @@ public class PostUtils {
                     properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
                             : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
+                    properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                                                         properties);
                 }
