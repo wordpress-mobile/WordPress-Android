@@ -140,7 +140,8 @@ public class PostUtils {
                 break;
             case DRAFT:
                 properties.put("post_id", post.getRemotePostId());
-                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT, site);
+                properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT, site, properties);
                 break;
             default:
                 // No-op
