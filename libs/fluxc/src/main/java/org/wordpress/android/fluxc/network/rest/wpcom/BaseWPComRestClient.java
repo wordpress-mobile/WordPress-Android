@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -72,7 +73,7 @@ public abstract class BaseWPComRestClient {
             request.setOnParseErrorListener(mOnParseErrorListener);
             request.setUserAgent(mUserAgent.getUserAgent());
         }
-        return mRequestQueue.add(request);
+        return addRequest(request);
     }
 
     protected Request addUnauthedRequest(WPComGsonRequest request) {
@@ -99,7 +100,7 @@ public abstract class BaseWPComRestClient {
         return request;
     }
 
-    private Request addRequest(WPComGsonRequest request) {
+    private Request addRequest(BaseRequest request) {
         if (request.shouldCache() && request.shouldForceUpdate()) {
             mRequestQueue.getCache().invalidate(request.mUri.toString(), true);
         }
