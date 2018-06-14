@@ -44,7 +44,6 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.helpshift.network.util.InetAddressUtils;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -75,6 +74,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.ValidationUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -1592,7 +1592,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // if any IP string is not a valid IP address then entry is not valid
         for (String ip : ipStrings) {
-            if (!InetAddressUtils.isIPv4Address(ip)) {
+            if (!ValidationUtils.validateIPv4(ip)) {
                 return false;
             }
         }
