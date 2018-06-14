@@ -169,7 +169,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return "";
         }
 
-        return noteString.replace("\n\t\n\t", "\t");
+        return noteString.replace("\n\t\n\t", "\n\t");
     }
 
     private long getTimestamp() {
