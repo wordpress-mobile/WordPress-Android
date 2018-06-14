@@ -2005,11 +2005,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     String content = mPost.getContent().replaceAll("\uFFFC", "");
                     // Prepare eventual legacy editor local draft for the new editor
                     content = migrateLegacyDraft(content);
-                    if (PostUtils.contentContainsGutenbergBlocks(content)) {
-                        AnalyticsTracker.track(Stat.EDITOR_OPEN_ABOUT_TO_LOAD_GUTENBERG_POST);
-                    } else {
-                        AnalyticsTracker.track(Stat.EDITOR_OPEN_ABOUT_TO_LOAD_NORMAL_POST);
-                    }
                     mEditorFragment.setContent(content);
                 }
             }
