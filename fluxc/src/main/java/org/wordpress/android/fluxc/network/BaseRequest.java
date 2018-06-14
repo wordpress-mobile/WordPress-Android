@@ -245,25 +245,25 @@ public abstract class BaseRequest<T> extends Request<T> {
 
         if (cacheEntry == null) {
             cacheEntry = new Cache.Entry();
-        }
 
-        cacheEntry.data = response.data;
+            String headerValue = response.headers.get("Date");
+            if (headerValue != null) {
+                cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+            }
+
+            headerValue = response.headers.get("Last-Modified");
+            if (headerValue != null) {
+                cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue);
+            }
+
+            cacheEntry.data = response.data;
+            cacheEntry.responseHeaders = response.headers;
+        }
 
         long now = System.currentTimeMillis();
         cacheEntry.ttl = now + mCacheTtl;
         cacheEntry.softTtl = now + mCacheSoftTtl;
 
-        String headerValue = response.headers.get("Date");
-        if (headerValue != null) {
-            cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
-        }
-
-        headerValue = response.headers.get("Last-Modified");
-        if (headerValue != null) {
-            cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue);
-        }
-
-        cacheEntry.responseHeaders = response.headers;
         return cacheEntry;
     }
 
