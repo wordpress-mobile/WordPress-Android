@@ -21,8 +21,11 @@ import javax.inject.Inject
 /**
  * Glide Header loader which adds an authorization header and a user agent header to requests.
  */
-class GlideHeaderLoader @Inject constructor(modelLoader: ModelLoader<GlideUrl, InputStream>, private val mAccessToken: AccessToken,
-    private val mHttpAuthManager: HTTPAuthManager, private val mUserAgent: UserAgent) : BaseGlideUrlLoader<GlideUrl>(modelLoader) {
+class GlideHeaderLoader @Inject constructor(
+    modelLoader: ModelLoader<GlideUrl, InputStream>,
+    private val mAccessToken: AccessToken,
+    private val mHttpAuthManager: HTTPAuthManager,
+    private val mUserAgent: UserAgent) : BaseGlideUrlLoader<GlideUrl>(modelLoader) {
     override fun getHeaders(url: GlideUrl?, width: Int, height: Int, options: Options?): Headers? {
         var headerBuilder = Builder()
 
