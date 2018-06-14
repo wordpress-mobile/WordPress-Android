@@ -43,6 +43,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
      * for the rest of Zendesk functions to work and it should only be called once, probably during the Application
      * setup. It'll also enable Zendesk logs for DEBUG builds.
      */
+    @JvmOverloads
     fun setupZendesk(
         context: Context,
         zendeskUrl: String,
