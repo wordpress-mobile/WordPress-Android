@@ -120,7 +120,8 @@ public class PostUtils {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
-                    properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                    properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                            PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadHandler
@@ -129,21 +130,24 @@ public class PostUtils {
             case SCHEDULED:
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
-                    properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                    properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                            PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
                             : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
-                    properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                    properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                            PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                                                         properties);
                 }
                 break;
             case DRAFT:
                 properties.put("post_id", post.getRemotePostId());
-                properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                        PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT, site, properties);
                 break;
             default:
@@ -156,7 +160,8 @@ public class PostUtils {
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
         }
-        properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                PostUtils.contentContainsGutenbergBlocks(post.getContent()));
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,
                 properties);
     }

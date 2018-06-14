@@ -533,7 +533,8 @@ public class PostsListFragment extends Fragment
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
                 }
-                properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                        PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, mSite,
                         properties);
 

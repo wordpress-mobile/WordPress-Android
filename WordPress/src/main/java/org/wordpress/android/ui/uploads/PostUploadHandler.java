@@ -562,8 +562,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 } else {
                     sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
                 }
-                sCurrentUploadingPostAnalyticsProperties.put("has_gutenberg_blocks", PostUtils
-                        .contentContainsGutenbergBlocks(event.post.getContent()));
+                sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                                                PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
                                                     mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
                                                     sCurrentUploadingPostAnalyticsProperties);

@@ -288,7 +288,8 @@ public class PostPreviewActivity extends AppCompatActivity {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
             if (!mPost.isLocalDraft()) {
                 Map<String, Object> properties = new HashMap<>();
-                properties.put("has_gutenberg_blocks", PostUtils.contentContainsGutenbergBlocks(mPost.getContent()));
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                        PostUtils.contentContainsGutenbergBlocks(mPost.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite, properties);
             }
 
