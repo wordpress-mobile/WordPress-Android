@@ -91,13 +91,14 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
+    @JvmOverloads
     fun createNewTicket(
         context: Context,
         accountStore: AccountStore?,
         siteStore: SiteStore,
         origin: Origin?,
         selectedSite: SiteModel?,
-        extraTags: List<String>?
+        extraTags: List<String>? = null
     ) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
