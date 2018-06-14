@@ -217,9 +217,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                     if (lastFragment != null) {
                         lastFragment.pauseWebView();
                     }
-
-                    // don't show the swipe indicator in the future since the user knows how to swipe
-                    AppPrefs.setReaderSwipeToNavigateShown(true);
                 }
 
                 // resume the newly active webView if it was previously paused
@@ -708,6 +705,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         // let the user know they can swipe between posts
                         if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
                             WPSwipeSnackbar.show(mViewPager);
+                            AppPrefs.setReaderSwipeToNavigateShown(true);
                         }
                     }
                 });
