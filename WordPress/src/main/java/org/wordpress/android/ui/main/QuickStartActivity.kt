@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogPositiveClickInterface {
     @Inject lateinit var quickStartStore: QuickStartStore
-    private val site: Int = getSelectedSite()
 
+    private val site: Int = getSelectedSite()
     private val skipAllTasksDialogTag = "skip_all_tasks_dialog"
 
     override fun attachBaseContext(newBase: Context) {
@@ -65,7 +65,7 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
 
     private fun areAllTasksCompleted(): Boolean {
         QuickStartTask.values().forEach {
-            if (it != QuickStartTask.CREATE_SITE) {
+            if (it != QuickStartTask.CREATE_SITE) { // CREATE_SITE is completed by default, regardless of DB flag
                 if (!quickStartStore.hasDoneTask(site.toLong(), it)) {
                     return@areAllTasksCompleted false
                 }
@@ -188,12 +188,7 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
     }
 
     private fun setTasksSkip() {
-        quickStartStore.setDoneTask(site.toLong(), QuickStartTask.VIEW_SITE, true)
-        quickStartStore.setDoneTask(site.toLong(), QuickStartTask.CHOOSE_THEME, true)
-        quickStartStore.setDoneTask(site.toLong(), QuickStartTask.CUSTOMIZE_SITE, true)
-        quickStartStore.setDoneTask(site.toLong(), QuickStartTask.SHARE_SITE, true)
-        quickStartStore.setDoneTask(site.toLong(), QuickStartTask.PUBLISH_POST, true)
-        quickStartStore.setDoneTask(site.toLong(), QuickStartTask.FOLLOW_SITE, true)
+        QuickStartTask.values().forEach { quickStartStore.setDoneTask(site.toLong(), it, true) }
 
         val titleCreateSite = findViewById<TextView>(R.id.title_create_site)
         titleCreateSite.paintFlags = titleCreateSite.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -233,7 +228,8 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
         basicFragmentDialog.initialize(skipAllTasksDialogTag,
                 getString(R.string.quick_start_dialog_skip_title),
                 getString(R.string.quick_start_dialog_skip_message),
-                getString(R.string.quick_start_button_skip_positive), null, getString(R.string.quick_start_button_skip_negative))
+                getString(R.string.quick_start_button_skip_positive),
+                null, getString(R.string.quick_start_button_skip_negative))
 
         basicFragmentDialog.show(supportFragmentManager, skipAllTasksDialogTag)
     }
