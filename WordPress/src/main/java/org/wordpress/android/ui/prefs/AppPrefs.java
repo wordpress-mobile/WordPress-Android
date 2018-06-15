@@ -94,6 +94,9 @@ public class AppPrefs {
         VIDEO_OPTIMIZE_ENABLED,
         VIDEO_OPTIMIZE_WIDTH,
         VIDEO_OPTIMIZE_QUALITY, // Encoder max bitrate
+
+        // Used to flag the account created stat needs to be bumped after account information is synced.
+        SHOULD_TRACK_MAGIC_LINK_SIGNUP,
     }
 
     /**
@@ -121,6 +124,8 @@ public class AppPrefs {
 
         // When we need to show the async promo dialog
         ASYNC_PROMO_REQUIRED,
+
+        BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
 
         // When we need to show the new image optimize promo dialog
         IMAGE_OPTIMIZE_PROMO_REQUIRED,
@@ -465,6 +470,14 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
     }
 
+    public static boolean shouldShowBookmarksSavedLocallyDialog() {
+        return getBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, true);
+    }
+
+    public static void setBookmarksSavedLocallyDialogShown() {
+        setBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, false);
+    }
+
     public static boolean isImageOptimizePromoRequired() {
         return getBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, true);
     }
@@ -691,5 +704,17 @@ public class AppPrefs {
 
     public static void setLastWpComThemeSync(long time) {
         setLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC, time);
+    }
+
+    public static void setShouldTrackMagicLinkSignup(Boolean shouldTrack) {
+        setBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, shouldTrack);
+    }
+
+    public static boolean getShouldTrackMagicLinkSignup() {
+        return getBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, false);
+    }
+
+    public static void removeShouldTrackMagicLinkSignup() {
+        remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 }

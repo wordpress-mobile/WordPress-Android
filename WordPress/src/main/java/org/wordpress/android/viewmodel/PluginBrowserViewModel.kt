@@ -101,7 +101,7 @@ class PluginBrowserViewModel @Inject constructor(
     val title: LiveData<String>
         get() = _title
 
-    var site: SiteModel? = null
+    lateinit var site: SiteModel
 
     var searchQuery: String by Delegates.observable("") {
         _, oldValue, newValue ->
@@ -331,35 +331,30 @@ class PluginBrowserViewModel @Inject constructor(
             return
         }
 
-        val siteId = site?.siteId
-        siteId?.let {
-            site = mSiteStore.getSiteBySiteId(siteId)
-        }
+        site = mSiteStore.getSiteBySiteId(site.siteId)
     }
 
     // Keeping the data up to date
 
     private fun updateAllPluginListsForSlug(slug: String?) {
-        site?.let { site ->
-            mPluginStore.getImmutablePluginBySlug(site, slug)?.let { updatedPlugin ->
-                val transformFunc: (List<ImmutablePluginModel>) -> List<ImmutablePluginModel> = { list ->
-                    list.map { currentPlugin ->
-                        if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
-                    }
+        mPluginStore.getImmutablePluginBySlug(site, slug)?.let { updatedPlugin ->
+            val transformFunc: (List<ImmutablePluginModel>) -> List<ImmutablePluginModel> = { list ->
+                list.map { currentPlugin ->
+                    if (currentPlugin.slug == slug) updatedPlugin else currentPlugin
                 }
-                featuredPlugins = featuredPlugins.transform(transformFunc)
-                newPlugins = newPlugins.transform(transformFunc)
-                searchResults = searchResults.transform(transformFunc)
-                popularPlugins = popularPlugins.transform(transformFunc)
+            }
+            featuredPlugins = featuredPlugins.transform(transformFunc)
+            newPlugins = newPlugins.transform(transformFunc)
+            searchResults = searchResults.transform(transformFunc)
+            popularPlugins = popularPlugins.transform(transformFunc)
 
-                sitePlugins = sitePlugins.transform { list ->
-                    if (!updatedPlugin.isInstalled) {
-                        list.filter { it.slug != slug }
-                    } else if (list.none { it.slug == slug }) {
-                        list.plus(updatedPlugin).sortedBy { it.displayName }
-                    } else {
-                        list.map { if (it.slug == slug) updatedPlugin else it }
-                    }
+            sitePlugins = sitePlugins.transform { list ->
+                if (!updatedPlugin.isInstalled) {
+                    list.filter { it.slug != slug }
+                } else if (list.none { it.slug == slug }) {
+                    list.plus(updatedPlugin).sortedBy { it.displayName }
+                } else {
+                    list.map { if (it.slug == slug) updatedPlugin else it }
                 }
             }
         }
@@ -399,26 +394,22 @@ class PluginBrowserViewModel @Inject constructor(
     // ListState Helpers
 
     private fun updateListStateToReady(directoryType: PluginDirectoryType) {
-        site?.let {
-            val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
-            when (directoryType) {
-                PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Ready(pluginList)
-                PluginDirectoryType.NEW -> newPlugins = ListState.Ready(pluginList)
-                PluginDirectoryType.POPULAR -> popularPlugins = ListState.Ready(pluginList)
-                PluginDirectoryType.SITE -> sitePlugins = ListState.Ready(pluginList)
-            }
+        val pluginList = mPluginStore.getPluginDirectory(site, directoryType)
+        when (directoryType) {
+            PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Ready(pluginList)
+            PluginDirectoryType.NEW -> newPlugins = ListState.Ready(pluginList)
+            PluginDirectoryType.POPULAR -> popularPlugins = ListState.Ready(pluginList)
+            PluginDirectoryType.SITE -> sitePlugins = ListState.Ready(pluginList)
         }
     }
 
     private fun updateListStateToSuccess(directoryType: PluginDirectoryType, canLoadMore: Boolean) {
-        site?.let {
-            val pluginList = mPluginStore.getPluginDirectory(it, directoryType)
-            when (directoryType) {
-                PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Success(pluginList, canLoadMore)
-                PluginDirectoryType.NEW -> newPlugins = ListState.Success(pluginList, canLoadMore)
-                PluginDirectoryType.POPULAR -> popularPlugins = ListState.Success(pluginList, canLoadMore)
-                PluginDirectoryType.SITE -> sitePlugins = ListState.Success(pluginList, canLoadMore)
-            }
+        val pluginList = mPluginStore.getPluginDirectory(site, directoryType)
+        when (directoryType) {
+            PluginDirectoryType.FEATURED -> featuredPlugins = ListState.Success(pluginList, canLoadMore)
+            PluginDirectoryType.NEW -> newPlugins = ListState.Success(pluginList, canLoadMore)
+            PluginDirectoryType.POPULAR -> popularPlugins = ListState.Success(pluginList, canLoadMore)
+            PluginDirectoryType.SITE -> sitePlugins = ListState.Success(pluginList, canLoadMore)
         }
     }
 

@@ -29,14 +29,7 @@
 
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- self-defined permission prevents other apps to hijack PNs -->
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -149,7 +142,7 @@
         <activity
             android:name=".ui.prefs.AboutActivity"
             android:label="@string/about_the_app"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/WordPress.TransparentToolbarTheme" />
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
@@ -653,7 +646,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.StatsWidgetProvider"
@@ -672,47 +664,24 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-
         <service
             android:name=".push.GCMRegistrationIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false" />
 
         <service
-            android:name=".push.GCMMessageService"
-            android:exported="false">
+            android:name=".push.GCMMessageService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".push.InstanceIDService"
-            android:exported="false">
+            >
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".ui.HelpshiftDeepLinkReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="helpshift"
-                    android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
 
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />

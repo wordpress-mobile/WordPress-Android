@@ -86,15 +86,23 @@ public class ReaderActivityLauncher {
     }
 
     /*
-     * show a list of posts in a specific blog
+     * show a list of posts in a specific blog or feed
      */
-    public static void showReaderBlogPreview(Context context, long siteId) {
-        if (siteId == 0) {
+    public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId) {
+        if (siteId == 0 && feedId == 0) {
             return;
         }
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
+
+        if (siteId == 0) {
+            intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
+            intent.putExtra(ReaderConstants.ARG_IS_FEED, true);
+        } else {
+            intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
+        }
+
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -103,23 +111,11 @@ public class ReaderActivityLauncher {
         if (post == null) {
             return;
         }
-        if (post.isExternal) {
-            showReaderFeedPreview(context, post.feedId);
-        } else {
-            showReaderBlogPreview(context, post.blogId);
-        }
+        showReaderBlogOrFeedPreview(context, post.blogId, post.feedId);
     }
 
-    public static void showReaderFeedPreview(Context context, long feedId) {
-        if (feedId == 0) {
-            return;
-        }
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
-        Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
-        context.startActivity(intent);
+    public static void showReaderBlogPreview(Context context, long siteId) {
+        showReaderBlogOrFeedPreview(context, siteId, 0);
     }
 
     /*
