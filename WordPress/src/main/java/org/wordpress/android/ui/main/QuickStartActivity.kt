@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatButton
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.ScrollView
@@ -136,41 +135,35 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
 
     private fun crossOutCompletedTasks() {
         // Create Site task is completed by default
-        strikeThroughTextView(findViewById(R.id.title_create_site))
-        findViewById<ImageView>(R.id.done_create_site).visibility = View.VISIBLE
+        visuallyMarkTaskAsCompleted(findViewById(R.id.title_create_site), findViewById(R.id.done_create_site))
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.VIEW_SITE)) {
-            strikeThroughTextView(findViewById(R.id.title_view_site))
-            findViewById<ImageView>(R.id.done_view_site).visibility = View.VISIBLE
+            visuallyMarkTaskAsCompleted(findViewById(R.id.title_view_site), findViewById(R.id.done_view_site))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.CHOOSE_THEME)) {
-            strikeThroughTextView(findViewById(R.id.title_browse_themes))
-            findViewById<ImageView>(R.id.done_browse_themes).visibility = View.VISIBLE
+            visuallyMarkTaskAsCompleted(findViewById(R.id.title_browse_themes), findViewById(R.id.done_browse_themes))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.CUSTOMIZE_SITE)) {
-            strikeThroughTextView(findViewById(R.id.title_customize_site))
-            findViewById<ImageView>(R.id.done_customize_site).visibility = View.VISIBLE
+            visuallyMarkTaskAsCompleted(findViewById(R.id.title_customize_site), findViewById(R.id.done_customize_site))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.SHARE_SITE)) {
-            strikeThroughTextView(findViewById(R.id.title_share_site))
-            findViewById<ImageView>(R.id.done_share_site).visibility = View.VISIBLE
+            visuallyMarkTaskAsCompleted(findViewById(R.id.title_share_site), findViewById(R.id.done_share_site))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.PUBLISH_POST)) {
-            strikeThroughTextView(findViewById(R.id.title_publish_post))
-            findViewById<ImageView>(R.id.done_publish_post).visibility = View.VISIBLE
+            visuallyMarkTaskAsCompleted(findViewById(R.id.title_publish_post), findViewById(R.id.done_publish_post))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.FOLLOW_SITE)) {
-            strikeThroughTextView(findViewById(R.id.title_follow_site))
-            findViewById<ImageView>(R.id.done_follow_site).visibility = View.VISIBLE
+            visuallyMarkTaskAsCompleted(findViewById(R.id.title_follow_site), findViewById(R.id.done_follow_site))
         }
     }
 
-    private fun strikeThroughTextView(textView: TextView) {
-        textView.let { it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG }
+    private fun visuallyMarkTaskAsCompleted(taskTitleTextView: TextView, taskDoneCheckMark: View) {
+        taskTitleTextView.let { it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG }
+        taskDoneCheckMark.visibility = View.VISIBLE
     }
 }
