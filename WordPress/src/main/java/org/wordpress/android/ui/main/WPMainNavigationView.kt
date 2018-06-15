@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main
 import android.annotation.SuppressLint
 import android.app.Fragment
 import android.app.FragmentManager
-import android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -53,7 +52,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
-        set(position) = setCurrentPosition(position, true)
+        set(position) = updateCurrentPosition(position)
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
@@ -130,7 +129,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             handlePostButtonClicked()
             false
         } else {
-            setCurrentPosition(position, false)
+            currentPosition = position
             pageListener.onPageChanged(position)
             true
         }
@@ -185,7 +184,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
     }
 
-    private fun setCurrentPosition(position: Int, ensureSelected: Boolean) {
+    private fun updateCurrentPosition(position: Int) {
         // new post page can't be selected, only tapped
         if (position == PAGE_NEW_POST) {
             return
@@ -204,22 +203,19 @@ class WPMainNavigationView @JvmOverloads constructor(
         AppPrefs.setMainPageIndex(position)
         prevPosition = position
 
-        if (ensureSelected) {
-            // temporarily disable the nav listeners so they don't fire when we change the selected page
-            assignNavigationListeners(false)
-            try {
-                selectedItemId = getItemIdForPosition(position)
-            } finally {
-                assignNavigationListeners(true)
-            }
+        // temporarily disable the nav listeners so they don't fire when we change the selected page
+        assignNavigationListeners(false)
+        try {
+            selectedItemId = getItemIdForPosition(position)
+        } finally {
+            assignNavigationListeners(true)
         }
 
         val fragment = navAdapter.getFragment(position)
         if (fragment != null) {
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .setTransition(TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.fragment_container, fragment, getTagForPosition(position))
                     .commit()
         }
     }
@@ -265,6 +261,15 @@ class WPMainNavigationView @JvmOverloads constructor(
             else -> R.string.tabbar_accessibility_label_notifications
         }
         return context.getString(idRes)
+    }
+
+    private fun getTagForPosition(position: Int): String {
+        return when (position) {
+            PAGE_MY_SITE -> TAG_MY_SITE
+            PAGE_READER -> TAG_READER
+            PAGE_ME -> TAG_ME
+            else -> TAG_NOTIFS
+        }
     }
 
     private fun getTitleViewForPosition(position: Int): TextView? {
@@ -334,10 +339,16 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         internal fun getFragment(position: Int): Fragment? {
-            return if (isValidPosition(position) && mFragments.get(position) != null) {
-                mFragments.get(position)
+            if (isValidPosition(position) && mFragments.get(position) != null) {
+                return mFragments.get(position)
+            }
+
+            val fragment = fragmentManager.findFragmentByTag(getTagForPosition(position))
+            if (fragment != null) {
+                mFragments.put(position, fragment)
+                return fragment
             } else {
-                createFragment(position)
+                return createFragment(position)
             }
         }
     }
@@ -350,5 +361,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         internal const val PAGE_NEW_POST = 2
         internal const val PAGE_ME = 3
         internal const val PAGE_NOTIFS = 4
+
+        private const val TAG_MY_SITE = "tag-mysite"
+        private const val TAG_READER = "tag-reader"
+        private const val TAG_ME = "tag-me"
+        private const val TAG_NOTIFS = "tag-notifs"
     }
 }

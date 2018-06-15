@@ -175,7 +175,6 @@ Language: sr_RS
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="cab_selected">%d изабрано</string>
     <string name="browse_our_faq_button">Прегледајте наша ЧПП</string>
-    <string name="faq_button">ЧПП</string>
     <string name="pages_empty_list">Не постоји ниједна страна. Зашто не бисте направили нову?</string>
     <string name="reader_empty_posts_liked">Нисте означили да вам се свиђа ниједан чланак</string>
     <string name="error_refresh_unauthorized_pages">Немате дозволу да прегледате или уређујете стране</string>
@@ -211,8 +210,6 @@ Language: sr_RS
     <string name="hs__new_conversation_header">Ћаскање са подршком</string>
     <string name="hs__conversation_header">Ћаскање са подршком</string>
     <string name="contact_us">Контактирајте нас</string>
-    <string name="preference_send_usage_stats_summary">Аутоматски пошаљи статистике ради унапређења Вордпреса за Андроид</string>
-    <string name="preference_send_usage_stats">Пошаљи статистике</string>
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Заказати</string>
     <string name="reader_empty_recommended_blogs">Нема препоручених блогова</string>
@@ -331,7 +328,6 @@ Language: sr_RS
     <string name="reader_empty_followed_blogs_description">Не брините, потребно је само да додирнете иконицу горе десно да бисте започели истраживање!</string>
     <string name="reader_empty_followed_tags">Не пратите ниједну ознаку</string>
     <string name="empty_list_default">Овај списак је празан</string>
-    <string name="nux_tutorial_get_started_title">Почните!</string>
     <string name="reader_toast_err_url_intent">Није могуће отворити %s</string>
     <string name="reader_toast_err_view_image">Није могуће прегледати слику</string>
     <string name="reader_btn_share">Поделите</string>

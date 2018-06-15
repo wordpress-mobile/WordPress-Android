@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,25 +27,33 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.about_activity);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        WPTextView version = (WPTextView) findViewById(R.id.about_version);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setElevation(0);
+
+        WPTextView version = findViewById(R.id.about_version);
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
 
-        WPTextView tos = (WPTextView) findViewById(R.id.about_tos);
+        WPTextView tos = findViewById(R.id.about_tos);
         tos.setOnClickListener(this);
 
-        WPTextView pp = (WPTextView) findViewById(R.id.about_privacy);
+        WPTextView pp = findViewById(R.id.about_privacy);
         pp.setOnClickListener(this);
 
-        WPTextView publisher = (WPTextView) findViewById(R.id.about_publisher);
+        WPTextView publisher = findViewById(R.id.about_publisher);
         publisher.setText(getString(R.string.publisher_with_company_param, getString(R.string.automattic_inc)));
 
-        WPTextView copyright = (WPTextView) findViewById(R.id.about_copyright);
+        WPTextView copyright = findViewById(R.id.about_copyright);
         copyright.setText(
                 getString(R.string.copyright_with_year_and_company_params, Calendar.getInstance().get(Calendar.YEAR),
                         getString(R.string.automattic_inc)));
 
-        WPTextView about = (WPTextView) findViewById(R.id.about_url);
+        WPTextView about = findViewById(R.id.about_url);
         about.setOnClickListener(this);
     }
 

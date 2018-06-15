@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -31,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -124,8 +124,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mInstalledText;
     private AppCompatButton mUpdateButton;
     private AppCompatButton mInstallButton;
-    private Switch mSwitchActive;
-    private Switch mSwitchAutoupdates;
+    private SwitchCompat mSwitchActive;
+    private SwitchCompat mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
     private ProgressDialog mAutomatedTransferProgressDialog;
 
@@ -497,7 +497,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         }
 
-        findViewById(R.id.plugin_card_site).setVisibility(mPlugin.isInstalled() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.plugin_card_site)
+                .setVisibility(mPlugin.isInstalled() && isNotAutoManaged() ? View.VISIBLE : View.GONE);
         findViewById(R.id.plugin_state_active_container)
                 .setVisibility(canPluginBeDisabledOrRemoved() ? View.VISIBLE : View.GONE);
         mSwitchActive.setChecked(mIsActive);
@@ -523,7 +524,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         String availableVersion = mPlugin.getWPOrgPluginVersion();
         String versionTopText = "";
         String versionBottomText = "";
-        if (mPlugin.isInstalled()) {
+        if (mPlugin.isInstalled() && isNotAutoManaged()) {
             if (PluginUtils.isUpdateAvailable(mPlugin)) {
                 versionTopText = String.format(getString(R.string.plugin_available_version), availableVersion);
                 versionBottomText = String.format(getString(R.string.plugin_installed_version), pluginVersion);
@@ -543,10 +544,15 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void refreshUpdateVersionViews() {
         if (mPlugin.isInstalled()) {
             mInstallButton.setVisibility(View.GONE);
-            boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin);
-            boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
-            mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
-            mInstalledText.setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+            if (isNotAutoManaged()) {
+                boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin);
+                boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
+                mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
+                mInstalledText.setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+            } else {
+                mUpdateButton.setVisibility(View.GONE);
+                mInstalledText.setVisibility(View.GONE);
+            }
         } else {
             mUpdateButton.setVisibility(View.GONE);
             mInstalledText.setVisibility(View.GONE);
@@ -1097,19 +1103,18 @@ public class PluginDetailActivity extends AppCompatActivity {
             return false;
         }
 
-        String pluginName = mPlugin.getName();
         // Disable removing jetpack as the site will stop working in the client
-        if (pluginName == null || pluginName.equals("jetpack/jetpack")) {
+        if (PluginUtils.isJetpack(mPlugin)) {
             return false;
         }
-        // Disable removing akismet and vaultpress for AT sites
-        return !mSite.isAutomatedTransfer()
-               || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
+        // Disable removing for auto-managed AT sites
+        return isNotAutoManaged();
     }
 
     // only show settings for active plugins on .org sites
     private boolean canShowSettings() {
         return mPlugin.isInstalled()
+               && isNotAutoManaged()
                && mPlugin.isActive()
                && !TextUtils.isEmpty(mPlugin.getSettingsUrl());
     }
@@ -1481,5 +1486,9 @@ public class PluginDetailActivity extends AppCompatActivity {
                 break;
         }
         return getString(errorMessageRes);
+    }
+
+    private boolean isNotAutoManaged() {
+        return !PluginUtils.isAutoManaged(mSite, mPlugin);
     }
 }

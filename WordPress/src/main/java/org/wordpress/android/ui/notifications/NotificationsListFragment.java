@@ -5,10 +5,12 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -51,7 +54,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
-        RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
+        RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener, MainToolbarFragment {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
@@ -72,8 +75,13 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private View mFilterContainer;
     private View mNewNotificationsBar;
 
+    @Nullable
+    private Toolbar mToolbar = null;
+    private String mToolbarTitle;
+
     private long mRestoredScrollNoteID;
     private boolean mIsAnimatingOutNewNotificationsBar;
+    private boolean mShouldRefreshNotifications;
 
     @Inject AccountStore mAccountStore;
 
@@ -92,6 +100,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mShouldRefreshNotifications = true;
     }
 
     @Override
@@ -130,6 +139,9 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 onScrollToTop();
             }
         });
+
+        mToolbar = view.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
 
         return view;
     }
@@ -198,11 +210,14 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            String noteId = data.getStringExtra(NOTE_MODERATE_ID_EXTRA);
-            String newStatus = data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA);
-            if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
-                updateNote(noteId, CommentStatus.fromString(newStatus));
+        if (requestCode == RequestCodes.NOTE_DETAIL) {
+            mShouldRefreshNotifications = false;
+            if (resultCode == RESULT_OK) {
+                String noteId = data.getStringExtra(NOTE_MODERATE_ID_EXTRA);
+                String newStatus = data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA);
+                if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
+                    updateNote(noteId, CommentStatus.fromString(newStatus));
+                }
             }
         }
     }
@@ -223,7 +238,16 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             mFilterRadioGroup.setVisibility(View.GONE);
         } else {
             getNotesAdapter().reloadNotesFromDBAsync();
+            if (mShouldRefreshNotifications) {
+                fetchNotesFromRemote();
+            }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mShouldRefreshNotifications = true;
     }
 
     @Override
@@ -535,6 +559,14 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     public void onStart() {
         super.onStart();
         EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        mToolbarTitle = title;
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
+        }
     }
 
     @SuppressWarnings("unused")

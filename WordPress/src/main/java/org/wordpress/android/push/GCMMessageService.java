@@ -16,7 +16,8 @@ import android.support.v4.app.RemoteInput;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -29,7 +30,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -54,7 +54,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class GCMMessageService extends GcmListenerService {
+public class GCMMessageService extends FirebaseMessagingService {
     private static final ArrayMap<Integer, Bundle> ACTIVE_NOTIFICATIONS_MAP = new ArrayMap<>();
     private static final NotificationHelper NOTIFICATION_HELPER = new NotificationHelper();
 
@@ -105,15 +105,28 @@ public class GCMMessageService extends GcmListenerService {
     private static final String[] PROPERTIES_TO_COPY_INTO_ANALYTICS =
             {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id"};
 
-    private void synchronizedHandleDefaultPush(@NonNull Bundle data) {
+    private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START);
         synchronized (GCMMessageService.class) {
-            NOTIFICATION_HELPER.handleDefaultPush(this, data, mAccountStore.getAccount().getUserId());
+            NOTIFICATION_HELPER.handleDefaultPush(
+                    this, convertMapToBundle(data), mAccountStore.getAccount().getUserId());
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END);
+    }
+
+    // convert FCM RemoteMessage's Map into legacy GCM Bundle to keep code changes to a minimum
+    private Bundle convertMapToBundle(@NonNull Map<String, String> data) {
+        Bundle bundle = new Bundle();
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
+        }
+        return bundle;
     }
 
     @Override
-    public void onMessageReceived(String from, Bundle data) {
+    public void onMessageReceived(RemoteMessage message) {
+        Map data = message.getData();
         AppLog.v(T.NOTIFS, "Received Message");
 
         if (data == null) {
@@ -736,12 +749,9 @@ public class GCMMessageService extends GcmListenerService {
                     // We're re-using the same builder for single and group.
                 }
 
-                // Call broadcast receiver when notification is dismissed
-                Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
-                notificationDeletedIntent.putExtra("notificationId", pushId);
-                notificationDeletedIntent.setAction(String.valueOf(pushId));
+                // Call processing service when notification is dismissed
                 PendingIntent pendingDeleteIntent =
-                        PendingIntent.getBroadcast(context, pushId, notificationDeletedIntent, 0);
+                        NotificationsProcessingService.getPendingIntentForNotificationDismiss(context, pushId);
                 builder.setDeleteIntent(pendingDeleteIntent);
 
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
@@ -978,12 +988,10 @@ public class GCMMessageService extends GcmListenerService {
                               authIgnorePendingIntent);
 
 
-            // Call broadcast receiver when notification is dismissed
-            Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
-            notificationDeletedIntent.putExtra("notificationId", AUTH_PUSH_NOTIFICATION_ID);
-            notificationDeletedIntent.setAction(String.valueOf(AUTH_PUSH_NOTIFICATION_ID));
+            // Call processing service when notification is dismissed
             PendingIntent pendingDeleteIntent =
-                    PendingIntent.getBroadcast(context, AUTH_PUSH_NOTIFICATION_ID, notificationDeletedIntent, 0);
+                    NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                            context, AUTH_PUSH_NOTIFICATION_ID);
             builder.setDeleteIntent(pendingDeleteIntent);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
