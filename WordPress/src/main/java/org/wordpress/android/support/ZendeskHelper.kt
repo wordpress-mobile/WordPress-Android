@@ -2,8 +2,12 @@ package org.wordpress.android.support
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.support.v7.preference.PreferenceManager
 import android.telephony.TelephonyManager
 import com.zendesk.logger.Logger
+import com.zendesk.service.ErrorResponse
+import com.zendesk.service.ZendeskCallback
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -11,6 +15,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
@@ -53,6 +58,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
         Logger.setLoggable(BuildConfig.DEBUG)
         Support.INSTANCE.init(zendeskInstance)
+        if (!AppPrefs.getSupportEmail().isNullOrEmpty()) {
+            enablePushNotifications()
+        }
     }
 
     /**
@@ -126,6 +134,45 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
+    }
+
+    // TODO: enable push notifications after the user creates a support identity if they haven't enabled already
+    private fun enablePushNotifications() {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+        val deviceToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
+        if (deviceToken.isNullOrEmpty()) {
+            return
+        }
+        zendeskInstance.provider()?.pushRegistrationProvider()?.registerWithDeviceIdentifier(
+                deviceToken,
+                object : ZendeskCallback<String>() {
+                    override fun onSuccess(result: String?) {
+                        // TODO: add logs
+                    }
+
+                    override fun onError(errorResponse: ErrorResponse?) {
+                        // TODO: add logs
+                    }
+                })
+    }
+
+    fun disablePushNotifications() {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        zendeskInstance.provider()?.pushRegistrationProvider()?.unregisterDevice(
+                object : ZendeskCallback<Void>() {
+                    override fun onSuccess(response: Void) {
+                        // TODO: add logs
+                    }
+
+                    override fun onError(errorResponse: ErrorResponse?) {
+                        // TODO: add logs
+                    }
+                })
     }
 }
 
