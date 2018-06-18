@@ -32,19 +32,21 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/reader_xpost_padding_left">
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/image_blavatar"
                 android:layout_width="@dimen/blavatar_sz"
                 android:layout_height="@dimen/blavatar_sz"
                 android:layout_gravity="top|start"
+                android:contentDescription="@string/reader_blavatar_desc"
                 app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/image_avatar"
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_gravity="bottom|end"
                 android:layout_marginLeft="14dp"
                 android:layout_marginTop="14dp"
+                android:contentDescription="@string/reader_avatar_desc"
                 app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
                 android:layout_marginStart="14dp"/>
         </FrameLayout>
