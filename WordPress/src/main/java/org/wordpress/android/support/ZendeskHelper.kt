@@ -18,6 +18,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
@@ -26,6 +27,7 @@ import org.wordpress.android.util.logInformation
 import org.wordpress.android.util.stateLogInformation
 import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
+import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
 import zendesk.support.CustomField
 import zendesk.support.Support
@@ -42,6 +44,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
 
     private val isZendeskEnabled: Boolean
         get() = zendeskInstance.isInitialized
+
+    private val zendeskPushRegistrationProvider: PushRegistrationProvider?
+        get() = zendeskInstance.provider()?.pushRegistrationProvider()
 
     fun setupZendesk(
         context: Context,
@@ -136,41 +141,49 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
-    // TODO: enable push notifications after the user creates a support identity if they haven't enabled already
     fun enablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
-        val deviceToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
-        if (deviceToken.isNullOrEmpty()) {
+        if (zendeskPushRegistrationProvider?.isRegisteredForPush == true) {
+            AppLog.v(T.SUPPORT, "Zendesk push notifications are already enabled, skipping " +
+                    "enablePushNotifications call!")
             return
         }
-        zendeskInstance.provider()?.pushRegistrationProvider()?.registerWithDeviceIdentifier(
-                deviceToken,
-                object : ZendeskCallback<String>() {
-                    override fun onSuccess(result: String?) {
-                        // TODO: add logs
-                    }
+        pushNotificationDeviceToken?.let { deviceToken ->
+            zendeskPushRegistrationProvider?.registerWithDeviceIdentifier(
+                    deviceToken,
+                    object : ZendeskCallback<String>() {
+                        override fun onSuccess(result: String?) {
+                            AppLog.v(T.SUPPORT, "Zendesk push notifications successfully enabled!")
+                        }
 
-                    override fun onError(errorResponse: ErrorResponse?) {
-                        // TODO: add logs
-                    }
-                })
+                        override fun onError(errorResponse: ErrorResponse?) {
+                            AppLog.v(T.SUPPORT, "Enabling Zendesk push notifications failed with" +
+                                    " error: ${errorResponse?.reason}")
+                        }
+                    })
+        }
     }
 
     fun disablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        zendeskInstance.provider()?.pushRegistrationProvider()?.unregisterDevice(
+        if (zendeskPushRegistrationProvider?.isRegisteredForPush == false) {
+            AppLog.v(T.SUPPORT, "Zendesk push notifications are not enabled, skipping " +
+                    "disablePushNotifications call!")
+            return
+        }
+        zendeskPushRegistrationProvider?.unregisterDevice(
                 object : ZendeskCallback<Void>() {
                     override fun onSuccess(response: Void) {
-                        // TODO: add logs
+                        AppLog.v(T.SUPPORT, "Zendesk push notifications successfully disabled!")
                     }
 
                     override fun onError(errorResponse: ErrorResponse?) {
-                        // TODO: add logs
+                        AppLog.v(T.SUPPORT, "Disabling Zendesk push notifications failed with" +
+                                " error: ${errorResponse?.reason}")
                     }
                 })
     }
@@ -262,6 +275,12 @@ private fun getNetworkInformation(context: Context): String {
             "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase()}"
     ).joinToString(separator = "\n")
 }
+
+private val pushNotificationDeviceToken: String?
+    get() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+        return preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
+    }
 
 private object ZendeskConstants {
     const val articleLabel = "Android"
