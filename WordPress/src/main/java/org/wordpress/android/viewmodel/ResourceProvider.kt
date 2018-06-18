@@ -10,6 +10,6 @@ class ResourceProvider @Inject constructor(private val context: Context) {
     }
 
     fun getString(@StringRes resourceId: Int, vararg formatArgs: Any): String {
-        return context.getString(resourceId, formatArgs)
+        return context.getString(resourceId, *formatArgs)
     }
 }
