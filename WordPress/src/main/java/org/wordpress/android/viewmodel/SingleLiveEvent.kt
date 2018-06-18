@@ -71,6 +71,11 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
         value = null
     }
 
+    fun asyncCall() {
+        pending.set(true)
+        super.postValue(null)
+    }
+
     companion object {
         private val TAG = "SingleLiveEvent"
     }

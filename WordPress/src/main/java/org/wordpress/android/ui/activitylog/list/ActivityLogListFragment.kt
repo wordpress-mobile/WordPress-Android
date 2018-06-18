@@ -38,15 +38,13 @@ class ActivityLogListFragment : Fragment() {
 
         activityLogList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(
-                activityLogPullToRefresh,
-                {
-                    if (NetworkUtils.checkConnection(activity)) {
-                        viewModel.pullToRefresh()
-                    } else {
-                        swipeToRefreshHelper.isRefreshing = false
-                    }
-                })
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(activityLogPullToRefresh) {
+            if (NetworkUtils.checkConnection(activity)) {
+                viewModel.pullToRefresh()
+            } else {
+                swipeToRefreshHelper.isRefreshing = false
+            }
+        }
 
         (activity?.application as WordPress).component()?.inject(this)
 
@@ -69,19 +67,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     fun onRewindConfirmed(activityId: String) {
-        viewModel.events.value
-            ?.filter { it is ActivityLogListItem.Event }
-            ?.map { it as ActivityLogListItem.Event }
-            ?.firstOrNull { it.activityId == activityId }
-            ?.let { item ->
-                item.rewindId?.let {
-                    viewModel.onRewindConfirmed(ActivityLogListItem.Progress(
-                            getString(R.string.activity_log_currently_restoring_title),
-                            getString(R.string.activity_log_currently_restoring_message,
-                            item.formattedDate, item.formattedTime),
-                            getString(R.string.now)), item.rewindId)
-                }
-        }
+        viewModel.onRewindConfirmed(activityId)
     }
 
     private fun setupObservers() {

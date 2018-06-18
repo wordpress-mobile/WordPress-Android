@@ -13,7 +13,7 @@ sealed class ActivityLogListItem(
     val icon: Icon,
     val status: Status,
     val date: Date,
-    val isButtonVisible: Boolean,
+    var isButtonVisible: Boolean,
     val isProgressBarVisible: Boolean,
     var previousItem: ActivityLogListItem?,
     var nextItem: ActivityLogListItem?
