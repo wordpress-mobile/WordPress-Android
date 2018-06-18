@@ -171,8 +171,10 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         supportName = name
         zendeskInstance.setIdentity(createZendeskIdentity(email, name))
 
-        // When identity changes, make sure the push notifications are enabled
-        enablePushNotifications()
+        supportEmail?.let {
+            // When identity changes, make sure the push notifications are enabled
+            enablePushNotifications()
+        }
     }
 
     private fun disablePushNotifications() {
