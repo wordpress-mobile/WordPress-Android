@@ -36,8 +36,8 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
         (application as WordPress).component()?.inject(this)
         setContentView(R.layout.quick_start_activity)
 
-        checkCompletedTasks()
         setTasksClickListeners()
+        checkCompletedTasks()
     }
 
     // TODO to be used in future branches
@@ -136,29 +136,36 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
     private fun crossOutCompletedTasks() {
         // Create Site task is completed by default
         visuallyMarkTaskAsCompleted(findViewById(R.id.title_create_site), findViewById(R.id.done_create_site))
+        findViewById<View>(R.id.layout_create_site).isClickable = false
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.VIEW_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_view_site), findViewById(R.id.done_view_site))
+            findViewById<View>(R.id.layout_view_site).isClickable = false
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.CHOOSE_THEME)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_browse_themes), findViewById(R.id.done_browse_themes))
+            findViewById<View>(R.id.layout_browse_themes).isClickable = false
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.CUSTOMIZE_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_customize_site), findViewById(R.id.done_customize_site))
+            findViewById<View>(R.id.layout_customize_site).isClickable = false
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.SHARE_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_share_site), findViewById(R.id.done_share_site))
+            findViewById<View>(R.id.layout_share_site).isClickable = false
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.PUBLISH_POST)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_publish_post), findViewById(R.id.done_publish_post))
+            findViewById<View>(R.id.layout_publish_post).isClickable = false
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.FOLLOW_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_follow_site), findViewById(R.id.done_follow_site))
+            findViewById<View>(R.id.layout_follow_site).isClickable = false
         }
     }
 
