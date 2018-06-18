@@ -28,9 +28,9 @@
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:paddingLeft="@dimen/reader_xpost_padding_left"
+            android:layout_marginLeft="@dimen/reader_xpost_padding_left"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/reader_xpost_padding_left">
+            android:layout_marginStart="@dimen/reader_xpost_padding_left">
 
             <ImageView
                 android:id="@+id/image_blavatar"
