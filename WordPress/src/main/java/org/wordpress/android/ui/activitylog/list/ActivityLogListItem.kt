@@ -89,7 +89,7 @@ sealed class ActivityLogListItem(
 
     enum class Icon(val value: String, @DrawableRes val drawable: Int) {
         CHECKMARK("checkmark", R.drawable.ic_checkmark_white_24dp),
-        CLOUT("cloud", R.drawable.ic_cloud_white_24dp),
+        CLOUD("cloud", R.drawable.ic_cloud_white_24dp),
         COG("cog", R.drawable.ic_cog_white_24dp),
         COMMENT("comment", R.drawable.ic_comment_white_24dp),
         CROSS("cross", R.drawable.ic_cross_white_24dp),
