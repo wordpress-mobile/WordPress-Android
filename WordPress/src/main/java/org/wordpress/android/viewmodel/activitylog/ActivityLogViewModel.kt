@@ -57,21 +57,12 @@ class ActivityLogViewModel @Inject constructor(
         get() = eventListStatus.value == ActivityLogListStatus.LOADING_MORE ||
                 eventListStatus.value == ActivityLogListStatus.FETCHING
 
-    private val rewindProgressObserver = Observer<RewindProgress> { state ->
-        when (state?.status) {
-            RewindStatusModel.Rewind.Status.RUNNING -> {
-                _events.value
-                        ?.filter { it is ActivityLogListItem.Event }
-                        ?.firstOrNull { (it as ActivityLogListItem.Event).activityId == state.activityId }
-                        ?.let {
-                            onRewindInProgress(it)
-                        }
-            }
-            RewindStatusModel.Rewind.Status.FINISHED,
-            RewindStatusModel.Rewind.Status.FAILED -> reloadEvents()
-            else -> {}
-        }
+    private val rewindProgressObserver = Observer<RewindProgress> {
+        reloadEvents()
     }
+
+    private val isRewindInProgress: Boolean
+        get() = rewindStatusService.rewindProgress.value?.status == RewindStatusModel.Rewind.Status.RUNNING
 
     lateinit var site: SiteModel
 
@@ -106,8 +97,23 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun reloadEvents() {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
-        val items = eventList.map { model -> ActivityLogListItem.Event(model) }
+        val items = ArrayList<ActivityLogListItem>(eventList.map { model -> ActivityLogListItem.Event(model) })
+
+        if (isRewindInProgress) {
+            disableEvents(items)
+
+            val activityId = rewindStatusService.rewindProgress.value?.activityId
+            getRewindProgressItem(activityId)?.let {
+                items.add(0, it)
+            }
+        }
         _events.postValue(items)
+    }
+
+    private fun disableEvents(items: List<ActivityLogListItem>) {
+        items.forEach {
+            it.isButtonVisible = false
+        }
     }
 
     fun pullToRefresh() {
@@ -115,19 +121,25 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: ActivityLogListItem) {
-        _showItemDetail.postValue(item)
+        if (item is ActivityLogListItem.Event && !isRewindInProgress) {
+            _showItemDetail.postValue(item)
+        }
     }
 
-    private fun onRewindInProgress(event: ActivityLogListItem) {
-        val rewindActivity = ActivityLogListItem.Progress(
-                resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                resourceProvider.getString(R.string.activity_log_currently_restoring_message,
-                        event.formattedDate, event.formattedTime),
-                resourceProvider.getString(R.string.now))
-        showProgressListItem(rewindActivity)
+    private fun getRewindProgressItem(activityId: String?): ActivityLogListItem.Progress? {
+        return activityId?.let {
+            val rewoundEvent = _events.value
+                    ?.filter { it is ActivityLogListItem.Event }
+                    ?.firstOrNull { (it as ActivityLogListItem.Event).activityId == activityId }
 
-        val events = _events.value.apply { this?.forEach { it.isButtonVisible = false }}
-        _events.postValue(events)
+            rewoundEvent?.let {
+                ActivityLogListItem.Progress(
+                        resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                        resourceProvider.getString(R.string.activity_log_currently_restoring_message,
+                                rewoundEvent.formattedDate, rewoundEvent.formattedTime),
+                        resourceProvider.getString(R.string.now))
+            }
+        }
     }
 
     fun onRewindButtonClicked(item: ActivityLogListItem) {
@@ -136,14 +148,6 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onRewindConfirmed(rewindId: String) {
         rewindStatusService.rewind(rewindId, site)
-    }
-
-    private fun showProgressListItem(rewindActivity: ActivityLogListItem) {
-        _events.value?.let {
-            val newEvents = ArrayList(it)
-            newEvents.add(0, rewindActivity)
-            _events.postValue(newEvents)
-        }
     }
 
     private fun fetchEvents(loadMore: Boolean) {
