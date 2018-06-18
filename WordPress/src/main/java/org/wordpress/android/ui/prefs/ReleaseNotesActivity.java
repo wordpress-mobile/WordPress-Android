@@ -33,6 +33,7 @@ public class ReleaseNotesActivity extends WebViewActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ZendeskHelper mZendeskHelper;
 
     public static Intent createIntent(Context context, @NonNull String targetUrl, @Nullable Origin origin,
                                       @Nullable SiteModel selectedSite) {
@@ -96,7 +97,7 @@ public class ReleaseNotesActivity extends WebViewActivity {
             case R.id.menu_bug:
                 HelpActivity.Origin origin = (HelpActivity.Origin) getIntent().getSerializableExtra(KEY_ORIGIN);
                 SiteModel selectedSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-                ZendeskHelper
+                mZendeskHelper
                         .createNewTicket(ReleaseNotesActivity.this, mAccountStore, mSiteStore, origin, selectedSite);
                 return true;
         }

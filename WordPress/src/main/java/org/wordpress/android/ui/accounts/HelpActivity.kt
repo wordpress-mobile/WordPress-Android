@@ -11,10 +11,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.support.createNewTicket
-import org.wordpress.android.support.showAllTickets
-import org.wordpress.android.support.showSupportEmailInputDialog
-import org.wordpress.android.support.showZendeskHelpCenter
+import org.wordpress.android.support.SupportHelper
+import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -25,6 +23,8 @@ import javax.inject.Inject
 class HelpActivity : AppCompatActivity() {
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
+    @Inject lateinit var supportHelper: SupportHelper
+    @Inject lateinit var zendeskHelper: ZendeskHelper
 
     private val originFromExtras by lazy {
         (intent.extras?.get(HelpActivity.ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
@@ -62,7 +62,7 @@ class HelpActivity : AppCompatActivity() {
         }
 
         contactEmailContainer.setOnClickListener {
-            showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { _ ->
+            supportHelper.showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { _ ->
                 refreshContactEmailText()
             }
         }
@@ -83,17 +83,18 @@ class HelpActivity : AppCompatActivity() {
     }
 
     private fun createNewZendeskTicket() {
-        createNewTicket(this, accountStore, siteStore, originFromExtras,
+        zendeskHelper.createNewTicket(this, accountStore, siteStore, originFromExtras,
                 selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun showZendeskTickets() {
-        showAllTickets(this, accountStore, siteStore, originFromExtras,
+        zendeskHelper.showAllTickets(this, accountStore, siteStore, originFromExtras,
                 selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun showZendeskFaq() {
-        showZendeskHelpCenter(this, siteStore, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+        zendeskHelper
+                .showZendeskHelpCenter(this, siteStore, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun refreshContactEmailText() {

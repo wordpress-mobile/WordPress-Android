@@ -1,5 +1,3 @@
-@file:JvmName("ZendeskHelper")
-
 package org.wordpress.android.support
 
 import android.content.Context
@@ -31,101 +29,103 @@ import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
 
-private val zendeskInstance: Zendesk
-    get() = Zendesk.INSTANCE
-
-val isZendeskEnabled: Boolean
-    get() = zendeskInstance.isInitialized
-
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
 
-fun setupZendesk(
-    context: Context,
-    zendeskUrl: String,
-    applicationId: String,
-    oauthClientId: String
-) {
-    require(!isZendeskEnabled) {
-        "Zendesk shouldn't be initialized more than once!"
-    }
-    if (zendeskUrl.isEmpty() || applicationId.isEmpty() || oauthClientId.isEmpty()) {
-        return
-    }
-    zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
-    Logger.setLoggable(BuildConfig.DEBUG)
-    Support.INSTANCE.init(zendeskInstance)
-}
+class ZendeskHelper(private val supportHelper: SupportHelper) {
+    private val zendeskInstance: Zendesk
+        get() = Zendesk.INSTANCE
 
-/**
- * We don't force a valid identity for Help Center. If the identity is already there, we use it to enable the
- * contact us button on the Help Center, if it's not, we give the option to the user to browse the FAQ without
- * setting an email.
- */
-fun showZendeskHelpCenter(
-    context: Context,
-    siteStore: SiteStore,
-    origin: Origin?,
-    selectedSite: SiteModel?,
-    extraTags: List<String>? = null
-) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
-    }
-    val supportEmail = AppPrefs.getSupportEmail()
-    val supportName = AppPrefs.getSupportName()
-    val isIdentityAvailable = !supportEmail.isNullOrEmpty()
-    if (isIdentityAvailable) {
-        zendeskInstance.setIdentity(createZendeskIdentity(supportEmail, supportName))
-    } else {
-        zendeskInstance.setIdentity(createZendeskIdentity(null, null))
-    }
-    val builder = HelpCenterActivity.builder()
-            .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-            .withContactUsButtonVisible(isIdentityAvailable)
-            .withLabelNames(ZendeskConstants.articleLabel)
-            .withShowConversationsMenuButton(isIdentityAvailable)
-    AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
-    if (isIdentityAvailable) {
-        builder.show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
-    } else {
-        builder.show(context)
-    }
-}
+    private val isZendeskEnabled: Boolean
+        get() = zendeskInstance.isInitialized
 
-@JvmOverloads
-fun createNewTicket(
-    context: Context,
-    accountStore: AccountStore?,
-    siteStore: SiteStore,
-    origin: Origin?,
-    selectedSite: SiteModel?,
-    extraTags: List<String>? = null
-) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
+    fun setupZendesk(
+        context: Context,
+        zendeskUrl: String,
+        applicationId: String,
+        oauthClientId: String
+    ) {
+        require(!isZendeskEnabled) {
+            "Zendesk shouldn't be initialized more than once!"
+        }
+        if (zendeskUrl.isEmpty() || applicationId.isEmpty() || oauthClientId.isEmpty()) {
+            return
+        }
+        zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
+        Logger.setLoggable(BuildConfig.DEBUG)
+        Support.INSTANCE.init(zendeskInstance)
     }
-    getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-        zendeskInstance.setIdentity(createZendeskIdentity(email, name))
-        RequestActivity.builder()
-                .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
-    }
-}
 
-fun showAllTickets(
-    context: Context,
-    accountStore: AccountStore,
-    siteStore: SiteStore,
-    origin: Origin?,
-    selectedSite: SiteModel? = null,
-    extraTags: List<String>? = null
-) {
-    require(isZendeskEnabled) {
-        zendeskNeedsToBeEnabledError
+    /**
+     * We don't force a valid identity for Help Center. If the identity is already there, we use it to enable the
+     * contact us button on the Help Center, if it's not, we give the option to the user to browse the FAQ without
+     * setting an email.
+     */
+    fun showZendeskHelpCenter(
+        context: Context,
+        siteStore: SiteStore,
+        origin: Origin?,
+        selectedSite: SiteModel?,
+        extraTags: List<String>? = null
+    ) {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        val supportEmail = AppPrefs.getSupportEmail()
+        val supportName = AppPrefs.getSupportName()
+        val isIdentityAvailable = !supportEmail.isNullOrEmpty()
+        if (isIdentityAvailable) {
+            zendeskInstance.setIdentity(createZendeskIdentity(supportEmail, supportName))
+        } else {
+            zendeskInstance.setIdentity(createZendeskIdentity(null, null))
+        }
+        val builder = HelpCenterActivity.builder()
+                .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
+                .withContactUsButtonVisible(isIdentityAvailable)
+                .withLabelNames(ZendeskConstants.articleLabel)
+                .withShowConversationsMenuButton(isIdentityAvailable)
+        AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
+        if (isIdentityAvailable) {
+            builder.show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+        } else {
+            builder.show(context)
+        }
     }
-    getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
-        zendeskInstance.setIdentity(createZendeskIdentity(email, name))
-        RequestListActivity.builder()
-                .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+
+    @JvmOverloads
+    fun createNewTicket(
+        context: Context,
+        accountStore: AccountStore?,
+        siteStore: SiteStore,
+        origin: Origin?,
+        selectedSite: SiteModel?,
+        extraTags: List<String>? = null
+    ) {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
+            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+            RequestActivity.builder()
+                    .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+        }
+    }
+
+    fun showAllTickets(
+        context: Context,
+        accountStore: AccountStore,
+        siteStore: SiteStore,
+        origin: Origin?,
+        selectedSite: SiteModel? = null,
+        extraTags: List<String>? = null
+    ) {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
+            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+            RequestListActivity.builder()
+                    .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+        }
     }
 }
 

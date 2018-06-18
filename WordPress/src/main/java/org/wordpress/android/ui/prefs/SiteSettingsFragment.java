@@ -152,6 +152,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ZendeskHelper mZendeskHelper;
 
     public SiteModel mSite;
 
@@ -1789,7 +1790,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ZendeskHelper.createNewTicket(getActivity(), mAccountStore, mSiteStore, Origin.DELETE_SITE, mSite);
+                mZendeskHelper.createNewTicket(getActivity(), mAccountStore, mSiteStore, Origin.DELETE_SITE, mSite);
             }
         });
         builder.show();
