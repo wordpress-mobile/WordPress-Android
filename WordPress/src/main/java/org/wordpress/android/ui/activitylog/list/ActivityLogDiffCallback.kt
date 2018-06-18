@@ -7,12 +7,12 @@ class ActivityLogDiffCallback(
     private val newList: List<ActivityLogListItem>
 ) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition] as? ActivityLogListItem.Event
-        val newItem = newList[newItemPosition] as? ActivityLogListItem.Event
-        return if (oldItem != null && newItem != null) {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return if (oldItem is ActivityLogListItem.Event && newItem is ActivityLogListItem.Event) {
             oldItem.activityId == newItem.activityId
         } else {
-            oldItem == newItem
+            false
         }
     }
 

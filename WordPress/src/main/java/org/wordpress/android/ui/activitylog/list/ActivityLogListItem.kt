@@ -7,18 +7,17 @@ import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 
-sealed class ActivityLogListItem(
-    val title: String,
-    val description: String,
-    val icon: Icon,
-    val status: Status,
-    val date: Date,
-    var isButtonVisible: Boolean,
-    val isProgressBarVisible: Boolean,
-    var previousItem: ActivityLogListItem?,
-    var nextItem: ActivityLogListItem?
-) {
+sealed class ActivityLogListItem {
     abstract val header: String
+    abstract val title: String
+    abstract val description: String
+    abstract val icon: Icon
+    abstract val status: Status
+    abstract val date: Date
+    abstract var isButtonVisible: Boolean
+    abstract val isProgressBarVisible: Boolean
+    abstract var previousItem: ActivityLogListItem?
+    abstract var nextItem: ActivityLogListItem?
 
     var isHeaderVisible: Boolean = false
         get() = isHeaderVisible(previousItem)
@@ -39,19 +38,55 @@ sealed class ActivityLogListItem(
         }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ActivityLogListItem) return false
+
+        if (header != other.header) return false
+        if (title != other.title) return false
+        if (description != other.description) return false
+        if (icon != other.icon) return false
+        if (status != other.status) return false
+        if (date != other.date) return false
+        if (isButtonVisible != other.isButtonVisible) return false
+        if (isProgressBarVisible != other.isProgressBarVisible) return false
+        if (previousItem != other.previousItem) return false
+        if (nextItem != other.nextItem) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = header.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + icon.hashCode()
+        result = 31 * result + status.hashCode()
+        result = 31 * result + date.hashCode()
+        result = 31 * result + isButtonVisible.hashCode()
+        result = 31 * result + isProgressBarVisible.hashCode()
+        result = 31 * result + (previousItem?.hashCode() ?: 0)
+        result = 31 * result + (nextItem?.hashCode() ?: 0)
+        return result
+    }
+
     data class Event(
         val activityId: String,
-        private val summary: String,
-        private val text: String,
+        override val title: String,
+        override val description: String,
         private val gridIcon: String?,
         private val eventStatus: String?,
         val isRewindable: Boolean,
         val rewindId: String?,
-        private val datePublished: Date,
-        private val previous: ActivityLogListItem? = null,
-        private val next: ActivityLogListItem? = null)
-        : ActivityLogListItem(summary, text, Icon.fromValue(gridIcon), Status.fromValue(eventStatus),
-            datePublished, isRewindable, false, previous, next) {
+        override val date: Date,
+        override var isButtonVisible: Boolean = isRewindable,
+        override val isProgressBarVisible: Boolean = false,
+        override var previousItem: ActivityLogListItem? = null,
+        override var nextItem: ActivityLogListItem? = null)
+        : ActivityLogListItem() {
+        override val icon = Icon.fromValue(gridIcon)
+        override val status = Status.fromValue(eventStatus)
+
         init {
             nextItem?.previousItem = this
             previousItem?.nextItem = this
@@ -64,12 +99,17 @@ sealed class ActivityLogListItem(
     }
 
     data class Progress(
-        private val progressTitle: String,
-        private val message: String,
+        override val title: String,
+        override val description: String,
         override val header: String,
-        private val next: ActivityLogListItem? = null)
-        : ActivityLogListItem(message, progressTitle, Icon.NOTICE_OUTLINE, Status.INFO, Date(),false,
-            true, null, next) {
+        override val date:Date = Date(),
+        override val isProgressBarVisible: Boolean = true,
+        override var isButtonVisible: Boolean = false,
+        override val icon: Icon = Icon.NOTICE_OUTLINE,
+        override val status: Status = Status.INFO,
+        override var previousItem: ActivityLogListItem? = null,
+        override var nextItem: ActivityLogListItem? = null)
+        : ActivityLogListItem() {
         init {
             nextItem?.previousItem = this
         }
