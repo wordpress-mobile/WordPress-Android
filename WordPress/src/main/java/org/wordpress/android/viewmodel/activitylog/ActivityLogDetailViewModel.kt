@@ -20,6 +20,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
+const val ACTIVITY_LOG_REWIND_ID_KEY: String = "activity_log_rewind_id_key"
 
 class ActivityLogDetailViewModel
 @Inject constructor(
@@ -29,6 +30,7 @@ class ActivityLogDetailViewModel
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
+    lateinit var rewindId: String
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogDetailModel>()
     val showRewindDialog: LiveData<ActivityLogDetailModel>
@@ -65,6 +67,7 @@ class ActivityLogDetailViewModel
                             ?.let {
                                 ActivityLogDetailModel(
                                         activityID = it.activityID,
+                                        rewindId = it.rewindID,
                                         actorIconUrl = it.actor?.avatarURL,
                                         showJetpackIcon = it.actor?.showJetpackIcon(),
                                         isRewindButtonVisible = it.rewindable ?: false,

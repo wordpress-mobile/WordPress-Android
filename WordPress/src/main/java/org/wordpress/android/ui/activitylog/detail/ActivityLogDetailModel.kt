@@ -2,6 +2,7 @@ package org.wordpress.android.ui.activitylog.detail
 
 data class ActivityLogDetailModel(
     val activityID: String,
+    val rewindId: String?,
     val actorIconUrl: String? = null,
     val showJetpackIcon: Boolean? = null,
     val isRewindButtonVisible: Boolean,

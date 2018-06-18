@@ -9,7 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog
-import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 
 class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface {
@@ -35,7 +35,7 @@ class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDi
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.ACTIVITY_LOG_DETAIL) {
-            data?.getStringExtra(ACTIVITY_LOG_ID_KEY)?.let {
+            data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
                 passRewindConfirmation(it)
             }
         }
@@ -48,10 +48,10 @@ class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDi
     override fun onNegativeClicked(instanceTag: String) {
     }
 
-    private fun passRewindConfirmation(activityId: String) {
+    private fun passRewindConfirmation(rewindId: String) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is ActivityLogListFragment) {
-            fragment.onRewindConfirmed(activityId)
+            fragment.onRewindConfirmed(rewindId)
         }
     }
 }

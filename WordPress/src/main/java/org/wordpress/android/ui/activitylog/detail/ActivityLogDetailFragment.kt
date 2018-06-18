@@ -12,10 +12,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
+import org.wordpress.android.R.id.activityJetpackActorIcon
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import org.wordpress.android.widgets.WPNetworkImageView
 import javax.inject.Inject
@@ -92,8 +94,8 @@ class ActivityLogDetailFragment : Fragment() {
         outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
     }
 
-    fun onRewindConfirmed(activityId: String) {
-        val intent = activity?.intent?.putExtra(ACTIVITY_LOG_ID_KEY, activityId)
+    fun onRewindConfirmed(rewindId: String) {
+        val intent = activity?.intent?.putExtra(ACTIVITY_LOG_REWIND_ID_KEY, rewindId)
         activity?.setResult(RESULT_OK, intent)
         activity?.finish()
     }
@@ -138,11 +140,13 @@ class ActivityLogDetailFragment : Fragment() {
 
     private fun onRewindButtonClicked(item: ActivityLogDetailModel) {
         val dialog = BasicFragmentDialog()
-        dialog.initialize(item.activityID,
-                getString(R.string.activity_log_rewind_site),
-                getString(R.string.activity_log_rewind_dialog_message, item.createdDate, item.createdTime),
-                getString(R.string.activity_log_rewind_site),
-                getString(R.string.cancel))
-        dialog.show(fragmentManager, item.activityID)
+        item.rewindId?.let {
+            dialog.initialize(it,
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.activity_log_rewind_dialog_message, item.createdDate, item.createdTime),
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.cancel))
+            dialog.show(fragmentManager, it)
+        }
     }
 }
