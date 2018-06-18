@@ -32,8 +32,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -560,10 +559,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
         try {
-            String gcmId = BuildConfig.GCM_ID;
-            if (!TextUtils.isEmpty(gcmId)) {
-                InstanceID.getInstance(context).deleteToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-            }
+            FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (Exception e) {
             AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }

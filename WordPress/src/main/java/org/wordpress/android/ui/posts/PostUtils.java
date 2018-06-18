@@ -38,6 +38,8 @@ public class PostUtils {
 
     private static final HashSet<String> SHORTCODE_TABLE = new HashSet<>();
 
+    private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
+
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
      * shortcode name and the closing brace
@@ -118,6 +120,8 @@ public class PostUtils {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
+                    properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                            PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadHandler
@@ -126,23 +130,40 @@ public class PostUtils {
             case SCHEDULED:
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
+                    properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                            PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
                             : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
+                    properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                            PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                                                         properties);
                 }
                 break;
             case DRAFT:
                 properties.put("post_id", post.getRemotePostId());
-                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT, site);
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                        PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT, site, properties);
                 break;
             default:
                 // No-op
         }
+    }
+
+    public static void trackOpenPostAnalytics(PostModel post, SiteModel site) {
+        Map<String, Object> properties = new HashMap<>();
+        if (!post.isLocalDraft()) {
+            properties.put("post_id", post.getRemotePostId());
+        }
+        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,
+                properties);
     }
 
     public static void showCustomDialog(Activity activity, String title, String message,
@@ -353,5 +374,28 @@ public class PostUtils {
         }
 
         return postsThatContainListedMedia;
+    }
+
+    /*
+    Note the way we detect we're in presence of Gutenberg blocks logic is taken from
+    https://github.com/WordPress/gutenberg/blob/5a6693589285363341bebad15bd56d9371cf8ecc/lib/register.php#L331-L345
+
+    * Determine whether a content string contains blocks. This test optimizes for
+    * performance rather than strict accuracy, detecting the pattern of a block
+    * but not validating its structure. For strict accuracy, you should use the
+    * block parser on post content.
+    *
+    * @since 1.6.0
+    * @see gutenberg_parse_blocks()
+    *
+    * @param string $content Content to test.
+    * @return bool Whether the content contains blocks.
+
+    function gutenberg_content_has_blocks( $content ) {
+        return false !== strpos( $content, '<!-- wp:' );
+    }
+    */
+    public static boolean contentContainsGutenbergBlocks(String postContent) {
+        return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
 }

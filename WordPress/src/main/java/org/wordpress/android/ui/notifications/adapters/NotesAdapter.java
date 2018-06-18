@@ -105,7 +105,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         return new NoteViewHolder(view);
     }
 
-    // Instead of building the filterd notes list dinamically, create it once and re-use it.
+    // Instead of building the filtered notes list dynamically, create it once and re-use it.
     // Otherwise it's re-created so many times during layout.
     public static void buildFilteredNotesList(ArrayList<Note> filteredNotes, ArrayList<Note> notes, FILTERS filter) {
         filteredNotes.clear();
