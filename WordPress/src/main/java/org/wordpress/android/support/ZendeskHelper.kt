@@ -137,7 +137,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     }
 
     // TODO: enable push notifications after the user creates a support identity if they haven't enabled already
-    private fun enablePushNotifications() {
+    fun enablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
