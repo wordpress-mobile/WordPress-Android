@@ -142,7 +142,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             return;
         }
 
-        if (PUSH_TYPE_ZENDESK.equalsIgnoreCase(message.getMessageType())) {
+        if (PUSH_TYPE_ZENDESK.equals(String.valueOf(data.get("type")))) {
             NOTIFICATION_HELPER.handleZendeskNotification(this);
         }
 

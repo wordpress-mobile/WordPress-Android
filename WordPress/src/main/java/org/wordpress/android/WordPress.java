@@ -560,7 +560,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         VolleyUtils.cancelAllRequests(sRequestQueue);
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
-        mZendeskHelper.disablePushNotifications();
+        mZendeskHelper.reset();
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (Exception e) {

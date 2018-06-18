@@ -48,6 +48,11 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     private val zendeskPushRegistrationProvider: PushRegistrationProvider?
         get() = zendeskInstance.provider()?.pushRegistrationProvider()
 
+    private var supportEmail: String? = null
+    private var supportName: String? = null
+    private val isIdentityAvailable: Boolean
+        get() = !supportEmail.isNullOrEmpty()
+
     fun setupZendesk(
         context: Context,
         zendeskUrl: String,
@@ -63,9 +68,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
         Logger.setLoggable(BuildConfig.DEBUG)
         Support.INSTANCE.init(zendeskInstance)
-        if (!AppPrefs.getSupportEmail().isNullOrEmpty()) {
-            enablePushNotifications()
-        }
+        setIdentity(AppPrefs.getSupportEmail(), AppPrefs.getSupportName())
     }
 
     /**
@@ -82,14 +85,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     ) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
-        }
-        val supportEmail = AppPrefs.getSupportEmail()
-        val supportName = AppPrefs.getSupportName()
-        val isIdentityAvailable = !supportEmail.isNullOrEmpty()
-        if (isIdentityAvailable) {
-            zendeskInstance.setIdentity(createZendeskIdentity(supportEmail, supportName))
-        } else {
-            zendeskInstance.setIdentity(createZendeskIdentity(null, null))
         }
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
@@ -117,7 +112,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
             zendeskNeedsToBeEnabledError
         }
         supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+            setIdentity(email, name)
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
@@ -135,7 +130,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
             zendeskNeedsToBeEnabledError
         }
         supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
-            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+            setIdentity(email, name)
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
@@ -144,11 +139,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     fun enablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
-        }
-        if (zendeskPushRegistrationProvider?.isRegisteredForPush == true) {
-            AppLog.v(T.SUPPORT, "Zendesk push notifications are already enabled, skipping " +
-                    "enablePushNotifications call!")
-            return
         }
         pushNotificationDeviceToken?.let { deviceToken ->
             zendeskPushRegistrationProvider?.registerWithDeviceIdentifier(
@@ -166,18 +156,32 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
-    fun disablePushNotifications() {
+    fun reset() {
+        // Disable push notifications before resetting the identity
+        disablePushNotifications()
+        setIdentity(null, null)
+    }
+
+    private fun setIdentity(email: String?, name: String?) {
+        if (supportEmail == email && supportName == name) {
+            // Identity set with the same credentials
+            return
+        }
+        supportEmail = email
+        supportName = name
+        zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+
+        // When identity changes, make sure the push notifications are enabled
+        enablePushNotifications()
+    }
+
+    private fun disablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        if (zendeskPushRegistrationProvider?.isRegisteredForPush == false) {
-            AppLog.v(T.SUPPORT, "Zendesk push notifications are not enabled, skipping " +
-                    "disablePushNotifications call!")
-            return
-        }
         zendeskPushRegistrationProvider?.unregisterDevice(
                 object : ZendeskCallback<Void>() {
-                    override fun onSuccess(response: Void) {
+                    override fun onSuccess(response: Void?) {
                         AppLog.v(T.SUPPORT, "Zendesk push notifications successfully disabled!")
                     }
 
