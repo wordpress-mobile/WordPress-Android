@@ -3,9 +3,11 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +29,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderCardType;
@@ -47,6 +50,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
@@ -435,8 +440,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
-            mImageManager.load(holder.mImgAvatarOrBlavatar,
-                    imageUrl, null, ScaleType.CENTER);
+            mImageManager.load(holder.mImgAvatarOrBlavatar, imageUrl, null, ScaleType.CENTER);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             holder.mImgAvatarOrBlavatar.setVisibility(View.GONE);
@@ -487,7 +491,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.mFramePhoto.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
             } else if (post.getCardType() == ReaderCardType.VIDEO) {
-                holder.mImgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
+                ReaderVideoUtils.retrieveVideoThumbnailUrl(post.getFeaturedVideo(), new VideoThumbnailUrlListener() {
+                    @Override public void showThumbnail(String thumbnailUrl) {
+                        mImageManager.load(holder.mImgFeatured, thumbnailUrl, null, ScaleType.CENTER_CROP);
+                    }
+
+                    @Override public void showPlaceholder() {
+                        mImageManager.load(holder.mImgFeatured, new ColorDrawable(
+                                        ContextCompat.getColor(holder.mImgFeatured.getContext(), R.color.grey_lighten_30)),
+                                ScaleType.CENTER);
+                    }
+
+                    @Override public void cacheThumbnailUrl(String thumbnailUrl) {
+                        ReaderThumbnailTable.addThumbnail(post.postId, post.getFeaturedVideo(), thumbnailUrl);
+                    }
+                });
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;

@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -29,6 +30,35 @@ public class ReaderVideoUtils {
                || isYouTubeVideoLink(videoUrl)
                || MediaUtils.isValidImage(videoUrl);
     }
+
+    public static void retrieveVideoThumbnailUrl(final String videoUrl, final VideoThumbnailUrlListener listener) {
+        // if this is a YouTube video we can determine the thumbnail url from the passed url,
+        // otherwise check if we've already cached the thumbnail url for this video
+        String thumbnailUrl;
+        if (ReaderVideoUtils.isYouTubeVideoLink(videoUrl)) {
+            thumbnailUrl = ReaderVideoUtils.getYouTubeThumbnailUrl(videoUrl);
+        } else {
+            thumbnailUrl = ReaderThumbnailTable.getThumbnailUrl(videoUrl);
+        }
+        if (!TextUtils.isEmpty(thumbnailUrl)) {
+            listener.showThumbnail(thumbnailUrl);
+        } else if (MediaUtils.isValidImage(videoUrl)) {
+            listener.showThumbnail(videoUrl);
+        } else if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
+            listener.showPlaceholder();
+            ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new FetchVideoThumbnailListener() {
+                @Override
+                public void onResponse(boolean successful, String thumbnailUrl) {
+                    listener.showThumbnail(videoUrl);
+                    listener.cacheThumbnailUrl(videoUrl);
+                }
+            });
+        } else {
+            AppLog.d(AppLog.T.UTILS, "no video thumbnail for " + videoUrl);
+            listener.showPlaceholder();
+        }
+    }
+
 
     /*
      * returns the url to get the full-size (480x360) thumbnail url for the passed video
@@ -139,7 +169,7 @@ public class ReaderVideoUtils {
     /*
      * unlike YouTube thumbnails, Vimeo thumbnails require network request
      */
-    public static void requestVimeoThumbnail(final String videoUrl, final VideoThumbnailListener thumbListener) {
+    public static void requestVimeoThumbnail(final String videoUrl, final FetchVideoThumbnailListener thumbListener) {
         // useless without a listener
         if (thumbListener == null) {
             return;
@@ -181,7 +211,13 @@ public class ReaderVideoUtils {
         WordPress.sRequestQueue.add(request);
     }
 
-    public interface VideoThumbnailListener {
+    public interface FetchVideoThumbnailListener {
         void onResponse(boolean successful, String thumbnailUrl);
+    }
+
+    public interface VideoThumbnailUrlListener {
+        void showThumbnail(String thumbnailUrl);
+        void showPlaceholder();
+        void cacheThumbnailUrl(String thumbnailUrl);
     }
 }
