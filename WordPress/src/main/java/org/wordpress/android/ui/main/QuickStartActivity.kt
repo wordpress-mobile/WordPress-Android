@@ -56,6 +56,7 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
         return super.onOptionsItemSelected(item)
     }
 
+    // TODO click listeners will lead to actual tutorials
     private fun setTasksClickListeners() {
         findViewById<RelativeLayout>(R.id.layout_view_site).setOnClickListener {
             quickStartStore.setDoneTask(site.toLong(), QuickStartTask.VIEW_SITE, true)
@@ -136,41 +137,45 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
     private fun crossOutCompletedTasks() {
         // Create Site task is completed by default
         visuallyMarkTaskAsCompleted(findViewById(R.id.title_create_site), findViewById(R.id.done_create_site))
-        findViewById<View>(R.id.layout_create_site).isClickable = false
+        disableTaskContainer(findViewById<View>(R.id.layout_create_site))
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.VIEW_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_view_site), findViewById(R.id.done_view_site))
-            findViewById<View>(R.id.layout_view_site).isClickable = false
+            disableTaskContainer(findViewById<View>(R.id.layout_view_site))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.CHOOSE_THEME)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_browse_themes), findViewById(R.id.done_browse_themes))
-            findViewById<View>(R.id.layout_browse_themes).isClickable = false
+            disableTaskContainer(findViewById<View>(R.id.layout_browse_themes))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.CUSTOMIZE_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_customize_site), findViewById(R.id.done_customize_site))
-            findViewById<View>(R.id.layout_customize_site).isClickable = false
+            disableTaskContainer(findViewById<View>(R.id.layout_customize_site))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.SHARE_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_share_site), findViewById(R.id.done_share_site))
-            findViewById<View>(R.id.layout_share_site).isClickable = false
+            disableTaskContainer(findViewById<View>(R.id.layout_share_site))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.PUBLISH_POST)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_publish_post), findViewById(R.id.done_publish_post))
-            findViewById<View>(R.id.layout_publish_post).isClickable = false
+            disableTaskContainer(findViewById<View>(R.id.layout_publish_post))
         }
 
         if (quickStartStore.hasDoneTask(site.toLong(), QuickStartTask.FOLLOW_SITE)) {
             visuallyMarkTaskAsCompleted(findViewById(R.id.title_follow_site), findViewById(R.id.done_follow_site))
-            findViewById<View>(R.id.layout_follow_site).isClickable = false
+            disableTaskContainer(findViewById<View>(R.id.layout_follow_site))
         }
     }
 
     private fun visuallyMarkTaskAsCompleted(taskTitleTextView: TextView, taskDoneCheckMark: View) {
         taskTitleTextView.let { it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG }
         taskDoneCheckMark.visibility = View.VISIBLE
+    }
+
+    private fun disableTaskContainer(container: View) {
+        container.isClickable = false
     }
 }
