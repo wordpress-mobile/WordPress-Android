@@ -340,6 +340,7 @@
     <string name="comment_spam_talkback">Comment marked as spam</string>
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
     <string name="comment_title">%s on %s</string>
+    <string name="comment_read_source_post">Read the source post</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
