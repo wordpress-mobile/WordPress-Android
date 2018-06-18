@@ -166,6 +166,7 @@ Language: is
     <string name="invite">Bjóða</string>
     <string name="invite_names_title">Notendanöfn eða netföng</string>
     <string name="invite_people">Bjóða fólki</string>
+    <string name="send_link">Senda tengil</string>
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
@@ -194,6 +195,7 @@ Language: is
     <string name="checking_email">Athuga tölvupóst</string>
     <string name="magic_link_unavailable_error_message">Ekki tiltækt í augnablikinu. Vinsamlegast sláðu inn lykilorðið þitt.</string>
     <string name="logging_in">Skrá inn</string>
+    <string name="enter_your_password_instead">Sláðu inn lykilorðið þitt í staðinn</string>
     <string name="web_address_dialog_hint">Birt öllum þegar þú skrifar athugasemd.</string>
     <string name="new_editor_reflection_error">Sjónrænn ritill er ekki samhæfður þínu tæki. Hann var\n    sjálfvirkt gerður óvirkur.</string>
     <string name="stats_insights_latest_post_no_title">(án titils)</string>
@@ -545,6 +547,7 @@ Language: is
     <string name="language">Tungumál</string>
     <string name="auth_required">Skráðu þig aftur inn til að halda áfram.</string>
     <string name="editor_toast_invalid_path">Ógild skráarslóð</string>
+    <string name="invalid_verification_code">Ógildur staðfestingarkóði</string>
     <string name="verification_code">Staðfestingarkóði</string>
     <string name="error_notification_open">Gat ekki opnað tilkynningu</string>
     <string name="stats_view_authors">Höfundar</string>

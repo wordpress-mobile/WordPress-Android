@@ -170,7 +170,6 @@ Language: pt_BR
     <string name="signup_magic_link_message">Enviamos para você um endereço mágico para cadastro! Confira seu e-mail neste dispositivo e toque no endereço no e–mail para finalizar seu cadastro.</string>
     <string name="signup_magic_link_error_button_positive">Tentar novamente</string>
     <string name="signup_magic_link_error_button_negative">Fechar</string>
-    <string name="signup_magic_link_error">Houve um problema ao enviar o e–mail. Você pode tentar novamente agora ou fechar e tentar de novo mais tarde.</string>
     <string name="signup_epilogue_hint_username">Nome de usuário</string>
     <string name="signup_epilogue_hint_password_detail">Você sempre pode acessar com um endereço mágico como o que acabou de usar, mas também é possível definir uma senha se preferir.</string>
     <string name="signup_epilogue_hint_password">Senha (opcional)</string>
@@ -754,6 +753,7 @@ Language: pt_BR
     <string name="invite_names_title">Nome de usuários ou e–mails</string>
     <string name="invite_people">Convidar pessoas</string>
     <string name="my_site_header_external">Externo</string>
+    <string name="send_link">Enviar link</string>
     <string name="label_clear_search_history">Limpar histórico de pesquisa</string>
     <string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
     <string name="reader_empty_posts_in_search_description">Nenhum post na sua língua foi encontrado para %s</string>
@@ -781,6 +781,7 @@ Language: pt_BR
     <string name="checking_email">Verificando e–mail</string>
     <string name="magic_link_unavailable_error_message">Atualmente indisponível. Digite sua senha</string>
     <string name="logging_in">Fazendo login</string>
+    <string name="enter_your_password_instead">Digite sua senha ao invés disso</string>
     <string name="web_address_dialog_hint">Exibido ao público quando você comentar.</string>
     <string name="new_editor_reflection_error">O editor visual não é compatível com seu dispositivo. Ele foi\n        desativado automaticamente.</string>
     <string name="stats_insights_latest_post_no_title">(sem título)</string>
@@ -1137,6 +1138,7 @@ Language: pt_BR
     <string name="deselect_all">Desmarcar todos</string>
     <string name="stats_generic_error">As estatísticas requisitadas não puderam ser carregadas</string>
     <string name="auth_required">Faça login novamente para continuar.</string>
+    <string name="invalid_verification_code">Código de verificação inválido</string>
     <string name="verification_code">Código de verificação</string>
     <string name="editor_toast_invalid_path">Caminho do arquivo inválido</string>
     <string name="language">Idioma</string>
