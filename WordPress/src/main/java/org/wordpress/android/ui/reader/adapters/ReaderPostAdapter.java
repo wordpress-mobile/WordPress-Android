@@ -498,8 +498,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     @Override public void showPlaceholder() {
                         mImageManager.load(holder.mImgFeatured, new ColorDrawable(
-                                        ContextCompat.getColor(holder.mImgFeatured.getContext(), R.color.grey_lighten_30)),
-                                ScaleType.CENTER);
+                                        ContextCompat.getColor(holder.mImgFeatured.getContext(), R.color
+                                                .grey_lighten_30)), ScaleType.CENTER);
                     }
 
                     @Override public void cacheThumbnailUrl(String thumbnailUrl) {
