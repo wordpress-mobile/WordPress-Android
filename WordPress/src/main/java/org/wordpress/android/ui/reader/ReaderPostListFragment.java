@@ -568,6 +568,8 @@ public class ReaderPostListFragment extends Fragment
                         case BLOG_PREVIEW:
                             updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
                             break;
+                        case SEARCH_RESULTS:
+                            break;
                     }
                     // make sure swipe-to-refresh progress shows since this is a manual refresh
                     mRecyclerView.setRefreshing(true);
@@ -1504,6 +1506,10 @@ public class ReaderPostListFragment extends Fragment
             case TAG_PREVIEW:
                 mTagPreviewHistory.push(tag.getTagSlug());
                 break;
+            case BLOG_PREVIEW:
+                break;
+            case SEARCH_RESULTS:
+                break;
         }
 
         getPostAdapter().setCurrentTag(tag);
@@ -1910,7 +1916,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         // clear 'post removed from saved posts' undo items
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
         }
 
