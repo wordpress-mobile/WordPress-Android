@@ -74,7 +74,6 @@ public class GCMRegistrationIntentService extends JobIntentService {
 
             // Register to other kind of notifications
             HelpshiftHelper.getInstance().registerDeviceToken(this, gcmToken);
-            AnalyticsTracker.registerPushNotificationToken(gcmToken);
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
             PreferenceManager.getDefaultSharedPreferences(this).edit()
