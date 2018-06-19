@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-30 06:54:07+0000
+Translation-Revision-Date: 2018-06-12 08:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">點選「%s」即可將文章儲存至你的清單。</string>
+    <string name="reader_empty_saved_posts_title">尚未儲存任何文章 u2014！</string>
+    <string name="reader_bookmark_snack_title">文章已儲存</string>
+    <string name="reader_bookmark_snack_btn">檢視全部</string>
+    <string name="reader_btn_bookmarked">已儲存</string>
+    <string name="reader_btn_bookmark">儲存</string>
+    <string name="reader_remove_bookmark">從已儲存文章中移除</string>
+    <string name="reader_add_bookmark">加入已儲存文章</string>
+    <string name="reader_save_for_later_title">已儲存文章</string>
+    <string name="activity_log_empty_list">未記錄任何事件</string>
+    <string name="removed">已移除</string>
     <string name="tabbar_accessibility_label_write">新文章。撰寫新文章。</string>
     <string name="my_site_icon_content_description">變更網站圖示</string>
     <string name="my_site_icon_dialog_cancel_button">取消</string>
@@ -298,7 +309,6 @@ Language: zh_TW
     <string name="signup_magic_link_message">我們已將神奇註冊連結寄給你！用此裝置查看電子郵件，點選電子郵件中的連結就能完成註冊。</string>
     <string name="signup_magic_link_error_button_positive">重試</string>
     <string name="signup_magic_link_error_button_negative">關閉</string>
-    <string name="signup_magic_link_error">傳送電子郵件時發生錯誤。你可以現在重試，或先關閉稍後再試看看。</string>
     <string name="signup_epilogue_hint_username">使用者名稱</string>
     <string name="signup_epilogue_hint_password_detail">你可以像剛剛一樣隨時使用神奇連結來登入，不過也可以依你的需要設定密碼。</string>
     <string name="signup_epilogue_hint_password">密碼 (非必要)</string>
@@ -868,6 +878,7 @@ Language: zh_TW
     <string name="invite_message_title">自訂訊息</string>
     <string name="invite">邀請</string>
     <string name="invite_names_title">使用者名稱或電子郵件</string>
+    <string name="send_link">傳送連結</string>
     <string name="my_site_header_external">外部</string>
     <string name="invite_people">邀請他人</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
@@ -897,6 +908,7 @@ Language: zh_TW
     <string name="checking_email">正在檢查電子郵件</string>
     <string name="magic_link_unavailable_error_message">目前無法使用。請輸入你的密碼</string>
     <string name="logging_in">正在登入</string>
+    <string name="enter_your_password_instead">改為輸入你的密碼</string>
     <string name="web_address_dialog_hint">當你留言時公開顯示。</string>
     <string name="new_editor_reflection_error">視覺化編輯器與你的裝置不相容，已\n自動停用。</string>
     <string name="stats_insights_latest_post_no_title">(無標題)</string>
@@ -1248,6 +1260,7 @@ Language: zh_TW
     <string name="language">語言</string>
     <string name="editor_toast_invalid_path">檔案路徑無效</string>
     <string name="verification_code">驗證碼</string>
+    <string name="invalid_verification_code">驗證碼無效</string>
     <string name="auth_required">再次登入以繼續操作。</string>
     <string name="media_fetching">正在擷取媒體…</string>
     <string name="posts_fetching">正在擷取文章…</string>

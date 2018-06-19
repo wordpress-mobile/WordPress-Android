@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-04 08:54:10+0000
+Translation-Revision-Date: 2018-06-13 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">Tippe auf %s, um einen Beitrag in deiner Liste zu speichern.</string>
+    <string name="reader_empty_saved_posts_title">Keine Beiträge gespeichert – noch!</string>
+    <string name="reader_bookmark_snack_title">Beitrag gespeichert</string>
+    <string name="reader_bookmark_snack_btn">Alles anzeigen</string>
+    <string name="reader_btn_bookmarked">Gespeichert</string>
+    <string name="reader_btn_bookmark">Speichern</string>
+    <string name="reader_remove_bookmark">Aus gespeicherten Beiträgen entfernen</string>
+    <string name="reader_add_bookmark">Zu gespeicherten Beiträgen hinzufügen</string>
+    <string name="reader_save_for_later_title">Gespeicherte Beiträge</string>
+    <string name="activity_log_empty_list">Noch keine Events verzeichnet</string>
+    <string name="removed">Entfernt</string>
     <string name="tabbar_accessibility_label_write">Neuer Beitrag. Schreibe einen neuen Beitrag.</string>
     <string name="my_site_icon_content_description">Website–Symbol ändern</string>
     <string name="my_site_icon_dialog_cancel_button">Abbrechen</string>
@@ -297,7 +308,6 @@ Language: de
     <string name="signup_magic_link_message">Wir haben dir einen magischen Link für die Registrierung gesendet! Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E–Mail, um die Registrierung abzuschließen.</string>
     <string name="signup_magic_link_error_button_positive">Erneut versuchen</string>
     <string name="signup_magic_link_error_button_negative">Schließen</string>
-    <string name="signup_magic_link_error">Es gab Probleme beim Senden dieser E–Mail. Du kannst es jetzt erneut versuchen oder die Seite schließen und es später erneut versuchen.</string>
     <string name="signup_epilogue_hint_username">Benutzername</string>
     <string name="signup_epilogue_hint_password_detail">Du kannst dich immer mit einem magischen Link wie dem gerade verwendeten anmelden, du kannst aber auch ein Passwort einrichten, wenn du dies bevorzugst.</string>
     <string name="signup_epilogue_hint_password">Passwort (optional)</string>
@@ -880,6 +890,7 @@ Language: de
     <string name="invite_names_title">Benutzernamen oder E–Mails</string>
     <string name="invite_people">Personen einladen</string>
     <string name="my_site_header_external">Extern</string>
+    <string name="send_link">Link senden</string>
     <string name="label_clear_search_history">Lösche Suchverlauf</string>
     <string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
     <string name="reader_empty_posts_in_search_description">Keine Beiträge zu %s in deiner Sprache gefunden.</string>
@@ -907,6 +918,7 @@ Language: de
     <string name="checking_email">Überprüfe E-Mail–Adresse</string>
     <string name="magic_link_unavailable_error_message">Zur Zeit nicht verfügbar. Bitte gib dein Passwort ein</string>
     <string name="logging_in">Anmeldung läuft</string>
+    <string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
     <string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
     <string name="new_editor_reflection_error">Der visuelle Editor ist mit deinem Gerät nicht kompatibel.\nEr wurde automatisch deaktiviert.</string>
     <string name="stats_insights_latest_post_no_title">(ohne Titel)</string>
@@ -1263,6 +1275,7 @@ Language: de
     <string name="deselect_all">Alle abwählen</string>
     <string name="stats_generic_error">Erforderliche Statistiken konnten nicht geladen werden</string>
     <string name="auth_required">Melde dich erneut an, um fortzufahren.</string>
+    <string name="invalid_verification_code">Ungültiger Überprüfungscode</string>
     <string name="verification_code">Überprüfungscode</string>
     <string name="editor_toast_invalid_path">Ungültiger Dateipfad</string>
     <string name="language">Sprache</string>

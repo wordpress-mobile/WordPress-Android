@@ -113,6 +113,7 @@ Language: sk
     <string name="invite_names_title">Používateľské mená alebo emaily</string>
     <string name="invite_people">Pozvať ľudí</string>
     <string name="my_site_header_external">Externý</string>
+    <string name="send_link">Poslať odkaz</string>
     <string name="label_clear_search_history">Vyčistiť históriu vyhľadávania</string>
     <string name="dlg_confirm_clear_search_history">Vyčistiť históriu vyhľadávania?</string>
     <string name="reader_empty_posts_in_search_description">Nenašli sa žiadne príspevky pre %s vo vašom jazyku</string>
@@ -361,6 +362,7 @@ Language: sk
     <string name="show">Zobraziť</string>
     <string name="deselect_all">Odznačiť všetky</string>
     <string name="stats_generic_error">Požadované štatistiky nemohli byť načítané</string>
+    <string name="invalid_verification_code">Nesprávny overovací kód</string>
     <string name="verification_code">Overovací kód</string>
     <string name="editor_toast_invalid_path">Nesprávna cesta súboru</string>
     <string name="language">Jazyk</string>

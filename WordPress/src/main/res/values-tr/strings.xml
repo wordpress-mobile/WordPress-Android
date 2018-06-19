@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-30 07:54:10+0000
+Translation-Revision-Date: 2018-06-13 20:53:00+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="signup_magic_link_title">Sihirli bağlantı gönderildi</string>
+    <string name="signup_email_screen_title">E–posta ile giriş</string>
+    <string name="verification_2fa_screen_title">Kod doğrulaması</string>
+    <string name="selfhosted_site_login_title">Giriş bilgileri</string>
+    <string name="magic_link_sent_login_title">Sihirli bağlantı gönderildi</string>
+    <string name="magic_link_login_title">Sihirli bağlantı ile giriş</string>
+    <string name="site_address_login_title">Site adresi ile giriş</string>
+    <string name="email_address_login_title">E–posta ile giriş</string>
+    <string name="alternatively">Alternatif olarak:</string>
+    <string name="reader_empty_saved_posts_description">%s üzerine dokunarak gönderiyi listenize kaydedin.</string>
+    <string name="reader_empty_saved_posts_title">Henüz hiç gönderi kaydedilmedi!</string>
+    <string name="reader_bookmark_snack_title">Gönderi kaydedildi</string>
+    <string name="reader_bookmark_snack_btn">Tümünü Görüntüle</string>
+    <string name="reader_btn_bookmarked">Kaydedildi</string>
+    <string name="reader_btn_bookmark">Kaydet</string>
+    <string name="reader_remove_bookmark">Kaydedilen gönderilerden kaldır</string>
+    <string name="reader_add_bookmark">Kaydedilen gönderilere ekle</string>
+    <string name="reader_save_for_later_title">Kaydedilen gönderiler</string>
+    <string name="activity_log_empty_list">Henüz hiçbir etkinlik kaydedilmedi</string>
+    <string name="removed">Kaldırıldı</string>
     <string name="tabbar_accessibility_label_write">Yeni gönderi. Yeni bir gönderi yazın.</string>
     <string name="my_site_icon_content_description">Site simgesini değiştir</string>
     <string name="my_site_icon_dialog_cancel_button">İptal</string>
@@ -886,6 +906,7 @@ Language: tr
     <string name="invite_names_title">Kullanıcı adları ya da e–postalar</string>
     <string name="invite_people">İnsanları davet et</string>
     <string name="my_site_header_external">Harici</string>
+    <string name="send_link">Bağlantı gönder</string>
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_posts_in_search_description">Dilinizde %s için hiç yazı bulunamadı</string>
@@ -913,6 +934,7 @@ Language: tr
     <string name="checking_email">E–posta kontrol ediliyor</string>
     <string name="magic_link_unavailable_error_message">Şu an uygun değil. Lütfen parolanızı girin</string>
     <string name="logging_in">Giriş yapılıyor</string>
+    <string name="enter_your_password_instead">Bunun yerine parola gir</string>
     <string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
     <string name="new_editor_reflection_error">Görsel düzenleyici cihazınız ile uyumsuz. Otomatik\n olarak etkisizleştirildi.</string>
     <string name="stats_insights_latest_post_no_title">(başlıksız)</string>
@@ -1269,6 +1291,7 @@ Language: tr
     <string name="deselect_all">Tüm seçimleri kaldır</string>
     <string name="stats_generic_error">Gerekli istatistikler yüklenemiyor</string>
     <string name="auth_required">Devam etmek için tekrar giriş yapın.</string>
+    <string name="invalid_verification_code">Geçersiz doğrulama kodu</string>
     <string name="verification_code">Doğrulama kodu</string>
     <string name="editor_toast_invalid_path">Geçersiz dosya yolu</string>
     <string name="language">Dil</string>
