@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
