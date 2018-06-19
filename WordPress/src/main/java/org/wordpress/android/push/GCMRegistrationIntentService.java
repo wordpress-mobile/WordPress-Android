@@ -72,7 +72,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
                 NotificationsUtils.registerDeviceForPushNotifications(this, gcmToken);
             }
 
-            mZendeskHelper.enablePushNotifications(mAccountStore);
+            mZendeskHelper.enablePushNotifications();
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
             PreferenceManager.getDefaultSharedPreferences(this).edit()

@@ -48,6 +48,11 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     private val zendeskPushRegistrationProvider: PushRegistrationProvider?
         get() = zendeskInstance.provider()?.pushRegistrationProvider()
 
+    private var supportEmail: String? = null
+    private var supportName: String? = null
+    private val isIdentityAvailable: Boolean
+        get() = !supportEmail.isNullOrEmpty()
+
     fun setupZendesk(
         context: Context,
         zendeskUrl: String,
@@ -63,6 +68,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
         Logger.setLoggable(BuildConfig.DEBUG)
         Support.INSTANCE.init(zendeskInstance)
+        refreshIdentity()
     }
 
     /**
@@ -73,7 +79,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     fun showZendeskHelpCenter(
         context: Context,
         siteStore: SiteStore,
-        accountStore: AccountStore?,
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>? = null
@@ -81,15 +86,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        val supportEmail = AppPrefs.getSupportEmail()
-        val supportName = AppPrefs.getSupportName()
-        val isIdentityAvailable = !supportEmail.isNullOrEmpty()
-        if (isIdentityAvailable) {
-            zendeskInstance.setIdentity(createZendeskIdentity(supportEmail, supportName))
-        } else {
-            zendeskInstance.setIdentity(createZendeskIdentity(null, null))
-        }
-        enablePushNotifications(accountStore)
+        refreshIdentity()
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
                 .withContactUsButtonVisible(isIdentityAvailable)
@@ -115,9 +112,8 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
-            enablePushNotifications(accountStore)
+        supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { _, _ ->
+            refreshIdentity()
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
@@ -134,27 +130,27 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
-            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
-            enablePushNotifications(accountStore)
+        supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { _, _ ->
+            refreshIdentity()
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
     }
 
-    fun enablePushNotifications(accountStore: AccountStore?) {
+    fun reset() {
+        disablePushNotifications()
+        clearIdentity()
+    }
+
+    fun enablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        if (accountStore?.hasAccessToken() != true) {
-            // Push notifications only available while logged in with WordPress.com account
+        if (!isIdentityAvailable) {
+            // identity should be set before registering the device token
             return
         }
-        if (zendeskPushRegistrationProvider?.isRegisteredForPush == true) {
-            // already enabled
-            return
-        }
-        pushNotificationDeviceToken?.let { deviceToken ->
+        wpcomPushNotificationDeviceToken?.let { deviceToken ->
             zendeskPushRegistrationProvider?.registerWithDeviceIdentifier(
                     deviceToken,
                     object : ZendeskCallback<String>() {
@@ -170,13 +166,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
-    fun disablePushNotifications() {
+    private fun disablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
-        }
-        if (zendeskPushRegistrationProvider?.isRegisteredForPush != true) {
-            // already disabled
-            return
         }
         zendeskPushRegistrationProvider?.unregisterDevice(
                 object : ZendeskCallback<Void>() {
@@ -189,6 +181,28 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
                                 " error: ${errorResponse?.reason}")
                     }
                 })
+    }
+
+    private fun refreshIdentity() {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        val email = AppPrefs.getSupportEmail()
+        val name = AppPrefs.getSupportName()
+        if (supportEmail != email || supportName != name) {
+            supportEmail = email
+            supportName = name
+            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+        }
+        enablePushNotifications()
+    }
+
+    private fun clearIdentity() {
+        supportEmail = null
+        supportName = null
+        AppPrefs.removeSupportEmail()
+        AppPrefs.removeSupportName()
+        zendeskInstance.setIdentity(createZendeskIdentity(null, null))
     }
 }
 
@@ -279,7 +293,7 @@ private fun getNetworkInformation(context: Context): String {
     ).joinToString(separator = "\n")
 }
 
-private val pushNotificationDeviceToken: String?
+private val wpcomPushNotificationDeviceToken: String?
     get() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
         return preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
