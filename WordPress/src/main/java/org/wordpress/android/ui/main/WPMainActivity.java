@@ -684,6 +684,12 @@ public class WPMainActivity extends AppCompatActivity implements
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.QUICK_START:
+                MySiteFragment msf = getMySiteFragment();
+                if (msf != null) {
+                    msf.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
     }
 
@@ -698,8 +704,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 R.drawable.img_promo_quick_start,
                 getString(R.string.quick_start_dialog_need_help_button_negative),
                 "",
-                getString(R.string.quick_start_dialog_need_help_button_neutral)
-        );
+                getString(R.string.quick_start_dialog_need_help_button_neutral));
 
         promoDialog.show(getSupportFragmentManager(), tag);
     }
