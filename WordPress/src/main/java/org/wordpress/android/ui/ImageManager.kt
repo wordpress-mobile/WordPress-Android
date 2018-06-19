@@ -49,6 +49,9 @@ class ImageManager @Inject constructor() {
         request.into(imageView)
     }
 
+    fun cancelRequestAndClearImageView(imageView: ImageView) {
+        GlideApp.with(imageView.context).clear(imageView)
+    }
 
     private fun applyScaleType(request: GlideRequest<Drawable>, scaleType: ScaleType) {
         when (scaleType) {
@@ -99,5 +102,15 @@ class ImageManager @Inject constructor() {
         fun loadImageIntoCircle(imageView: ImageView, imgUrl: String, @DrawableRes placeholder: Int? = null) {
             ImageManager().loadIntoCircle(imageView, imgUrl, placeholder)
         }
+
+        @JvmStatic
+        @Deprecated("Use injected ImageManager",
+                ReplaceWith("imageManager.clear(imageView)",
+                        "org.wordpress.android.ui.ImageManager"))
+        fun clear(imageView: ImageView) {
+            ImageManager().cancelRequestAndClearImageView(imageView)
+        }
+
+
     }
 }

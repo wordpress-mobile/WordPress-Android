@@ -443,6 +443,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mImageManager.load(holder.mImgAvatarOrBlavatar, imageUrl, null, ScaleType.CENTER);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
+            mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
             holder.mImgAvatarOrBlavatar.setVisibility(View.GONE);
         }
 
@@ -472,6 +473,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ScaleType.CENTER_CROP);
             holder.mThumbnailStrip.setVisibility(View.GONE);
         } else {
+            mImageManager.cancelRequestAndClearImageView(holder.mImgFeatured);
             holder.mTxtTitle.setVisibility(View.VISIBLE);
             holder.mTxtTitle.setText(post.getTitle());
             holder.mTxtPhotoTitle.setVisibility(View.GONE);
@@ -658,6 +660,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case OTHER:
             default:
+                mImageManager.cancelRequestAndClearImageView(postHolder.mImgDiscoverAvatar);
                 // something else, so hide discover section
                 postHolder.mLayoutDiscover.setVisibility(View.GONE);
                 break;
