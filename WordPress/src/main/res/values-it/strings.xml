@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-30 14:54:08+0000
+Translation-Revision-Date: 2018-06-18 14:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="signup_magic_link_title">Link inviato</string>
+    <string name="signup_email_screen_title">Registrazione via e–mail</string>
+    <string name="verification_2fa_screen_title">Verifica del codice</string>
+    <string name="selfhosted_site_login_title">Credenziali di accesso</string>
+    <string name="magic_link_sent_login_title">Link inviato</string>
+    <string name="magic_link_login_title">Accesso tramite link</string>
+    <string name="site_address_login_title">Accesso tramite indirizzo sito</string>
+    <string name="email_address_login_title">Accesso tramite indirizzo e–mail</string>
+    <string name="alternatively">In alternativa:</string>
+    <string name="reader_empty_saved_posts_description">Tocca %s per salvare un articolo nel tuo elenco.</string>
+    <string name="reader_empty_saved_posts_title">U2014, non è stato ancora salvato nessun articolo.</string>
+    <string name="reader_bookmark_snack_title">Articolo salvato</string>
+    <string name="reader_bookmark_snack_btn">Visualizza tutto</string>
+    <string name="reader_btn_bookmarked">Salvataggio completato</string>
+    <string name="reader_btn_bookmark">Salva</string>
+    <string name="reader_remove_bookmark">Rimuovi da articoli salvati</string>
+    <string name="reader_add_bookmark">Aggiungi ad articoli salvati</string>
+    <string name="reader_save_for_later_title">Articoli salvati</string>
+    <string name="activity_log_empty_list">Non è stato ancora registrato nessun evento</string>
+    <string name="removed">Rimozione completata</string>
     <string name="tabbar_accessibility_label_write">Nuovo articolo. Scrivi un nuovo articolo.</string>
     <string name="my_site_icon_content_description">Cambia l\'icona del sito</string>
     <string name="my_site_icon_dialog_cancel_button">Annulla</string>
@@ -302,7 +322,6 @@ Language: it
     <string name="signup_magic_link_message">Ti abbiamo inviato un link per l\'accesso. Controlla la tua e–mail su questo dispositivo e premi il link per terminare l\'iscrizione.</string>
     <string name="signup_magic_link_error_button_positive">Riprova</string>
     <string name="signup_magic_link_error_button_negative">Chiudi</string>
-    <string name="signup_magic_link_error">Si è verificato un errore durante l\'invio dell\'e–mail. Puoi riprovare ora o chiudere e riprovare più tardi.</string>
     <string name="signup_epilogue_hint_username">Nome utente</string>
     <string name="signup_epilogue_hint_password_detail">Puoi sempre accedere con un link come quello che hai appena utilizzato, ma, se preferisci, puoi anche impostare una password.</string>
     <string name="signup_epilogue_hint_password">Password (opzionale)</string>
@@ -885,6 +904,7 @@ Language: it
     <string name="invite_names_title">Nomi utente o email</string>
     <string name="invite_people">Invita delle persone</string>
     <string name="my_site_header_external">Esterno</string>
+    <string name="send_link">Invia link</string>
     <string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
     <string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
     <string name="reader_empty_posts_in_search_description">Nessun articolo trovato riguardo %s per la tua lingua</string>
@@ -912,6 +932,7 @@ Language: it
     <string name="checking_email">Verifica della email</string>
     <string name="magic_link_unavailable_error_message">Attualmente non disponibile. Inserisci la tua password</string>
     <string name="logging_in">Sto entrando</string>
+    <string name="enter_your_password_instead">Oppure inserisci la tua password</string>
     <string name="web_address_dialog_hint">Mostrato pubblicamente quando si commenta.</string>
     <string name="new_editor_reflection_error">L\'editor visuale non è compatibile con il tuo device. &amp;Egrave; stato automaticamente disabilitato.</string>
     <string name="stats_insights_latest_post_no_title">(nessun titolo)</string>
@@ -1268,6 +1289,7 @@ Language: it
     <string name="deselect_all">Deseleziona tutto</string>
     <string name="stats_generic_error">Le statistiche richieste non possono venir caricate</string>
     <string name="auth_required">Accedi di nuovo per continuare.</string>
+    <string name="invalid_verification_code">Codice di verifica non valido</string>
     <string name="verification_code">Codice di verifica</string>
     <string name="editor_toast_invalid_path">Percorso file non valido</string>
     <string name="language">Lingua</string>

@@ -719,9 +719,6 @@ public class WPMainActivity extends AppCompatActivity
         if (mAccountStore.hasAccessToken()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
 
-            GCMRegistrationIntentService.enqueueWork(this,
-                    new Intent(this, GCMRegistrationIntentService.class));
-
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
                     // Sets a flag that we need to track a magic link sign up.

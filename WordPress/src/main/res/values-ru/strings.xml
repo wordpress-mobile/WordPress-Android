@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-22 20:54:04+0000
+Translation-Revision-Date: 2018-06-12 17:13:43+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="signup_magic_link_title">Магическая ссылка отослана</string>
+    <string name="signup_email_screen_title">Email регистрация</string>
+    <string name="verification_2fa_screen_title">Проверка кода</string>
+    <string name="selfhosted_site_login_title">Данные для входа</string>
+    <string name="magic_link_sent_login_title">Магическая ссылка отослана</string>
+    <string name="magic_link_login_title">Вход по магической ссылке</string>
+    <string name="site_address_login_title">Вход по адресу сайта</string>
+    <string name="email_address_login_title">Вход по email адресу</string>
+    <string name="alternatively">Альтернативно:</string>
+    <string name="reader_empty_saved_posts_description">Нажмите %s для сохранения записи в ваш список.</string>
+    <string name="reader_empty_saved_posts_title">Пока не сохранено никаких записей!</string>
+    <string name="reader_bookmark_snack_title">Запись сохранена</string>
+    <string name="reader_bookmark_snack_btn">Посмотреть все</string>
+    <string name="reader_btn_bookmarked">Сохранено</string>
+    <string name="reader_btn_bookmark">Сохранить</string>
+    <string name="reader_remove_bookmark">Удалить из сохраненных записей</string>
+    <string name="reader_add_bookmark">Добавить в сохраненные записи</string>
+    <string name="reader_save_for_later_title">Сохраненные записи</string>
+    <string name="activity_log_empty_list">Никаких событий пока не зарегистрировано</string>
+    <string name="removed">Удалено</string>
     <string name="tabbar_accessibility_label_write">Новая запись. Написать новую запись.</string>
     <string name="my_site_icon_content_description">Сменить значок сайта</string>
     <string name="my_site_icon_dialog_cancel_button">Отменить</string>
@@ -886,6 +906,7 @@ Language: ru
     <string name="invite_names_title">Имена пользователей или адреса e–mail</string>
     <string name="invite_people">Пригласить людей</string>
     <string name="my_site_header_external">Внешние ссылки</string>
+    <string name="send_link">Отправить ссылку</string>
     <string name="label_clear_search_history">Очистить историю поиска</string>
     <string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
     <string name="reader_empty_posts_in_search_description">По запросу «%s» на вашем языке записей не найдено</string>
@@ -913,6 +934,7 @@ Language: ru
     <string name="checking_email">Проверка адреса эл. почты</string>
     <string name="magic_link_unavailable_error_message">В настоящий момент ссылка недоступна. Введите пароль</string>
     <string name="logging_in">Вход в систему</string>
+    <string name="enter_your_password_instead">Введите пароль.</string>
     <string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
     <string name="new_editor_reflection_error">Визуальный редактор не поддерживается на вашем устройстве. Он был\n автоматически отключен.</string>
     <string name="stats_insights_latest_post_no_title">(без заголовка)</string>
@@ -1269,6 +1291,7 @@ Language: ru
     <string name="deselect_all">Снять выделение</string>
     <string name="stats_generic_error">Не удалось загрузить необходимую статистику</string>
     <string name="auth_required">Войдите заново для продолжения.</string>
+    <string name="invalid_verification_code">Неверный код подтверждения</string>
     <string name="verification_code">Код подтверждения</string>
     <string name="editor_toast_invalid_path">Неверный путь к файлу</string>
     <string name="language">Язык</string>

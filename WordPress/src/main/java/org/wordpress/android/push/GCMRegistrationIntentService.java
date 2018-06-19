@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -74,9 +73,6 @@ public class GCMRegistrationIntentService extends JobIntentService {
 
                 mZendeskHelper.enablePushNotifications();
             }
-
-            // Register to other kind of notifications
-            AnalyticsTracker.registerPushNotificationToken(gcmToken);
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
             PreferenceManager.getDefaultSharedPreferences(this).edit()

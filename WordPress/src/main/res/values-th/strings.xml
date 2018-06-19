@@ -226,6 +226,7 @@ Language: th
     <string name="deselect_all">ไม่เลือกทั้งหมด</string>
     <string name="sign_out_wpcom_confirm">ตัดการเชื่อมต่อบัญชีของคุณจะลบข้อมูลทั้งหมดของ @%s’s WordPress.com ออกจากอุปกรณ์นี้  รวมถึงฉบับร่างและการเปลี่ยนแปลงในเครื่องด้วย</string>
     <string name="stats_generic_error">สถิติที่ต้องการไม่สามารถแสดงผลได้</string>
+    <string name="invalid_verification_code">โค้ดยืนยันไม่ถูกต้อง</string>
     <string name="verification_code">โค้ดยืนยัน</string>
     <string name="editor_toast_invalid_path">ที่อยู่ไฟล์ไม่ถูกต้อง</string>
     <string name="language">ภาษา</string>
