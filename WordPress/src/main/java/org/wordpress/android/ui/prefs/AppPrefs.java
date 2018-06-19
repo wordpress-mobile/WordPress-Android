@@ -97,9 +97,6 @@ public class AppPrefs {
 
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
-
-        SUPPORT_EMAIL,
-        SUPPORT_NAME
     }
 
     /**
@@ -160,7 +157,11 @@ public class AppPrefs {
         LAST_WP_COM_THEMES_SYNC,
 
         // user id last used to login with
-        LAST_USED_USER_ID
+        LAST_USED_USER_ID,
+
+        // Support email address and name that's independent of any account or site
+        SUPPORT_EMAIL,
+        SUPPORT_NAME
     }
 
     private static SharedPreferences prefs() {
@@ -620,19 +621,19 @@ public class AppPrefs {
     }
 
     public static void setSupportEmail(String email) {
-        setString(DeletablePrefKey.SUPPORT_EMAIL, email);
+        setString(UndeletablePrefKey.SUPPORT_EMAIL, email);
     }
 
     public static String getSupportEmail() {
-        return getString(DeletablePrefKey.SUPPORT_EMAIL);
+        return getString(UndeletablePrefKey.SUPPORT_EMAIL);
     }
 
     public static void setSupportName(String name) {
-        setString(DeletablePrefKey.SUPPORT_NAME, name);
+        setString(UndeletablePrefKey.SUPPORT_NAME, name);
     }
 
     public static String getSupportName() {
-        return getString(DeletablePrefKey.SUPPORT_NAME);
+        return getString(UndeletablePrefKey.SUPPORT_NAME);
     }
 
     /*
