@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -52,6 +56,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -59,11 +64,13 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 import org.wordpress.android.widgets.WPTextView;
@@ -121,6 +128,7 @@ public class MySiteFragment extends Fragment implements
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject QuickStartStore mQuickStartStore;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -216,6 +224,8 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                completeTask(QuickStartTask.VIEW_SITE);
+                removeQuickStartFocusPoint((LinearLayout) rootView.findViewById(R.id.row_view_site));
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
             }
         });
@@ -223,7 +233,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewQuickStart(getActivity());
+                ActivityLauncher.viewQuickStartForResult(getActivity());
             }
         });
 
@@ -305,6 +315,7 @@ public class MySiteFragment extends Fragment implements
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                removeQuickStartFocusPoint(mThemesContainer);
                 ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
             }
         });
@@ -356,7 +367,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
-                                           mAccountStore.getAccount().getUserName());
+                        mAccountStore.getAccount().getUserName());
             }
         });
 
@@ -484,7 +495,48 @@ public class MySiteFragment extends Fragment implements
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
                 }
                 break;
+            case RequestCodes.QUICK_START:
+                if (data != null && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
+
+                    QuickStartTask task =
+                            (QuickStartTask) data.getExtras().getSerializable(QuickStartActivity.ARG_QUICK_START_TASK);
+
+                    LinearLayout container = getMenuContainerForQuickStartTask(task);
+
+                    addQuickStartFocusPoint(container);
+
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_globe_grey_24dp);
+
+                    Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
+                            getString(R.string.quick_start_dialog_view_site_message_short),
+                            getResources().getColor(R.color.blue_light),
+                            drawable);
+
+                    WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator), title,
+                            AccessibilityUtils.getSnackbarDuration(getActivity())).show();
+
+                    mScrollView.smoothScrollTo(0, container.getBottom());
+                    container.setPressed(true);
+                }
+                break;
         }
+    }
+
+    private LinearLayout getMenuContainerForQuickStartTask(QuickStartTask task) {
+        LinearLayout container = null;
+
+        switch (task) {
+            case VIEW_SITE:
+                container = getView().findViewById(R.id.row_view_site);
+                break;
+            case CHOOSE_THEME:
+                container = getView().findViewById(R.id.row_themes);
+                break;
+            default:
+                break;
+        }
+
+        return container;
     }
 
     /**
@@ -653,7 +705,7 @@ public class MySiteFragment extends Fragment implements
         } else {
             Date dateCreated = DateTimeUtils.dateFromIso8601(mAccountStore.getAccount().getDate());
             GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH,
-                                                               HIDE_WP_ADMIN_DAY);
+                    HIDE_WP_ADMIN_DAY);
             calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
             return dateCreated != null && dateCreated.after(calendar.getTime());
         }
@@ -683,7 +735,6 @@ public class MySiteFragment extends Fragment implements
      * We can't just use fluxc OnSiteChanged event, as the order of events is not guaranteed -> getSelectedSite()
      * method might return an out of date SiteModel, if the OnSiteChanged event handler in the WPMainActivity wasn't
      * called yet.
-     *
      */
     public void onSiteChanged(SiteModel site) {
         refreshSelectedSiteDetails(site);
@@ -821,5 +872,22 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void onCredentialsValidated(Exception error) {
+    }
+
+    private void addQuickStartFocusPoint(LinearLayout container) {
+        LayoutInflater.from(container.getContext())
+                      .inflate(R.layout.quick_start_focus_point, container, true);
+    }
+
+    private void removeQuickStartFocusPoint(LinearLayout container) {
+        View focusPointSpacer = container.findViewById(R.id.quick_start_focus_point_spacer);
+        View focusPoint = container.findViewById(R.id.quick_start_focus_point);
+
+        container.removeView(focusPointSpacer);
+        container.removeView(focusPoint);
+    }
+
+    private void completeTask(QuickStartTask task) {
+        mQuickStartStore.setDoneTask(getSelectedSite().getId(), task, true);
     }
 }

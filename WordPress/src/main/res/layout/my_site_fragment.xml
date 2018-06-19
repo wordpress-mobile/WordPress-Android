@@ -48,9 +48,9 @@
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="@dimen/margin_large"
                             android:layout_marginRight="@dimen/margin_large"
+                            android:gravity="center_vertical"
                             android:indeterminate="true"
-                            android:visibility="gone"
-                            android:gravity="center_vertical" />
+                            android:visibility="gone"/>
 
                         <org.wordpress.android.widgets.WPNetworkImageView
                             android:id="@+id/my_site_blavatar"
@@ -133,48 +133,48 @@
             <!--Quick Start-->
             <LinearLayout
                 android:id="@+id/row_quick_start"
+                style="@style/MySiteListRowLayout"
                 android:visibility="visible"
-                tools:visibility="visible"
-                style="@style/MySiteListRowLayout" >
+                tools:visibility="visible">
 
                 <ImageView
                     android:id="@+id/my_site_quick_start_icon"
+                    style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_list_checkmark_grey_24dp"
-                    style="@style/MySiteListRowIcon" />
+                    app:srcCompat="@drawable/ic_list_checkmark_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_quick_start_text"
-                    android:text="@string/quick_start_sites"
-                    style="@style/MySiteListRowTextView" />
+                    style="@style/MySiteListRowTextView"
+                    android:text="@string/quick_start_sites"/>
 
                 <RelativeLayout
-                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent" >
+                    android:layout_gravity="center_vertical">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_quick_start_progress"
-                        android:gravity="end"
+                        style="@style/MySiteListRowSecondaryTextView"
                         android:layout_width="wrap_content"
+                        android:gravity="end"
                         android:paddingLeft="@dimen/margin_medium"
                         android:paddingStart="@dimen/margin_medium"
                         android:textAlignment="viewEnd"
                         tools:ignore="RtlSymmetry"
-                        tools:text="7/7"
-                        style="@style/MySiteListRowSecondaryTextView" />
+                        tools:text="7/7"/>
 
                     <View
                         android:id="@+id/my_site_quick_start_dot"
-                        android:background="@drawable/bg_oval_accent"
-                        android:layout_centerVertical="true"
+                        android:layout_width="@dimen/quick_start_dot_size"
                         android:layout_height="@dimen/quick_start_dot_size"
+                        android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/my_site_quick_start_progress"
                         android:layout_toStartOf="@+id/my_site_quick_start_progress"
-                        android:layout_width="@dimen/quick_start_dot_size"
+                        android:background="@drawable/bg_oval_accent"
                         android:gravity="end"
                         android:visibility="gone"
-                        tools:visibility="visible" />
+                        tools:visibility="visible"/>
 
                 </RelativeLayout>
 
@@ -206,13 +206,13 @@
                 <ImageView
                     android:id="@+id/my_site_activity_log_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_history_alt_grey_24dp"
-                    android:importantForAccessibility="no"/>
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_history_alt_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_activity_log_text_view"
                     style="@style/MySiteListRowTextView"
-                    android:text="@string/activity" />
+                    android:text="@string/activity"/>
 
             </LinearLayout>
 
