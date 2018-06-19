@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-04 09:02:35+0000
+Translation-Revision-Date: 2018-06-14 08:40:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: da_DK
 -->
 <resources>
+    <string name="signup_magic_link_title">Magisk link sendt</string>
     <string name="site_creation_epilogue_write">Skriv første indlæg</string>
     <string name="site_creation_epilogue_configure">Konfigurer</string>
     <string name="site_creation_epilogue_congrats">Tillykke!\nDit websted er færdigt.</string>
@@ -109,6 +110,7 @@ Language: da_DK
     <string name="show">Vis</string>
     <string name="deselect_all">Fravælg alle</string>
     <string name="auth_required">Log ind igen for at fortsætte.</string>
+    <string name="invalid_verification_code">Ugyldig godkendelseskode</string>
     <string name="verification_code">Godkendelseskode</string>
     <string name="editor_toast_invalid_path">Ugyldig filsti</string>
     <string name="language">Sprog</string>

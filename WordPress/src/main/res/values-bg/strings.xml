@@ -279,6 +279,7 @@ Language: bg
     <string name="invite_names_title">Имена или имейл адреси</string>
     <string name="invite_people">Покана</string>
     <string name="my_site_header_external">Външна</string>
+    <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_empty_posts_in_search_description">Няма намерени публикации за %s на вашия език</string>
@@ -306,6 +307,7 @@ Language: bg
     <string name="checking_email">Проверяване на имейл</string>
     <string name="magic_link_unavailable_error_message">В момента не е налично. Въведете вашата парола</string>
     <string name="logging_in">Влизане</string>
+    <string name="enter_your_password_instead">Въведете паролата си</string>
     <string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
     <string name="new_editor_reflection_error">Визуалният редактор не е съвместим с устройството ви. \n        Беше изключен автоматично.</string>
     <string name="stats_insights_latest_post_no_title">(без заглавие)</string>
@@ -659,6 +661,7 @@ Language: bg
     <string name="deselect_all">От–маркиране на всичко</string>
     <string name="stats_generic_error">Желаната статистина не може да бъде заредена</string>
     <string name="auth_required">За да продължите, влезте отново.</string>
+    <string name="invalid_verification_code">Невалиден верификационен код</string>
     <string name="verification_code">Верификационен код</string>
     <string name="editor_toast_invalid_path">Невалиден път до файла</string>
     <string name="language">Език</string>

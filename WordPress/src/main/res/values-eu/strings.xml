@@ -89,6 +89,7 @@ Language: eu_ES
     <string name="invite">Gonbidatu</string>
     <string name="invite_names_title">Erabiltzaile-izenak edo e–postak</string>
     <string name="my_site_header_external">Kanpokoak</string>
+    <string name="send_link">Bidali esteka</string>
     <string name="invite_people">Gonbidatu jendea</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
@@ -102,6 +103,7 @@ Language: eu_ES
     <string name="error_refreshing_gravatar">Errorea zure Gravatarra birkargatzean</string>
     <string name="checking_email">E–posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
+    <string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
     <string name="stats_insights_latest_post_no_title">(izenbururik gabe)</string>
     <string name="plans_loading_error">Ezin izan dira planak kargatu</string>
@@ -308,6 +310,7 @@ Language: eu_ES
     <string name="select_all">Aukeratu denak</string>
     <string name="language">Hizkuntza</string>
     <string name="verification_code">Egiaztaketa kodea</string>
+    <string name="invalid_verification_code">Egiaztaketa kode okerra</string>
     <string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
     <string name="editor_toast_invalid_path">Fitxategiaren bide okerra</string>
     <string name="reader_empty_posts_request_failed">Huts egin du bidalketak eskuratzeak</string>

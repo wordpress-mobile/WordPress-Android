@@ -477,15 +477,6 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void registerPushNotificationToken(String regId) {
-        if (mHasUserOptedOut) {
-            return;
-        }
-        for (Tracker tracker : TRACKERS) {
-            tracker.registerPushNotificationToken(regId);
-        }
-    }
-
     public static void clearAllData() {
         for (Tracker tracker : TRACKERS) {
             tracker.clearAllData();

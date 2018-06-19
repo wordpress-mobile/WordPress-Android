@@ -52,6 +52,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -545,6 +546,16 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     AnalyticsUtils.updateAnalyticsPreference(getContext(), mDispatcher, mAccountStore, true);
                 }
             }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        if (mAccountStore.hasAccessToken()) {
+            // Make sure the Push Notification token is sent to our servers after a successful login
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
         }
     }
 

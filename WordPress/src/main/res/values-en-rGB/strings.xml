@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-23 11:50:08+0000
+Translation-Revision-Date: 2018-06-18 01:13:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="signup_magic_link_title">Magic link sent</string>
+    <string name="signup_email_screen_title">Email signup</string>
+    <string name="verification_2fa_screen_title">Code verification</string>
+    <string name="selfhosted_site_login_title">Login credentials</string>
+    <string name="magic_link_sent_login_title">Magic link sent</string>
+    <string name="magic_link_login_title">Magic link login</string>
+    <string name="site_address_login_title">Site address login</string>
+    <string name="email_address_login_title">Email address login</string>
+    <string name="alternatively">Alternatively:</string>
+    <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
+    <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
+    <string name="reader_bookmark_snack_title">Post saved</string>
+    <string name="reader_bookmark_snack_btn">View All</string>
+    <string name="reader_btn_bookmarked">Saved</string>
+    <string name="reader_btn_bookmark">Save</string>
+    <string name="reader_remove_bookmark">Remove from saved posts</string>
+    <string name="reader_add_bookmark">Add to saved posts</string>
+    <string name="reader_save_for_later_title">Saved posts</string>
+    <string name="activity_log_empty_list">No events recorded yet</string>
+    <string name="removed">Removed</string>
     <string name="tabbar_accessibility_label_write">New post. Write a new post.</string>
     <string name="my_site_icon_content_description">Change site icon</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
@@ -302,7 +322,7 @@ Language: en_GB
     <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
-    <string name="signup_magic_link_error">There was some trouble sending the email.  You can retry now or close and try again later.</string>
+    <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_epilogue_hint_username">Username</string>
     <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
@@ -886,6 +906,7 @@ Language: en_GB
     <string name="invite_names_title">Usernames or Emails</string>
     <string name="invite_people">Invite People</string>
     <string name="my_site_header_external">External</string>
+    <string name="send_link">Send link</string>
     <string name="label_clear_search_history">Clear search history</string>
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="reader_empty_posts_in_search_description">No posts found for %s for your language</string>
@@ -913,6 +934,7 @@ Language: en_GB
     <string name="checking_email">Checking email</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="logging_in">Logging in</string>
+    <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was\n        automatically disabled.</string>
     <string name="stats_insights_latest_post_no_title">(no title)</string>
@@ -1269,6 +1291,7 @@ Language: en_GB
     <string name="deselect_all">Deselect all</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
     <string name="auth_required">Log in again to continue.</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
     <string name="verification_code">Verification code</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="language">Language</string>

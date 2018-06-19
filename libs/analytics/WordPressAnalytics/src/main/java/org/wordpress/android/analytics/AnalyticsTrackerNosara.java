@@ -380,10 +380,6 @@ public class AnalyticsTrackerNosara extends Tracker {
         mNosaraClient.clearQueues();
     }
 
-    @Override
-    public void registerPushNotificationToken(String regId) {
-    }
-
     @SuppressWarnings("checkstyle:methodlength")
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
         if (!isValidEvent(stat)) {

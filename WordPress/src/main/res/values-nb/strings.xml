@@ -498,6 +498,7 @@ Language: nb_NO
     <string name="invite_names_title">Brukernavn eller E–poster</string>
     <string name="invite_people">Inviter folk</string>
     <string name="my_site_header_external">Eksternt</string>
+    <string name="send_link">Send lenke</string>
     <string name="label_clear_search_history">Slett søkehistorien</string>
     <string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
     <string name="reader_empty_posts_in_search_description">Ingen innlegg ble funnet for %s på språket ditt</string>
@@ -525,6 +526,7 @@ Language: nb_NO
     <string name="checking_email">Sjekker E–posten</string>
     <string name="magic_link_unavailable_error_message">Ikke tilgjengelig for øyeblikket. Vennligst skriv inn passordet ditt</string>
     <string name="logging_in">Logger inn</string>
+    <string name="enter_your_password_instead">Skriv inn passordet ditt istedet</string>
     <string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
     <string name="new_editor_reflection_error">Den visuelle redigereren er ikke kompatibel med\n   enheten din. Den ble automatisk skrudd av.</string>
     <string name="stats_insights_latest_post_no_title">(ingen tittel)</string>
@@ -878,6 +880,7 @@ Language: nb_NO
     <string name="deselect_all">Avvelg alle</string>
     <string name="stats_generic_error">«Påkrevde statistikker» kunne ikke bli lastet inn</string>
     <string name="auth_required">Logg på igjen for å fortsette.</string>
+    <string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
     <string name="verification_code">Verifikasjonskode</string>
     <string name="editor_toast_invalid_path">Ugyldig filsti</string>
     <string name="language">Språk</string>

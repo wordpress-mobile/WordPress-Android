@@ -84,6 +84,7 @@ Language: gd_GB
     <string name="show">Seall</string>
     <string name="deselect_all">Dì-thagh na h–uile</string>
     <string name="stats_generic_error">Cha b’ urrainn dhuinn na stats a dh’iarr thu a luchdadh</string>
+    <string name="invalid_verification_code">Còd dearbhadh mì–dhligheach</string>
     <string name="verification_code">Còd dearbhaidh</string>
     <string name="editor_toast_invalid_path">Tha slighe an fhaidhle mì–dhligheach</string>
     <string name="language">Cànan</string>

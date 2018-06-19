@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-29 08:54:08+0000
+Translation-Revision-Date: 2018-06-12 16:54:06+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">انقر على %s لحفظ مقالة في القائمة لديك.</string>
+    <string name="reader_empty_saved_posts_title">لم يتم حفظ أي مقالات – حتى الآن!</string>
+    <string name="reader_bookmark_snack_title">تم حفظ المقالة</string>
+    <string name="reader_bookmark_snack_btn">عرض الكل</string>
+    <string name="reader_btn_bookmarked">تم الحفظ</string>
+    <string name="reader_btn_bookmark">حفظ</string>
+    <string name="reader_remove_bookmark">حذف من المقالات المحفوظة</string>
+    <string name="reader_add_bookmark">إضافة إلى المقالات المحفوظة</string>
+    <string name="reader_save_for_later_title">المقالات المحفوظة</string>
+    <string name="activity_log_empty_list">لم تُسجَّل أي أحداث حتى الآن</string>
+    <string name="removed">تم الحذف</string>
     <string name="tabbar_accessibility_label_write">مقالة جديدة. كتابة مقالة جديدة.</string>
     <string name="my_site_icon_content_description">تغيير رمز الموقع</string>
     <string name="my_site_icon_dialog_cancel_button">إلغاء</string>
@@ -287,7 +298,6 @@ Language: ar
     <string name="signup_magic_link_message">أرسلنا إليك رابطًا لا يحتاج إلى كلمة مرور لتسجيل الدخول! تحقق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط الموجود في البريد الإلكتروني لإنهاء تسجيل الدخول.</string>
     <string name="signup_magic_link_error_button_positive">إعادة المحاولة</string>
     <string name="signup_magic_link_error_button_negative">إغلاق</string>
-    <string name="signup_magic_link_error">حدثت بعض المشكلات في إرسال البريد الإلكتروني. يمكنك إعادة المحاولة الآن أو الإغلاق والمحاولة مرة أخرى لاحقًا.</string>
     <string name="signup_epilogue_hint_username">اسم المستخدم</string>
     <string name="signup_epilogue_hint_password_detail">يمكنك دائمًا تسجيل الدخول باستخدام رابط لا يحتاج إلى كلمة مرور مثل الرابط الذي استخدمته، لكن يمكنك أيضًا إعداد كلمة مرور إذا كنت تفضل ذلك.</string>
     <string name="signup_epilogue_hint_password">كلمة المرور (اختياري)</string>
@@ -846,6 +856,7 @@ Language: ar
     <string name="invite_names_title">اسم المستخدم أو البريد الإلكتروني</string>
     <string name="invite_people">دعوة أشخاص</string>
     <string name="my_site_header_external">خارجي</string>
+    <string name="send_link">إرسال رابط</string>
     <string name="label_clear_search_history">مسح محفوظات البحث</string>
     <string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
     <string name="reader_empty_posts_in_search_description">لم يتم العثور على مقالات عن %s للغة الخاصة بك</string>
@@ -873,6 +884,7 @@ Language: ar
     <string name="checking_email">التحقق من البريد الإلكتروني</string>
     <string name="magic_link_unavailable_error_message">غير متاح حاليًا. يُرجى إدخال كلمة مرورك</string>
     <string name="logging_in">تسجيل الدخول</string>
+    <string name="enter_your_password_instead">أدخل كلمة مرورك بدلاً من ذلك</string>
     <string name="web_address_dialog_hint">تظهر للعامة أثناء تعليقك.</string>
     <string name="new_editor_reflection_error">المحرر المرئي غير متوافق مع جهازك. كان\n معطلاً تلقائيًا.</string>
     <string name="stats_insights_latest_post_no_title">(بلا عنوان)</string>
@@ -1215,6 +1227,7 @@ Language: ar
     <string name="show">إظهار</string>
     <string name="deselect_all">إلغاء تحديد الكل</string>
     <string name="stats_generic_error">تعذر تحميل الإحصاءات المطلوبة</string>
+    <string name="invalid_verification_code">رمز التحقق غير صالح</string>
     <string name="verification_code">رمز التحقق</string>
     <string name="editor_toast_invalid_path">مسار الملف غير صالح</string>
     <string name="language">اللغة</string>

@@ -129,6 +129,7 @@ Language: cy_GB
     <string name="invite_message_title">Neges Bersonol</string>
     <string name="invite">Gwahodd</string>
     <string name="invite_names_title">Enwau defnyddwyr neu E–byst</string>
+    <string name="send_link">Anfon dolen</string>
     <string name="my_site_header_external">Allanol</string>
     <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
@@ -158,6 +159,7 @@ Language: cy_GB
     <string name="checking_email">Gwirio e–bost</string>
     <string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
     <string name="logging_in">Mewngofnodi</string>
+    <string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
     <string name="new_editor_reflection_error">Nid yw\'r golygydd gweledol yn gydnaws â\'ch dyfais. Cafodd\n         ei analluogi\'n awtomatig.</string>
     <string name="stats_insights_latest_post_no_title">(dim teit)</string>
@@ -506,6 +508,7 @@ Language: cy_GB
     <string name="sign_out_wpcom_confirm">Bydd allgofnodi o\'ch cyfrif yn tynnu holl fanylion WordPress.com @%s o\'r ddyfais hon, gan gynnwys drafftiau a newidiadau lleol.</string>
     <string name="stats_generic_error">Methu llwytho\'r ystadegau angenrheidiol</string>
     <string name="auth_required">Mewngofnodwch eto i barhau.</string>
+    <string name="invalid_verification_code">Cod dilysu annilys</string>
     <string name="verification_code">Cod dilysu</string>
     <string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
     <string name="language">Iaith</string>
