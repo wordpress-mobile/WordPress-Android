@@ -318,4 +318,7 @@
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <!-- quick start -->
+    <dimen name="dialog_snackbar_max_icons_size">16dp</dimen>
 </resources>
