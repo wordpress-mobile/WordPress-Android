@@ -18,7 +18,12 @@ import javax.inject.Singleton
 @Singleton
 class ImageManager @Inject constructor() {
     @JvmOverloads
-    fun load(imageView: ImageView, imgUrl: String, @DrawableRes placeholder: Int? = null, scaleType: ImageView.ScaleType) {
+    fun load(
+        imageView: ImageView,
+        imgUrl: String,
+        @DrawableRes placeholder: Int? = null,
+        scaleType: ImageView.ScaleType
+    ) {
         val request = GlideApp.with(imageView.context)
                 .load(imgUrl)
                 .let { if (placeholder != null) it.fallback(placeholder) else it }
@@ -56,7 +61,7 @@ class ImageManager @Inject constructor() {
     private fun applyScaleType(request: GlideRequest<Drawable>, scaleType: ScaleType) {
         when (scaleType) {
             ImageView.ScaleType.CENTER -> {
-            }// default
+            } // default
             ImageView.ScaleType.MATRIX -> AppLog.e(AppLog.T.UTILS, "ScaleType matrix is not supported.")
             ImageView.ScaleType.CENTER_CROP -> request.centerCrop()
             ImageView.ScaleType.CENTER_INSIDE -> request.centerInside()
@@ -74,7 +79,12 @@ class ImageManager @Inject constructor() {
                 ReplaceWith("imageManager.load(imageView, imgUrl, placeholder, scaleType)",
                         "org.wordpress.android.ui.ImageManager"))
         @JvmOverloads
-        fun loadImage(imageView: ImageView, imgUrl: String, @DrawableRes placeholder: Int? = null, scaleType: ImageView.ScaleType) {
+        fun loadImage(
+            imageView: ImageView,
+            imgUrl: String,
+            @DrawableRes placeholder: Int? = null,
+            scaleType: ImageView.ScaleType
+        ) {
             ImageManager().load(imageView, imgUrl, placeholder, scaleType)
         }
 
@@ -110,7 +120,5 @@ class ImageManager @Inject constructor() {
         fun clear(imageView: ImageView) {
             ImageManager().cancelRequestAndClearImageView(imageView)
         }
-
-
     }
 }
