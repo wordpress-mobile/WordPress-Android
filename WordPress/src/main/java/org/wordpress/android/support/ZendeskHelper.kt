@@ -138,9 +138,17 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
-    fun enablePushNotifications() {
+    fun enablePushNotifications(accountStore: AccountStore?) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
+        }
+        if (accountStore?.hasAccessToken() != true) {
+            // Push notifications only available while logged in with WordPress.com account
+            return
+        }
+        if (zendeskPushRegistrationProvider?.isRegisteredForPush == true) {
+            // already enabled
+            return
         }
         pushNotificationDeviceToken?.let { deviceToken ->
             zendeskPushRegistrationProvider?.registerWithDeviceIdentifier(
@@ -161,6 +169,10 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     fun disablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
+        }
+        if (zendeskPushRegistrationProvider?.isRegisteredForPush != true) {
+            // already disabled
+            return
         }
         zendeskPushRegistrationProvider?.unregisterDevice(
                 object : ZendeskCallback<Void>() {
