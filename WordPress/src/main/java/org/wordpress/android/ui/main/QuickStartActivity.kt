@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -26,6 +27,10 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
 
     private val site: Int = getSelectedSite()
     private val skipAllTasksDialogTag = "skip_all_tasks_dialog"
+
+    companion object {
+        const val ARG_QUICK_START_TASK = "quick_start_task"
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
@@ -59,13 +64,11 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
     // TODO click listeners will lead to actual tutorials
     private fun setTasksClickListeners() {
         findViewById<RelativeLayout>(R.id.layout_view_site).setOnClickListener {
-            quickStartStore.setDoneTask(site.toLong(), QuickStartTask.VIEW_SITE, true)
-            checkCompletedTasks()
+            startTask(QuickStartTask.VIEW_SITE)
         }
 
         findViewById<RelativeLayout>(R.id.layout_browse_themes).setOnClickListener {
-            quickStartStore.setDoneTask(site.toLong(), QuickStartTask.CHOOSE_THEME, true)
-            checkCompletedTasks()
+            startTask(QuickStartTask.CHOOSE_THEME)
         }
 
         findViewById<RelativeLayout>(R.id.layout_customize_site).setOnClickListener {
@@ -91,6 +94,13 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
         findViewById<AppCompatButton>(R.id.button_skip_all).setOnClickListener {
             showSkipDialog()
         }
+    }
+
+    private fun startTask(task: QuickStartTask) {
+        val intent = Intent()
+        intent.putExtra(ARG_QUICK_START_TASK, task)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     private fun showSkipDialog() {
