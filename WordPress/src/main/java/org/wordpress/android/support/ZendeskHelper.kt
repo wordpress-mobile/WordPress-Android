@@ -73,6 +73,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     fun showZendeskHelpCenter(
         context: Context,
         siteStore: SiteStore,
+        accountStore: AccountStore?,
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>? = null
@@ -88,6 +89,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         } else {
             zendeskInstance.setIdentity(createZendeskIdentity(null, null))
         }
+        enablePushNotifications(accountStore)
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
                 .withContactUsButtonVisible(isIdentityAvailable)
@@ -115,6 +117,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
         supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+            enablePushNotifications(accountStore)
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
@@ -133,6 +136,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
         supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+            enablePushNotifications(accountStore)
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }

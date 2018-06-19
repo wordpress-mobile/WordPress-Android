@@ -93,8 +93,8 @@ class HelpActivity : AppCompatActivity() {
     }
 
     private fun showZendeskFaq() {
-        zendeskHelper
-                .showZendeskHelpCenter(this, siteStore, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+        zendeskHelper.showZendeskHelpCenter(this, siteStore, accountStore, originFromExtras, selectedSiteFromExtras,
+                extraTagsFromExtras)
     }
 
     private fun refreshContactEmailText() {
