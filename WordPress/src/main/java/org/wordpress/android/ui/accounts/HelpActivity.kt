@@ -88,18 +88,16 @@ class HelpActivity : AppCompatActivity() {
     }
 
     private fun createNewZendeskTicket() {
-        zendeskHelper.createNewTicket(this, accountStore, siteStore, originFromExtras,
-                selectedSiteFromExtras, extraTagsFromExtras)
+        zendeskHelper.createNewTicket(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun showZendeskTickets() {
-        zendeskHelper.showAllTickets(this, accountStore, siteStore, originFromExtras,
-                selectedSiteFromExtras, extraTagsFromExtras)
+        zendeskHelper.showAllTickets(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun showZendeskFaq() {
         zendeskHelper
-                .showZendeskHelpCenter(this, siteStore, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+                .showZendeskHelpCenter(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun refreshContactEmailText() {

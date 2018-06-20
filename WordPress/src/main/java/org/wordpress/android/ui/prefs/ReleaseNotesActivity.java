@@ -97,8 +97,7 @@ public class ReleaseNotesActivity extends WebViewActivity {
             case R.id.menu_bug:
                 HelpActivity.Origin origin = (HelpActivity.Origin) getIntent().getSerializableExtra(KEY_ORIGIN);
                 SiteModel selectedSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-                mZendeskHelper
-                        .createNewTicket(ReleaseNotesActivity.this, mAccountStore, mSiteStore, origin, selectedSite);
+                mZendeskHelper.createNewTicket(ReleaseNotesActivity.this, origin, selectedSite);
                 return true;
         }
 

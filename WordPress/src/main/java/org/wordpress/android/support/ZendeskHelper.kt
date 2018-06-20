@@ -10,7 +10,6 @@ import com.zendesk.service.ZendeskCallback
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -39,7 +38,11 @@ import zendesk.support.requestlist.RequestListActivity
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
 
-class ZendeskHelper(private val supportHelper: SupportHelper) {
+class ZendeskHelper(
+    private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
+    private val supportHelper: SupportHelper
+) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
 
@@ -92,7 +95,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
      */
     fun showZendeskHelpCenter(
         context: Context,
-        siteStore: SiteStore,
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>? = null
@@ -107,7 +109,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
                 .withShowConversationsMenuButton(isIdentityAvailable)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
         if (isIdentityAvailable) {
-            builder.show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+            builder.show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         } else {
             builder.show(context)
         }
@@ -121,8 +123,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     @JvmOverloads
     fun createNewTicket(
         context: Context,
-        accountStore: AccountStore?,
-        siteStore: SiteStore,
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>? = null
@@ -130,9 +130,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        requireIdentity(context, accountStore?.account, selectedSite) {
+        requireIdentity(context, selectedSite) {
             RequestActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
     }
 
@@ -143,8 +143,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
      */
     fun showAllTickets(
         context: Context,
-        accountStore: AccountStore,
-        siteStore: SiteStore,
         origin: Origin?,
         selectedSite: SiteModel? = null,
         extraTags: List<String>? = null
@@ -152,9 +150,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        requireIdentity(context, accountStore.account, selectedSite) {
+        requireIdentity(context, selectedSite) {
             RequestListActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
     }
 
@@ -237,7 +235,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
      */
     private fun requireIdentity(
         context: Context,
-        account: AccountModel?,
         selectedSite: SiteModel?,
         onIdentitySet: () -> Unit
     ) {
@@ -246,7 +243,8 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
             onIdentitySet()
             return
         }
-        val (emailSuggestion, nameSuggestion) = supportHelper.getSupportEmailAndNameSuggestion(account, selectedSite)
+        val (emailSuggestion, nameSuggestion) = supportHelper
+                .getSupportEmailAndNameSuggestion(accountStore.account, selectedSite)
         supportHelper.showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion) { email, name ->
             AppPrefs.setSupportEmail(email)
             AppPrefs.setSupportName(name)
@@ -293,15 +291,15 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
  */
 private fun buildZendeskConfig(
     context: Context,
-    siteStore: SiteStore,
+    allSites: List<SiteModel>?,
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null
 ): UiConfig {
     return RequestActivity.builder()
-            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, siteStore, selectedSite))
+            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, allSites, selectedSite))
             .withRequestSubject(ZendeskConstants.ticketSubject)
-            .withTags(buildZendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
+            .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
             .config()
 }
 
@@ -311,7 +309,7 @@ private fun buildZendeskConfig(
  */
 private fun buildZendeskCustomFields(
     context: Context,
-    siteStore: SiteStore,
+    allSites: List<SiteModel>?,
     selectedSite: SiteModel?
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
@@ -321,7 +319,7 @@ private fun buildZendeskCustomFields(
     }
     return listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(siteStore.sites)),
+            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
             CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),

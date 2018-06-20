@@ -563,7 +563,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
-        mZendeskHelper.createNewTicket(this, null, siteStore, Origin.LOGIN_SITE_ADDRESS, null);
+        mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
     }
 
     @Override
