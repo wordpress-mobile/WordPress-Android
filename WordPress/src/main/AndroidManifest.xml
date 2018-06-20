@@ -230,7 +230,7 @@
             android:theme="@style/Calypso.NoActionBar"
             android:label="" />
         <activity
-            android:name=".ui.pages.PageListActivity"
+            android:name=".ui.pages.PagesActivity"
             android:theme="@style/Calypso.NoActionBar"
             android:label="@string/pages" />
         <activity

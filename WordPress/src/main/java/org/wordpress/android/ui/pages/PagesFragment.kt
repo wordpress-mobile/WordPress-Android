@@ -25,8 +25,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
 import javax.inject.Inject
 
-
-
 class PagesFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
@@ -80,32 +78,19 @@ class PagesFragment : Fragment() {
             }
         }
         tabLayout.setupWithViewPager(pages_pager)
-//        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab) {
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab) {
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab) {
-//            }
-//        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)
-
         val myActionMenuItem = menu?.findItem(R.id.action_search)
         myActionMenuItem?.setOnActionExpandListener(object: OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                viewModel.searchOpen()
-                return true
+                return viewModel.searchExpanded()
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                viewModel.searchClose()
-                return true
+                return viewModel.searchCollapsed()
             }
         })
         val searchView = myActionMenuItem?.actionView as SearchView

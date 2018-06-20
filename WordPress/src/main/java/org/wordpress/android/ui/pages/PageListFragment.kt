@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView.Adapter
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +28,7 @@ class PageListFragment : Fragment() {
 
     companion object {
         const val fragmentKey = "fragment_key"
-        const val typeKey = "type_key"
+        private const val typeKey = "type_key"
 
         enum class Type(val text: Int) {
             PUBLISHED(R.string.pages_published),
@@ -82,11 +80,7 @@ class PageListFragment : Fragment() {
         recyclerView.layoutManager = linearLayoutManager
 
 
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
-                pullToRefresh,
-                { viewModel.refresh() }
-        )
-
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) { viewModel.refresh() }
         (activity?.application as WordPress).component()?.inject(this)
 
         val key = arguments?.getString(fragmentKey)
@@ -117,21 +111,4 @@ class PageListFragment : Fragment() {
         outState.putParcelable(listStateKey, recyclerView.layoutManager.onSaveInstanceState())
         super.onSaveInstanceState(outState)
     }
-}
-
-class PostListAdapter : Adapter<PostViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-}
-
-class PostViewHolder(itemView: View) : ViewHolder(itemView) {
 }

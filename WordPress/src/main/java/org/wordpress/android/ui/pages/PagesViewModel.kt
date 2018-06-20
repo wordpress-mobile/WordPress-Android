@@ -17,11 +17,13 @@ class PagesViewModel
         return true
     }
 
-    fun searchOpen() {
+    fun searchExpanded(): Boolean {
         mutableSearchExpanded.postValue(true)
+        return true
     }
 
-    fun searchClose() {
+    fun searchCollapsed(): Boolean {
         mutableSearchExpanded.postValue(false)
+        return true
     }
 }

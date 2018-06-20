@@ -16,10 +16,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import javax.inject.Inject
 
 class PageListViewModel
-@Inject constructor(
-    val dispatcher: Dispatcher,
-    private val postStore: PostStore
-) : ViewModel() {
+@Inject constructor(val dispatcher: Dispatcher, private val postStore: PostStore) : ViewModel() {
     private var initialized: Boolean = false
     private val mutableData = MutableLiveData<UiModel>()
     private val mutableState = MutableLiveData<UiState>()
