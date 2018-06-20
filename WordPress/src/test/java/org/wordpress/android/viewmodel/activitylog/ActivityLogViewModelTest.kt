@@ -77,18 +77,18 @@ class ActivityLogViewModelTest {
 
     @Test
     fun fetchesEventsOnPullToRefresh() {
-        viewModel.pullToRefresh()
+        viewModel.onPullToRefresh()
 
         assertFetchEvents()
     }
 
     @Test
     fun doesNotFetchEventsWhenAlreadyFetching() {
-        viewModel.pullToRefresh()
+        viewModel.onPullToRefresh()
 
         reset(dispatcher)
 
-        viewModel.pullToRefresh()
+        viewModel.onPullToRefresh()
 
         verify(dispatcher, never()).dispatch(any())
     }
@@ -96,7 +96,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedPostsDataAndChangesStatusIfCanLoadMore() {
         val canLoadMore = true
-        viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         assertEquals(
                 viewModel.events.value,
@@ -109,7 +109,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedLoadsMoreDataIfCanLoadMore() {
         val canLoadMore = true
-        viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.loadMore()
 
@@ -119,7 +119,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedPostsDataAndChangesStatusIfCannotLoadMore() {
         val canLoadMore = false
-        viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         assertEquals(
                 viewModel.events.value,
@@ -132,7 +132,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() {
         val canLoadMore = false
-        viewModel.onActivityLogFetched(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.loadMore()
 
@@ -142,7 +142,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() {
         val canLoadMore = true
-        viewModel.onActivityLogFetched(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
+        viewModel.onEventsUpdated(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
 
         verify(store, never()).getActivityLogForSite(site, false)
     }
@@ -150,7 +150,7 @@ class ActivityLogViewModelTest {
     @Test
     fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() {
         val canLoadMore = true
-        viewModel.onActivityLogFetched(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
+        viewModel.onEventsUpdated(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
         assertTrue(events.last()?.get(0)?.isHeaderVisible == true)
         assertTrue(events.last()?.get(1)?.isHeaderVisible == false)

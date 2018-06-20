@@ -87,7 +87,7 @@ class ActivityLogViewModel @Inject constructor(
         this.site = site
 
         reloadEvents()
-        fetchEvents(false)
+        requestEventsUpdate(false)
 
         rewindStatusService.start(site)
         rewindStatusService.rewindProgress.observeForever(rewindProgressObserver)
@@ -95,34 +95,45 @@ class ActivityLogViewModel @Inject constructor(
         isStarted = true
     }
 
-    private fun reloadEvents() {
-        val eventList = activityLogStore.getActivityLogForSite(site, false)
-        val items = ArrayList<ActivityLogListItem>(eventList.map { model -> ActivityLogListItem.Event(model) })
-
-        if (isRewindInProgress) {
-            disableEvents(items)
-
-            val activityId = rewindStatusService.rewindProgress.value?.activityId
-            getRewindProgressItem(activityId)?.let {
-                items.add(0, it)
-            }
-        }
-        _events.postValue(items)
-    }
-
-    private fun disableEvents(items: List<ActivityLogListItem>) {
-        items.forEach {
-            it.isButtonVisible = false
-        }
-    }
-
-    fun pullToRefresh() {
-        fetchEvents(false)
+    fun onPullToRefresh() {
+        requestEventsUpdate(false)
     }
 
     fun onItemClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event && !isRewindInProgress) {
             _showItemDetail.postValue(item)
+        }
+    }
+
+    fun onRewindButtonClicked(item: ActivityLogListItem) {
+        _showRewindDialog.postValue(item)
+    }
+
+    fun onRewindConfirmed(rewindId: String) {
+        rewindStatusService.rewind(rewindId, site)
+    }
+
+    private fun reloadEvents() {
+        val eventList = activityLogStore.getActivityLogForSite(site, false)
+        val items = ArrayList<ActivityLogListItem>(eventList.map { model -> ActivityLogListItem.Event(model) })
+
+        if (isRewindInProgress) {
+            disableListActions(items)
+            insertRewindProgressItem(items)
+        }
+        _events.postValue(items)
+    }
+
+    private fun insertRewindProgressItem(items: ArrayList<ActivityLogListItem>) {
+        val activityId = rewindStatusService.rewindProgress.value?.activityId
+        getRewindProgressItem(activityId)?.let {
+            items.add(0, it)
+        }
+    }
+
+    private fun disableListActions(items: List<ActivityLogListItem>) {
+        items.forEach {
+            it.isButtonVisible = false
         }
     }
 
@@ -142,40 +153,32 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    fun onRewindButtonClicked(item: ActivityLogListItem) {
-        _showRewindDialog.postValue(item)
-    }
-
-    fun onRewindConfirmed(rewindId: String) {
-        rewindStatusService.rewind(rewindId, site)
-    }
-
-    private fun fetchEvents(loadMore: Boolean) {
-        if (shouldFetchEvents(loadMore)) {
-            val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
+    private fun requestEventsUpdate(isLoadingMore: Boolean) {
+        if (canRequestEventsUpdate(isLoadingMore)) {
+            val newStatus = if (isLoadingMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.postValue(newStatus)
-            val payload = ActivityLogStore.FetchActivityLogPayload(site, loadMore)
+            val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
         }
     }
 
-    private fun shouldFetchEvents(loadMore: Boolean): Boolean {
+    private fun canRequestEventsUpdate(isLoadingMore: Boolean): Boolean {
         return when {
             isLoadingInProgress -> false
-            loadMore -> _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
+            isLoadingMore -> _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
             else -> true
         }
     }
 
     fun loadMore() {
-        fetchEvents(true)
+        requestEventsUpdate(true)
     }
 
     // Network Callbacks
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
-    fun onActivityLogFetched(event: OnActivityLogFetched) {
+    fun onEventsUpdated(event: OnActivityLogFetched) {
         if (event.isError) {
             _eventListStatus.postValue(ActivityLogListStatus.ERROR)
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
