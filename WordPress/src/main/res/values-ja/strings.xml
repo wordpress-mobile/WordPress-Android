@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-01 02:54:08+0000
+Translation-Revision-Date: 2018-06-12 09:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">%s をタップし、投稿をリストに保存します。</string>
+    <string name="reader_empty_saved_posts_title">投稿がまだ保存されていません。</string>
+    <string name="reader_bookmark_snack_title">投稿を保存しました</string>
+    <string name="reader_bookmark_snack_btn">すべて表示</string>
+    <string name="reader_btn_bookmarked">保存しました</string>
+    <string name="reader_btn_bookmark">保存</string>
+    <string name="reader_remove_bookmark">保存済み投稿から削除</string>
+    <string name="reader_add_bookmark">保存済み投稿へ追加</string>
+    <string name="reader_save_for_later_title">保存済みの投稿</string>
+    <string name="activity_log_empty_list">イベントがまだ記録されていません</string>
+    <string name="removed">削除</string>
     <string name="tabbar_accessibility_label_write">新規投稿。新規投稿を作成します。</string>
     <string name="my_site_icon_content_description">サイトアイコンを変更</string>
     <string name="my_site_icon_dialog_cancel_button">キャンセル</string>
@@ -298,7 +309,6 @@ Language: ja_JP
     <string name="signup_magic_link_message">マジック登録リンクを送信しました。このデバイスでメールをチェックして、メールにあるリンクをタップして登録を完了してください。</string>
     <string name="signup_magic_link_error_button_positive">再試行</string>
     <string name="signup_magic_link_error_button_negative">閉じる</string>
-    <string name="signup_magic_link_error">メールの送信中にエラーが発生しました。今すぐ再試行するか、閉じてから後で再試行できます。</string>
     <string name="signup_epilogue_hint_username">ユーザー名</string>
     <string name="signup_epilogue_hint_password_detail">直前に使用したものと同様のマジックリンクを使用していつでもログインできますが、希望される場合はパスワードを設定することもできます。</string>
     <string name="signup_epilogue_hint_password">パスワード (オプション)</string>
@@ -881,6 +891,7 @@ Language: ja_JP
     <string name="invite_names_title">ユーザー名またはメールアドレス</string>
     <string name="invite_people">他の人を招待</string>
     <string name="my_site_header_external">外部</string>
+    <string name="send_link">リンクを送信</string>
     <string name="label_clear_search_history">検索履歴の削除</string>
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
     <string name="reader_empty_posts_in_search_description">お使いの言語では %s に関する投稿は見つかりませんでした。</string>
@@ -908,6 +919,7 @@ Language: ja_JP
     <string name="checking_email">メールをチェック</string>
     <string name="magic_link_unavailable_error_message">現在ご利用いただけません。パスワードを入力してください</string>
     <string name="logging_in">ログインしています</string>
+    <string name="enter_your_password_instead">代わりにパスワードを入力</string>
     <string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
     <string name="new_editor_reflection_error">ビジュアルエディターはお使いの端末との互換性がありません。自動で無効化されました。</string>
     <string name="stats_insights_latest_post_no_title">(タイトルなし)</string>
@@ -1264,6 +1276,7 @@ Language: ja_JP
     <string name="deselect_all">すべて選択解除</string>
     <string name="stats_generic_error">必須の統計情報が読み込めませんでした</string>
     <string name="auth_required">続けるにはログインしてください。</string>
+    <string name="invalid_verification_code">無効な認証コード</string>
     <string name="verification_code">認証コード</string>
     <string name="editor_toast_invalid_path">無効なファイルパス</string>
     <string name="language">言語</string>

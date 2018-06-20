@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-26 08:06:09+0000
+Translation-Revision-Date: 2018-06-13 21:45:40+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="signup_magic_link_title">Wysłano Magic Linka</string>
+    <string name="signup_email_screen_title">Rejestracja przy użyciu emaila</string>
+    <string name="verification_2fa_screen_title">Weryfikacja kodu</string>
+    <string name="selfhosted_site_login_title">Dane uwierzytelniające logowania</string>
+    <string name="magic_link_sent_login_title">Wysłano Magic Linka</string>
+    <string name="magic_link_login_title">Logowanie przy użyciu Magic Linka</string>
+    <string name="site_address_login_title">Logowanie adresem witryny</string>
+    <string name="email_address_login_title">Logowanie adresem email</string>
+    <string name="alternatively">Alternatywnie:</string>
+    <string name="reader_empty_saved_posts_description">Stuknij %s aby zapisać wpis na swojej liście.</string>
+    <string name="reader_bookmark_snack_title">Wpis zapisano</string>
+    <string name="reader_bookmark_snack_btn">Zobacz wszystkie</string>
+    <string name="reader_btn_bookmarked">Zapisano</string>
+    <string name="reader_btn_bookmark">Zapisz</string>
+    <string name="reader_remove_bookmark">Usuń z zapisanych wpisów</string>
+    <string name="reader_add_bookmark">Dodaj do zapisanych wpisów</string>
+    <string name="reader_save_for_later_title">Zapisane wpisy</string>
+    <string name="activity_log_empty_list">Nie zarejestrowano żadnych wydarzeń</string>
+    <string name="removed">Usunięto</string>
     <string name="tabbar_accessibility_label_write">Nowy wpis. Napisz nowy wpis.</string>
     <string name="my_site_icon_content_description">Zmień ikonę witryny</string>
     <string name="my_site_icon_dialog_cancel_button">Anuluj</string>
@@ -301,7 +320,7 @@ Language: pl
     <string name="signup_magic_link_message">Wysłaliśmy tobie odnośnik do rejestracji! Sprawdź swoją pocztę na tym urządzeniu i stuknij na odnośnik we wiadomości email w celu finalizacji rejestracji.</string>
     <string name="signup_magic_link_error_button_positive">Ponów próbę</string>
     <string name="signup_magic_link_error_button_negative">Zamknij</string>
-    <string name="signup_magic_link_error">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować później.</string>
+    <string name="signup_magic_link_error">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować ponownie później.</string>
     <string name="signup_epilogue_hint_username">Nazwa użytkownika</string>
     <string name="signup_epilogue_hint_password_detail">Możesz zawsze zalogować się za pomocą odnośnika którego właśnie użyłeś, ale możesz również założyć hasło jeśli wolisz.</string>
     <string name="signup_epilogue_hint_password">Hasło (opcjonalnie)</string>
@@ -885,6 +904,7 @@ Language: pl
     <string name="invite_names_title">Nazwy użytkowników lub adresy e–mail</string>
     <string name="invite_people">Zaproś ludzi</string>
     <string name="my_site_header_external">Na zewnątrz</string>
+    <string name="send_link">Wyślij odnośnik</string>
     <string name="label_clear_search_history">Usuń historię wyszukiwania</string>
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
     <string name="reader_empty_posts_in_search_description">Nie odnaleziono żadnych wpisów zawierających %s w twoim języku</string>
@@ -912,6 +932,7 @@ Language: pl
     <string name="checking_email">Sprawdzanie emaili</string>
     <string name="magic_link_unavailable_error_message">Aktualnie niedostępne. Proszę wprowadzić hasło</string>
     <string name="logging_in">Logowanie</string>
+    <string name="enter_your_password_instead">Wprowadź swoje hasło</string>
     <string name="web_address_dialog_hint">Prezentowany kiedy dodajesz komentarze.</string>
     <string name="new_editor_reflection_error">Edytor widoku nie jest kompatybilny z twoim urządzeniem. Został automatycznie wyłączony.</string>
     <string name="stats_insights_latest_post_no_title">(brak tytułu)</string>
@@ -1268,6 +1289,7 @@ Language: pl
     <string name="deselect_all">Odznacz wszystko</string>
     <string name="stats_generic_error">Nie udało się załadować wymaganych statystyk</string>
     <string name="auth_required">Zaloguj się ponownie, by kontynuować.</string>
+    <string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
     <string name="verification_code">Kod weryfikacyjny</string>
     <string name="editor_toast_invalid_path">Niewłaściwa ścieżka do pliku</string>
     <string name="language">Język</string>

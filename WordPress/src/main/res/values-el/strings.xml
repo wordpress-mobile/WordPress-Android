@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-31 14:05:06+0000
+Translation-Revision-Date: 2018-06-15 08:50:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
+    <string name="signup_email_screen_title">Εγγραφή με Email</string>
+    <string name="signup_magic_link_title">Ο μαγικός σύνδεσμος στάλθηκε</string>
+    <string name="selfhosted_site_login_title">Στοιχεία εισόδου</string>
+    <string name="reader_bookmark_snack_btn">Προβολή όλων</string>
     <string name="plugin_info_requires_version">Απαιτεί WordPress Έκδοση</string>
     <string name="plugin_info_lastupdated">Τελευταία Ενημέρωση</string>
     <string name="plugin_info_version">Έκδοση</string>
@@ -302,6 +306,7 @@ Language: el_GR
     <string name="invite_message_title">Προσαρμοσμένο Μήνυμα</string>
     <string name="invite">Πρόσκληση</string>
     <string name="invite_names_title">Ονόματα Χρήστη ή Ηλ. Διευθύνσεις</string>
+    <string name="send_link">Αποστολή συνδέσμου</string>
     <string name="my_site_header_external">Εξωτερική</string>
     <string name="invite_people">Πρόσκαλέστε Άτομα</string>
     <string name="label_clear_search_history">Καθαρισμός ιστορικού αναζήτησης</string>
@@ -331,6 +336,7 @@ Language: el_GR
     <string name="checking_email">Έλεγχος e–mail</string>
     <string name="magic_link_unavailable_error_message">Μη διαθέσιμο αυτή τη στιγμή. Παρακαλούμε εισάγετε το συνθηματικό σας</string>
     <string name="logging_in">Γίνεται σύνδεση</string>
+    <string name="enter_your_password_instead">Εναλλακτικά, εισάγετε το συνθηματικό σας</string>
     <string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
     <string name="new_editor_reflection_error">Ο κειμενογράφος δεν είναι συμβατός με τη συσκευή σας.\nΑπενεργοποιήθηκε αυτόματα.</string>
     <string name="stats_insights_latest_post_no_title">(δίχως τίτλο)</string>
@@ -688,6 +694,7 @@ Language: el_GR
     <string name="stats_generic_error">Τα Στατιστικά που ζητήθηκαν δεν μπόρεσαν να φορτωθούν</string>
     <string name="language">Γλώσσα</string>
     <string name="verification_code">Κωδικός επαλήθευσης</string>
+    <string name="invalid_verification_code">Μη έγκυρος κωδικός επαλήθευσης</string>
     <string name="auth_required">Συνδεθείτε ξανά για να συνεχίσετε.</string>
     <string name="editor_toast_invalid_path">Μη έγκυρη διαδρομή αρχείου</string>
     <string name="pages_fetching">Ανάκτηση σελίδων…</string>

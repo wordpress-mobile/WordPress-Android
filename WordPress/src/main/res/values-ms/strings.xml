@@ -475,6 +475,7 @@ Language: ms
     <string name="invite_names_title">Nama Pengguna atau Emel</string>
     <string name="invite_people">Jemput Orang</string>
     <string name="my_site_header_external">Luaran</string>
+    <string name="send_link">Hantar pautan</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
     <string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
     <string name="reader_empty_posts_in_search_description">Tiada kiriman dijumpai untuk %s bagi bahasa anda</string>
@@ -502,6 +503,7 @@ Language: ms
     <string name="checking_email">Menyemak emel</string>
     <string name="magic_link_unavailable_error_message">Tidak terdapat pada masa ini. Sila masukkan kata laluan anda</string>
     <string name="logging_in">Melog masuk</string>
+    <string name="enter_your_password_instead">Sebaliknya masukkan kata laluan anda</string>
     <string name="web_address_dialog_hint">Tunjukkan kepada umum apabila anda mengulas.</string>
     <string name="new_editor_reflection_error">Penyunting visual tidak serasi dengan peranti anda. Ia dinyah boleh\nsecara automatik</string>
     <string name="stats_insights_latest_post_no_title">(tiada tajuk)</string>
@@ -855,6 +857,7 @@ Language: ms
     <string name="deselect_all">Nyahpilih semua</string>
     <string name="stats_generic_error">Statistik Yang Diperlukan tidak dapat dimuatkan</string>
     <string name="auth_required">Log masuk semula untuk meneruskan.</string>
+    <string name="invalid_verification_code">Kod pengesahan tidak sah</string>
     <string name="verification_code">Kod pengesahan</string>
     <string name="editor_toast_invalid_path">Laluan fail tidak sah</string>
     <string name="language">Bahasa</string>

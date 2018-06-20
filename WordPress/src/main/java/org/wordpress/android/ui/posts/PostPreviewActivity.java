@@ -41,6 +41,9 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
@@ -284,7 +287,10 @@ public class PostPreviewActivity extends AppCompatActivity {
     private void publishPost() {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
             if (!mPost.isLocalDraft()) {
-                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite);
+                Map<String, Object> properties = new HashMap<>();
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                        PostUtils.contentContainsGutenbergBlocks(mPost.getContent()));
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite, properties);
             }
 
             if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {

@@ -4,20 +4,45 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_gravity="center"
-              android:paddingLeft="@dimen/margin_extra_large"
-              android:paddingRight="@dimen/margin_extra_large"
-              android:paddingTop="@dimen/margin_medium"
-              android:paddingBottom="@dimen/margin_medium"
-              android:orientation="vertical"
-    android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large">
+              android:orientation="vertical">
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/note_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/grey_dark"
-        android:textColorLink="@color/grey_dark"
-        app:fixWidowWords="true"/>
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/note_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/grey_dark"
+            android:textColorLink="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            app:fixWidowWords="true"/>
+
+        <Button
+            android:id="@+id/note_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end|center_vertical"
+            android:text="@string/comment_read_source_post"
+            android:textColor="@color/blue_medium"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/notifications_list_divider"
+        android:visibility="gone"/>
 </LinearLayout>

@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -44,6 +45,8 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
@@ -99,7 +102,9 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderCustomViewListener,
         ReaderInterfaces.OnFollowListener,
         ReaderWebViewPageFinishedListener,
-        ReaderWebViewUrlClickListener {
+        ReaderWebViewUrlClickListener,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface {
+    private static final String BOOKMARKS_SAVED_LOCALLY_DIALOG = "bookmarks_saved_locally_dialog";
     private long mPostId;
     private long mBlogId;
     private DirectOperation mDirectOperation;
@@ -526,12 +531,37 @@ public class ReaderPostDetailFragment extends Fragment
         } else {
             ReaderPostActions.addToBookmarked(mPost);
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS);
-            showBookmarkSnackbar();
+            if (AppPrefs.shouldShowBookmarksSavedLocallyDialog()) {
+                AppPrefs.setBookmarksSavedLocallyDialogShown();
+                showBookmarksSavedLocallyDialog();
+            } else {
+                // show snackbar when not in saved posts list
+                showBookmarkSnackbar();
+            }
         }
 
         mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
 
         updateBookmarkView();
+    }
+
+    private void showBookmarksSavedLocallyDialog() {
+        BasicFragmentDialog basicFragmentDialog = new BasicFragmentDialog();
+        basicFragmentDialog.initialize(BOOKMARKS_SAVED_LOCALLY_DIALOG,
+                getString(R.string.reader_save_posts_locally_dialog_title),
+                getString(R.string.reader_save_posts_locally_dialog_message),
+                getString(R.string.dialog_button_ok),
+                null, null);
+        basicFragmentDialog.show(getFragmentManager(), BOOKMARKS_SAVED_LOCALLY_DIALOG);
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
+        switch (instanceTag) {
+            case BOOKMARKS_SAVED_LOCALLY_DIALOG:
+            showBookmarkSnackbar();
+            break;
+        }
     }
 
     private void showBookmarkSnackbar() {
@@ -1432,7 +1462,7 @@ public class ReaderPostDetailFragment extends Fragment
      * can we show the footer bar which contains the like & comment counts?
      */
     private boolean canShowFooter() {
-        return canShowLikeCount() || canShowCommentCount();
+        return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton();
     }
 
     private boolean canShowCommentCount() {
@@ -1448,7 +1478,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private boolean canShowBookmarkButton() {
-        return hasPost() && (mPost.isWP() || mPost.isJetpack) && !mPost.isDiscoverPost();
+        return hasPost() && !mPost.isDiscoverPost();
     }
 
     private boolean canShowLikeCount() {

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-31 07:03:20+0000
+Translation-Revision-Date: 2018-06-12 07:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">Tik op %s om een bericht op te slaan in je lijst.</string>
+    <string name="reader_empty_saved_posts_title">Nog geen berichten opgeslagen!</string>
+    <string name="reader_bookmark_snack_title">Bericht opgeslagen</string>
+    <string name="reader_bookmark_snack_btn">Alles weergeven</string>
+    <string name="reader_btn_bookmarked">Opgeslagen</string>
+    <string name="reader_btn_bookmark">Opslaan</string>
+    <string name="reader_remove_bookmark">Verwijderen uit opgeslagen berichten</string>
+    <string name="reader_add_bookmark">Toevoegen aan opgeslagen berichten</string>
+    <string name="reader_save_for_later_title">Opgeslagen berichten</string>
+    <string name="activity_log_empty_list">Nog geen evenementen geregistreerd</string>
+    <string name="removed">Verwijderd</string>
     <string name="tabbar_accessibility_label_write">Nieuw bericht. Een nieuw bericht opstellen.</string>
     <string name="my_site_icon_content_description">Favicon wijzigen</string>
     <string name="my_site_icon_dialog_cancel_button">Annuleren</string>
@@ -835,6 +846,7 @@ Language: nl
     <string name="invite_names_title">Gebruikersnamen of e–mails</string>
     <string name="invite_people">Mensen uitnodigen</string>
     <string name="my_site_header_external">Extern</string>
+    <string name="send_link">Stuur link</string>
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
     <string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
@@ -862,6 +874,7 @@ Language: nl
     <string name="checking_email">E–mail wordt gecontroleerd</string>
     <string name="magic_link_unavailable_error_message">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
     <string name="logging_in">Inloggen</string>
+    <string name="enter_your_password_instead">Voer je wachtwoord in</string>
     <string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
     <string name="new_editor_reflection_error">Visual Editor is niet compatibel met uw apparaat. Het is\n automatisch uitgeschakeld.</string>
     <string name="stats_insights_latest_post_no_title">(geen titel)</string>
@@ -1218,6 +1231,7 @@ Language: nl
     <string name="deselect_all">Alles deselecteren</string>
     <string name="stats_generic_error">Benodigde statistieken konden niet geladen worden</string>
     <string name="auth_required">Log opnieuw in om door te gaan.</string>
+    <string name="invalid_verification_code">Ongeldige verificatiecode</string>
     <string name="verification_code">Verificatiecode</string>
     <string name="editor_toast_invalid_path">Ongeldig bestandspad</string>
     <string name="language">Taal</string>
