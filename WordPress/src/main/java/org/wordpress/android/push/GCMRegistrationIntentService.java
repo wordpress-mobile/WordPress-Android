@@ -12,7 +12,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -25,7 +24,6 @@ import static org.wordpress.android.JobServiceId.JOB_GCM_REG_SERVICE_ID;
 
 public class GCMRegistrationIntentService extends JobIntentService {
     @Inject AccountStore mAccountStore;
-    @Inject ZendeskHelper mZendeskHelper;
 
     @Override
     public void onCreate() {
@@ -72,7 +70,8 @@ public class GCMRegistrationIntentService extends JobIntentService {
                 NotificationsUtils.registerDeviceForPushNotifications(this, gcmToken);
             }
 
-            mZendeskHelper.enablePushNotifications();
+            // Register to other kind of notifications
+            // TODO: Handle Zendesk PNs
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
             PreferenceManager.getDefaultSharedPreferences(this).edit()

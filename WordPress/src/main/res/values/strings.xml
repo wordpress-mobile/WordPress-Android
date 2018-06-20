@@ -1538,8 +1538,6 @@
     <string name="application_log_button">Application log</string>
     <string name="support_contact_email">Contact email</string>
     <string name="support_contact_email_not_set">Not set</string>
-    <string name="support_push_notification_title">WordPress</string>
-    <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>

@@ -115,7 +115,6 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
-    public static final String ARG_ME = "show_me";
 
     private WPMainNavigationView mBottomNav;
 
@@ -289,9 +288,6 @@ public class WPMainActivity extends AppCompatActivity
                     break;
                 case ARG_READER:
                     mBottomNav.setCurrentPosition(PAGE_READER);
-                    break;
-                case ARG_ME:
-                    mBottomNav.setCurrentPosition(PAGE_ME);
                     break;
             }
         } else {
