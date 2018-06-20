@@ -23,20 +23,20 @@ import javax.inject.Inject
  */
 class GlideHeaderLoader @Inject constructor(
     modelLoader: ModelLoader<GlideUrl, InputStream>,
-    private val mAccessToken: AccessToken,
-    private val mHttpAuthManager: HTTPAuthManager,
-    private val mUserAgent: UserAgent
+    private val accessToken: AccessToken,
+    private val httpAuthManager: HTTPAuthManager,
+    private val userAgent: UserAgent
 ) : BaseGlideUrlLoader<GlideUrl>(modelLoader) {
     override fun getHeaders(url: GlideUrl?, width: Int, height: Int, options: Options?): Headers? {
         var headerBuilder = Builder()
 
         url?.let {
-            headerBuilder = headerBuilder.addHeader("User-Agent", mUserAgent.userAgent)
+            headerBuilder = headerBuilder.addHeader("User-Agent", userAgent.userAgent)
             if (WPUrlUtils.safeToAddWordPressComAuthToken(url.toStringUrl())) {
-                headerBuilder = headerBuilder.addHeader("Authorization", "Bearer " + mAccessToken.get())
+                headerBuilder = headerBuilder.addHeader("Authorization", "Bearer " + accessToken.get())
             } else {
                 // Check if we had HTTP Auth credentials for the root url
-                val httpAuthModel = mHttpAuthManager.getHTTPAuthModel(url.toStringUrl())
+                val httpAuthModel = httpAuthManager.getHTTPAuthModel(url.toStringUrl())
                 if (httpAuthModel != null) {
                     val creds = String.format("%s:%s", httpAuthModel.username, httpAuthModel.password)
                     val auth = "Basic " + Base64.encodeToString(creds.toByteArray(), Base64.NO_WRAP)

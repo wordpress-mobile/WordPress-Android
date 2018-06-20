@@ -28,10 +28,10 @@ import javax.inject.Named
  */
 @GlideModule
 class WordPressGlideModule : AppGlideModule() {
-    @Inject @field:Named("custom-ssl") lateinit var mRequestQueue: RequestQueue
-    @Inject lateinit var mAccessToken: AccessToken
-    @Inject lateinit var mHttpAuthManager: HTTPAuthManager
-    @Inject lateinit var mUserAgent: UserAgent
+    @Inject @field:Named("custom-ssl") lateinit var requestQueue: RequestQueue
+    @Inject lateinit var accessToken: AccessToken
+    @Inject lateinit var httpAuthManager: HTTPAuthManager
+    @Inject lateinit var userAgent: UserAgent
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {}
 
@@ -41,8 +41,8 @@ class WordPressGlideModule : AppGlideModule() {
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         (context as WordPress).component().inject(this)
-        registry.replace(GlideUrl::class.java, InputStream::class.java, VolleyUrlLoader.Factory(mRequestQueue))
+        registry.replace(GlideUrl::class.java, InputStream::class.java, VolleyUrlLoader.Factory(requestQueue))
         registry.append(GlideUrl::class.java, InputStream::class.java,
-                GlideHeaderLoaderFactory(mAccessToken, mHttpAuthManager, mUserAgent))
+                GlideHeaderLoaderFactory(accessToken, httpAuthManager, userAgent))
     }
 }
