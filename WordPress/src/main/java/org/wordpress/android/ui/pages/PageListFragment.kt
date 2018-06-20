@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.pages
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +13,11 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageListViewModel
-    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private val listStateKey = "list_state"
 
@@ -66,7 +61,7 @@ class PageListFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        viewModel.detach()
+        viewModel.stop()
         super.onDestroyView()
     }
 
@@ -79,29 +74,14 @@ class PageListFragment : Fragment() {
         }
         recyclerView.layoutManager = linearLayoutManager
 
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) { viewModel.refresh() }
         (activity?.application as WordPress).component()?.inject(this)
 
         val key = arguments?.getString(fragmentKey)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PageListViewModel>(checkNotNull(key), PageListViewModel::class.java)
 
-        viewModel.attach()
-
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
                 ?: activity?.intent?.getSerializableExtra(WordPress.SITE)) as SiteModel
-
-        viewModel.state.observe(this, Observer { state ->
-            Log.d("page_list", "State: $state")
-            val refreshing = state?.refreshing == true
-            if (swipeToRefreshHelper.isRefreshing != refreshing) {
-                swipeToRefreshHelper.isRefreshing = refreshing
-            }
-        })
-
-        viewModel.data.observe(this, Observer { data ->
-            Log.d("page_list", "Data: $data")
-        })
 
         viewModel.start(site)
     }
