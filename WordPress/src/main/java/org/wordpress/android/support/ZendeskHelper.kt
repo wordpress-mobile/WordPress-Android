@@ -10,6 +10,7 @@ import com.zendesk.service.ZendeskCallback
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -86,7 +87,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        refreshIdentity()
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
                 .withContactUsButtonVisible(isIdentityAvailable)
@@ -112,8 +112,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { _, _ ->
-            refreshIdentity()
+        requireIdentity(context, accountStore?.account, selectedSite) {
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
@@ -130,8 +129,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { _, _ ->
-            refreshIdentity()
+        requireIdentity(context, accountStore.account, selectedSite) {
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
         }
@@ -183,6 +181,35 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
                 })
     }
 
+    fun setSupportEmail(email: String?) {
+        AppPrefs.setSupportEmail(email)
+        refreshIdentity()
+
+        // The identity might not be available previously, this will ensure that push notifications is enabled
+        enablePushNotifications()
+    }
+
+    private fun requireIdentity(
+        context: Context,
+        account: AccountModel?,
+        selectedSite: SiteModel?,
+        onIdentitySet: () -> Unit
+    ) {
+        if (isIdentityAvailable) {
+            // identity already available
+            onIdentitySet()
+            return
+        }
+        val (emailSuggestion, nameSuggestion) = supportHelper.getSupportEmailAndNameSuggestion(account, selectedSite)
+        supportHelper.showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion) { email, name ->
+            AppPrefs.setSupportEmail(email)
+            AppPrefs.setSupportName(name)
+            refreshIdentity()
+            enablePushNotifications()
+            onIdentitySet()
+        }
+    }
+
     private fun refreshIdentity() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
@@ -194,7 +221,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
             supportName = name
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
         }
-        enablePushNotifications()
     }
 
     private fun clearIdentity() {

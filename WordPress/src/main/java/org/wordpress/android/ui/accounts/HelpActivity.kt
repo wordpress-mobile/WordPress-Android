@@ -62,8 +62,13 @@ class HelpActivity : AppCompatActivity() {
         }
 
         contactEmailContainer.setOnClickListener {
-            supportHelper.showSupportEmailInputDialog(this, accountStore.account, selectedSiteFromExtras) { _ ->
-                refreshContactEmailText()
+            var emailSuggestion = AppPrefs.getSupportEmail()
+            if (emailSuggestion.isNullOrEmpty()) {
+                emailSuggestion = supportHelper
+                        .getSupportEmailAndNameSuggestion(accountStore.account, selectedSiteFromExtras).first
+            }
+            supportHelper.showSupportIdentityInputDialog(this, emailSuggestion, isNameInputHidden = true) { email, _ ->
+                zendeskHelper.setSupportEmail(email)
             }
         }
     }
