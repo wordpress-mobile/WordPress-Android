@@ -49,6 +49,11 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     private val zendeskPushRegistrationProvider: PushRegistrationProvider?
         get() = zendeskInstance.provider()?.pushRegistrationProvider()
 
+    /**
+     * These two properties are used to keep track of the Zendesk identity set. Since we allow users' to change their
+     * supportEmail and reset their identity on logout, we need to ensure that the correct identity is set all times.
+     * Check [requireIdentity], [refreshIdentity] & [clearIdentity] for more details about how Zendesk identity works.
+     */
     private var supportEmail: String? = null
     private var supportName: String? = null
     private val isIdentityAvailable: Boolean
@@ -153,11 +158,20 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
+    /**
+     * This function should be called when the user logs out of WordPress.com. Push notifications are only available
+     * for WordPress.com users, so they'll be disabled. We'll also clear the Zendesk identity of the user on logout.
+     * The Zendesk identity will need to be set again when the user wants to create a new ticket.
+     */
     fun reset() {
         disablePushNotifications()
         clearIdentity()
     }
 
+    /**
+     * This function will enable push notifications for Zendesk. Both a Zendesk identity and a valid push
+     * notification device token is required. If either doesn't exist, the request will simply be ignored.
+     */
     fun enablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
@@ -182,6 +196,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
+    /**
+     * This function will disable push notifications for Zendesk.
+     */
     private fun disablePushNotifications() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
@@ -199,6 +216,11 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
                 })
     }
 
+    /**
+     * This function provides a way to change the support email for the Zendesk identity. Due to the way Zendesk
+     * anonymous identity works, this will reset the users' tickets. If the user hasn't used Zendesk yet, their identity
+     * might not be created. It'll attempt to enable push notifications for Zendesk for such a case.
+     */
     fun setSupportEmail(email: String?) {
         AppPrefs.setSupportEmail(email)
         refreshIdentity()
@@ -207,6 +229,12 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         enablePushNotifications()
     }
 
+    /**
+     * This is a helper function which provides an easy way to make sure a Zendesk identity is set before running a
+     * piece of code. It'll check the existence of the identity and call the callback if it's already available.
+     * Otherwise, it'll show a dialog for the user to enter an email and name through a helper function which then
+     * will be used to set the identity and call the callback. It'll also try to enable the push notifications.
+     */
     private fun requireIdentity(
         context: Context,
         account: AccountModel?,
@@ -228,6 +256,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
+    /**
+     * This is a helper function that'll ensure the Zendesk identity is set with the credentials from AppPrefs.
+     */
     private fun refreshIdentity() {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
@@ -241,6 +272,11 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         }
     }
 
+    /**
+     * This is a helper function to clear the Zendesk identity. It'll remove the credentials from AppPrefs and update
+     * the Zendesk identity with a new anonymous one without an email or name. Due to the way Zendesk anonymous identity
+     * works, this will clear all the users' tickets.
+     */
     private fun clearIdentity() {
         supportEmail = null
         supportName = null
