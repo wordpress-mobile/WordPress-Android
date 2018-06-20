@@ -11,7 +11,6 @@ class PageListViewModel
     private var site: SiteModel? = null
 
     fun start(site: SiteModel) {
-        dispatcher.register(this)
         this.site = site
         if (!initialized) {
             initialized = true
@@ -20,6 +19,5 @@ class PageListViewModel
 
     fun stop() {
         this.site = null
-        dispatcher.unregister(this)
     }
 }
