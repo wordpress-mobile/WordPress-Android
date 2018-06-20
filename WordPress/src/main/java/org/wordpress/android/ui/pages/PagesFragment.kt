@@ -84,7 +84,7 @@ class PagesFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)
         val myActionMenuItem = menu?.findItem(R.id.action_search)
-        myActionMenuItem?.setOnActionExpandListener(object: OnActionExpandListener {
+        myActionMenuItem?.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 return viewModel.searchExpanded()
             }

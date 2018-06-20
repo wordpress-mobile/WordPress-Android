@@ -10,7 +10,7 @@ class PagesViewModel
     private val mutableSearchExpanded: MutableLiveData<Boolean> = MutableLiveData()
     val searchExpanded: LiveData<Boolean> = mutableSearchExpanded
     fun onSearchTextSubmit(query: String?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented")
     }
 
     fun onSearchTextChange(newText: String?): Boolean {

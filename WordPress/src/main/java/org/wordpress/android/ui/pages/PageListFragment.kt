@@ -79,7 +79,6 @@ class PageListFragment : Fragment() {
         }
         recyclerView.layoutManager = linearLayoutManager
 
-
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) { viewModel.refresh() }
         (activity?.application as WordPress).component()?.inject(this)
 
