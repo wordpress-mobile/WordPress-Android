@@ -63,3 +63,7 @@ msgid ""
 "\n"
 "Need help with the app? Visit the forums at https://android.forums.wordpress.org/forum/troubleshooting or tweet us @WPAndroid."
 msgstr ""
+
+msgctxt "play_store_app_title"
+msgid "WordPress – Website & Blog Builder"
+msgstr ""
