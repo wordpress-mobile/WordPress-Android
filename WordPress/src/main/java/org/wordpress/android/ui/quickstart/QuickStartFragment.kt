@@ -1,0 +1,183 @@
+package org.wordpress.android.ui.quickstart
+
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Paint
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ScrollView
+import android.widget.TextView
+import kotlinx.android.synthetic.main.quick_start_fragment.*
+import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel
+import javax.inject.Inject
+
+class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveClickInterface {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: QuickStartViewModel
+
+    private val site: Int = AppPrefs.getSelectedSite()
+    private val skipAllTasksDialogTag = "skip_all_tasks_dialog"
+
+    companion object {
+        fun newInstance(): QuickStartFragment {
+            return QuickStartFragment()
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get<QuickStartViewModel>(QuickStartViewModel::class.java)
+
+        viewModel.quickStartTasks.observe(this, Observer { quickStartModel ->
+            var allTasksCompleted = true
+            quickStartModel?.forEach {
+                if (it.isTaskCompleted) {
+                    crossOutTask(it.task)
+                } else {
+                    allTasksCompleted = false
+                }
+            }
+
+            if (allTasksCompleted) {
+                layout_list_complete.visibility = View.VISIBLE
+                layout_skip_all.visibility = View.GONE
+            }
+        })
+
+        viewModel.start(site.toLong())
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as WordPress).component()?.inject(this)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.quick_start_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        layout_view_site.setOnClickListener {
+            viewModel.setDoneTask(site.toLong(), QuickStartTask.VIEW_SITE, true)
+        }
+
+        layout_browse_themes.setOnClickListener {
+            viewModel.setDoneTask(site.toLong(), QuickStartTask.CHOOSE_THEME, true)
+        }
+
+        layout_customize_site.setOnClickListener {
+            viewModel.setDoneTask(site.toLong(), QuickStartTask.CUSTOMIZE_SITE, true)
+        }
+
+        layout_share_site.setOnClickListener {
+            viewModel.setDoneTask(site.toLong(), QuickStartTask.SHARE_SITE, true)
+        }
+
+        layout_publish_post.setOnClickListener {
+            viewModel.setDoneTask(site.toLong(), QuickStartTask.PUBLISH_POST, true)
+        }
+
+        layout_follow_site.setOnClickListener {
+            viewModel.setDoneTask(site.toLong(), QuickStartTask.FOLLOW_SITE, true)
+        }
+
+        button_skip_all.setOnClickListener {
+            showSkipDialog()
+        }
+    }
+
+    private fun showSkipDialog() {
+        val basicFragmentDialog = BasicFragmentDialog()
+        basicFragmentDialog.initialize(skipAllTasksDialogTag,
+                getString(R.string.quick_start_dialog_skip_title),
+                getString(R.string.quick_start_dialog_skip_message),
+                getString(R.string.quick_start_button_skip_positive),
+                null, getString(R.string.quick_start_button_skip_negative))
+
+        basicFragmentDialog.show(fragmentManager, skipAllTasksDialogTag)
+    }
+
+    override fun onPositiveClicked(instanceTag: String) {
+        (view as ScrollView).smoothScrollTo(0, 0)
+        skipAllTasks()
+    }
+
+    private fun skipAllTasks() {
+        viewModel.skipAllTasks(site.toLong())
+    }
+
+    private fun crossOutTask(task: QuickStartTask) {
+        val titleView: TextView
+        val checkMarkView: View
+        val containerView: View
+
+        when (task) {
+            CREATE_SITE -> {
+                titleView = title_create_site
+                checkMarkView = done_create_site
+                containerView = layout_create_site
+            }
+            VIEW_SITE -> {
+                titleView = title_view_site
+                checkMarkView = done_view_site
+                containerView = layout_view_site
+            }
+            CHOOSE_THEME -> {
+                titleView = title_browse_themes
+                checkMarkView = done_browse_themes
+                containerView = layout_browse_themes
+            }
+            CUSTOMIZE_SITE -> {
+                titleView = title_customize_site
+                checkMarkView = done_customize_site
+                containerView = layout_customize_site
+            }
+            SHARE_SITE -> {
+                titleView = title_share_site
+                checkMarkView = done_share_site
+                containerView = layout_share_site
+            }
+            PUBLISH_POST -> {
+                titleView = title_publish_post
+                checkMarkView = done_publish_post
+                containerView = layout_publish_post
+            }
+            FOLLOW_SITE -> {
+                titleView = title_follow_site
+                checkMarkView = done_follow_site
+                containerView = layout_follow_site
+            }
+        }
+
+        visuallyMarkTaskAsCompleted(titleView, checkMarkView)
+        disableTaskContainer(containerView)
+    }
+
+    private fun visuallyMarkTaskAsCompleted(taskTitleTextView: TextView, taskDoneCheckMark: View) {
+        taskTitleTextView.let { it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG }
+        taskDoneCheckMark.visibility = View.VISIBLE
+    }
+
+    private fun disableTaskContainer(container: View) {
+        container.isClickable = false
+    }
+}

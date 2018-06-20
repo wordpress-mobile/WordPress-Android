@@ -715,7 +715,7 @@
         </activity>
 
         <activity
-            android:name=".ui.main.QuickStartActivity"
+            android:name=".ui.quickstart.QuickStartActivity"
             android:label="@string/quick_start_sites"
             android:parentActivityName=".ui.main.WPMainActivity"
             android:theme="@style/CalypsoTheme" />
