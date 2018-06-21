@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.StringDef;
 
 import com.yarolegovich.wellsql.DefaultWellConfig;
@@ -41,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 38;
+        return 39;
     }
 
     @Override
@@ -309,6 +311,18 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE QuickStartModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                            + "SITE_ID INTEGER,TASK_NAME TEXT,IS_DONE INTEGER,IS_SHOWN INTEGER)");
+                oldVersion++;
+            case 38:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                SharedPreferences defaultSharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                String token = defaultSharedPrefs.getString("ACCOUNT_TOKEN_PREF_KEY", "");
+                if (!token.isEmpty()) {
+                    AppLog.d(T.DB, "Migrating token to fluxc-preferences");
+                    SharedPreferences fluxCPreferences = getContext().getSharedPreferences(
+                            getContext().getPackageName() + "_fluxc-preferences", Context.MODE_PRIVATE);
+                    fluxCPreferences.edit().putString("ACCOUNT_TOKEN_PREF_KEY", token).apply();
+                    defaultSharedPrefs.edit().remove("ACCOUNT_TOKEN_PREF_KEY").apply();
+                }
                 oldVersion++;
         }
         db.setTransactionSuccessful();
