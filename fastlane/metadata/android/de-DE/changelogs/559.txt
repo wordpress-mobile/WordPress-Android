@@ -1,0 +1,5 @@
+10.0:
+* Neue Funktion: Unterstützung für die Installation von Plugins für WordPress.com-Websites mit dem Business-Tarif hinzugefügt
+* Neue Funktion: Android-Tastaturkürzel für Statistiken, Benachrichtigungen und neue Bildschirme für die Beiträge hinzugefügt Android 7.1+-Funktion
+* Neue Funktion: Erstellen von Konten mit SignUp während der Herstellung einer Verbindung zu Jetpack
+* Problem des verlorenen Fokus im Editor beim Einfügen von Text gelöst

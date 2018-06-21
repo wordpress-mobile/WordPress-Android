@@ -1,0 +1,7 @@
+9.9:
+* Vi har genomfört många förändringar för att förbättra stödet för olika behörigheter i Android Oreo.
+* Videoklipp från YouTube visas nu korrekt i läsaren.
+* Rättat problem med TalkBack i samband när man skapar en webbplats.
+* Korrigerat AMP-länkar så att de nu kan öppnas inuti appen.
+* Nu går det att välja från arkivfoton när du anger utvald bild för ett inlägg.
+* Felrättningar.

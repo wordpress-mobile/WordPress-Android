@@ -1,0 +1,3 @@
+9.8:
+* İstatistikler ekranında küçük görsel güncellemesi.
+* Okuyucu resim görüntüleyicisine geri tuşu eklendi.

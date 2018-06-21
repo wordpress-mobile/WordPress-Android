@@ -1,0 +1,3 @@
+10.2-rc-1:
+- New feature: Something there catched your eye? Read it any time with Save for later! Even when you're offline!
+- Various bugfixes.

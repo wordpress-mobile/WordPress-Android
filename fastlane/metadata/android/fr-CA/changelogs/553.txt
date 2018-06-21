@@ -1,0 +1,3 @@
+9.8 :
+* Mise à jour visuelle mineure dans l'écran des statistiques.
+* Ajour d'un bouton Retour dans l'outil de visualisation des images du Lecteur.

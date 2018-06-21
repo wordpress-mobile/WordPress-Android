@@ -1,0 +1,6 @@
+10.1:
+* BARU: sekarang Anda bisa mendapatkan pemberitahuan pos baru dari blog yang Anda ikuti! Tetap terbaru dengan fitur keren yang baru ini.
+* BARU: kami sekarang menawarkan navigasi bawah pada layar utama! Suka dengan hal itu! ;).
+* BARU: Log Aktivitas ditambahkan! Anda dapat melihat semua yang sedang terjadi pada situs Anda dengan fitur baru ini.
+* Menambahkan penyunting ikon situs.
+* Perbaikan bug.

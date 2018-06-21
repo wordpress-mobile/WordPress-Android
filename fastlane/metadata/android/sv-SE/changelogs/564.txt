@@ -1,0 +1,6 @@
+10.1:
+* NYTT: Nu kan du få notiser om nya inlägg i bloggar du följer! Håll dig uppdaterad med denna nya funktion.
+* NYTT: Vi erbjuder navigering i nederkanten av huvudskärmen! Bra va! ;).
+* NYTT: Aktivitetslogg tillagd! Denna nya funktion visar allt som händer på din webbplats.
+* Lagt till redigering av webbplatsikon.
+* Felrättningar.

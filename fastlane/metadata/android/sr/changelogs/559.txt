@@ -1,0 +1,5 @@
+10.0:
+* New feature: Add support for installing plugins for WordPress.com Business plan sites
+* New feature: Add Android shortcuts for Stats, Notifications and New Post screens. Android 7.1+ feature.
+* New feature: Create an account with signup while connecting Jetpack.
+* Fixed an issue with the editor losing focus when pasting text.

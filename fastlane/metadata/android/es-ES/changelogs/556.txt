@@ -1,0 +1,7 @@
+9.9:
+* Hemos realizado varios cambios para mejorar la compatibilidad con las capacidades de Android Oreo.
+* Los videos YouTube ya se ven bien en el lector.
+* Solucionados los problemas con TalkBack relacionados con la creación de sitios.
+* Arreglo de los enlaces AMP para que puedan ser abiertos en la aplicación.
+* Ahora puedes utilizar imágenes de stock cuando configuras la imagen destacada de una entrada.
+* Corrección de errores.

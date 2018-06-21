@@ -1,0 +1,6 @@
+10.1:
+*NIEUW: je kunt nu meldingen ontvangen voor nieuwe berichten of blogs die je volgt! Blijf up-to-date met deze leuke nieuwe functie.
+*NIEUW: je kunt nu navigeren vanuit de onderkant van het hoofdscherm! Dikke duim omhoog! ;).
+*NIEUW: activiteitenlog toegevoegd! Met deze nieuwe functie kun je precies zien wat er allemaal gebeurt op je site.
+* Bewerken van favicons toegevoegd.
+* Bugfixes.

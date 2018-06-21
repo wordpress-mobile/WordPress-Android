@@ -1,0 +1,5 @@
+10.0:
+* Yeni özellik: WordPress.com Business paket siteleri için eklenti yükleme desteği ekleyin
+* Yeni özellik: İstatistikler, Bildirimler ve Yeni Gönderi ekranları için Android kısayolları ekleyin. Android 7.1+ özellik.
+* Yeni özellik: Jetpack'e bağlanırken kaydolarak bir hesap oluşturun.
+* Metin yapıştırırken ortaya çıkan düzenleyici odak kaybı sorunu düzeltildi.

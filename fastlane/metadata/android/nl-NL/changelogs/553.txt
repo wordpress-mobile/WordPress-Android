@@ -1,0 +1,3 @@
+9.8:
+* Kleine visuele update van het scherm Statistieken.
+* Knop voor terugkeren toegevoegd aan voorbeeldweergave Reader.

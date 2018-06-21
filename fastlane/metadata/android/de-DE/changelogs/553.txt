@@ -1,0 +1,3 @@
+9.8:
+* Kleine visuelle Änderung auf dem Bildschirm für Statistiken.
+* Zurück-Button zu Reader-Bildanzeige hinzugefügt.

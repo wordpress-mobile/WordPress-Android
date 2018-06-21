@@ -1,0 +1,3 @@
+9.8:
+* Drobna aktualizacja wizualna na ekranie Statystyk.
+* Dodano przycisk Wróć w przeglądarce obrazków Czytnika.

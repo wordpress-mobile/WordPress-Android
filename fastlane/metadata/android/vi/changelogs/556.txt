@@ -1,0 +1,7 @@
+9.9:
+* We made several changes to better support capabilities in Android Oreo.
+* YouTube videos are displayed correctly now in the Reader.
+* Fixed TalkBack issues around site creation.
+* Fixed AMP links so they can be opened in the app.
+* Now you can use stock photos when setting a Post's featured image.
+* Bugfixes.

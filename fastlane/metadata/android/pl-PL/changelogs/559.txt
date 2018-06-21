@@ -1,0 +1,4 @@
+10.0:
+* Nowa funkcja: dodane wsparcie dla instalacji wtyczek dla witryn WordPressa z planami Business
+* Nowa funkcja: dodano skróty dla ekranów Statystyk, Powiadomień i Nowego Wpisu. Funkcjonaść Android 7.1.
+* Nowa funkcja: utwórz konto podłączając Jetpacka.

@@ -1,0 +1,6 @@
+10.1:
+* NUEVO: ¡ahora puedes recibir avisos de las nuevas entradas de los blogs que sigues! Estate al día con esta nueva característica tan chula.
+* NUEVO: ¡ahora ofrecemos navegación inferior en la pantalla principal! ¡Pulgares arriba por ello! ;).
+* NUEVO: ¡Añadido registro de actividad! Puedes ver todo lo que ha pasado en tu sitio con esta nueva característica.
+* Añadida edición del icono del sitio.
+* Soluciones a fallos.

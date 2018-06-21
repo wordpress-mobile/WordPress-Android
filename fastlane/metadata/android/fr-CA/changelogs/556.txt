@@ -1,0 +1,7 @@
+9.9 :
+* Nous avons apporté plusieurs modifications pour mieux prendre en charge les fonctionnalités dans Android Oreo.
+* Les vidéos YouTube s'affichent désormais correctement dans le Lecteur.
+* Résolution des problèmes de TalkBack concernant la création de site.
+* Résolution des problèmes inhérents aux liens AMP afin de pouvoir les ouvrir dans l'application.
+* Vous pouvez désormais utiliser des photothèques lors de la configuration d'une image à la Une d'un article.
+* Résolution de bogues

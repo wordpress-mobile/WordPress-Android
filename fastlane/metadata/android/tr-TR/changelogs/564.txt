@@ -1,0 +1,6 @@
+10.1:
+* YENİ: artık takip ettiğiniz bloglardaki yeni gönderiler hakkında bildirim alabilirsiniz! Bu yeni özellik sayesinde sürekli güncel kalın.
+* YENİ: artık ana ekranda alt kısımda gezinme sunuyoruz! Bunun için başparmaklar yukarı! ;).
+* YENİ: Etkinlik Günlüğü eklendi! Bu özellik sayesinde sitenize olan biten her şeyi görebilirsiniz.
+* Site simgesi düzenleme eklendi.
+* Hata düzeltmeleri.

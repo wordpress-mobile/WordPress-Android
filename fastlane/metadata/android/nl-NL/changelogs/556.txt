@@ -1,0 +1,7 @@
+9.9:
+* We hebben een aantal wijzigingen doorgevoerd om functies van Android Oreo beter te ondersteunen.
+* YouTube-video's worden nu op de juiste manier weergegeven in de Reader.
+* TalkBack-problemen rondom het aanmaken van sites opgelost.
+* AMP-links gerepareerd, zodat ze kunnen worden geopend in de app.
+* Je kunt nu stockfoto's gebruiken wanneer je een aanbevolen afbeelding voor een bericht instelt.
+* Bugfixes.

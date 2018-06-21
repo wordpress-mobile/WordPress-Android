@@ -1,0 +1,6 @@
+10.3-rc-1
+* Reader: Search function is now improved to allow searching of sites as well as posts.
+* Editor: Improved handling of Gutenberg posts.
+* Notifications: Pingback moderation and comments management has been improved.
+* A lot of small UI improvements and refinements.
+* Various bugfixes.

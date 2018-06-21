@@ -1,0 +1,6 @@
+10.1:
+* NOVITÀ: ora puoi ricevere le notifiche sui nuovi articoli dei blog che segui! Resta sempre aggiornato grazie a questa nuova fantastica funzione.
+* NOVITÀ: ora offriamo la bottom navigation sulla schermata principale! Pollici in su per questa novità! ;).
+* NOVITÀ: aggiunto il log attività! Grazie a questa nuova funzionalità puoi visualizzare tutto quello che accade sul tuo sito.
+* Modifica dell’icona del sito aggiunta.
+* Correzioni di bug.
