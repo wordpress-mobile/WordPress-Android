@@ -13,6 +13,7 @@ class QuickStartActivity : AppCompatActivity(), BasicFragmentDialog.BasicDialogP
         setContentView(R.layout.quick_start_activity)
     }
 
+    // TODO to be used with future branches
     override fun onBackPressed() {
         setResult(Activity.RESULT_OK)
         finish()

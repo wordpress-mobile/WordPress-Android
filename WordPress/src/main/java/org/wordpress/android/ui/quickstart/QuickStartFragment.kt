@@ -31,7 +31,6 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: QuickStartViewModel
 
-    private val site: Int = AppPrefs.getSelectedSite()
     private val skipAllTasksDialogTag = "skip_all_tasks_dialog"
 
     companion object {
@@ -61,7 +60,7 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
             }
         })
 
-        viewModel.start(site.toLong())
+        viewModel.start(AppPrefs.getSelectedSite().toLong())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
