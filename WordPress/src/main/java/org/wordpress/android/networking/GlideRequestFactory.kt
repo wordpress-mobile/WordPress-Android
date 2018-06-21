@@ -41,16 +41,18 @@ class GlideRequestFactory @Inject constructor(
 
     private fun addAuthHeaders(url: String, currentHeaders: Map<String, String>): MutableMap<String, String> {
         val headers = currentHeaders.toMutableMap()
-        headers.put("User-Agent", userAgent.userAgent)
+        headers["User-Agent"] = userAgent.userAgent
         if (WPUrlUtils.safeToAddWordPressComAuthToken(url)) {
-            headers.put("Authorization", "Bearer " + accessToken.get())
+            accessToken.get()?.let {
+                headers["Authorization"] = "Bearer " + accessToken.get()
+            }
         } else {
             // Check if we had HTTP Auth credentials for the root url
             val httpAuthModel = httpAuthManager.getHTTPAuthModel(url)
             if (httpAuthModel != null) {
                 val creds = String.format("%s:%s", httpAuthModel.username, httpAuthModel.password)
                 val auth = "Basic " + Base64.encodeToString(creds.toByteArray(), Base64.NO_WRAP)
-                headers.put("Authorization", auth)
+                headers["Authorization"] = auth
             }
         }
         return headers
