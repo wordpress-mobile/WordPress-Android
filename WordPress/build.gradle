@@ -42,6 +42,8 @@ android {
         applicationId "org.wordpress.android"
         versionName "alpha-114"
         versionCode 572
+        versionName "10.3-rc-1"
+        versionCode 571
         minSdkVersion 16
         targetSdkVersion 26
 
