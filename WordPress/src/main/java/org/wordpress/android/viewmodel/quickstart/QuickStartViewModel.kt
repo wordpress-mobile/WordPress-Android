@@ -14,18 +14,21 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
         get() = tasks
 
     private var isStarted = false
+    var siteId: Long = 0
 
     fun start(siteId: Long) {
         if (isStarted) {
             return
         }
 
-        refreshTaskCompletionStatuses(siteId)
+        this.siteId = siteId
+
+        refreshTaskCompletionStatuses()
 
         isStarted = true
     }
 
-    private fun refreshTaskCompletionStatuses(siteId: Long) {
+    private fun refreshTaskCompletionStatuses() {
         val list = ArrayList<QuickStartDetailModel>()
         QuickStartTask.values().forEach {
             // CREATE_SITE task is completed by default
@@ -36,13 +39,13 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
         tasks.postValue(list)
     }
 
-    fun setDoneTask(siteId: Long, task: QuickStartTask, isCompleted: Boolean) {
+    fun setDoneTask(task: QuickStartTask, isCompleted: Boolean) {
         quickStartStore.setDoneTask(siteId, task, isCompleted)
-        refreshTaskCompletionStatuses(siteId)
+        refreshTaskCompletionStatuses()
     }
 
-    fun skipAllTasks(siteId: Long) {
+    fun skipAllTasks() {
         QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteId, it, true) }
-        refreshTaskCompletionStatuses(siteId)
+        refreshTaskCompletionStatuses()
     }
 }

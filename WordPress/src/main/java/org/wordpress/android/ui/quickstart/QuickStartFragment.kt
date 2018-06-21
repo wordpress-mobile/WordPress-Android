@@ -77,27 +77,27 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
         super.onViewCreated(view, savedInstanceState)
 
         layout_view_site.setOnClickListener {
-            viewModel.setDoneTask(site.toLong(), QuickStartTask.VIEW_SITE, true)
+            viewModel.setDoneTask(QuickStartTask.VIEW_SITE, true)
         }
 
         layout_browse_themes.setOnClickListener {
-            viewModel.setDoneTask(site.toLong(), QuickStartTask.CHOOSE_THEME, true)
+            viewModel.setDoneTask(QuickStartTask.CHOOSE_THEME, true)
         }
 
         layout_customize_site.setOnClickListener {
-            viewModel.setDoneTask(site.toLong(), QuickStartTask.CUSTOMIZE_SITE, true)
+            viewModel.setDoneTask(QuickStartTask.CUSTOMIZE_SITE, true)
         }
 
         layout_share_site.setOnClickListener {
-            viewModel.setDoneTask(site.toLong(), QuickStartTask.SHARE_SITE, true)
+            viewModel.setDoneTask(QuickStartTask.SHARE_SITE, true)
         }
 
         layout_publish_post.setOnClickListener {
-            viewModel.setDoneTask(site.toLong(), QuickStartTask.PUBLISH_POST, true)
+            viewModel.setDoneTask(QuickStartTask.PUBLISH_POST, true)
         }
 
         layout_follow_site.setOnClickListener {
-            viewModel.setDoneTask(site.toLong(), QuickStartTask.FOLLOW_SITE, true)
+            viewModel.setDoneTask(QuickStartTask.FOLLOW_SITE, true)
         }
 
         button_skip_all.setOnClickListener {
@@ -122,7 +122,7 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
     }
 
     private fun skipAllTasks() {
-        viewModel.skipAllTasks(site.toLong())
+        viewModel.skipAllTasks()
     }
 
     private fun crossOutTask(task: QuickStartTask) {
