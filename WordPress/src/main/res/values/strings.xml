@@ -758,6 +758,7 @@
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="rewind">Rewind</string>
+    <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_list">No events recorded yet</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>

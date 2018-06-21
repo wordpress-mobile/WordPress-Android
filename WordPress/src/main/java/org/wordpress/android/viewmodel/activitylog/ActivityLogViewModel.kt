@@ -100,13 +100,15 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: ActivityLogListItem) {
-        if (item is ActivityLogListItem.Event && !isRewindInProgress) {
+        if (item is ActivityLogListItem.Event) {
             _showItemDetail.postValue(item)
         }
     }
 
-    fun onRewindButtonClicked(item: ActivityLogListItem) {
-        _showRewindDialog.postValue(item)
+    fun onActionButtonClicked(item: ActivityLogListItem) {
+        if (item is ActivityLogListItem.Event) {
+            _showRewindDialog.postValue(item)
+        }
     }
 
     fun onRewindConfirmed(rewindId: String) {

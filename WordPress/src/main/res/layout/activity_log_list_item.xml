@@ -84,16 +84,14 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/rewind_button"
+                android:id="@+id/action_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="@dimen/activity_log_icon_margin"
-                android:layout_marginEnd="@dimen/activity_log_icon_margin"
+                android:padding="@dimen/activity_log_icon_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/rewind"
-                tools:visibility="visible"
-                app:srcCompat="@drawable/ic_history_blue_24dp" />
+                android:contentDescription="@string/activity_log_button"
+                tools:visibility="visible" />
 
         </LinearLayout>
 

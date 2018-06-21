@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
@@ -127,7 +128,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun onItemButtonClicked(item: ActivityLogListItem) {
-        viewModel.onRewindButtonClicked(item)
+        viewModel.onActionButtonClicked(item)
     }
 
     private fun setEvents(events: List<ActivityLogListItem>) {

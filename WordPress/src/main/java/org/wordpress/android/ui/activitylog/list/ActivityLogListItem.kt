@@ -14,6 +14,7 @@ sealed class ActivityLogListItem {
     abstract val icon: Icon
     abstract val status: Status
     abstract val date: Date
+    abstract val buttonIcon: Icon
     abstract var isButtonVisible: Boolean
     abstract val isProgressBarVisible: Boolean
     abstract var previousItem: ActivityLogListItem?
@@ -46,6 +47,7 @@ sealed class ActivityLogListItem {
         if (title != other.title) return false
         if (description != other.description) return false
         if (icon != other.icon) return false
+        if (buttonIcon != other.buttonIcon) return false
         if (status != other.status) return false
         if (date != other.date) return false
         if (isButtonVisible != other.isButtonVisible) return false
@@ -61,6 +63,7 @@ sealed class ActivityLogListItem {
         result = 31 * result + title.hashCode()
         result = 31 * result + description.hashCode()
         result = 31 * result + icon.hashCode()
+        result = 31 * result + buttonIcon.hashCode()
         result = 31 * result + status.hashCode()
         result = 31 * result + date.hashCode()
         result = 31 * result + isButtonVisible.hashCode()
@@ -79,11 +82,11 @@ sealed class ActivityLogListItem {
         val isRewindable: Boolean,
         val rewindId: String?,
         override val date: Date,
+        override val buttonIcon: Icon = Icon.HISTORY,
         override var isButtonVisible: Boolean = isRewindable,
         override val isProgressBarVisible: Boolean = false,
         override var previousItem: ActivityLogListItem? = null,
-        override var nextItem: ActivityLogListItem? = null)
-        : ActivityLogListItem() {
+        override var nextItem: ActivityLogListItem? = null) : ActivityLogListItem() {
         override val icon = Icon.fromValue(gridIcon)
         override val status = Status.fromValue(eventStatus)
 
@@ -104,12 +107,12 @@ sealed class ActivityLogListItem {
         override val header: String,
         override val date:Date = Date(),
         override val isProgressBarVisible: Boolean = true,
+        override val buttonIcon: Icon = Icon.DEFAULT,
         override var isButtonVisible: Boolean = false,
         override val icon: Icon = Icon.NOTICE_OUTLINE,
         override val status: Status = Status.INFO,
         override var previousItem: ActivityLogListItem? = null,
-        override var nextItem: ActivityLogListItem? = null)
-        : ActivityLogListItem() {
+        override var nextItem: ActivityLogListItem? = null) : ActivityLogListItem() {
         init {
             nextItem?.previousItem = this
         }

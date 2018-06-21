@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.activitylog.list
 
+import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +23,7 @@ class ActivityLogViewHolder(
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val progressBarContainer: View = itemView.findViewById(R.id.rewind_progress_bar_container)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
-    private val rewindButton: ImageButton = itemView.findViewById(R.id.rewind_button)
+    private val actionButton: ImageButton = itemView.findViewById(R.id.action_button)
     private val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
     private lateinit var activity: ActivityLogListItem
@@ -38,7 +41,18 @@ class ActivityLogViewHolder(
 
         progressBarContainer.visibility = if (activity.isProgressBarVisible) View.VISIBLE else View.GONE
         header.visibility = if (activity.isHeaderVisible) View.VISIBLE else View.GONE
-        rewindButton.visibility = if (activity.isButtonVisible) View.VISIBLE else View.GONE
+
+        if (activity.isButtonVisible) {
+            ContextCompat.getDrawable(container.context, activity.buttonIcon.drawable)?.let { buttonIcon ->
+                val wrapDrawable = DrawableCompat.wrap(buttonIcon).mutate()
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(container.context, R.color.blue_medium))
+                actionButton.setImageDrawable(DrawableCompat.unwrap(wrapDrawable))
+                actionButton.visibility = View.VISIBLE
+            }
+        }
+        else {
+            actionButton.visibility = View.GONE
+        }
 
         thumbnail.setImageResource(activity.icon.drawable)
         thumbnail.setBackgroundResource(activity.status.color)
@@ -46,7 +60,7 @@ class ActivityLogViewHolder(
             itemClickListener(activity)
         }
 
-        rewindButton.setOnClickListener {
+        actionButton.setOnClickListener {
             rewindClickListener(activity)
         }
     }
