@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import javax.inject.Singleton;
@@ -14,7 +14,7 @@ public class AccessToken {
 
     public AccessToken(Context appContext) {
         mContext = appContext;
-        mToken = PreferenceManager.getDefaultSharedPreferences(mContext).getString(ACCOUNT_TOKEN_PREF_KEY, "");
+        mToken = getFluxCPreferences().getString(ACCOUNT_TOKEN_PREF_KEY, "");
     }
 
     public boolean exists() {
@@ -27,6 +27,10 @@ public class AccessToken {
 
     public void set(String token) {
         mToken = token;
-        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(ACCOUNT_TOKEN_PREF_KEY, token).apply();
+        getFluxCPreferences().edit().putString(ACCOUNT_TOKEN_PREF_KEY, token).apply();
+    }
+
+    private SharedPreferences getFluxCPreferences() {
+        return mContext.getSharedPreferences(mContext.getPackageName() + "_fluxc-preferences", Context.MODE_PRIVATE);
     }
 }
