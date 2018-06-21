@@ -43,7 +43,7 @@ class GlideRequestFactory @Inject constructor(
         val headers = currentHeaders.toMutableMap()
         headers["User-Agent"] = userAgent.userAgent
         if (WPUrlUtils.safeToAddWordPressComAuthToken(url)) {
-            accessToken.get()?.let {
+            if (accessToken.exists()) {
                 headers["Authorization"] = "Bearer " + accessToken.get()
             }
         } else {
