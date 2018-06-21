@@ -5,13 +5,13 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.ui.quickstart.QuickStartDetailModel
+import org.wordpress.android.ui.quickstart.QuickStartTaskState
 import javax.inject.Inject
 
 class QuickStartViewModel @Inject constructor(private val quickStartStore: QuickStartStore) : ViewModel() {
-    private val tasks = MutableLiveData<List<QuickStartDetailModel>>()
-    val quickStartTasks: LiveData<List<QuickStartDetailModel>>
-        get() = tasks
+    private val _quickStartTaskStateStates = MutableLiveData<List<QuickStartTaskState>>()
+    val quickStartTaskStateStates: LiveData<List<QuickStartTaskState>>
+        get() = _quickStartTaskStateStates
 
     private var isStarted = false
     var siteId: Long = 0
@@ -23,29 +23,28 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
 
         this.siteId = siteId
 
-        refreshTaskCompletionStatuses()
+        refreshTaskStatus()
 
         isStarted = true
     }
 
-    private fun refreshTaskCompletionStatuses() {
-        val list = ArrayList<QuickStartDetailModel>()
+    private fun refreshTaskStatus() {
+        val list = ArrayList<QuickStartTaskState>()
         QuickStartTask.values().forEach {
             // CREATE_SITE task is completed by default
-            list.add(QuickStartDetailModel(it,
+            list.add(QuickStartTaskState(it,
                     if (it == QuickStartTask.CREATE_SITE) true else quickStartStore.hasDoneTask(siteId, it)))
-
         }
-        tasks.postValue(list)
+        _quickStartTaskStateStates.postValue(list)
     }
 
-    fun setDoneTask(task: QuickStartTask, isCompleted: Boolean) {
+    fun completeTask(task: QuickStartTask, isCompleted: Boolean) {
         quickStartStore.setDoneTask(siteId, task, isCompleted)
-        refreshTaskCompletionStatuses()
+        refreshTaskStatus()
     }
 
     fun skipAllTasks() {
         QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteId, it, true) }
-        refreshTaskCompletionStatuses()
+        refreshTaskStatus()
     }
 }

@@ -14,10 +14,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
-import org.wordpress.android.ui.quickstart.QuickStartDetailModel
+import org.wordpress.android.ui.quickstart.QuickStartTaskState
 
 @RunWith(MockitoJUnitRunner::class)
 class QuickStartViewModelTest {
@@ -26,63 +25,47 @@ class QuickStartViewModelTest {
     @Mock private lateinit var store: QuickStartStore
     private val siteId = 1L
     private lateinit var viewModel: QuickStartViewModel
-    private var quickStartDetailModelList: List<QuickStartDetailModel>? = null
+    private var mQuickStartDetailStateList: List<QuickStartTaskState>? = null
 
     @Before
     fun setUp() {
         viewModel = QuickStartViewModel(store)
-        viewModel.quickStartTasks.observeForever { quickStartDetailModelList = it }
+        viewModel.quickStartTaskStateStates.observeForever { mQuickStartDetailStateList = it }
     }
 
     @After
     fun tearDown() {
-        quickStartDetailModelList = null
+        mQuickStartDetailStateList = null
     }
 
     @Test
-    fun testStart() {
-        whenever(store.hasDoneTask(siteId, FOLLOW_SITE)).thenReturn(true)
+    fun testStartingViewModel() {
         viewModel.start(siteId)
 
-        Assert.assertNotNull(quickStartDetailModelList)
-        assertEquals(1, quickStartDetailModelList?.filter { it.task == FOLLOW_SITE && it.isTaskCompleted }?.size)
+        Assert.assertNotNull(mQuickStartDetailStateList)
+        assertEquals(QuickStartTask.values().size, mQuickStartDetailStateList?.size)
+        // CREATE_SITE task is always considered done, so there is allways 1 completed task in a list
+        assertEquals(1, mQuickStartDetailStateList?.filter { it.isTaskCompleted }?.size)
     }
-
 
     @Test
     fun testSetDoneTask() {
         viewModel.start(siteId)
 
-        Assert.assertNotNull(quickStartDetailModelList)
-        assertEquals(0, quickStartDetailModelList?.filter { it.task != CREATE_SITE && it.isTaskCompleted }?.size)
-
         whenever(store.hasDoneTask(siteId, SHARE_SITE)).thenReturn(true)
+        viewModel.completeTask(SHARE_SITE, true)
 
-        viewModel.setDoneTask(SHARE_SITE,true)
-
-        assertEquals(1, quickStartDetailModelList?.filter { it.task == SHARE_SITE && it.isTaskCompleted }?.size)
+        assertEquals(1, mQuickStartDetailStateList?.filter { it.task == SHARE_SITE && it.isTaskCompleted }?.size)
     }
 
     @Test
     fun testSkipAllTasks() {
         viewModel.start(siteId)
 
-        Assert.assertNotNull(quickStartDetailModelList)
-        assertEquals(0, quickStartDetailModelList?.filter { it.task != CREATE_SITE && it.isTaskCompleted }?.size)
-
         whenever(store.hasDoneTask(eq(siteId), any())).thenReturn(true)
 
         viewModel.skipAllTasks()
 
-        assertEquals(1, quickStartDetailModelList?.filter { it.task == SHARE_SITE && it.isTaskCompleted }?.size)
-    }
-
-    @Test
-    fun testCreateSiteTaskDoneByDefault() {
-        viewModel.start(siteId)
-
-        Assert.assertNotNull(quickStartDetailModelList)
-        assertEquals(0, quickStartDetailModelList?.filter { it.task != CREATE_SITE && it.isTaskCompleted }?.size)
-        assertEquals(1, quickStartDetailModelList?.filter { it.task == CREATE_SITE && it.isTaskCompleted }?.size)
+        assertEquals(0, mQuickStartDetailStateList?.filter { !it.isTaskCompleted }?.size)
     }
 }

@@ -45,7 +45,7 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<QuickStartViewModel>(QuickStartViewModel::class.java)
 
-        viewModel.quickStartTasks.observe(this, Observer { quickStartModel ->
+        viewModel.quickStartTaskStateStates.observe(this, Observer { quickStartModel ->
             var allTasksCompleted = true
             quickStartModel?.forEach {
                 if (it.isTaskCompleted) {
@@ -77,27 +77,27 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
         super.onViewCreated(view, savedInstanceState)
 
         layout_view_site.setOnClickListener {
-            viewModel.setDoneTask(QuickStartTask.VIEW_SITE, true)
+            viewModel.completeTask(QuickStartTask.VIEW_SITE, true)
         }
 
         layout_browse_themes.setOnClickListener {
-            viewModel.setDoneTask(QuickStartTask.CHOOSE_THEME, true)
+            viewModel.completeTask(QuickStartTask.CHOOSE_THEME, true)
         }
 
         layout_customize_site.setOnClickListener {
-            viewModel.setDoneTask(QuickStartTask.CUSTOMIZE_SITE, true)
+            viewModel.completeTask(QuickStartTask.CUSTOMIZE_SITE, true)
         }
 
         layout_share_site.setOnClickListener {
-            viewModel.setDoneTask(QuickStartTask.SHARE_SITE, true)
+            viewModel.completeTask(QuickStartTask.SHARE_SITE, true)
         }
 
         layout_publish_post.setOnClickListener {
-            viewModel.setDoneTask(QuickStartTask.PUBLISH_POST, true)
+            viewModel.completeTask(QuickStartTask.PUBLISH_POST, true)
         }
 
         layout_follow_site.setOnClickListener {
-            viewModel.setDoneTask(QuickStartTask.FOLLOW_SITE, true)
+            viewModel.completeTask(QuickStartTask.FOLLOW_SITE, true)
         }
 
         button_skip_all.setOnClickListener {
@@ -118,10 +118,6 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
 
     override fun onPositiveClicked(instanceTag: String) {
         (view as ScrollView).smoothScrollTo(0, 0)
-        skipAllTasks()
-    }
-
-    private fun skipAllTasks() {
         viewModel.skipAllTasks()
     }
 

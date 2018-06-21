@@ -2,6 +2,8 @@ package org.wordpress.android.ui.quickstart
 
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 
-data class QuickStartDetailModel(
+// represents completion state of Quick Start tasks
+data class QuickStartTaskState(
     val task: QuickStartTask,
-    val isTaskCompleted: Boolean)
+    val isTaskCompleted: Boolean
+)
