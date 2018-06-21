@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="48dp"
+              android:orientation="horizontal">
+
+    <View
+        android:id="@+id/first_indent"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/second_indent"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/third_indent"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/fourth_indent"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/fifth_indent"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/page_title"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:background="@color/white"
+        android:textSize="16sp"
+        android:textColor="@color/wp_grey_dark"
+        tools:text="First page"/>
+
+    <Button
+        android:id="@+id/page_more"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"/>
+</LinearLayout>

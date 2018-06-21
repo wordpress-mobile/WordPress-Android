@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -22,11 +23,16 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
+import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private val listStateKey = "list_state"
 
@@ -66,6 +72,36 @@ class PagesFragment : Fragment() {
             }
         }
         tabLayout.setupWithViewPager(pages_pager)
+
+        recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+
+        val adapter = PagesAdapter()
+        recyclerView.adapter = adapter
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get<PagesViewModel>(PagesViewModel::class.java)
+        viewModel.searchExpanded.observe(activity!!, Observer {
+            if (it == true) {
+                pages_pager.visibility = View.GONE
+                tabLayout.visibility = View.GONE
+                pages_search_result.visibility = View.VISIBLE
+            } else {
+                pages_pager.visibility = View.VISIBLE
+                tabLayout.visibility = View.VISIBLE
+                pages_search_result.visibility = View.GONE
+            }
+        })
+        viewModel.searchResult.observe(this, Observer { result ->
+            if (result != null) {
+                recyclerView.visibility = View.VISIBLE
+                adapter.onNext(result)
+            } else {
+                recyclerView.visibility = View.GONE
+                adapter.onNext(listOf())
+            }
+        })
+
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) { viewModel.refresh() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
