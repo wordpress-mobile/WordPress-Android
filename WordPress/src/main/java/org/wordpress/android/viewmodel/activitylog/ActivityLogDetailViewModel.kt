@@ -30,7 +30,6 @@ class ActivityLogDetailViewModel
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
-    lateinit var rewindId: String
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogDetailModel>()
     val showRewindDialog: LiveData<ActivityLogDetailModel>
