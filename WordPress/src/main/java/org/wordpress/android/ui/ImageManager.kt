@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import com.bumptech.glide.request.RequestOptions
+import android.widget.ImageView.ScaleType.CENTER
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
@@ -22,26 +22,28 @@ class ImageManager @Inject constructor() {
         imageView: ImageView,
         imgUrl: String,
         @DrawableRes placeholder: Int? = null,
-        scaleType: ImageView.ScaleType
+        scaleType: ImageView.ScaleType = CENTER
     ) {
-        val request = GlideApp.with(imageView.context)
+        var request = GlideApp.with(imageView.context)
                 .load(imgUrl)
                 .let { if (placeholder != null) it.fallback(placeholder) else it }
-        applyScaleType(request, scaleType)
+        request = applyScaleType(request, scaleType)
         request.into(imageView)
     }
 
-    fun load(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType) {
-        val request = GlideApp.with(imageView.context)
+    @JvmOverloads
+    fun load(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
+        var request = GlideApp.with(imageView.context)
                 .load(bitmap)
-        applyScaleType(request, scaleType)
+        request = applyScaleType(request, scaleType)
         request.into(imageView)
     }
 
-    fun load(imageView: ImageView, imgUrl: Drawable, scaleType: ImageView.ScaleType) {
-        val request = GlideApp.with(imageView.context)
+    @JvmOverloads
+    fun load(imageView: ImageView, imgUrl: Drawable, scaleType: ImageView.ScaleType = CENTER) {
+        var request = GlideApp.with(imageView.context)
                 .load(imgUrl)
-        applyScaleType(request, scaleType)
+        request = applyScaleType(request, scaleType)
         request.into(imageView)
     }
 
@@ -50,7 +52,7 @@ class ImageManager @Inject constructor() {
         val request = GlideApp.with(imageView.context)
                 .load(imgUrl)
                 .let { if (placeholder != null) it.fallback(placeholder) else it }
-                .apply(RequestOptions().circleCrop())
+                .circleCrop()
         request.into(imageView)
     }
 
@@ -58,17 +60,22 @@ class ImageManager @Inject constructor() {
         GlideApp.with(imageView.context).clear(imageView)
     }
 
-    private fun applyScaleType(request: GlideRequest<Drawable>, scaleType: ScaleType) {
-        when (scaleType) {
-            ImageView.ScaleType.CENTER -> {
-            } // default
-            ImageView.ScaleType.MATRIX -> AppLog.e(AppLog.T.UTILS, "ScaleType matrix is not supported.")
+    private fun applyScaleType(
+        request: GlideRequest<Drawable>,
+        scaleType: ScaleType
+    ): GlideRequest<Drawable> {
+        return when (scaleType) {
             ImageView.ScaleType.CENTER_CROP -> request.centerCrop()
             ImageView.ScaleType.CENTER_INSIDE -> request.centerInside()
             ImageView.ScaleType.FIT_CENTER -> request.fitCenter()
-            ImageView.ScaleType.FIT_END -> AppLog.e(AppLog.T.UTILS, "ScaleType fitEnd is not supported.")
-            ImageView.ScaleType.FIT_START -> AppLog.e(AppLog.T.UTILS, "ScaleType fitStart is not supported.")
-            ImageView.ScaleType.FIT_XY -> AppLog.e(AppLog.T.UTILS, "ScaleType fitXY is not supported.")
+            ImageView.ScaleType.CENTER -> request
+            ImageView.ScaleType.FIT_END,
+            ImageView.ScaleType.FIT_START,
+            ImageView.ScaleType.FIT_XY,
+            ImageView.ScaleType.MATRIX -> {
+                AppLog.e(AppLog.T.UTILS, String.format("ScaleType %s is not supported.", scaleType.toString()))
+                request
+            }
         }
     }
 
@@ -92,7 +99,8 @@ class ImageManager @Inject constructor() {
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.load(imageView, bitmap, placeholder, scaleType)",
                         "org.wordpress.android.ui.ImageManager"))
-        fun loadImage(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType) {
+        @JvmOverloads
+        fun loadImage(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
             ImageManager().load(imageView, bitmap, scaleType)
         }
 
@@ -100,7 +108,8 @@ class ImageManager @Inject constructor() {
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.load(imageView, drawable, placeholder, scaleType)",
                         "org.wordpress.android.ui.ImageManager"))
-        fun loadImage(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType) {
+        @JvmOverloads
+        fun loadImage(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
             ImageManager().load(imageView, drawable, scaleType)
         }
 
