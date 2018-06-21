@@ -86,7 +86,7 @@ class ActivityLogViewModel @Inject constructor(
 
         this.site = site
 
-        reloadEvents()
+//        reloadEvents()
         requestEventsUpdate(false)
 
         rewindStatusService.start(site)
