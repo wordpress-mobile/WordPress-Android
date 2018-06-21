@@ -141,16 +141,15 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun getRewindProgressItem(activityId: String?): ActivityLogListItem.Progress? {
         return activityId?.let {
-            val rewoundEvent = _events.value
-                    ?.filter { it is ActivityLogListItem.Event }
-                    ?.firstOrNull { (it as ActivityLogListItem.Event).activityId == activityId }
-
-            rewoundEvent?.let {
-                ActivityLogListItem.Progress(
-                        resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                        resourceProvider.getString(R.string.activity_log_currently_restoring_message,
-                                rewoundEvent.formattedDate, rewoundEvent.formattedTime),
-                        resourceProvider.getString(R.string.now))
+            activityLogStore.getActivityLogItemByActivityId(activityId)?.let {
+                val rewoundEvent = ActivityLogListItem.Event(it)
+                rewoundEvent.let {
+                    ActivityLogListItem.Progress(
+                            resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                            resourceProvider.getString(R.string.activity_log_currently_restoring_message,
+                                    rewoundEvent.formattedDate, rewoundEvent.formattedTime),
+                            resourceProvider.getString(R.string.now))
+                }
             }
         }
     }
