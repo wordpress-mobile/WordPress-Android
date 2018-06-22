@@ -54,9 +54,8 @@ constructor(
     fun start(site: SiteModel) {
         this.site = site
         dispatcher.register(this)
-        if (!reloadRewindStatus()) {
-            dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
-        }
+        reloadRewindStatus()
+        dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
     }
 
     fun stop() {
@@ -64,7 +63,7 @@ constructor(
         site = null
     }
 
-    private fun reloadRewindStatus(): Boolean {
+    fun reloadRewindStatus(): Boolean {
         site?.let {
             val state = activityLogStore.getRewindStatusForSite(it)
             state?.let {

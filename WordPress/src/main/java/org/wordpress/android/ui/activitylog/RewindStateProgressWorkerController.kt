@@ -76,8 +76,6 @@ constructor() {
                 rewind?.let {
                     if (rewind.status == FINISHED && rewind.restoreId == restoreId) {
                         return SUCCESS
-                    } else if (rewind.restoreId != restoreId) {
-                        return FAILURE
                     }
                 }
                 dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))

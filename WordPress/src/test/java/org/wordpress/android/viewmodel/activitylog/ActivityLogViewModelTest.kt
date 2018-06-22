@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
 
@@ -33,6 +34,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var rewindStatusService: RewindStatusService
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
     private var events: MutableList<List<ActivityLogListItemViewModel>?> = mutableListOf()
@@ -42,7 +44,7 @@ class ActivityLogViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogViewModel(dispatcher, store)
+        viewModel = ActivityLogViewModel(dispatcher, store, rewindStatusService)
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
