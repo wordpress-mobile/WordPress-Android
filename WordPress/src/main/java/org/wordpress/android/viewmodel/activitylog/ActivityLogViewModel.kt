@@ -187,9 +187,7 @@ class ActivityLogViewModel @Inject constructor(
         }
 
         if (event.rowsAffected > 0) {
-            val eventList = activityLogStore.getActivityLogForSite(site, false)
-            val items = eventList.map { ActivityLogListItem.Event(it) }
-            _events.postValue(items)
+            reloadEvents()
         }
 
         if (event.canLoadMore) {
