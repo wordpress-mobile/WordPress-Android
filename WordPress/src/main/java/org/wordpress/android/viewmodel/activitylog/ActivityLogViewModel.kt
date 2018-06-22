@@ -108,6 +108,7 @@ class ActivityLogViewModel @Inject constructor(
             val eventList = activityLogStore.getActivityLogForSite(site, false)
             val items = eventList.map { ActivityLogListItemViewModel.fromDomainModel(it) }
             _events.postValue(items)
+            rewindStatusService.reloadRewindStatus()
         }
 
         if (event.canLoadMore) {
