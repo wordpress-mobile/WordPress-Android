@@ -2,8 +2,12 @@ package org.wordpress.android.support
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.support.v7.preference.PreferenceManager
 import android.telephony.TelephonyManager
 import com.zendesk.logger.Logger
+import com.zendesk.service.ErrorResponse
+import com.zendesk.service.ZendeskCallback
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -11,8 +15,10 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
@@ -21,6 +27,7 @@ import org.wordpress.android.util.logInformation
 import org.wordpress.android.util.stateLogInformation
 import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
+import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
 import zendesk.support.CustomField
 import zendesk.support.Support
@@ -41,6 +48,9 @@ class ZendeskHelper(
 
     private val isZendeskEnabled: Boolean
         get() = zendeskInstance.isInitialized
+
+    private val zendeskPushRegistrationProvider: PushRegistrationProvider?
+        get() = zendeskInstance.provider()?.pushRegistrationProvider()
 
     /**
      * These two properties are used to keep track of the Zendesk identity set. Since we allow users' to change their
@@ -147,20 +157,75 @@ class ZendeskHelper(
     }
 
     /**
-     * This function should be called when the user logs out of WordPress.com. We'll clear the Zendesk identity of the
-     * user on logout and it will need to be set again when the user wants to create a new ticket.
+     * This function should be called when the user logs out of WordPress.com. Push notifications are only available
+     * for WordPress.com users, so they'll be disabled. We'll also clear the Zendesk identity of the user on logout
+     * and it will need to be set again when the user wants to create a new ticket.
      */
     fun reset() {
+        disablePushNotifications()
         clearIdentity()
     }
 
     /**
+     * This function will enable push notifications for Zendesk. Both a Zendesk identity and a valid push
+     * notification device token is required. If either doesn't exist, the request will simply be ignored.
+     */
+    fun enablePushNotifications() {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        if (!isIdentityAvailable) {
+            // identity should be set before registering the device token
+            return
+        }
+        // The device token will not be available if the user is not logged in, so this check serves two purposes
+        wpcomPushNotificationDeviceToken?.let { deviceToken ->
+            zendeskPushRegistrationProvider?.registerWithDeviceIdentifier(
+                    deviceToken,
+                    object : ZendeskCallback<String>() {
+                        override fun onSuccess(result: String?) {
+                            AppLog.v(T.SUPPORT, "Zendesk push notifications successfully enabled!")
+                        }
+
+                        override fun onError(errorResponse: ErrorResponse?) {
+                            AppLog.v(T.SUPPORT, "Enabling Zendesk push notifications failed with" +
+                                    " error: ${errorResponse?.reason}")
+                        }
+                    })
+        }
+    }
+
+    /**
+     * This function will disable push notifications for Zendesk.
+     */
+    private fun disablePushNotifications() {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        zendeskPushRegistrationProvider?.unregisterDevice(
+                object : ZendeskCallback<Void>() {
+                    override fun onSuccess(response: Void?) {
+                        AppLog.v(T.SUPPORT, "Zendesk push notifications successfully disabled!")
+                    }
+
+                    override fun onError(errorResponse: ErrorResponse?) {
+                        AppLog.v(T.SUPPORT, "Disabling Zendesk push notifications failed with" +
+                                " error: ${errorResponse?.reason}")
+                    }
+                })
+    }
+
+    /**
      * This function provides a way to change the support email for the Zendesk identity. Due to the way Zendesk
-     * anonymous identity works, this will reset the users' tickets.
+     * anonymous identity works, this will reset the users' tickets. If the user hasn't used Zendesk yet, their identity
+     * might not be created. It'll attempt to enable push notifications for Zendesk for such a case.
      */
     fun setSupportEmail(email: String?) {
         AppPrefs.setSupportEmail(email)
         refreshIdentity()
+
+        // The identity might not be available previously, this will ensure that push notifications is enabled
+        enablePushNotifications()
     }
 
     /**
@@ -185,6 +250,7 @@ class ZendeskHelper(
             AppPrefs.setSupportEmail(email)
             AppPrefs.setSupportName(name)
             refreshIdentity()
+            enablePushNotifications()
             onIdentitySet()
         }
     }
@@ -336,6 +402,12 @@ private fun getNetworkInformation(context: Context): String {
             "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase()}"
     ).joinToString(separator = "\n")
 }
+
+private val wpcomPushNotificationDeviceToken: String?
+    get() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+        return preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null)
+    }
 
 private object ZendeskConstants {
     const val articleLabel = "Android"

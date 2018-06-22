@@ -87,6 +87,10 @@ public class GCMMessageService extends FirebaseMessagingService {
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
     private static final String PUSH_TYPE_NOTE_DELETE = "note-delete";
+    private static final String PUSH_TYPE_ZENDESK = "zendesk";
+
+    // All Zendesk push notifications will show the same notification, so hopefully this will be a unique ID
+    private static final int ZENDESK_PUSH_NOTIFICATION_ID = 1999999999;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -134,10 +138,12 @@ public class GCMMessageService extends FirebaseMessagingService {
             return;
         }
 
-        // TODO: Handle Zendesk PNs instead
-
         if (!mAccountStore.hasAccessToken()) {
             return;
+        }
+
+        if (PUSH_TYPE_ZENDESK.equals(String.valueOf(data.get("type")))) {
+            NOTIFICATION_HELPER.handleZendeskNotification(this);
         }
 
         synchronizedHandleDefaultPush(data);
@@ -446,6 +452,12 @@ public class GCMMessageService extends FirebaseMessagingService {
             showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
         }
 
+        private void showSimpleNotification(Context context, String title, String message, Intent resultIntent,
+                                            int pushId) {
+            NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
+            showNotificationForBuilder(builder, context, resultIntent, pushId, true);
+        }
+
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder,
                                                       String noteId) {
             // Add some actions if this is a comment notification
@@ -679,12 +691,12 @@ public class GCMMessageService extends FirebaseMessagingService {
                         .setContentText(subject)
                         .setStyle(inboxStyle);
 
-                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
+                showWPComNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true)
                         .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
-                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
+                showWPComNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             }
         }
 
@@ -699,16 +711,11 @@ public class GCMMessageService extends FirebaseMessagingService {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
 
-            showNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser);
+            showWPComNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser);
         }
 
-        // Displays a notification to the user
-        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
-                                                String wpcomNoteID, int pushId, boolean notifyUser) {
-            if (builder == null || context == null) {
-                return;
-            }
-
+        private void showWPComNotificationForBuilder(NotificationCompat.Builder builder, Context context,
+                                                     String wpcomNoteID, int pushId, boolean notifyUser) {
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -716,6 +723,16 @@ public class GCMMessageService extends FirebaseMessagingService {
             resultIntent.setAction("android.intent.action.MAIN");
             resultIntent.addCategory("android.intent.category.LAUNCHER");
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
+
+            showNotificationForBuilder(builder, context, resultIntent, pushId, notifyUser);
+        }
+
+        // Displays a notification to the user
+        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
+                                                Intent resultIntent, int pushId, boolean notifyUser) {
+            if (builder == null || context == null || resultIntent == null) {
+                return;
+            }
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             boolean shouldReceiveNotifications =
@@ -999,7 +1016,7 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         // Returns true if the note type is known to have a gravatar
-        public boolean shouldCircularizeNoteIcon(String noteType) {
+        private boolean shouldCircularizeNoteIcon(String noteType) {
             if (TextUtils.isEmpty(noteType)) {
                 return false;
             }
@@ -1015,6 +1032,23 @@ public class GCMMessageService extends FirebaseMessagingService {
                 default:
                     return false;
             }
+        }
+
+        /**
+         * Shows a notification stating that the user has a reply pending from Zendesk. Since Zendesk always sends a
+         * notification with the same title and message, we use our own localized messaging. For the same reason,
+         * we use a static push notification ID. Tapping on the notification will open the `ME` fragment.
+         */
+        private void handleZendeskNotification(Context context) {
+            if (context == null) {
+                return;
+            }
+            String title = context.getString(R.string.support_push_notification_title);
+            String message = context.getString(R.string.support_push_notification_message);
+            Intent resultIntent = new Intent(context, WPMainActivity.class);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            resultIntent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_ME);
+            showSimpleNotification(context, title, message, resultIntent, ZENDESK_PUSH_NOTIFICATION_ID);
         }
     }
 }
