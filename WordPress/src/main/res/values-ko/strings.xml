@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-30 08:54:08+0000
+Translation-Revision-Date: 2018-06-12 08:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">%s을(를) 탭하여 목록에 글을 저장합니다.</string>
+    <string name="reader_empty_saved_posts_title">글이 아직 저장되지 않았습니다!</string>
+    <string name="reader_bookmark_snack_title">글이 저장됨</string>
+    <string name="reader_bookmark_snack_btn">모두 보기</string>
+    <string name="reader_btn_bookmarked">저장됨</string>
+    <string name="reader_btn_bookmark">저장</string>
+    <string name="reader_remove_bookmark">저장된 글에서 제거</string>
+    <string name="reader_add_bookmark">저장된 글에 추가</string>
+    <string name="reader_save_for_later_title">저장된 글</string>
+    <string name="activity_log_empty_list">기록된 이벤트가 아직 없음</string>
+    <string name="removed">제거됨</string>
     <string name="tabbar_accessibility_label_write">새 글입니다. 새 글을 작성합니다.</string>
     <string name="my_site_icon_content_description">사이트 아이콘 변경</string>
     <string name="my_site_icon_dialog_cancel_button">취소</string>
@@ -298,7 +309,6 @@ Language: ko_KR
     <string name="signup_magic_link_message">매직 가입 링크를 보냈습니다! 이 장치에서 이메일을 확인하고 이메일의 링크를 눌러 가입을 완료하세요.</string>
     <string name="signup_magic_link_error_button_positive">다시 시도</string>
     <string name="signup_magic_link_error_button_negative">닫기</string>
-    <string name="signup_magic_link_error">이메일을 보내는 중에 문제가 발생했습니다. 지금 다시 시도하거나 닫고 나중에 다시 시도할 수 있습니다.</string>
     <string name="signup_epilogue_hint_username">사용자 이름</string>
     <string name="signup_epilogue_hint_password_detail">회원님이 방금 사용한 것과 같은 매직 링크로 항상 로그인할 수 있지만, 원하는 경우 비밀번호를 설정할 수도 있습니다.</string>
     <string name="signup_epilogue_hint_password">암호(옵션)</string>
@@ -872,6 +882,7 @@ Language: ko_KR
     <string name="invite_names_title">사용자명 또는 이메일</string>
     <string name="invite_people">사용자 초대</string>
     <string name="my_site_header_external">외부</string>
+    <string name="send_link">링크 전송</string>
     <string name="label_clear_search_history">검색 내역 지우기</string>
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
     <string name="reader_empty_posts_in_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
@@ -899,6 +910,7 @@ Language: ko_KR
     <string name="checking_email">이메일 확인 중</string>
     <string name="magic_link_unavailable_error_message">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
     <string name="logging_in">로그인 중</string>
+    <string name="enter_your_password_instead">비밀번호를 대신 입력하세요.</string>
     <string name="web_address_dialog_hint">댓글을 달 때 공개적으로 표시합니다.</string>
     <string name="new_editor_reflection_error">비주얼 편집기가 장치와 호환되지 않습니다. 자동으로\n 사용 중지되었습니다.</string>
     <string name="stats_insights_latest_post_no_title">(제목 없음)</string>
@@ -1247,6 +1259,7 @@ Language: ko_KR
     <string name="deselect_all">모두 선택 해제</string>
     <string name="stats_generic_error">필요한 통계 자료를 로드할 수 없음</string>
     <string name="auth_required">계속하려면 다시 로그인하세요.</string>
+    <string name="invalid_verification_code">잘못된 확인 코드</string>
     <string name="verification_code">확인 코드</string>
     <string name="editor_toast_invalid_path">잘못된 파일 경로</string>
     <string name="language">언어</string>

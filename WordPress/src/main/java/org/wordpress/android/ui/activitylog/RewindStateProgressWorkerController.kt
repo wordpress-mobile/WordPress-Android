@@ -71,8 +71,6 @@ constructor(val activityLogStore: ActivityLogStore, val siteStore: SiteStore, va
                 rewind?.let {
                     if (rewind.status == FINISHED && rewind.restoreId == restoreId) {
                         return SUCCESS
-                    } else if (rewind.restoreId != restoreId) {
-                        return FAILURE
                     }
                 }
                 val action = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site))

@@ -340,7 +340,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new CaptionShortcodePlugin(mContent))
                 .addPlugin(new VideoShortcodePlugin())
                 .addPlugin(new AudioShortcodePlugin())
-                .addPlugin(new HiddenGutenbergPlugin())
+                .addPlugin(new HiddenGutenbergPlugin(mContent))
                 .addPlugin(mediaToolbarGalleryButton)
                 .addPlugin(mediaToolbarCameraButton)
                 .addPlugin(mediaToolbarLibraryButton);

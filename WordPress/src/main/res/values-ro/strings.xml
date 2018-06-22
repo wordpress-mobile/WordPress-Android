@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-28 11:21:43+0000
+Translation-Revision-Date: 2018-06-12 20:55:15+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="signup_magic_link_title">Legătura magică a fost trimisă</string>
+    <string name="signup_email_screen_title">Înregistrare prin email</string>
+    <string name="verification_2fa_screen_title">Verificare cod</string>
+    <string name="selfhosted_site_login_title">Date de autentificare</string>
+    <string name="magic_link_sent_login_title">Legătura magică a fost trimisă</string>
+    <string name="magic_link_login_title">Autentificare prin legătura magică</string>
+    <string name="site_address_login_title">Autentificare prin adresa sitului</string>
+    <string name="email_address_login_title">Autentificare prin adresa de email</string>
+    <string name="alternatively">Ca alternativă:</string>
+    <string name="reader_empty_saved_posts_description">Atinge %s pentru a salva un articol în lista ta.</string>
+    <string name="reader_empty_saved_posts_title">Niciun articol salvat u2014 până acum!</string>
+    <string name="reader_bookmark_snack_title">Publică salvate</string>
+    <string name="reader_bookmark_snack_btn">Vezi tot</string>
+    <string name="reader_btn_bookmarked">Salvate</string>
+    <string name="reader_btn_bookmark">Salvează</string>
+    <string name="reader_remove_bookmark">Înlătură din articole salvate</string>
+    <string name="reader_add_bookmark">Adaugă la articole salvate</string>
+    <string name="reader_save_for_later_title">Articole salvate</string>
+    <string name="activity_log_empty_list">Niciun eveniment înregistrat până acum</string>
+    <string name="removed">Înlăturat</string>
     <string name="tabbar_accessibility_label_write">Articol nou. Scrie un articol nou.</string>
     <string name="my_site_icon_content_description">Schimbă iconul sitului</string>
     <string name="my_site_icon_dialog_cancel_button">Anulează</string>
     <string name="my_site_icon_dialog_remove_button">Înlătură</string>
-    <string name="my_site_icon_dialog_change_button">Schimbă</string>
+    <string name="my_site_icon_dialog_change_button">Modifică</string>
     <string name="my_site_icon_dialog_change_requires_permission_message">Nu ai permisiunea să editezi iconul sitului.</string>
     <string name="my_site_icon_dialog_add_requires_permission_message">Nu ai permisiunea să adaugi un icon sit.</string>
     <string name="my_site_icon_dialog_change_message">Cum ai vrea să editezi iconul?</string>
@@ -886,6 +906,7 @@ Language: ro
     <string name="invite_names_title">Nume de utilizatori sau emailuri</string>
     <string name="invite_people">Invită persoane</string>
     <string name="my_site_header_external">Extern</string>
+    <string name="send_link">Trimite legătura</string>
     <string name="label_clear_search_history">Șterge istoric căutări</string>
     <string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
     <string name="reader_empty_posts_in_search_description">Nu s–a găsit niciun articol a lui %s în limba ta</string>
@@ -913,6 +934,7 @@ Language: ro
     <string name="checking_email">Verificarea emailului</string>
     <string name="magic_link_unavailable_error_message">În prezent indisponibilă. Te rog să–ți introduci parola</string>
     <string name="logging_in">Autentificat</string>
+    <string name="enter_your_password_instead">Introdu–ți parola în schimb</string>
     <string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
     <string name="new_editor_reflection_error">Editorul vizual nu este compatibil cu dispozitivul tău. A fost\n        dezactivat automat.</string>
     <string name="stats_insights_latest_post_no_title">(fără titlu)</string>
@@ -1269,6 +1291,7 @@ Language: ro
     <string name="deselect_all">Deselectează tot</string>
     <string name="stats_generic_error">Statisticile cerute nu pot fi încărcate</string>
     <string name="auth_required">Autentifică–te din nou pentru a continua.</string>
+    <string name="invalid_verification_code">Cod de verificare invalid</string>
     <string name="verification_code">Cod de verificare</string>
     <string name="editor_toast_invalid_path">Cale fișier invalidă</string>
     <string name="language">Limbă</string>

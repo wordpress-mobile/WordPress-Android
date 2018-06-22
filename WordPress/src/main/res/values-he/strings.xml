@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-29 18:54:07+0000
+Translation-Revision-Date: 2018-06-18 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="signup_magic_link_title">הקישור הישיר נשלח</string>
+    <string name="signup_email_screen_title">הרשמה באימייל</string>
+    <string name="verification_2fa_screen_title">אימות קוד</string>
+    <string name="selfhosted_site_login_title">פרטי כניסה</string>
+    <string name="magic_link_sent_login_title">הקישור הישיר נשלח</string>
+    <string name="magic_link_login_title">התחברות באמצעות קישור ישיר</string>
+    <string name="site_address_login_title">התחברות באמצעות כתובת האתר</string>
+    <string name="email_address_login_title">התחברות באמצעות כתובת אימייל</string>
+    <string name="alternatively">לחלופין:</string>
+    <string name="reader_empty_saved_posts_description">יש להקיש על %s כדי לשמור את הפוסט ברשימה שלך.</string>
+    <string name="reader_empty_saved_posts_title">לא נשמרו פוסטים u2014 עדיין!</string>
+    <string name="reader_bookmark_snack_title">הפוסט נשמר</string>
+    <string name="reader_bookmark_snack_btn">להציג הכול</string>
+    <string name="reader_btn_bookmarked">נשמר</string>
+    <string name="reader_btn_bookmark">שמירה</string>
+    <string name="reader_remove_bookmark">הסרה מהפוסטים שנשמרו</string>
+    <string name="reader_add_bookmark">הוספה לפוסטים שנשמרו</string>
+    <string name="reader_save_for_later_title">פוסטים שנשמרו</string>
+    <string name="activity_log_empty_list">עדיין לא נרשמו אירועים</string>
+    <string name="removed">נמחק</string>
     <string name="tabbar_accessibility_label_write">פוסט חדש. כתיבת פוסט חדש.</string>
     <string name="my_site_icon_content_description">שינוי סמל אתר</string>
     <string name="my_site_icon_dialog_cancel_button">ביטול</string>
@@ -298,7 +318,6 @@ Language: he_IL
     <string name="signup_magic_link_message">שלחנו אליך קישור ישיר להרשמה! עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת כדי להשלים את ההרשמה.</string>
     <string name="signup_magic_link_error_button_positive">יש לנסות שנית</string>
     <string name="signup_magic_link_error_button_negative">סגור</string>
-    <string name="signup_magic_link_error">אירעה בעיה בשליחת האימייל. אפשר לנסות שוב עכשיו או לסגור את העמוד ולנסות שוב מאוחר יותר.</string>
     <string name="signup_epilogue_hint_username">שם משתמש</string>
     <string name="signup_epilogue_hint_password_detail">אפשר תמיד להתחבר באמצעות קישור ישיר, כמו הקישור שבו השתמשת כעת, אבל באפשרותך גם להגדיר סיסמה לבחירתך.</string>
     <string name="signup_epilogue_hint_password">סיסמה (לא חובה)</string>
@@ -873,6 +892,7 @@ Language: he_IL
     <string name="invite">הזמנה</string>
     <string name="invite_names_title">שמות משתמש או אימיילים</string>
     <string name="my_site_header_external">חיצוני</string>
+    <string name="send_link">שלח קישור</string>
     <string name="invite_people">הזמנת אנשים</string>
     <string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
@@ -901,6 +921,7 @@ Language: he_IL
     <string name="checking_email">בודק אימייל</string>
     <string name="magic_link_unavailable_error_message">לא זמין כרגע. יש להזין סיסמה</string>
     <string name="logging_in">נכנס</string>
+    <string name="enter_your_password_instead">במקום זאת יש להזין סיסמה</string>
     <string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
     <string name="new_editor_reflection_error">עורך ויזואלי לא תואם למכשיר שלך. הוא\n הושבת אוטומטית.</string>
     <string name="stats_insights_latest_post_no_title">(חסרה כותרת)</string>
@@ -1255,6 +1276,7 @@ Language: he_IL
     <string name="stats_generic_error">לא ניתן לטעון סטטוס נדרש</string>
     <string name="editor_toast_invalid_path">נתיב קובץ שגוי</string>
     <string name="verification_code">קוד אימות</string>
+    <string name="invalid_verification_code">קוד אימות שגוי</string>
     <string name="auth_required">יש להתחבר שוב כדי המשיך.</string>
     <string name="language">שפה</string>
     <string name="media_fetching">מביא מדיה…</string>

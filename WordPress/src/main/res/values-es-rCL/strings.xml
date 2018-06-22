@@ -121,6 +121,7 @@ Language: es_CL
     <string name="language">Idioma</string>
     <string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
     <string name="verification_code">Código de verificación</string>
+    <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="reader_empty_posts_request_failed">No fue posible cargar las entradas</string>
     <string name="publisher">Autor:</string>
     <string name="error_notification_open">No se pudo abrir la notificación</string>

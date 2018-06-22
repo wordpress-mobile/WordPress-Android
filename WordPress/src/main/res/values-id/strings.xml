@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-30 07:54:10+0000
+Translation-Revision-Date: 2018-06-12 09:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">Ketuk %s untuk menyimpan pos ke dalam daftar Anda.</string>
+    <string name="reader_empty_saved_posts_title">Masih belum ada pos yang disimpan!</string>
+    <string name="reader_bookmark_snack_title">Pos disimpan</string>
+    <string name="reader_bookmark_snack_btn">Lihat Semua</string>
+    <string name="reader_btn_bookmarked">Disimpan</string>
+    <string name="reader_btn_bookmark">Simpan</string>
+    <string name="reader_remove_bookmark">Buang dari pos saya yang disimpan</string>
+    <string name="reader_add_bookmark">Tambahkan ke pos saya yang disimpan</string>
+    <string name="reader_save_for_later_title">Pos yang disimpan</string>
+    <string name="activity_log_empty_list">Masih belum ada kejadian yang direkam</string>
+    <string name="removed">Dibuang</string>
     <string name="tabbar_accessibility_label_write">Pos baru. Tulis pos baru.</string>
     <string name="my_site_icon_content_description">Ubah ikon situs</string>
     <string name="my_site_icon_dialog_cancel_button">Batalkan</string>
@@ -298,7 +309,6 @@ Language: id
     <string name="signup_magic_link_message">Kami mengirimkan tautan pendaftaran tanpa kata sandi kepada Anda! Periksa email Anda di perangkat ini, dan ketuk tautan pada email untuk menyelesaikan pendaftaran.</string>
     <string name="signup_magic_link_error_button_positive">Coba lagi</string>
     <string name="signup_magic_link_error_button_negative">Tutup</string>
-    <string name="signup_magic_link_error">Ada beberapa masalah saat mengirim email. Anda dapat mencoba lagi sekarang atau menutupnya dan mencoba lagi nanti.</string>
     <string name="signup_epilogue_hint_username">Nama pengguna</string>
     <string name="signup_epilogue_hint_password_detail">Anda dapat login dengan tautan tanpa kata sandi kapan saja seperti yang Anda lakukan sebelumnya, tetapi Anda juga dapat menyiapkan kata sandi jika ingin.</string>
     <string name="signup_epilogue_hint_password">Kata Sandi (opsional)</string>
@@ -848,6 +858,7 @@ Language: id
     <string name="invite_names_title">Nama pengguna atau Email</string>
     <string name="invite_people">Undang Orang–orang</string>
     <string name="my_site_header_external">Eksternal</string>
+    <string name="send_link">Kirim tautan</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
     <string name="reader_empty_posts_in_search_description">Tak ditemukan pos untuk %s dalam bahasa Anda</string>
@@ -875,6 +886,7 @@ Language: id
     <string name="checking_email">Memeriksa surat elektronik</string>
     <string name="magic_link_unavailable_error_message">Saat ini tidak tersedia. Masukkan kata sandi Anda</string>
     <string name="logging_in">Proses masuk</string>
+    <string name="enter_your_password_instead">Sebaiknya masukkan kata sandi Anda</string>
     <string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
     <string name="new_editor_reflection_error">Visual editor tidak kompatibel dengan perangkat Anda. Ini\n dinonaktifkan secara otomatis.</string>
     <string name="stats_insights_latest_post_no_title">(tanpa judul)</string>
@@ -1223,6 +1235,7 @@ Language: id
     <string name="deselect_all">Batalkan semua pilihan</string>
     <string name="stats_generic_error">Statistik yang diminta gagal dimuat</string>
     <string name="auth_required">Log in lagi untuk melanjutkan.</string>
+    <string name="invalid_verification_code">Kode verifikasi tidak valid</string>
     <string name="verification_code">Kode verifikasi</string>
     <string name="editor_toast_invalid_path">Lokasi file tidak valid</string>
     <string name="language">Bahasa</string>

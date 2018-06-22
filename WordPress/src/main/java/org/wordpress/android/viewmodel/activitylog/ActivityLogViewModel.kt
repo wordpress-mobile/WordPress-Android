@@ -188,6 +188,7 @@ class ActivityLogViewModel @Inject constructor(
 
         if (event.rowsAffected > 0) {
             reloadEvents()
+            rewindStatusService.reloadRewindStatus()
         }
 
         if (event.canLoadMore) {

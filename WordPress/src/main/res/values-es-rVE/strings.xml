@@ -103,6 +103,7 @@ Language: es_VE
     <string name="invite_names_title">Nombres de usuario o correos electrónicos</string>
     <string name="invite_people">Invitar gente</string>
     <string name="my_site_header_external">Externo</string>
+    <string name="send_link">Enviar enlace</string>
     <string name="label_clear_search_history">Borrar historial de búsqueda</string>
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_posts_in_search_description">No se han encontrado entradas con %s para tu idioma</string>
@@ -130,6 +131,7 @@ Language: es_VE
     <string name="checking_email">Comprobando correo electrónico</string>
     <string name="magic_link_unavailable_error_message">Actualmente no disponible. Por favor, introduce tu contraseña</string>
     <string name="logging_in">Accediendo</string>
+    <string name="enter_your_password_instead">Introduce tu contraseña</string>
     <string name="web_address_dialog_hint">Cuando comentes se hará público</string>
     <string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
     <string name="stats_insights_latest_post_no_title">(sin título)</string>
@@ -479,6 +481,7 @@ Language: es_VE
     <string name="stats_generic_error">No se pudieron cargar las estadísticas solicitadas.</string>
     <string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
     <string name="language">Idioma</string>
+    <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="verification_code">Código de verificación</string>
     <string name="auth_required">Accede de nuevo para continuar.</string>
     <string name="stats_search_terms_unknown_search_terms">Términos de búsqueda desconocidos</string>

@@ -16,7 +16,6 @@
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">4dp</dimen>
-    <dimen name="filter_subbar_elevation">@dimen/appbar_elevation</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -202,12 +201,15 @@
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_list_row_padding_left">12dp</dimen>
+    <dimen name="my_site_list_row_padding_left">20dp</dimen>
+    <dimen name="my_site_list_row_padding_left_switch">12dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
+    <dimen name="me_content_margin">@dimen/margin_large</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
+    <dimen name="me_list_row_padding_horizontal">@dimen/me_content_margin</dimen>
 
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
