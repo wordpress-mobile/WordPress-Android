@@ -31,12 +31,26 @@ import zendesk.support.requestlist.RequestListActivity
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
 
-class ZendeskHelper(private val supportHelper: SupportHelper) {
+class ZendeskHelper(
+    private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
+    private val supportHelper: SupportHelper
+) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
 
     private val isZendeskEnabled: Boolean
         get() = zendeskInstance.isInitialized
+
+    /**
+     * These two properties are used to keep track of the Zendesk identity set. Since we allow users' to change their
+     * supportEmail and reset their identity on logout, we need to ensure that the correct identity is set all times.
+     * Check [requireIdentity], [refreshIdentity] & [clearIdentity] for more details about how Zendesk identity works.
+     */
+    private var supportEmail: String? = null
+    private var supportName: String? = null
+    private val isIdentityAvailable: Boolean
+        get() = !supportEmail.isNullOrEmpty()
 
     /**
      * This function sets up the Zendesk singleton instance with the passed in credentials. This step is required
@@ -60,6 +74,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
         Logger.setLoggable(enableLogs)
         Support.INSTANCE.init(zendeskInstance)
+        refreshIdentity()
     }
 
     /**
@@ -70,21 +85,12 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
      */
     fun showZendeskHelpCenter(
         context: Context,
-        siteStore: SiteStore,
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>? = null
     ) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
-        }
-        val supportEmail = AppPrefs.getSupportEmail()
-        val supportName = AppPrefs.getSupportName()
-        val isIdentityAvailable = !supportEmail.isNullOrEmpty()
-        if (isIdentityAvailable) {
-            zendeskInstance.setIdentity(createZendeskIdentity(supportEmail, supportName))
-        } else {
-            zendeskInstance.setIdentity(createZendeskIdentity(null, null))
         }
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
@@ -93,7 +99,7 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
                 .withShowConversationsMenuButton(isIdentityAvailable)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
         if (isIdentityAvailable) {
-            builder.show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+            builder.show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         } else {
             builder.show(context)
         }
@@ -107,8 +113,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
     @JvmOverloads
     fun createNewTicket(
         context: Context,
-        accountStore: AccountStore?,
-        siteStore: SiteStore,
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>? = null
@@ -116,10 +120,9 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        supportHelper.getSupportIdentity(context, accountStore?.account, selectedSite) { email, name ->
-            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+        requireIdentity(context, selectedSite) {
             RequestActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
     }
 
@@ -130,8 +133,6 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
      */
     fun showAllTickets(
         context: Context,
-        accountStore: AccountStore,
-        siteStore: SiteStore,
         origin: Origin?,
         selectedSite: SiteModel? = null,
         extraTags: List<String>? = null
@@ -139,11 +140,82 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        supportHelper.getSupportIdentity(context, accountStore.account, selectedSite) { email, name ->
-            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+        requireIdentity(context, selectedSite) {
             RequestListActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore, origin, selectedSite, extraTags))
+                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
+    }
+
+    /**
+     * This function should be called when the user logs out of WordPress.com. We'll clear the Zendesk identity of the
+     * user on logout and it will need to be set again when the user wants to create a new ticket.
+     */
+    fun reset() {
+        clearIdentity()
+    }
+
+    /**
+     * This function provides a way to change the support email for the Zendesk identity. Due to the way Zendesk
+     * anonymous identity works, this will reset the users' tickets.
+     */
+    fun setSupportEmail(email: String?) {
+        AppPrefs.setSupportEmail(email)
+        refreshIdentity()
+    }
+
+    /**
+     * This is a helper function which provides an easy way to make sure a Zendesk identity is set before running a
+     * piece of code. It'll check the existence of the identity and call the callback if it's already available.
+     * Otherwise, it'll show a dialog for the user to enter an email and name through a helper function which then
+     * will be used to set the identity and call the callback. It'll also try to enable the push notifications.
+     */
+    private fun requireIdentity(
+        context: Context,
+        selectedSite: SiteModel?,
+        onIdentitySet: () -> Unit
+    ) {
+        if (isIdentityAvailable) {
+            // identity already available
+            onIdentitySet()
+            return
+        }
+        val (emailSuggestion, nameSuggestion) = supportHelper
+                .getSupportEmailAndNameSuggestion(accountStore.account, selectedSite)
+        supportHelper.showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion) { email, name ->
+            AppPrefs.setSupportEmail(email)
+            AppPrefs.setSupportName(name)
+            refreshIdentity()
+            onIdentitySet()
+        }
+    }
+
+    /**
+     * This is a helper function that'll ensure the Zendesk identity is set with the credentials from AppPrefs.
+     */
+    private fun refreshIdentity() {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        val email = AppPrefs.getSupportEmail()
+        val name = AppPrefs.getSupportName()
+        if (supportEmail != email || supportName != name) {
+            supportEmail = email
+            supportName = name
+            zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+        }
+    }
+
+    /**
+     * This is a helper function to clear the Zendesk identity. It'll remove the credentials from AppPrefs and update
+     * the Zendesk identity with a new anonymous one without an email or name. Due to the way Zendesk anonymous identity
+     * works, this will clear all the users' tickets.
+     */
+    private fun clearIdentity() {
+        supportEmail = null
+        supportName = null
+        AppPrefs.removeSupportEmail()
+        AppPrefs.removeSupportName()
+        zendeskInstance.setIdentity(createZendeskIdentity(null, null))
     }
 }
 
@@ -154,15 +226,15 @@ class ZendeskHelper(private val supportHelper: SupportHelper) {
  */
 private fun buildZendeskConfig(
     context: Context,
-    siteStore: SiteStore,
+    allSites: List<SiteModel>?,
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null
 ): UiConfig {
     return RequestActivity.builder()
-            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, siteStore, selectedSite))
+            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, allSites, selectedSite))
             .withRequestSubject(ZendeskConstants.ticketSubject)
-            .withTags(buildZendeskTags(siteStore.sites, origin ?: Origin.UNKNOWN, extraTags))
+            .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
             .config()
 }
 
@@ -172,7 +244,7 @@ private fun buildZendeskConfig(
  */
 private fun buildZendeskCustomFields(
     context: Context,
-    siteStore: SiteStore,
+    allSites: List<SiteModel>?,
     selectedSite: SiteModel?
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
@@ -182,7 +254,7 @@ private fun buildZendeskCustomFields(
     }
     return listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(siteStore.sites)),
+            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
             CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
