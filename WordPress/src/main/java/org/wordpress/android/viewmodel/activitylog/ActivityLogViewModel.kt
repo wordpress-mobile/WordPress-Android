@@ -10,12 +10,14 @@ import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class ActivityLogViewModel @Inject constructor(
     val dispatcher: Dispatcher,
-    private val activityLogStore: ActivityLogStore
+    private val activityLogStore: ActivityLogStore,
+    private val rewindStatusService: RewindStatusService
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
