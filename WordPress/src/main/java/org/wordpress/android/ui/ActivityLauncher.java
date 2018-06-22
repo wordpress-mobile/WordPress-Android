@@ -28,7 +28,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
-import org.wordpress.android.ui.main.QuickStartActivity;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;

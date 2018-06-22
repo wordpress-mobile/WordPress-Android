@@ -52,6 +52,7 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -497,12 +498,10 @@ public class MySiteFragment extends Fragment implements
                 break;
             case RequestCodes.QUICK_START:
                 if (data != null && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
-
                     QuickStartTask task =
                             (QuickStartTask) data.getExtras().getSerializable(QuickStartActivity.ARG_QUICK_START_TASK);
 
-                    LinearLayout container = getMenuContainerForQuickStartTask(task);
-
+                    final LinearLayout container = getMenuContainerForQuickStartTask(task);
                     addQuickStartFocusPoint(container);
 
                     Drawable drawable = getResources().getDrawable(R.drawable.ic_globe_grey_24dp);
@@ -515,8 +514,15 @@ public class MySiteFragment extends Fragment implements
                     WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator), title,
                             AccessibilityUtils.getSnackbarDuration(getActivity())).show();
 
-                    mScrollView.smoothScrollTo(0, container.getBottom());
-                    container.setPressed(true);
+
+                    mScrollView.post(new Runnable() {
+                        @Override public void run() {
+                            mScrollView.smoothScrollTo(0, container.getBottom());
+                            container.setPressed(true);
+                        }
+                    });
+
+
                 }
                 break;
         }
