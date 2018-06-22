@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -30,6 +31,8 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -41,7 +44,8 @@ import javax.inject.Inject;
 
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
-        NotificationFragment.OnPostClickListener {
+        NotificationFragment.OnPostClickListener,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface {
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
@@ -307,5 +311,13 @@ public class CommentsActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
+        Fragment fragmentById = getSupportFragmentManager().findFragmentById(R.id.layout_fragment_container);
+        if (fragmentById instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
+            ((BasicDialogPositiveClickInterface) fragmentById).onPositiveClicked(instanceTag);
+        }
     }
 }

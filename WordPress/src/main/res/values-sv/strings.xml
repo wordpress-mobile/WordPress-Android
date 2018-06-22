@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-24 12:59:51+0000
+Translation-Revision-Date: 2018-06-12 17:40:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="signup_magic_link_title">Magisk länk har skickats</string>
+    <string name="signup_email_screen_title">Registrering via e–post</string>
+    <string name="verification_2fa_screen_title">Bekräftelse av kod</string>
+    <string name="selfhosted_site_login_title">Inloggningsuppgifter</string>
+    <string name="magic_link_sent_login_title">Magisk länk har skickats</string>
+    <string name="magic_link_login_title">Inloggning via magisk länk</string>
+    <string name="site_address_login_title">Webbplatsens inloggningsadress</string>
+    <string name="email_address_login_title">E–postadress för inloggning</string>
+    <string name="alternatively">Alternativt:</string>
+    <string name="reader_empty_saved_posts_description">Knacka på %s för att spara ett inlägg till din lista.</string>
+    <string name="reader_empty_saved_posts_title">Inga inlägg sparade – ännu!</string>
+    <string name="reader_bookmark_snack_title">Inlägget sparat</string>
+    <string name="reader_bookmark_snack_btn">Se alla</string>
+    <string name="reader_btn_bookmarked">Sparat</string>
+    <string name="reader_btn_bookmark">Spara</string>
+    <string name="reader_remove_bookmark">Ta bort från sparade inlägg</string>
+    <string name="reader_add_bookmark">Lägg till i sparade inlägg</string>
+    <string name="reader_save_for_later_title">Sparade inlägg</string>
+    <string name="activity_log_empty_list">Inga händelser har registrerats ännu</string>
+    <string name="removed">Borttaget</string>
     <string name="tabbar_accessibility_label_write">Nytt inlägg. Skriv ett nytt inlägg.</string>
     <string name="my_site_icon_content_description">Byt webbplatsikon</string>
     <string name="my_site_icon_dialog_cancel_button">Avbryt</string>
@@ -302,7 +322,7 @@ Language: sv_SE
     <string name="signup_magic_link_message">Vi har skickat dig en magisk länk för registrering! Kolla din e-post på denna telefon och knacka på länken i e–posten för att bekräfta registreringen.</string>
     <string name="signup_magic_link_error_button_positive">Försök igen</string>
     <string name="signup_magic_link_error_button_negative">Stäng</string>
-    <string name="signup_magic_link_error">Det gick inte att sända e–postmeddelandet. Du kan försöka en gång till eller stänga och försöka igen senare.</string>
+    <string name="signup_magic_link_error">Det gick inte att sända e–postmeddelandet. Du kan försöka igen nu eller stänga och göra ett nytt försök senare.</string>
     <string name="signup_epilogue_hint_username">Användarnamn</string>
     <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en magisk länk som den du just klickade på, men om du vill kan du också spara ett lösenord.</string>
     <string name="signup_epilogue_hint_password">Lösenord (valfritt)</string>
@@ -886,6 +906,7 @@ Language: sv_SE
     <string name="invite_names_title">Användarnamn eller e‑postmeddelanden</string>
     <string name="invite_people">Bjud in personer</string>
     <string name="my_site_header_external">Externt</string>
+    <string name="send_link">Skicka länk</string>
     <string name="label_clear_search_history">Rensa sökhistoriken</string>
     <string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
     <string name="reader_empty_posts_in_search_description">Inga inlägg hittade för %s på ditt språk</string>
@@ -913,6 +934,7 @@ Language: sv_SE
     <string name="checking_email">Kontrollerar e–post</string>
     <string name="magic_link_unavailable_error_message">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
     <string name="logging_in">Loggar in</string>
+    <string name="enter_your_password_instead">Ange ditt lösenord istället</string>
     <string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
     <string name="new_editor_reflection_error">Den visuella redigeraren är inte kompatibel med din enhet. Den\n inaktiverades automatiskt.</string>
     <string name="stats_insights_latest_post_no_title">(ingen rubrik)</string>
@@ -1269,6 +1291,7 @@ Language: sv_SE
     <string name="deselect_all">Avmarkera alla </string>
     <string name="stats_generic_error">Nödvändig statistik kunde inte laddas in. </string>
     <string name="auth_required">Logga in igen för att fortsätta.</string>
+    <string name="invalid_verification_code">Ogiltig verifieringskod</string>
     <string name="verification_code">Verifieringskod</string>
     <string name="editor_toast_invalid_path">Ogiltig sökväg till fil</string>
     <string name="language">Språk</string>
