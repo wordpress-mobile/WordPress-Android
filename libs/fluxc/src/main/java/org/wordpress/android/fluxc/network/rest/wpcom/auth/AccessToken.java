@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import javax.inject.Singleton;
@@ -15,6 +16,11 @@ public class AccessToken {
     public AccessToken(Context appContext) {
         mContext = appContext;
         mToken = getFluxCPreferences().getString(ACCOUNT_TOKEN_PREF_KEY, "");
+        if (mToken.isEmpty()) {
+            // Check the old token storage location, since we might init the access token
+            // before the token migration completes (DB upgrade 38 -> 39)
+            mToken = PreferenceManager.getDefaultSharedPreferences(mContext).getString(ACCOUNT_TOKEN_PREF_KEY, "");
+        }
     }
 
     public boolean exists() {
