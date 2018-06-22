@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
@@ -19,7 +20,7 @@ class PagesAdapter : RecyclerView.Adapter<PageItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            PageItem.PAGE -> PageViewHolder(layoutInflater, parent)
+            PageItem.PAGE -> PageViewHolder(layoutInflater, parent) { showMenu(it) }
             PageItem.DIVIDER -> PageDividerViewHolder(layoutInflater, parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
@@ -42,11 +43,32 @@ class PagesAdapter : RecyclerView.Adapter<PageItemViewHolder>() {
         diffResult.dispatchUpdatesTo(this)
     }
 
+    fun showMenu(v: View) {
+        val popup = PopupMenu(v.context, v)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.view_page -> TODO()
+                R.id.set_parent -> TODO()
+                R.id.publish_now -> TODO()
+                R.id.move_to_draft -> TODO()
+                R.id.move_to_trash -> TODO()
+                else -> {
+                    throw IllegalArgumentException("Unexpected item in contextual menu")
+                }
+            }
+        }
+        popup.menuInflater.inflate(R.menu.page_more, popup.menu)
+        popup.show()
+    }
+
     sealed class PageItemViewHolder(parentView: View) :
             ViewHolder(parentView) {
         abstract fun onBind(pageItem: PageItem)
 
-        class PageViewHolder(layoutInflater: LayoutInflater, parentView: ViewGroup) :
+        class PageViewHolder(
+            layoutInflater: LayoutInflater,
+            parentView: ViewGroup,
+            private val moreClick: (View) -> Unit) :
                 PageItemViewHolder(layoutInflater.inflate(layout.page_list_item, parentView, false)) {
             private val firstIndent = itemView.findViewById<View>(R.id.first_indent)
             private val secondIndent = itemView.findViewById<View>(R.id.second_indent)
@@ -64,6 +86,7 @@ class PagesAdapter : RecyclerView.Adapter<PageItemViewHolder>() {
                     fourthIndent.visibility = if (pageItem.indent > 3) View.VISIBLE else View.GONE
                     fifthIndent.visibility = if (pageItem.indent > 4) View.VISIBLE else View.GONE
                     pageTitle.text = pageItem.title
+                    pageMore.setOnClickListener { moreClick(it) }
                 }
             }
         }
