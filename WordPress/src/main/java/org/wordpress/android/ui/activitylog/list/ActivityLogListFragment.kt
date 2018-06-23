@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,14 @@ class ActivityLogListFragment : Fragment() {
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
+
+        activityLogList.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                if (!recyclerView!!.canScrollVertically(1) && dy != 0) {
+                    viewModel.onScrolledToBottom()
+                }
+            }
+        })
 
         setupObservers()
 
@@ -137,7 +146,6 @@ class ActivityLogListFragment : Fragment() {
             if (activityLogList.adapter == null) {
                 adapter = ActivityLogAdapter(
                         it,
-                        viewModel,
                         this::onItemClicked,
                         this::onItemButtonClicked
                 )

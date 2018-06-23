@@ -23,17 +23,13 @@ class ActivityLogViewHolder(
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val progressBarContainer: View = itemView.findViewById(R.id.rewind_progress_bar_container)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
-    private val actionButton: ImageButton = itemView.findViewById(R.id.action_button)
-    private val header: TextView = itemView.findViewById(R.id.activity_header_text)
+    val actionButton: ImageButton = itemView.findViewById(R.id.action_button)
+    val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
     private lateinit var activity: ActivityLogListItem
 
-    fun bind(activity: ActivityLogListItem, previous: ActivityLogListItem?, next: ActivityLogListItem?) {
+    fun bind(activity: ActivityLogListItem) {
         this.activity = activity
-        this.activity.previousItem = previous
-        this.activity.nextItem = next
-        previous?.nextItem = activity
-        next?.previousItem = activity
 
         summary.text = activity.title
         text.text = activity.description
