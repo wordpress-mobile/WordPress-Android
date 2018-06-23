@@ -99,6 +99,10 @@ class ActivityLogListFragment : Fragment() {
                 displayRewindDialog(it)
             }
         })
+
+        viewModel.moveToTop.observe(this, Observer {
+            activityLogList.scrollToPosition(0)
+        })
     }
 
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
@@ -154,10 +158,6 @@ class ActivityLogListFragment : Fragment() {
                 adapter = activityLogList.adapter as ActivityLogAdapter
             }
             adapter.updateList(events)
-
-            if (viewModel.eventListStatus.value != LOADING_MORE) {
-                activityLogList.scrollToPosition(0)
-            }
         }
     }
 }
