@@ -80,21 +80,21 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(this, Observer<List<ActivityLogListItem>> {
+        viewModel.events.observe(this, Observer {
             reloadEvents()
         })
 
-        viewModel.eventListStatus.observe(this, Observer<ActivityLogViewModel.ActivityLogListStatus> { listStatus ->
+        viewModel.eventListStatus.observe(this, Observer { listStatus ->
             refreshProgressBars(listStatus)
         })
 
-        viewModel.showItemDetail.observe(this, Observer<ActivityLogListItem> {
+        viewModel.showItemDetail.observe(this, Observer {
             if (it is ActivityLogListItem.Event) {
                 ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
             }
         })
 
-        viewModel.showRewindDialog.observe(this, Observer<ActivityLogListItem> {
+        viewModel.showRewindDialog.observe(this, Observer {
             if (it is ActivityLogListItem.Event) {
                 displayRewindDialog(it)
             }
