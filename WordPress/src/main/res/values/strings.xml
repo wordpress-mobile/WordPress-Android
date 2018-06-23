@@ -765,6 +765,7 @@
     <string name="activity_log_empty_list">No events recorded yet</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_currently_restoring_message">Rewinding to %s %s</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Rewinding…</string>
     <string name="activity_log_rewind_site">Rewind Site</string>
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %s at %s? This will remove all content and options created or changed since then.</string>
 
