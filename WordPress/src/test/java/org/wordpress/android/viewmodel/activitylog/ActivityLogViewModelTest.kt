@@ -111,7 +111,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.loadMore()
+        viewModel.onScrolledToBottom()
 
         assertFetchEvents(canLoadMore)
     }
@@ -134,7 +134,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.loadMore()
+        viewModel.onScrolledToBottom()
 
         verify(dispatcher, never()).dispatch(any())
     }
