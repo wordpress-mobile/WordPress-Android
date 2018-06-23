@@ -3,12 +3,12 @@ package org.wordpress.android.ui.activitylog
 import androidx.work.Constraints.Builder
 import androidx.work.Data
 import androidx.work.NetworkType.NOT_REQUIRED
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.Worker.WorkerResult.FAILURE
 import androidx.work.Worker.WorkerResult.RETRY
 import androidx.work.Worker.WorkerResult.SUCCESS
-import androidx.work.ktx.PeriodicWorkRequestBuilder
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
