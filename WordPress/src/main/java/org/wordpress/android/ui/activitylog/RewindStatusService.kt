@@ -43,6 +43,12 @@ constructor(
     val rewindState: LiveData<Rewind> = mutableRewindState
     val rewindProgress: LiveData<RewindProgress> = mutableRewindProgress
 
+    val isRewindInProgress: Boolean
+        get() = rewindState.value?.status == Status.RUNNING
+
+    val isRewindAvailable: Boolean
+        get() = rewindAvailable.value == true
+
     fun rewind(rewindId: String, site: SiteModel) {
         dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))
         updateRewindProgress(rewindId, 0, RUNNING)
