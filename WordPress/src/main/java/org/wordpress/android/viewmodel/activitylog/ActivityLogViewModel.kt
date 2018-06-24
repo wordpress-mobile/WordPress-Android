@@ -155,7 +155,17 @@ class ActivityLogViewModel @Inject constructor(
             insertRewindProgressItem(items)
         }
 
+        prepareHeaders(items)
+
         _events.postValue(items)
+    }
+
+    private fun prepareHeaders(items: List<ActivityLogListItem>) {
+        items.forEachIndexed { i, _ ->
+            if (i == 0 || items[i-1].header != items[i].header) {
+                items[i].isHeaderVisible = true
+            }
+        }
     }
 
     private fun insertRewindProgressItem(items: ArrayList<ActivityLogListItem>) {

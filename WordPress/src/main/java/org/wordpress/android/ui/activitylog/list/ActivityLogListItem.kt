@@ -28,14 +28,6 @@ sealed class ActivityLogListItem {
         DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
     }
 
-    private fun isHeaderVisible(previous: ActivityLogListItem?): Boolean {
-        return if (previous != null) {
-            header != previous.header
-        } else {
-            true
-        }
-    }
-
     data class Event(
         override val activityId: String,
         override val title: String,
