@@ -571,6 +571,7 @@ public class ReaderPostListFragment extends Fragment
                             updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
                             break;
                         case SEARCH_RESULTS:
+                            // no-op
                             break;
                     }
                     // make sure swipe-to-refresh progress shows since this is a manual refresh
@@ -1509,8 +1510,8 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.push(tag.getTagSlug());
                 break;
             case BLOG_PREVIEW:
-                break;
             case SEARCH_RESULTS:
+                // no-op
                 break;
         }
 
