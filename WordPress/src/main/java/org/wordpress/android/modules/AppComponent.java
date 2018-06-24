@@ -39,7 +39,7 @@ import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogF
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
-import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker;
+import org.wordpress.android.ui.activitylog.RewindProgressChecker.RewindStateProgressWorker;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;

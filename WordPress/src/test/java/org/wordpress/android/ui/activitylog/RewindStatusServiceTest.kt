@@ -46,7 +46,7 @@ class RewindStatusServiceTest {
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
     @Mock private lateinit var activityLogStore: ActivityLogStore
-    @Mock private lateinit var workerController: RewindStateProgressWorkerController
+    @Mock private lateinit var rewindProgressChecker: RewindProgressChecker
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var site: SiteModel
 
@@ -93,7 +93,7 @@ class RewindStatusServiceTest {
 
     @Before
     fun setUp() {
-        rewindStatusService = RewindStatusService(activityLogStore, workerController, dispatcher)
+        rewindStatusService = RewindStatusService(activityLogStore, rewindProgressChecker, dispatcher)
         rewindAvailable = null
         rewindState = null
         rewindStatusService.rewindAvailable.observeForever { rewindAvailable = it }
@@ -170,7 +170,7 @@ class RewindStatusServiceTest {
         val error = RewindStatusError(INVALID_RESPONSE, null)
         rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(error, REWIND))
 
-        verify(workerController).cancelWorker()
+        verify(rewindProgressChecker).cancel()
         assertEquals(error, rewindStatusFetchError)
     }
 
@@ -200,7 +200,7 @@ class RewindStatusServiceTest {
 
         assertEquals(rewindAvailable, true)
         assertEquals(rewindState, rewindFinished)
-        verify(workerController).cancelWorker()
+        verify(rewindProgressChecker).cancel()
     }
 
     @Test
@@ -226,7 +226,7 @@ class RewindStatusServiceTest {
 
         rewindStatusService.onRewind(OnRewind("5", 10, REWIND))
 
-        verify(workerController).startWorker(site, 10)
+        verify(rewindProgressChecker).start(site, 10)
     }
 
     private fun assertFetchRewindStatusAction() {

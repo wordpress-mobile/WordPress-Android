@@ -27,7 +27,7 @@ class RewindStatusService
 @Inject
 constructor(
     private val activityLogStore: ActivityLogStore,
-    private val workerController: RewindStateProgressWorkerController,
+    private val rewindProgressChecker: RewindProgressChecker,
     private val dispatcher: Dispatcher
 ) {
     private val mutableRewindAvailable = MutableLiveData<Boolean>()
@@ -55,13 +55,16 @@ constructor(
         mutableRewindAvailable.postValue(false)
         mutableRewindError.postValue(null)
         mutableRewindState.postValue(null)
+        mutableRewindProgress.postValue(null)
+
+        requestStatusUpdate()
     }
 
     fun start(site: SiteModel) {
         this.site = site
         dispatcher.register(this)
+        requestStatusUpdate()
         reloadRewindStatus()
-        dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site)))
     }
 
     fun stop() {
@@ -69,7 +72,13 @@ constructor(
         site = null
     }
 
-    fun reloadRewindStatus(): Boolean {
+    fun requestStatusUpdate() {
+        site?.let {
+            dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(it)))
+        }
+    }
+
+    private fun reloadRewindStatus(): Boolean {
         site?.let {
             val state = activityLogStore.getRewindStatusForSite(it)
             state?.let {
@@ -81,10 +90,8 @@ constructor(
     }
 
     private fun updateRewindStatus(rewindStatus: RewindStatusModel?) {
-        mutableRewindAvailable.postValue(
-                        rewindStatus?.state == ACTIVE &&
-                        rewindStatus.rewind?.status != RUNNING
-        )
+        mutableRewindAvailable.postValue(rewindStatus?.state == ACTIVE && rewindStatus.rewind?.status != RUNNING)
+
         val rewind = rewindStatus?.rewind
         mutableRewindState.postValue(rewind)
         if (rewind != null) {
@@ -92,7 +99,7 @@ constructor(
                 updateRewindProgress(rewindId, rewind.progress, rewind.status, rewind.reason)
             }
             if (rewind.status != RUNNING) {
-                workerController.cancelWorker()
+                rewindProgressChecker.cancel()
             }
         }
     }
@@ -102,7 +109,7 @@ constructor(
     fun onRewindStatusFetched(event: OnRewindStatusFetched) {
         mutableRewindStatusFetchError.postValue(event.error)
         if (event.isError) {
-            workerController.cancelWorker()
+            rewindProgressChecker.cancel()
         }
         reloadRewindStatus()
     }
@@ -119,7 +126,7 @@ constructor(
         }
         site?.let {
             event.restoreId?.let { restoreId ->
-                workerController.startWorker(it, restoreId)
+                rewindProgressChecker.start(it, restoreId)
             }
         }
     }
