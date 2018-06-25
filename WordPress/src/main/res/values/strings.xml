@@ -2074,9 +2074,9 @@
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_transient_title">Transient</string>
 
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_transient_id">wpandroid_notification_transient_channel_id</string>
+    <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
