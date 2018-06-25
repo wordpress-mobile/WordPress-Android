@@ -74,7 +74,7 @@ class ActivityLogAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
-        val view = layoutInflater.inflate(layout.activity_log_list_item, parent, false) as ViewGroup
+        val view = layoutInflater.inflate(layout.activity_log_list_event_item, parent, false) as ViewGroup
         return ActivityLogViewHolder(view, itemClickListener, rewindClickListener)
     }
 }

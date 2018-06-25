@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.activitylog.list
 
-import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
@@ -17,7 +16,7 @@ class ActivityLogViewHolder(
     private val itemClickListener: (ActivityLogListItem) -> Unit,
     private val rewindClickListener: (ActivityLogListItem) -> Unit
 ) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.activity_log_list_item, parent, false)) {
+        LayoutInflater.from(parent.context).inflate(R.layout.activity_log_list_event_item, parent, false)) {
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
     private val text: TextView = itemView.findViewById(R.id.action_text)
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
