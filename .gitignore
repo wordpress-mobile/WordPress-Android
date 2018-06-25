@@ -73,5 +73,6 @@ WordPress/src/androidTest/monkeys/*.png
 # Google services configuration
 google-services.json
 
-# Fastlane configuration
+# Fastlane 
 fastlane/.env*
+fastlane/report.xml
