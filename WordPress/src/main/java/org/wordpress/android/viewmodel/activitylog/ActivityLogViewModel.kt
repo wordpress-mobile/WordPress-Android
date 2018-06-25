@@ -4,13 +4,14 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import android.util.Log
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -65,27 +66,23 @@ class ActivityLogViewModel @Inject constructor(
                 eventListStatus.value == ActivityLogListStatus.FETCHING
 
     private val isRewindProgressItemShown: Boolean
-        get() = _events.value?.get(0) is ActivityLogListItem.Progress
+        get() = _events.value?.getOrNull(0) is ActivityLogListItem.Progress
 
     private var areActionsEnabled: Boolean = true
 
     private var lastRewindActivityId: String? = null
     private var lastRewindStatus: Status? = null
     private val rewindProgressObserver = Observer<RewindProgress> {
-        if (it?.activityId != lastRewindActivityId || it?.status != lastRewindStatus) {
-            lastRewindActivityId = it?.activityId
-            updateRewindState(it?.status)
+        Log.d("rewind_service", "Rewind progress: $it")
+        if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
+            lastRewindActivityId = it?.activityLogItem?.activityID
+            updateRewindState(it?.status, it?.activityLogItem?.activityID != null)
         }
     }
 
-    private val rewindStateObserver = Observer<Rewind> {
-        if (it?.status != lastRewindStatus) {
-            updateRewindState(it?.status)
-        }
-    }
-
-    private fun updateRewindState(status: Status?) {
+    private fun updateRewindState(status: Status?, hasActivity: Boolean) {
         lastRewindStatus = status
+        Log.d("rewind_service", "Status: $status, is in progress: $isRewindProgressItemShown")
         if (status == RUNNING && !isRewindProgressItemShown) {
             reloadEvents(true, true)
         } else if (status != RUNNING && isRewindProgressItemShown) {
@@ -116,7 +113,6 @@ class ActivityLogViewModel @Inject constructor(
 
         rewindStatusService.start(site)
         rewindStatusService.rewindProgress.observeForever(rewindProgressObserver)
-        rewindStatusService.rewindState.observeForever(rewindStateObserver)
         rewindStatusService.rewindAvailable.observeForever(rewindAvailableObserver)
 
         activityLogStore.getRewindStatusForSite(site)
@@ -131,7 +127,6 @@ class ActivityLogViewModel @Inject constructor(
         dispatcher.unregister(this)
 
         rewindStatusService.rewindAvailable.removeObserver(rewindAvailableObserver)
-        rewindStatusService.rewindState.removeObserver(rewindStateObserver)
         rewindStatusService.rewindProgress.removeObserver(rewindProgressObserver)
         rewindStatusService.stop()
 
@@ -156,7 +151,6 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onRewindConfirmed(rewindId: String) {
         rewindStatusService.rewind(rewindId, site)
-        reloadEvents(true, true)
     }
 
     fun onScrolledToBottom() {
@@ -166,6 +160,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun reloadEvents(disableActions: Boolean = areActionsEnabled,
         displayProgressItem: Boolean = isRewindProgressItemShown) {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
+        Log.d("rewind_service", "Reloading: disable actions: $disableActions, progress item: $displayProgressItem")
         val items = ArrayList<ActivityLogListItem>(eventList.map { model -> ActivityLogListItem.Event(model) })
         areActionsEnabled = true
 
@@ -185,15 +180,15 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun prepareHeaders(items: List<ActivityLogListItem>) {
         items.forEachIndexed { i, _ ->
-            if (i == 0 || items[i-1].header != items[i].header) {
+            if (i == 0 || items[i - 1].header != items[i].header) {
                 items[i].isHeaderVisible = true
             }
         }
     }
 
     private fun insertRewindProgressItem(items: ArrayList<ActivityLogListItem>) {
-        val activityId = rewindStatusService.rewindProgress.value?.activityId
-        items.add(0, getRewindProgressItem(activityId))
+        val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
+        items.add(0, getRewindProgressItem(activityLogModel))
     }
 
     private fun disableListActions(items: List<ActivityLogListItem>) {
@@ -203,16 +198,14 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun getRewindProgressItem(activityId: String?): ActivityLogListItem.Progress {
-        return activityId?.let {
-            activityLogStore.getActivityLogItemByActivityId(activityId)?.let {
-                val rewoundEvent = ActivityLogListItem.Event(it)
-                ActivityLogListItem.Progress(activityId,
-                        resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                        resourceProvider.getString(R.string.activity_log_currently_restoring_message,
-                                rewoundEvent.formattedDate, rewoundEvent.formattedTime),
-                        resourceProvider.getString(R.string.now))
-            }
+    private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
+        return activityLogModel?.let {
+            val rewoundEvent = ActivityLogListItem.Event(it)
+            ActivityLogListItem.Progress(activityLogModel.activityID,
+                    resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                    resourceProvider.getString(R.string.activity_log_currently_restoring_message,
+                            rewoundEvent.formattedDate, rewoundEvent.formattedTime),
+                    resourceProvider.getString(R.string.now))
         } ?: ActivityLogListItem.Progress("",
                 resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                 resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates),

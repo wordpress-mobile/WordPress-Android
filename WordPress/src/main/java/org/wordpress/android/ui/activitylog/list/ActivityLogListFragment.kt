@@ -81,7 +81,7 @@ class ActivityLogListFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.events.observe(this, Observer {
-            reloadEvents()
+            reloadEvents(it ?: emptyList())
         })
 
         viewModel.eventListStatus.observe(this, Observer { listStatus ->
@@ -132,8 +132,8 @@ class ActivityLogListFragment : Fragment() {
                 eventListStatus !== FETCHING) View.VISIBLE else View.GONE
     }
 
-    private fun reloadEvents() {
-        setEvents(viewModel.events.value ?: emptyList())
+    private fun reloadEvents(data: List<ActivityLogListItem>) {
+        setEvents(data)
     }
 
     private fun onItemClicked(item: ActivityLogListItem) {
