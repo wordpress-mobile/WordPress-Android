@@ -75,7 +75,7 @@ class PostUploadNotifier {
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                                                                               Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
-                context.getString(R.string.notification_channel_normal_id));
+                context.getString(R.string.notification_channel_transient_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
                             .setColor(context.getResources().getColor(R.color.blue_wordpress))
                             .setOnlyAlertOnce(true);
