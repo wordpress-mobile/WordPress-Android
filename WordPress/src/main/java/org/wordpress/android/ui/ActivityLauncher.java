@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -169,6 +170,7 @@ public class ActivityLauncher {
         if (!ReaderTagTable.getBookmarkTags().isEmpty()) {
             AppPrefs.setReaderTag(ReaderTagTable.getBookmarkTags().get(0));
         }
+        ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
 
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);

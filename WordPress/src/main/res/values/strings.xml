@@ -2155,6 +2155,9 @@
     <string name="stats_followers_zero_desc">zero followers</string>
     <string name="stats_followers_one_desc">one follower</string>
     <string name="stats_followers_many_desc">%d followers</string>
+    <string name="reader_blavatar_desc">site icon</string>
+    <string name="reader_avatar_desc">profile picture</string>
+
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>

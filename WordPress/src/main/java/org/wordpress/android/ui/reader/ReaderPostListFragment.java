@@ -69,6 +69,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.ImageManager;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -174,6 +175,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject AccountStore mAccountStore;
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ImageManager mImageManager;
 
     private static class HistoryStack extends Stack<String> {
         private final String mKeyName;
@@ -496,6 +498,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
+        outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -567,6 +570,9 @@ public class ReaderPostListFragment extends Fragment
                             break;
                         case BLOG_PREVIEW:
                             updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
+                            break;
+                        case SEARCH_RESULTS:
+                            // no-op
                             break;
                     }
                     // make sure swipe-to-refresh progress shows since this is a manual refresh
@@ -640,6 +646,11 @@ public class ReaderPostListFragment extends Fragment
         // progress bar that appears when loading more posts
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
+            mIsUpdating = true;
+            mRecyclerView.setRefreshing(true);
+        }
 
         return rootView;
     }
@@ -1270,7 +1281,6 @@ public class ReaderPostListFragment extends Fragment
             if (!isAdded()) {
                 return;
             }
-            mRecyclerView.setRefreshing(false);
             if (isEmpty) {
                 setEmptyTitleAndDescription(false);
                 showEmptyView();
@@ -1291,7 +1301,7 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
+    private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
             new ReaderInterfaces.OnPostBookmarkedListener() {
                 @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
                                                                boolean isCachingActionRequired) {
@@ -1413,7 +1423,7 @@ public class ReaderPostListFragment extends Fragment
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostAdapter = new ReaderPostAdapter(context, getPostListType());
+            mPostAdapter = new ReaderPostAdapter(context, getPostListType(), mImageManager);
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
@@ -1503,6 +1513,10 @@ public class ReaderPostListFragment extends Fragment
                 break;
             case TAG_PREVIEW:
                 mTagPreviewHistory.push(tag.getTagSlug());
+                break;
+            case BLOG_PREVIEW:
+            case SEARCH_RESULTS:
+                // no-op
                 break;
         }
 
@@ -1910,7 +1924,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         // clear 'post removed from saved posts' undo items
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
         }
 
