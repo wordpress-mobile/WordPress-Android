@@ -55,7 +55,7 @@ sealed class ActivityLogListItem {
         override val title: String,
         override val description: String,
         override val header: String,
-        override val date:Date = Date(),
+        override val date: Date = Date(0),
         override var isHeaderVisible: Boolean = false,
         override val isProgressBarVisible: Boolean = true,
         override val buttonIcon: Icon = Icon.DEFAULT,
