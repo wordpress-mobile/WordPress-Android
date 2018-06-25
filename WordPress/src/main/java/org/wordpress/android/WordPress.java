@@ -360,7 +360,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // or media upload)
             NotificationChannel transientChannel = new NotificationChannel(
                     getString(R.string.notification_channel_transient_id),
-                    getString(R.string.notification_channel_transient_title), NotificationManager.IMPORTANCE_LOW);
+                    getString(R.string.notification_channel_transient_title), NotificationManager.IMPORTANCE_DEFAULT);
             transientChannel.setSound(null, null);
             transientChannel.enableVibration(false);
             transientChannel.enableLights(false);
