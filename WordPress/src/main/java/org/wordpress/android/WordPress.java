@@ -355,6 +355,18 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(importantChannel);
+
+            // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
+            // or media upload)
+            NotificationChannel transientChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_transient_id),
+                    getString(R.string.notification_channel_transient_title), NotificationManager.IMPORTANCE_LOW);
+            transientChannel.setSound(null, null);
+            transientChannel.enableVibration(false);
+            transientChannel.enableLights(false);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(transientChannel);
         }
     }
 
