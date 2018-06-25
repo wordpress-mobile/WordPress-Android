@@ -25,6 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.FetchVideoThumbnailListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -154,7 +155,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         } else if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
             // vimeo videos require network request to get thumbnail
             showDefaultImage();
-            ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new ReaderVideoUtils.VideoThumbnailListener() {
+            ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new FetchVideoThumbnailListener() {
                 @Override
                 public void onResponse(boolean successful, String thumbnailUrl) {
                     if (successful) {
@@ -438,6 +439,10 @@ public class WPNetworkImageView extends AppCompatImageView {
             case PLUGIN_ICON:
                 showDefaultPluginIcon();
                 break;
+            case BLAVATAR:
+            case PHOTO:
+            case PHOTO_ROUNDED:
+            case VIDEO:
             default:
                 // light grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
@@ -468,6 +473,9 @@ public class WPNetworkImageView extends AppCompatImageView {
             case PLUGIN_ICON:
                 showDefaultPluginIcon();
                 break;
+            case PHOTO:
+            case PHOTO_ROUNDED:
+            case VIDEO:
             default:
                 // grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_lighten_30)));
