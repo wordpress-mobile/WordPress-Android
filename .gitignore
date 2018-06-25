@@ -76,3 +76,4 @@ google-services.json
 # Fastlane 
 fastlane/.env*
 fastlane/report.xml
+fastlane/README.md
