@@ -22,10 +22,10 @@ default_platform(:android)
 # and updates the .po file that is then picked by GlotPress for translations.
 # -----------------------------------------------------------------------------------
 # Usage:
-# fastlane update_ps_strings version: <version>
+# fastlane update_ps_strings version:<version>
 #
 # Example:
-# fastlane update_ps_strings version: 10.3
+# fastlane update_ps_strings version:10.3
 #####################################################################################
 desc "Updates the PlayStoreStrings.po file"
 lane :update_ps_strings do |options| 
@@ -50,10 +50,10 @@ end
 # app store strings, title, etc.) from GlotPress and updates the local files
 # -----------------------------------------------------------------------------------
 # Usage:
-# fastlane download_metadata_string build_number: <build_number> version: <version>
+# fastlane download_metadata_string build_number:<build_number> version:<version>
 #
 # Example:
-# fastlane download_metadata_string build_number: 573 version: 10.3
+# fastlane download_metadata_string build_number:573 version:10.3
 #####################################################################################
 desc "Downloads translated metadata from GlotPress"
 lane :download_metadata_strings do |options| 
