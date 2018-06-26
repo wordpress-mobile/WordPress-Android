@@ -15,6 +15,18 @@
 
 default_platform(:android)
 
+#####################################################################################
+# update_ps_strings 
+# -----------------------------------------------------------------------------------
+# This lane gets the data from the txt files in the WordPress/metadata/ folder
+# and updates the .po file that is then picked by GlotPress for translations.
+# -----------------------------------------------------------------------------------
+# Usage:
+# fastlane update_ps_strings version: <version>
+#
+# Example:
+# fastlane update_ps_strings version: 10.3
+#####################################################################################
 desc "Updates the PlayStoreStrings.po file"
 lane :update_ps_strings do |options| 
   prj_folder = Dir.pwd + "/.."
@@ -31,6 +43,18 @@ lane :update_ps_strings do |options|
     release_version: options[:version])
 end 
 
+#####################################################################################
+# download_metadata_string 
+# -----------------------------------------------------------------------------------
+# This lane downloads the translated metadata (release notes,
+# app store strings, title, etc.) from GlotPress and updates the local files
+# -----------------------------------------------------------------------------------
+# Usage:
+# fastlane download_metadata_string build_number: <build_number> version: <version>
+#
+# Example:
+# fastlane download_metadata_string build_number: 573 version: 10.3
+#####################################################################################
 desc "Downloads translated metadata from GlotPress"
 lane :download_metadata_strings do |options| 
   values = options[:version].split('.')
