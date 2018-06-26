@@ -377,8 +377,17 @@ private fun buildZendeskCustomFields(
  * authentication. More information can be found in their documentation:
  * https://developer.zendesk.com/embeddables/docs/android-support-sdk/sdk_set_identity#setting-a-unique-identity
  */
-private fun createZendeskIdentity(email: String?, name: String?): Identity =
-        AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
+private fun createZendeskIdentity(email: String?, name: String?): Identity {
+    val identity = AnonymousIdentity.Builder()
+    if (!email.isNullOrEmpty()) {
+        identity.withEmailIdentifier(email)
+    }
+    if (!name.isNullOrEmpty()) {
+        identity.withNameIdentifier(name)
+    }
+    return identity.build()
+}
+
 
 /**
  * This is a small helper function which just joins the `logInformation` of all the sites passed in with a separator.
