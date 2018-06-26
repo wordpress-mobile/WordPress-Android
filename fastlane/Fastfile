@@ -16,7 +16,7 @@
 default_platform(:android)
 
 desc "Updates the PlayStoreStrings.po file"
-lane :update_ps_string do |options| 
+lane :update_ps_strings do |options| 
   prj_folder = Dir.pwd + "/.."
 
   files = {
@@ -31,4 +31,43 @@ lane :update_ps_string do |options|
     release_version: options[:version])
 end 
 
+desc "Downloads translated metadata from GlotPress"
+lane :download_metadata_strings do |options| 
+  values = options[:version].split('.')
+  files = {
+    "release_note_#{values[0]}#{values[1]}" => "changelogs/#{options[:build_number]}.txt",
+    play_store_promo: "short_description.txt",
+    play_store_desc: "full_description.txt",
+    play_store_app_title: "title.txt"
+  }
+
+  metadata_locales = [
+    ["en-gb", "en-US"],
+    ["pl", "pl-PL"],
+    ["id", "id"],
+    ["ja", "ja-JP"],
+    ["fr", "fr-FR"],
+    ["fr", "fr-CA"],
+    ["ko", "ko-KR"],
+    ["zh-cn", "zh-CN"],
+    ["sv", "sv-SE"],
+    ["it", "it-IT"],
+    ["ru", "ru-RU"],
+    ["tr", "tr-TR"],
+    ["de", "de-DE"],
+    ["nl", "nl-NL"],
+    ["es", "es-ES"],
+    ["pt-br", "pt-BR"],
+    ["zh-tw", "zh-TW"],
+    ["he", "iw-IL"],
+    ["ar", "ar"],
+    ["sr",  "sr"],
+    ["th", "th"],
+    ["vi", "vi"]
+  ]
+
+  download_metadata(project_url: "http://translate.wordpress.org/projects/apps/android/release-notes/", 
+    target_files: files, 
+    locales: metadata_locales)
+end 
 
