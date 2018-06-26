@@ -90,7 +90,7 @@ lane :download_metadata_strings do |options|
     ["vi", "vi"]
   ]
 
-  download_metadata(project_url: "http://translate.wordpress.org/projects/apps/android/release-notes/", 
+  download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
     target_files: files, 
     locales: metadata_locales)
 end 
