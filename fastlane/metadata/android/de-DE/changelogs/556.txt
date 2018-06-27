@@ -1,7 +1,0 @@
-9.9:
-* Wir haben einige Änderungen vorgenommen, um die Funktionalitäten in Android Oreo besser zu unterstützen.
-* YouTube-Videos werden jetzt korrekt im Reader angezeigt.
-* TalkBack-Probleme bei Website-Erstellung gelöst.
-* AMP-Links repariert, sodass sie in der App geöffnet werden können.
-* Du kannst jetzt Stockfotos als Beitragsbilder einstellen.
-* Behobene Fehler.

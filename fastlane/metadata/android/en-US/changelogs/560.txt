@@ -1,6 +1,0 @@
-10.1-rc-1:
-* NEW: now you can get notifications for new posts of blogs you follow! Stay up to date with this new cool feature.
-* NEW: we now offer bottom navigation on the main screen! Thumbs up on that! ;).
-* NEW: Activity Log added! You can see all that has been going on with your site with this new feature.
-* Added site icon editing.
-* Bugfixes.

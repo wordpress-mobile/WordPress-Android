@@ -1,7 +1,0 @@
-9.9:
-* Kami membuat beberapa perubahan untuk kemampuan bantuan yang lebih baik di Android Oreo.
-* Video YouTube sekarang dapat ditampilkan dalam Pembaca.
-* Memperbaiki masalah TalkBack di seluruh pembuatan situs.
-* Memperbaiki tautan AMP agar dapat dibuka dalam aplikasi.
-* Sekarang Anda dapat menggunakan foto stok saat mengatur gambar Andalan pos.
-* Perbaikan bug.

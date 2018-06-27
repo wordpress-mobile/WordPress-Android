@@ -1,6 +1,0 @@
-10.1 :
-* NOUVEAU: maintenant vous pouvez recevoir des notifications pour les nouveaux messages des blogs que vous suivez! Restez à jour avec cette nouvelle fonctionnalité.
-* NOUVEAU: nous offrons maintenant la navigation du bas sur l'écran principal! Bravo à ça! ;).
-* NOUVEAU: Journal d'activité ajouté! Vous pouvez voir tout ce qui se passe sur votre site avec cette nouvelle fonctionnalité.
-* Ajout de l'édition de l'icône du site.
-* Bugfixes.

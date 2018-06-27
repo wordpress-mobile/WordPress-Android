@@ -1,5 +1,0 @@
-10.0:
-* Nueva característica: Compatibilidad con la instalación de plugins a sitios de WordPress.com con plan Business
-* Nueva característica: Añadidos atajos de Android a las pantallas de estadísticas, notificaciones y nueva entrada. Es una función para Android 7.1+.
-* Nueva característica: Crear una cuenta mediante registro mientras que se está conectando Jetpack.
-* Arreglado un problema que hacía que el editor perdiera foco cuando se pegaba texto.

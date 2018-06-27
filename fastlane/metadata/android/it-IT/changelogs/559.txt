@@ -1,5 +1,0 @@
-10.0:
-* Nuova funzionalità: aggiunto supporto per l'installazione di plugin per i siti con il piano WordPress.com Business
-* Nuova funzionalità: aggiunti tasti di scelta rapida per Android per le schermate Statistiche, Notifiche e Nuovo articolo. 
-* Nuova funzionalità: creazione di un account con la registrazione durante il collegamento di Jetpack.
-* È stato risolto un problema dell'editor relativo alla perdita di focalizzazione quando si incolla del testo.

@@ -1,6 +1,0 @@
-10.1:
-* NEU: Jetzt kannst du Benachrichtigungen für neue Beiträge in Blogs erhalten, denen du folgst! Mit dieser tollen neuen Funktion bleibst du auf dem neuesten Stand.
-* NEU: Unten auf der Hauptseite bieten wir jetzt Navigationsmöglichkeiten an. Eine großartige Funktion!
-* NEU: Aktivitätsprotokoll hinzugefügt! Mit dieser neuen Funktion siehst du alle Vorgänge im Zusammenhang mit deiner Website.
-* Möglichkeit zum Ändern des Website-Symbols hinzugefügt.
-* Behobene Fehler.

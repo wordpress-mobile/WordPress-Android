@@ -1,6 +1,0 @@
-10.1:
-* NOWOŚĆ: możesz teraz otrzymać powiadomienia o nowych wpisach i blogach, które obserwujesz! Bądź na bieżąco z pomocą tej funkcjonalności.
-* NOWOŚĆ: oferujemy teraz nawigację na dole ekranu głównego!
-* NOWOŚĆ: Dodano dziennik aktywności! Z pomocą tej funkcjonalności możesz sprawdzić co się dzieje z witryną.
-* Dodano możliwość edycji ikony witryny.
-* Poprawki błędów.

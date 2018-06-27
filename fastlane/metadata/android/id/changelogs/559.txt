@@ -1,5 +1,0 @@
-10.0:
-* Fitur baru: Menambahkan dukungan untuk menginstal plugin situs dengan paket WordPress.com Business
-* Fitur baru: Menambahkan pintasan Android untuk layar Statistik, Pemberitahuan, dan Pos Baru. Fitur Android 7.1+
-* Fitur baru: Buat akun dengan mendaftar saat menghubungkan ke Jetpack.
-* Memperbaiki masalah dengan penyunting yang kehilangan fokus saat menempelkan teks.

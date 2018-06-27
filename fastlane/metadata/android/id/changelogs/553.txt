@@ -1,3 +1,0 @@
-9.8:
-* Pembaruan visual minor di layar Statistik.
-* Menambahkan tombol kembali di penampil gambar Pembaca.

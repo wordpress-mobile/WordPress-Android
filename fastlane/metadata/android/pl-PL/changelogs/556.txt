@@ -1,7 +1,0 @@
-9.9:
-* Zmiany w celu lepszego wsparcia nowych funkcjonalności w Android Oreo.
-* Filmy wideo są teraz prawidłowo wyświetlane w Czytniku.
-* Poprawka błędów funkcji TalkBalk w obszarze tworzenia witryny.
-* Poprawa odnośników Accelerated Mobile Pages (AMP) tak aby mogły być otwarte w aplikacji.
-* Teraz można korzystać z baz zdjęć bez tantiem w ustawieniach obrazka wyróżniającego danego wpisu.
-* Poprawki błędów.

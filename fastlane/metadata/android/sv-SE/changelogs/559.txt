@@ -1,5 +1,0 @@
-10.0:
-* Ny funktion: Lagt till stöd för installation av tillägg på WordPress.com-webbplatser med prisplanen ”business”
-* Ny funktion: Lagt till Android-genvägar till skärmbilderna för statistik, notiser och nytt inlägg. Funktion i Android 7.1 och senare.
-* Ny funktion: Skapa ett konto via registrering i samband med konfiguration av Jetpack.
-* Rättat ett problem med att redigeraren förlorade fokus när text klistrades in.

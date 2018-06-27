@@ -1,3 +1,0 @@
-9.8:
-* Actualización visual menor en la pantalla de estadísticas.
-* Añadido un botón de vuelta atrás en el visor de imágenes del Lector.

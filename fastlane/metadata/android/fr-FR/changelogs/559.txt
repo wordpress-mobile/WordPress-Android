@@ -1,5 +1,0 @@
-10.0 :
-* Nouvelle fonctionnalité : Ajoutez l'assistance d'installation des extensions pour les sites bénéficiant du plan WordPress.com Business
-* Nouvelle fonctionnalité : Ajoutez les raccourcis Android pour les écrans Statistiques, Notifications et Nouvel article. Fonctionnalité Android 7.1+.
-* Nouvelle fonctionnalité : Créez un compte avec signature tout en vous connectant à Jetpack.
-* Résolution d'une erreur concernant la perte de ciblage de l'éditeur lors du collage de texte.

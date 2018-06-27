@@ -1,3 +1,0 @@
-9.8:
-* Mindre visuell uppdatering i vyn över statistik.
-* Lade till en tillbaka-knapp i bildvisaren för Läsaren.

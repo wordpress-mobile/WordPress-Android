@@ -1,7 +1,0 @@
-9.9:
-* Android Oreo' da bulunan yetenekleri daha iyi desteklemek için pek çok değişiklik yaptık .
-* YouTube videoları artık okuyucuda düzgün görüntüleniyor.
-* Site oluşturma sırasındaki TalkBack sorunları giderildi.
-* AMP bağlantıları düzeltildi böylece uygulama içinde açılabiliyorlar.
-* Yazının öne çıkan görseli için artık stok fotoğraf kullanabilirsiniz.
-* Hata düzeltmeleri.

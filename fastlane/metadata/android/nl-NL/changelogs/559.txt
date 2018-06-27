@@ -1,5 +1,0 @@
-10.0:
-* Nieuwe functie: ondersteuning toegevoegd voor het installeren van plugins op sites met het WordPress.com Business abonnement.
-* Nieuwe functie: Android-snelkoppelingen toegevoegd voor de vensters Statistieken, Meldingen en Nieuw bericht. Voor Android 7.1 en hoger.
-* Nieuwe functie: een account aanmaken via registratie terwijl Jetpack wordt gekoppeld.
-* Probleem opgelost waarbij de Editor onscherp wordt wanneer tekst wordt geplakt.

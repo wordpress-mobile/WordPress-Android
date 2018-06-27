@@ -1,3 +1,0 @@
-9.8:
-* Aggiornamento visuale minore nella schermata Statistiche.
-* È stato aggiunto un pulsante Indietro sul visualizzatore immagini Lettore.

@@ -1,7 +1,0 @@
-9.9:
-* Abbiamo apportato diverse modifiche per meglio supportare le capacità in Android Oreo.
-* I video YouTube ora vengono visualizzati correttamente nel Reader.
-* I problemi relativi alla creazione di siti in TalkBack sono stati risolti.
-* I collegamenti AMP sono stati corretti in modo da consentirne l'apertura nell'app.
-* Ora è possibile utilizzare foto stock per impostare l'immagine in primo piano di un articolo.
-* Correzioni di bug.
