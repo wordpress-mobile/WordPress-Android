@@ -1,0 +1,5 @@
+Android 版 WordPress 賦予你強大的發佈能力，建立及取用內容從未如此輕鬆容易。撰寫、編輯並將文章發佈至你的網站，查看統計數據，並從閱讀程式中的優質文章汲取靈感。還有哪些優點？這是開放原始碼軟體。
+
+Android 版 WordPress 支援 WordPress.com 和執行 WordPress 3.7 或以上版本的自行管理 WordPress.org 網站。
+
+歡迎造訪論壇，取得此應用程式的相關說明：http://android.forums.wordpress.org

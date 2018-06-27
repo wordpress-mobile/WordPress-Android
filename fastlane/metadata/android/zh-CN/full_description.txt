@@ -1,0 +1,5 @@
+WordPress Android版适合手机使用，让你能够很容易的创建、编辑和发表文章，检查统计，在阅读器的文章中获得灵感。更重要的是，它是开源的。
+
+WordPress Android版支持运行Wordpress 3.6或更高版本的WordPress.com博客和自建的Wordpress站点。
+
+访问社区寻求关于该程序的使用帮助 http://android.forums.wordpress.org
