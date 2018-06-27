@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -77,6 +78,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     private static final String PUSH_ARG_MSG = "msg";
     public static final String PUSH_ARG_NOTE_ID = "note_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
+    private static final String PUSH_ARG_ZENDESK_REQUEST_ID = "zendesk_sdk_request_id";
 
     private static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
@@ -94,6 +96,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ZendeskHelper mZendeskHelper;
 
     private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
     private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
@@ -143,7 +146,12 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         if (PUSH_TYPE_ZENDESK.equals(String.valueOf(data.get("type")))) {
-            NOTIFICATION_HELPER.handleZendeskNotification(this);
+            String zendeskRequestId = String.valueOf(data.get(PUSH_ARG_ZENDESK_REQUEST_ID));
+
+            // Try to refresh the Zendesk request page if it's currently being displayed; otherwise show a notification
+            if (!mZendeskHelper.refreshRequest(this, zendeskRequestId)) {
+                NOTIFICATION_HELPER.handleZendeskNotification(this);
+            }
         }
 
         synchronizedHandleDefaultPush(data);

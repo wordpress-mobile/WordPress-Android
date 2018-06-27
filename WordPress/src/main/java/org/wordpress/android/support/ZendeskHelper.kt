@@ -170,6 +170,13 @@ class ZendeskHelper(
     }
 
     /**
+     * This function refreshes the Zendesk's request activity if it's currently being displayed. It'll return true if
+     * it's successful. We'll use the return value to decide whether to show a push notification or not.
+     */
+    fun refreshRequest(context: Context, requestId: String?): Boolean =
+            Support.INSTANCE.refreshRequest(requestId, context)
+
+    /**
      * This function should be called when the user logs out of WordPress.com. Push notifications are only available
      * for WordPress.com users, so they'll be disabled. We'll also clear the Zendesk identity of the user on logout
      * and it will need to be set again when the user wants to create a new ticket.
@@ -387,7 +394,6 @@ private fun createZendeskIdentity(email: String?, name: String?): Identity {
     }
     return identity.build()
 }
-
 
 /**
  * This is a small helper function which just joins the `logInformation` of all the sites passed in with a separator.
