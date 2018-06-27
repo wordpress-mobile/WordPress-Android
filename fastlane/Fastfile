@@ -90,8 +90,20 @@ lane :download_metadata_strings do |options|
     ["vi", "vi"]
   ]
 
+  delete_old_changelogs(build: options[:build_number])
   download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
     target_files: files, 
     locales: metadata_locales)
 end 
+
+#####################################################################################
+# Private lanes
+#####################################################################################
+private lane :delete_old_changelogs do | options |
+  Dir.glob("./metadata/android/*/").each do | folder |
+    Dir["#{folder}changelogs/*"].each do | file |
+      File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
+    end
+  end
+end
 
