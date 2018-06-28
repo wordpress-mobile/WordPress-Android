@@ -39,7 +39,7 @@ class ActivityLogDiffCallback(
             bundle.putBoolean(LIST_ITEM_BUTTON_VISIBILITY_KEY, newItem.isButtonVisible)
         }
 
-        if (oldItem.isButtonVisible != newItem.isButtonVisible) {
+        if (oldItem.isHeaderVisible != newItem.isHeaderVisible) {
             bundle.putBoolean(LIST_ITEM_HEADER_VISIBILITY_KEY, newItem.isHeaderVisible)
         }
         return bundle
