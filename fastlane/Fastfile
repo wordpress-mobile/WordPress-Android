@@ -35,7 +35,12 @@ lane :update_ps_strings do |options|
     release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
     play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
     play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
-    play_store_app_title: prj_folder + "/WordPress/metadata/title.txt"
+    play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",
+    play_store_screenshot_1: prj_folder + "/WordPress/metadata/screenshot_1.txt",
+    play_store_screenshot_2: prj_folder + "/WordPress/metadata/screenshot_2.txt",
+    play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
+    play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
+    play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
   }
 
   update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
@@ -99,7 +104,7 @@ end
 #####################################################################################
 # Private lanes
 #####################################################################################
-private lane :delete_old_changelogs do | options |
+private_lane :delete_old_changelogs do | options |
   Dir.glob("./metadata/android/*/").each do | folder |
     Dir["#{folder}changelogs/*"].each do | file |
       File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
