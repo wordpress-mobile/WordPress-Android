@@ -67,3 +67,24 @@ msgstr ""
 msgctxt "play_store_app_title"
 msgid "WordPress – Website & Blog Builder"
 msgstr ""
+
+msgctxt "play_store_screenshot_1"
+msgid "Enjoy your favourite sites"
+msgstr ""
+
+msgctxt "play_store_screenshot_2"
+msgid "Share your ideas with the world"
+msgstr ""
+
+msgctxt "play_store_screenshot_3"
+msgid "Manage your site everywhere you go"
+msgstr ""
+
+msgctxt "play_store_screenshot_4"
+msgid "Get notified in real-time"
+msgstr ""
+
+msgctxt "play_store_screenshot_5"
+msgid "All the stats in your hand"
+msgstr ""
+
