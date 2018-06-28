@@ -665,10 +665,9 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
     @Override
     public void setTitle(final String title) {
-        mToolbarTitle = title.isEmpty() ? getString(R.string.wordpress_as_site_title) : title;
-
+        mToolbarTitle = title;
         if (mToolbar != null) {
-            mToolbar.setTitle(mToolbarTitle);
+            mToolbar.setTitle(title);
         }
     }
 

@@ -47,9 +47,6 @@
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
 
-    <!-- default values -->
-    <string name="wordpress_as_site_title">WordPress</string>
-
     <!-- general strings -->
     <string name="posts">Posts</string>
     <string name="sites">Sites</string>
