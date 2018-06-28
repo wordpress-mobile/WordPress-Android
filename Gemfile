@@ -3,3 +3,6 @@
 source "https://rubygems.org" do 
   gem 'danger'
 end
+
+
+gem "fastlane"

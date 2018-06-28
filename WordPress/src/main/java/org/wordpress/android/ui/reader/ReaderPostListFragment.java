@@ -69,6 +69,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.ImageManager;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -174,6 +175,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject AccountStore mAccountStore;
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ImageManager mImageManager;
 
     private static class HistoryStack extends Stack<String> {
         private final String mKeyName;
@@ -570,6 +572,7 @@ public class ReaderPostListFragment extends Fragment
                             updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
                             break;
                         case SEARCH_RESULTS:
+                            // no-op
                             break;
                     }
                     // make sure swipe-to-refresh progress shows since this is a manual refresh
@@ -1298,7 +1301,7 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
+    private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
             new ReaderInterfaces.OnPostBookmarkedListener() {
                 @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
                                                                boolean isCachingActionRequired) {
@@ -1420,7 +1423,7 @@ public class ReaderPostListFragment extends Fragment
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostAdapter = new ReaderPostAdapter(context, getPostListType());
+            mPostAdapter = new ReaderPostAdapter(context, getPostListType(), mImageManager);
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
@@ -1512,8 +1515,8 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.push(tag.getTagSlug());
                 break;
             case BLOG_PREVIEW:
-                break;
             case SEARCH_RESULTS:
+                // no-op
                 break;
         }
 

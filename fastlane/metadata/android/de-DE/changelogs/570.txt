@@ -1,0 +1,3 @@
+10.2:
+* Neue Funktion: Ist dir etwas besonders aufgefallen? Mit der Funktion "Für später speichern" kannst es jederzeit lesen! Selbst wenn du offline bist!
+* Verschiedene Fehlerbehebungen.

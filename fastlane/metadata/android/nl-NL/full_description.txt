@@ -1,0 +1,5 @@
+WordPress voor Android brengt de kracht van publiceren binnen handbereik, zodat je gemakkelijk content kunt maken en bekijken. Schrijf, bewerk en publiceer berichten op je site, bekijk statistieken en laat je inspireren door geweldige berichten in de Reader. En verder? Het is open source.
+
+WordPress voor Android ondersteunt WordPress.com en zelfgehoste WordPress.org-sites die WordPress 3.7 of hoger gebruiken.
+
+Bezoek de forums als je hulp nodig hebt met de app: http://android.forums.wordpress.org

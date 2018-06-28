@@ -2072,9 +2072,11 @@
     <!-- Android O notification channels, these show in the Android app settings -->
     <string name="notification_channel_general_title">General</string>
     <string name="notification_channel_important_title">Important</string>
+    <string name="notification_channel_transient_title">Transient</string>
 
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -2152,6 +2154,9 @@
     <string name="stats_followers_zero_desc">zero followers</string>
     <string name="stats_followers_one_desc">one follower</string>
     <string name="stats_followers_many_desc">%d followers</string>
+    <string name="reader_blavatar_desc">site icon</string>
+    <string name="reader_avatar_desc">profile picture</string>
+
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
