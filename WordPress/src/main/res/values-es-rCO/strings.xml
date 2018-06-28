@@ -459,11 +459,8 @@ Language: es_CO
     <string name="error_locating_image">Error al localizar la imagen recortada</string>
     <string name="error_cropping_image">Error al recortar la imagen</string>
     <string name="checking_email">Comprobando correo electrónico</string>
-    <string name="launch_your_email_app">Abre tu app de correo electrónico</string>
-    <string name="check_your_email">Comprueba tu correo electrónico</string>
     <string name="magic_link_unavailable_error_message">Actualmente no disponible. Por favor, introduce tu contraseña</string>
     <string name="logging_in">Accediendo</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Haz que se envíe un enlace a tu correo electrónico inmediatamente</string>
     <string name="enter_your_password_instead">Introduce tu contraseña</string>
     <string name="web_address_dialog_hint">Cuando comentes se hará público</string>
     <string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
@@ -818,6 +815,7 @@ Language: es_CO
     <string name="deselect_all">Anular todas las selecciones</string>
     <string name="stats_generic_error">No se pudieron cargar las estadísticas solicitadas.</string>
     <string name="auth_required">Accede de nuevo para continuar.</string>
+    <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="verification_code">Código de verificación</string>
     <string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
     <string name="language">Idioma</string>
@@ -934,7 +932,6 @@ Language: es_CO
     <string name="create_new_blog_wpcom">Crear un blog de WordPress.com</string>
     <string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
     <string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
     <string name="reader_menu_block_blog">Bloquear este blog</string>
@@ -947,8 +944,6 @@ Language: es_CO
     <string name="hs__new_conversation_header">Chat de soporte</string>
     <string name="hs__conversation_detail_error">Describe el problema que estás teniendo</string>
     <string name="contact_us">Contacta con nosotros</string>
-    <string name="preference_send_usage_stats_summary">Enviar automáticamente estadísticas de uso para ayudarnos a mejorar WordPress para Android</string>
-    <string name="preference_send_usage_stats">Enviar estadísticas</string>
     <string name="schedule_verb">Programación</string>
     <string name="update_verb">Actualizar</string>
     <string name="reader_empty_recommended_blogs">Sin blogs recomendados</string>
@@ -1072,7 +1067,6 @@ Language: es_CO
     <string name="pick_photo">Elige una foto</string>
     <string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
-    <string name="nux_tutorial_get_started_title">¡Empezar!</string>
     <string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>

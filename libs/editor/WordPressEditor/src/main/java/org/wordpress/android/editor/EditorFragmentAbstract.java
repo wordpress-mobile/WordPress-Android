@@ -22,7 +22,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
-    public abstract CharSequence getContent() throws EditorFragmentNotAddedException;
+    public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
@@ -30,6 +30,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract boolean isUploadingMedia();
     public abstract boolean isActionInProgress();
     public abstract boolean hasFailedMediaUploads();
+    // Check whether we need to reload the content of the post from the editor or not.
+    // This was required since Aztec Visual->HTML can slightly change the content of the HTML. See #692 for details.
     public abstract void removeAllFailedMediaUploads();
     public abstract void removeMedia(String mediaId);
     public abstract void setTitlePlaceholder(CharSequence text);

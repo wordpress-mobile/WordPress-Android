@@ -3,9 +3,11 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +19,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -25,6 +29,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderCardType;
@@ -32,6 +37,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ImageManager;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -44,6 +50,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
@@ -58,13 +66,13 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
 
 import javax.inject.Inject;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final ImageManager mImageManager;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -113,8 +121,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView mCardView;
-        private final WPNetworkImageView mImgAvatar;
-        private final WPNetworkImageView mImgBlavatar;
+        private final ImageView mImgAvatar;
+        private final ImageView mImgBlavatar;
         private final TextView mTxtTitle;
         private final TextView mTxtSubtitle;
 
@@ -173,8 +181,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ImageView mImgVideoOverlay;
         private final LinearLayout mVisit;
 
-        private final WPNetworkImageView mImgFeatured;
-        private final WPNetworkImageView mImgAvatarOrBlavatar;
+        private final ImageView mImgFeatured;
+        private final ImageView mImgAvatarOrBlavatar;
 
         private final ReaderFollowButton mFollowButton;
 
@@ -182,7 +190,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtPhotoTitle;
 
         private final ViewGroup mLayoutDiscover;
-        private final WPNetworkImageView mImgDiscoverAvatar;
+        private final ImageView mImgDiscoverAvatar;
         private final TextView mTxtDiscover;
 
         private final ReaderThumbnailStrip mThumbnailStrip;
@@ -379,21 +387,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
-        if (post.hasPostAvatar()) {
-            holder.mImgAvatar.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall),
-                    WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            holder.mImgAvatar.showDefaultGravatarImageAndNullifyUrl();
-        }
+        mImageManager
+                .loadIntoCircle(holder.mImgAvatar, GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall),
+                        R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp);
 
-        if (post.hasBlogImageUrl()) {
-            holder.mImgBlavatar.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall),
-                    WPNetworkImageView.ImageType.BLAVATAR);
-        } else {
-            holder.mImgBlavatar.showDefaultBlavatarImageAndNullifyUrl();
-        }
+        mImageManager.load(holder.mImgBlavatar, GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall),
+                R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
         holder.mTxtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));
@@ -426,7 +425,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderPost(final int position, final ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
-        ReaderTypes.ReaderPostListType postListType = getPostListType();
+        ReaderPostListType postListType = getPostListType();
         if (post == null) {
             return;
         }
@@ -436,13 +435,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // show avatar if it exists, otherwise show blavatar
         if (post.hasPostAvatar()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
-            holder.mImgAvatarOrBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar,
+                    imageUrl, null);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
-            holder.mImgAvatarOrBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            mImageManager.load(holder.mImgAvatarOrBlavatar, imageUrl, null);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
+            mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
             holder.mImgAvatarOrBlavatar.setVisibility(View.GONE);
         }
 
@@ -468,11 +469,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mFramePhoto.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setText(post.getTitle());
-            holder.mImgFeatured.setImageUrl(
-                    post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
-                    WPNetworkImageView.ImageType.PHOTO);
+            mImageManager.load(holder.mImgFeatured, post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                    null, ScaleType.CENTER_CROP);
             holder.mThumbnailStrip.setVisibility(View.GONE);
         } else {
+            mImageManager.cancelRequestAndClearImageView(holder.mImgFeatured);
             holder.mTxtTitle.setVisibility(View.VISIBLE);
             holder.mTxtTitle.setText(post.getTitle());
             holder.mTxtPhotoTitle.setVisibility(View.GONE);
@@ -492,14 +493,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.mFramePhoto.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
             } else if (post.getCardType() == ReaderCardType.VIDEO) {
-                holder.mImgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
+                ReaderVideoUtils.retrieveVideoThumbnailUrl(post.getFeaturedVideo(), new VideoThumbnailUrlListener() {
+                    @Override public void showThumbnail(String thumbnailUrl) {
+                        mImageManager.load(holder.mImgFeatured, thumbnailUrl, null, ScaleType.CENTER_CROP);
+                    }
+
+                    @Override public void showPlaceholder() {
+                        mImageManager.load(holder.mImgFeatured, new ColorDrawable(
+                                        ContextCompat.getColor(holder.mImgFeatured.getContext(),
+                                                R.color.grey_lighten_30)));
+                    }
+
+                    @Override public void cacheThumbnailUrl(String thumbnailUrl) {
+                        ReaderThumbnailTable.addThumbnail(post.postId, post.getFeaturedVideo(), thumbnailUrl);
+                    }
+                });
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
             } else if (post.hasFeaturedImage()) {
-                holder.mImgFeatured.setImageUrl(
-                        post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
-                        WPNetworkImageView.ImageType.PHOTO);
+                mImageManager.load(holder.mImgFeatured, post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                        null, ScaleType.CENTER_CROP);
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
@@ -510,7 +524,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             // set the top margin of the title based on whether there's a featured image
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.mTxtTitle.getLayoutParams();
+            LayoutParams params = (LayoutParams) holder.mTxtTitle.getLayoutParams();
             params.topMargin = titleMargin;
         }
 
@@ -522,9 +536,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         initBookmarkButton(position, holder, post);
 
         // more menu only shows for followed tags
-        if (!mIsLoggedOutReader && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+        if (!mIsLoggedOutReader && postListType == ReaderPostListType.TAG_FOLLOWED) {
             holder.mImgMore.setVisibility(View.VISIBLE);
-            holder.mImgMore.setOnClickListener(new View.OnClickListener() {
+            holder.mImgMore.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mOnPostPopupListener != null) {
@@ -539,7 +553,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (shouldShowFollowButton()) {
             holder.mFollowButton.setIsFollowed(post.isFollowedByCurrentUser);
-            holder.mFollowButton.setOnClickListener(new View.OnClickListener() {
+            holder.mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     toggleFollow(view.getContext(), view, post);
@@ -557,7 +571,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLayoutDiscover.setVisibility(View.GONE);
         }
 
-        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+        holder.mCardView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mPostSelectedListener != null) {
@@ -610,13 +624,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         switch (discoverData.getDiscoverType()) {
             case EDITOR_PICK:
-                if (discoverData.hasAvatarUrl()) {
-                    postHolder.mImgDiscoverAvatar
-                            .setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
-                                    WPNetworkImageView.ImageType.AVATAR);
-                } else {
-                    postHolder.mImgDiscoverAvatar.showDefaultGravatarImageAndNullifyUrl();
-                }
+                mImageManager.loadIntoCircle(postHolder.mImgDiscoverAvatar,
+                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
+                        R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp);
                 // tapping an editor pick opens the source post, which is handled by the existing
                 // post selection handler
                 postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
@@ -630,13 +640,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
 
             case SITE_PICK:
-                if (discoverData.hasAvatarUrl()) {
-                    postHolder.mImgDiscoverAvatar.setImageUrl(
-                            GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
-                            WPNetworkImageView.ImageType.BLAVATAR);
-                } else {
-                    postHolder.mImgDiscoverAvatar.showDefaultBlavatarImageAndNullifyUrl();
-                }
+                // BLAVATAR
+                mImageManager.load(postHolder.mImgDiscoverAvatar,
+                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
+                        R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
                 postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
@@ -653,6 +660,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case OTHER:
             default:
+                mImageManager.cancelRequestAndClearImageView(postHolder.mImgDiscoverAvatar);
                 // something else, so hide discover section
                 postHolder.mLayoutDiscover.setVisibility(View.GONE);
                 break;
@@ -661,10 +669,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     // ********************************************************************************************
 
-    public ReaderPostAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
+    public ReaderPostAdapter(Context context, ReaderPostListType postListType, ImageManager imageManager) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
-
+        this.mImageManager = imageManager;
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
@@ -893,15 +901,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ImageView bookmarkButton = holder.mBtnBookmark;
         Context context = holder.mBtnBookmark.getContext();
 
-        boolean canBookmarkPost = (post.isWP() || post.isJetpack) && !post.isDiscoverPost();
+        boolean canBookmarkPost = !post.isDiscoverPost();
         if (canBookmarkPost) {
             bookmarkButton.setVisibility(View.VISIBLE);
         } else {
             bookmarkButton.setVisibility(View.GONE);
         }
-        bookmarkButton.setImageResource(post.isBookmarked ? R.drawable.ic_bookmark_18dp
-                : R.drawable.ic_bookmark_outline_18dp);
-        ReaderUtils.setBackgroundToRoundRipple(bookmarkButton);
+        bookmarkButton.setImageResource(post.isBookmarked
+                ? R.drawable.ic_bookmark_blue_medium_18dp
+                : R.drawable.ic_bookmark_grey_min_18dp);
         if (post.isBookmarked) {
             bookmarkButton.setContentDescription(context.getString(R.string.reader_remove_bookmark));
         } else {

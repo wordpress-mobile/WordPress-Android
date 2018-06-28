@@ -129,10 +129,7 @@ Language: es_VE
     <string name="error_locating_image">Error al localizar la imagen recortada</string>
     <string name="error_cropping_image">Error al recortar la imagen</string>
     <string name="checking_email">Comprobando correo electrónico</string>
-    <string name="launch_your_email_app">Abre tu app de correo electrónico</string>
-    <string name="check_your_email">Comprueba tu correo electrónico</string>
     <string name="magic_link_unavailable_error_message">Actualmente no disponible. Por favor, introduce tu contraseña</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Haz que se envíe un enlace a tu correo electrónico inmediatamente</string>
     <string name="logging_in">Accediendo</string>
     <string name="enter_your_password_instead">Introduce tu contraseña</string>
     <string name="web_address_dialog_hint">Cuando comentes se hará público</string>
@@ -484,6 +481,7 @@ Language: es_VE
     <string name="stats_generic_error">No se pudieron cargar las estadísticas solicitadas.</string>
     <string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
     <string name="language">Idioma</string>
+    <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="verification_code">Código de verificación</string>
     <string name="auth_required">Accede de nuevo para continuar.</string>
     <string name="stats_search_terms_unknown_search_terms">Términos de búsqueda desconocidos</string>
@@ -577,7 +575,6 @@ Language: es_VE
     <string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
     <string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
     <string name="comment_reply_to_user">Responder a %s</string>
-    <string name="faq_button">Preguntas frecuentes</string>
     <string name="error_refresh_unauthorized_pages">No tienes permiso para ver o editar páginas.</string>
     <string name="error_refresh_unauthorized_posts">No tienes permiso para ver o editar entradas.</string>
     <string name="error_refresh_unauthorized_comments">No tienes permiso para ver o editar comentarios.</string>
@@ -611,8 +608,6 @@ Language: es_VE
     <string name="hs__conversation_header">Chat de soporte</string>
     <string name="hs__username_blank_error">Escribe un nombre válido</string>
     <string name="hs__invalid_email_error">Escribe una dirección de correo electrónico válida</string>
-    <string name="preference_send_usage_stats">Enviar estadísticas</string>
-    <string name="preference_send_usage_stats_summary">Enviar automáticamente estadísticas de uso para ayudarnos a mejorar WordPress para Android</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
     <string name="reader_title_subs">Etiquetas y blogs</string>
@@ -747,7 +742,6 @@ Language: es_VE
     <string name="reader_toast_err_share_intent">Imposible compartir</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
-    <string name="nux_tutorial_get_started_title">¡Empezar!</string>
     <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
     <string name="reader_hint_comment_on_comment">Contestar al comentario </string>

@@ -3,7 +3,6 @@ package org.wordpress.android.util;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -284,8 +283,8 @@ public class HelpshiftHelper {
     /**
      * Handle push notification
      */
-    public void handlePush(Context context, Intent intent) {
-        Core.handlePush(context, intent);
+    public void handlePush(Context context, Map<String, String> data) {
+        Core.handlePush(context, data);
     }
 
     /**

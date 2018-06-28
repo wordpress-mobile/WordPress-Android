@@ -156,11 +156,8 @@ Language: cy_GB
     <string name="error_locating_image">Gwall wrth ganfod y ddelwedd wedi ei thocio</string>
     <string name="error_refreshing_gravatar">Gwall wrth ail–lwytho eich Gravatar</string>
     <string name="error_cropping_image">Bu gwall wrth docio eich delwedd.</string>
-    <string name="launch_your_email_app">Cychwyn eich rhaglen e–bost</string>
     <string name="checking_email">Gwirio e–bost</string>
     <string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
-    <string name="check_your_email">Gwiriwch eich e–bost</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Derbyn dolen wedi ei anfon at eich e–bost er mwyn mewngofnodi\'n syth</string>
     <string name="logging_in">Mewngofnodi</string>
     <string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
@@ -511,6 +508,7 @@ Language: cy_GB
     <string name="sign_out_wpcom_confirm">Bydd allgofnodi o\'ch cyfrif yn tynnu holl fanylion WordPress.com @%s o\'r ddyfais hon, gan gynnwys drafftiau a newidiadau lleol.</string>
     <string name="stats_generic_error">Methu llwytho\'r ystadegau angenrheidiol</string>
     <string name="auth_required">Mewngofnodwch eto i barhau.</string>
+    <string name="invalid_verification_code">Cod dilysu annilys</string>
     <string name="verification_code">Cod dilysu</string>
     <string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
     <string name="language">Iaith</string>
@@ -627,7 +625,6 @@ Language: cy_GB
     <string name="browse_our_faq_button">Porwch ein Cwestiynnau Cyffredin</string>
     <string name="reader_empty_posts_liked">Nid ydych wedi hoffi unrhyw gofnod</string>
     <string name="reader_empty_followed_blogs_title">Nid ydych yn dilyn unrhyw wefan hyd yn hyn</string>
-    <string name="faq_button">Cwestiynnau Cyffredin</string>
     <string name="reader_label_liked_by">Hoffwyd gan</string>
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
     <string name="reader_toast_err_block_blog">Methu rhwystro\'r blog hwn</string>
@@ -639,8 +636,6 @@ Language: cy_GB
     <string name="hs__conversation_detail_error">Disgrifiwch eich anhawster</string>
     <string name="hs__new_conversation_header">Cefnogaeth drwy sgwrs</string>
     <string name="hs__conversation_header">Cefnogaeth drwy sgwrs</string>
-    <string name="preference_send_usage_stats">Anfon ystadegau</string>
-    <string name="preference_send_usage_stats_summary">Anfonwch ystadegau defnydd i\'n cynorthwyo i wella WordPress Android</string>
     <string name="update_verb">Diweddaru</string>
     <string name="schedule_verb">Amserlen</string>
     <string name="reader_toast_err_unfollow_blog">Methu peidio â dilyn y blog hwn</string>
@@ -761,7 +756,6 @@ Language: cy_GB
     <string name="pick_photo">Dewis ffoto</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
     <string name="reader_empty_followed_blogs_description">Ond peidiwch â phoeni, tapiwch yr eicon tag ar y brig de i ddechrau darganfod!</string>
-    <string name="nux_tutorial_get_started_title">Cychwyn arni!</string>
     <string name="reader_empty_followed_tags">Nid ydych yn dlyn unrhyw dagiau</string>
     <string name="reader_toast_err_url_intent">Methu agor %s</string>
     <string name="reader_toast_err_view_image">Methu â gweld delwedd</string>

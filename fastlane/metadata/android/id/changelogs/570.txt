@@ -1,0 +1,3 @@
+10.2:
+* Fitur baru: Ada sesuatu yang menarik perhatian Anda? Baca kapan saja dengan Simpan untuk nanti! Bahkan saat Anda sedang offline!
+* Beragam perbaikan bug.

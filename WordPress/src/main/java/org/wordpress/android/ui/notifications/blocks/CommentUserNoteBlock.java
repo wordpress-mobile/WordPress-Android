@@ -60,7 +60,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         noteBlockHolder.mNameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
-                                                                                 WordPress.getContext()));
+                WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.mBulletTextView.setVisibility(View.VISIBLE);
             noteBlockHolder.mSiteTextView.setVisibility(View.VISIBLE);
@@ -104,13 +104,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.mAvatarImageView.setContentDescription(null);
         }
 
-        noteBlockHolder.mCommentTextView.setText(
-                NotificationsUtils.getSpannableContentForRanges(
-                        getNoteData().optJSONObject("comment_text"),
-                        noteBlockHolder.mCommentTextView,
-                        getOnNoteBlockTextClickListener(),
-                        false)
-                                                );
+        noteBlockHolder.mCommentTextView.setText(getCommentTextOfNotification(noteBlockHolder));
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -160,6 +154,22 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
 
         return view;
+    }
+
+    private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
+        String commentText = NotificationsUtils
+                .getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"),
+                        noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
+
+        return getStringWithNewlineInListsRemoved(commentText);
+    }
+
+    private String getStringWithNewlineInListsRemoved(String noteString) {
+        if (noteString == null) {
+            return "";
+        }
+
+        return noteString.replace("\n\t\n\t", "\n\t");
     }
 
     private long getTimestamp() {

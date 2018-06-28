@@ -32,8 +32,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -53,6 +52,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -355,6 +355,18 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(importantChannel);
+
+            // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
+            // or media upload)
+            NotificationChannel transientChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_transient_id),
+                    getString(R.string.notification_channel_transient_title), NotificationManager.IMPORTANCE_DEFAULT);
+            transientChannel.setSound(null, null);
+            transientChannel.enableVibration(false);
+            transientChannel.enableLights(false);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(transientChannel);
         }
     }
 
@@ -549,6 +561,16 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        if (mAccountStore.hasAccessToken()) {
+            // Make sure the Push Notification token is sent to our servers after a successful login
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUnexpectedError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
     }
@@ -560,10 +582,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
         try {
-            String gcmId = BuildConfig.GCM_ID;
-            if (!TextUtils.isEmpty(gcmId)) {
-                InstanceID.getInstance(context).deleteToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-            }
+            FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (Exception e) {
             AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }

@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-10 09:58:04+0000
+Translation-Revision-Date: 2018-06-12 17:40:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="signup_magic_link_title">Magisk länk har skickats</string>
+    <string name="signup_email_screen_title">Registrering via e–post</string>
+    <string name="verification_2fa_screen_title">Bekräftelse av kod</string>
+    <string name="selfhosted_site_login_title">Inloggningsuppgifter</string>
+    <string name="magic_link_sent_login_title">Magisk länk har skickats</string>
+    <string name="magic_link_login_title">Inloggning via magisk länk</string>
+    <string name="site_address_login_title">Webbplatsens inloggningsadress</string>
+    <string name="email_address_login_title">E–postadress för inloggning</string>
+    <string name="alternatively">Alternativt:</string>
+    <string name="reader_empty_saved_posts_description">Knacka på %s för att spara ett inlägg till din lista.</string>
+    <string name="reader_empty_saved_posts_title">Inga inlägg sparade – ännu!</string>
+    <string name="reader_bookmark_snack_title">Inlägget sparat</string>
+    <string name="reader_bookmark_snack_btn">Se alla</string>
+    <string name="reader_btn_bookmarked">Sparat</string>
+    <string name="reader_btn_bookmark">Spara</string>
+    <string name="reader_remove_bookmark">Ta bort från sparade inlägg</string>
+    <string name="reader_add_bookmark">Lägg till i sparade inlägg</string>
+    <string name="reader_save_for_later_title">Sparade inlägg</string>
+    <string name="activity_log_empty_list">Inga händelser har registrerats ännu</string>
+    <string name="removed">Borttaget</string>
+    <string name="tabbar_accessibility_label_write">Nytt inlägg. Skriv ett nytt inlägg.</string>
+    <string name="my_site_icon_content_description">Byt webbplatsikon</string>
+    <string name="my_site_icon_dialog_cancel_button">Avbryt</string>
+    <string name="my_site_icon_dialog_remove_button">Ta bort</string>
+    <string name="my_site_icon_dialog_change_button">Ändra</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Du har inte behörighet att redigera webbplatsikonen.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Du har inte behörighet att lägga till webbplatsikon.</string>
+    <string name="my_site_icon_dialog_change_message">Hur vill du redigera ikonen?</string>
+    <string name="my_site_icon_dialog_add_message">Vill du lägga till en webbplatsikon?</string>
+    <string name="my_site_icon_dialog_title">Webbplatsikon</string>
+    <string name="reader_followed_blog_notifications_this">denna webbplats</string>
+    <string name="reader_followed_blog_notifications_action">Aktivera</string>
+    <string name="reader_followed_blog_notifications">Aktivera notiser för %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Slå på webbplatsnotiser</string>
+    <string name="reader_btn_notifications_off">Stäng av webbplatsnotiser</string>
+    <string name="activity_log_jetpack_icon">Jetpack–ikon</string>
+    <string name="rewind">Spola tillbaka</string>
+    <string name="activity_log_event">Händelse</string>
+    <string name="activity_log_icon">Aktivitetsikon</string>
+    <string name="activity_log">Aktivitetslogg</string>
+    <string name="activity">Aktivitet</string>
+    <string name="privacy_policy_read">Läs integritetspolicy</string>
+    <string name="third_party_policy_learn_more_caption">Vi använder spårningsverktyg, inklusive vissa från tredje part. Läs mer om dessa och hur du styr dem.</string>
+    <string name="third_party_policy_learn_more_header">Policyer från tredje part</string>
+    <string name="privacy_policy_learn_more_caption">Denna information hjälper oss att förbättra våra produkter, visa dig marknadsinformation som är mer relevant, anpassa din upplevelse av WordPress.com och annat som finns beskrivet i vår integritetspolicy.</string>
+    <string name="privacy_policy_learn_more_header">Integritetspolicy</string>
+    <string name="cookie_policy_learn_more_caption">Dela information till vårt analysverktyg om din användning av tjänster medan du är inloggad på ditt konto på WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">Cookie–policy</string>
+    <string name="preference_privacy_settings">Integritetsinställningar</string>
+    <string name="preference_collect_information">Samla in information</string>
+    <string name="post_submitted">Inlägget har skickats</string>
+    <string name="write_post">Skriv inlägg</string>
     <string name="login_email_button_signup">Har du inget konto? %1$sRegistrera dig%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funktionen för tillägg kräver att webbplatsen har gott anseende.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funktionen för tillägg kräver att domänens abonnemang är kopplat till denna användare.</string>
@@ -76,7 +128,6 @@ Language: sv_SE
     <string name="stats_tab_tap_content_description">visar %s</string>
     <string name="stats_legend">beskrivning av statistikdiagram</string>
     <string name="fab_create_desc">skapa</string>
-    <string name="fab_create_post_desc">skapa inlägg</string>
     <string name="fab_add_tag_desc">skapa etikett</string>
     <string name="stats_bar_week_desc">Veckan med %s</string>
     <string name="stats_bar_date_value_desc">%s, %d visningar</string>
@@ -271,7 +322,7 @@ Language: sv_SE
     <string name="signup_magic_link_message">Vi har skickat dig en magisk länk för registrering! Kolla din e-post på denna telefon och knacka på länken i e–posten för att bekräfta registreringen.</string>
     <string name="signup_magic_link_error_button_positive">Försök igen</string>
     <string name="signup_magic_link_error_button_negative">Stäng</string>
-    <string name="signup_magic_link_error">Det gick inte att sända e–postmeddelandet. Du kan försöka en gång till eller stänga och försöka igen senare.</string>
+    <string name="signup_magic_link_error">Det gick inte att sända e–postmeddelandet. Du kan försöka igen nu eller stänga och göra ett nytt försök senare.</string>
     <string name="signup_epilogue_hint_username">Användarnamn</string>
     <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en magisk länk som den du just klickade på, men om du vill kan du också spara ett lösenord.</string>
     <string name="signup_epilogue_hint_password">Lösenord (valfritt)</string>
@@ -881,11 +932,8 @@ Language: sv_SE
     <string name="error_locating_image">Det gick inte att hitta den beskurna bilden</string>
     <string name="error_cropping_image">Det gick inte att beskära bilden</string>
     <string name="checking_email">Kontrollerar e–post</string>
-    <string name="launch_your_email_app">Starta din e‑postapp</string>
-    <string name="check_your_email">Kolla din e–post</string>
     <string name="magic_link_unavailable_error_message">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
     <string name="logging_in">Loggar in</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Få en länk skickad till din e–post för att logga in direkt</string>
     <string name="enter_your_password_instead">Ange ditt lösenord istället</string>
     <string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
     <string name="new_editor_reflection_error">Den visuella redigeraren är inte kompatibel med din enhet. Den\n inaktiverades automatiskt.</string>
@@ -1243,6 +1291,7 @@ Language: sv_SE
     <string name="deselect_all">Avmarkera alla </string>
     <string name="stats_generic_error">Nödvändig statistik kunde inte laddas in. </string>
     <string name="auth_required">Logga in igen för att fortsätta.</string>
+    <string name="invalid_verification_code">Ogiltig verifieringskod</string>
     <string name="verification_code">Verifieringskod</string>
     <string name="editor_toast_invalid_path">Ogiltig sökväg till fil</string>
     <string name="language">Språk</string>
@@ -1359,7 +1408,6 @@ Language: sv_SE
     <string name="create_new_blog_wpcom">Skapa en blogg på WordPress.com</string>
     <string name="nux_help_description">Besök hjälpsektionen för att få svar på vanliga frågor eller besök forumet för att ställa nya frågor</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
-    <string name="faq_button">Vanliga frågor</string>
     <string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
     <string name="reader_empty_followed_blogs_title">Du följer inga webbplatser än</string>
     <string name="reader_menu_block_blog">Blockera denna blogg</string>
@@ -1372,8 +1420,6 @@ Language: sv_SE
     <string name="hs__new_conversation_header">Supportchatt</string>
     <string name="hs__conversation_detail_error">Beskriv problemet du upplever</string>
     <string name="contact_us">Kontakta oss</string>
-    <string name="preference_send_usage_stats_summary">Skicka automatiskt användarstatistik för att hjälpa oss förbättra WordPress för Android</string>
-    <string name="preference_send_usage_stats">Skicka statistik</string>
     <string name="schedule_verb">Tidinställ</string>
     <string name="update_verb">Uppdatera</string>
     <string name="reader_empty_recommended_blogs">Inga rekommenderade bloggar</string>
@@ -1501,7 +1547,6 @@ Language: sv_SE
     <string name="pick_photo">Välj bild</string>
     <string name="reader_empty_followed_blogs_description">Inget att oroa sig för, peka på ikonen uppe till höger för att börja utforska!</string>
     <string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
-    <string name="nux_tutorial_get_started_title">Kom igång!</string>
     <string name="reader_empty_followed_tags">Du följer inga ämnen</string>
     <string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
     <string name="reader_toast_err_view_image">Kunde inte visa bild</string>
