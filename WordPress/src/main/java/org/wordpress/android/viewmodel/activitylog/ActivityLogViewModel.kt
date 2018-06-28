@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -73,16 +72,14 @@ class ActivityLogViewModel @Inject constructor(
     private var lastRewindActivityId: String? = null
     private var lastRewindStatus: Status? = null
     private val rewindProgressObserver = Observer<RewindProgress> {
-        Log.d("rewind_service", "Rewind progress: $it")
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
             lastRewindActivityId = it?.activityLogItem?.activityID
-            updateRewindState(it?.status, it?.activityLogItem?.activityID != null)
+            updateRewindState(it?.status)
         }
     }
 
-    private fun updateRewindState(status: Status?, hasActivity: Boolean) {
+    private fun updateRewindState(status: Status?) {
         lastRewindStatus = status
-        Log.d("rewind_service", "Status: $status, is in progress: $isRewindProgressItemShown")
         if (status == RUNNING && !isRewindProgressItemShown) {
             reloadEvents(true, true)
         } else if (status != RUNNING && isRewindProgressItemShown) {
@@ -160,7 +157,6 @@ class ActivityLogViewModel @Inject constructor(
     private fun reloadEvents(disableActions: Boolean = areActionsEnabled,
         displayProgressItem: Boolean = isRewindProgressItemShown) {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
-        Log.d("rewind_service", "Reloading: disable actions: $disableActions, progress item: $displayProgressItem")
         val items = ArrayList<ActivityLogListItem>(eventList.map { model -> ActivityLogListItem.Event(model) })
         areActionsEnabled = true
 

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.activitylog
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -30,22 +29,18 @@ constructor(val activityLogStore: ActivityLogStore, val siteStore: SiteStore, va
     }
 
     fun start(site: SiteModel, restoreId: Long, now: Boolean = false) {
-        Log.d("rewind_service", "Handler - Start $now")
         isRunning = true
         checkState = object : Runnable {
             override fun run() {
-                Log.d("rewind_service", "Starting handler")
                 val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
                 val rewind = rewindStatusForSite?.rewind
                 rewind?.let {
                     if (rewind.status == FINISHED && rewind.restoreId == restoreId) {
-                        Log.d("rewind_service", "Cancelling handler")
                         isRunning = false
                         return
                     }
                 }
 
-                Log.d("rewind_service", "Handler running")
                 val action = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site))
                 dispatcher.dispatch(action)
 
@@ -61,7 +56,6 @@ constructor(val activityLogStore: ActivityLogStore, val siteStore: SiteStore, va
 
     fun cancel() {
         checkState?.let {
-            Log.d("rewind_service", "Cancelling rewind")
             handler.removeCallbacks(checkState)
             isRunning = false
         }

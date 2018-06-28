@@ -2,7 +2,6 @@ package org.wordpress.android.ui.activitylog
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
@@ -73,7 +72,6 @@ constructor(
 
     fun requestStatusUpdate() {
         site?.let {
-            Log.d("rewind_service ", "requestStatusUpdate")
             dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(it)))
         }
     }
@@ -82,7 +80,6 @@ constructor(
         site?.let {
             val state = activityLogStore.getRewindStatusForSite(it)
             state?.let {
-                Log.d("rewind_service ", "Reloading rewind status")
                 updateRewindStatus(state)
                 return true
             }
@@ -94,7 +91,6 @@ constructor(
         mutableRewindAvailable.postValue(rewindStatus?.state == ACTIVE && rewindStatus.rewind?.status != RUNNING)
 
         val rewind = rewindStatus?.rewind
-        Log.d("rewind_service ", "Updating rewind progress: $rewind")
         if (rewind != null) {
             val restoreId = rewindStatus.rewind?.restoreId
             if (!rewindProgressChecker.isRunning && restoreId != null) {
@@ -112,7 +108,6 @@ constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onRewindStatusFetched(event: OnRewindStatusFetched) {
-        Log.d("rewind_service ", "onRewindStatusFetched")
         mutableRewindStatusFetchError.postValue(event.error)
         if (event.isError) {
             rewindProgressChecker.cancel()
@@ -123,7 +118,6 @@ constructor(
     @Subscribe(threadMode = BACKGROUND)
     @SuppressWarnings("unused")
     fun onRewind(event: OnRewind) {
-        Log.d("rewind_service ", "onRewind")
         mutableRewindError.postValue(event.error)
         if (event.isError) {
             mutableRewindAvailable.postValue(true)
@@ -144,7 +138,6 @@ constructor(
         rewindStatus: Rewind.Status,
         rewindError: String? = null
     ) {
-        Log.d("rewind_service ", "Cached activity - ${activityLogModelItem?.activityID}, rewindId: $rewindId, cached rewindID: ${activityLogModelItem?.rewindID}")
         var activityItem = if (rewindId != null) activityLogStore.getActivityLogItemByRewindId(rewindId) else null
         if (activityItem == null && activityLogModelItem != null && activityLogModelItem?.rewindID == rewindId) {
             activityItem = activityLogModelItem
@@ -152,7 +145,6 @@ constructor(
         if (activityItem != null) {
             activityLogModelItem = activityItem
         }
-        Log.d("rewind_service ", "Cached activity - After loading - ${activityItem?.activityID}, rewindId: $rewindId, cached rewindID: ${activityItem?.rewindID}")
         val rewindProgress = RewindProgress(
                 activityItem,
                 progress,
@@ -160,7 +152,6 @@ constructor(
                 rewindStatus,
                 rewindError
         )
-        Log.d("rewind_service ", "Updating rewind progress: $rewindProgress")
         mutableRewindProgress.postValue(rewindProgress)
     }
 
