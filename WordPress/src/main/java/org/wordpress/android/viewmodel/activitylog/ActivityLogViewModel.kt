@@ -170,7 +170,10 @@ class ActivityLogViewModel @Inject constructor(
 
         if (displayProgressItem) {
             insertRewindProgressItem(items)
-            _moveToTop.asyncCall()
+
+            if (eventListStatus.value != LOADING_MORE) {
+                _moveToTop.asyncCall()
+            }
         }
 
         prepareHeaders(items)
@@ -242,9 +245,6 @@ class ActivityLogViewModel @Inject constructor(
 
         if (event.rowsAffected > 0) {
             reloadEvents(!rewindStatusService.isRewindAvailable, rewindStatusService.isRewindInProgress)
-            if (eventListStatus.value != LOADING_MORE) {
-                _moveToTop.asyncCall()
-            }
             rewindStatusService.requestStatusUpdate()
         }
 
