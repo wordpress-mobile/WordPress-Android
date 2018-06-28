@@ -3,65 +3,58 @@ package org.wordpress.android.ui.activitylog.list
 import android.support.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 
 sealed class ActivityLogListItem {
-    abstract val activityId: String
-    abstract val header: String
+    abstract var isHeaderVisible: Boolean
     abstract val title: String
     abstract val description: String
-    abstract val icon: Icon
-    abstract val status: Status
-    abstract val date: Date
-    abstract val buttonIcon: Icon
-    abstract var isButtonVisible: Boolean
-    abstract val isProgressBarVisible: Boolean
-    abstract var isHeaderVisible: Boolean
+    abstract val header: String
+    abstract val type: ViewType
 
-    val formattedDate: String by lazy {
-        DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
-    }
-
-    val formattedTime: String by lazy {
-        DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
+    interface IActionableItem {
+        var isButtonVisible: Boolean
     }
 
     data class Event(
-        override val activityId: String,
+        val activityId: String,
         override val title: String,
         override val description: String,
         private val gridIcon: String?,
         private val eventStatus: String?,
         val isRewindable: Boolean,
         val rewindId: String?,
-        override val date: Date,
+        val date: Date,
         override var isHeaderVisible: Boolean = false,
-        override val buttonIcon: Icon = Icon.HISTORY,
+        val buttonIcon: Icon = Icon.HISTORY,
         override var isButtonVisible: Boolean = isRewindable,
-        override val isProgressBarVisible: Boolean = false) : ActivityLogListItem() {
-        override val icon = Icon.fromValue(gridIcon)
-        override val status = Status.fromValue(eventStatus)
+        val isProgressBarVisible: Boolean = false) : ActivityLogListItem(), IActionableItem {
+
+        val formattedDate: String = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
+        val formattedTime: String = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
+        val icon = Icon.fromValue(gridIcon)
+        val status = Status.fromValue(eventStatus)
+        override val header = formattedDate
+        override val type = ViewType.EVENT
 
         constructor(model: ActivityLogModel) : this(model.activityID, model.summary, model.text, model.gridicon,
                 model.status, model.rewindable ?: false, model.rewindID, model.published)
-
-        override val header = formattedDate
     }
 
     data class Progress(
-        override val activityId: String,
         override val title: String,
         override val description: String,
         override val header: String,
-        override val date: Date = Date(0),
-        override var isHeaderVisible: Boolean = false,
-        override val isProgressBarVisible: Boolean = true,
-        override val buttonIcon: Icon = Icon.DEFAULT,
-        override var isButtonVisible: Boolean = false,
-        override val icon: Icon = Icon.NOTICE_OUTLINE,
-        override val status: Status = Status.INFO) : ActivityLogListItem() {
+        override var isHeaderVisible: Boolean = false) : ActivityLogListItem() {
+        override val type = ViewType.PROGRESS
+    }
+
+    enum class ViewType(val id: Int) {
+        EVENT(0),
+        PROGRESS(1)
     }
 
     enum class Status(val value: String, @DrawableRes val color: Int) {

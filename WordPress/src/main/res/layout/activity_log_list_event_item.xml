@@ -95,26 +95,6 @@
 
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/rewind_progress_bar_container"
-            android:layout_width="match_parent"
-            android:layout_height="5dp">
-
-            <ProgressBar
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:theme="@style/LinearProgress"
-                android:id="@+id/rewind_progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginBottom="-7dp"
-                android:layout_marginTop="-8dp"
-                android:background="@color/wp_grey_lighten_20"
-                android:indeterminate="true"
-                android:progress="50"
-                />
-
-        </FrameLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"

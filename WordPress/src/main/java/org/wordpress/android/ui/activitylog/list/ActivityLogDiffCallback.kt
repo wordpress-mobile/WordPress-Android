@@ -2,6 +2,7 @@ package org.wordpress.android.ui.activitylog.list
 
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
 
 class ActivityLogDiffCallback(
     private val oldList: List<ActivityLogListItem>,
@@ -15,7 +16,15 @@ class ActivityLogDiffCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
-        return oldItem.activityId == newItem.activityId
+
+        return if (oldItem.javaClass == newItem.javaClass) {
+            when (oldItem) {
+                is ActivityLogListItem.Event -> oldItem.activityId == (newItem as ActivityLogListItem.Event).activityId
+                is ActivityLogListItem.Progress -> oldItem == newItem
+            }
+        } else {
+            false
+        }
     }
 
     override fun getOldListSize(): Int {
@@ -35,7 +44,8 @@ class ActivityLogDiffCallback(
         val newItem = newList[newItemPosition]
 
         val bundle = Bundle()
-        if (oldItem.isButtonVisible != newItem.isButtonVisible) {
+        if (oldItem is IActionableItem && newItem is IActionableItem
+                && oldItem.isButtonVisible != newItem.isButtonVisible) {
             bundle.putBoolean(LIST_ITEM_BUTTON_VISIBILITY_KEY, newItem.isButtonVisible)
         }
 

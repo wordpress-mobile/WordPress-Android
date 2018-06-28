@@ -148,11 +148,7 @@ class ActivityLogListFragment : Fragment() {
         context?.let {
             val adapter: ActivityLogAdapter
             if (activityLogList.adapter == null) {
-                adapter = ActivityLogAdapter(
-                        it,
-                        this::onItemClicked,
-                        this::onItemButtonClicked
-                )
+                adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
                 activityLogList.adapter = adapter
             } else {
                 adapter = activityLogList.adapter as ActivityLogAdapter

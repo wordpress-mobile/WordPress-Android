@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -165,7 +166,7 @@ class ActivityLogViewModel @Inject constructor(
         areActionsEnabled = true
 
         if (disableActions) {
-            disableListActions(items)
+            disableListActions(items.filter { it is IActionableItem }.map { it as IActionableItem })
         }
 
         if (displayProgressItem) {
@@ -194,7 +195,7 @@ class ActivityLogViewModel @Inject constructor(
         items.add(0, getRewindProgressItem(activityLogModel))
     }
 
-    private fun disableListActions(items: List<ActivityLogListItem>) {
+    private fun disableListActions(items: List<IActionableItem>) {
         areActionsEnabled = false
         items.forEach {
             it.isButtonVisible = false
@@ -204,13 +205,11 @@ class ActivityLogViewModel @Inject constructor(
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
         return activityLogModel?.let {
             val rewoundEvent = ActivityLogListItem.Event(it)
-            ActivityLogListItem.Progress(activityLogModel.activityID,
-                    resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+            ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                     resourceProvider.getString(R.string.activity_log_currently_restoring_message,
                             rewoundEvent.formattedDate, rewoundEvent.formattedTime),
                     resourceProvider.getString(R.string.now))
-        } ?: ActivityLogListItem.Progress("",
-                resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+        } ?: ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                 resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates),
                 resourceProvider.getString(R.string.now))
     }
