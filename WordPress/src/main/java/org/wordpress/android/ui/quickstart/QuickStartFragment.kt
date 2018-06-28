@@ -108,7 +108,8 @@ class QuickStartFragment : Fragment() {
             showSkipDialog()
         }
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE, false)) {
+        if (savedInstanceState != null &&
+                savedInstanceState.getBoolean(STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE, false)) {
             showSkipDialog()
         }
     }
