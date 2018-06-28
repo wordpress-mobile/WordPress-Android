@@ -1,0 +1,5 @@
+O WordPress para Android coloca o poder de publicar à sua disposição, facilitando a criação e o consumo de conteúdos. Escreva, edite e publique posts em seu site, verifique stats e se inspire com ótimos posts no leitor. E o que mais? Ele tem código aberto.
+
+O WordPress para Android oferece suporte para o WordPress.com auto-hospeda sites do WordPress.org executando WordPress 3.7 ou superior.
+
+Acesse os fóruns para obter ajuda com o aplicativo: http://android.forums.wordpress.org
