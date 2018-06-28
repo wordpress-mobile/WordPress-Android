@@ -104,6 +104,8 @@ public final class AnalyticsTracker {
         MEDIA_PICKER_PREVIEW_OPENED,
         EDITOR_UPDATED_POST,
         EDITOR_SCHEDULED_POST,
+        EDITOR_OPENED,
+        POST_LIST_BUTTON_PRESSED,
         EDITOR_CLOSED,
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
@@ -193,6 +195,8 @@ public final class AnalyticsTracker {
         NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST,
         NOTIFICATION_UPLOAD_POST_ERROR_RETRY,
         NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY,
+        NOTIFICATION_RECEIVED_PROCESSING_START,
+        NOTIFICATION_RECEIVED_PROCESSING_END,
         OPENED_POSTS,
         OPENED_PAGES,
         OPENED_COMMENTS,
@@ -475,15 +479,6 @@ public final class AnalyticsTracker {
         }
         for (Tracker tracker : TRACKERS) {
             tracker.endSession();
-        }
-    }
-
-    public static void registerPushNotificationToken(String regId) {
-        if (mHasUserOptedOut) {
-            return;
-        }
-        for (Tracker tracker : TRACKERS) {
-            tracker.registerPushNotificationToken(regId);
         }
     }
 

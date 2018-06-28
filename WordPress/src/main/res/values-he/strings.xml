@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-15 10:54:08+0000
+Translation-Revision-Date: 2018-06-18 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="signup_magic_link_title">הקישור הישיר נשלח</string>
+    <string name="signup_email_screen_title">הרשמה באימייל</string>
+    <string name="verification_2fa_screen_title">אימות קוד</string>
+    <string name="selfhosted_site_login_title">פרטי כניסה</string>
+    <string name="magic_link_sent_login_title">הקישור הישיר נשלח</string>
+    <string name="magic_link_login_title">התחברות באמצעות קישור ישיר</string>
+    <string name="site_address_login_title">התחברות באמצעות כתובת האתר</string>
+    <string name="email_address_login_title">התחברות באמצעות כתובת אימייל</string>
+    <string name="alternatively">לחלופין:</string>
+    <string name="reader_empty_saved_posts_description">יש להקיש על %s כדי לשמור את הפוסט ברשימה שלך.</string>
+    <string name="reader_empty_saved_posts_title">לא נשמרו פוסטים u2014 עדיין!</string>
+    <string name="reader_bookmark_snack_title">הפוסט נשמר</string>
+    <string name="reader_bookmark_snack_btn">להציג הכול</string>
+    <string name="reader_btn_bookmarked">נשמר</string>
+    <string name="reader_btn_bookmark">שמירה</string>
+    <string name="reader_remove_bookmark">הסרה מהפוסטים שנשמרו</string>
+    <string name="reader_add_bookmark">הוספה לפוסטים שנשמרו</string>
+    <string name="reader_save_for_later_title">פוסטים שנשמרו</string>
+    <string name="activity_log_empty_list">עדיין לא נרשמו אירועים</string>
+    <string name="removed">נמחק</string>
+    <string name="tabbar_accessibility_label_write">פוסט חדש. כתיבת פוסט חדש.</string>
+    <string name="my_site_icon_content_description">שינוי סמל אתר</string>
+    <string name="my_site_icon_dialog_cancel_button">ביטול</string>
+    <string name="my_site_icon_dialog_remove_button">מחיקה</string>
+    <string name="my_site_icon_dialog_change_button">שינוי</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">אין לך הרשאה לערוך את סמל האתר.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">אין לך הרשאה להוסיף סמל לאתר.</string>
+    <string name="my_site_icon_dialog_change_message">אילו שינויים ברצונך לבצע בסמל האתר?</string>
+    <string name="my_site_icon_dialog_add_message">האם ברצונך להוסיף סמל לאתר?</string>
+    <string name="my_site_icon_dialog_title">סמל אתר</string>
+    <string name="reader_followed_blog_notifications_this">האתר הזה</string>
+    <string name="reader_followed_blog_notifications_action">הפעלה</string>
+    <string name="reader_followed_blog_notifications">האם להפעיל התראות עבור %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">הפעלת הודעות אתר</string>
+    <string name="reader_btn_notifications_off">השבתת הודעות אתר</string>
+    <string name="activity_log_jetpack_icon">סמל Jetpack</string>
+    <string name="rewind">שחזור לגרסה קודמת</string>
+    <string name="activity_log_event">אירוע</string>
+    <string name="activity_log_icon">סמל פעילות</string>
+    <string name="activity_log">יומן פעילות</string>
+    <string name="activity">פעילות</string>
+    <string name="privacy_policy_read">עיון במדיניות פרטיות</string>
+    <string name="third_party_policy_learn_more_caption">אנחנו משתמשים בכלים למעקב, כולל כלים של צד שלישי. אפשר לקרוא פרטים על אלו על אלו ועל אופן השליטה בהם.</string>
+    <string name="third_party_policy_learn_more_header">מדיניות של צד שלישי</string>
+    <string name="privacy_policy_learn_more_caption">המידע הזה עוזר לנו לשפר את המוצרים שלנו, להציג שיווק רלוונטי יותר, לספק לך חוויית שימוש אישית ב–WordPress.com ועוד, כפי שמפורט במדיניות הפרטיות שלנו.</string>
+    <string name="privacy_policy_learn_more_header">מדיניות פרטיות</string>
+    <string name="cookie_policy_learn_more_caption">שיתוף של פרטי השימוש שלך בשירותים השונים עם כלי הניתוח שלנו לאחר ההתחברות לחשבון שלך ב–WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">מדיניות קובצי ה–Cookie</string>
+    <string name="preference_privacy_settings">הגדרות פרטיות</string>
+    <string name="preference_collect_information">איסוף מידע</string>
+    <string name="post_submitted">הפוסט נשלח</string>
+    <string name="write_post">כתיבת פוסט</string>
     <string name="login_email_button_signup">אין לך חשבון עדיין? %1$sהרשמה%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">כדי להוסיף את התוסף, האתר חייב להיות יציב.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">כדי להוסיף את התוסף, הרישום לעדכונים בדומיין חייב להיות משויך למשתמש זה.</string>
@@ -76,7 +128,6 @@ Language: he_IL
     <string name="stats_tab_tap_content_description">מציג %s</string>
     <string name="stats_legend">מקרא של גרף הנתונים הסטטיסטיים</string>
     <string name="fab_create_desc">יצירה</string>
-    <string name="fab_create_post_desc">יצירת פוסט</string>
     <string name="fab_add_tag_desc">יצירת תגית</string>
     <string name="stats_bar_week_desc">שבוע מתוך %s</string>
     <string name="stats_bar_date_value_desc">%s, %d צפיות</string>
@@ -267,7 +318,6 @@ Language: he_IL
     <string name="signup_magic_link_message">שלחנו אליך קישור ישיר להרשמה! עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת כדי להשלים את ההרשמה.</string>
     <string name="signup_magic_link_error_button_positive">יש לנסות שנית</string>
     <string name="signup_magic_link_error_button_negative">סגור</string>
-    <string name="signup_magic_link_error">אירעה בעיה בשליחת האימייל. אפשר לנסות שוב עכשיו או לסגור את העמוד ולנסות שוב מאוחר יותר.</string>
     <string name="signup_epilogue_hint_username">שם משתמש</string>
     <string name="signup_epilogue_hint_password_detail">אפשר תמיד להתחבר באמצעות קישור ישיר, כמו הקישור שבו השתמשת כעת, אבל באפשרותך גם להגדיר סיסמה לבחירתך.</string>
     <string name="signup_epilogue_hint_password">סיסמה (לא חובה)</string>
@@ -868,12 +918,9 @@ Language: he_IL
     <string name="error_locating_image">שגיאה באיתור התמונה החתוכה</string>
     <string name="error_refreshing_gravatar">שגיאה בטעינה מחדש של ה–gravatar שלך</string>
     <string name="error_cropping_image">שגיאה בחיתוך בתמונה</string>
-    <string name="launch_your_email_app">הפעלת אפליקציית האימייל</string>
     <string name="checking_email">בודק אימייל</string>
     <string name="magic_link_unavailable_error_message">לא זמין כרגע. יש להזין סיסמה</string>
-    <string name="check_your_email">יש לבדוק אימייל</string>
     <string name="logging_in">נכנס</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">קבלת קישור להתחברות מיידית באימייל</string>
     <string name="enter_your_password_instead">במקום זאת יש להזין סיסמה</string>
     <string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
     <string name="new_editor_reflection_error">עורך ויזואלי לא תואם למכשיר שלך. הוא\n הושבת אוטומטית.</string>
@@ -1229,6 +1276,7 @@ Language: he_IL
     <string name="stats_generic_error">לא ניתן לטעון סטטוס נדרש</string>
     <string name="editor_toast_invalid_path">נתיב קובץ שגוי</string>
     <string name="verification_code">קוד אימות</string>
+    <string name="invalid_verification_code">קוד אימות שגוי</string>
     <string name="auth_required">יש להתחבר שוב כדי המשיך.</string>
     <string name="language">שפה</string>
     <string name="media_fetching">מביא מדיה…</string>
@@ -1319,7 +1367,6 @@ Language: he_IL
     <string name="ssl_certificate_details">פרטים</string>
     <string name="cab_selected">%d נבחרו</string>
     <string name="stats_no_blog">לא ניתן לטעון את הנתונים הסטטיסטיים עבור האתר הדרוש</string>
-    <string name="faq_button">שאלות נפוצות</string>
     <string name="reader_empty_comments">אין תגובות עדיין</string>
     <string name="reader_empty_posts_in_tag">אין פוסטים עם התגית הזו</string>
     <string name="reader_label_view_original">לצפות בפוסט המקורי</string>
@@ -1357,8 +1404,6 @@ Language: he_IL
     <string name="hs__conversation_header">צ׳אט תמיכה</string>
     <string name="hs__username_blank_error">נא להזין שם</string>
     <string name="hs__invalid_email_error">נא להזין כתובת אימייל</string>
-    <string name="preference_send_usage_stats">שליחת סטטיסטיקות</string>
-    <string name="preference_send_usage_stats_summary">שליחת נתוני שימוש סטטיסטיים שיאפשרו לנו לשפר את WordPress לאנדרויד</string>
     <string name="update_verb">עדכן</string>
     <string name="schedule_verb">תזמן</string>
     <string name="reader_toast_err_unfollow_blog">לא ניתן לבטל את המעקב אחר אתר זה</string>
@@ -1500,7 +1545,6 @@ Language: he_IL
     <string name="reader_toast_err_share_intent">לא ניתן לשתף</string>
     <string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
     <string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
-    <string name="nux_tutorial_get_started_title">צא לדרך!</string>
     <string name="reader_empty_followed_tags">אין מעקב אחר שום תגית</string>
     <string name="themes">ערכות עיצוב</string>
     <string name="stats_view_tags_and_categories">תגים וקטגוריות</string>

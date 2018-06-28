@@ -1,0 +1,5 @@
+WordPress for Android legt dir alle Werkzeuge für die Veröffentlichung in die Hand. Damit können Inhalte mit Leichtigkeit erstellt und genutzt werden. Verfasse, bearbeite und veröffentliche Beiträge auf deiner Website, überprüfe Statistiken und lass dich von spannenden Beiträgen im Reader inspirieren. Und außerdem? Es ist quelloffen.
+
+WordPress for Android unterstützt WordPress.com und selbst gehostete WordPress.org-Websites ab WordPress 3.7 oder höher.
+
+Besuche die Foren, wenn du Hilfe mit der App brauchst: http://android.forums.wordpress.org

@@ -1,0 +1,3 @@
+10.2:
+* Nueva característica: ¿Te llamó algo la atención? ¡Léelo en cualquier momento con Guardar para más tarde! ¡Incluso cuando no estás conectado!
+* Varias corrección de errores.

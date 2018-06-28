@@ -1,11 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-19 17:54:51+0000
+Translation-Revision-Date: 2018-06-13 21:45:40+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="signup_magic_link_title">Wysłano Magic Linka</string>
+    <string name="signup_email_screen_title">Rejestracja przy użyciu emaila</string>
+    <string name="verification_2fa_screen_title">Weryfikacja kodu</string>
+    <string name="selfhosted_site_login_title">Dane uwierzytelniające logowania</string>
+    <string name="magic_link_sent_login_title">Wysłano Magic Linka</string>
+    <string name="magic_link_login_title">Logowanie przy użyciu Magic Linka</string>
+    <string name="site_address_login_title">Logowanie adresem witryny</string>
+    <string name="email_address_login_title">Logowanie adresem email</string>
+    <string name="alternatively">Alternatywnie:</string>
+    <string name="reader_empty_saved_posts_description">Stuknij %s aby zapisać wpis na swojej liście.</string>
+    <string name="reader_bookmark_snack_title">Wpis zapisano</string>
+    <string name="reader_bookmark_snack_btn">Zobacz wszystkie</string>
+    <string name="reader_btn_bookmarked">Zapisano</string>
+    <string name="reader_btn_bookmark">Zapisz</string>
+    <string name="reader_remove_bookmark">Usuń z zapisanych wpisów</string>
+    <string name="reader_add_bookmark">Dodaj do zapisanych wpisów</string>
+    <string name="reader_save_for_later_title">Zapisane wpisy</string>
+    <string name="activity_log_empty_list">Nie zarejestrowano żadnych wydarzeń</string>
+    <string name="removed">Usunięto</string>
+    <string name="tabbar_accessibility_label_write">Nowy wpis. Napisz nowy wpis.</string>
+    <string name="my_site_icon_content_description">Zmień ikonę witryny</string>
+    <string name="my_site_icon_dialog_cancel_button">Anuluj</string>
+    <string name="my_site_icon_dialog_remove_button">Usuń</string>
+    <string name="my_site_icon_dialog_change_button">Zmień</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Nie posiadasz uprawnień do zmiany ikony witryny.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Nie posiadasz uprawnień do dodawania ikony witryny.</string>
+    <string name="my_site_icon_dialog_change_message">Jak chciał(a)byś edytować ikonę?</string>
+    <string name="my_site_icon_dialog_add_message">Czy chciał(a)byś dodać ikonę witryny?</string>
+    <string name="my_site_icon_dialog_title">Ikona witryny</string>
+    <string name="reader_followed_blog_notifications_this">ta witryna</string>
+    <string name="reader_followed_blog_notifications_action">Włącz</string>
+    <string name="reader_followed_blog_notifications">Włączyć powiadomienia dla %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Włącz powiadomienia dla witryny</string>
+    <string name="reader_btn_notifications_off">Wyłącz powiadomienia dla witryny</string>
+    <string name="activity_log_jetpack_icon">Ikona Jetpacka</string>
+    <string name="rewind">Przewiń</string>
+    <string name="activity_log_event">Wydarzenie</string>
+    <string name="activity_log_icon">Ikona aktywności</string>
+    <string name="activity_log">Dziennik aktywności</string>
+    <string name="activity">Aktywność</string>
+    <string name="privacy_policy_read">Przeczytaj politykę prywatności</string>
+    <string name="third_party_policy_learn_more_caption">Korzystamy z narzędzi do śledzenia, w tym z narzędzi od podmiotów trzecich. Przeczytaj więcej i dowiedz się jak je kontrolować.</string>
+    <string name="third_party_policy_learn_more_header">Polityka prywatności podmiotów trzecich</string>
+    <string name="privacy_policy_learn_more_caption">Ta informacja pomaga nam ulepszyć nasze produkty, oferować bardziej spersonalizowany marketing, dostosować działanie WordPressa oraz uszczegółowić politykę prywatności.</string>
+    <string name="privacy_policy_learn_more_header">Polityka prywatności</string>
+    <string name="cookie_policy_learn_more_caption">Udostępnij informacje przy pomocy naszego narzędzia analitycznego dotyczące wykorzystania usług podczas zalogowania to konta WordPressowego.</string>
+    <string name="cookie_policy_learn_more_header">Polityka \"ciasteczek\"</string>
+    <string name="preference_privacy_settings">Ustawienia prywatności</string>
+    <string name="preference_collect_information">Zbieranie informacji</string>
+    <string name="post_submitted">Zamieszczono wpis</string>
+    <string name="write_post">Napisz wpis</string>
     <string name="login_email_button_signup">Nie masz konta? %1$sZarejestruj się%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funkcja wtyczki wymaga, aby witryna była w dobrej kondycji.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkcjonalność wtyczek wymaga aby subskrypcja domeny głównej była przypisana do tego użytkownika.</string>
@@ -75,7 +126,6 @@ Language: pl
     <string name="stats_tab_tap_content_description">Pokazano %s</string>
     <string name="stats_legend">legenda wykresu statystyk</string>
     <string name="fab_create_desc">utwórz</string>
-    <string name="fab_create_post_desc">utwórz wpis</string>
     <string name="fab_add_tag_desc">utwórz tag</string>
     <string name="stats_bar_week_desc">Tydzień %s</string>
     <string name="stats_bar_date_value_desc">%s, %d wyświetleń</string>
@@ -270,7 +320,7 @@ Language: pl
     <string name="signup_magic_link_message">Wysłaliśmy tobie odnośnik do rejestracji! Sprawdź swoją pocztę na tym urządzeniu i stuknij na odnośnik we wiadomości email w celu finalizacji rejestracji.</string>
     <string name="signup_magic_link_error_button_positive">Ponów próbę</string>
     <string name="signup_magic_link_error_button_negative">Zamknij</string>
-    <string name="signup_magic_link_error">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować później.</string>
+    <string name="signup_magic_link_error">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować ponownie później.</string>
     <string name="signup_epilogue_hint_username">Nazwa użytkownika</string>
     <string name="signup_epilogue_hint_password_detail">Możesz zawsze zalogować się za pomocą odnośnika którego właśnie użyłeś, ale możesz również założyć hasło jeśli wolisz.</string>
     <string name="signup_epilogue_hint_password">Hasło (opcjonalnie)</string>
@@ -880,11 +930,8 @@ Language: pl
     <string name="error_locating_image">Błąd lokalizacji skadrowanego obrazka</string>
     <string name="error_cropping_image">Błąd kadrowania obrazka</string>
     <string name="checking_email">Sprawdzanie emaili</string>
-    <string name="launch_your_email_app">Uruchom aplikację do poczty email</string>
-    <string name="check_your_email">Sprawdź swoje konto email</string>
     <string name="magic_link_unavailable_error_message">Aktualnie niedostępne. Proszę wprowadzić hasło</string>
     <string name="logging_in">Logowanie</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Otrzymaj odnośnik przesłany na twój adres email aby się niezwłocznie zalogować</string>
     <string name="enter_your_password_instead">Wprowadź swoje hasło</string>
     <string name="web_address_dialog_hint">Prezentowany kiedy dodajesz komentarze.</string>
     <string name="new_editor_reflection_error">Edytor widoku nie jest kompatybilny z twoim urządzeniem. Został automatycznie wyłączony.</string>
@@ -1242,6 +1289,7 @@ Language: pl
     <string name="deselect_all">Odznacz wszystko</string>
     <string name="stats_generic_error">Nie udało się załadować wymaganych statystyk</string>
     <string name="auth_required">Zaloguj się ponownie, by kontynuować.</string>
+    <string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
     <string name="verification_code">Kod weryfikacyjny</string>
     <string name="editor_toast_invalid_path">Niewłaściwa ścieżka do pliku</string>
     <string name="language">Język</string>
@@ -1358,7 +1406,6 @@ Language: pl
     <string name="create_new_blog_wpcom">Stwórz blog na WordPress.com</string>
     <string name="nux_help_description">Przejdź do centrum pomocy, aby uzyskać odpowiedzi na najczęściej zadawane pytania lub odwiedź forum, aby zadać nowe</string>
     <string name="browse_our_faq_button">Przejrzyj nasze FAQ</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">Nie polubiłeś jeszcze żadnych wpisów</string>
     <string name="reader_empty_followed_blogs_title">Nie obserwujesz jeszcze żadnych blogów</string>
     <string name="reader_menu_block_blog">Zablokuj ten blog</string>
@@ -1371,8 +1418,6 @@ Language: pl
     <string name="hs__new_conversation_header">Chat pomocy technicznej</string>
     <string name="hs__conversation_detail_error">Opisz problem, który zaobserwowano</string>
     <string name="contact_us">Kontakt</string>
-    <string name="preference_send_usage_stats_summary">Automatycznie wysyłaj statystyki użytkowania, by pomóc nam ulepszać WordPressa dla Androida</string>
-    <string name="preference_send_usage_stats">Wysyłaj statystyki</string>
     <string name="schedule_verb">Zaplanuj</string>
     <string name="update_verb">Zaktualizuj</string>
     <string name="reader_empty_recommended_blogs">Brak polecanych blogów</string>
@@ -1500,7 +1545,6 @@ Language: pl
     <string name="pick_photo">Wybierz zdjęcie</string>
     <string name="reader_empty_followed_blogs_description">Nie martw się – stuknij ikonę w prawym górnym rogu, aby rozpocząć przeglądanie!</string>
     <string name="reader_likes_you_and_one">Ty i jedna inna osoba lubicie to</string>
-    <string name="nux_tutorial_get_started_title">Rozpocznij!</string>
     <string name="reader_empty_followed_tags">Nie obserwujesz żadnych tagów</string>
     <string name="reader_toast_err_url_intent">Nie można otworzyć %s</string>
     <string name="reader_toast_err_view_image">Nie można wyświetlić obrazka</string>

@@ -322,7 +322,7 @@ public class AppLog {
         items.add("<strong>" + getAppInfoHeaderText(context) + "</strong>");
         items.add("<strong>" + getDeviceInfoHeaderText(context) + "</strong>");
 
-        Iterator<LogEntry> it = mLogEntries.iterator();
+        Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
         while (it.hasNext()) {
             items.add(it.next().toHtml());
         }
@@ -341,7 +341,7 @@ public class AppLog {
         sb.append(getAppInfoHeaderText(context)).append("\n")
           .append(getDeviceInfoHeaderText(context)).append("\n\n");
 
-        Iterator<LogEntry> it = mLogEntries.iterator();
+        Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
         int lineNum = 1;
         while (it.hasNext()) {
             LogEntry entry = it.next();

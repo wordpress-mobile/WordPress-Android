@@ -13,13 +13,13 @@ import javax.inject.Singleton;
 @Singleton
 public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
-    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin) {
-        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcomLogin);
+    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcom) {
+        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcom);
     }
 
     @Override
-    public void trackCreatedAccount() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
+    public void trackCreatedAccount(String username, String email) {
+        AnalyticsUtils.trackAnalyticsAccountCreated(username, email);
     }
 
     @Override

@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.reader_bookmark_button.view.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.utils.ReaderUtils
 import java.util.Locale
 
 /**
@@ -27,7 +26,6 @@ class ReaderBookmarkButton : LinearLayout {
 
     private fun initView(context: Context) {
         View.inflate(context, R.layout.reader_bookmark_button, this)
-        ReaderUtils.setBackgroundToRoundRipple(icon_bookmark_button)
     }
 
     override fun setEnabled(enabled: Boolean) {

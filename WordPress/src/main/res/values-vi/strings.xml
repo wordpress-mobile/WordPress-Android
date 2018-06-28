@@ -67,12 +67,9 @@ Language: vi_VN
     <string name="error_refreshing_gravatar">Lỗi nạp lại Gravatar của bạn</string>
     <string name="error_locating_image">Lỗi định vị hình ảnh được cắt</string>
     <string name="error_cropping_image">Lỗi xén ảnh</string>
-    <string name="launch_your_email_app">Chạy ứng dụng email của bạn</string>
     <string name="checking_email">Đang kiểm tra email</string>
-    <string name="check_your_email">Kiểm tra email của bạn</string>
     <string name="magic_link_unavailable_error_message">Hiện tại không sẵn có. Vui lòng nhập mật khẩu của bạn</string>
     <string name="logging_in">Đang đăng nhập</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Lấy 1 liên kết được gửi tới email của bạn để đăng nhập ngay lập tức</string>
     <string name="enter_your_password_instead">Nhập mật khẩu thay thế của bạn</string>
     <string name="web_address_dialog_hint">Được hiển thị công khai khi bạn bình luận.</string>
     <string name="new_editor_reflection_error">Trình biên tập trực quan không tương thích với thiết bị của bạn. \nNó bị vô hiệu tự động.</string>
@@ -425,6 +422,7 @@ Language: vi_VN
     <string name="language">Ngôn ngữ</string>
     <string name="editor_toast_invalid_path">Đường dẫn tập tin không hợp lệ</string>
     <string name="verification_code">Mã xác nhận</string>
+    <string name="invalid_verification_code">Mã xác nhận không hợp lệ</string>
     <string name="stats_view_authors">Tác giả</string>
     <string name="error_notification_open">Không thể mở thông báo</string>
     <string name="stats_view_search_terms">Điều kiện tìm kiếm</string>
@@ -533,7 +531,6 @@ Language: vi_VN
     <string name="pages_empty_list">Chưa có trang nào. Tại sao không tạo 1 trang?</string>
     <string name="reader_empty_followed_blogs_title">Bạn chưa theo dõi bất kì site nào</string>
     <string name="reader_empty_posts_liked">Bạn chưa thích bất kì bài viết nào</string>
-    <string name="faq_button">FAQ</string>
     <string name="browse_our_faq_button">Duyệt FAQ của chúng tôi</string>
     <string name="nux_help_description">Ghé thăm trung tâm trợ giúp để có các câu trả lời cho các câu hỏi thông thường hoặc vào diễn đàn để yêu cầu các câu hỏi mới</string>
     <string name="stats_no_blog">Thống kê không thể được nạp cho các blog yêu cầu</string>
@@ -549,8 +546,6 @@ Language: vi_VN
     <string name="hs__conversation_header">Chat giup do</string>
     <string name="hs__username_blank_error">Bam vao ten </string>
     <string name="hs__invalid_email_error">bam vao dia chi email</string>
-    <string name="preference_send_usage_stats">Gui ban bao cao</string>
-    <string name="preference_send_usage_stats_summary">Tu dong gui bao cao su dung de giup do chung toi cai thien WordPress cho Android</string>
     <string name="update_verb">Cập nhật</string>
     <string name="schedule_verb">Lich trinh</string>
     <string name="reader_toast_err_already_follow_blog">Bạn đã theo blog này</string>
@@ -688,7 +683,6 @@ Language: vi_VN
     <string name="reader_toast_err_tag_exists">Bạn đã theo dõi thẻ này rồi</string>
     <string name="empty_list_default">Danh sách này trống rỗng</string>
     <string name="reader_untitled_post">(Chưa có tiêu đề)</string>
-    <string name="nux_tutorial_get_started_title">Bắt đầu!</string>
     <string name="stats_timeframe_weeks">Tuần</string>
     <string name="stats_timeframe_months">Tháng</string>
     <string name="stats_entry_country">Quốc gia</string>

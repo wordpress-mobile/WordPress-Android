@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-11 10:33:21+0000
+Translation-Revision-Date: 2018-06-14 11:28:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="signup_magic_link_title">Lidhja magjike u dërgua</string>
+    <string name="signup_email_screen_title">Regjistrim me email</string>
+    <string name="verification_2fa_screen_title">Verifikim kodi</string>
+    <string name="selfhosted_site_login_title">Kredenciale hyrjeje</string>
+    <string name="magic_link_sent_login_title">Lidhja magjike u dërgua</string>
+    <string name="magic_link_login_title">Hyrje me lidhje magjike</string>
+    <string name="site_address_login_title">Hyrje me adresë sajti</string>
+    <string name="email_address_login_title">Hyrje me adresë email</string>
+    <string name="alternatively">Ndryshe:</string>
+    <string name="reader_empty_saved_posts_description">Prekeni %s që të ruhet një postim te lista juaj.</string>
+    <string name="reader_empty_saved_posts_title">Ende pa postime të ruajtur!</string>
+    <string name="reader_bookmark_snack_title">Postimi u ruajt</string>
+    <string name="reader_bookmark_snack_btn">Shihini Krejt</string>
+    <string name="reader_btn_bookmarked">U ruajt</string>
+    <string name="reader_btn_bookmark">Ruaje</string>
+    <string name="reader_remove_bookmark">U hoq nga postime të ruajtur</string>
+    <string name="reader_add_bookmark">Shtoje te postime të ruajtura</string>
+    <string name="reader_save_for_later_title">Postime të ruajtur</string>
+    <string name="activity_log_empty_list">Ende s’ka akte të regjistruara</string>
+    <string name="removed">U hoq</string>
+    <string name="tabbar_accessibility_label_write">Postim i ri. Shkruani një postim të ri.</string>
+    <string name="my_site_icon_content_description">Ndryshoni ikonë sajti</string>
+    <string name="my_site_icon_dialog_cancel_button">Anuloje</string>
+    <string name="my_site_icon_dialog_remove_button">Hiqe</string>
+    <string name="my_site_icon_dialog_change_button">Ndryshojeni</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">S’keni leje të përpunoni ikonën e sajtit.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Nuk keni leje të shtoni një ikonë sajti.</string>
+    <string name="my_site_icon_dialog_change_message">Si doni ta përpunoni ikonën?</string>
+    <string name="my_site_icon_dialog_add_message">Do të donit të shtoni një ikonë sajti?</string>
+    <string name="my_site_icon_dialog_title">Ikonë Sajti</string>
+    <string name="reader_followed_blog_notifications_this">këtë sajt</string>
+    <string name="reader_followed_blog_notifications_action">Aktivizoji</string>
+    <string name="reader_followed_blog_notifications">Aktivizo njoftime për %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Aktivizoni njoftime sajti</string>
+    <string name="reader_btn_notifications_off">Çaktivizoni njoftime sajti</string>
+    <string name="activity_log_jetpack_icon">Ikonë Jetpack</string>
+    <string name="rewind">Rikthim</string>
+    <string name="activity_log_event">Veprimtari</string>
+    <string name="activity_log_icon">Ikonë veprimtarie</string>
+    <string name="activity_log">Regjistër Veprimtarish</string>
+    <string name="activity">Veprimtari</string>
+    <string name="privacy_policy_read">Lexoni rregullat e privatësisë</string>
+    <string name="third_party_policy_learn_more_caption">Përdorim mjete të tjera gjurmimi, përfshi disa të tillë nga palë të treta. Lexoni rreth tyre dhe se si t’i mbani nën kontroll.</string>
+    <string name="third_party_policy_learn_more_header">Rregulla Palësh të Treta</string>
+    <string name="privacy_policy_learn_more_caption">Këto të dhëna na ndihmojnë të përmirësojmë produktet tona, ta bëjmë marketingun më specifik për ju, më personal punimin tuaj në WordPress.com, etj, siç përshkruhet hollësisht te rregullat tona mbi privatësinë.</string>
+    <string name="privacy_policy_learn_more_header">Rregulla Privatësie</string>
+    <string name="cookie_policy_learn_more_caption">Ndani me mjetin tuaj të analizave të dhëna rreth përdorimit tuaj të shërbimeve, teksa jeni i futur në llogarinë tuaj WordPress.com.</string>
+    <string name="cookie_policy_learn_more_header">Rregulla mbi Cookie–t</string>
+    <string name="preference_privacy_settings">Rregullime privatësie</string>
+    <string name="preference_collect_information">Grumbullo të dhëna</string>
+    <string name="post_submitted">Postimi u parashtrua</string>
+    <string name="write_post">Shkruani Postim</string>
     <string name="login_email_button_signup">S’keni llogari? %1$sRegjistrohuni%2$s</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Veçoria e shtojcës lyp që pajtimi i përkatësisë parësore të jetë përshoqëruar me këtë përdorues.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Veçoria e shtojcës lyp privilegje përgjegjësi.</string>
@@ -75,7 +127,6 @@ Language: sq_AL
     <string name="stats_tab_tap_content_description">po shfaqen %s</string>
     <string name="stats_legend">legjendë grafiku statistikash</string>
     <string name="fab_create_desc">krijoje</string>
-    <string name="fab_create_post_desc">krijoje postimin</string>
     <string name="fab_add_tag_desc">krijoje etiketën</string>
     <string name="stats_bar_week_desc">Java e %s</string>
     <string name="stats_bar_date_value_desc">%s, %d parje</string>
@@ -736,7 +787,7 @@ Language: sq_AL
     <string name="media_upload_error">Ndodhi një gabim ngarkimi mediash</string>
     <string name="retry">Riprovoni</string>
     <string name="confirm">Ripohojeni</string>
-    <string name="xmlrpc_endpoint_forbidden_error">S’u bë dot lidhja. Morëm një gabim 403 error, kur provuat të hyjmë\n        te mEndpoint XMLRPC të sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">S’u bë dot lidhja. Morëm një gabim 403, kur provuat të hyjmë\n        te mEndpoint XMLRPC e sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="xmlrpc_post_blocked_error">S’u bë dot lidhja. Strehuesi juaj i bllokon kërkesat POST, dhe aplikacionit\n        i duhen që të mund të komunikojë me sajtin tuaj. Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="reader_empty_followed_blogs_search_title">S’ka sajte me përputhje</string>
     <string name="reader_hint_search_followed_sites">Kërkoni te sajtet vijues</string>
@@ -880,11 +931,8 @@ Language: sq_AL
     <string name="error_locating_image">Gabim në ngarkimin e figurës së qethur</string>
     <string name="error_cropping_image">Gabim teksa qethej figura</string>
     <string name="checking_email">Po kontrollohet email–i</string>
-    <string name="launch_your_email_app">Nisni aplikacionin tuaj për email</string>
-    <string name="check_your_email">Kontrolloni email–in tuaj</string>
     <string name="magic_link_unavailable_error_message">Jo e mundshme këtë çast. Ju lutemi, jepni fjalëkalimin tuaj</string>
     <string name="logging_in">Po hyhet</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Merrni një lidhje dërguar te email–i juaj, që të hyni në çast</string>
     <string name="enter_your_password_instead">Në vend të kësaj, jepni fjalëkalimin tuaj</string>
     <string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
     <string name="new_editor_reflection_error">Përpunuesi pamor s’është i përputhshëm me pajisjen tuaj.\n        U çaktivizua vetvetiu.</string>
@@ -1242,6 +1290,7 @@ Language: sq_AL
     <string name="deselect_all">Shpërzgjidhe krejt</string>
     <string name="stats_generic_error">Statistikat e kërkuara s’u ngarkuan dot</string>
     <string name="auth_required">Hyni sërish që të vazhdohet.</string>
+    <string name="invalid_verification_code">Kod verifikimi i pavlefshëm</string>
     <string name="verification_code">Kod verifikimi</string>
     <string name="editor_toast_invalid_path">Shteg kartele i pavlefshëm</string>
     <string name="language">Gjuhë</string>
@@ -1358,7 +1407,6 @@ Language: sq_AL
     <string name="create_new_blog_wpcom">Krijoni blog WordPress.com</string>
     <string name="nux_help_description">Vizitoni qendrën e ndihmës që të merrni përgjigje për pyetje të rëndomta, ose vizitoni forumet që të bëni pyetje të reja</string>
     <string name="browse_our_faq_button">Shfletoni FAQ–en tonë</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">S\'keni pëlqyer ende ndonjë postim</string>
     <string name="reader_empty_followed_blogs_title">S’ndiqni ende ndonjë sajt</string>
     <string name="reader_menu_block_blog">Bllokoje këtë blog</string>
@@ -1371,8 +1419,6 @@ Language: sq_AL
     <string name="hs__new_conversation_header">Asistencë me bisedë</string>
     <string name="hs__conversation_detail_error">Përshkruani problemin që po shihni</string>
     <string name="contact_us">Lidhuni me ne</string>
-    <string name="preference_send_usage_stats_summary">Dërgo vetvetiu statistika përdorimi për të na ndihmuar ta përmirësojmë WordPress–in për Android</string>
-    <string name="preference_send_usage_stats">Dërgo statistika</string>
     <string name="schedule_verb">Planifikoje</string>
     <string name="update_verb">Përditësoje</string>
     <string name="reader_empty_recommended_blogs">S’ka blogje të këshilluar</string>
@@ -1500,7 +1546,6 @@ Language: sq_AL
     <string name="pick_photo">Përzgjidhni foto</string>
     <string name="reader_empty_followed_blogs_description">Por mos u shqetësoni, thjesht prekeni ikonën sipër djathtas që të filloni eksplorimin!</string>
     <string name="reader_likes_you_and_one">Këtë e pëlqeni ju dhe një tjetër</string>
-    <string name="nux_tutorial_get_started_title">Nisjani!</string>
     <string name="reader_empty_followed_tags">S’ndiqni ndonjë etiketë</string>
     <string name="reader_toast_err_url_intent">S’arrin të hapë %s</string>
     <string name="reader_toast_err_view_image">S’arrin të shihet figura</string>

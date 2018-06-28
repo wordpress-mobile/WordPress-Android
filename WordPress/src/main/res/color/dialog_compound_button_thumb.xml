@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:color="@color/grey_400" android:state_enabled="false" />
+    <item android:color="@color/grey_200" android:state_checked="false" />
+    <item android:color="@color/switch_tint" android:state_checked="true" />
+
+</selector>
