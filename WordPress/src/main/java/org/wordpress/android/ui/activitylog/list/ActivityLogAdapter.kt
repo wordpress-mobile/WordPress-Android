@@ -24,10 +24,10 @@ class ActivityLogAdapter(
     }
 
     override fun onBindViewHolder(holder: ActivityLogViewHolder, position: Int) {
-        if (holder is EventItemViewHolder) {
-            holder.bind(list[position] as Event)
-        } else if (holder is ProgressItemViewHolder) {
-            holder.bind(list[position] as Progress)
+        when (holder) {
+            is EventItemViewHolder -> holder.bind(list[position] as Event)
+            is ProgressItemViewHolder -> holder.bind(list[position] as Progress)
+            else -> throw IllegalArgumentException("Unexpected view holder in ActivityLog")
         }
     }
 
@@ -48,10 +48,11 @@ class ActivityLogAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return if (list[position] is ActivityLogListItem.Event)
-            (list[position] as ActivityLogListItem.Event).activityId.hashCode().toLong()
-        else
-            list[position].hashCode().toLong()
+        val item = list[position]
+        return when(item) {
+            is ActivityLogListItem.Event -> item.activityId.hashCode().toLong()
+            is ActivityLogListItem.Progress -> item.hashCode().toLong()
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -59,10 +60,10 @@ class ActivityLogAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
-        return if (viewType == ViewType.PROGRESS.id) {
-            ProgressItemViewHolder(parent)
-        } else {
-            EventItemViewHolder(parent, itemClickListener, rewindClickListener)
+        return when (viewType) {
+            ViewType.PROGRESS.id -> ProgressItemViewHolder(parent)
+            ViewType.EVENT.id -> EventItemViewHolder(parent, itemClickListener, rewindClickListener)
+            else -> throw IllegalArgumentException("Unexpected view type in ActivityLog")
         }
     }
 }
