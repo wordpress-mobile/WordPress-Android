@@ -8,6 +8,8 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.help_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -67,10 +69,13 @@ class HelpActivity : AppCompatActivity() {
                 emailSuggestion = supportHelper
                         .getSupportEmailAndNameSuggestion(accountStore.account, selectedSiteFromExtras).first
             }
+
             supportHelper.showSupportIdentityInputDialog(this, emailSuggestion, isNameInputHidden = true) { email, _ ->
                 zendeskHelper.setSupportEmail(email)
                 refreshContactEmailText()
+                AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_SET)
             }
+            AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
         }
     }
 
