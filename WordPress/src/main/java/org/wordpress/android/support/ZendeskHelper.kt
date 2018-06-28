@@ -35,8 +35,11 @@ import zendesk.support.UiConfig
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
+private const val enablePushNotificationsDelayAfterIdentityChange: Long = 2500
 
 class ZendeskHelper(
     private val accountStore: AccountStore,
@@ -52,6 +55,10 @@ class ZendeskHelper(
     private val zendeskPushRegistrationProvider: PushRegistrationProvider?
         get() = zendeskInstance.provider()?.pushRegistrationProvider()
 
+    private val timer: Timer by lazy {
+        Timer()
+    }
+
     /**
      * These two properties are used to keep track of the Zendesk identity set. Since we allow users' to change their
      * supportEmail and reset their identity on logout, we need to ensure that the correct identity is set all times.
@@ -59,8 +66,14 @@ class ZendeskHelper(
      */
     private var supportEmail: String? = null
     private var supportName: String? = null
-    private val isIdentityAvailable: Boolean
-        get() = !supportEmail.isNullOrEmpty()
+
+    /**
+     * Although rare, Zendesk SDK might reset the identity due to a 401 error. This seems to happen if the identity
+     * is changed and another Zendesk action happens before the identity change could be completed. In order to avoid
+     * such issues, we check both Zendesk identity and the [supportEmail] to decide whether identity is set.
+     */
+    private val isIdentitySet: Boolean
+        get() = !supportEmail.isNullOrEmpty() && zendeskInstance.identity != null
 
     /**
      * This function sets up the Zendesk singleton instance with the passed in credentials. This step is required
@@ -104,11 +117,11 @@ class ZendeskHelper(
         }
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-                .withContactUsButtonVisible(isIdentityAvailable)
+                .withContactUsButtonVisible(isIdentitySet)
                 .withLabelNames(ZendeskConstants.articleLabel)
-                .withShowConversationsMenuButton(isIdentityAvailable)
+                .withShowConversationsMenuButton(isIdentitySet)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
-        if (isIdentityAvailable) {
+        if (isIdentitySet) {
             builder.show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         } else {
             builder.show(context)
@@ -157,6 +170,13 @@ class ZendeskHelper(
     }
 
     /**
+     * This function refreshes the Zendesk's request activity if it's currently being displayed. It'll return true if
+     * it's successful. We'll use the return value to decide whether to show a push notification or not.
+     */
+    fun refreshRequest(context: Context, requestId: String?): Boolean =
+            Support.INSTANCE.refreshRequest(requestId, context)
+
+    /**
      * This function should be called when the user logs out of WordPress.com. Push notifications are only available
      * for WordPress.com users, so they'll be disabled. We'll also clear the Zendesk identity of the user on logout
      * and it will need to be set again when the user wants to create a new ticket.
@@ -174,7 +194,7 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        if (!isIdentityAvailable) {
+        if (!isIdentitySet) {
             // identity should be set before registering the device token
             return
         }
@@ -202,6 +222,10 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
+        if (!isIdentitySet) {
+            // identity should be set before removing the device token
+            return
+        }
         zendeskPushRegistrationProvider?.unregisterDevice(
                 object : ZendeskCallback<Void>() {
                     override fun onSuccess(response: Void?) {
@@ -217,15 +241,11 @@ class ZendeskHelper(
 
     /**
      * This function provides a way to change the support email for the Zendesk identity. Due to the way Zendesk
-     * anonymous identity works, this will reset the users' tickets. If the user hasn't used Zendesk yet, their identity
-     * might not be created. It'll attempt to enable push notifications for Zendesk for such a case.
+     * anonymous identity works, this will reset the users' tickets.
      */
     fun setSupportEmail(email: String?) {
         AppPrefs.setSupportEmail(email)
         refreshIdentity()
-
-        // The identity might not be available previously, this will ensure that push notifications is enabled
-        enablePushNotifications()
     }
 
     /**
@@ -239,8 +259,17 @@ class ZendeskHelper(
         selectedSite: SiteModel?,
         onIdentitySet: () -> Unit
     ) {
-        if (isIdentityAvailable) {
+        if (isIdentitySet) {
             // identity already available
+            onIdentitySet()
+            return
+        }
+        if (!AppPrefs.getSupportEmail().isNullOrEmpty()) {
+            /**
+             * Zendesk SDK reset the identity, but we already know the email of the user, we can simply refresh
+             * the identity. Check out the documentation for [isIdentitySet] for more details.
+             */
+            refreshIdentity()
             onIdentitySet()
             return
         }
@@ -250,7 +279,6 @@ class ZendeskHelper(
             AppPrefs.setSupportEmail(email)
             AppPrefs.setSupportName(name)
             refreshIdentity()
-            enablePushNotifications()
             onIdentitySet()
         }
     }
@@ -264,10 +292,27 @@ class ZendeskHelper(
         }
         val email = AppPrefs.getSupportEmail()
         val name = AppPrefs.getSupportName()
-        if (supportEmail != email || supportName != name) {
+        /**
+         * We refresh the Zendesk identity if the email or the name has been updated. We also check whether
+         * Zendesk SDK has cleared the identity. Check out the documentation for [isIdentitySet] for more details.
+         */
+        if (supportEmail != email || supportName != name || zendeskInstance.identity == null) {
             supportEmail = email
             supportName = name
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
+
+            /**
+             * When we change the identity in Zendesk, it seems to be making an asynchronous call to a server to
+             * receive a different access token. During this time, if there is a call to Zendesk with the previous
+             * access token, it could fail with a 401 error which seems to be clearing the identity. In order to avoid
+             * such cases, we put a delay on enabling push notifications for the new identity.
+             *
+             * [enablePushNotifications] will check if the identity is set, before making the actual call, so if the
+             * identity is cleared through [clearIdentity], this call will simply be ignored.
+             */
+            timer.schedule(enablePushNotificationsDelayAfterIdentityChange) {
+                enablePushNotifications()
+            }
         }
     }
 
@@ -277,11 +322,9 @@ class ZendeskHelper(
      * works, this will clear all the users' tickets.
      */
     private fun clearIdentity() {
-        supportEmail = null
-        supportName = null
         AppPrefs.removeSupportEmail()
         AppPrefs.removeSupportName()
-        zendeskInstance.setIdentity(createZendeskIdentity(null, null))
+        refreshIdentity()
     }
 }
 
@@ -341,8 +384,16 @@ private fun buildZendeskCustomFields(
  * authentication. More information can be found in their documentation:
  * https://developer.zendesk.com/embeddables/docs/android-support-sdk/sdk_set_identity#setting-a-unique-identity
  */
-private fun createZendeskIdentity(email: String?, name: String?): Identity =
-        AnonymousIdentity.Builder().withEmailIdentifier(email).withNameIdentifier(name).build()
+private fun createZendeskIdentity(email: String?, name: String?): Identity {
+    val identity = AnonymousIdentity.Builder()
+    if (!email.isNullOrEmpty()) {
+        identity.withEmailIdentifier(email)
+    }
+    if (!name.isNullOrEmpty()) {
+        identity.withNameIdentifier(name)
+    }
+    return identity.build()
+}
 
 /**
  * This is a small helper function which just joins the `logInformation` of all the sites passed in with a separator.

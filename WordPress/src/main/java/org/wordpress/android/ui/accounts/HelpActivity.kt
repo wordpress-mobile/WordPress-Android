@@ -69,6 +69,7 @@ class HelpActivity : AppCompatActivity() {
             }
             supportHelper.showSupportIdentityInputDialog(this, emailSuggestion, isNameInputHidden = true) { email, _ ->
                 zendeskHelper.setSupportEmail(email)
+                refreshContactEmailText()
             }
         }
     }
@@ -102,8 +103,10 @@ class HelpActivity : AppCompatActivity() {
 
     private fun refreshContactEmailText() {
         val supportEmail = AppPrefs.getSupportEmail()
-        if (!supportEmail.isNullOrEmpty()) {
-            contactEmailAddress.text = supportEmail
+        contactEmailAddress.text = if (!supportEmail.isNullOrEmpty()) {
+            supportEmail
+        } else {
+            getString(R.string.support_contact_email_not_set)
         }
     }
 
