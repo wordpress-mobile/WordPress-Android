@@ -60,15 +60,19 @@ constructor(
     }
 
     fun start(site: SiteModel) {
-        this.site = site
-        dispatcher.register(this)
-        requestStatusUpdate()
-        reloadRewindStatus()
+        if (this.site == null) {
+            this.site = site
+            dispatcher.register(this)
+            requestStatusUpdate()
+            reloadRewindStatus()
+        }
     }
 
     fun stop() {
-        dispatcher.unregister(this)
-        site = null
+        if (site != null) {
+            dispatcher.unregister(this)
+            site = null
+        }
     }
 
     fun requestStatusUpdate() {
