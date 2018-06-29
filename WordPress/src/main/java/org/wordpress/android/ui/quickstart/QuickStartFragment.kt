@@ -68,6 +68,10 @@ class QuickStartFragment : Fragment() {
         })
 
         viewModel.start(AppPrefs.getSelectedSite().toLong())
+
+        QuickStartTask.values().forEach {
+//            viewModel.completeTask(it, false)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,35 +87,27 @@ class QuickStartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         layout_view_site.setOnClickListener {
-            val intent = Intent()
-            intent.putExtra(QuickStartActivity.ARG_QUICK_START_TASK, QuickStartTask.VIEW_SITE)
-            activity?.setResult(RESULT_OK,intent)
-            activity?.finish()
-//            viewModel.completeTask(QuickStartTask.VIEW_SITE, true)
+            startQuickStartTask(VIEW_SITE)
         }
 
         layout_browse_themes.setOnClickListener {
-            val intent = Intent()
-            intent.putExtra(QuickStartActivity.ARG_QUICK_START_TASK, QuickStartTask.CHOOSE_THEME)
-            activity?.setResult(RESULT_OK,intent)
-            activity?.finish()
-//            viewModel.completeTask(QuickStartTask.CHOOSE_THEME, true)
+            startQuickStartTask(CHOOSE_THEME)
         }
 
         layout_customize_site.setOnClickListener {
-            viewModel.completeTask(QuickStartTask.CUSTOMIZE_SITE, true)
+            startQuickStartTask(CUSTOMIZE_SITE)
         }
 
         layout_share_site.setOnClickListener {
-            viewModel.completeTask(QuickStartTask.SHARE_SITE, true)
+            startQuickStartTask(SHARE_SITE)
         }
 
         layout_publish_post.setOnClickListener {
-            viewModel.completeTask(QuickStartTask.PUBLISH_POST, true)
+            startQuickStartTask(PUBLISH_POST)
         }
 
         layout_follow_site.setOnClickListener {
-            viewModel.completeTask(QuickStartTask.FOLLOW_SITE, true)
+            startQuickStartTask(FOLLOW_SITE)
         }
 
         button_skip_all.setOnClickListener {
@@ -128,6 +124,13 @@ class QuickStartFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putBoolean(STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE,
                 skipAllTasksDialog != null && skipAllTasksDialog!!.isShowing)
+    }
+
+    private fun startQuickStartTask(task: QuickStartTask) {
+        val intent = Intent()
+        intent.putExtra(QuickStartActivity.ARG_QUICK_START_TASK, task)
+        activity?.setResult(RESULT_OK, intent)
+        activity?.finish()
     }
 
     private fun showSkipDialog() {
