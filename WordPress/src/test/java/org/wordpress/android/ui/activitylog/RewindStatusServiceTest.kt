@@ -214,7 +214,8 @@ class RewindStatusServiceTest {
 
         assertEquals(rewindAvailable, true)
         assertEquals(error, rewindError)
-        assertEquals(rewindProgress, RewindProgress(activityLogModel, 0, published, FAILED, INVALID_RESPONSE.toString()))
+        val progress = RewindProgress(activityLogModel, 0, published, FAILED, INVALID_RESPONSE.toString())
+        assertEquals(rewindProgress, progress)
     }
 
     @Test
