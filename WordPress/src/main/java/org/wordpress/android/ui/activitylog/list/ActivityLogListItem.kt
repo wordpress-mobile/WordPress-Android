@@ -3,6 +3,7 @@ package org.wordpress.android.ui.activitylog.list
 import android.support.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTORY
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -27,9 +28,9 @@ sealed class ActivityLogListItem {
         val isRewindable: Boolean,
         val rewindId: String?,
         val date: Date,
-        override var isHeaderVisible: Boolean = false,
-        val buttonIcon: Icon = Icon.HISTORY,
         override val isButtonVisible: Boolean,
+        override var isHeaderVisible: Boolean = false,
+        val buttonIcon: Icon = HISTORY,
         val isProgressBarVisible: Boolean = false
     ) : ActivityLogListItem(), IActionableItem {
         val formattedDate: String = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
