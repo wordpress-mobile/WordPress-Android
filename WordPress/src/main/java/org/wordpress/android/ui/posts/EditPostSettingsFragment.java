@@ -766,9 +766,13 @@ public class EditPostSettingsFragment extends Fragment {
             case PRIVATE:
                 return 3;
             case TRASHED:
+                // fallthrough
             case UNKNOWN:
+                // fallthrough
             case PUBLISHED:
+                // fallthrough
             case SCHEDULED:
+                // fallthrough
             default:
                 return 0;
         }
