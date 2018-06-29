@@ -42,6 +42,9 @@ constructor(
     private var site: SiteModel? = null
     private var activityLogModelItem: ActivityLogModel? = null
 
+    val rewindingActivity: ActivityLogModel?
+        get() = activityLogModelItem
+
     val rewindAvailable: LiveData<Boolean> = mutableRewindAvailable
     val rewindError: LiveData<RewindError> = mutableRewindError
     val rewindStatusFetchError: LiveData<RewindStatusError> = mutableRewindStatusFetchError
