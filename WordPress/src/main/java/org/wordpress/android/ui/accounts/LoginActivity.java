@@ -41,9 +41,12 @@ import org.wordpress.android.login.SignupBottomSheetDialog.SignupSheetListener;
 import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
+import org.wordpress.android.support.ZendeskExtraTags;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
@@ -52,8 +55,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -63,7 +64,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -100,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject ZendeskHelper mZendeskHelper;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -546,27 +550,20 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         });
     }
 
-    private void launchHelpshift(String url, String email, boolean isWpcom, Tag origin) {
-        Intent intent = new Intent(this, HelpActivity.class);
-        // Used to pass data to an eventual support service
-        intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
-        intent.putExtra(HelpshiftHelper.ENTERED_EMAIL_KEY, email);
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
-        if (getLoginMode() == LoginMode.JETPACK_STATS) {
-            Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};
-            intent.putExtra(HelpshiftHelper.EXTRA_TAGS_KEY, tags);
-        }
-        startActivity(intent);
+    private void viewHelpAndSupport(Origin origin) {
+        List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
+                .singletonList(ZendeskExtraTags.connectingJetpack) : null;
+        ActivityLauncher.viewHelpAndSupport(this, origin, null, extraSupportTags);
     }
 
     @Override
     public void helpSiteAddress(String url) {
-        launchHelpshift(url, null, false, Tag.ORIGIN_LOGIN_SITE_ADDRESS);
+        viewHelpAndSupport(Origin.LOGIN_SITE_ADDRESS);
     }
 
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
-        HelpshiftHelper.getInstance().showConversation(this, siteStore, Tag.ORIGIN_LOGIN_SITE_ADDRESS, username);
+        mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
     }
 
     @Override
@@ -576,22 +573,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpEmailScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL);
+        viewHelpAndSupport(Origin.LOGIN_EMAIL);
     }
 
     @Override
     public void helpSignupEmailScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_SIGNUP_EMAIL);
+        viewHelpAndSupport(Origin.SIGNUP_EMAIL);
     }
 
     @Override
     public void helpSignupMagicLinkScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_SIGNUP_MAGIC_LINK);
+        viewHelpAndSupport(Origin.SIGNUP_MAGIC_LINK);
     }
 
     @Override
     public void helpSocialEmailScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_SOCIAL);
+        viewHelpAndSupport(Origin.LOGIN_SOCIAL);
     }
 
     @Override
@@ -613,22 +610,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_MAGIC_LINK);
+        viewHelpAndSupport(Origin.LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_MAGIC_LINK);
+        viewHelpAndSupport(Origin.LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL_PASSWORD);
+        viewHelpAndSupport(Origin.LOGIN_EMAIL_PASSWORD);
     }
 
     @Override
     public void help2FaScreen(String email) {
-        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_2FA);
+        viewHelpAndSupport(Origin.LOGIN_2FA);
     }
 
     @Override
@@ -644,7 +641,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        launchHelpshift(url, username, isWpcom, Tag.ORIGIN_LOGIN_USERNAME_PASSWORD);
+        viewHelpAndSupport(Origin.LOGIN_USERNAME_PASSWORD);
     }
 
     // SmartLock

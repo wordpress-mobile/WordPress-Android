@@ -147,7 +147,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
-        LoginServiceModule.class
+        LoginServiceModule.class,
+        SupportModule.class
 })
 public interface AppComponent extends AndroidInjector<WordPress> {
     @Override
