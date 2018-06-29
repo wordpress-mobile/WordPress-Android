@@ -43,7 +43,6 @@ class ActivityLogStoreTest {
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogSqlUtils).deleteActivityLog()
         verify(activityLogRestClient).fetchActivity(siteModel, number, offset)
     }
 
@@ -96,6 +95,7 @@ class ActivityLogStoreTest {
                 false,
                 ActivityLogAction.FETCHED_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
+        verify(activityLogSqlUtils).deleteActivityLog()
     }
 
     @Test
