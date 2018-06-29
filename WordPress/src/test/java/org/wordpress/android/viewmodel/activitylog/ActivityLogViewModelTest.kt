@@ -22,12 +22,14 @@ import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.RewindStatusService
+import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
 
@@ -38,24 +40,27 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
+    @Mock private lateinit var resourceProvider: ResourceProvider
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
-    private var rewindState = MutableLiveData<Rewind>()
+    private var rewindState = MutableLiveData<RewindProgress>()
+    private var rewindAvailable = MutableLiveData<Boolean>()
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogViewModel(dispatcher, store, rewindStatusService)
+        viewModel = ActivityLogViewModel(dispatcher, store, rewindStatusService, resourceProvider)
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
-        whenever(rewindStatusService.rewindState).thenReturn(rewindState)
+        whenever(rewindStatusService.rewindProgress).thenReturn(rewindState)
+        whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
     }
 
     @Test
@@ -67,7 +72,7 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                activityLogList.map { ActivityLogListItem.Event(it) }
+                expectedActivityList()
         )
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.FETCHING)
 
@@ -100,7 +105,7 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                activityLogList.map { ActivityLogListItem.Event(it) }
+                expectedActivityList()
         )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
@@ -123,10 +128,16 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                activityLogList.map { ActivityLogListItem.Event(it) }
+                expectedActivityList()
         )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
+    }
+
+    private fun expectedActivityList(): List<Event> {
+        return activityLogList.mapIndexed { index, activityLogModel ->
+            Event(activityLogModel, true).copy(isHeaderVisible = index != 1)
+        }
     }
 
     @Test
