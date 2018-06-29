@@ -35,6 +35,8 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
@@ -69,6 +71,7 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -121,6 +124,7 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
+    public static final String ARG_SHOW_QUICK_START = "show_quick_start";
 
     private WPMainNavigationView mBottomNav;
 
@@ -138,6 +142,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject QuickStartStore mQuickStartStore;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -498,11 +503,21 @@ public class WPMainActivity extends AppCompatActivity implements
     public void onPageChanged(int position) {
         updateTitle(position);
         trackLastVisiblePage(position, true);
+        if (position == PAGE_READER && getMySiteFragment() != null && getMySiteFragment()
+                .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+            getMySiteFragment().clearActiveQuickStartTask();
+            EventBus.getDefault().postSticky(new QuickStartEvent(QuickStartTask.FOLLOW_SITE));
+        }
     }
 
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
+        if (getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+            getMySiteFragment().clearActiveQuickStartTask();
+            mQuickStartStore.setDoneTask(mSelectedSite.getId(), QuickStartTask.PUBLISH_POST, true);
+        }
+
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
     }
 
