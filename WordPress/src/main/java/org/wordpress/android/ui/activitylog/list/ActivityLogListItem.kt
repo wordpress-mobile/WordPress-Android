@@ -16,7 +16,7 @@ sealed class ActivityLogListItem {
     abstract val type: ViewType
 
     interface IActionableItem {
-        var isButtonVisible: Boolean
+        val isButtonVisible: Boolean
     }
 
     data class Event(
@@ -30,7 +30,7 @@ sealed class ActivityLogListItem {
         val date: Date,
         override var isHeaderVisible: Boolean = false,
         val buttonIcon: Icon = Icon.HISTORY,
-        override var isButtonVisible: Boolean = isRewindable,
+        override val isButtonVisible: Boolean,
         val isProgressBarVisible: Boolean = false) : ActivityLogListItem(), IActionableItem {
 
         val formattedDate: String = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
@@ -40,8 +40,16 @@ sealed class ActivityLogListItem {
         override val header = formattedDate
         override val type = ViewType.EVENT
 
-        constructor(model: ActivityLogModel) : this(model.activityID, model.summary, model.text, model.gridicon,
-                model.status, model.rewindable ?: false, model.rewindID, model.published)
+        constructor(model: ActivityLogModel, rewindDisabled: Boolean = false) : this(
+                model.activityID,
+                model.summary,
+                model.text,
+                model.gridicon,
+                model.status,
+                model.rewindable ?: false,
+                model.rewindID,
+                model.published,
+                isButtonVisible = !rewindDisabled && model.rewindable ?: false)
     }
 
     data class Progress(

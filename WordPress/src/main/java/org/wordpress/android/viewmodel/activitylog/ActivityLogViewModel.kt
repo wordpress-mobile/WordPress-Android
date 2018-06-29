@@ -158,7 +158,9 @@ class ActivityLogViewModel @Inject constructor(
     private fun reloadEvents(disableActions: Boolean = areActionsEnabled,
         displayProgressItem: Boolean = isRewindProgressItemShown) {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
-        val items = ArrayList<ActivityLogListItem>(eventList.map { model -> ActivityLogListItem.Event(model) })
+        val items = ArrayList<ActivityLogListItem>(eventList.map { model ->
+            ActivityLogListItem.Event(model, disableActions)
+        })
         areActionsEnabled = true
 
         if (disableActions) {
@@ -196,9 +198,6 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun disableListActions(items: List<IActionableItem>) {
         areActionsEnabled = false
-        items.forEach {
-            it.isButtonVisible = false
-        }
     }
 
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
