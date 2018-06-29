@@ -63,6 +63,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -81,7 +82,6 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
@@ -136,6 +136,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
+    @Inject ZendeskHelper mZendeskHelper;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -273,7 +274,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
-        HelpshiftHelper.init(this);
+        mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
 
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
@@ -581,6 +583,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         VolleyUtils.cancelAllRequests(sRequestQueue);
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
+        mZendeskHelper.reset();
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (Exception e) {

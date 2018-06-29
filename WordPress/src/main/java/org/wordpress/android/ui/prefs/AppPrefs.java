@@ -97,6 +97,10 @@ public class AppPrefs {
 
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
+
+        // Support email address and name that's independent of any account or site
+        SUPPORT_EMAIL,
+        SUPPORT_NAME
     }
 
     /**
@@ -614,6 +618,30 @@ public class AppPrefs {
     public static int getVideoOptimizeQuality() {
         int quality = getInt(DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY, 0);
         return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_VIDEO_ENCODER_BITRATE_KB;
+    }
+
+    public static void setSupportEmail(String email) {
+        setString(DeletablePrefKey.SUPPORT_EMAIL, email);
+    }
+
+    public static String getSupportEmail() {
+        return getString(DeletablePrefKey.SUPPORT_EMAIL);
+    }
+
+    public static void removeSupportEmail() {
+        remove(DeletablePrefKey.SUPPORT_EMAIL);
+    }
+
+    public static void setSupportName(String name) {
+        setString(DeletablePrefKey.SUPPORT_NAME, name);
+    }
+
+    public static String getSupportName() {
+        return getString(DeletablePrefKey.SUPPORT_NAME);
+    }
+
+    public static void removeSupportName() {
+        remove(DeletablePrefKey.SUPPORT_NAME);
     }
 
     /*
