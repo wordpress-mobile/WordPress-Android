@@ -6,7 +6,6 @@ import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -22,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
@@ -46,13 +46,12 @@ class RewindStatusServiceTest {
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
     @Mock private lateinit var activityLogStore: ActivityLogStore
-    @Mock private lateinit var workerController: RewindStateProgressWorkerController
+    @Mock private lateinit var rewindProgressChecker: RewindProgressChecker
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var site: SiteModel
 
     private lateinit var rewindStatusService: RewindStatusService
     private var rewindAvailable: Boolean? = null
-    private var rewindState: Rewind? = null
     private var rewindProgress: RewindProgress? = null
     private var rewindError: RewindError? = null
     private var rewindStatusFetchError: RewindStatusError? = null
@@ -93,17 +92,16 @@ class RewindStatusServiceTest {
 
     @Before
     fun setUp() {
-        rewindStatusService = RewindStatusService(activityLogStore, workerController, dispatcher)
+        rewindStatusService = RewindStatusService(activityLogStore, rewindProgressChecker, dispatcher)
         rewindAvailable = null
-        rewindState = null
         rewindStatusService.rewindAvailable.observeForever { rewindAvailable = it }
-        rewindStatusService.rewindState.observeForever { rewindState = it }
         rewindStatusService.rewindProgress.observeForever { rewindProgress = it }
         rewindStatusService.rewindError.observeForever { rewindError = it }
         rewindStatusService.rewindStatusFetchError.observeForever { rewindStatusFetchError = it }
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
 
         whenever(activityLogStore.getActivityLogItemByRewindId(rewindId)).thenReturn(activityLogModel)
+        whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPCOM_REST)
     }
 
     @Test
@@ -148,6 +146,8 @@ class RewindStatusServiceTest {
 
     @Test
     fun unregistersOnStop() {
+        rewindStatusService.start(site)
+
         rewindStatusService.stop()
 
         verify(dispatcher).unregister(rewindStatusService)
@@ -161,8 +161,7 @@ class RewindStatusServiceTest {
 
         assertRewindAction(rewindId)
         assertEquals(false, rewindAvailable)
-        assertNull(rewindState)
-        assertEquals(rewindProgress, RewindProgress(activityID, 0, published, RUNNING))
+        assertEquals(rewindProgress, RewindProgress(activityLogModel, 0, published, RUNNING))
     }
 
     @Test
@@ -170,7 +169,7 @@ class RewindStatusServiceTest {
         val error = RewindStatusError(INVALID_RESPONSE, null)
         rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(error, REWIND))
 
-        verify(workerController).cancelWorker()
+        verify(rewindProgressChecker).cancel()
         assertEquals(error, rewindStatusFetchError)
     }
 
@@ -184,8 +183,8 @@ class RewindStatusServiceTest {
         rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(FETCH_REWIND_STATE))
 
         assertEquals(rewindAvailable, false)
-        assertEquals(rewindState, rewindInProgress)
-        assertEquals(rewindProgress, RewindProgress(activityID, progress, published, RUNNING))
+        assertEquals(rewindProgress?.status, Status.RUNNING)
+        assertEquals(rewindProgress, RewindProgress(activityLogModel, progress, published, RUNNING))
     }
 
     @Test
@@ -199,8 +198,8 @@ class RewindStatusServiceTest {
         rewindStatusService.onRewindStatusFetched(OnRewindStatusFetched(FETCH_REWIND_STATE))
 
         assertEquals(rewindAvailable, true)
-        assertEquals(rewindState, rewindFinished)
-        verify(workerController).cancelWorker()
+        assertEquals(rewindProgress?.status, Status.FINISHED)
+        verify(rewindProgressChecker).cancel()
     }
 
     @Test
@@ -214,9 +213,9 @@ class RewindStatusServiceTest {
         rewindStatusService.onRewind(OnRewind(rewindId, error, REWIND))
 
         assertEquals(rewindAvailable, true)
-        assertNull(rewindState)
         assertEquals(error, rewindError)
-        assertEquals(rewindProgress, RewindProgress(activityID, 0, published, FAILED, INVALID_RESPONSE.toString()))
+        val progress = RewindProgress(activityLogModel, 0, published, FAILED, INVALID_RESPONSE.toString())
+        assertEquals(rewindProgress, progress)
     }
 
     @Test
@@ -226,7 +225,7 @@ class RewindStatusServiceTest {
 
         rewindStatusService.onRewind(OnRewind("5", 10, REWIND))
 
-        verify(workerController).startWorker(site, 10)
+        verify(rewindProgressChecker).start(site, 10)
     }
 
     private fun assertFetchRewindStatusAction() {

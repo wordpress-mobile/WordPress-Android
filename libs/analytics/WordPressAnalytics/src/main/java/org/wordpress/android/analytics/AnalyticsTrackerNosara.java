@@ -1129,6 +1129,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "publicize_service_connected";
             case PUBLICIZE_SERVICE_DISCONNECTED:
                 return "publicize_service_disconnected";
+            case ACTIVITY_LOG_LIST_OPENED:
+                return "activity_log_list_opened";
+            case ACTIVITY_LOG_DETAIL_OPENED:
+                return "activity_log_detail_opened";
+            case ACTIVITY_LOG_REWIND_STARTED:
+                return "activity_log_rewind_started";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
             case SUPPORT_IDENTITY_FORM_VIEWED:

@@ -36,10 +36,9 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeAdapter;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
-import org.wordpress.android.ui.activitylog.ActivityLogDetailFragment;
-import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
-import org.wordpress.android.ui.activitylog.ActivityLogListFragment;
-import org.wordpress.android.ui.activitylog.RewindStateProgressWorkerController.RewindStateProgressWorker;
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
+import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -379,8 +378,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ActivityLogListFragment object);
 
     void inject(ActivityLogDetailFragment object);
-
-    void inject(RewindStateProgressWorker object);
 
     void inject(PluginListFragment object);
 
