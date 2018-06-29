@@ -72,6 +72,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -277,7 +278,10 @@ public class ActivityLauncher {
     }
 
     public static void viewActivityLogDetailForResult(Activity activity, SiteModel site, String activityId) {
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_DETAIL, site);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_DETAIL, site, properties);
+
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);

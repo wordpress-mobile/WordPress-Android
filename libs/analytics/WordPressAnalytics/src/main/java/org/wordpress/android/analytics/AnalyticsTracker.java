@@ -16,6 +16,7 @@ public final class AnalyticsTracker {
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
     public static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
     public static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
+    public static final String ACTIVITY_LOG_ACTIVITY_ID_KEY = "activity_id";
 
     public enum Stat {
         APPLICATION_OPENED,
@@ -213,6 +214,7 @@ public final class AnalyticsTracker {
         OPENED_PLUGIN_DIRECTORY,
         OPENED_ACTIVITY_LOG_LIST,
         OPENED_ACTIVITY_LOG_DETAIL,
+        STARTED_ACTIVITY_LOG_REWIND,
         OPENED_PLUGIN_LIST,
         OPENED_PLUGIN_DETAIL,
         CREATE_ACCOUNT_INITIATED,

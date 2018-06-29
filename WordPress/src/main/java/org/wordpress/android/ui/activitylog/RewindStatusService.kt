@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
+import org.wordpress.android.util.AnalyticsUtils
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,7 +53,14 @@ constructor(
     val isRewindAvailable: Boolean
         get() = rewindAvailable.value == true
 
+    companion object {
+        const val REWIND_ID_TRACKING_KEY = "rewind_id"
+    }
+
     fun rewind(rewindId: String, site: SiteModel) {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STARTED_ACTIVITY_LOG_REWIND,
+                site, mutableMapOf(REWIND_ID_TRACKING_KEY to rewindId as Any))
+
         dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))
         updateRewindProgress(rewindId, 0, RUNNING)
         mutableRewindAvailable.postValue(false)
