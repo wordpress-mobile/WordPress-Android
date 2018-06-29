@@ -1,63 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_icon"
         android:layout_width="@dimen/blavatar_sz_small"
         android:layout_height="@dimen/blavatar_sz_small"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
-        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"
-        android:layout_marginEnd="@dimen/margin_large"/>
+        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"/>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
+        android:layout_toEndOf="@+id/image_icon"
         android:layout_toRightOf="@+id/image_icon"
-        android:background="@color/divider_grey"
-        android:layout_toEndOf="@+id/image_icon"/>
+        android:background="@color/divider_grey"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="20dp"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginTop="20dp"
-        android:layout_toRightOf="@+id/image_icon"
-        android:orientation="vertical"
         android:layout_toEndOf="@+id/image_icon"
-        android:layout_marginEnd="@dimen/margin_extra_large">
+        android:layout_toRightOf="@+id/image_icon"
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textAlignment="viewStart"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            android:textAlignment="viewStart"
-            android:layout_gravity="start"
-            tools:text="text_service" />
+            tools:text="text_service"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:ellipsize="end"
             android:maxLines="2"
+            android:textAlignment="viewStart"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
-            android:textAlignment="viewStart"
-            android:layout_gravity="start"
-            tools:text="text_user" />
+            tools:text="text_user"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/quick_start_focus_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical|center"
+        android:contentDescription="@string/quick_start_focus_point_description"
+        android:paddingEnd="24dp"
+        android:paddingRight="24dp"
+        android:src="@drawable/ic_quick_start_focus"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:ignore="RtlSymmetry"/>
 
 </RelativeLayout>
