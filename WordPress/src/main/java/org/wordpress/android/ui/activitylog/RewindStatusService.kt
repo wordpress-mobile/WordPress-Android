@@ -61,7 +61,7 @@ constructor(
     }
 
     fun rewind(rewindId: String, site: SiteModel) {
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STARTED_ACTIVITY_LOG_REWIND,
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_REWIND_STARTED,
                 site, mutableMapOf(REWIND_ID_TRACKING_KEY to rewindId as Any))
 
         dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))

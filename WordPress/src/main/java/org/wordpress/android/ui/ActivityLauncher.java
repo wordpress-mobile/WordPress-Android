@@ -270,7 +270,7 @@ public class ActivityLauncher {
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_LIST, site);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
@@ -279,7 +279,7 @@ public class ActivityLauncher {
     public static void viewActivityLogDetailForResult(Activity activity, SiteModel site, String activityId) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_DETAIL, site, properties);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
 
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
