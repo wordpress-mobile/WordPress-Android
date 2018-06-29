@@ -57,7 +57,7 @@ class ActivityLogListFragment : Fragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        activityLogList.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+        activityLogList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 if (!recyclerView!!.canScrollVertically(1) && dy != 0) {
                     viewModel.onScrolledToBottom()

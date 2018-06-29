@@ -49,7 +49,7 @@ class ActivityLogAdapter(
 
     override fun getItemId(position: Int): Long {
         val item = list[position]
-        return when(item) {
+        return when (item) {
             is ActivityLogListItem.Event -> item.activityId.hashCode().toLong()
             is ActivityLogListItem.Progress -> item.hashCode().toLong()
         }

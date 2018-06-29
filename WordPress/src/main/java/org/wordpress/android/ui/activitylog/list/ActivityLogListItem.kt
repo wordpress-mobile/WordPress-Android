@@ -3,7 +3,6 @@ package org.wordpress.android.ui.activitylog.list
 import android.support.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -31,8 +30,8 @@ sealed class ActivityLogListItem {
         override var isHeaderVisible: Boolean = false,
         val buttonIcon: Icon = Icon.HISTORY,
         override val isButtonVisible: Boolean,
-        val isProgressBarVisible: Boolean = false) : ActivityLogListItem(), IActionableItem {
-
+        val isProgressBarVisible: Boolean = false
+    ) : ActivityLogListItem(), IActionableItem {
         val formattedDate: String = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
         val formattedTime: String = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
         val icon = Icon.fromValue(gridIcon)
@@ -56,7 +55,8 @@ sealed class ActivityLogListItem {
         override val title: String,
         override val description: String,
         override val header: String,
-        override var isHeaderVisible: Boolean = false) : ActivityLogListItem() {
+        override var isHeaderVisible: Boolean = false
+    ) : ActivityLogListItem() {
         override val type = ViewType.PROGRESS
     }
 
