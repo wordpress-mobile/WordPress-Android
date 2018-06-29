@@ -1131,6 +1131,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "publicize_service_disconnected";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
+            case SUPPORT_IDENTITY_FORM_VIEWED:
+                return "support_identity_form_viewed";
+            case SUPPORT_IDENTITY_SET:
+                return "support_identity_set";
             default:
                 return null;
         }
