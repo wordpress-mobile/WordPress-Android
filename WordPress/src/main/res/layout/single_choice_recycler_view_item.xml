@@ -19,7 +19,7 @@
 
     <RadioButton
         android:id="@+id/radio"
-        android:buttonTint="@color/dialog_compound_button"
+        android:buttonTint="@color/dialog_compound_button_thumb"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"

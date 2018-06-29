@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-10 08:50:15+0000
+Translation-Revision-Date: 2018-06-12 17:13:43+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="signup_magic_link_title">Магическая ссылка отослана</string>
+    <string name="signup_email_screen_title">Email регистрация</string>
+    <string name="verification_2fa_screen_title">Проверка кода</string>
+    <string name="selfhosted_site_login_title">Данные для входа</string>
+    <string name="magic_link_sent_login_title">Магическая ссылка отослана</string>
+    <string name="magic_link_login_title">Вход по магической ссылке</string>
+    <string name="site_address_login_title">Вход по адресу сайта</string>
+    <string name="email_address_login_title">Вход по email адресу</string>
+    <string name="alternatively">Альтернативно:</string>
+    <string name="reader_empty_saved_posts_description">Нажмите %s для сохранения записи в ваш список.</string>
+    <string name="reader_empty_saved_posts_title">Пока не сохранено никаких записей!</string>
+    <string name="reader_bookmark_snack_title">Запись сохранена</string>
+    <string name="reader_bookmark_snack_btn">Посмотреть все</string>
+    <string name="reader_btn_bookmarked">Сохранено</string>
+    <string name="reader_btn_bookmark">Сохранить</string>
+    <string name="reader_remove_bookmark">Удалить из сохраненных записей</string>
+    <string name="reader_add_bookmark">Добавить в сохраненные записи</string>
+    <string name="reader_save_for_later_title">Сохраненные записи</string>
+    <string name="activity_log_empty_list">Никаких событий пока не зарегистрировано</string>
+    <string name="removed">Удалено</string>
+    <string name="tabbar_accessibility_label_write">Новая запись. Написать новую запись.</string>
+    <string name="my_site_icon_content_description">Сменить значок сайта</string>
+    <string name="my_site_icon_dialog_cancel_button">Отменить</string>
+    <string name="my_site_icon_dialog_remove_button">Удалить</string>
+    <string name="my_site_icon_dialog_change_button">Сменить</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">У вас нет разрешения редактировать значок сайта.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">У вас нет разрешения добавить значок сайта.</string>
+    <string name="my_site_icon_dialog_change_message">Как вы хотите отредактировать значок?</string>
+    <string name="my_site_icon_dialog_add_message">Хотите ли вы добавить значок сайта?</string>
+    <string name="my_site_icon_dialog_title">Значок сайта</string>
+    <string name="reader_followed_blog_notifications_this">этот сайт</string>
+    <string name="reader_followed_blog_notifications_action">Включить</string>
+    <string name="reader_followed_blog_notifications">Включить уведомления для %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Включить уведомления сайта</string>
+    <string name="reader_btn_notifications_off">Отключить уведомления сайта</string>
+    <string name="activity_log_jetpack_icon">Значок Jetpack</string>
+    <string name="rewind">Откат</string>
+    <string name="activity_log_event">Событие</string>
+    <string name="activity_log_icon">Значок активности</string>
+    <string name="activity_log">Журнал активности</string>
+    <string name="activity">Активность</string>
+    <string name="privacy_policy_read">Прочитать политику конфиденциальности</string>
+    <string name="third_party_policy_learn_more_caption">Мы используем другие инструменты отслеживания, включая и инструменты третьих сторон. Прочитайте о них и как их контролировать.</string>
+    <string name="third_party_policy_learn_more_header">Политики третьих сторон</string>
+    <string name="privacy_policy_learn_more_caption">Эта информация позволит нам улушать наши продукты, уточнять маркетинг, персонализировать ваш опыт взаимодействия с WordPress.com, и далее как указано в нашей политике конфиденциальности.</string>
+    <string name="privacy_policy_learn_more_header">Политика конфиденциальности</string>
+    <string name="cookie_policy_learn_more_caption">Поделиться информацией с нашей аналитикой по использованию сервисов при входе в вашу учетную запись WordPress.</string>
+    <string name="cookie_policy_learn_more_header">Политика куки</string>
+    <string name="preference_privacy_settings">Настройки конфиденциальности</string>
+    <string name="preference_collect_information">Сбор информации</string>
+    <string name="post_submitted">Запись отправлена</string>
+    <string name="write_post">Написать запись</string>
     <string name="login_email_button_signup">Еще нет учетной записи? %1$sЗарегистрируйтесь%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Возможность установки плагинов требует, чтобы сайт не был в серых списках.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Возможность установки плагинов требует связи подписки основного домена и этого пользователя.</string>
@@ -76,7 +128,6 @@ Language: ru
     <string name="stats_tab_tap_content_description">показано %s</string>
     <string name="stats_legend">легенда графика статистики</string>
     <string name="fab_create_desc">создать</string>
-    <string name="fab_create_post_desc">создать запись</string>
     <string name="fab_add_tag_desc">создать метку</string>
     <string name="stats_bar_week_desc">Неделя %s</string>
     <string name="stats_bar_date_value_desc">%s, %d просмотров</string>
@@ -881,11 +932,8 @@ Language: ru
     <string name="error_locating_image">Не удалось найти обрезанное изображение</string>
     <string name="error_cropping_image">При обрезке изображения произошла ошибка</string>
     <string name="checking_email">Проверка адреса эл. почты</string>
-    <string name="launch_your_email_app">Запустите приложение эл. почты</string>
-    <string name="check_your_email">Проверьте электронную почту</string>
     <string name="magic_link_unavailable_error_message">В настоящий момент ссылка недоступна. Введите пароль</string>
     <string name="logging_in">Вход в систему</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Получите эл. письмо со ссылкой для моментального входа.</string>
     <string name="enter_your_password_instead">Введите пароль.</string>
     <string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
     <string name="new_editor_reflection_error">Визуальный редактор не поддерживается на вашем устройстве. Он был\n автоматически отключен.</string>
@@ -1243,6 +1291,7 @@ Language: ru
     <string name="deselect_all">Снять выделение</string>
     <string name="stats_generic_error">Не удалось загрузить необходимую статистику</string>
     <string name="auth_required">Войдите заново для продолжения.</string>
+    <string name="invalid_verification_code">Неверный код подтверждения</string>
     <string name="verification_code">Код подтверждения</string>
     <string name="editor_toast_invalid_path">Неверный путь к файлу</string>
     <string name="language">Язык</string>
@@ -1359,7 +1408,6 @@ Language: ru
     <string name="create_new_blog_wpcom">Создать блог на WordPress.com</string>
     <string name="nux_help_description">Перейдите в справочный центр, чтобы получить ответы на часто задаваемые вопросы, или обратитесь к другим участникам форума.</string>
     <string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
-    <string name="faq_button">Часто задаваемые вопросы</string>
     <string name="reader_empty_posts_liked">Вы еще не поставили отметку «Нравится» ни одной записи.</string>
     <string name="reader_empty_followed_blogs_title">Вы еще не подписаны ни на один сайт.</string>
     <string name="reader_menu_block_blog">Заблокировать этот блог</string>
@@ -1372,8 +1420,6 @@ Language: ru
     <string name="hs__new_conversation_header">Чат поддержки</string>
     <string name="hs__conversation_detail_error">Опишите проблему, с которой вы столкнулись</string>
     <string name="contact_us">Обратная связь</string>
-    <string name="preference_send_usage_stats_summary">Автоматически отправлять статистику использования для улучшения WordPress для Android</string>
-    <string name="preference_send_usage_stats">Отправить статистику</string>
     <string name="schedule_verb">Запланировать</string>
     <string name="update_verb">Обновить</string>
     <string name="reader_empty_recommended_blogs">Нет рекомендованных блогов</string>
@@ -1501,7 +1547,6 @@ Language: ru
     <string name="pick_photo">Выберите фото</string>
     <string name="reader_empty_followed_blogs_description">Просто нажмите на иконку справа вверху, чтобы найти что–нибудь интересное!</string>
     <string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
-    <string name="nux_tutorial_get_started_title">Начать работу!</string>
     <string name="reader_empty_followed_tags">Вы не подписаны ни на одну метку.</string>
     <string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
     <string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>

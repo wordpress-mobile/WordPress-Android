@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-16 05:22:09+0000
+Translation-Revision-Date: 2018-06-12 09:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">%s をタップし、投稿をリストに保存します。</string>
+    <string name="reader_empty_saved_posts_title">投稿がまだ保存されていません。</string>
+    <string name="reader_bookmark_snack_title">投稿を保存しました</string>
+    <string name="reader_bookmark_snack_btn">すべて表示</string>
+    <string name="reader_btn_bookmarked">保存しました</string>
+    <string name="reader_btn_bookmark">保存</string>
+    <string name="reader_remove_bookmark">保存済み投稿から削除</string>
+    <string name="reader_add_bookmark">保存済み投稿へ追加</string>
+    <string name="reader_save_for_later_title">保存済みの投稿</string>
+    <string name="activity_log_empty_list">イベントがまだ記録されていません</string>
+    <string name="removed">削除</string>
+    <string name="tabbar_accessibility_label_write">新規投稿。新規投稿を作成します。</string>
+    <string name="my_site_icon_content_description">サイトアイコンを変更</string>
+    <string name="my_site_icon_dialog_cancel_button">キャンセル</string>
+    <string name="my_site_icon_dialog_remove_button">削除</string>
+    <string name="my_site_icon_dialog_change_button">変更</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">サイトアイコンを編集する権限がありません。</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">サイトアイコンを追加する権限がありません。</string>
+    <string name="my_site_icon_dialog_change_message">どの方法でアイコンを編集しますか ?</string>
+    <string name="my_site_icon_dialog_add_message">サイトアイコンを追加しますか ?</string>
+    <string name="my_site_icon_dialog_title">サイトアイコン</string>
+    <string name="reader_followed_blog_notifications_this">このサイト</string>
+    <string name="reader_followed_blog_notifications_action">有効化する</string>
+    <string name="reader_followed_blog_notifications">%1$s%2$s%3$s の通知を有効にしますか ?</string>
+    <string name="reader_btn_notifications_on">サイト通知を有効にする</string>
+    <string name="reader_btn_notifications_off">サイト通知を無効にする</string>
+    <string name="activity_log_jetpack_icon">Jetpack アイコン</string>
+    <string name="rewind">巻き戻す</string>
+    <string name="activity_log_event">イベント</string>
+    <string name="activity_log_icon">アクティビティアイコン</string>
+    <string name="activity_log">アクティビティログ</string>
+    <string name="activity">アクティビティ</string>
+    <string name="privacy_policy_read">個人情報保護方針を読む</string>
+    <string name="third_party_policy_learn_more_caption">サードパーティのものを含め、他の追跡ツールを使用します。それらについての詳細と設定方法についてお読みください。</string>
+    <string name="third_party_policy_learn_more_header">サードパーティのポリシー</string>
+    <string name="privacy_policy_learn_more_caption">この情報は、製品を改善し、マーケティングをより関連性の高いものとし、WordPress.com の利用をパーソナライズするのに役立ちます。さらに詳しくは、個人情報保護方針をご覧ください。</string>
+    <string name="privacy_policy_learn_more_header">個人情報保護方針</string>
+    <string name="cookie_policy_learn_more_caption">WordPress.com アカウントへのログイン中のサービス利用の情報を分析ツールと共有してください。</string>
+    <string name="cookie_policy_learn_more_header">Cookie ポリシー</string>
+    <string name="preference_privacy_settings">プライバシー設定</string>
+    <string name="preference_collect_information">情報を収集</string>
+    <string name="post_submitted">投稿を送信しました</string>
+    <string name="write_post">投稿を作成</string>
     <string name="login_email_button_signup">アカウントをまだお持ちではありませんか ?%1$s登録%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">プラグイン機能を使うには、サイトが問題のない状態でなければなりません。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">プラグイン機能を使うには、一次ドメインサブスクリプションがこのユーザーに関連付けられている必要があります。</string>
@@ -76,7 +119,6 @@ Language: ja_JP
     <string name="stats_tab_tap_content_description">%sを表示中</string>
     <string name="stats_legend">統計グラフの凡例</string>
     <string name="fab_create_desc">作成</string>
-    <string name="fab_create_post_desc">投稿の作成</string>
     <string name="fab_add_tag_desc">タグの作成</string>
     <string name="stats_bar_week_desc">週 (%s)</string>
     <string name="stats_bar_date_value_desc">%s、表示回数%d</string>
@@ -267,7 +309,6 @@ Language: ja_JP
     <string name="signup_magic_link_message">マジック登録リンクを送信しました。このデバイスでメールをチェックして、メールにあるリンクをタップして登録を完了してください。</string>
     <string name="signup_magic_link_error_button_positive">再試行</string>
     <string name="signup_magic_link_error_button_negative">閉じる</string>
-    <string name="signup_magic_link_error">メールの送信中にエラーが発生しました。今すぐ再試行するか、閉じてから後で再試行できます。</string>
     <string name="signup_epilogue_hint_username">ユーザー名</string>
     <string name="signup_epilogue_hint_password_detail">直前に使用したものと同様のマジックリンクを使用していつでもログインできますが、希望される場合はパスワードを設定することもできます。</string>
     <string name="signup_epilogue_hint_password">パスワード (オプション)</string>
@@ -281,7 +322,7 @@ Language: ja_JP
     <string name="signup_email_error_generic">メールアドレスの確認中にエラーが発生しました。</string>
     <string name="sign_up">WordPress.com に登録</string>
     <string name="enter_username_instead">ユーザー名でログインします。</string>
-    <string name="enter_site_address_instead">サイトアドレスを入力してログインしてください。</string>
+    <string name="enter_site_address_instead">サイトのアドレスを入力してログインする。</string>
     <string name="plugin_needs_update">更新が必要</string>
     <string name="plugin_caption_search">プラグインの検索</string>
     <string name="plugin_caption_new">新規</string>
@@ -415,7 +456,7 @@ Language: ja_JP
     <string name="login_error_generic">Google アカウントへの接続で何らかの問題が発生しました。</string>
     <string name="login_error_email_not_found">Google アカウント「%s」は、WordPress.com 上での既存のアカウントと一致しません。</string>
     <string name="login_error_button">閉じる</string>
-    <string name="login_google_button_suffix">Google でログインします。</string>
+    <string name="login_google_button_suffix">Google でログインする。</string>
     <string name="enter_wpcom_password_google">この Google アカウントで続行するには、一致する WordPress.com パスワードを入力してください。この操作が必要になるのは一度だけです。</string>
     <string name="error_generic_network">ネットワークエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="post_settings_remove_featured_image">アイキャッチ画像を削除</string>
@@ -876,11 +917,8 @@ Language: ja_JP
     <string name="error_locating_image">切り抜き済み画像位置不明エラー</string>
     <string name="error_cropping_image">画像切り抜きエラー</string>
     <string name="checking_email">メールをチェック</string>
-    <string name="launch_your_email_app">メールアプリを開く</string>
-    <string name="check_your_email">メールをご確認ください</string>
     <string name="magic_link_unavailable_error_message">現在ご利用いただけません。パスワードを入力してください</string>
     <string name="logging_in">ログインしています</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">メールで送信されたリンクですぐにログイン</string>
     <string name="enter_your_password_instead">代わりにパスワードを入力</string>
     <string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
     <string name="new_editor_reflection_error">ビジュアルエディターはお使いの端末との互換性がありません。自動で無効化されました。</string>
@@ -1238,6 +1276,7 @@ Language: ja_JP
     <string name="deselect_all">すべて選択解除</string>
     <string name="stats_generic_error">必須の統計情報が読み込めませんでした</string>
     <string name="auth_required">続けるにはログインしてください。</string>
+    <string name="invalid_verification_code">無効な認証コード</string>
     <string name="verification_code">認証コード</string>
     <string name="editor_toast_invalid_path">無効なファイルパス</string>
     <string name="language">言語</string>
@@ -1354,7 +1393,6 @@ Language: ja_JP
     <string name="create_new_blog_wpcom">WordPress.com ブログを作成</string>
     <string name="nux_help_description">ヘルプセンターにアクセスして一般的な質問の答えを探すか、フォーラムにアクセスして新しい質問を尋ねてください。</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
-    <string name="faq_button">よくある質問</string>
     <string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
     <string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
     <string name="reader_menu_block_blog">このブログをブロック</string>
@@ -1367,8 +1405,6 @@ Language: ja_JP
     <string name="hs__new_conversation_header">サポートチャット</string>
     <string name="hs__conversation_detail_error">発生している問題を説明してください</string>
     <string name="contact_us">お問い合わせ</string>
-    <string name="preference_send_usage_stats_summary">WordPress for Android を改善するため、利用統計情報を自動的に送信する</string>
-    <string name="preference_send_usage_stats">統計情報を送信</string>
     <string name="schedule_verb">予約</string>
     <string name="update_verb">更新</string>
     <string name="reader_empty_recommended_blogs">おすすめブログはありません</string>
@@ -1496,7 +1532,6 @@ Language: ja_JP
     <string name="pick_photo">画像を選択</string>
     <string name="reader_empty_followed_blogs_description">右上のタグアイコンをタップし、お気に入りを発見してみてください。</string>
     <string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
-    <string name="nux_tutorial_get_started_title">始めてみましょう</string>
     <string name="reader_empty_followed_tags">現在何もタグをフォローしていません</string>
     <string name="reader_toast_err_url_intent">%sを開けませんでした</string>
     <string name="reader_toast_err_view_image">画像を表示できません</string>

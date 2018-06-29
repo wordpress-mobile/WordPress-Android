@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-15 08:54:09+0000
+Translation-Revision-Date: 2018-06-13 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="reader_empty_saved_posts_description">Tippe auf %s, um einen Beitrag in deiner Liste zu speichern.</string>
+    <string name="reader_empty_saved_posts_title">Keine Beiträge gespeichert – noch!</string>
+    <string name="reader_bookmark_snack_title">Beitrag gespeichert</string>
+    <string name="reader_bookmark_snack_btn">Alles anzeigen</string>
+    <string name="reader_btn_bookmarked">Gespeichert</string>
+    <string name="reader_btn_bookmark">Speichern</string>
+    <string name="reader_remove_bookmark">Aus gespeicherten Beiträgen entfernen</string>
+    <string name="reader_add_bookmark">Zu gespeicherten Beiträgen hinzufügen</string>
+    <string name="reader_save_for_later_title">Gespeicherte Beiträge</string>
+    <string name="activity_log_empty_list">Noch keine Events verzeichnet</string>
+    <string name="removed">Entfernt</string>
+    <string name="tabbar_accessibility_label_write">Neuer Beitrag. Schreibe einen neuen Beitrag.</string>
+    <string name="my_site_icon_content_description">Website–Symbol ändern</string>
+    <string name="my_site_icon_dialog_cancel_button">Abbrechen</string>
+    <string name="my_site_icon_dialog_remove_button">Entfernen</string>
+    <string name="my_site_icon_dialog_change_button">Ändern</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Du bist nicht berechtigt, das Website–Symbol zu bearbeiten.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Du bist nicht berechtigt, ein Website–Symbol hinzuzufügen.</string>
+    <string name="my_site_icon_dialog_change_message">Wie möchtest du das Symbol ändern?</string>
+    <string name="my_site_icon_dialog_add_message">Möchtest du ein Website–Symbol hinzufügen?</string>
+    <string name="my_site_icon_dialog_title">Website–Symbol</string>
+    <string name="reader_followed_blog_notifications_this">Diese Website</string>
+    <string name="reader_followed_blog_notifications_action">Aktivieren</string>
+    <string name="reader_followed_blog_notifications">Benachrichtigungen für %1$s%2$s%3$s aktivieren?</string>
+    <string name="reader_btn_notifications_on">Website–Benachrichtigungen aktivieren</string>
+    <string name="reader_btn_notifications_off">Website–Benachrichtigungen deaktivieren</string>
+    <string name="activity_log_jetpack_icon">Jetpack–Symbol</string>
+    <string name="rewind">Zurücksetzen</string>
+    <string name="activity_log_event">Ereignis</string>
+    <string name="activity_log_icon">Aktivitätssymbol</string>
+    <string name="activity_log">Aktivitätsprotokoll</string>
+    <string name="activity">Aktivität</string>
+    <string name="privacy_policy_read">Datenschutzerklärung lesen</string>
+    <string name="third_party_policy_learn_more_caption">Wir verwenden andere Werkzeuge zum Tracking, darunter auch welche von Drittanbietern. Hier erhältst du weitere Informationen und Tipps, wie du sie kontrollierst.</string>
+    <string name="third_party_policy_learn_more_header">Richtlinie für Drittanbieter</string>
+    <string name="privacy_policy_learn_more_caption">Diese Informationen helfen uns dabei, unsere Produkte zu verbessern, Marketing besser auf dich zuzuschneiden, deine Erfahrung mit WordPress.com zu personalisieren und mehr. All das kannst du auch in unserer Datenschutzerklärung nachlesen.</string>
+    <string name="privacy_policy_learn_more_header">Datenschutzerklärung</string>
+    <string name="cookie_policy_learn_more_caption">Teile Informationen über deine Nutzung von Diensten mit unserem Analysewerkzeug, während du in deinem WordPress.com–Konto angemeldet bist.</string>
+    <string name="cookie_policy_learn_more_header">Cookie–Richtlinie</string>
+    <string name="preference_privacy_settings">Datenschutzeinstellungen</string>
+    <string name="preference_collect_information">Informationen erfassen</string>
+    <string name="post_submitted">Beitrag übermittelt</string>
+    <string name="write_post">Beitrag verfassen</string>
     <string name="login_email_button_signup">Du hast noch kein Konto? %1$sRegistrieren%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Für das Plugin–Feature ist eine einwandfreie Historie der Website erforderlich.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Für das Plugin–Feature muss dieser Benutzer dem Abonnement für die Hauptdomain zugeordnet sein.</string>
@@ -76,7 +119,6 @@ Language: de
     <string name="stats_tab_tap_content_description">%s wird angezeigt</string>
     <string name="stats_legend">Legende des Statistikdiagramms</string>
     <string name="fab_create_desc">erstellen</string>
-    <string name="fab_create_post_desc">Beitrag erstellen</string>
     <string name="fab_add_tag_desc">Schlagwort erstellen</string>
     <string name="stats_bar_week_desc">Woche von %s</string>
     <string name="stats_bar_date_value_desc">%s, %d Aufrufe</string>
@@ -266,7 +308,6 @@ Language: de
     <string name="signup_magic_link_message">Wir haben dir einen magischen Link für die Registrierung gesendet! Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E–Mail, um die Registrierung abzuschließen.</string>
     <string name="signup_magic_link_error_button_positive">Erneut versuchen</string>
     <string name="signup_magic_link_error_button_negative">Schließen</string>
-    <string name="signup_magic_link_error">Es gab Probleme beim Senden dieser E–Mail. Du kannst es jetzt erneut versuchen oder die Seite schließen und es später erneut versuchen.</string>
     <string name="signup_epilogue_hint_username">Benutzername</string>
     <string name="signup_epilogue_hint_password_detail">Du kannst dich immer mit einem magischen Link wie dem gerade verwendeten anmelden, du kannst aber auch ein Passwort einrichten, wenn du dies bevorzugst.</string>
     <string name="signup_epilogue_hint_password">Passwort (optional)</string>
@@ -875,11 +916,8 @@ Language: de
     <string name="error_locating_image">Bei der Lokalisierung des zugeschnittenen Bildes ist ein Fehler aufgetreten.</string>
     <string name="error_cropping_image">Beim Zuschneiden des Bildes ist ein Fehler aufgetreten</string>
     <string name="checking_email">Überprüfe E-Mail–Adresse</string>
-    <string name="launch_your_email_app">E-Mail–Programm starten</string>
-    <string name="check_your_email">Überprüfe dein Postfach</string>
     <string name="magic_link_unavailable_error_message">Zur Zeit nicht verfügbar. Bitte gib dein Passwort ein</string>
     <string name="logging_in">Anmeldung läuft</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Lass dir einen Link für die sofortige Anmeldung per E–Mail zuschicken.</string>
     <string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
     <string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
     <string name="new_editor_reflection_error">Der visuelle Editor ist mit deinem Gerät nicht kompatibel.\nEr wurde automatisch deaktiviert.</string>
@@ -1237,6 +1275,7 @@ Language: de
     <string name="deselect_all">Alle abwählen</string>
     <string name="stats_generic_error">Erforderliche Statistiken konnten nicht geladen werden</string>
     <string name="auth_required">Melde dich erneut an, um fortzufahren.</string>
+    <string name="invalid_verification_code">Ungültiger Überprüfungscode</string>
     <string name="verification_code">Überprüfungscode</string>
     <string name="editor_toast_invalid_path">Ungültiger Dateipfad</string>
     <string name="language">Sprache</string>
@@ -1353,7 +1392,6 @@ Language: de
     <string name="create_new_blog_wpcom">Erstelle ein WordPress.com Blog</string>
     <string name="nux_help_description">Besuche das Helpcenter um Antworten auf die häufig gestellten Fragen zu erhalten oder besuche die Foren um eine neue Frage zu stellen</string>
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
     <string name="reader_empty_followed_blogs_title">Du folgst bisher noch keiner Website</string>
     <string name="reader_menu_block_blog">Blockiere diesen Blog</string>
@@ -1366,8 +1404,6 @@ Language: de
     <string name="hs__new_conversation_header">Support–Chat</string>
     <string name="hs__conversation_detail_error">Beschreibe das Problem, das du siehst</string>
     <string name="contact_us">Kontaktiere uns</string>
-    <string name="preference_send_usage_stats_summary">Nutzungsstatistiken automatisch versenden, damit wir WordPress für Android weiter verbessern können</string>
-    <string name="preference_send_usage_stats">Statistiken senden</string>
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Update</string>
     <string name="reader_empty_recommended_blogs">Keine empfohlenen Blogs</string>
@@ -1495,7 +1531,6 @@ Language: de
     <string name="pick_photo">Foto auswählen</string>
     <string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Icon rechts oben an um zu stöbern!</string>
     <string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
-    <string name="nux_tutorial_get_started_title">Los geht\'s!</string>
     <string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>
     <string name="reader_toast_err_url_intent">Konnte %s nicht öffnen</string>
     <string name="reader_toast_err_view_image">Kann das Bild nicht anzeigen</string>

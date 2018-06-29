@@ -1,0 +1,5 @@
+WordPress pour Android vous donne le pouvoir de créer et de découvrir du contenu sur votre mobile. Rédigez, éditez, et publiez des articles sur votre site, accédez à vos stats et inspirez vous d'articles sur le Lecteur. Quoi de plus? C'est open source!
+
+WordPress pour Android supporte les sites hébergés sur WordPress.com et les sites WordPress.org auto-hébergés à partir de la version 3.6.
+
+Visitez nos forums si vous avez besoin d'aide: http://android.forums.wordpress.org

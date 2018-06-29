@@ -33,7 +33,6 @@ Language: hu
     <string name="stats_followers_total_email">Email követők összesen: %1$s</string>
     <string name="cab_selected">%d kiválasztva</string>
     <string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
-    <string name="faq_button">GYIK</string>
     <string name="browse_our_faq_button">GYIK tallózása</string>
     <string name="create_new_blog_wpcom">WordPress.com honlap létrehozása</string>
     <string name="reader_empty_comments">Vélemény?</string>
@@ -56,7 +55,6 @@ Language: hu
     <string name="hs__conversation_detail_error">Írjuk le a problémát, amivel találkoztunk</string>
     <string name="hs__new_conversation_header">Támogató chat</string>
     <string name="hs__conversation_header">Támogató chat</string>
-    <string name="preference_send_usage_stats">Statisztika küldés</string>
     <string name="update_verb">Frissítést</string>
     <string name="schedule_verb">Időzítés</string>
     <string name="reader_title_subs">Címkék és blogok</string>

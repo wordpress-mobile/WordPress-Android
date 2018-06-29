@@ -170,7 +170,6 @@ Language: pt_BR
     <string name="signup_magic_link_message">Enviamos para você um endereço mágico para cadastro! Confira seu e-mail neste dispositivo e toque no endereço no e–mail para finalizar seu cadastro.</string>
     <string name="signup_magic_link_error_button_positive">Tentar novamente</string>
     <string name="signup_magic_link_error_button_negative">Fechar</string>
-    <string name="signup_magic_link_error">Houve um problema ao enviar o e–mail. Você pode tentar novamente agora ou fechar e tentar de novo mais tarde.</string>
     <string name="signup_epilogue_hint_username">Nome de usuário</string>
     <string name="signup_epilogue_hint_password_detail">Você sempre pode acessar com um endereço mágico como o que acabou de usar, mas também é possível definir uma senha se preferir.</string>
     <string name="signup_epilogue_hint_password">Senha (opcional)</string>
@@ -780,11 +779,8 @@ Language: pt_BR
     <string name="error_locating_image">Erro ao localizar o recorte da imagem</string>
     <string name="error_cropping_image">Erro ao cortar a imagem</string>
     <string name="checking_email">Verificando e–mail</string>
-    <string name="launch_your_email_app">Inicie o seu aplicativo de e–mail</string>
-    <string name="check_your_email">Verifique seu e–mail</string>
     <string name="magic_link_unavailable_error_message">Atualmente indisponível. Digite sua senha</string>
     <string name="logging_in">Fazendo login</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Enviar um link para o seu e–mail para fazer login instantaneamente</string>
     <string name="enter_your_password_instead">Digite sua senha ao invés disso</string>
     <string name="web_address_dialog_hint">Exibido ao público quando você comentar.</string>
     <string name="new_editor_reflection_error">O editor visual não é compatível com seu dispositivo. Ele foi\n        desativado automaticamente.</string>
@@ -1142,6 +1138,7 @@ Language: pt_BR
     <string name="deselect_all">Desmarcar todos</string>
     <string name="stats_generic_error">As estatísticas requisitadas não puderam ser carregadas</string>
     <string name="auth_required">Faça login novamente para continuar.</string>
+    <string name="invalid_verification_code">Código de verificação inválido</string>
     <string name="verification_code">Código de verificação</string>
     <string name="editor_toast_invalid_path">Caminho do arquivo inválido</string>
     <string name="language">Idioma</string>
@@ -1258,7 +1255,6 @@ Language: pt_BR
     <string name="create_new_blog_wpcom">Crie um blog do WordPress.com</string>
     <string name="nux_help_description">Visite a central de ajuda para obter respostas para perguntas frequentes, ou visite os fóruns para fazer novas perguntas.</string>
     <string name="browse_our_faq_button">Veja nossa seção de Perguntas Frequentes</string>
-    <string name="faq_button">Perguntas frequentes</string>
     <string name="reader_empty_posts_liked">Você não curtiu posts ainda</string>
     <string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um site</string>
     <string name="reader_menu_block_blog">Bloquear este blog</string>
@@ -1271,8 +1267,6 @@ Language: pt_BR
     <string name="hs__new_conversation_header">Chat de Suporte</string>
     <string name="hs__conversation_detail_error">Descreva o problema que está experimentando</string>
     <string name="contact_us">Contate nos</string>
-    <string name="preference_send_usage_stats_summary">Envie estatísticas de uso automaticamente para nos ajudar a melhorar o WordPress para Android</string>
-    <string name="preference_send_usage_stats">Enviar estatísticas</string>
     <string name="schedule_verb">Agendar</string>
     <string name="update_verb">Atualizar</string>
     <string name="reader_empty_recommended_blogs">Nenhum blog recomendado</string>
@@ -1400,7 +1394,6 @@ Language: pt_BR
     <string name="pick_photo">Selecione a foto</string>
     <string name="reader_empty_followed_blogs_description">Não se preocupe! Toque no ícone na parte superior direita para começar a explorar!</string>
     <string name="reader_likes_you_and_one">Você e mais um gostaram disso</string>
-    <string name="nux_tutorial_get_started_title">Iniciar Tutorial</string>
     <string name="reader_empty_followed_tags">Você não segue nenhuma tag</string>
     <string name="reader_toast_err_url_intent">Não é possível abrir %s</string>
     <string name="reader_toast_err_view_image">Não é possível visualizar a imagem </string>

@@ -21,8 +21,6 @@ public abstract class Tracker {
 
     abstract void refreshMetadata(AnalyticsMetadata metadata);
 
-    abstract void registerPushNotificationToken(String regId);
-
     abstract String getAnonIdPrefKey();
 
     private String mAnonID = null; // do not access this variable directly. Use methods.

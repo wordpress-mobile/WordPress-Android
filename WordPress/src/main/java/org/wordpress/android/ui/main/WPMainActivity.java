@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -26,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -123,7 +123,6 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_READER = "show_reader";
 
     private WPMainNavigationView mBottomNav;
-    private Toolbar mToolbar;
 
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
@@ -168,10 +167,6 @@ public class WPMainActivity extends AppCompatActivity implements
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
-        mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setTitle(R.string.app_title);
-        setSupportActionBar(mToolbar);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getFragmentManager(), this);
@@ -490,10 +485,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     @Override
     public void onRequestHideBottomNavigation() {
-        // we only hide the bottom navigation when there's not a hardware keyboard present
-        if (!DeviceUtils.getInstance().hasHardwareKeyboard(this)) {
-            showBottomNav(false);
-        }
+        showBottomNav(false);
     }
 
     private void showBottomNav(boolean show) {
@@ -520,9 +512,10 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void updateTitle(int position) {
         if (position == PAGE_MY_SITE && mSelectedSite != null) {
-            mToolbar.setTitle(mSelectedSite.getName());
+            ((MainToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedSite.getName());
         } else {
-            mToolbar.setTitle(mBottomNav.getTitleForPosition(position));
+            ((MainToolbarFragment) mBottomNav.getActiveFragment())
+                    .setTitle(mBottomNav.getTitleForPosition(position).toString());
         }
     }
 
@@ -762,9 +755,11 @@ public class WPMainActivity extends AppCompatActivity implements
 
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
-                    mLoginAnalyticsListener.trackCreatedAccount();
-                    mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
-
+                    // Sets a flag that we need to track a magic link sign up.
+                    // We'll handle it in onAccountChanged so we know we have
+                    // updated account info.
+                    AppPrefs.setShouldTrackMagicLinkSignup(true);
+                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, mSelectedSite);
                     } else {
@@ -790,8 +785,25 @@ public class WPMainActivity extends AppCompatActivity implements
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (AppPrefs.getShouldTrackMagicLinkSignup()) {
+                trackMagicLinkSignupIfNeeded();
+            }
         }
     }
+
+    /**
+     * Bumps stats related to a magic link sign up provided the account has been updated with
+     * the username and email address needed to refresh analytics meta data.
+     */
+    private void trackMagicLinkSignupIfNeeded() {
+        AccountModel account = mAccountStore.getAccount();
+        if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
+            mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
+            mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
+            AppPrefs.removeShouldTrackMagicLinkSignup();
+        }
+    }
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {

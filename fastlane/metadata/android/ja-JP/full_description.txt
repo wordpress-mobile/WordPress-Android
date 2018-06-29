@@ -1,0 +1,5 @@
+WordPress for Android アプリを使えばコンテンツの作成・閲覧がいつでも簡単にできるようになります。サイトで投稿を作成・編集・公開し、Reader 機能で他の記事を読んでインスピレーションを受けましょう。さらに、このアプリはオープンソースです。
+
+WordPress for Android は WordPress.com およびインストール型 WordPress.org サイト (バージョン3.6移行) に対応しています。
+
+ヘルプが必要な場合はフォーラムへどうぞ: http://android.forums.wordpress.org

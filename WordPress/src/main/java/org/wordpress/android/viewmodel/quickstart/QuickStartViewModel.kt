@@ -10,8 +10,7 @@ import javax.inject.Inject
 
 class QuickStartViewModel @Inject constructor(private val quickStartStore: QuickStartStore) : ViewModel() {
     private val _quickStartTaskStateStates = MutableLiveData<List<QuickStartTaskState>>()
-    val quickStartTaskStateStates: LiveData<List<QuickStartTaskState>>
-        get() = _quickStartTaskStateStates
+    val quickStartTaskStateStates: LiveData<List<QuickStartTaskState>> = _quickStartTaskStateStates
 
     private var isStarted = false
     var siteId: Long = 0

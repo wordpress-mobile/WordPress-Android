@@ -267,6 +267,7 @@ Language: hr
     <string name="language">Jezik</string>
     <string name="verification_code">Kod za provjeru</string>
     <string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
+    <string name="invalid_verification_code">Neispravan verifikacijski kod</string>
     <string name="auth_required">Ponovno se prijavite za nastavak.</string>
     <string name="publisher">Izdavač:</string>
     <string name="error_notification_open">Ne mogu otvoriti obavjesti</string>
@@ -356,7 +357,6 @@ Language: hr
     <string name="ssl_certificate_details">Detalji</string>
     <string name="cab_selected">%d odabrano</string>
     <string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
-    <string name="faq_button">FAQ</string>
     <string name="reader_label_like">Lajk</string>
     <string name="reader_empty_comments">Još nema komentara</string>
     <string name="reader_label_view_original">Pogledaj izvorni članak</string>
@@ -393,8 +393,6 @@ Language: hr
     <string name="hs__conversation_detail_error">Opišite problem koji se pojavljuje</string>
     <string name="hs__new_conversation_header">Razgovor s podrškom</string>
     <string name="hs__conversation_header">Razgovor s podrškom</string>
-    <string name="preference_send_usage_stats">Šalji statistiku</string>
-    <string name="preference_send_usage_stats_summary">Automatski šalji statistiku o korištenju kako bi nam pomogli poboljšati WordPress za Andorid</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
     <string name="reader_page_followed_tags">Praćene oznake</string>
@@ -535,7 +533,6 @@ Language: hr
     <string name="reader_toast_err_share_intent">Nije moguće podijeliti</string>
     <string name="reader_toast_err_view_image">Nije moguće prikazati sliku</string>
     <string name="reader_toast_err_url_intent">Nije moguće otvoriti %s</string>
-    <string name="nux_tutorial_get_started_title">Započnimo!</string>
     <string name="stats_timeframe_days">Dani</string>
     <string name="stats_timeframe_weeks">Tjedni</string>
     <string name="stats_timeframe_months">Mjeseci</string>

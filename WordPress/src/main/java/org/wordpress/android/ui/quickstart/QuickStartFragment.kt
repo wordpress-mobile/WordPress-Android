@@ -8,6 +8,9 @@ import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
+import android.support.v7.app.AlertDialog.Builder
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +18,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.quick_start_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.style
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
@@ -24,18 +28,19 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
-import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel
 import javax.inject.Inject
 
-class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveClickInterface {
+class QuickStartFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: QuickStartViewModel
 
-    private val skipAllTasksDialogTag = "skip_all_tasks_dialog"
+    private var skipAllTasksDialog: AlertDialog? = null
 
     companion object {
+        private const val STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE = "is_skip_all_dialog_visible"
+
         fun newInstance(): QuickStartFragment {
             return QuickStartFragment()
         }
@@ -112,22 +117,31 @@ class QuickStartFragment : Fragment(), BasicFragmentDialog.BasicDialogPositiveCl
         button_skip_all.setOnClickListener {
             showSkipDialog()
         }
+
+        if (savedInstanceState != null &&
+                savedInstanceState.getBoolean(STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE, false)) {
+            showSkipDialog()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE,
+                skipAllTasksDialog != null && skipAllTasksDialog!!.isShowing)
     }
 
     private fun showSkipDialog() {
-        val basicFragmentDialog = BasicFragmentDialog()
-        basicFragmentDialog.initialize(skipAllTasksDialogTag,
-                getString(R.string.quick_start_dialog_skip_title),
-                getString(R.string.quick_start_dialog_skip_message),
-                getString(R.string.quick_start_button_skip_positive),
-                null, getString(R.string.quick_start_button_skip_negative))
-
-        basicFragmentDialog.show(fragmentManager, skipAllTasksDialogTag)
-    }
-
-    override fun onPositiveClicked(instanceTag: String) {
-        (view as ScrollView).smoothScrollTo(0, 0)
-        viewModel.skipAllTasks()
+        skipAllTasksDialog = Builder(ContextThemeWrapper(activity, style.Calypso_Dialog))
+                .setTitle(getString(R.string.quick_start_dialog_skip_title))
+                .setMessage(getString(R.string.quick_start_dialog_skip_message))
+                .setPositiveButton(getString(R.string.quick_start_button_skip_positive)) { _, _ ->
+                    (view as ScrollView).smoothScrollTo(0, 0)
+                    viewModel.skipAllTasks()
+                }
+                .setNegativeButton(getString(R.string.quick_start_button_skip_negative)) { _, _ ->
+                }
+                .setCancelable(true)
+                .show()
     }
 
     private fun crossOutTask(task: QuickStartTask) {

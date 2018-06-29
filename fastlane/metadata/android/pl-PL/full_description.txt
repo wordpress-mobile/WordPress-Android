@@ -1,0 +1,5 @@
+WordPress dla Androida wkłada w twoje ręce moc publikowania, czyniąc prostym tworzenie i konsumpcję treści. Pisz, edytuj, publikuj wpisy na swojej stronie, sprawdzaj statystyki, oraz daj się zainspirować przez wspaniałe wpisy w Czytniku. Czy trzeba mówić coś jeszcze? A, całość jest open source.
+
+WordPress dla Androida wspiera strony w platformie WordPress.com oraz samodzielnie hostowane na WordPressie w wersji 3.6 i wyższych.
+
+Odwiedź nasze forum, żeby uzyskać pomoc dotyczącą aplikacji: http://android.forums.wordpress.org
