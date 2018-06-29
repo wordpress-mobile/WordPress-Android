@@ -70,8 +70,6 @@ class ActivityLogStore
                     fetchActivityLogPayload.site,
                     SelectQuery.ORDER_ASCENDING
             ).size
-        } else {
-            activityLogSqlUtils.deleteActivityLog()
         }
         activityLogRestClient.fetchActivity(fetchActivityLogPayload.site, ACTIVITY_LOG_PAGE_SIZE, offset)
     }
@@ -84,6 +82,9 @@ class ActivityLogStore
         if (payload.error != null) {
             emitChange(OnActivityLogFetched(payload.error, action))
         } else {
+            if (payload.offset == 0) {
+                activityLogSqlUtils.deleteActivityLog()
+            }
             val rowsAffected = if (payload.activityLogModels.isNotEmpty())
                 activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
             else 0
