@@ -80,11 +80,14 @@ class PagesFragment : Fragment() {
         tabLayout.setupWithViewPager(pages_pager)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)
-        val myActionMenuItem = menu?.findItem(R.id.action_search)
-        myActionMenuItem?.setOnActionExpandListener(object : OnActionExpandListener {
+        val myActionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
+            "Menu does not contain mandatory search item"
+        }
+
+        myActionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 return viewModel.searchExpanded()
             }
@@ -93,7 +96,7 @@ class PagesFragment : Fragment() {
                 return viewModel.searchCollapsed()
             }
         })
-        val searchView = myActionMenuItem?.actionView as SearchView
+        val searchView = myActionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return viewModel.onSearchTextSubmit(query)

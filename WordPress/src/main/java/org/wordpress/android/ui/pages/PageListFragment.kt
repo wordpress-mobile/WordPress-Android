@@ -68,6 +68,12 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecyclerView(savedInstanceState)
+
+        initViewModel(savedInstanceState)
+    }
+
+    private fun initRecyclerView(savedInstanceState: Bundle?) {
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             linearLayoutManager.onRestoreInstanceState(it)
@@ -75,7 +81,9 @@ class PageListFragment : Fragment() {
         recyclerView.layoutManager = linearLayoutManager
 
         (activity?.application as WordPress).component()?.inject(this)
+    }
 
+    private fun initViewModel(savedInstanceState: Bundle?) {
         val key = arguments?.getString(fragmentKey)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PageListViewModel>(checkNotNull(key), PageListViewModel::class.java)

@@ -7,13 +7,13 @@ import javax.inject.Inject
 
 class PageListViewModel
 @Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
-    private var initialized: Boolean = false
+    private var isStarted: Boolean = false
     private var site: SiteModel? = null
 
     fun start(site: SiteModel) {
         this.site = site
-        if (!initialized) {
-            initialized = true
+        if (!isStarted) {
+            isStarted = true
         }
     }
 
