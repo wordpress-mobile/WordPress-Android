@@ -2,7 +2,9 @@ package org.wordpress.android.ui.activitylog.list
 
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress
 
 class ActivityLogDiffCallback(
     private val oldList: List<ActivityLogListItem>,
@@ -17,13 +19,10 @@ class ActivityLogDiffCallback(
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
-        return if (oldItem.javaClass == newItem.javaClass) {
-            when (oldItem) {
-                is ActivityLogListItem.Event -> oldItem.activityId == (newItem as ActivityLogListItem.Event).activityId
-                is ActivityLogListItem.Progress -> oldItem == newItem
-            }
-        } else {
-            false
+        return when {
+            oldItem is Event && newItem is Event -> oldItem.activityId == newItem.activityId
+            oldItem is Progress && newItem is Progress -> oldItem == newItem
+            else -> false
         }
     }
 
@@ -52,6 +51,7 @@ class ActivityLogDiffCallback(
         if (oldItem.isHeaderVisible != newItem.isHeaderVisible) {
             bundle.putBoolean(LIST_ITEM_HEADER_VISIBILITY_KEY, newItem.isHeaderVisible)
         }
+        if (bundle.size() == 0) return null
         return bundle
     }
 }

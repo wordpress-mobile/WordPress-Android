@@ -36,7 +36,7 @@ class ActivityLogAdapter(
     }
 
     internal fun updateList(items: List<ActivityLogListItem>) {
-        val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list, items))
+        val diffResult = DiffUtil.calculateDiff(ActivityLogDiffCallback(list.toList(), items))
         list.clear()
         list.addAll(items)
 
