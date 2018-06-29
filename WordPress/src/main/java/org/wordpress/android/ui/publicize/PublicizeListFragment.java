@@ -3,23 +3,37 @@ package org.wordpress.android.ui.publicize;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
     public interface PublicizeButtonPrefsListener {
@@ -31,13 +45,14 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
+    private QuickStartEvent mQuickStartEvent;
 
     @Inject AccountStore mAccountStore;
+    @Inject QuickStartStore mQuickStartStore;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
-
         PublicizeListFragment fragment = new PublicizeListFragment();
         fragment.setArguments(args);
 
@@ -55,6 +70,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
+        }
+
+        if (savedInstanceState != null) {
+            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -87,6 +106,47 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         });
 
         return rootView;
+    }
+
+    @Override public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(final QuickStartEvent event) {
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
+        if (!isAdded() || getView() == null) {
+            return;
+        }
+        if (mQuickStartEvent.getTask() == QuickStartTask.SHARE_SITE) {
+            getView().post(new Runnable() {
+                @Override public void run() {
+                    Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
+                            getString(R.string.quick_start_dialog_share_site_message_short_connections),
+                            getResources().getColor(R.color.blue_light),
+                            null);
+
+                    WPDialogSnackbar.make(getView(), title,
+                            AccessibilityUtils.getSnackbarDuration(getActivity())).setNegativeButton(
+                            getString(R.string.cancel), new OnClickListener() {
+                                @Override public void onClick(View view) {
+                                }
+                            }).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
     }
 
     @Override
@@ -129,10 +189,17 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             mAdapter = new PublicizeServiceAdapter(
                     getActivity(),
                     mSite.getSiteId(),
-                    mAccountStore.getAccount().getUserId());
+                    mAccountStore.getAccount().getUserId(), mQuickStartEvent != null);
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
-                mAdapter.setOnServiceClickListener((OnServiceClickListener) getActivity());
+                mAdapter.setOnServiceClickListener(new OnServiceClickListener() {
+                    @Override public void onServiceClicked(PublicizeService service) {
+                        mQuickStartStore.setDoneTask(mSite.getId(), mQuickStartEvent.getTask(), true);
+                        mAdapter.hideQuickStartFocus();
+                        mQuickStartEvent = null;
+                        ((OnServiceClickListener) getActivity()).onServiceClicked(service);
+                    }
+                });
             }
         }
         return mAdapter;
@@ -140,5 +207,16 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     void reload() {
         getAdapter().reload();
+    }
+
+
+    @Override public void onStart() {
+        super.onStart();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }
