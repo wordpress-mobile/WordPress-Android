@@ -71,7 +71,6 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -505,8 +504,7 @@ public class WPMainActivity extends AppCompatActivity implements
         trackLastVisiblePage(position, true);
         if (position == PAGE_READER && getMySiteFragment() != null && getMySiteFragment()
                 .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
-            getMySiteFragment().clearActiveQuickStartTask();
-            EventBus.getDefault().postSticky(new QuickStartEvent(QuickStartTask.FOLLOW_SITE));
+            getMySiteFragment().continueQuickStartTask(QuickStartTask.FOLLOW_SITE);
         }
     }
 
@@ -514,8 +512,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Override
     public void onNewPostButtonClicked() {
         if (getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-            getMySiteFragment().clearActiveQuickStartTask();
-            mQuickStartStore.setDoneTask(mSelectedSite.getId(), QuickStartTask.PUBLISH_POST, true);
+            getMySiteFragment().completeQuickStartTask(QuickStartTask.PUBLISH_POST);
         }
 
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);

@@ -10,8 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -238,11 +238,8 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (isQuickStartTaskActive(QuickStartTask.VIEW_SITE)) {
-                    completeQuickStartTask(mActiveQuickStartTask.getTask());
-                    clearVisualQuickStartIndicators();
-                    clearActiveQuickStartTask();
+                    completeQuickStartTask(QuickStartTask.VIEW_SITE);
                 }
-
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
             }
         });
@@ -332,11 +329,9 @@ public class MySiteFragment extends Fragment implements
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.CHOOSE_THEME)
-                    || isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
-                    clearVisualQuickStartIndicators();
-                    EventBus.getDefault().postSticky(new QuickStartEvent(mActiveQuickStartTask.getTask()));
-                    clearActiveQuickStartTask();
+                if (isQuickStartTaskActive(QuickStartTask.CHOOSE_THEME) || isQuickStartTaskActive(
+                        QuickStartTask.CUSTOMIZE_SITE)) {
+                    continueQuickStartTask(mActiveQuickStartTask.getTask());
                 }
                 ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
             }
@@ -374,9 +369,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (isQuickStartTaskActive(QuickStartTask.SHARE_SITE)) {
-                    clearVisualQuickStartIndicators();
-                    EventBus.getDefault().postSticky(new QuickStartEvent(mActiveQuickStartTask.getTask()));
-                    clearActiveQuickStartTask();
+                    continueQuickStartTask(mActiveQuickStartTask.getTask());
                 }
                 ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
             }
@@ -949,9 +942,6 @@ public class MySiteFragment extends Fragment implements
         container.removeView(focusPoint);
     }
 
-    private void completeQuickStartTask(QuickStartTask task) {
-        mQuickStartStore.setDoneTask(getSelectedSite().getId(), task, true);
-    }
 
     public boolean isQuickStartTaskActive(QuickStartTask task) {
         return isInQuickStartMode() && mActiveQuickStartTask.getTask() == task;
@@ -992,4 +982,16 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
+
+    public void continueQuickStartTask(QuickStartTask task) {
+        clearVisualQuickStartIndicators();
+        EventBus.getDefault().postSticky(new QuickStartEvent(mActiveQuickStartTask.getTask()));
+        clearActiveQuickStartTask();
+    }
+
+    public void completeQuickStartTask(QuickStartTask task) {
+        clearVisualQuickStartIndicators();
+        mQuickStartStore.setDoneTask(getSelectedSite().getId(), task, true);
+        clearActiveQuickStartTask();
+    }
 }

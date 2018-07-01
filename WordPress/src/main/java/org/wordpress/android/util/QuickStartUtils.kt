@@ -5,9 +5,6 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.LinearLayout
 
 class QuickStartUtils {
     companion object {
@@ -26,8 +23,9 @@ class QuickStartUtils {
                     startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             if (icon != null) {
-                icon.setTint(color);
-                spannedString.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                icon.setTint(color)
+                spannedString.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
 
             return spannedString

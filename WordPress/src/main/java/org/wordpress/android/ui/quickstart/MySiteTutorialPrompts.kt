@@ -7,8 +7,8 @@ enum class MySiteTutorialPrompts constructor(
     val task: QuickStartTask,
     val mySiteRowId: Int,
     val shortMessagePrompt: Int,
-    val iconId: Int) {
-
+    val iconId: Int
+) {
     VIEW_SITE_TUTORIAL(
             QuickStartTask.VIEW_SITE,
             R.id.row_view_site,
