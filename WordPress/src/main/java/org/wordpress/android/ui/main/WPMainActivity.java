@@ -504,7 +504,7 @@ public class WPMainActivity extends AppCompatActivity implements
         trackLastVisiblePage(position, true);
         if (position == PAGE_READER && getMySiteFragment() != null && getMySiteFragment()
                 .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
-            getMySiteFragment().continueQuickStartTask(QuickStartTask.FOLLOW_SITE);
+            getMySiteFragment().requestNextStepOfActiveQuickStartTask();
         }
     }
 
@@ -512,7 +512,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Override
     public void onNewPostButtonClicked() {
         if (getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-            getMySiteFragment().completeQuickStartTask(QuickStartTask.PUBLISH_POST);
+            getMySiteFragment().completeActiveQuickStartTask();
         }
 
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);

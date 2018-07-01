@@ -6,10 +6,8 @@
             <solid android:color="@color/quickstart_focus_outer_circle"/>
         </shape>
     </item>
-    <!-- Smaller red circle in front -->
     <item>
         <shape android:shape="oval">
-            <!-- transparent stroke = larger_circle_size - smaller_circle_size -->
             <stroke
                 android:width="16dp"
                 android:color="@android:color/transparent"/>

@@ -351,7 +351,6 @@ public class ThemeBrowserFragment extends Fragment
             }
         });
 
-
         mGridView.addHeaderView(header);
     }
 

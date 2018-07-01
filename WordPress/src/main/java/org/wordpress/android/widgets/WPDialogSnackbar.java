@@ -44,6 +44,7 @@ public class WPDialogSnackbar {
         } else {
             message.setVisibility(View.VISIBLE);
 
+            //normalizing image spans
             if (text instanceof Spannable) {
                 ImageSpan[] spans = ((Spannable) text).getSpans(0, text.length(), ImageSpan.class);
 

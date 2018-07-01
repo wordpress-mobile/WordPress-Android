@@ -238,7 +238,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (isQuickStartTaskActive(QuickStartTask.VIEW_SITE)) {
-                    completeQuickStartTask(QuickStartTask.VIEW_SITE);
+                    completeActiveQuickStartTask();
                 }
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
             }
@@ -331,7 +331,7 @@ public class MySiteFragment extends Fragment implements
             public void onClick(View v) {
                 if (isQuickStartTaskActive(QuickStartTask.CHOOSE_THEME) || isQuickStartTaskActive(
                         QuickStartTask.CUSTOMIZE_SITE)) {
-                    continueQuickStartTask(mActiveQuickStartTask.getTask());
+                    requestNextStepOfActiveQuickStartTask();
                 }
                 ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
             }
@@ -369,7 +369,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (isQuickStartTaskActive(QuickStartTask.SHARE_SITE)) {
-                    continueQuickStartTask(mActiveQuickStartTask.getTask());
+                    requestNextStepOfActiveQuickStartTask();
                 }
                 ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
             }
@@ -534,8 +534,7 @@ public class MySiteFragment extends Fragment implements
                 }
                 break;
             case RequestCodes.QUICK_START:
-                if (data != null && data.getExtras() != null
-                    && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
+                if (data != null && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
                     QuickStartTask task =
                             (QuickStartTask) data.getExtras().getSerializable(QuickStartActivity.ARG_QUICK_START_TASK);
 
@@ -545,25 +544,7 @@ public class MySiteFragment extends Fragment implements
                         return;
                     }
 
-                    addQuickStartFocusPoint();
-
-                    Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
-                            getString(mActiveQuickStartTask.getShortMessagePrompt()),
-                            getResources().getColor(R.color.blue_light),
-                            getResources().getDrawable(mActiveQuickStartTask.getIconId()));
-
-                    mQuickStartSnackbar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator), title,
-                            AccessibilityUtils.getSnackbarDuration(getActivity())).setNegativeButton(
-                            getString(R.string.cancel), new OnClickListener() {
-                                @Override public void onClick(View view) {
-                                    // will self dismiss with listener
-                                    clearActiveQuickStartTask();
-                                    removeQuickStartFocusPoint();
-                                }
-                            });
-
-                    mQuickStartSnackbar.show();
-                    focusOnQuickStartRow();
+                    showActiveQuickStartTutorial();
                 }
                 break;
         }
@@ -912,7 +893,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void addQuickStartFocusPoint() {
-        if (getView() == null || !isInQuickStartMode()) {
+        if (getView() == null || !hasActiveQuickStartTask()) {
             return;
         }
 
@@ -926,7 +907,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void removeQuickStartFocusPoint() {
-        if (getView() == null || !isInQuickStartMode()) {
+        if (getView() == null || !hasActiveQuickStartTask()) {
             return;
         }
 
@@ -944,14 +925,14 @@ public class MySiteFragment extends Fragment implements
 
 
     public boolean isQuickStartTaskActive(QuickStartTask task) {
-        return isInQuickStartMode() && mActiveQuickStartTask.getTask() == task;
+        return hasActiveQuickStartTask() && mActiveQuickStartTask.getTask() == task;
     }
 
     public void clearActiveQuickStartTask() {
         mActiveQuickStartTask = null;
     }
 
-    private boolean isInQuickStartMode() {
+    private boolean hasActiveQuickStartTask() {
         return mActiveQuickStartTask != null;
     }
 
@@ -967,7 +948,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void focusOnQuickStartRow() {
-        if (getView() == null || !isInQuickStartMode()) {
+        if (getView() == null || !hasActiveQuickStartTask()) {
             return;
         }
 
@@ -983,15 +964,46 @@ public class MySiteFragment extends Fragment implements
     }
 
 
-    public void continueQuickStartTask(QuickStartTask task) {
+    public void requestNextStepOfActiveQuickStartTask() {
+        if (!hasActiveQuickStartTask()) {
+            return;
+        }
         clearVisualQuickStartIndicators();
         EventBus.getDefault().postSticky(new QuickStartEvent(mActiveQuickStartTask.getTask()));
         clearActiveQuickStartTask();
     }
 
-    public void completeQuickStartTask(QuickStartTask task) {
+    public void completeActiveQuickStartTask() {
+        if (!hasActiveQuickStartTask()) {
+            return;
+        }
         clearVisualQuickStartIndicators();
-        mQuickStartStore.setDoneTask(getSelectedSite().getId(), task, true);
+        mQuickStartStore.setDoneTask(getSelectedSite().getId(), mActiveQuickStartTask.getTask(), true);
         clearActiveQuickStartTask();
+    }
+
+    private void showActiveQuickStartTutorial() {
+        if (!hasActiveQuickStartTask()) {
+            return;
+        }
+        addQuickStartFocusPoint();
+
+        Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
+                getString(mActiveQuickStartTask.getShortMessagePrompt()),
+                getResources().getColor(R.color.blue_light),
+                getResources().getDrawable(mActiveQuickStartTask.getIconId()));
+
+        mQuickStartSnackbar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator), title,
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setNegativeButton(
+                getString(R.string.cancel), new OnClickListener() {
+                    @Override public void onClick(View view) {
+                        // will self dismiss with listener
+                        clearActiveQuickStartTask();
+                        removeQuickStartFocusPoint();
+                    }
+                });
+
+        mQuickStartSnackbar.show();
+        focusOnQuickStartRow();
     }
 }
