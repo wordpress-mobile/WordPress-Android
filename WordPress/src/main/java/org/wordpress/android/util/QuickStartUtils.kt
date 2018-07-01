@@ -1,6 +1,7 @@
 package org.wordpress.android.util
 
 import android.graphics.drawable.Drawable
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -23,7 +24,7 @@ class QuickStartUtils {
                     startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             if (icon != null) {
-                icon.setTint(color)
+                DrawableCompat.setTint(icon, color)
                 spannedString.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
