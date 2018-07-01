@@ -96,6 +96,10 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
