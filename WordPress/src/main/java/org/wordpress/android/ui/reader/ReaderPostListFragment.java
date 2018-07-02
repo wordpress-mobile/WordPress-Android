@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
@@ -53,6 +54,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
@@ -263,6 +265,14 @@ public class ReaderPostListFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    public @Nullable SiteModel getSelectedSite() {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        }
+        return null;
     }
 
     @Override
@@ -742,8 +752,9 @@ public class ReaderPostListFragment extends Fragment
                     mBottomNavController.onRequestHideBottomNavigation();
                 }
 
-                if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
-                    mQuickStartStore.setDoneTask(mCurrentBlogId, mQuickStartEvent.getTask(), true);
+                if (mQuickStartEvent != null
+                    && mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE && getSelectedSite() != null) {
+                    mQuickStartStore.setDoneTask(getSelectedSite().getId(), mQuickStartEvent.getTask(), true);
                 }
 
                 return true;
@@ -955,6 +966,7 @@ public class ReaderPostListFragment extends Fragment
                         }
                     }
                 }
+
                 @Override public void onTabUnselected(Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
                         mPostSearchAdapterPos = mRecyclerView.getCurrentPosition();
@@ -962,6 +974,7 @@ public class ReaderPostListFragment extends Fragment
                         mSiteSearchAdapterPos = mRecyclerView.getCurrentPosition();
                     }
                 }
+
                 @Override public void onTabReselected(Tab tab) {
                     mRecyclerView.smoothScrollToPosition(0);
                 }
@@ -1495,6 +1508,7 @@ public class ReaderPostListFragment extends Fragment
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             getActivity(), site.getSiteId(), site.getFeedId());
                 }
+
                 @Override
                 public void onLoadMore(int offset) {
                     showLoadingProgress(true);
