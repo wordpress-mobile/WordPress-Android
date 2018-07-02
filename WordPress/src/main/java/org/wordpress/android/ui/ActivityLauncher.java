@@ -29,6 +29,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -176,6 +177,11 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
+    public static void viewQuickStart(Context context) {
+        Intent intent = new Intent(context, QuickStartActivity.class);
         context.startActivity(intent);
     }
 

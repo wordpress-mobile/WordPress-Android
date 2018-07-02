@@ -224,6 +224,13 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
+        rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewQuickStart(getActivity());
+            }
+        });
+
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

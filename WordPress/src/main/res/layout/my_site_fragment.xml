@@ -142,7 +142,7 @@
             <!--Quick Start-->
             <LinearLayout
                 android:id="@+id/row_quick_start"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:visibility="visible"
                 style="@style/MySiteListRowLayout" >
 

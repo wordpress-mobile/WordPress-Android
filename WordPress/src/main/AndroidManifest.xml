@@ -695,6 +695,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.quickstart.QuickStartActivity"
+            android:label="@string/quick_start_sites"
+            android:parentActivityName=".ui.main.WPMainActivity"
+            android:theme="@style/CalypsoTheme" />
+
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
