@@ -97,6 +97,9 @@ public class AppPrefs {
 
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
+
+        // used to indicate that user is performing Quick Start tutorial
+        IS_QUICK_START_ACTIVE,
     }
 
     /**
@@ -696,5 +699,15 @@ public class AppPrefs {
 
     public static void removeShouldTrackMagicLinkSignup() {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
+    }
+
+
+    public static void setQuickStartActive(Boolean isActive) {
+        setBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, isActive);
+    }
+
+    //TODO quick start is set to true by default for testing purposes. Remove in prod.
+    public static boolean isQuickStartActive() {
+        return getBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, true);
     }
 }
