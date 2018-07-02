@@ -42,7 +42,7 @@ enum class MySiteTutorialPrompts constructor(
 
     companion object {
         @JvmStatic
-        fun getTutorialForTask(task: QuickStartTask): MySiteTutorialPrompts? {
+        fun getPromptDetailsForTask(task: QuickStartTask): MySiteTutorialPrompts? {
             MySiteTutorialPrompts.values().forEach {
                 if (it.task == task) return it
             }

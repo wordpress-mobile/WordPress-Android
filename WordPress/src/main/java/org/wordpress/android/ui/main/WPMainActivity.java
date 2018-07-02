@@ -35,7 +35,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
-import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -141,7 +140,6 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
-    @Inject QuickStartStore mQuickStartStore;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -502,8 +500,8 @@ public class WPMainActivity extends AppCompatActivity implements
     public void onPageChanged(int position) {
         updateTitle(position);
         trackLastVisiblePage(position, true);
-        if (position == PAGE_READER && getMySiteFragment() != null && getMySiteFragment()
-                .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+        if (position == PAGE_READER && getMySiteFragment() != null
+            && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
             getMySiteFragment().requestNextStepOfActiveQuickStartTask();
         }
     }

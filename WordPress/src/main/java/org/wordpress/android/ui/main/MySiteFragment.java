@@ -123,7 +123,7 @@ public class MySiteFragment extends Fragment implements
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
-    private MySiteTutorialPrompts mActiveQuickStartTask;
+    private MySiteTutorialPrompts mActiveMySiteTutorialPrompt;
     private WPDialogSnackbar mQuickStartSnackbar;
 
     @Nullable
@@ -156,7 +156,7 @@ public class MySiteFragment extends Fragment implements
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mActiveQuickStartTask =
+            mActiveMySiteTutorialPrompt =
                     (MySiteTutorialPrompts) savedInstanceState.getSerializable(MySiteTutorialPrompts.KEY);
         }
     }
@@ -329,8 +329,8 @@ public class MySiteFragment extends Fragment implements
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.CHOOSE_THEME) || isQuickStartTaskActive(
-                        QuickStartTask.CUSTOMIZE_SITE)) {
+                if (isQuickStartTaskActive(QuickStartTask.CHOOSE_THEME)
+                    || isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
                     requestNextStepOfActiveQuickStartTask();
                 }
                 ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
@@ -400,7 +400,7 @@ public class MySiteFragment extends Fragment implements
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (mActiveQuickStartTask != null) {
+        if (mActiveMySiteTutorialPrompt != null) {
             addQuickStartFocusPoint();
             focusOnQuickStartRow();
         }
@@ -453,8 +453,7 @@ public class MySiteFragment extends Fragment implements
 
     @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putSerializable(MySiteTutorialPrompts.KEY, mActiveQuickStartTask);
+        outState.putSerializable(MySiteTutorialPrompts.KEY, mActiveMySiteTutorialPrompt);
     }
 
     @Override
@@ -536,15 +535,18 @@ public class MySiteFragment extends Fragment implements
             case RequestCodes.QUICK_START:
                 if (data != null && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
                     QuickStartTask task =
-                            (QuickStartTask) data.getExtras().getSerializable(QuickStartActivity.ARG_QUICK_START_TASK);
+                            (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
 
-                    mActiveQuickStartTask = MySiteTutorialPrompts.getTutorialForTask(task);
-
-                    if (mActiveQuickStartTask == null) {
-                        return;
+                    // remove all the visual indicators of previous task if necessary
+                    if (mActiveMySiteTutorialPrompt != null) {
+                        removeQuickStartFocusPoint();
                     }
 
-                    showActiveQuickStartTutorial();
+                    mActiveMySiteTutorialPrompt = MySiteTutorialPrompts.getPromptDetailsForTask(task);
+
+                    if (mActiveMySiteTutorialPrompt != null) {
+                        showActiveQuickStartTutorial();
+                    }
                 }
                 break;
         }
@@ -897,7 +899,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        ViewGroup container = getView().findViewById(mActiveQuickStartTask.getMySiteRowId());
+        ViewGroup container = getView().findViewById(mActiveMySiteTutorialPrompt.getMySiteRowId());
 
         if (container == null) {
             return;
@@ -911,7 +913,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        ViewGroup container = getView().findViewById(mActiveQuickStartTask.getMySiteRowId());
+        final ViewGroup container = getView().findViewById(mActiveMySiteTutorialPrompt.getMySiteRowId());
 
         if (container == null) {
             return;
@@ -921,19 +923,24 @@ public class MySiteFragment extends Fragment implements
 
         container.removeView(focusPointSpacer);
         container.removeView(focusPoint);
-    }
+        container.post(new Runnable() {
+            @Override public void run() {
+                container.setPressed(false);
+            }
+        });
 
+    }
 
     public boolean isQuickStartTaskActive(QuickStartTask task) {
-        return hasActiveQuickStartTask() && mActiveQuickStartTask.getTask() == task;
+        return hasActiveQuickStartTask() && mActiveMySiteTutorialPrompt.getTask() == task;
     }
 
-    public void clearActiveQuickStartTask() {
-        mActiveQuickStartTask = null;
+    private void clearActiveQuickStartTask() {
+        mActiveMySiteTutorialPrompt = null;
     }
 
     private boolean hasActiveQuickStartTask() {
-        return mActiveQuickStartTask != null;
+        return mActiveMySiteTutorialPrompt != null;
     }
 
     private void clearVisualQuickStartIndicators() {
@@ -952,7 +959,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        final LinearLayout container = getView().findViewById(mActiveQuickStartTask.getMySiteRowId());
+        final LinearLayout container = getView().findViewById(mActiveMySiteTutorialPrompt.getMySiteRowId());
         if (container != null) {
             mScrollView.post(new Runnable() {
                 @Override public void run() {
@@ -963,13 +970,12 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-
     public void requestNextStepOfActiveQuickStartTask() {
         if (!hasActiveQuickStartTask()) {
             return;
         }
         clearVisualQuickStartIndicators();
-        EventBus.getDefault().postSticky(new QuickStartEvent(mActiveQuickStartTask.getTask()));
+        EventBus.getDefault().postSticky(new QuickStartEvent(mActiveMySiteTutorialPrompt.getTask()));
         clearActiveQuickStartTask();
     }
 
@@ -978,7 +984,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
         clearVisualQuickStartIndicators();
-        mQuickStartStore.setDoneTask(getSelectedSite().getId(), mActiveQuickStartTask.getTask(), true);
+        mQuickStartStore.setDoneTask(getSelectedSite().getId(), mActiveMySiteTutorialPrompt.getTask(), true);
         clearActiveQuickStartTask();
     }
 
@@ -988,20 +994,14 @@ public class MySiteFragment extends Fragment implements
         }
         addQuickStartFocusPoint();
 
-        Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
-                getString(mActiveQuickStartTask.getShortMessagePrompt()),
+        Spannable promptSnackBarDialogTitle = QuickStartUtils.stylizeQuickStartPrompt(
+                getString(mActiveMySiteTutorialPrompt.getShortMessagePrompt()),
                 getResources().getColor(R.color.blue_light),
-                getResources().getDrawable(mActiveQuickStartTask.getIconId()));
+                getResources().getDrawable(mActiveMySiteTutorialPrompt.getIconId()));
 
-        mQuickStartSnackbar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator), title,
-                AccessibilityUtils.getSnackbarDuration(getActivity())).setNegativeButton(
-                getString(R.string.cancel), new OnClickListener() {
-                    @Override public void onClick(View view) {
-                        // will self dismiss with listener
-                        clearActiveQuickStartTask();
-                        removeQuickStartFocusPoint();
-                    }
-                });
+        mQuickStartSnackbar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator),
+                promptSnackBarDialogTitle,
+                AccessibilityUtils.getSnackbarDuration(getActivity()));
 
         mQuickStartSnackbar.show();
         focusOnQuickStartRow();
