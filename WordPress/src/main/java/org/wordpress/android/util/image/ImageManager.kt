@@ -2,7 +2,6 @@ package org.wordpress.android.util.image
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
@@ -16,17 +15,18 @@ import javax.inject.Singleton
  * Singleton for asynchronous image fetching/loading with support for placeholders, transformations and more.
  */
 @Singleton
-class ImageManager @Inject constructor() {
+class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderManager) {
     @JvmOverloads
     fun load(
         imageView: ImageView,
+        imageType: ImageType,
         imgUrl: String,
-        @DrawableRes placeholder: Int? = null,
         scaleType: ImageView.ScaleType = CENTER
     ) {
         var request = GlideApp.with(imageView.context)
                 .load(imgUrl)
-                .let { if (placeholder != null) it.fallback(placeholder) else it }
+        request = addFallback(request, imageType)
+        request = addPlaceholder(request, imageType)
         request = applyScaleType(request, scaleType)
         request.into(imageView)
     }
@@ -40,20 +40,19 @@ class ImageManager @Inject constructor() {
     }
 
     @JvmOverloads
-    fun load(imageView: ImageView, imgUrl: Drawable, scaleType: ImageView.ScaleType = CENTER) {
+    fun load(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
         var request = GlideApp.with(imageView.context)
-                .load(imgUrl)
+                .load(drawable)
         request = applyScaleType(request, scaleType)
         request.into(imageView)
     }
 
-    @JvmOverloads
-    fun loadIntoCircle(imageView: ImageView, imgUrl: String, @DrawableRes placeholder: Int? = null) {
-        val request = GlideApp.with(imageView.context)
+    fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
+        var request = GlideApp.with(imageView.context)
                 .load(imgUrl)
-                .let { if (placeholder != null) it.fallback(placeholder) else it }
-                .circleCrop()
-        request.into(imageView)
+        request = addFallback(request, imageType)
+        request = addPlaceholder(request, imageType)
+        request.circleCrop().into(imageView)
     }
 
     fun cancelRequestAndClearImageView(imageView: ImageView) {
@@ -79,47 +78,55 @@ class ImageManager @Inject constructor() {
         }
     }
 
+    private fun addPlaceholder(request: GlideRequest<Drawable>, imageType: ImageType): GlideRequest<Drawable> {
+        val placeholderImageRes = placeholderManager.getPlaceholderImage(imageType)
+        return if (placeholderImageRes == null) request else request.placeholder(placeholderImageRes)
+    }
+
+    private fun addFallback(request: GlideRequest<Drawable>, imageType: ImageType): GlideRequest<Drawable> {
+        val errorImageRes = placeholderManager.getErrorImage(imageType)
+        return if (errorImageRes == null) request else request.error(errorImageRes)
+    }
+
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
     companion object {
         @JvmStatic
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.load(imageView, imgUrl, placeholder, scaleType)",
                         "org.wordpress.android.util.image.ImageManager"))
-        @JvmOverloads
         fun loadImage(
             imageView: ImageView,
+            imageType: ImageType,
             imgUrl: String,
-            @DrawableRes placeholder: Int? = null,
             scaleType: ImageView.ScaleType
         ) {
-            ImageManager().load(imageView, imgUrl, placeholder, scaleType)
+            ImageManager(ImagePlaceholderManager()).load(imageView, imageType, imgUrl, scaleType)
         }
 
         @JvmStatic
         @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, bitmap, placeholder, scaleType)",
+                ReplaceWith("imageManager.load(imageView, bitmap, scaleType)",
                         "org.wordpress.android.util.image.ImageManager"))
         @JvmOverloads
         fun loadImage(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
-            ImageManager().load(imageView, bitmap, scaleType)
+            ImageManager(ImagePlaceholderManager()).load(imageView, bitmap, scaleType)
         }
 
         @JvmStatic
         @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, drawable, placeholder, scaleType)",
+                ReplaceWith("imageManager.load(imageView, drawable, scaleType)",
                         "org.wordpress.android.util.image.ImageManager"))
         @JvmOverloads
         fun loadImage(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
-            ImageManager().load(imageView, drawable, scaleType)
+            ImageManager(ImagePlaceholderManager()).load(imageView, drawable, scaleType)
         }
 
         @JvmStatic
         @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.loadIntoCircle(imageView, imgUrl, placeholder)",
+                ReplaceWith("imageManager.loadIntoCircle(imageView, imgType, imgUrl)",
                         "org.wordpress.android.util.image.ImageManager"))
-        @JvmOverloads
-        fun loadImageIntoCircle(imageView: ImageView, imgUrl: String, @DrawableRes placeholder: Int? = null) {
-            ImageManager().loadIntoCircle(imageView, imgUrl, placeholder)
+        fun loadImageIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
+            ImageManager(ImagePlaceholderManager()).loadIntoCircle(imageView, imageType, imgUrl)
         }
 
         @JvmStatic
@@ -127,7 +134,7 @@ class ImageManager @Inject constructor() {
                 ReplaceWith("imageManager.clear(imageView)",
                         "org.wordpress.android.util.image.ImageManager"))
         fun clear(imageView: ImageView) {
-            ImageManager().cancelRequestAndClearImageView(imageView)
+            ImageManager(ImagePlaceholderManager()).cancelRequestAndClearImageView(imageView)
         }
     }
 }
