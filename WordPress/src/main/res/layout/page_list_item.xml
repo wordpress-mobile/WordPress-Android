@@ -36,26 +36,51 @@
         android:layout_height="match_parent"
         android:visibility="gone"/>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/page_title"
-        android:layout_width="0dp"
+    <View
+        android:id="@+id/sixth_indent"
+        android:layout_width="16dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/seventh_indent"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/eight_indent"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingStart="16dp"
-        android:background="@color/white"
-        android:textSize="16sp"
-        android:textColor="@color/wp_grey_dark"
-        tools:text="First page"/>
+        android:paddingStart="16dp">
 
-    <ImageButton
-        android:id="@+id/page_more"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:contentDescription="@string/show_more_desc"
-        app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"/>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/page_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textColor="@color/wp_grey_dark"
+            android:textSize="16sp"
+            tools:text="First page"/>
+
+        <ImageButton
+            android:id="@+id/page_more"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/show_more_desc"
+            android:background="@color/white"
+            app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"/>
+    </LinearLayout>
 </LinearLayout>

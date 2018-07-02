@@ -20,6 +20,7 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_fragment.*
+import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
@@ -63,34 +64,19 @@ class PagesFragment : Fragment() {
         val toolbar = view.findViewById<Toolbar>(org.wordpress.android.login.R.id.toolbar)
         (activity as AppCompatActivity).apply {
             setSupportActionBar(toolbar)
-            supportActionBar?.setHomeButtonEnabled(true)
+            supportActionBar!!.setHomeButtonEnabled(true)
         }
 
-        pages_pager.adapter = activity?.let { fragmentActivity ->
-            fragmentActivity.supportFragmentManager?.let { manager ->
-                PagesPagerAdapter(fragmentActivity, manager)
-            }
-        }
+        pages_pager.adapter = PagesPagerAdapter(activity!!, activity!!.supportFragmentManager)
         tabLayout.setupWithViewPager(pages_pager)
 
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
-        val adapter = PagesAdapter()
+        val adapter = PagesAdapter {action, pageItem -> viewModel.onAction(action, pageItem) }
         recyclerView.adapter = adapter
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PagesViewModel>(PagesViewModel::class.java)
-        viewModel.searchExpanded.observe(activity!!, Observer {
-            if (it == true) {
-                pages_pager.visibility = View.GONE
-                tabLayout.visibility = View.GONE
-                pages_search_result.visibility = View.VISIBLE
-            } else {
-                pages_pager.visibility = View.VISIBLE
-                tabLayout.visibility = View.VISIBLE
-                pages_search_result.visibility = View.GONE
-            }
-        })
         viewModel.searchResult.observe(this, Observer { result ->
             if (result != null) {
                 recyclerView.visibility = View.VISIBLE
