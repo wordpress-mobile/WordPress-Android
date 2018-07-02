@@ -1,4 +1,4 @@
-package org.wordpress.android.ui
+package org.wordpress.android.util.image
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -84,7 +84,7 @@ class ImageManager @Inject constructor() {
         @JvmStatic
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.load(imageView, imgUrl, placeholder, scaleType)",
-                        "org.wordpress.android.ui.ImageManager"))
+                        "org.wordpress.android.util.image.ImageManager"))
         @JvmOverloads
         fun loadImage(
             imageView: ImageView,
@@ -98,7 +98,7 @@ class ImageManager @Inject constructor() {
         @JvmStatic
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.load(imageView, bitmap, placeholder, scaleType)",
-                        "org.wordpress.android.ui.ImageManager"))
+                        "org.wordpress.android.util.image.ImageManager"))
         @JvmOverloads
         fun loadImage(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
             ImageManager().load(imageView, bitmap, scaleType)
@@ -107,7 +107,7 @@ class ImageManager @Inject constructor() {
         @JvmStatic
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.load(imageView, drawable, placeholder, scaleType)",
-                        "org.wordpress.android.ui.ImageManager"))
+                        "org.wordpress.android.util.image.ImageManager"))
         @JvmOverloads
         fun loadImage(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
             ImageManager().load(imageView, drawable, scaleType)
@@ -116,7 +116,7 @@ class ImageManager @Inject constructor() {
         @JvmStatic
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.loadIntoCircle(imageView, imgUrl, placeholder)",
-                        "org.wordpress.android.ui.ImageManager"))
+                        "org.wordpress.android.util.image.ImageManager"))
         @JvmOverloads
         fun loadImageIntoCircle(imageView: ImageView, imgUrl: String, @DrawableRes placeholder: Int? = null) {
             ImageManager().loadIntoCircle(imageView, imgUrl, placeholder)
@@ -125,7 +125,7 @@ class ImageManager @Inject constructor() {
         @JvmStatic
         @Deprecated("Use injected ImageManager",
                 ReplaceWith("imageManager.clear(imageView)",
-                        "org.wordpress.android.ui.ImageManager"))
+                        "org.wordpress.android.util.image.ImageManager"))
         fun clear(imageView: ImageView) {
             ImageManager().cancelRequestAndClearImageView(imageView)
         }

@@ -69,7 +69,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
-import org.wordpress.android.ui.ImageManager;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
