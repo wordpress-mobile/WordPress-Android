@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ImagePlaceholderManager @Inject constructor() {
-    fun getErrorImage(imgType: ImageType) : Int? {
+    fun getErrorImage(imgType: ImageType): Int? {
         return when (imgType) {
             ImageType.PHOTO -> R.color.grey_lighten_30
             ImageType.VIDEO -> R.color.grey_lighten_30
@@ -15,7 +15,7 @@ class ImagePlaceholderManager @Inject constructor() {
         }
     }
 
-    fun getPlaceholderImage(imgType: ImageType) : Int? {
+    fun getPlaceholderImage(imgType: ImageType): Int? {
         return when (imgType) {
             ImageType.PHOTO -> R.color.grey_light
             ImageType.VIDEO -> R.color.grey_light
