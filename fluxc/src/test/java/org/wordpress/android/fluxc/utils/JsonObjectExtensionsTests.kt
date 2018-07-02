@@ -3,8 +3,6 @@ package org.wordpress.android.fluxc.utils
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.network.utils.getJsonObject
 import org.wordpress.android.fluxc.network.utils.getString
@@ -24,7 +22,6 @@ private const val sampleJson =
 }
 """
 
-@RunWith(RobolectricTestRunner::class)
 class JsonObjectExtensionsTests {
     private val jsonObject by lazy {
         JsonParser().parse(sampleJson).asJsonObject
