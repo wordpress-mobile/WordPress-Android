@@ -861,7 +861,7 @@ public class EditPostSettingsFragment extends Fragment {
         int height = DisplayUtils.getDisplayPixelHeight(getActivity());
         int size = Math.max(width, height);
 
-        String mediaUri = media.getThumbnailUrl();
+        String mediaUri = media.getUrl();
         if (SiteUtils.isPhotonCapable(siteModel)) {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
