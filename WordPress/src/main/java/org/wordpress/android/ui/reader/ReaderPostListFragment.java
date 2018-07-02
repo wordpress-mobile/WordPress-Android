@@ -512,11 +512,7 @@ public class ReaderPostListFragment extends Fragment
                             getResources().getDrawable(R.drawable.ic_search_grey_24dp));
 
                     WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator), title,
-                            AccessibilityUtils.getSnackbarDuration(getActivity())).setNegativeButton(
-                            getString(R.string.cancel), new View.OnClickListener() {
-                                @Override public void onClick(View view) {
-                                }
-                            }).show();
+                            AccessibilityUtils.getSnackbarDuration(getActivity())).show();
                 }
             });
         }

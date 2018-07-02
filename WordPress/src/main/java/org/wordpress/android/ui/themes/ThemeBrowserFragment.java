@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.LinearLayout;
@@ -178,12 +177,8 @@ public class ThemeBrowserFragment extends Fragment
                             getResources().getColor(R.color.blue_light),
                             getResources().getDrawable(R.drawable.ic_customize_white_24dp));
 
-                    WPDialogSnackbar.make(getView(), title,
-                            AccessibilityUtils.getSnackbarDuration(getActivity())).setNegativeButton(
-                            getString(R.string.cancel), new OnClickListener() {
-                                @Override public void onClick(View view) {
-                                }
-                            }).show();
+                    WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity()))
+                                    .show();
                 }
             });
         }
