@@ -2132,6 +2132,7 @@
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="post_cardview_featured_desc">featured image</string>
+    <string name="post_settings_featured_desc">featured image</string>
     <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
