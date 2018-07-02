@@ -1,3 +1,0 @@
-10.2:
-* Yeni özellik: Bir şey dikkatinizi mi çekti? Sonrası için Kaydet ile istediğiniz zaman okuyun! Çevrimdışı olduğunuzda bile!
-* Çeşitli hata düzeltmeleri.

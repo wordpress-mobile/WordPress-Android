@@ -1,3 +1,0 @@
-10.2:
-* Nieuwe functie: Heb je iets leuks ontdekt? Lees het wanneer het jou uitkomt met Bewaren voor later! Je kunt het bericht zelfs offline bekijken!
-* Verschillende bugfixes.

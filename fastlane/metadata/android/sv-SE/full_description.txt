@@ -1,5 +1,9 @@
-WordPress för Android är ett kraftfullt publiceringsverktyg som gör det lätt att både skapa och läsa innehåll. Skriv, redigera och publicera inlägg på din webbplats, kolla din statistik och bli inspirerad av inlägg i Läsaren. Dessutom är appen Open Source!
+Hantera eller skapa din WordPress-blogg eller -webbplats direkt från din Android-enhet: skapa och redigera inlägg och sidor, ladda upp dina bästa bilder och videklipp, kolla statistiken och svara på dina kommentarer.
 
-WordPress för Android stöder WordPress-installationer på WordPress.com samt de flesta webbhotell så länge version 3.7 eller högre används.
+Med WordPress för Android finns möjligheten att publicera direkt i din handflata. Skriv ett spontant utkast till en haiku när du sitter i soffan. Ta ett foto och publicera det under lunchrasten. Svara på dina senaste kommentarer eller kolla statistiken för att se från vilka nya länder du fått besökare idag.
 
-Besök forumen för att få hjälp med appen: http://android.forums.wordpress.org
+WordPress för Android är ett öppen källkodsprojekt, vilket innebär att även du är välkommen att bidra till dess utveckling. Läs mer på https://apps.wordpress.com/contribute/.
+
+WordPress för Android stödjer WordPress.com och webbplatser på eget webbhotell med WordPress.org som kör WordPress 4.0 eller senare.
+
+Need help with the app? Visit the forums at https://android.forums.wordpress.org/forum/troubleshooting or tweet us @WPAndroid.

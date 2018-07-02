@@ -1,5 +1,9 @@
-WordPress per Android permette la completa gestione del proprio blog, consentendo la creazione e la scoperta di nuovi contenuti dal tuo smartphone Android. Scrivere, modificare e pubblicare articoli sul tuo sito non è mai stato così facile. WordPress per Android consente inoltre l’accesso alle statistiche del tuo sito, e favorisce l’ispirazione grazie ai nuovi contenuti proposti nel Reader. Cosa vuoi di più? L’applicazione è anche open source!
+Gestisci o crea il tuo sito web o blog WordPress direttamente dal tuo dispositivo Android: crea e modifica articoli e pagine, carica foto e video preferiti, visualizza le statistiche e rispondi ai commenti.
 
-WordPress per Android supporta WordPress.com e WordPress 3.7 o superiore.
+Con WordPress per Android, hai il potere di pubblicare sul palmo della tua mano. Crea una bozza di un haiku spontaneo dal divano. Scatta e supplica una foto della tua pausa pranzo. Rispondi agli ultimi commenti o controlla le statistiche per scoprire da quale paese provengono i nuovi lettori di oggi.
 
-Per chiedere aiuto con l’applicazione visita il forum disponibile su http://android.forums.wordpress.org
+WordPress per Android è un progetto Open Source, il che significa che anche tu puoi contribuire al suo sviluppo. Scopri di più all’indirizzo https://apps.wordpress.com/contribute/.
+
+WordPress per Android supporta WordPress.com e i siti WordPress.org in self-hosting che eseguono WordPress 4.0 o versione successiva.
+
+Hai bisogno di aiuto con l’app? Visita i forum all’indirizzo https://android.forums.wordpress.org/forum/troubleshooting o mandaci un tweet a @WPAndroid.
