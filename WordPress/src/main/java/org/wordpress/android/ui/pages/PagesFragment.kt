@@ -19,7 +19,6 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_fragment.*
-import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
@@ -47,17 +46,6 @@ class PagesFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PagesViewModel>(PagesViewModel::class.java)
-        viewModel.searchExpanded.observe(activity!!, Observer {
-            if (it == true) {
-                pages_pager.visibility = View.GONE
-                tabLayout.visibility = View.GONE
-                pages_search_result.visibility = View.VISIBLE
-            } else {
-                pages_pager.visibility = View.VISIBLE
-                tabLayout.visibility = View.VISIBLE
-                pages_search_result.visibility = View.GONE
-            }
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -86,6 +74,23 @@ class PagesFragment : Fragment() {
         val myActionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
         }
+        viewModel.searchExpanded.observe(activity!!, Observer {
+            if (it == true) {
+                pages_pager.visibility = View.GONE
+                tabLayout.visibility = View.GONE
+                pages_search_result.visibility = View.VISIBLE
+                if (!myActionMenuItem.isActionViewExpanded) {
+                    myActionMenuItem.expandActionView()
+                }
+            } else {
+                pages_pager.visibility = View.VISIBLE
+                tabLayout.visibility = View.VISIBLE
+                pages_search_result.visibility = View.GONE
+                if (myActionMenuItem.isActionViewExpanded) {
+                    myActionMenuItem.collapseActionView()
+                }
+            }
+        })
 
         myActionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
@@ -106,11 +111,6 @@ class PagesFragment : Fragment() {
                 return viewModel.onSearchTextChange(newText)
             }
         })
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(listStateKey, recyclerView.layoutManager.onSaveInstanceState())
-        super.onSaveInstanceState(outState)
     }
 }
 

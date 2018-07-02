@@ -18,6 +18,7 @@ import javax.inject.Inject
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageListViewModel
+    private var linearLayoutManager: LinearLayoutManager? = null
 
     private val listStateKey = "list_state"
 
@@ -74,11 +75,12 @@ class PageListFragment : Fragment() {
     }
 
     private fun initRecyclerView(savedInstanceState: Bundle?) {
-        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
-            linearLayoutManager.onRestoreInstanceState(it)
+            layoutManager.onRestoreInstanceState(it)
         }
         recyclerView.layoutManager = linearLayoutManager
+        linearLayoutManager = layoutManager
 
         (activity?.application as WordPress).component()?.inject(this)
     }
@@ -95,7 +97,7 @@ class PageListFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(listStateKey, recyclerView.layoutManager.onSaveInstanceState())
+        linearLayoutManager?.let { outState.putParcelable(listStateKey, it.onSaveInstanceState()) }
         super.onSaveInstanceState(outState)
     }
 }
