@@ -37,7 +37,6 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import java.util.Calendar
 import java.util.Date
 
-
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
