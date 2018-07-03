@@ -220,6 +220,15 @@ public class MySiteFragment extends Fragment implements
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
 
+        setupClickListeners(rootView);
+
+        mToolbar = rootView.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
+
+        return rootView;
+    }
+
+    private void setupClickListeners(View rootView) {
         rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -389,13 +398,7 @@ public class MySiteFragment extends Fragment implements
                         mAccountStore.getAccount().getUserName());
             }
         });
-
-        mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
-
-        return rootView;
     }
-
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -928,7 +931,6 @@ public class MySiteFragment extends Fragment implements
                 container.setPressed(false);
             }
         });
-
     }
 
     public boolean isQuickStartTaskActive(QuickStartTask task) {
