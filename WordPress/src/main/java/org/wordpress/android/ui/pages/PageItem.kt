@@ -16,7 +16,7 @@ sealed class PageItem(open val id: Long? = null, val type: Type) {
 
     data class Divider(override val id: Long, val title: String) : PageItem(id, DIVIDER)
 
-    data class Empty(val textResource: Int? = null): PageItem(type = EMPTY)
+    data class Empty(val textResource: Int? = null) : PageItem(type = EMPTY)
 
     enum class Type(val viewType: Int) {
         PAGE(1), DIVIDER(2), EMPTY(3)

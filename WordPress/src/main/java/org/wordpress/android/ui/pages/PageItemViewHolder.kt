@@ -23,8 +23,8 @@ sealed class PageItemViewHolder(parentView: View) :
     class PageViewHolder(
         layoutInflater: LayoutInflater,
         parentView: ViewGroup,
-        private val onAction: (PageItem.Action, PageItem) -> Boolean) :
-            PageItemViewHolder(layoutInflater.inflate(layout.page_list_item, parentView, false)) {
+        private val onAction: (PageItem.Action, PageItem) -> Boolean
+    ) : PageItemViewHolder(layoutInflater.inflate(layout.page_list_item, parentView, false)) {
         private val indentContainer = itemView.findViewById<FrameLayout>(id.indent_container)
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)

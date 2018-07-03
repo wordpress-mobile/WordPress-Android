@@ -3,7 +3,6 @@ package org.wordpress.android.ui.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW

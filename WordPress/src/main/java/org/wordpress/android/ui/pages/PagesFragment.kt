@@ -73,7 +73,7 @@ class PagesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
-        val adapter = PagesAdapter {action, pageItem -> viewModel.onAction(action, pageItem) }
+        val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
         recyclerView.adapter = adapter
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PagesViewModel>(PagesViewModel::class.java)
