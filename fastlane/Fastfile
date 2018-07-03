@@ -1,0 +1,114 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+#####################################################################################
+# update_ps_strings 
+# -----------------------------------------------------------------------------------
+# This lane gets the data from the txt files in the WordPress/metadata/ folder
+# and updates the .po file that is then picked by GlotPress for translations.
+# -----------------------------------------------------------------------------------
+# Usage:
+# fastlane update_ps_strings version:<version>
+#
+# Example:
+# fastlane update_ps_strings version:10.3
+#####################################################################################
+desc "Updates the PlayStoreStrings.po file"
+lane :update_ps_strings do |options| 
+  prj_folder = Dir.pwd + "/.."
+
+  files = {
+    release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
+    play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
+    play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
+    play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",
+    play_store_screenshot_1: prj_folder + "/WordPress/metadata/screenshot_1.txt",
+    play_store_screenshot_2: prj_folder + "/WordPress/metadata/screenshot_2.txt",
+    play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
+    play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
+    play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
+  }
+
+  update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
+    source_files: files, 
+    release_version: options[:version])
+end 
+
+#####################################################################################
+# download_metadata_string 
+# -----------------------------------------------------------------------------------
+# This lane downloads the translated metadata (release notes,
+# app store strings, title, etc.) from GlotPress and updates the local files
+# -----------------------------------------------------------------------------------
+# Usage:
+# fastlane download_metadata_string build_number:<build_number> version:<version>
+#
+# Example:
+# fastlane download_metadata_string build_number:573 version:10.3
+#####################################################################################
+desc "Downloads translated metadata from GlotPress"
+lane :download_metadata_strings do |options| 
+  values = options[:version].split('.')
+  files = {
+    "release_note_#{values[0]}#{values[1]}" => "changelogs/#{options[:build_number]}.txt",
+    play_store_promo: "short_description.txt",
+    play_store_desc: "full_description.txt",
+    play_store_app_title: "title.txt"
+  }
+
+  metadata_locales = [
+    ["en-gb", "en-US"],
+    ["pl", "pl-PL"],
+    ["id", "id"],
+    ["ja", "ja-JP"],
+    ["fr", "fr-FR"],
+    ["fr", "fr-CA"],
+    ["ko", "ko-KR"],
+    ["zh-cn", "zh-CN"],
+    ["sv", "sv-SE"],
+    ["it", "it-IT"],
+    ["ru", "ru-RU"],
+    ["tr", "tr-TR"],
+    ["de", "de-DE"],
+    ["nl", "nl-NL"],
+    ["es", "es-ES"],
+    ["pt-br", "pt-BR"],
+    ["zh-tw", "zh-TW"],
+    ["he", "iw-IL"],
+    ["ar", "ar"],
+    ["sr",  "sr"],
+    ["th", "th"],
+    ["vi", "vi"]
+  ]
+
+  delete_old_changelogs(build: options[:build_number])
+  download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
+    target_files: files, 
+    locales: metadata_locales)
+end 
+
+#####################################################################################
+# Private lanes
+#####################################################################################
+private_lane :delete_old_changelogs do | options |
+  Dir.glob("./metadata/android/*/").each do | folder |
+    Dir["#{folder}changelogs/*"].each do | file |
+      File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
+    end
+  end
+end
+

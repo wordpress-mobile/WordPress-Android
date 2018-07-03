@@ -498,6 +498,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
+        outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -571,6 +572,7 @@ public class ReaderPostListFragment extends Fragment
                             updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
                             break;
                         case SEARCH_RESULTS:
+                            // no-op
                             break;
                     }
                     // make sure swipe-to-refresh progress shows since this is a manual refresh
@@ -644,6 +646,11 @@ public class ReaderPostListFragment extends Fragment
         // progress bar that appears when loading more posts
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
+            mIsUpdating = true;
+            mRecyclerView.setRefreshing(true);
+        }
 
         return rootView;
     }
@@ -1274,7 +1281,6 @@ public class ReaderPostListFragment extends Fragment
             if (!isAdded()) {
                 return;
             }
-            mRecyclerView.setRefreshing(false);
             if (isEmpty) {
                 setEmptyTitleAndDescription(false);
                 showEmptyView();
@@ -1509,8 +1515,8 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.push(tag.getTagSlug());
                 break;
             case BLOG_PREVIEW:
-                break;
             case SEARCH_RESULTS:
+                // no-op
                 break;
         }
 
@@ -1918,7 +1924,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         // clear 'post removed from saved posts' undo items
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
         }
 

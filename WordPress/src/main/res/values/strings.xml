@@ -760,8 +760,17 @@
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="rewind">Rewind</string>
+    <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_list">No events recorded yet</string>
+    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %s %s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %s %s</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
+    <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
+    <string name="activity_log_currently_restoring_message">Rewinding to %s %s</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
+    <string name="activity_log_rewind_site">Rewind Site</string>
+    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %s at %s? This will remove all content and options created or changed since then.</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -1532,9 +1541,14 @@
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
-    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
+    <string name="my_tickets">My Tickets</string>
+    <string name="application_log_button">Application log</string>
+    <string name="support_contact_email">Contact email</string>
+    <string name="support_contact_email_not_set">Not set</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1574,12 +1588,10 @@
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
 
-    <!-- Helpshift overridden strings -->
-    <string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>
-    <string name="hs__new_conversation_header">Support chat</string>
-    <string name="hs__conversation_header">Support chat</string>
-    <string name="hs__username_blank_error">Enter a valid name</string>
-    <string name="hs__invalid_email_error">Enter a valid email address</string>
+    <!--Support strings-->
+    <string name="support_identity_input_dialog_enter_email_and_name">To continue please enter your email address and name</string>
+    <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
@@ -2072,9 +2084,11 @@
     <!-- Android O notification channels, these show in the Android app settings -->
     <string name="notification_channel_general_title">General</string>
     <string name="notification_channel_important_title">Important</string>
+    <string name="notification_channel_transient_title">Transient</string>
 
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
+    <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>

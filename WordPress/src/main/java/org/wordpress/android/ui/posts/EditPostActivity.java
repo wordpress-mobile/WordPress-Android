@@ -1400,9 +1400,8 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onLinkClicked(@NotNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
-                Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
-                intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL, WHAT_IS_NEW_IN_MOBILE_URL);
-                startActivity(intent);
+                startActivity(ReleaseNotesActivity.createIntent(EditPostActivity.this, WHAT_IS_NEW_IN_MOBILE_URL,
+                        null, mSite));
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
