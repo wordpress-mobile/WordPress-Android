@@ -79,11 +79,7 @@ class PagesFragment : Fragment() {
                 .get<PagesViewModel>(PagesViewModel::class.java)
         viewModel.searchResult.observe(this, Observer { result ->
             if (result != null) {
-                recyclerView.visibility = View.VISIBLE
                 adapter.onNext(result)
-            } else {
-                recyclerView.visibility = View.GONE
-                adapter.onNext(listOf())
             }
         })
 

@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 
 sealed class PageItemViewHolder(parentView: View) :
@@ -69,6 +70,18 @@ sealed class PageItemViewHolder(parentView: View) :
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
                 dividerTitle.text = pageItem.title
+            }
+        }
+    }
+
+    class EmptyViewHolder(layoutInflater: LayoutInflater, parentView: ViewGroup) :
+            PageItemViewHolder(layoutInflater.inflate(layout.page_empty_item, parentView, false)) {
+        private val emptyView = itemView.findViewById<TextView>(id.empty_view)
+        override fun onBind(pageItem: PageItem) {
+            (pageItem as Empty).apply {
+                pageItem.textResource?.let {
+                    emptyView.text = emptyView.resources.getText(it)
+                }
             }
         }
     }

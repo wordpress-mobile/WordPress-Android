@@ -3,10 +3,13 @@ package org.wordpress.android.ui.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import javax.inject.Inject
 
@@ -17,15 +20,21 @@ class PagesViewModel
     val searchExpanded: LiveData<Boolean> = mutableSearchExpanded
     val searchResult: LiveData<List<PageItem>> = mutableSearchResult
 
-    fun onSearchTextSubmit(query: String?): Boolean {
-        val listOf = mockResult(query)
-        mutableSearchResult.postValue(listOf)
-        return true
+    fun start() {
+        clear()
     }
 
-    fun onSearchTextChange(newText: String?): Boolean {
-        val listOf = mockResult(newText)
-        mutableSearchResult.postValue(listOf)
+    fun onSearchTextSubmit(query: String?): Boolean {
+        return onSearchTextChange(query)
+    }
+
+    fun onSearchTextChange(query: String?): Boolean {
+        if (!query.isNullOrEmpty()) {
+            val listOf = mockResult(query)
+            mutableSearchResult.postValue(listOf)
+        } else {
+            clear()
+        }
         return true
     }
 
@@ -43,7 +52,11 @@ class PagesViewModel
     }
 
     fun onAction(action: Action, pageItem: PageItem): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented")
+    }
+
+    private fun clear() {
+        mutableSearchResult.postValue(listOf(Empty(string.empty_list_default)))
     }
 }
 

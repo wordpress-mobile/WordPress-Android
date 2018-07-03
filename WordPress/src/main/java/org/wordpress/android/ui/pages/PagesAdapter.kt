@@ -4,6 +4,7 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 
@@ -14,6 +15,7 @@ class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean)
         return when (viewType) {
             PageItem.Type.PAGE.viewType -> PageViewHolder(layoutInflater, parent, onAction)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(layoutInflater, parent)
+            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(layoutInflater, parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }

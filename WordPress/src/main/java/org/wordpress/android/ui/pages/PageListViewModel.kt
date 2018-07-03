@@ -3,6 +3,7 @@ package org.wordpress.android.ui.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class PageListViewModel
     fun start(site: SiteModel, key: String) {
         this.site = site
         if (!isStarted) {
+            mutableData.postValue(listOf(PageItem.Empty(R.string.empty_list_default)))
             isStarted = true
         }
         val listOf = mockResult(key)
@@ -29,6 +31,6 @@ class PageListViewModel
     }
 
     fun onAction(action: PageItem.Action, pageItem: PageItem): Boolean {
-        return true
+        TODO("not implemented")
     }
 }
