@@ -47,6 +47,14 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .into(imageView)
     }
 
+    @JvmOverloads
+    fun load(imageView: ImageView, resourceId: Int, scaleType: ImageView.ScaleType = CENTER) {
+        GlideApp.with(imageView.context)
+                .load(resourceId)
+                .applyScaleType(scaleType)
+                .into(imageView)
+    }
+
     fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
         GlideApp.with(imageView.context)
                 .load(imgUrl)
@@ -119,6 +127,15 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         @JvmOverloads
         fun loadImage(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
             ImageManager(ImagePlaceholderManager()).load(imageView, drawable, scaleType)
+        }
+
+        @JvmStatic
+        @Deprecated("Use injected ImageManager",
+                ReplaceWith("imageManager.load(imageView, resourceId, scaleType)",
+                        "org.wordpress.android.util.image.ImageManager"))
+        @JvmOverloads
+        fun loadImage(imageView: ImageView, resourceId: Int, scaleType: ImageView.ScaleType = CENTER) {
+            ImageManager(ImagePlaceholderManager()).load(imageView, resourceId, scaleType)
         }
 
         @JvmStatic
