@@ -3,6 +3,8 @@ package org.wordpress.android.modules;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.pages.PageListViewModel;
+import org.wordpress.android.ui.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
@@ -29,6 +31,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ActivityLogDetailViewModel.class)
     abstract ViewModel activityLogDetailViewModel(ActivityLogDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PagesViewModel.class)
+    abstract ViewModel pagesViewModel(PagesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PageListViewModel.class)
+    abstract ViewModel pageListViewModel(PageListViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

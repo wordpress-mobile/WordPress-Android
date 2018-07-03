@@ -60,6 +60,8 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
+import org.wordpress.android.ui.pages.PageListFragment;
+import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -384,6 +386,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PluginDetailActivity object);
 
     void inject(WordPressGlideModule object);
+
+    void inject(PagesFragment object);
+
+    void inject(PageListFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
