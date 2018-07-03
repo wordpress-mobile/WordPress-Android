@@ -565,7 +565,7 @@ public class ReaderPostListFragment extends Fragment
                 } else {
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
-                            // fallthrough
+                            // fall through to TAG_PREVIEW
                         case TAG_PREVIEW:
                             updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
                             break;
@@ -1197,7 +1197,7 @@ public class ReaderPostListFragment extends Fragment
                     }
                     break;
                 case TAG_PREVIEW:
-                    // fallthrough
+                    // fall through to the default case
                 default:
                     title = getString(R.string.reader_empty_posts_in_tag);
                     break;
@@ -1387,7 +1387,7 @@ public class ReaderPostListFragment extends Fragment
                     // request older posts unless we already have the max # to show
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
-                            // fallthrough
+                            // fall through to TAG_PREVIEW
                         case TAG_PREVIEW:
                             if (ReaderPostTable.getNumPostsWithTag(mCurrentTag)
                                 < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
@@ -1518,9 +1518,10 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.push(tag.getTagSlug());
                 break;
             case BLOG_PREVIEW:
-                // fallthrough
+                // noop
+                break;
             case SEARCH_RESULTS:
-                // no-op
+                // noop
                 break;
         }
 
@@ -1899,7 +1900,7 @@ public class ReaderPostListFragment extends Fragment
 
         switch (type) {
             case TAG_FOLLOWED:
-                // fallthrough
+                // fall through to the TAG_PREVIEW
             case TAG_PREVIEW:
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),
