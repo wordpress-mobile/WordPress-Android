@@ -9,7 +9,7 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/indent_container"/>
+        android:id="@+id/indent_container" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,6 +38,8 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/show_more_desc"
             android:background="@color/white"
-            app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"/>
+            app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
+
     </LinearLayout>
+
 </LinearLayout>

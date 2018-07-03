@@ -17,5 +17,6 @@
         android:paddingStart="16dp"
         android:textColor="@color/wp_grey_darken_20"
         android:textSize="14sp"
-        tools:text="First part of pages"/>
+        tools:text="First part of pages" />
+
 </LinearLayout>

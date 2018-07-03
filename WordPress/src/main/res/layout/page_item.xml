@@ -31,12 +31,13 @@
             tools:text="text_date"
             android:textAlignment="viewStart"
             android:gravity="start"
-            android:drawableStart="@drawable/ic_time_grey_darken_10_16dp"/>
+            android:drawableStart="@drawable/ic_time_grey_darken_10_16dp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey_lighten_20" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -96,7 +97,7 @@
                         android:layout_marginRight="@dimen/margin_small"
                         android:contentDescription="@null"
                         tools:src="@drawable/ic_gridicons_page"
-                        android:layout_marginEnd="@dimen/margin_small"/>
+                        android:layout_marginEnd="@dimen/margin_small" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/text_status"
@@ -126,7 +127,7 @@
                 android:tint="@color/grey_text_min"
                 app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="@dimen/margin_medium"/>
+                android:layout_marginStart="@dimen/margin_medium" />
 
         </RelativeLayout>
 
@@ -150,8 +151,6 @@
             android:max="100" />
 
     </LinearLayout>
-
-
 
     <View
         android:id="@+id/divider_bottom"
