@@ -79,12 +79,12 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     }
 
     private fun GlideRequest<Drawable>.addPlaceholder(imageType: ImageType): GlideRequest<Drawable> {
-        val placeholderImageRes = placeholderManager.getPlaceholderImage(imageType)
+        val placeholderImageRes = placeholderManager.getPlaceholderResource(imageType)
         return if (placeholderImageRes == null) this else this.placeholder(placeholderImageRes)
     }
 
     private fun GlideRequest<Drawable>.addFallback(imageType: ImageType): GlideRequest<Drawable> {
-        val errorImageRes = placeholderManager.getErrorImage(imageType)
+        val errorImageRes = placeholderManager.getErrorResource(imageType)
         return if (errorImageRes == null) this else this.error(errorImageRes)
     }
 
