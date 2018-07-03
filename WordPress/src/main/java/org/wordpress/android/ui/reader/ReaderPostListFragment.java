@@ -496,11 +496,12 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(final QuickStartEvent event) {
-        mQuickStartEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
         if (!isAdded() || getView() == null) {
             return;
         }
+
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
 
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(

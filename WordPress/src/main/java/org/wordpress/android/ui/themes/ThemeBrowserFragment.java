@@ -110,7 +110,6 @@ public class ThemeBrowserFragment extends Fragment
     @Inject ThemeStore mThemeStore;
     @Inject QuickStartStore mQuickStartStore;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +140,15 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mSearchView != null) {
+            mSearchView.setOnQueryTextListener(null);
+        }
+        mCallback = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
@@ -157,12 +165,12 @@ public class ThemeBrowserFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(final QuickStartEvent event) {
-        EventBus.getDefault().removeStickyEvent(event);
-        mQuickStartEvent = event;
-
         if (!isAdded() || getView() == null) {
             return;
         }
+
+        EventBus.getDefault().removeStickyEvent(event);
+        mQuickStartEvent = event;
 
         if (mQuickStartEvent.getTask() == QuickStartTask.CHOOSE_THEME) {
             mQuickStartStore.setDoneTask(mSite.getId(), mQuickStartEvent.getTask(), true);

@@ -13,10 +13,9 @@ class QuickStartUtils {
         @JvmOverloads
         fun stylizeQuickStartPrompt(string: String, color: Int, icon: Drawable? = null): Spannable {
             val startOfHighlight = string.indexOf("%1${'$'}s")
-
             var clearString = string.replace("%1${'$'}s", if (icon != null) " " else "")
-
             val endOfHighlight = clearString.indexOf("%2${'$'}s")
+
             clearString = clearString.replace("%2${'$'}s", "")
 
             val spannedString = SpannableStringBuilder(clearString)

@@ -109,11 +109,13 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(final QuickStartEvent event) {
-        mQuickStartEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
         if (!isAdded() || getView() == null) {
             return;
         }
+
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
+
         if (mQuickStartEvent.getTask() == QuickStartTask.SHARE_SITE) {
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
                     getString(R.string.quick_start_dialog_share_site_message_short_connections),
