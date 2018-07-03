@@ -56,7 +56,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.ImageManager;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
@@ -72,6 +71,8 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -866,7 +867,7 @@ public class EditPostSettingsFragment extends Fragment {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
 
-        mImageManager.load(mFeaturedImageView, mediaUri, null, ScaleType.FIT_CENTER);
+        mImageManager.load(mFeaturedImageView, ImageType.PHOTO, mediaUri, ScaleType.FIT_CENTER);
     }
 
     private void launchFeaturedMediaPicker() {
