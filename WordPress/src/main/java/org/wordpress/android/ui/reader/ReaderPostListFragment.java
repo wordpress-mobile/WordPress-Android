@@ -108,7 +108,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -504,17 +503,14 @@ public class ReaderPostListFragment extends Fragment
         }
 
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
-            getView().post(new Runnable() {
-                @Override public void run() {
-                    Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
-                            getString(R.string.quick_start_dialog_follow_sites_message_short_search),
-                            getResources().getColor(R.color.blue_light),
-                            getResources().getDrawable(R.drawable.ic_search_grey_24dp));
+            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
+                    getString(R.string.quick_start_dialog_follow_sites_message_short_search),
+                    getResources().getColor(R.color.blue_light),
+                    getResources().getDrawable(R.drawable.ic_search_grey_24dp));
 
-                    WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator), title,
-                            AccessibilityUtils.getSnackbarDuration(getActivity())).show();
-                }
-            });
+            if (getActivity() != null && getActivity() instanceof WPMainActivity) {
+                ((WPMainActivity) getActivity()).showQuickStartSnackBar(title);
+            }
         }
     }
 

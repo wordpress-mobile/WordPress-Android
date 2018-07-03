@@ -68,10 +68,6 @@ class QuickStartFragment : Fragment() {
         })
 
         viewModel.start(AppPrefs.getSelectedSite().toLong())
-
-        QuickStartTask.values().forEach {
-//            viewModel.completeTask(it, false)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

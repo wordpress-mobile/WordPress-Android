@@ -96,6 +96,7 @@ android {
     }
 }
 
+// allows us to use cool things like @Parcelize annotations
 androidExtensions {
     experimental = true
 }
