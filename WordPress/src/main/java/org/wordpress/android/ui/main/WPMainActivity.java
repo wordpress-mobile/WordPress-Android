@@ -509,8 +509,9 @@ public class WPMainActivity extends AppCompatActivity implements
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
-        if (getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-            getMySiteFragment().completeActiveQuickStartTask();
+        if (getSelectedSite() != null
+            && getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+            getMySiteFragment().completeActiveQuickStartTask(getSelectedSite().getId());
         }
 
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);

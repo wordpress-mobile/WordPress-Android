@@ -981,13 +981,21 @@ public class MySiteFragment extends Fragment implements
         clearActiveQuickStartTask();
     }
 
-    public void completeActiveQuickStartTask() {
+    // we might need to call this one when the fragment is not attached to WPMainActivity
+    public void completeActiveQuickStartTask(int siteId) {
         if (!hasActiveQuickStartTask()) {
             return;
         }
         clearVisualQuickStartIndicators();
-        mQuickStartStore.setDoneTask(getSelectedSite().getId(), mActiveMySiteTutorialPrompt.getTask(), true);
+        mQuickStartStore.setDoneTask(siteId, mActiveMySiteTutorialPrompt.getTask(), true);
         clearActiveQuickStartTask();
+    }
+
+
+    public void completeActiveQuickStartTask() {
+        if (getSelectedSite() != null) {
+            completeActiveQuickStartTask(getSelectedSite().getId());
+        }
     }
 
     private void showActiveQuickStartTutorial() {
