@@ -59,7 +59,6 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -73,7 +72,6 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 import org.wordpress.android.widgets.WPTextView;
@@ -124,7 +122,6 @@ public class MySiteFragment extends Fragment implements
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
     private MySiteTutorialPrompts mActiveMySiteTutorialPrompt;
-    private WPDialogSnackbar mQuickStartSnackbar;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -945,17 +942,6 @@ public class MySiteFragment extends Fragment implements
         return mActiveMySiteTutorialPrompt != null;
     }
 
-    private void clearVisualQuickStartIndicators() {
-        hideQuickStartSnackBar();
-        removeQuickStartFocusPoint();
-    }
-
-    private void hideQuickStartSnackBar() {
-        if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
-            mQuickStartSnackbar.dismiss();
-        }
-    }
-
     private void focusOnQuickStartRow() {
         if (getView() == null || !hasActiveQuickStartTask()) {
             return;
@@ -976,7 +962,7 @@ public class MySiteFragment extends Fragment implements
         if (!hasActiveQuickStartTask()) {
             return;
         }
-        clearVisualQuickStartIndicators();
+        removeQuickStartFocusPoint();
         EventBus.getDefault().postSticky(new QuickStartEvent(mActiveMySiteTutorialPrompt.getTask()));
         clearActiveQuickStartTask();
     }
@@ -986,7 +972,7 @@ public class MySiteFragment extends Fragment implements
         if (!hasActiveQuickStartTask()) {
             return;
         }
-        clearVisualQuickStartIndicators();
+        removeQuickStartFocusPoint();
         mQuickStartStore.setDoneTask(siteId, mActiveMySiteTutorialPrompt.getTask(), true);
         clearActiveQuickStartTask();
     }
@@ -1009,11 +995,10 @@ public class MySiteFragment extends Fragment implements
                 getResources().getColor(R.color.blue_light),
                 getResources().getDrawable(mActiveMySiteTutorialPrompt.getIconId()));
 
-        mQuickStartSnackbar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator),
-                promptSnackBarDialogTitle,
-                AccessibilityUtils.getSnackbarDuration(getActivity()));
+        if (getActivity() != null && getActivity() instanceof WPMainActivity) {
+            ((WPMainActivity) getActivity()).showQuickStartSnackBar(promptSnackBarDialogTitle);
+        }
 
-        mQuickStartSnackbar.show();
         focusOnQuickStartRow();
     }
 }

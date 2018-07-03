@@ -73,6 +73,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -86,6 +87,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.List;
 
@@ -128,6 +130,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
+    private WPDialogSnackbar mQuickStartSnackbar;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
 
@@ -1004,5 +1007,20 @@ public class WPMainActivity extends AppCompatActivity implements
         if (fragment != null) {
             fragment.onLinkClicked(instanceTag);
         }
+    }
+
+
+    // because of the bottom nav implementation (we only get callback after active fragment is changed we need
+    // to manage SnackBar in activity
+    public void showQuickStartSnackBar(CharSequence message) {
+        if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
+            mQuickStartSnackbar.dismiss();
+        }
+
+        mQuickStartSnackbar = WPDialogSnackbar.make(findViewById(R.id.coordinator),
+                message,
+                AccessibilityUtils.getSnackbarDuration(this));
+
+        mQuickStartSnackbar.show();
     }
 }
