@@ -1009,18 +1009,29 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-
     // because of the bottom nav implementation (we only get callback after active fragment is changed we need
     // to manage SnackBar in activity
     public void showQuickStartSnackBar(CharSequence message) {
-        if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
-            mQuickStartSnackbar.dismiss();
-        }
+        hideQuickStartSnackBar();
 
         mQuickStartSnackbar = WPDialogSnackbar.make(findViewById(R.id.coordinator),
                 message,
                 AccessibilityUtils.getSnackbarDuration(this));
 
         mQuickStartSnackbar.show();
+    }
+
+    private void hideQuickStartSnackBar() {
+        if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
+            mQuickStartSnackbar.dismiss();
+            mQuickStartSnackbar = null;
+        }
+    }
+
+    // We dismiss the QuickStart SnackBar every time activity is paused because
+    // SnackBar sometimes do not appear when another SnackBar is still visible, even in other activities (weird)
+    @Override protected void onPause() {
+        super.onPause();
+        hideQuickStartSnackBar();
     }
 }

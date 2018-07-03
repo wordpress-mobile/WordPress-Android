@@ -177,7 +177,8 @@ public class ThemeBrowserFragment extends Fragment
                             getResources().getColor(R.color.blue_light),
                             getResources().getDrawable(R.drawable.ic_customize_white_24dp));
 
-                    WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity())).show();
+                    WPDialogSnackbar.make(getView(), title,
+                            AccessibilityUtils.getSnackbarDuration(getActivity())).show();
                 }
             });
         }
