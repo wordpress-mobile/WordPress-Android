@@ -2216,4 +2216,9 @@
     <string name="pages_drafts" tools:ignore="UnusedResources">Drafts</string>
     <string name="pages_scheduled" tools:ignore="UnusedResources">Scheduled</string>
     <string name="pages_trashed" tools:ignore="UnusedResources">Trashed</string>
+    <string name="pages_view">View</string>
+    <string name="pages_set_parent">Set parent</string>
+    <string name="pages_publish_now">Publish Now</string>
+    <string name="pages_move_to_draft">Move to Draft</string>
+    <string name="pages_move_to_trash">Move to Trash</string>
 </resources>

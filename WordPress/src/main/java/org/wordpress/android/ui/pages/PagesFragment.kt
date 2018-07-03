@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -19,14 +20,20 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_fragment.*
+import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
+import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private val listStateKey = "list_state"
 
@@ -57,15 +64,26 @@ class PagesFragment : Fragment() {
         val toolbar = view.findViewById<Toolbar>(org.wordpress.android.login.R.id.toolbar)
         (activity as AppCompatActivity).apply {
             setSupportActionBar(toolbar)
-            supportActionBar?.setHomeButtonEnabled(true)
+            supportActionBar!!.setHomeButtonEnabled(true)
         }
 
-        pages_pager.adapter = activity?.let { fragmentActivity ->
-            fragmentActivity.supportFragmentManager?.let { manager ->
-                PagesPagerAdapter(fragmentActivity, manager)
-            }
-        }
+        pages_pager.adapter = PagesPagerAdapter(activity!!, activity!!.supportFragmentManager)
         tabLayout.setupWithViewPager(pages_pager)
+
+        recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+
+        val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+        recyclerView.adapter = adapter
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get<PagesViewModel>(PagesViewModel::class.java)
+        viewModel.searchResult.observe(this, Observer { result ->
+            if (result != null) {
+                adapter.onNext(result)
+            }
+        })
+
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) { viewModel.refresh() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

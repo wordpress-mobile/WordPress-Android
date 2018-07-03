@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -54,7 +55,7 @@ class PageListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as WordPress).component()?.inject(this)
+        (activity!!.application as WordPress).component()!!.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,9 +70,9 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecyclerView(savedInstanceState)
-
         initViewModel(savedInstanceState)
+
+        initRecyclerView(savedInstanceState)
     }
 
     private fun initRecyclerView(savedInstanceState: Bundle?) {
@@ -82,18 +83,27 @@ class PageListFragment : Fragment() {
         recyclerView.layoutManager = linearLayoutManager
         linearLayoutManager = layoutManager
 
-        (activity?.application as WordPress).component()?.inject(this)
+        val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+        recyclerView.adapter = adapter
+
+        viewModel.data.observe(this, Observer { data ->
+            if (data != null) {
+                adapter.onNext(data)
+            }
+        })
+
+        (activity!!.application as WordPress).component()?.inject(this)
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        val key = arguments?.getString(fragmentKey)
+        val key = arguments!!.getString(fragmentKey)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PageListViewModel>(checkNotNull(key), PageListViewModel::class.java)
 
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
-                ?: activity?.intent?.getSerializableExtra(WordPress.SITE)) as SiteModel
+                ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
 
-        viewModel.start(site)
+        viewModel.start(site, key)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
