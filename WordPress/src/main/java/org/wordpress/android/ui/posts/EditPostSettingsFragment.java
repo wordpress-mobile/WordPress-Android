@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -767,16 +768,15 @@ public class EditPostSettingsFragment extends Fragment {
             case PRIVATE:
                 return 3;
             case TRASHED:
-                // fallthrough
             case UNKNOWN:
-                // fallthrough
             case PUBLISHED:
-                // fallthrough
             case SCHEDULED:
-                // fallthrough
-            default:
                 return 0;
         }
+        if (BuildConfig.DEBUG) {
+            throw new IllegalStateException("Missing switch case.");
+        }
+        return 0;
     }
 
     // Post Format Helpers
