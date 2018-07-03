@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 18:37:43+0000
+Translation-Revision-Date: 2018-06-20 07:59:43+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="plugin_auto_managed">Auto–géré</string>
+    <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article, et revenez pour le lire quand vous le souhaitez. Il ne sera disponible que sur cet appareil -– les articles enregistrés ne sont pas encore synchronisés avec les autres périphériques. (On y travaille.)</string>
+    <string name="reader_save_posts_locally_dialog_title">Enregistrer les articles pour plus tard</string>
+    <string name="reader_empty_search_request_failed">Impossible d’effectuer la recherche</string>
+    <string name="reader_empty_search_title">Aucun résultat trouvé</string>
+    <string name="reader_label_post_search_explainer">Recherche WordPress\npour un site ou un article</string>
+    <string name="comment_read_source_post">Lire la source de l’article</string>
+    <string name="sites">Sites</string>
     <string name="signup_magic_link_title">Lien magique envoyé</string>
     <string name="signup_email_screen_title">E–mail d’inscription</string>
     <string name="verification_2fa_screen_title">Code de vérification</string>
@@ -16,7 +24,7 @@ Language: fr
     <string name="email_address_login_title">Adresse e–mail de connexion</string>
     <string name="alternatively">Alternativement :</string>
     <string name="reader_empty_saved_posts_description">Appuyez sur %s pour enregistrer un article dans votre liste.</string>
-    <string name="reader_empty_saved_posts_title">Aucun article u2014 enregistré pour le moment.</string>
+    <string name="reader_empty_saved_posts_title">Aucun article enregistré — pour le moment !</string>
     <string name="reader_bookmark_snack_title">Article enregistré</string>
     <string name="reader_bookmark_snack_btn">Voir tout</string>
     <string name="reader_btn_bookmarked">Enregistré</string>
@@ -909,11 +917,9 @@ Language: fr
     <string name="send_link">Envoyer le lien</string>
     <string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
-    <string name="reader_empty_posts_in_search_description">Aucune article trouvé pour %s dans votre langue</string>
-    <string name="reader_empty_posts_in_search_title">Aucun article trouvé</string>
+    <string name="reader_empty_search_description">Aucune article trouvé pour %s dans votre langue</string>
     <string name="reader_label_post_search_running">Recherche en cours…</string>
-    <string name="reader_label_post_search_explainer">Recherche dans tous les blogs publics de WordPress.com</string>
-    <string name="reader_hint_post_search">Recherche dans WordPress.com</string>
+    <string name="reader_hint_post_search">Recherche WordPress</string>
     <string name="reader_title_related_post_detail">Article connexe</string>
     <string name="preview_screen_links_disabled">Les liens sont désactivés sur l\'écran de prévisualisation</string>
     <string name="draft_explainer">Cet article est un brouillon qui n\'a pas été publié</string>
@@ -1214,7 +1220,7 @@ Language: fr
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d abonnés</string>
     <string name="reader_short_like_count_one">1 Like</string>
-    <string name="reader_menu_tags">Éditer les tags et les blogs</string>
+    <string name="reader_menu_tags">Modifier les étiquettes et les sites</string>
     <string name="reader_title_post_detail">Article du Reader</string>
     <string name="local_draft_explainer">Cet article est un brouillon local qui n\'a pas été publié</string>
     <string name="local_changes_explainer">Cet article contient des modifications locales qui n\'ont pas été publiées</string>
@@ -1247,8 +1253,8 @@ Language: fr
     <string name="post_trashed">Article envoyé à la corbeille</string>
     <string name="post_deleted">Article supprimé</string>
     <string name="page_trashed">Page envoyée à la corbeille</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Vous n\'êtes pas autorisé à accéder à ce blog</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ce blog est introuvable</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">Vous n\'êtes pas autorisé à accéder à ce site</string>
+    <string name="reader_toast_err_follow_blog_not_found">Ce site est introuvable</string>
     <string name="undo">Annuler</string>
     <string name="passcodelock_prompt_message">Entrer votre PIN</string>
     <string name="push_auth_expired">La requête a expiré. Connectez–vous à WordPress.com et réessayez.</string>
@@ -1315,7 +1321,7 @@ Language: fr
     <string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
     <string name="stats_recent_weeks">Semaines récentes</string>
     <string name="stats_average_per_day">Moyenne par jour</string>
-    <string name="reader_empty_posts_in_blog">Ce blog est vide</string>
+    <string name="reader_empty_posts_in_blog">Ce site est vide</string>
     <string name="reader_label_new_posts">Nouveaux articles</string>
     <string name="logs_copied_to_clipboard">Les logs de l\'application ont été copiés dans le presse papier</string>
     <string name="stats_period">Période</string>
@@ -1410,9 +1416,9 @@ Language: fr
     <string name="browse_our_faq_button">Feuilleter notre FAQ</string>
     <string name="reader_empty_posts_liked">Vous n\'aimez aucun article</string>
     <string name="reader_empty_followed_blogs_title">Vous ne suivez aucun site pour le moment</string>
-    <string name="reader_menu_block_blog">Bloquer ce blog</string>
-    <string name="reader_toast_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
-    <string name="reader_toast_err_block_blog">Impossible de bloquer ce blog</string>
+    <string name="reader_menu_block_blog">Bloquer ce site</string>
+    <string name="reader_toast_blog_blocked">Les articles de ce site ne seront plus affichés</string>
+    <string name="reader_toast_err_block_blog">Impossible de bloquer ce site</string>
     <string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
     <string name="hs__invalid_email_error">Entrer une adresse email valide</string>
     <string name="hs__username_blank_error">Entrer un nom valide</string>
@@ -1422,18 +1428,18 @@ Language: fr
     <string name="contact_us">Contactez nous</string>
     <string name="schedule_verb">Programmer</string>
     <string name="update_verb">Mettre à jour</string>
-    <string name="reader_empty_recommended_blogs">Pas de blogs recommandés</string>
-    <string name="reader_toast_err_unfollow_blog">Impossible de se désabonner de ce blog</string>
-    <string name="reader_toast_err_follow_blog">Impossible de s\'abonner à ce blog</string>
-    <string name="reader_toast_err_already_follow_blog">Vous êtes déjà abonné à ce blog</string>
-    <string name="reader_toast_err_get_blog_info">Impossible d\'afficher ce blog</string>
-    <string name="reader_label_followed_blog">Abonné au blog</string>
+    <string name="reader_empty_recommended_blogs">Aucun site recommandé</string>
+    <string name="reader_toast_err_unfollow_blog">Impossible de se désabonner de ce site</string>
+    <string name="reader_toast_err_follow_blog">Impossible de suivre ce site</string>
+    <string name="reader_toast_err_already_follow_blog">Vous suivez déjà ce site</string>
+    <string name="reader_toast_err_get_blog_info">Impossible d\'afficher ce site</string>
+    <string name="reader_label_followed_blog">Site suivi</string>
     <string name="reader_hint_add_tag_or_url">Saisissez une étiquette ou une adresse web à suivre</string>
     <string name="reader_page_followed_blogs">Sites suivis</string>
     <string name="reader_page_followed_tags">Tags suivis</string>
-    <string name="reader_title_subs">Tags &amp; blogs</string>
+    <string name="reader_title_subs">Étiquettes &amp; sites</string>
     <string name="reader_title_tag_preview">Tag du Reader</string>
-    <string name="reader_title_blog_preview">Blog du Reader</string>
+    <string name="reader_title_blog_preview">Blog du Lecteur</string>
     <string name="media_empty_list">Pas de media</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez–vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>

@@ -756,11 +756,7 @@ Language: pt_BR
     <string name="send_link">Enviar link</string>
     <string name="label_clear_search_history">Limpar histórico de pesquisa</string>
     <string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
-    <string name="reader_empty_posts_in_search_description">Nenhum post na sua língua foi encontrado para %s</string>
-    <string name="reader_empty_posts_in_search_title">Nenhum post foi encontrado</string>
     <string name="reader_label_post_search_running">Pesquisando…</string>
-    <string name="reader_label_post_search_explainer">Pesquisar em todos os blogs públicos do WordPress.com</string>
-    <string name="reader_hint_post_search">Pesquisar no WordPress.com</string>
     <string name="reader_title_related_post_detail">Post relacionado</string>
     <string name="preview_screen_links_disabled">Os links são desabilitados na tela de visualização</string>
     <string name="draft_explainer">Este post é um rascunho que ainda não foi publicado</string>
@@ -1061,7 +1057,6 @@ Language: pt_BR
     <string name="reader_short_like_count_none">Curtir</string>
     <string name="reader_label_follow_count">%,d seguidores</string>
     <string name="reader_short_like_count_one">1 curtida</string>
-    <string name="reader_menu_tags">Editar tags e blogs</string>
     <string name="reader_title_post_detail">Post do leitor</string>
     <string name="local_draft_explainer">Este post é um rascunho local que ainda não foi publicado</string>
     <string name="local_changes_explainer">Este post teve alterações locais que ainda não foram publicadas</string>
@@ -1094,8 +1089,6 @@ Language: pt_BR
     <string name="post_trashed">Post enviado para a lixeira</string>
     <string name="post_deleted">Post excluído</string>
     <string name="page_trashed">Página enviada para a lixeira</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Você não está autorizado a acessar este blog</string>
-    <string name="reader_toast_err_follow_blog_not_found">Este blog não foi encontrado</string>
     <string name="undo">Desfazer</string>
     <string name="passcodelock_prompt_message">Digite seu PIN</string>
     <string name="push_auth_expired">A solicitação expirou. Faça login no WordPress.com para tentar novamente.</string>
@@ -1162,7 +1155,6 @@ Language: pt_BR
     <string name="error_copy_to_clipboard">Ocorreu um erro ao copiar o texto para a área de transferência</string>
     <string name="stats_recent_weeks">Semanas recentes</string>
     <string name="stats_average_per_day">Média por dia</string>
-    <string name="reader_empty_posts_in_blog">Este blog está vazio</string>
     <string name="reader_label_new_posts">Novos posts</string>
     <string name="logs_copied_to_clipboard">O logs do aplicativo foram copiados para a área de transferência</string>
     <string name="stats_period">Período</string>
@@ -1257,9 +1249,6 @@ Language: pt_BR
     <string name="browse_our_faq_button">Veja nossa seção de Perguntas Frequentes</string>
     <string name="reader_empty_posts_liked">Você não curtiu posts ainda</string>
     <string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um site</string>
-    <string name="reader_menu_block_blog">Bloquear este blog</string>
-    <string name="reader_toast_blog_blocked">Os posts deste blog não serão mais exibidos</string>
-    <string name="reader_toast_err_block_blog">Não é possível bloquear este blog</string>
     <string name="reader_toast_err_generic">Não é possível executar esta ação</string>
     <string name="hs__invalid_email_error">Digite um e–mail válido</string>
     <string name="hs__username_blank_error">Digite um nome válido</string>
@@ -1269,18 +1258,10 @@ Language: pt_BR
     <string name="contact_us">Contate nos</string>
     <string name="schedule_verb">Agendar</string>
     <string name="update_verb">Atualizar</string>
-    <string name="reader_empty_recommended_blogs">Nenhum blog recomendado</string>
-    <string name="reader_toast_err_unfollow_blog">Não é possível deixar de seguir o blog</string>
-    <string name="reader_toast_err_follow_blog">Não é possível seguir o blog</string>
-    <string name="reader_toast_err_already_follow_blog">Você já segue o blog</string>
-    <string name="reader_toast_err_get_blog_info">Não é possível mostrar o blog</string>
-    <string name="reader_label_followed_blog">Seguindo o blog</string>
     <string name="reader_hint_add_tag_or_url">Insira um URL ou tag para seguir</string>
     <string name="reader_page_followed_blogs">Sites seguidos</string>
     <string name="reader_page_followed_tags">Tags seguidas</string>
-    <string name="reader_title_subs">Tags e Blogs</string>
     <string name="reader_title_tag_preview">Tag do Leitor</string>
-    <string name="reader_title_blog_preview">Blog do Leitor</string>
     <string name="media_empty_list">Nenhuma mídia</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
     <string name="ssl_certificate_error">Certificado SSL inválido</string>

@@ -18,7 +18,6 @@ Language: sr_RS
     <string name="reader_short_like_count_one">1 свиђање</string>
     <string name="reader_short_like_count_none">Свиђање</string>
     <string name="reader_label_follow_count">%,d пратиоца</string>
-    <string name="reader_menu_tags">Уређивање ознака и блогова</string>
     <string name="reader_title_post_detail">Чланак читача</string>
     <string name="local_draft_explainer">Овај чланак је локални нацрт који није објављен</string>
     <string name="local_changes_explainer">Овај чланак има локалне измене које нису објављене</string>
@@ -50,8 +49,6 @@ Language: sr_RS
     <string name="button_view">Поглед</string>
     <string name="button_edit">Уређивање</string>
     <string name="button_publish">Објављивање</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Нисте овлашћени да приступите овом блогу</string>
-    <string name="reader_toast_err_follow_blog_not_found">Овај блог не може бити пронађен</string>
     <string name="undo">Врати</string>
     <string name="passcodelock_prompt_message">Унесите свој PIN</string>
     <string name="ignore">Занемари</string>
@@ -109,7 +106,6 @@ Language: sr_RS
     <string name="stats_average_per_day">Дневни просек</string>
     <string name="stats_recent_weeks">Претходних седмица</string>
     <string name="reader_label_new_posts">Нови чланци</string>
-    <string name="reader_empty_posts_in_blog">Овај блог је празан</string>
     <string name="logs_copied_to_clipboard">Извештај о променама у апликацији је копиран у оставу</string>
     <string name="stats_period">Период</string>
     <string name="stats_overall">Просек</string>
@@ -202,9 +198,6 @@ Language: sr_RS
     <string name="nux_help_description">Посетите центар за помоћ како бисте пронашли одговоре на честа питања или посетите форум и поставите питање</string>
     <string name="reader_empty_followed_blogs_title">Још увек не пратите ниједно веб место</string>
     <string name="reader_toast_err_generic">Није могуће обавити ову радњу</string>
-    <string name="reader_menu_block_blog">Блокирај овај блог</string>
-    <string name="reader_toast_blog_blocked">Чланци са овог блога више неће бити приказивани</string>
-    <string name="reader_toast_err_block_blog">Није могуће блокирати овај блог</string>
     <string name="hs__username_blank_error">Унесите исправно име</string>
     <string name="hs__invalid_email_error">Унесите исправну адресу е–поште</string>
     <string name="hs__conversation_detail_error">Опишите проблем који видите</string>
@@ -213,16 +206,8 @@ Language: sr_RS
     <string name="contact_us">Контактирајте нас</string>
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Заказати</string>
-    <string name="reader_empty_recommended_blogs">Нема препоручених блогова</string>
-    <string name="reader_toast_err_unfollow_blog">Није могуће зауставити праћење овог блога</string>
-    <string name="reader_toast_err_follow_blog">Није могуће пратити овај блог</string>
-    <string name="reader_toast_err_already_follow_blog">Већ пратите овај блог</string>
-    <string name="reader_toast_err_get_blog_info">Није могуће приказати овај блог</string>
-    <string name="reader_label_followed_blog">Блог се прати</string>
-    <string name="reader_title_subs">Ознаке и блогови</string>
     <string name="reader_page_followed_tags">Ознаке које пратите</string>
     <string name="reader_title_tag_preview">Ознака читача</string>
-    <string name="reader_title_blog_preview">Блог читача</string>
     <string name="reader_page_followed_blogs">Веб места која пратите</string>
     <string name="media_empty_list">Нема медија</string>
     <string name="ssl_certificate_error">Неисправна SSL потврда</string>

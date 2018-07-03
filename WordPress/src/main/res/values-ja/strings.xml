@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 09:54:06+0000
+Translation-Revision-Date: 2018-06-20 06:14:01+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="plugin_auto_managed">自動管理中</string>
+    <string name="reader_save_posts_locally_dialog_message">この投稿を保存し、いつでも戻ってきたときに読むことができます。この端末上のみで利用でき、保存した投稿は他の端末とは同期されません (ただし、現在開発中です)。</string>
+    <string name="reader_save_posts_locally_dialog_title">投稿を保存</string>
+    <string name="reader_empty_search_request_failed">検索を実行できませんでした</string>
+    <string name="reader_empty_search_title">一致する結果が見つかりません</string>
+    <string name="reader_label_post_search_explainer">WordPress で\nサイトまたは投稿を検索</string>
+    <string name="comment_read_source_post">元の投稿を読む</string>
+    <string name="sites">サイト</string>
+    <string name="signup_magic_link_title">マジックリンクが送信されました</string>
+    <string name="signup_email_screen_title">メール登録</string>
+    <string name="verification_2fa_screen_title">コードの認証</string>
+    <string name="selfhosted_site_login_title">ログイン情報</string>
+    <string name="magic_link_sent_login_title">マジックリンクが送信されました</string>
+    <string name="magic_link_login_title">マジックリンクでのログイン</string>
+    <string name="site_address_login_title">サイトアドレスでのログイン</string>
+    <string name="email_address_login_title">メールアドレスでのログイン</string>
+    <string name="alternatively">もしくは、</string>
     <string name="reader_empty_saved_posts_description">%s をタップし、投稿をリストに保存します。</string>
-    <string name="reader_empty_saved_posts_title">投稿がまだ保存されていません。</string>
     <string name="reader_bookmark_snack_title">投稿を保存しました</string>
     <string name="reader_bookmark_snack_btn">すべて表示</string>
     <string name="reader_btn_bookmarked">保存しました</string>
@@ -894,11 +910,7 @@ Language: ja_JP
     <string name="send_link">リンクを送信</string>
     <string name="label_clear_search_history">検索履歴の削除</string>
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
-    <string name="reader_empty_posts_in_search_description">お使いの言語では %s に関する投稿は見つかりませんでした。</string>
-    <string name="reader_empty_posts_in_search_title">投稿が見つかりません</string>
     <string name="reader_label_post_search_running">検索中…</string>
-    <string name="reader_label_post_search_explainer">WordPress.com の公開ブログをすべて検索</string>
-    <string name="reader_hint_post_search">WordPress.com を検索</string>
     <string name="reader_title_related_post_detail">関連記事</string>
     <string name="preview_screen_links_disabled">プレビュー画面ではリンクが無効になっています</string>
     <string name="draft_explainer">この投稿は公開されていない下書きです</string>
@@ -1199,7 +1211,6 @@ Language: ja_JP
     <string name="reader_short_like_count_none">いいね</string>
     <string name="reader_label_follow_count">%,d人のフォロワー</string>
     <string name="reader_short_like_count_one">1個の「いいね」</string>
-    <string name="reader_menu_tags">タグとブログの編集</string>
     <string name="reader_title_post_detail">Reader 投稿</string>
     <string name="local_draft_explainer">この投稿は公開されていないローカルの下書きです</string>
     <string name="local_changes_explainer">この投稿には公開されていないローカルの変更があります</string>
@@ -1232,8 +1243,6 @@ Language: ja_JP
     <string name="post_trashed">投稿をゴミ箱へ移動しました</string>
     <string name="post_deleted">投稿を削除しました</string>
     <string name="page_trashed">ページをゴミ箱へ移動しました</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">このブログにアクセスする権限がありません</string>
-    <string name="reader_toast_err_follow_blog_not_found">ブログが見つかりませんでした</string>
     <string name="undo">元に戻す</string>
     <string name="passcodelock_prompt_message">PIN コードを入力</string>
     <string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
@@ -1300,7 +1309,6 @@ Language: ja_JP
     <string name="error_copy_to_clipboard">テキストをクリップボードにコピーする際にエラーが発生しました</string>
     <string name="stats_recent_weeks">最近の週</string>
     <string name="stats_average_per_day">一日の平均</string>
-    <string name="reader_empty_posts_in_blog">このブログは空です</string>
     <string name="reader_label_new_posts">新規投稿</string>
     <string name="logs_copied_to_clipboard">アプリケーションログをクリップボードにコピーしました</string>
     <string name="stats_period">期間</string>
@@ -1395,9 +1403,6 @@ Language: ja_JP
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
     <string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
     <string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
-    <string name="reader_menu_block_blog">このブログをブロック</string>
-    <string name="reader_toast_blog_blocked">このブログからの投稿は今後表示されません</string>
-    <string name="reader_toast_err_block_blog">ブログをブロックできませんでした</string>
     <string name="reader_toast_err_generic">操作を実行できませんでした</string>
     <string name="hs__invalid_email_error">正しいメールアドレスを入力してください</string>
     <string name="hs__username_blank_error">正しいお名前を入力してください</string>
@@ -1407,18 +1412,10 @@ Language: ja_JP
     <string name="contact_us">お問い合わせ</string>
     <string name="schedule_verb">予約</string>
     <string name="update_verb">更新</string>
-    <string name="reader_empty_recommended_blogs">おすすめブログはありません</string>
-    <string name="reader_toast_err_unfollow_blog">このブログをフォローできませんでした</string>
-    <string name="reader_toast_err_follow_blog">このブログをフォローできません</string>
-    <string name="reader_toast_err_already_follow_blog">このブログをすでにフォローしています</string>
-    <string name="reader_toast_err_get_blog_info">このブログを表示できません</string>
-    <string name="reader_label_followed_blog">ブログをフォローしました</string>
     <string name="reader_hint_add_tag_or_url">フォローしたい URL またはタグを入力</string>
     <string name="reader_page_followed_blogs">フォロー中のサイト</string>
     <string name="reader_page_followed_tags">フォロー中のタグ</string>
-    <string name="reader_title_subs">タグ・ブログ</string>
     <string name="reader_title_tag_preview">Reader タグ</string>
-    <string name="reader_title_blog_preview">Reader ブログ</string>
     <string name="media_empty_list">メディアなし</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>

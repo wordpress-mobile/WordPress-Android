@@ -134,11 +134,7 @@ Language: cy_GB
     <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
     <string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
-    <string name="reader_empty_posts_in_search_description">Dim cofnodion gan %s yn eich iaith</string>
     <string name="reader_label_post_search_running">Chwilio…</string>
-    <string name="reader_empty_posts_in_search_title">Heb ganfod unrhyw gofnod</string>
-    <string name="reader_label_post_search_explainer">Chwilio pob blog WordPress.com gyhoeddus</string>
-    <string name="reader_hint_post_search">Chwilio WordPress.com</string>
     <string name="reader_title_related_post_detail">Cofnodion Perthnasol</string>
     <string name="preview_screen_links_disabled">Mae dolenni wedi eu hanalluogi ar y sgrin rhagolwg</string>
     <string name="draft_explainer">Mae\'r cofnod yn ddrafft sydd heb ei gyhoeddi</string>
@@ -435,7 +431,6 @@ Language: cy_GB
     <string name="reader_short_like_count_one">1 Hoffi</string>
     <string name="reader_label_follow_count">%,d dilynnwr</string>
     <string name="reader_short_like_count_none">Hoffi</string>
-    <string name="reader_menu_tags">Golygu tagiau a blogiau</string>
     <string name="reader_title_post_detail">Cofnod Darllennydd</string>
     <string name="local_draft_explainer">Mae\'r cofnod yn ddrafft lleol sydd heb ei gyhoeddi</string>
     <string name="local_changes_explainer">Mae gan y cofnod newidiadau lleol sydd heb eu cyhoeddi</string>
@@ -467,8 +462,6 @@ Language: cy_GB
     <string name="button_preview">Rhagolwg</string>
     <string name="button_view">Gweld</string>
     <string name="button_publish">Cyhoeddi</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Nid oes gennych hawl i gael mynediad at y blog hwn</string>
-    <string name="reader_toast_err_follow_blog_not_found">Nid oedd modd canfod y blog hwn</string>
     <string name="undo">Dadwneud</string>
     <string name="passcodelock_prompt_message">Rhowch eich PIN</string>
     <string name="push_auth_expired">Daeth y cais i ben. Mewngofnodwch i WordPress.com a cheisio eto.</string>
@@ -531,7 +524,6 @@ Language: cy_GB
     <string name="stats_months_and_years">Misoedd a Blynyddoedd</string>
     <string name="stats_recent_weeks">Wythnosau Diweddar</string>
     <string name="stats_average_per_day">Cyfartaledd Diwrnod</string>
-    <string name="reader_empty_posts_in_blog">Mae\'r blog yn wag</string>
     <string name="reader_label_new_posts">Cofnodion newydd</string>
     <string name="logs_copied_to_clipboard">Cofnodion y rhaglen wedi\'u copïo i\'r clipfwrdd</string>
     <string name="stats_period">Cyfnod</string>
@@ -627,9 +619,6 @@ Language: cy_GB
     <string name="reader_empty_followed_blogs_title">Nid ydych yn dilyn unrhyw wefan hyd yn hyn</string>
     <string name="reader_label_liked_by">Hoffwyd gan</string>
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
-    <string name="reader_toast_err_block_blog">Methu rhwystro\'r blog hwn</string>
-    <string name="reader_toast_blog_blocked">Ni fydd cofnodion o\'r blog yn cael eu dangos bellach</string>
-    <string name="reader_menu_block_blog">Rhwstro\'r blog</string>
     <string name="hs__username_blank_error">Rhowch enw dilys</string>
     <string name="hs__invalid_email_error">Rhowch gyfeiriad e–bost dilys</string>
     <string name="contact_us">Cysylltu â ni</string>
@@ -638,15 +627,7 @@ Language: cy_GB
     <string name="hs__conversation_header">Cefnogaeth drwy sgwrs</string>
     <string name="update_verb">Diweddaru</string>
     <string name="schedule_verb">Amserlen</string>
-    <string name="reader_toast_err_unfollow_blog">Methu peidio â dilyn y blog hwn</string>
-    <string name="reader_toast_err_already_follow_blog">Rydych eisoes yn dilyn blog hwn</string>
-    <string name="reader_toast_err_follow_blog">Methu dilyn y blog hwn</string>
-    <string name="reader_empty_recommended_blogs">Dim blogiau cymeradwy</string>
-    <string name="reader_toast_err_get_blog_info">Methu dangos y blog</string>
-    <string name="reader_label_followed_blog">Blogiau rwy\'n eu diyn</string>
     <string name="reader_page_followed_tags">Tagiau sy\'n cael eu dilyn</string>
-    <string name="reader_title_subs">Tagiau a Blogiau</string>
-    <string name="reader_title_blog_preview">Blog Darllenydd</string>
     <string name="reader_title_tag_preview">Tag Darllenydd</string>
     <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
     <string name="reader_hint_add_tag_or_url">Rhowch URL neu dag i\'w ddilyn</string>
