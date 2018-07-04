@@ -60,7 +60,7 @@
             tools:text="text_user"/>
     </LinearLayout>
 
-    <ImageView
+    <org.wordpress.android.widgets.QuickStartFocusPoint
         android:id="@+id/quick_start_focus_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +71,6 @@
         android:contentDescription="@string/quick_start_focus_point_description"
         android:paddingEnd="24dp"
         android:paddingRight="24dp"
-        android:src="@drawable/ic_quick_start_focus"
         android:visibility="gone"
         tools:visibility="visible"
         tools:ignore="RtlSymmetry"/>
