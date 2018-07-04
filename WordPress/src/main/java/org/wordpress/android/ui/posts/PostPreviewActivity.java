@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -239,9 +240,17 @@ public class PostPreviewActivity extends AppCompatActivity {
         // if both buttons are visible, show them below the message instead of to the right of it
         if (mPost.isLocallyChanged()) {
             RelativeLayout.LayoutParams paramsMessage = (RelativeLayout.LayoutParams) messageText.getLayoutParams();
-            // passing "0" removes the param (necessary since removeRule() is API 17+)
-            paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
-            paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+
+            if (VERSION.SDK_INT < 17) {
+                // passing "0" removes the param (necessary since removeRule() is API 17+)
+                paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
+                paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+            } else {
+                paramsMessage.removeRule(RelativeLayout.LEFT_OF);
+                paramsMessage.removeRule(RelativeLayout.START_OF);
+                paramsMessage.removeRule(RelativeLayout.CENTER_VERTICAL);
+            }
+
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
             marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
 
