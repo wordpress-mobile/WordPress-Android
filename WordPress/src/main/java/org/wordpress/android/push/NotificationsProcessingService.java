@@ -285,6 +285,9 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void getDataFromIntent() {
+            if (mIntent == null) {
+                return;
+            }
             // get all needed data from intent
             mNoteId = mIntent.getStringExtra(ARG_NOTE_ID);
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);

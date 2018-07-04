@@ -1,5 +1,3 @@
-* Reader: Search function is now improved to allow searching of sites.
-* Editor: Improved handling of Gutenberg posts.
-* Notifications: Pingback moderation and comments management has been improved.
-* A lot of small UI improvements and refinements.
-* Various bugfixes.
+* New: Activity Log Rewind: bring back your site to a previous state.
+* A bunch of small UI improvements and refinements.
+* Various bug-fixes
