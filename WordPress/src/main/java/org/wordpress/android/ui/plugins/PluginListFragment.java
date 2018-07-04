@@ -34,8 +34,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.viewmodel.PluginBrowserViewModel;
-import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
+import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
