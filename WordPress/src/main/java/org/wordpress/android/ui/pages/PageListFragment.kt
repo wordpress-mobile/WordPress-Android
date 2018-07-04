@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.viewmodel.pages.PageListViewModel
 import javax.inject.Inject
 
 class PageListFragment : Fragment() {

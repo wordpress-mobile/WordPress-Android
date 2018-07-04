@@ -3,8 +3,8 @@ package org.wordpress.android.modules;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-import org.wordpress.android.ui.pages.PageListViewModel;
-import org.wordpress.android.ui.pages.PagesViewModel;
+import org.wordpress.android.viewmodel.pages.PageListViewModel;
+import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
