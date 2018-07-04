@@ -222,15 +222,15 @@ public class PostPreviewActivity extends AppCompatActivity {
             }
         });
 
-        // revert applies to only local changes
-        View btnRevert = messageView.findViewById(R.id.btn_revert);
-        btnRevert.setVisibility(mPost.isLocallyChanged() ? View.VISIBLE : View.GONE);
+        // discard changes applies to only local changes
+        View btnDiscardChanges = messageView.findViewById(R.id.btn_discard_changes);
+        btnDiscardChanges.setVisibility(mPost.isLocallyChanged() ? View.VISIBLE : View.GONE);
         if (mPost.isLocallyChanged()) {
-            btnRevert.setOnClickListener(new View.OnClickListener() {
+            btnDiscardChanges.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AniUtils.animateBottomBar(messageView, false);
-                    revertPost();
+                    discardChanges();
                     AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 }
             });
@@ -266,9 +266,9 @@ public class PostPreviewActivity extends AppCompatActivity {
     }
 
     /*
-     * reverts local changes for this post, replacing it with the latest version from the server
+     * discard local changes for this post, replacing it with the latest version from the server
      */
-    private void revertPost() {
+    private void discardChanges() {
         if (isFinishing() || !NetworkUtils.checkConnection(this)) {
             return;
         }
