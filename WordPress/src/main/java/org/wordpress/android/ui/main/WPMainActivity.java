@@ -1016,7 +1016,8 @@ public class WPMainActivity extends AppCompatActivity implements
 
         mQuickStartSnackbar = WPDialogSnackbar.make(findViewById(R.id.coordinator),
                 message,
-                AccessibilityUtils.getSnackbarDuration(this));
+                AccessibilityUtils.getSnackbarDuration(this,
+                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
 
         mQuickStartSnackbar.show();
     }

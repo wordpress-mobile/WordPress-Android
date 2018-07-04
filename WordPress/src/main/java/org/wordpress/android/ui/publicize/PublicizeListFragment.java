@@ -122,7 +122,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                     getResources().getColor(R.color.blue_light),
                     null);
 
-            WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity())).show();
+            WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity(),
+                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
         }
     }
 
