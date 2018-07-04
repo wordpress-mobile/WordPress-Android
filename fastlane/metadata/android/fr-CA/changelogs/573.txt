@@ -1,0 +1,6 @@
+10.3 :
+* Lecteur : la fonction de recherche a été améliorée pour prendre en charge la recherche de sites.
+* Éditeur : amélioration de la gestion des articles sur Gutenberg.
+* Notifications : la modération du ping et la gestion des commentaires ont été améliorées.
+* Nombreuses améliorations mineures de l’interface utilisateur.
+* Résolution de divers bugs.

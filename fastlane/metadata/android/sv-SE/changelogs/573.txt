@@ -1,0 +1,6 @@
+10.3:
+* Läsaren: Förbättrad sökfunktionen som nu tillåter sökning av webbplatser.
+* Redigeraren: Förbättrad hantering av Gutenberg-inlägg.
+* Notiser: Moderering av Pingback och hantering av kommentarer har förbättrats.
+* En rad små förbättringar och finjusteringar av användargränssnittet.
+* Olika felrättningar.
