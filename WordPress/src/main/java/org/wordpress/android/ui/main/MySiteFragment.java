@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
@@ -665,10 +666,12 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
     @Override
     public void setTitle(final String title) {
-        mToolbarTitle = title.isEmpty() ? getString(R.string.wordpress_as_site_title) : title;
+        if (isAdded()) {
+            mToolbarTitle = title.isEmpty() ? getString(R.string.wordpress_as_site_title) : title;
 
-        if (mToolbar != null) {
-            mToolbar.setTitle(mToolbarTitle);
+            if (mToolbar != null) {
+                mToolbar.setTitle(mToolbarTitle);
+            }
         }
     }
 
