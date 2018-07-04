@@ -964,6 +964,7 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
+        MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
@@ -983,6 +984,14 @@ public class EditPostActivity extends AppCompatActivity implements
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
+        }
+
+        if (discardChanges != null) {
+            if (mPost != null) {
+                discardChanges.setVisible(showMenuItems && mPost.isLocallyChanged());
+            } else {
+                discardChanges.setVisible(false);
+            }
         }
 
         // Set text of the save button in the ActionBar

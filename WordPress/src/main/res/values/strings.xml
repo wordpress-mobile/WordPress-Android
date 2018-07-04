@@ -1147,6 +1147,7 @@
     <string name="menu_visual_mode">Visual Mode</string>
     <string name="menu_visual_mode_done_snackbar">Switched to Visual mode.</string>
     <string name="menu_undo_snackbar_action">UNDO</string>
+    <string name="menu_discard_changes">Discard Local Changes</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
