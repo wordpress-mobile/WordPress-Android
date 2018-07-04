@@ -227,6 +227,7 @@
     <string name="pages_empty_list">No pages yet. Why not create one?</string>
     <string name="page_settings">Page settings</string>
     <string name="pages">Pages</string>
+    <string name="set_parent">Set Parent</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>

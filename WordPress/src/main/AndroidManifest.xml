@@ -234,6 +234,10 @@
             android:theme="@style/Calypso.NoActionBar"
             android:label="@string/pages" />
         <activity
+            android:name=".ui.pages.PageParentActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/set_parent" />
+        <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
             android:theme="@style/Calypso.NoActionBar" />

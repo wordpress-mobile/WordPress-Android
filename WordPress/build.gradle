@@ -120,6 +120,8 @@ dependencies {
     implementation 'com.android.support:percent:27.1.1'
     implementation 'com.android.support:preference-v7:27.1.1'
 
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$arch_components_version"
 
