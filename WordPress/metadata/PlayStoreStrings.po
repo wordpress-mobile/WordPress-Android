@@ -48,10 +48,12 @@ msgctxt "release_note_footer"
 msgid "If you enjoy using the WordPress Android app, please take a moment to write a review — your input is invaluable to us."
 msgstr ""
 
+#. translators: Short description of the app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
 msgctxt "play_store_promo"
 msgid "Share posts and photos, monitor stats, keep up with blogs you follow, and more!"
 msgstr ""
 
+#. translators: Multi-paragraph text used to display in the Play Store.
 msgctxt "play_store_desc"
 msgid ""
 "Manage or create your WordPress blog or website right from your Android device: create and edit posts and pages, upload your favorite photos and videos, view stats and reply to comments.\n"
@@ -65,26 +67,37 @@ msgid ""
 "Need help with the app? Visit the forums at https://android.forums.wordpress.org/forum/troubleshooting or tweet us @WPAndroid.\n"
 msgstr ""
 
+#. translators: Title to be displayed in the Play Store. Limit to 50 characters including spaces and commas!
 msgctxt "play_store_app_title"
 msgid "WordPress – Website & Blog Builder"
 msgstr ""
 
+#. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_1"
 msgid "Enjoy your favourite sites"
 msgstr ""
 
+#. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_2"
 msgid "Share your ideas with the world"
 msgstr ""
 
+#. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_3"
 msgid "Manage your site everywhere you go"
 msgstr ""
 
+#. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_4"
 msgid "Get notified in real-time"
 msgstr ""
 
+#. translators: This is a promo message that will be attached on top of the fififthrst screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_5"
 msgid "All the stats in your hand"
 msgstr ""
