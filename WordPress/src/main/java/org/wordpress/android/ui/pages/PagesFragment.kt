@@ -38,8 +38,6 @@ class PagesFragment : Fragment() {
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    private val listStateKey = "list_state"
-
     companion object {
         fun newInstance(): PagesFragment {
             return PagesFragment()
