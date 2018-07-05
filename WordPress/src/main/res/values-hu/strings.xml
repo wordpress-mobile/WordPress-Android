@@ -16,7 +16,6 @@ Language: hu
     <string name="media_fetching">Média betöltése…</string>
     <string name="comments_fetching">Hozzászólások betöltése…</string>
     <string name="posts_fetching">Bejegyzések betöltése…</string>
-    <string name="reader_empty_posts_in_blog">Ez a blog üres</string>
     <string name="stats_followers_email_selector">E–mail</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
     <string name="stats_followers_seconds_ago">másodpercekkel ezelőtt</string>
@@ -45,10 +44,7 @@ Language: hu
     <string name="older_two_days">2 napnál régebbi</string>
     <string name="older_last_week">Egy hétnél régebbi</string>
     <string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
-    <string name="reader_menu_block_blog">Blog tiltása</string>
     <string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
-    <string name="reader_toast_err_block_blog">Nem sikerült a blog letiltása</string>
-    <string name="reader_toast_blog_blocked">Ennek a blognak a bejegyzései a továbbiakban nem jelennek meg</string>
     <string name="contact_us">Kapcsolat</string>
     <string name="hs__invalid_email_error">Adjunk meg valós e–mail címet</string>
     <string name="hs__username_blank_error">Adjunk meg valós nevet</string>
@@ -57,13 +53,7 @@ Language: hu
     <string name="hs__conversation_header">Támogató chat</string>
     <string name="update_verb">Frissítést</string>
     <string name="schedule_verb">Időzítés</string>
-    <string name="reader_title_subs">Címkék és blogok</string>
-    <string name="reader_label_followed_blog">Követett blogok</string>
     <string name="reader_page_followed_tags">Követett címkék</string>
-    <string name="reader_toast_err_follow_blog">Nem lehetséges ezt a blogot követni</string>
-    <string name="reader_empty_recommended_blogs">Nincsenek ajánlott blogok</string>
-    <string name="reader_toast_err_already_follow_blog">Ezt a blogot már követjük</string>
-    <string name="reader_toast_err_unfollow_blog">Nem sikerült ezt a blogot követni</string>
     <string name="media_empty_list">Nincs média</string>
     <string name="help">Segítség</string>
     <string name="forgot_password">Elfelejtett jelszó?</string>

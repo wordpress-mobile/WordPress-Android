@@ -11,12 +11,11 @@ import android.text.TextUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
 
 import java.util.UUID;
 
@@ -26,6 +25,7 @@ import static org.wordpress.android.JobServiceId.JOB_GCM_REG_SERVICE_ID;
 
 public class GCMRegistrationIntentService extends JobIntentService {
     @Inject AccountStore mAccountStore;
+    @Inject ZendeskHelper mZendeskHelper;
 
     @Override
     public void onCreate() {
@@ -52,7 +52,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
     @Override
     public boolean onStopCurrentWork() {
         // if this job is stopped, we really need this to be re-scheduled and re-register the token with
-        // our servers and Helpshift in order to keep receiving notifications, so let's just return `true`.
+        // our servers in order to keep receiving notifications, so let's just return `true`.
         return true;
     }
 
@@ -72,9 +72,7 @@ public class GCMRegistrationIntentService extends JobIntentService {
                 NotificationsUtils.registerDeviceForPushNotifications(this, gcmToken);
             }
 
-            // Register to other kind of notifications
-            HelpshiftHelper.getInstance().registerDeviceToken(this, gcmToken);
-            AnalyticsTracker.registerPushNotificationToken(gcmToken);
+            mZendeskHelper.enablePushNotifications();
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
             PreferenceManager.getDefaultSharedPreferences(this).edit()

@@ -274,7 +274,6 @@ Language: eu_ES
     <string name="button_view">Ikusi</string>
     <string name="button_edit">Editatu</string>
     <string name="button_publish">Argitaratu</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ezin izan da blog hori aurkitu</string>
     <string name="undo">Desegin</string>
     <string name="passcodelock_prompt_message">Sartu zure PINa</string>
     <string name="push_auth_expired">Eskaria iraungi da. Hasi saioa WordPress.com–en berriro saiatzeko.</string>
@@ -324,7 +323,6 @@ Language: eu_ES
     <string name="stats_view_search_terms">Bilaketa terminoak</string>
     <string name="stats_total">Guztira</string>
     <string name="reader_label_new_posts">Bidalketa berriak</string>
-    <string name="reader_empty_posts_in_blog">Blog hau hutsik dago</string>
     <string name="stats_average_per_day">Eguneko bataz bestekoa</string>
     <string name="stats_recent_weeks">Azken asteak</string>
     <string name="error_copy_to_clipboard">Errore bat gertatu da testua arbelera kopiatzean</string>
@@ -389,8 +387,6 @@ Language: eu_ES
     <string name="update_verb">Eguneratu</string>
     <string name="schedule_verb">Programatu</string>
     <string name="reader_page_followed_blogs">Jarraitutako guneak</string>
-    <string name="reader_empty_recommended_blogs">Ez dago gomendatutako blogik</string>
-    <string name="reader_title_subs">Etiketak eta blogak</string>
     <string name="media_empty_list">Ez dago mediarik</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>

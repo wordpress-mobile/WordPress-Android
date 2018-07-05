@@ -52,6 +52,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -62,6 +63,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -80,7 +82,6 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
@@ -135,6 +136,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
+    @Inject ZendeskHelper mZendeskHelper;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -272,7 +274,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
-        HelpshiftHelper.init(this);
+        mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
 
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
@@ -354,6 +357,18 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(importantChannel);
+
+            // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
+            // or media upload)
+            NotificationChannel transientChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_transient_id),
+                    getString(R.string.notification_channel_transient_title), NotificationManager.IMPORTANCE_DEFAULT);
+            transientChannel.setSound(null, null);
+            transientChannel.enableVibration(false);
+            transientChannel.enableLights(false);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(transientChannel);
         }
     }
 
@@ -393,8 +408,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
-            GCMRegistrationIntentService.enqueueWork(this,
-                    new Intent(this, GCMRegistrationIntentService.class));
+            GCMRegistrationIntentService.enqueueWork(activity,
+                    new Intent(activity, GCMRegistrationIntentService.class));
         }
 
         // Refresh account informations
@@ -548,6 +563,16 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        if (mAccountStore.hasAccessToken()) {
+            // Make sure the Push Notification token is sent to our servers after a successful login
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUnexpectedError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
     }
@@ -558,6 +583,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         VolleyUtils.cancelAllRequests(sRequestQueue);
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
+        mZendeskHelper.reset();
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (Exception e) {

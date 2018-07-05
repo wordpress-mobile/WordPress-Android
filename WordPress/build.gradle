@@ -16,6 +16,7 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
 apply plugin: 'com.android.application'
@@ -40,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "10.3-rc-1"
-        versionCode 571
+        versionName "alpha-116"
+        versionCode 578
         minSdkVersion 16
         targetSdkVersion 26
 
@@ -132,7 +133,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
-    implementation 'com.helpshift:android-helpshift-aar:6.4.1'
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'com.automattic:rest:1.0.7'
     implementation 'org.wordpress:graphview:3.4.0'
@@ -185,6 +185,10 @@ dependencies {
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
+    }
+
+    implementation (group: 'com.zendesk', name: 'support', version: '2.0.0') {
+        exclude group: 'com.google.dagger'
     }
 
     lintChecks 'org.wordpress:lint:1.0.1'
