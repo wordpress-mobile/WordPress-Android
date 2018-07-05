@@ -1,0 +1,6 @@
+10.3:
+* Reader: Die Suchfunktion wurde verbessert, sodass jetzt Websites durchsucht werden können.
+* Editor: Verbesserter Umgang mit Gutenberg-Beiträgen.
+*Benachrichtigungen: Die Pingback-Freischaltung und Verwaltung von Kommentaren wurde verbessert.
+* Viele kleine Verbesserungen an der Benutzeroberfläche.
+* Verschiedene Fehlerbehebungen.
