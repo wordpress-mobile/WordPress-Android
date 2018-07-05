@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -19,6 +20,7 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.pages_activity.*
 import kotlinx.android.synthetic.main.pages_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
@@ -93,6 +95,7 @@ class PagesFragment : Fragment() {
         val myActionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
         }
+        val newPageButton = activity?.findViewById<FloatingActionButton>(R.id.newPageButton)
         viewModel.searchExpanded.observe(activity!!, Observer {
             if (it == true) {
                 pages_pager.visibility = View.GONE
@@ -101,6 +104,7 @@ class PagesFragment : Fragment() {
                 if (!myActionMenuItem.isActionViewExpanded) {
                     myActionMenuItem.expandActionView()
                 }
+                newPageButton?.hide()
             } else {
                 pages_pager.visibility = View.VISIBLE
                 tabLayout.visibility = View.VISIBLE
@@ -108,6 +112,7 @@ class PagesFragment : Fragment() {
                 if (myActionMenuItem.isActionViewExpanded) {
                     myActionMenuItem.collapseActionView()
                 }
+                newPageButton?.show()
             }
         })
 

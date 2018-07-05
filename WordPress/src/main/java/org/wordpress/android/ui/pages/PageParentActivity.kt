@@ -10,7 +10,7 @@ class PageParentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.page_parent_activity)
+        setContentView(R.layout.pages_parent_activity)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
