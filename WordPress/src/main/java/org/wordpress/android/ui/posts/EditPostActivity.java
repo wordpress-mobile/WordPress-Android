@@ -7,6 +7,8 @@ import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -209,6 +211,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
+    private static final String STATE_KEY_IS_DIALOG_ERROR_SHOWN = "stateIsDialogErrorShown";
     private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateIsDialogProgressShown";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
@@ -273,6 +276,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private boolean mIsDialogErrorShown;
     private boolean mIsDialogProgressShown;
     private boolean mIsDiscardingChanges;
     private boolean mIsUpdatingPost;
@@ -398,8 +402,13 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
+            mIsDialogErrorShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, false);
 
             showDialogProgress(mIsDialogProgressShown);
+
+            if (mIsDialogErrorShown) {
+                showDialogError();
+            }
 
             // if we have a remote id saved, let's first try with that, as the local Id might have changed
             // after FETCH_POSTS
@@ -670,6 +679,7 @@ public class EditPostActivity extends AppCompatActivity implements
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
         outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
+        outState.putBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, mIsDialogErrorShown);
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
@@ -1165,6 +1175,26 @@ public class EditPostActivity extends AppCompatActivity implements
     private void refreshEditorContent() {
         mHasSetPostContent = false;
         fillContentEditorFields();
+    }
+
+    private void showDialogError() {
+        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
+                .setMessage(R.string.local_changes_discarding_error)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.contact_support, null)
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override public void onCancel(DialogInterface dialog) {
+                        mIsDialogErrorShown = false;
+                    }
+                })
+                .setOnDismissListener(new OnDismissListener() {
+                    @Override public void onDismiss(DialogInterface dialog) {
+                        mIsDialogErrorShown = false;
+                    }
+                })
+                .show();
+
+        mIsDialogErrorShown = true;
     }
 
     private void showDialogProgress(boolean show) {
@@ -3396,6 +3426,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mIsDiscardingChanges = false;
                 mIsUpdatingPost = false;
                 showDialogProgress(false);
+                showDialogError();
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         }
