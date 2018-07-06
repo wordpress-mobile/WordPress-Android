@@ -1163,6 +1163,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             });
                 }
             } else if (itemId == R.id.menu_discard_changes) {
+                AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 showDialogProgress(true);
                 mPostWithLocalChanges = mPost.clone();
                 mIsDiscardingChanges = true;
