@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +42,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
@@ -3344,6 +3346,19 @@ public class EditPostActivity extends AppCompatActivity implements
                     mIsUpdatingPost = false;
                     mPost = mPostStore.getPostByLocalPostId(mPost.getId());
                     refreshEditorContent();
+
+                    if (mViewPager != null) {
+                        Snackbar.make(mViewPager, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
+                                .setAction(getString(R.string.undo), new OnClickListener() {
+                                    @Override public void onClick(View view) {
+                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                                        mPost = mPostWithLocalChanges.clone();
+                                        refreshEditorContent();
+                                    }
+                                })
+                                .show();
+                    }
                 }
 
                 if (mIsDiscardingChanges) {
