@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -52,9 +53,11 @@ import de.greenrobot.event.EventBus;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
 public class PostPreviewActivity extends AppCompatActivity {
+    private boolean mIsDiscardingChanges;
     private boolean mIsUpdatingPost;
 
     private PostModel mPost;
+    private PostModel mPostWithLocalChanges;
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
@@ -193,7 +196,7 @@ public class PostPreviewActivity extends AppCompatActivity {
      * states mean, and hook up the publish and revert buttons
      */
     private void showMessageViewIfNecessary() {
-        final ViewGroup messageView = (ViewGroup) findViewById(R.id.message_container);
+        ViewGroup messageView = (ViewGroup) findViewById(R.id.message_container);
 
         if (mPost == null
             || mIsUpdatingPost
@@ -285,8 +288,9 @@ public class PostPreviewActivity extends AppCompatActivity {
         if (mIsUpdatingPost) {
             AppLog.d(AppLog.T.POSTS, "post preview > already updating post");
         } else {
-            mIsUpdatingPost = true;
+            mIsDiscardingChanges = true;
             showProgress();
+            mPostWithLocalChanges = mPost.clone();
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
@@ -338,17 +342,27 @@ public class PostPreviewActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        switch (event.causeOfChange) {
-            case UPDATE_POST:
-                mIsUpdatingPost = false;
-                hideProgress();
-                if (event.isError()) {
-                    // TODO: Report error to user
-                    AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
-                } else {
+        if (event.causeOfChange == PostAction.UPDATE_POST) {
+            hideProgress();
+
+            if (!event.isError()) {
+                if (mIsUpdatingPost) {
+                    mIsUpdatingPost = false;
                     mPost = mPostStore.getPostByLocalPostId(mPost.getId());
                     refreshPreview();
                 }
+
+                if (mIsDiscardingChanges) {
+                    mIsDiscardingChanges = false;
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+                    mIsUpdatingPost = true;
+                }
+            } else {
+                mIsDiscardingChanges = false;
+                mIsUpdatingPost = false;
+                AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
+            }
         }
     }
 
