@@ -247,8 +247,8 @@
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_back">Back</string>
+    <string name="button_discard">Discard</string>
     <string name="button_discard_changes">Discard Changes</string>
-    <string name="button_revert">Revert</string>
     <string name="button_retry">Retry</string>
 
     <!-- post uploads -->

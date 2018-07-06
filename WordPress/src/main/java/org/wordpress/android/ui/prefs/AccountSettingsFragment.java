@@ -190,7 +190,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
                 mEmailSnackbar = Snackbar
                         .make(getView(), "", Snackbar.LENGTH_INDEFINITE)
-                        .setAction(getString(R.string.button_revert), clickListener);
+                        .setAction(getString(R.string.button_discard), clickListener);
                 mEmailSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey_dark));
                 mEmailSnackbar.setActionTextColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
                 TextView textView =
