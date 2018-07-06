@@ -89,7 +89,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         setContentView(R.layout.post_preview_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -216,7 +216,7 @@ public class PostPreviewActivity extends AppCompatActivity {
      * states mean, and hook up the publish and revert buttons
      */
     private void showMessageViewIfNecessary() {
-        mMessageView = (ViewGroup) findViewById(R.id.message_container);
+        mMessageView = findViewById(R.id.message_container);
 
         if (mPost == null
             || mIsUpdatingPost
@@ -227,7 +227,7 @@ public class PostPreviewActivity extends AppCompatActivity {
             return;
         }
 
-        TextView messageText = (TextView) mMessageView.findViewById(R.id.message_text);
+        TextView messageText = mMessageView.findViewById(R.id.message_text);
         if (mPost.isLocallyChanged()) {
             messageText.setText(R.string.local_changes_explainer);
         } else if (mPost.isLocalDraft()) {
@@ -277,7 +277,7 @@ public class PostPreviewActivity extends AppCompatActivity {
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
             marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
 
-            ViewGroup buttonsView = (ViewGroup) mMessageView.findViewById(R.id.layout_buttons);
+            ViewGroup buttonsView = mMessageView.findViewById(R.id.layout_buttons);
             RelativeLayout.LayoutParams paramsButtons = (RelativeLayout.LayoutParams) buttonsView.getLayoutParams();
             paramsButtons.addRule(RelativeLayout.BELOW, R.id.message_text);
             ViewGroup.MarginLayoutParams marginsButtons = (ViewGroup.MarginLayoutParams) buttonsView.getLayoutParams();
