@@ -112,6 +112,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
@@ -1181,7 +1182,11 @@ public class EditPostActivity extends AppCompatActivity implements
         new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
                 .setMessage(R.string.local_changes_discarding_error)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.contact_support, null)
+                .setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        mZendeskHelper.createNewTicket(EditPostActivity.this, Origin.DISCARD_CHANGES, mSite);
+                    }
+                })
                 .setOnCancelListener(new OnCancelListener() {
                     @Override public void onCancel(DialogInterface dialog) {
                         mIsDialogErrorShown = false;
