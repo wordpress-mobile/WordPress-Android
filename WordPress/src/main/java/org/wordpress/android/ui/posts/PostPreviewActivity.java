@@ -7,12 +7,14 @@ import android.content.Context;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,6 +61,7 @@ public class PostPreviewActivity extends AppCompatActivity {
     private PostModel mPost;
     private PostModel mPostWithLocalChanges;
     private SiteModel mSite;
+    private ViewGroup mMessageView;
 
     @Inject Dispatcher mDispatcher;
     @Inject PostStore mPostStore;
@@ -196,18 +199,18 @@ public class PostPreviewActivity extends AppCompatActivity {
      * states mean, and hook up the publish and revert buttons
      */
     private void showMessageViewIfNecessary() {
-        ViewGroup messageView = (ViewGroup) findViewById(R.id.message_container);
+        mMessageView = (ViewGroup) findViewById(R.id.message_container);
 
         if (mPost == null
             || mIsUpdatingPost
             || UploadService.isPostUploadingOrQueued(mPost)
             || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
-            messageView.setVisibility(View.GONE);
+            mMessageView.setVisibility(View.GONE);
             return;
         }
 
-        TextView messageText = (TextView) messageView.findViewById(R.id.message_text);
+        TextView messageText = (TextView) mMessageView.findViewById(R.id.message_text);
         if (mPost.isLocallyChanged()) {
             messageText.setText(R.string.local_changes_explainer);
         } else if (mPost.isLocalDraft()) {
@@ -217,23 +220,23 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
 
         // publish applies to both local draft and local changes
-        View btnPublish = messageView.findViewById(R.id.btn_publish);
+        View btnPublish = mMessageView.findViewById(R.id.btn_publish);
         btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AniUtils.animateBottomBar(messageView, false);
+                AniUtils.animateBottomBar(mMessageView, false);
                 publishPost();
             }
         });
 
         // discard changes applies to only local changes
-        View btnDiscardChanges = messageView.findViewById(R.id.btn_discard_changes);
+        View btnDiscardChanges = mMessageView.findViewById(R.id.btn_discard_changes);
         btnDiscardChanges.setVisibility(mPost.isLocallyChanged() ? View.VISIBLE : View.GONE);
         if (mPost.isLocallyChanged()) {
             btnDiscardChanges.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AniUtils.animateBottomBar(messageView, false);
+                    AniUtils.animateBottomBar(mMessageView, false);
                     discardChanges();
                     AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 }
@@ -257,7 +260,7 @@ public class PostPreviewActivity extends AppCompatActivity {
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
             marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
 
-            ViewGroup buttonsView = (ViewGroup) messageView.findViewById(R.id.layout_buttons);
+            ViewGroup buttonsView = (ViewGroup) mMessageView.findViewById(R.id.layout_buttons);
             RelativeLayout.LayoutParams paramsButtons = (RelativeLayout.LayoutParams) buttonsView.getLayoutParams();
             paramsButtons.addRule(RelativeLayout.BELOW, R.id.message_text);
             ViewGroup.MarginLayoutParams marginsButtons = (ViewGroup.MarginLayoutParams) buttonsView.getLayoutParams();
@@ -266,12 +269,12 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         // first set message bar to invisible so it takes up space, then animate it in
         // after a brief delay to give time for preview to render first
-        messageView.setVisibility(View.INVISIBLE);
+        mMessageView.setVisibility(View.INVISIBLE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!isFinishing() && messageView.getVisibility() != View.VISIBLE) {
-                    AniUtils.animateBottomBar(messageView, true);
+                if (!isFinishing() && mMessageView.getVisibility() != View.VISIBLE) {
+                    AniUtils.animateBottomBar(mMessageView, true);
                 }
             }
         }, 1000);
@@ -350,6 +353,19 @@ public class PostPreviewActivity extends AppCompatActivity {
                     mIsUpdatingPost = false;
                     mPost = mPostStore.getPostByLocalPostId(mPost.getId());
                     refreshPreview();
+
+                    if (mMessageView != null) {
+                        Snackbar.make(mMessageView, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
+                                .setAction(getString(R.string.undo), new OnClickListener() {
+                                    @Override public void onClick(View view) {
+                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                                        mPost = mPostWithLocalChanges.clone();
+                                        refreshPreview();
+                                    }
+                                })
+                                .show();
+                    }
                 }
 
                 if (mIsDiscardingChanges) {
