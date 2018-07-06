@@ -85,7 +85,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View coordinatorView = inflater.inflate(R.layout.preference_coordinator, container, false);
-        CoordinatorLayout coordinator = (CoordinatorLayout) coordinatorView.findViewById(R.id.coordinator);
+        CoordinatorLayout coordinator = coordinatorView.findViewById(R.id.coordinator);
         View preferenceView = super.onCreateView(inflater, coordinator, savedInstanceState);
         coordinator.addView(preferenceView);
         return coordinatorView;
@@ -190,8 +190,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                 mEmailSnackbar = Snackbar
                         .make(getView(), "", Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.button_discard), clickListener);
-                TextView textView =
-                        (TextView) mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
                 textView.setMaxLines(4);
             }
             // instead of creating a new snackbar, update the current one to avoid the jumping animation
