@@ -209,6 +209,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
+    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateIsDialogProgressShown";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
@@ -267,9 +268,12 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
+    private ProgressDialog mProgressDialog;
+
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private boolean mIsDialogProgressShown;
     private boolean mIsDiscardingChanges;
     private boolean mIsUpdatingPost;
 
@@ -393,6 +397,9 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
+            mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
+
+            showDialogProgress(mIsDialogProgressShown);
 
             // if we have a remote id saved, let's first try with that, as the local Id might have changed
             // after FETCH_POSTS
@@ -662,6 +669,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!mPost.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
+        outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
@@ -1144,6 +1152,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             });
                 }
             } else if (itemId == R.id.menu_discard_changes) {
+                showDialogProgress(true);
                 mPostWithLocalChanges = mPost.clone();
                 mIsDiscardingChanges = true;
                 RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
@@ -1156,6 +1165,20 @@ public class EditPostActivity extends AppCompatActivity implements
     private void refreshEditorContent() {
         mHasSetPostContent = false;
         fillContentEditorFields();
+    }
+
+    private void showDialogProgress(boolean show) {
+        if (show) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setMessage(getString(R.string.local_changes_discarding));
+            mProgressDialog.show();
+        } else if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+
+        mIsDialogProgressShown = show;
     }
 
     private void toggleHtmlModeOnMenu() {
@@ -3359,6 +3382,8 @@ public class EditPostActivity extends AppCompatActivity implements
                                 })
                                 .show();
                     }
+
+                    showDialogProgress(false);
                 }
 
                 if (mIsDiscardingChanges) {
@@ -3370,6 +3395,7 @@ public class EditPostActivity extends AppCompatActivity implements
             } else {
                 mIsDiscardingChanges = false;
                 mIsUpdatingPost = false;
+                showDialogProgress(false);
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         }
