@@ -98,10 +98,12 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -254,6 +256,7 @@ public class EditPostActivity extends AppCompatActivity implements
     WPViewPager mViewPager;
 
     private PostModel mPost;
+    private PostModel mPostWithLocalChanges;
     private PostModel mOriginalPost;
 
     private EditorFragmentAbstract mEditorFragment;
@@ -265,6 +268,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private boolean mIsDiscardingChanges;
+    private boolean mIsUpdatingPost;
 
     private View mPhotoPickerContainer;
     private PhotoPickerFragment mPhotoPickerFragment;
@@ -283,6 +288,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject UploadStore mUploadStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject ZendeskHelper mZendeskHelper;
 
     private SiteModel mSite;
 
@@ -1135,9 +1141,19 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                 }
+            } else if (itemId == R.id.menu_discard_changes) {
+                mPostWithLocalChanges = mPost.clone();
+                mIsDiscardingChanges = true;
+                RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+                mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
             }
         }
         return false;
+    }
+
+    private void refreshEditorContent() {
+        mHasSetPostContent = false;
+        fillContentEditorFields();
     }
 
     private void toggleHtmlModeOnMenu() {
@@ -3323,6 +3339,23 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
                 invalidateOptionsMenu();
+
+                if (mIsUpdatingPost) {
+                    mIsUpdatingPost = false;
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    refreshEditorContent();
+                }
+
+                if (mIsDiscardingChanges) {
+                    mIsDiscardingChanges = false;
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+                    mIsUpdatingPost = true;
+                }
+            } else {
+                mIsDiscardingChanges = false;
+                mIsUpdatingPost = false;
+                AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         }
     }
