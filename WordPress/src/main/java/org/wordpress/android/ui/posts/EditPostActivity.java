@@ -3410,6 +3410,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         Snackbar.make(mViewPager, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
+                                        AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
                                         RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
                                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
                                         mPost = mPostWithLocalChanges.clone();
