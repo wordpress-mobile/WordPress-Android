@@ -9,7 +9,6 @@
         android:layout_weight="1"/>
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/quick_start_focus_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center"
