@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/quick_start_focus_point"
+        android:id="@+id/quick_start_focus_point_publicize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
