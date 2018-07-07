@@ -15,6 +15,7 @@ import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -84,6 +85,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -507,6 +509,38 @@ public class WPMainActivity extends AppCompatActivity implements
             && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
             getMySiteFragment().requestNextStepOfActiveQuickStartTask();
         }
+    }
+
+    public void addQuickStartFocusPointToBottomNavReaderButton() {
+        addQuickStartFocusPointToBottomNavView(
+                findViewById(R.id.root_view_main).findViewWithTag(QuickStartUtils.BOTTOM_NAV_READER_BUTTON_TAG));
+    }
+
+
+    public void addQuickStartFocusPointToBottomNavPostButton() {
+        addQuickStartFocusPointToBottomNavView(
+                findViewById(R.id.root_view_main).findViewWithTag(QuickStartUtils.BOTTOM_NAV_NEW_POST_BUTTON_TAG));
+    }
+
+    private void addQuickStartFocusPointToBottomNavView(final View view) {
+        if (view == null) {
+            return;
+        }
+        final ViewGroup rootView = findViewById(R.id.root_view_main);
+
+        final int[] location = new int[2];
+        view.post(new Runnable() {
+            @Override public void run() {
+                view.getLocationOnScreen(location);
+
+                int offset = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_margin);
+
+                int x = location[0] + view.getRight() / 2 - offset;
+                int y = location[1] - view.getBottom() / 2 + offset;
+
+                QuickStartUtils.addQuickStartFocusPointToCoordinates(rootView, x, y);
+            }
+        });
     }
 
     // user tapped the new post button in the bottom navbar

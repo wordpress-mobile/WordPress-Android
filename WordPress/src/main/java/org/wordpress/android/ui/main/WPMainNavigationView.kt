@@ -30,6 +30,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.QuickStartUtils
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -77,6 +78,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == PAGE_NEW_POST) {
                 itemView.background = null
                 customView = inflater.inflate(R.layout.navbar_post_item, menuView, false)
+                customView.tag = QuickStartUtils.BOTTOM_NAV_NEW_POST_BUTTON_TAG
             } else {
                 customView = inflater.inflate(R.layout.navbar_item, menuView, false)
                 val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
@@ -84,6 +86,9 @@ class WPMainNavigationView @JvmOverloads constructor(
                 txtLabel.text = getTitleForPosition(i)
                 customView.contentDescription = getContentDescriptionForPosition(i)
                 imgIcon.setImageResource(getDrawableResForPosition(i))
+                if(i == PAGE_READER){
+                    customView.tag = QuickStartUtils.BOTTOM_NAV_READER_BUTTON_TAG
+                }
             }
 
             itemView.addView(customView)
