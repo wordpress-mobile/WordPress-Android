@@ -126,7 +126,6 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
-    public static final String ARG_SHOW_QUICK_START = "show_quick_start";
 
     private WPMainNavigationView mBottomNav;
 
@@ -507,47 +506,18 @@ public class WPMainActivity extends AppCompatActivity implements
         trackLastVisiblePage(position, true);
         if (position == PAGE_READER && getMySiteFragment() != null
             && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+            //MySite fragment might not be attached to activity, so we need to remove focus point from here
+            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             getMySiteFragment().requestNextStepOfActiveQuickStartTask();
         }
     }
-
-    public void addQuickStartFocusPointToBottomNavReaderButton() {
-        addQuickStartFocusPointToBottomNavView(
-                findViewById(R.id.root_view_main).findViewWithTag(QuickStartUtils.BOTTOM_NAV_READER_BUTTON_TAG));
-    }
-
-
-    public void addQuickStartFocusPointToBottomNavPostButton() {
-        addQuickStartFocusPointToBottomNavView(
-                findViewById(R.id.root_view_main).findViewWithTag(QuickStartUtils.BOTTOM_NAV_NEW_POST_BUTTON_TAG));
-    }
-
-    private void addQuickStartFocusPointToBottomNavView(final View view) {
-        if (view == null) {
-            return;
-        }
-        final ViewGroup rootView = findViewById(R.id.root_view_main);
-
-        final int[] location = new int[2];
-        view.post(new Runnable() {
-            @Override public void run() {
-                view.getLocationOnScreen(location);
-
-                int offset = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_margin);
-
-                int x = location[0] + view.getRight() / 2 - offset;
-                int y = location[1] - view.getBottom() / 2 + offset;
-
-                QuickStartUtils.addQuickStartFocusPointToCoordinates(rootView, x, y);
-            }
-        });
-    }
-
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
         if (getSelectedSite() != null
             && getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+            //MySite fragment might not be attached to activity, so we need to remove focus point from here
+            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             getMySiteFragment().completeActiveQuickStartTask(getSelectedSite().getId());
         }
 

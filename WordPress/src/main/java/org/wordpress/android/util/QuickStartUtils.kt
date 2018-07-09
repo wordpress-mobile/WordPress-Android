@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import org.wordpress.android.R
+import org.wordpress.android.ui.main.WPMainActivity
 
 class QuickStartUtils {
     companion object {
@@ -41,23 +42,57 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        fun addQuickStartFocusPointToCoordinates(parent: ViewGroup, x: Int, y: Int) {
-            val quickStartFocusPointView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.quick_start_focus_point_standalone, parent, false)
+        fun addQuickStartFocusPointAboveTheView(topLevelParent: ViewGroup, view: View, horizontalOffset: Int,
+            verticalOffset: Int) {
 
-            val params = quickStartFocusPointView.layoutParams as MarginLayoutParams
-            params.leftMargin = x
-            params.topMargin = y
-            parent.addView(quickStartFocusPointView)
+            topLevelParent.post {
+                val quickStartFocusPointView = LayoutInflater.from(topLevelParent.context)
+                        .inflate(R.layout.quick_start_focus_point_view, topLevelParent, false)
 
-            quickStartFocusPointView.post { quickStartFocusPointView.layoutParams = params }
+                val parentViewLocation = IntArray(2)
+                topLevelParent.getLocationInWindow(parentViewLocation)
+
+                val parentsVerticalOffset = parentViewLocation[1]
+                val focusPointSize = topLevelParent.context.resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
+
+                view.post {
+                    val focusPointContainerLocation = IntArray(2)
+                    view.getLocationOnScreen(focusPointContainerLocation)
+
+                    val x = focusPointContainerLocation[0] + view.width - focusPointSize - horizontalOffset
+                    val y = focusPointContainerLocation[1] - parentsVerticalOffset + verticalOffset
+
+                    val params = quickStartFocusPointView.layoutParams as MarginLayoutParams
+                    params.leftMargin = x
+                    params.topMargin = y
+                    topLevelParent.addView(quickStartFocusPointView)
+
+                    quickStartFocusPointView.post {
+                        quickStartFocusPointView.layoutParams = params
+                    }
+                }
+            }
         }
 
         @JvmStatic
-        fun removeQuickStartFocusPoint(parent: ViewGroup) {
-            val focusPointView = parent.findViewById<View>(R.id.quick_start_focus_point)
+        fun removeQuickStartFocusPoint(topLevelParent: ViewGroup) {
+            val focusPointView = topLevelParent.findViewById<View>(R.id.quick_start_focus_point)
             if (focusPointView != null) {
-                parent.removeView(focusPointView)
+                val directParent = focusPointView.parent
+                if (directParent is ViewGroup) {
+                    directParent.removeView(focusPointView)
+                }
+            }
+        }
+
+        @JvmStatic
+        fun addQuickStartFocusPointToBottomNavReaderButton(topLevelParent: WPMainActivity) {
+            val focusPointView = topLevelParent.findViewById<View>(R.id.quick_start_focus_point)
+            if (focusPointView != null) {
+                val directParent = focusPointView.parent
+                if (directParent is ViewGroup) {
+                    directParent.removeView(focusPointView)
+                }
             }
         }
     }

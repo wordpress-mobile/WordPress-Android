@@ -3,9 +3,9 @@ package org.wordpress.android.ui.quickstart
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 
-enum class MySiteTutorialPrompts constructor(
+enum class InitialTutorialPrompts constructor(
     val task: QuickStartTask,
-    val parentContainerId,
+    val parentContainerId: Int,
     val focusedContainerId: Int,
     val shortMessagePrompt: Int,
     val iconId: Int
@@ -49,11 +49,16 @@ enum class MySiteTutorialPrompts constructor(
 
     companion object {
         @JvmStatic
-        fun getPromptDetailsForTask(task: QuickStartTask): MySiteTutorialPrompts? {
-            MySiteTutorialPrompts.values().forEach {
+        fun getPromptDetailsForTask(task: QuickStartTask): InitialTutorialPrompts? {
+            InitialTutorialPrompts.values().forEach {
                 if (it.task == task) return it
             }
             return null
+        }
+
+        @JvmStatic
+        fun isTargetingMainActivity(task: QuickStartTask): Boolean {
+            return task == QuickStartTask.FOLLOW_SITE || task == QuickStartTask.PUBLISH_POST
         }
 
         const val KEY = "my_site_tutorial_prompts"

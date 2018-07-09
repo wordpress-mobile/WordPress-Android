@@ -52,7 +52,7 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
-import org.wordpress.android.ui.quickstart.MySiteTutorialPrompts;
+import org.wordpress.android.ui.quickstart.InitialTutorialPrompts;
 import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -121,7 +121,7 @@ public class MySiteFragment extends Fragment implements
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
-    private MySiteTutorialPrompts mActiveMySiteTutorialPrompt;
+    private InitialTutorialPrompts mActiveTutorialPrompt;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -153,8 +153,8 @@ public class MySiteFragment extends Fragment implements
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mActiveMySiteTutorialPrompt =
-                    (MySiteTutorialPrompts) savedInstanceState.getSerializable(MySiteTutorialPrompts.KEY);
+            mActiveTutorialPrompt =
+                    (InitialTutorialPrompts) savedInstanceState.getSerializable(InitialTutorialPrompts.KEY);
         }
     }
 
@@ -399,8 +399,8 @@ public class MySiteFragment extends Fragment implements
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (mActiveMySiteTutorialPrompt != null) {
-            addQuickStartFocusPoint();
+        if (mActiveTutorialPrompt != null) {
+            showQuickStartFocusPoint();
         }
     }
 
@@ -451,7 +451,7 @@ public class MySiteFragment extends Fragment implements
 
     @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(MySiteTutorialPrompts.KEY, mActiveMySiteTutorialPrompt);
+        outState.putSerializable(InitialTutorialPrompts.KEY, mActiveTutorialPrompt);
     }
 
     @Override
@@ -536,13 +536,13 @@ public class MySiteFragment extends Fragment implements
                             (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
 
                     // remove all the visual indicators of previous task if necessary
-                    if (mActiveMySiteTutorialPrompt != null) {
-                        removeQuickStartIndication();
+                    if (mActiveTutorialPrompt != null) {
+                        removeQuickStartFocusPoint();
                     }
 
-                    mActiveMySiteTutorialPrompt = MySiteTutorialPrompts.getPromptDetailsForTask(task);
+                    mActiveTutorialPrompt = InitialTutorialPrompts.getPromptDetailsForTask(task);
 
-                    if (mActiveMySiteTutorialPrompt != null) {
+                    if (mActiveTutorialPrompt != null) {
                         showActiveQuickStartTutorial();
                     }
                 }
@@ -894,54 +894,64 @@ public class MySiteFragment extends Fragment implements
 
     private Runnable mAddQuickStartFocusPointTask = new Runnable() {
         @Override public void run() {
-            if (getView() == null) {
+            if (getView() == null || !isAdded()) {
                 return;
             }
 
-            ViewGroup container = getView().findViewById(mActiveMySiteTutorialPrompt.getMySiteRowId());
-            if (container == null) {
-                return;
-            }
+            int horizontalOffset;
+            int verticalOffset;
 
+            ViewGroup parentView = getActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
+            View quickStartTarget = getActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
             int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
-            int offset = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_margin);
 
-            int x = container.getRight() - focusPointSize - offset;
-            int y = container.getTop() + ((container.getBottom() - container.getTop()) - focusPointSize) / 2;
 
-            QuickStartUtils.addQuickStartFocusPointToCoordinates(
-                    (ViewGroup) getView().findViewById(R.id.my_site_scroll_view_root), x, y);
+            if (InitialTutorialPrompts.isTargetingMainActivity(mActiveTutorialPrompt.getTask())) {
+                horizontalOffset =
+                        getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+                verticalOffset = 0;
+            } else {
+                horizontalOffset =
+                        getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
+                verticalOffset = (((quickStartTarget.getHeight()) - focusPointSize) / 2);
+            }
+
+            if (quickStartTarget == null || parentView == null) {
+                return;
+            }
+
+            QuickStartUtils.addQuickStartFocusPointAboveTheView(parentView, quickStartTarget, horizontalOffset,
+                    verticalOffset);
 
             focusOnQuickStartRow();
         }
     };
 
-    private void addQuickStartFocusPoint() {
+    private void showQuickStartFocusPoint() {
         if (getView() == null || !hasActiveQuickStartTask()) {
             return;
         }
         getView().post(mAddQuickStartFocusPointTask);
     }
 
-    private void removeQuickStartIndication() {
-        if (getView() == null) {
+    private void removeQuickStartFocusPoint() {
+        if (getView() == null || !isAdded()) {
             return;
         }
-
         getView().removeCallbacks(mAddQuickStartFocusPointTask);
-        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView().findViewById(R.id.my_site_scroll_view_root));
+        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getActivity().findViewById(R.id.root_view_main));
     }
 
     public boolean isQuickStartTaskActive(QuickStartTask task) {
-        return hasActiveQuickStartTask() && mActiveMySiteTutorialPrompt.getTask() == task;
+        return hasActiveQuickStartTask() && mActiveTutorialPrompt.getTask() == task;
     }
 
     private void clearActiveQuickStartTask() {
-        mActiveMySiteTutorialPrompt = null;
+        mActiveTutorialPrompt = null;
     }
 
     private boolean hasActiveQuickStartTask() {
-        return mActiveMySiteTutorialPrompt != null;
+        return mActiveTutorialPrompt != null;
     }
 
     private void focusOnQuickStartRow() {
@@ -949,12 +959,16 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        final LinearLayout container = getView().findViewById(mActiveMySiteTutorialPrompt.getMySiteRowId());
-        if (container != null) {
+        if (InitialTutorialPrompts.isTargetingMainActivity(mActiveTutorialPrompt.getTask())) {
+            return;
+        }
+
+        final LinearLayout mySiteRow = getView().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
+        if (mySiteRow != null) {
             mScrollView.post(new Runnable() {
                 @Override public void run() {
-                    mScrollView.smoothScrollTo(0, container.getBottom());
-                    container.setPressed(true);
+                    mScrollView.smoothScrollTo(0, mySiteRow.getBottom());
+                    mySiteRow.setPressed(true);
                 }
             });
         }
@@ -964,8 +978,8 @@ public class MySiteFragment extends Fragment implements
         if (!hasActiveQuickStartTask()) {
             return;
         }
-        removeQuickStartIndication();
-        EventBus.getDefault().postSticky(new QuickStartEvent(mActiveMySiteTutorialPrompt.getTask()));
+        removeQuickStartFocusPoint();
+        EventBus.getDefault().postSticky(new QuickStartEvent(mActiveTutorialPrompt.getTask()));
         clearActiveQuickStartTask();
     }
 
@@ -974,8 +988,8 @@ public class MySiteFragment extends Fragment implements
         if (!hasActiveQuickStartTask()) {
             return;
         }
-        removeQuickStartIndication();
-        mQuickStartStore.setDoneTask(siteId, mActiveMySiteTutorialPrompt.getTask(), true);
+        removeQuickStartFocusPoint();
+        mQuickStartStore.setDoneTask(siteId, mActiveTutorialPrompt.getTask(), true);
         clearActiveQuickStartTask();
     }
 
@@ -991,18 +1005,12 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        if (mActiveMySiteTutorialPrompt.getTask() == QuickStartTask.FOLLOW_SITE) {
-            ((WPMainActivity) getActivity()).addQuickStartFocusPointToBottomNavReaderButton();
-        } else if (mActiveMySiteTutorialPrompt.getTask() == QuickStartTask.PUBLISH_POST) {
-            ((WPMainActivity) getActivity()).addQuickStartFocusPointToBottomNavPostButton();
-        } else {
-            addQuickStartFocusPoint();
-        }
+        showQuickStartFocusPoint();
 
         Spannable promptSnackBarDialogTitle = QuickStartUtils.stylizeQuickStartPrompt(
-                getString(mActiveMySiteTutorialPrompt.getShortMessagePrompt()),
+                getString(mActiveTutorialPrompt.getShortMessagePrompt()),
                 getResources().getColor(R.color.blue_light),
-                getResources().getDrawable(mActiveMySiteTutorialPrompt.getIconId()));
+                getResources().getDrawable(mActiveTutorialPrompt.getIconId()));
 
         if (getActivity() != null && getActivity() instanceof WPMainActivity) {
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(promptSnackBarDialogTitle);
