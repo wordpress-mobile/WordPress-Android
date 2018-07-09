@@ -20,7 +20,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import org.junit.ClassRule;
-import org.junit.BeforeClass;
 import org.wordpress.android.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -30,8 +29,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wordpress.android.ui.WPLaunchActivity;
 
+import tools.fastlane.screengrab.FalconScreenshotStrategy;
 import tools.fastlane.screengrab.Screengrab;
-import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 
@@ -50,16 +49,16 @@ public class WPScreenshotTest {
     @ClassRule
     public static final LocaleTestRule LOCALE_TEST_RULE = new LocaleTestRule();
 
-    @BeforeClass
-    public static void beforeAll() {
-        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
-    }
 
     @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class,
+            false, false);
 
     @Test
     public void wPScreenshotTest() {
+        mActivityTestRule.launchActivity(null);
+        Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
+
         wPLogin();
         navigateReader();
         createBlogPost();
