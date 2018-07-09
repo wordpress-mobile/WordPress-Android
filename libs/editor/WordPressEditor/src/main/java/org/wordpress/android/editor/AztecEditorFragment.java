@@ -71,6 +71,7 @@ import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
+import org.wordpress.aztec.AztecText.EditorHasChanges;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.IHistoryListener;
@@ -541,6 +542,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mSource.setCalypsoMode(true);
         }
 
+        // Initialize both editors (visual, source) with the same content. Need to do that so the starting point used in
+        //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
+        mSource.displayStyledAndFormattedHtml(postContent);
         mContent.fromHtml(postContent);
 
         updateFailedAndUploadingMedia();
@@ -855,15 +859,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getContent() {
+    public CharSequence getContent(CharSequence originalContent) {
         if (!isAdded()) {
             return "";
         }
 
         if (mContent.getVisibility() == View.VISIBLE) {
-            return mContent.toHtml(false);
+            return mContent.hasChanges() == EditorHasChanges.NO_CHANGES ? originalContent : mContent.toHtml(false);
         } else {
-            return mSource.getPureHtml(false);
+            return mSource.hasChanges() == EditorHasChanges.NO_CHANGES ? originalContent : mSource.getPureHtml(false);
         }
     }
 

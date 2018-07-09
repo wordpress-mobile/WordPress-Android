@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -15,7 +16,7 @@
 
     <include
         android:id="@+id/empty_custom_view"
-        layout="@layout/reader_empty_view" />
+        layout="@layout/reader_empty_view"/>
 
     <LinearLayout
         android:id="@+id/layout_new_posts"
@@ -28,28 +29,28 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_large"
+        android:paddingEnd="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
+        android:paddingStart="24dp"
         android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
         tools:targetApi="LOLLIPOP"
-        tools:visibility="visible"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp">
+        tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reader_label_new_posts"
             android:textColor="@color/grey_lighten_30"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reader_label_new_posts_subtitle"
             android:textColor="@color/grey_lighten_30"
-            android:textSize="@dimen/text_sz_small" />
+            android:textSize="@dimen/text_sz_small"/>
     </LinearLayout>
 
     <ProgressBar
@@ -58,8 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_centerHorizontal="true"/>
+        tools:visibility="visible"/>
 
 </RelativeLayout>

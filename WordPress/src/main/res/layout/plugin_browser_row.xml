@@ -62,6 +62,8 @@
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:contentDescription="@null"
                 tools:src="@drawable/plugin_update_available_icon" />
 
@@ -69,8 +71,6 @@
                 android:id="@+id/plugin_status_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
                 android:gravity="center_vertical"
                 android:maxLines="2"
                 android:textColor="@color/alert_yellow"

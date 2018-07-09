@@ -78,7 +78,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private WPViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
-    private boolean mIsReaderSwipeToNavigateShown;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -111,8 +110,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
-
-        mIsReaderSwipeToNavigateShown = AppPrefs.isReaderSwipeToNavigateShown();
 
         Note note = NotificationsTable.getNoteById(mNoteId);
         updateUIAndNote(note == null);
@@ -191,9 +188,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 @Override
                 public void onPageSelected(int position) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
-                    if (!mIsReaderSwipeToNavigateShown) {
-                        AppPrefs.setNotificationsSwipeToNavigateShown(true);
-                    }
                     // change the action bar title for the current note
                     Note currentNote = mAdapter.getNoteAtPosition(position);
                     if (currentNote != null) {
@@ -237,6 +231,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         // show a hint to promote swipe usage on the ViewPager
         if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAdapter != null && mAdapter.getCount() > 1) {
             WPSwipeSnackbar.show(mViewPager);
+            AppPrefs.setNotificationsSwipeToNavigateShown(true);
         }
     }
 

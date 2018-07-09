@@ -1,3 +1,6 @@
-source "https://rubygems.org"
+source "https://rubygems.org" do 
+  gem 'danger'
 
-gem "fastlane"
+  gem "fastlane"
+  # frozen_string_literal: true
+end

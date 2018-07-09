@@ -24,28 +24,19 @@ platform :android do
 
   desc "Capture screenshots"
   lane :take_screenshots do |options|
-    locales = ["en-US", "fr-FR", "it-IT"]
-
     devs = adb_devices()
     check_devices(devs: devs)
     
     device = devs[0]
     demo_mode_enter(device_serial: device.serial)
 
-    locales.each_with_index do |locale, index|
-      next_locale_index = index + 1
-      next_locale = "en_US"
-      next_locale = locales[next_locale_index] unless next_locale_index == locales.length
-
-      capture_android_screenshots(app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
+    capture_android_screenshots(app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
         tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk", 
         use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest", 
         reinstall_app: true,
-        locales: [locale],
-        ending_locale: next_locale,
         device_type: options[:device]
         )
-    end
+        
     demo_mode_exit(device_serial: device.serial)
   end
 

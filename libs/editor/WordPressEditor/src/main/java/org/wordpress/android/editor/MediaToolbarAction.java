@@ -7,19 +7,26 @@ import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.toolbar.IToolbarAction;
 import org.wordpress.aztec.toolbar.ToolbarActionType;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 public enum MediaToolbarAction implements IToolbarAction {
-    GALLERY(R.id.media_bar_button_gallery, ToolbarActionType.OTHER, AztecTextFormat.FORMAT_NONE),
-    CAMERA(R.id.media_bar_button_camera, ToolbarActionType.OTHER, AztecTextFormat.FORMAT_NONE),
-    LIBRARY(R.id.media_bar_button_library, ToolbarActionType.OTHER, AztecTextFormat.FORMAT_NONE);
+    GALLERY(R.id.media_bar_button_gallery, ToolbarActionType.OTHER,
+            new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE))),
+    CAMERA(R.id.media_bar_button_camera, ToolbarActionType.OTHER,
+            new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE))),
+    LIBRARY(R.id.media_bar_button_library, ToolbarActionType.OTHER,
+            new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE)));
 
     private final int mButtonId;
     private final ToolbarActionType mActionType;
-    private final ITextFormat mTextFormat;
+    private final Set<ITextFormat> mTextFormats;
 
-    MediaToolbarAction(int buttonId, ToolbarActionType actionType, ITextFormat textFormat) {
+    MediaToolbarAction(int buttonId, ToolbarActionType actionType, Set<ITextFormat> textFormats) {
         this.mButtonId = buttonId;
         this.mActionType = actionType;
-        this.mTextFormat = textFormat;
+        this.mTextFormats = textFormats;
     }
 
     @Override
@@ -35,8 +42,8 @@ public enum MediaToolbarAction implements IToolbarAction {
 
     @NotNull
     @Override
-    public ITextFormat getTextFormat() {
-        return mTextFormat;
+    public Set<ITextFormat> getTextFormats() {
+        return mTextFormats;
     }
 
     @Override

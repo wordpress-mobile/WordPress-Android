@@ -29,7 +29,7 @@ public class ReaderSearchLogic {
         mListenerCompanion = companion;
         String path = "read/search?q="
                       + UrlUtils.urlEncode(query)
-                      + "&number=" + ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST
+                      + "&number=" + ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST
                       + "&offset=" + offset
                       + "&meta=site,likes";
 
