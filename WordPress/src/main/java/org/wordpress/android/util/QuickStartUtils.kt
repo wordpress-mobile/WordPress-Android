@@ -50,23 +50,22 @@ class QuickStartUtils {
                 topLevelParent.getLocationInWindow(parentViewLocation)
 
                 val parentsVerticalOffset = parentViewLocation[1]
-                val focusPointSize = topLevelParent.context.resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
+                val focusPointSize = topLevelParent.context.resources.
+                        getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
 
-                view.post {
-                    val focusPointContainerLocation = IntArray(2)
-                    view.getLocationOnScreen(focusPointContainerLocation)
+                val focusPointContainerLocation = IntArray(2)
+                view.getLocationOnScreen(focusPointContainerLocation)
 
-                    val x = focusPointContainerLocation[0] + view.width - focusPointSize - horizontalOffset
-                    val y = focusPointContainerLocation[1] - parentsVerticalOffset + verticalOffset
+                val x = focusPointContainerLocation[0] + view.width - focusPointSize - horizontalOffset
+                val y = focusPointContainerLocation[1] - parentsVerticalOffset + verticalOffset
 
-                    val params = quickStartFocusPointView.layoutParams as MarginLayoutParams
-                    params.leftMargin = x
-                    params.topMargin = y
-                    topLevelParent.addView(quickStartFocusPointView)
+                val params = quickStartFocusPointView.layoutParams as MarginLayoutParams
+                params.leftMargin = x
+                params.topMargin = y
+                topLevelParent.addView(quickStartFocusPointView)
 
-                    quickStartFocusPointView.post {
-                        quickStartFocusPointView.layoutParams = params
-                    }
+                quickStartFocusPointView.post {
+                    quickStartFocusPointView.layoutParams = params
                 }
             }
         }
