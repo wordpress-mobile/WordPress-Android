@@ -1014,8 +1014,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (discardChanges != null) {
-            if (mPost != null) {
-                discardChanges.setVisible(showMenuItems && mPost.isLocallyChanged());
+            if (mPost != null && showMenuItems) {
+                boolean showDiscardChanges = mPost.isLocallyChanged();
+                if (mEditorFragment instanceof AztecEditorFragment) {
+                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
+                        && ((AztecEditorFragment) mEditorFragment).canUndo()) {
+                        //TODO set locallychanged here? mPost.setIsLocallyChanged(true);
+                        showDiscardChanges = true;
+                    } else {
+                        showDiscardChanges = false;
+                    }
+                }
+                discardChanges.setVisible(showDiscardChanges);
             } else {
                 discardChanges.setVisible(false);
             }
