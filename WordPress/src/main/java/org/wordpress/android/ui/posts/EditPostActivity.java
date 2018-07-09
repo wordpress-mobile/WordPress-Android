@@ -265,6 +265,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mPost;
     private PostModel mPostWithLocalChanges;
     private PostModel mOriginalPost;
+    private boolean mOriginalPostHadLocalChangesOnOpen;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
@@ -505,6 +506,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void initializePostObject() {
         if (mPost != null) {
             mOriginalPost = mPost.clone();
+            mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             mMediaMarkedUploadingOnStartIds =
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
@@ -1022,7 +1024,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         //TODO set locallychanged here? mPost.setIsLocallyChanged(true);
                         showDiscardChanges = true;
                     } else {
-                        showDiscardChanges = false;
+                        // we don't have history, so hide/show depending on the original post flag value
+                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
                     }
                 }
                 discardChanges.setVisible(showDiscardChanges);
