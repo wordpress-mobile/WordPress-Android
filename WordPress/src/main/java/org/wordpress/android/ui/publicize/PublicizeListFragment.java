@@ -8,6 +8,7 @@ import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -103,6 +104,11 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             }
         });
 
+
+        if (mQuickStartEvent != null) {
+            showQuickStartFocusPoint();
+        }
+
         return rootView;
     }
 
@@ -117,6 +123,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         EventBus.getDefault().removeStickyEvent(event);
 
         if (mQuickStartEvent.getTask() == QuickStartTask.SHARE_SITE) {
+            showQuickStartFocusPoint();
+
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
                     getString(R.string.quick_start_dialog_share_site_message_short_connections),
                     getResources().getColor(R.color.blue_light),
@@ -125,6 +133,33 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity(),
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
         }
+    }
+
+    private void showQuickStartFocusPoint() {
+        mRecycler.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                RecyclerView.ViewHolder holder = mRecycler.findViewHolderForAdapterPosition(0);
+                if (holder != null) {
+                    final View quickStartTarget = holder.itemView;
+
+                    quickStartTarget.post(new Runnable() {
+                        @Override public void run() {
+                            ViewGroup focusPointContainer = getView().findViewById(R.id.publicize_scroll_view_child);
+                            int focusPointSize =
+                                    getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+
+                            int verticalOffset = (((quickStartTarget.getHeight()) - focusPointSize) / 2);
+
+                            QuickStartUtils.addQuickStartFocusPointAboveTheView(focusPointContainer, quickStartTarget,
+                                    0, verticalOffset);
+                        }
+                    });
+                    mRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -173,13 +208,15 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             mAdapter = new PublicizeServiceAdapter(
                     getActivity(),
                     mSite.getSiteId(),
-                    mAccountStore.getAccount().getUserId(), mQuickStartEvent != null);
+                    mAccountStore.getAccount().getUserId());
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener(new OnServiceClickListener() {
                     @Override public void onServiceClicked(PublicizeService service) {
                         mQuickStartStore.setDoneTask(mSite.getId(), mQuickStartEvent.getTask(), true);
-                        mAdapter.hideQuickStartFocus();
+                        if (getView() != null) {
+                            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
+                        }
                         mQuickStartEvent = null;
                         ((OnServiceClickListener) getActivity()).onServiceClicked(service);
                     }

@@ -44,9 +44,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private OnAdapterLoadedListener mAdapterLoadedListener;
     private OnServiceClickListener mServiceClickListener;
 
-    private boolean mShowQuickStartFocusPoint = false;
-
-    public PublicizeServiceAdapter(Context context, long siteId, long currentUserId, boolean showQuickStartFocusPoint) {
+    public PublicizeServiceAdapter(Context context, long siteId, long currentUserId) {
         super();
 
         mSiteId = siteId;
@@ -58,15 +56,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         mGrayScaleFilter = new ColorMatrixColorFilter(matrix);
 
         setHasStableIds(true);
-
-        mShowQuickStartFocusPoint = showQuickStartFocusPoint;
-    }
-
-    public void hideQuickStartFocus() {
-        if (mShowQuickStartFocusPoint && getItemCount() > 0) {
-            mShowQuickStartFocusPoint = false;
-            notifyItemChanged(0);
-        }
     }
 
     public void setOnAdapterLoadedListener(OnAdapterLoadedListener listener) {
@@ -147,12 +136,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
                 }
             }
         });
-
-        if (mShowQuickStartFocusPoint && position == 0) {
-            holder.mQuickStartFocusPoint.setVisibility(View.VISIBLE);
-        } else {
-            holder.mQuickStartFocusPoint.setVisibility(View.GONE);
-        }
     }
 
     class SharingViewHolder extends RecyclerView.ViewHolder {
@@ -160,7 +143,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         private final TextView mTxtUser;
         private final View mDivider;
         private final WPNetworkImageView mImgIcon;
-        private final View mQuickStartFocusPoint;
 
         SharingViewHolder(View view) {
             super(view);
@@ -168,7 +150,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             mTxtUser = (TextView) view.findViewById(R.id.text_user);
             mImgIcon = (WPNetworkImageView) view.findViewById(R.id.image_icon);
             mDivider = view.findViewById(R.id.divider);
-            mQuickStartFocusPoint = view.findViewById(R.id.quick_start_focus_point);
         }
     }
 
