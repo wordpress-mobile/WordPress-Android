@@ -127,7 +127,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
                     getString(R.string.quick_start_dialog_share_site_message_short_connections),
-                    getResources().getColor(R.color.blue_light),
+                    getResources().getColor(R.color.color_accent),
                     null);
 
             WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity(),

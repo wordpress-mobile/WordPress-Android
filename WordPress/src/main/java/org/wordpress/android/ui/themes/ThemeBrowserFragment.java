@@ -182,7 +182,7 @@ public class ThemeBrowserFragment extends Fragment
 
                     Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
                             getString(R.string.quick_start_dialog_customize_site_message_short_customize),
-                            getResources().getColor(R.color.blue_light),
+                            getResources().getColor(R.color.color_accent),
                             getResources().getDrawable(R.drawable.ic_customize_white_24dp));
 
                     WPDialogSnackbar.make(getView(), title,

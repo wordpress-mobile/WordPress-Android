@@ -506,7 +506,7 @@ public class ReaderPostListFragment extends Fragment
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(
                     getString(R.string.quick_start_dialog_follow_sites_message_short_search),
-                    getResources().getColor(R.color.blue_light),
+                    getResources().getColor(R.color.color_accent),
                     getResources().getDrawable(R.drawable.ic_search_grey_24dp));
 
             if (getActivity() != null && getActivity() instanceof WPMainActivity) {

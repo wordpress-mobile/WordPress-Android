@@ -15,9 +15,6 @@ import org.wordpress.android.ui.main.WPMainActivity
 
 class QuickStartUtils {
     companion object {
-        const val BOTTOM_NAV_READER_BUTTON_TAG = "quick_start_reader_button"
-        const val BOTTOM_NAV_NEW_POST_BUTTON_TAG = "quick_start_new_post_button"
-
         @JvmStatic
         @JvmOverloads
         fun stylizeQuickStartPrompt(string: String, color: Int, icon: Drawable? = null): Spannable {

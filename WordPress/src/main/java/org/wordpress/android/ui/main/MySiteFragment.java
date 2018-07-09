@@ -1009,7 +1009,7 @@ public class MySiteFragment extends Fragment implements
 
         Spannable promptSnackBarDialogTitle = QuickStartUtils.stylizeQuickStartPrompt(
                 getString(mActiveTutorialPrompt.getShortMessagePrompt()),
-                getResources().getColor(R.color.blue_light),
+                getResources().getColor(R.color.color_accent),
                 getResources().getDrawable(mActiveTutorialPrompt.getIconId()));
 
         if (getActivity() != null && getActivity() instanceof WPMainActivity) {
