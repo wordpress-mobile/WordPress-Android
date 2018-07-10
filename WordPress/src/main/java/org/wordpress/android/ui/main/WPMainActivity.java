@@ -506,7 +506,7 @@ public class WPMainActivity extends AppCompatActivity implements
         trackLastVisiblePage(position, true);
         if (position == PAGE_READER && getMySiteFragment() != null
             && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
-            //MySite fragment might not be attached to activity, so we need to remove focus point from here
+            // MySite fragment might not be attached to activity, so we need to remove focus point from here
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             getMySiteFragment().requestNextStepOfActiveQuickStartTask();
         }
@@ -516,7 +516,7 @@ public class WPMainActivity extends AppCompatActivity implements
     public void onNewPostButtonClicked() {
         if (getSelectedSite() != null
             && getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-            //MySite fragment might not be attached to activity, so we need to remove focus point from here
+            // MySite fragment might not be attached to activity, so we need to remove focus point from here
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             getMySiteFragment().completeActiveQuickStartTask(getSelectedSite().getId());
         }

@@ -39,9 +39,12 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        fun addQuickStartFocusPointAboveTheView(topLevelParent: ViewGroup, view: View, horizontalOffset: Int,
-            verticalOffset: Int) {
-
+        fun addQuickStartFocusPointAboveTheView(
+            topLevelParent: ViewGroup,
+            view: View,
+            horizontalOffset: Int,
+            verticalOffset: Int
+        ) {
             topLevelParent.post {
                 val quickStartFocusPointView = LayoutInflater.from(topLevelParent.context)
                         .inflate(R.layout.quick_start_focus_point_view, topLevelParent, false)
@@ -50,8 +53,8 @@ class QuickStartUtils {
                 topLevelParent.getLocationInWindow(parentViewLocation)
 
                 val parentsVerticalOffset = parentViewLocation[1]
-                val focusPointSize = topLevelParent.context.resources.
-                        getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
+                val focusPointSize =
+                        topLevelParent.context.resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
 
                 val focusPointContainerLocation = IntArray(2)
                 view.getLocationOnScreen(focusPointContainerLocation)

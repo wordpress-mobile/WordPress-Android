@@ -85,7 +85,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 txtLabel.text = getTitleForPosition(i)
                 customView.contentDescription = getContentDescriptionForPosition(i)
                 imgIcon.setImageResource(getDrawableResForPosition(i))
-                if(i == PAGE_READER){
+                if (i == PAGE_READER) {
                     customView.id = R.id.bottom_nav_reader_button
                 }
             }

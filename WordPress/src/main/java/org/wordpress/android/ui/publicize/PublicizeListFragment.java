@@ -158,8 +158,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                 }
             }
         });
-
-
     }
 
     @Override
