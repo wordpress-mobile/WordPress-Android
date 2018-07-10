@@ -91,8 +91,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_list_fragment, container, false);
 
-        mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
+        mRecycler = rootView.findViewById(R.id.recycler_view);
+        mEmptyView = rootView.findViewById(R.id.empty_view);
 
         View manageContainer = rootView.findViewById(R.id.container_manage);
         manageContainer.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +103,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                 }
             }
         });
-
 
         if (mQuickStartEvent != null) {
             showQuickStartFocusPoint();
@@ -136,6 +135,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     private void showQuickStartFocusPoint() {
+        // we are waiting for RecyclerView to populate itself with views and then grab the first one when it's ready
         mRecycler.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override public void onGlobalLayout() {
                 RecyclerView.ViewHolder holder = mRecycler.findViewHolderForAdapterPosition(0);

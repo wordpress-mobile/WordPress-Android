@@ -3,6 +3,9 @@ package org.wordpress.android.ui.quickstart
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 
+/**
+ * Static data about initial tutorial prompts you see when selecting one from Quick Start task list
+ **/
 enum class InitialTutorialPrompts constructor(
     val task: QuickStartTask,
     val parentContainerId: Int,
@@ -48,6 +51,8 @@ enum class InitialTutorialPrompts constructor(
             R.drawable.ic_reader_white_32dp);
 
     companion object {
+        const val KEY = "my_site_tutorial_prompts"
+
         @JvmStatic
         fun getPromptDetailsForTask(task: QuickStartTask): InitialTutorialPrompts? {
             InitialTutorialPrompts.values().forEach {
@@ -57,10 +62,8 @@ enum class InitialTutorialPrompts constructor(
         }
 
         @JvmStatic
-        fun isTargetingMainActivity(task: QuickStartTask): Boolean {
+        fun isTargetingBottomNavBar(task: QuickStartTask): Boolean {
             return task == QuickStartTask.FOLLOW_SITE || task == QuickStartTask.PUBLISH_POST
         }
-
-        const val KEY = "my_site_tutorial_prompts"
     }
 }

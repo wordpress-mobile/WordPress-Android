@@ -1013,8 +1013,8 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    // because of the bottom nav implementation (we only get callback after active fragment is changed we need
-    // to manage SnackBar in activity
+    // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
+    // to manage SnackBar in Activity, instead of Fragment
     public void showQuickStartSnackBar(CharSequence message) {
         hideQuickStartSnackBar();
 

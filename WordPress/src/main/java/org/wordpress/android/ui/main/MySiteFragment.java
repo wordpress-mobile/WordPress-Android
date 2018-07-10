@@ -535,7 +535,7 @@ public class MySiteFragment extends Fragment implements
                     QuickStartTask task =
                             (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
 
-                    // remove all the visual indicators of previous task if necessary
+                    // remove previous quick start indicator if necessary
                     if (mActiveTutorialPrompt != null) {
                         removeQuickStartFocusPoint();
                     }
@@ -894,7 +894,8 @@ public class MySiteFragment extends Fragment implements
 
     private Runnable mAddQuickStartFocusPointTask = new Runnable() {
         @Override public void run() {
-            if (getView() == null || !isAdded()) {
+            // technically there is no situation (yet) where fragment is not added but we need to show focus point
+            if (!isAdded()) {
                 return;
             }
 
@@ -902,11 +903,15 @@ public class MySiteFragment extends Fragment implements
             int verticalOffset;
 
             ViewGroup parentView = getActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
-            View quickStartTarget = getActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
+            final View quickStartTarget = getActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
+
+            if (quickStartTarget == null || parentView == null) {
+                return;
+            }
+
             int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
 
-
-            if (InitialTutorialPrompts.isTargetingMainActivity(mActiveTutorialPrompt.getTask())) {
+            if (InitialTutorialPrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
                 horizontalOffset =
                         getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
                 verticalOffset = 0;
@@ -916,14 +921,18 @@ public class MySiteFragment extends Fragment implements
                 verticalOffset = (((quickStartTarget.getHeight()) - focusPointSize) / 2);
             }
 
-            if (quickStartTarget == null || parentView == null) {
-                return;
-            }
-
             QuickStartUtils.addQuickStartFocusPointAboveTheView(parentView, quickStartTarget, horizontalOffset,
                     verticalOffset);
 
-            focusOnQuickStartRow();
+            // highlighting MySite row and scrolling to it
+            if (!InitialTutorialPrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
+                mScrollView.post(new Runnable() {
+                    @Override public void run() {
+                        mScrollView.smoothScrollTo(0, quickStartTarget.getBottom());
+                        quickStartTarget.setPressed(true);
+                    }
+                });
+            }
         }
     };
 
@@ -938,6 +947,7 @@ public class MySiteFragment extends Fragment implements
         if (getView() == null || !isAdded()) {
             return;
         }
+        // processing activity result there might be pending task that adds quick start indicator that we need to cancel
         getView().removeCallbacks(mAddQuickStartFocusPointTask);
         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getActivity().findViewById(R.id.root_view_main));
     }
@@ -952,26 +962,6 @@ public class MySiteFragment extends Fragment implements
 
     private boolean hasActiveQuickStartTask() {
         return mActiveTutorialPrompt != null;
-    }
-
-    private void focusOnQuickStartRow() {
-        if (getView() == null || !hasActiveQuickStartTask()) {
-            return;
-        }
-
-        if (InitialTutorialPrompts.isTargetingMainActivity(mActiveTutorialPrompt.getTask())) {
-            return;
-        }
-
-        final LinearLayout mySiteRow = getView().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
-        if (mySiteRow != null) {
-            mScrollView.post(new Runnable() {
-                @Override public void run() {
-                    mScrollView.smoothScrollTo(0, mySiteRow.getBottom());
-                    mySiteRow.setPressed(true);
-                }
-            });
-        }
     }
 
     public void requestNextStepOfActiveQuickStartTask() {

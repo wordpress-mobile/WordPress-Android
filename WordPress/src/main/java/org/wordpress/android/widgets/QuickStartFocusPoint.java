@@ -10,7 +10,14 @@ import android.widget.FrameLayout;
 
 import org.wordpress.android.R;
 
-// perpetually animate quick start focus point (hint)
+/**
+ * Perpetually animated quick start focus point (hint)
+ * Consists of:
+ * - Initial expand animation with bounce
+ * 2 staggered animations on repeat:
+ * - Collapse
+ * - Expand
+ */
 public class QuickStartFocusPoint extends FrameLayout {
     public QuickStartFocusPoint(Context context) {
         super(context);
