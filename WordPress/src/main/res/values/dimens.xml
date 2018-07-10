@@ -312,6 +312,7 @@
     <dimen name="padding_input_row_start">60dp</dimen>
 
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
+    <dimen name="dialog_snackbar_max_icons_size">18dp</dimen>
 
     <dimen name="quick_start_dot_size">8dp</dimen>
     <dimen name="quick_start_completed_row_height">56dp</dimen>
