@@ -37,14 +37,20 @@ class QuickStartFocusPoint : FrameLayout {
         val outerCircle = findViewById<View>(R.id.quick_start_focus_outer_circle)
         val innerCircle = findViewById<View>(R.id.quick_start_focus_inner_circle)
 
-        val outerCircleInitialAnimation = AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
-        val innerCircleInitialAnimation = AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
+        val outerCircleInitialAnimation =
+                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
+        val innerCircleInitialAnimation =
+                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
 
-        val outerCircleCollapseAnimation = AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
-        val innerCircleCollapseAnimation = AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
+        val outerCircleCollapseAnimation =
+                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
+        val innerCircleCollapseAnimation =
+                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
 
-        val innerCircleExpanAnimation = AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
-        val outerCircleExpanAnimation = AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
+        val innerCircleExpanAnimation =
+                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
+        val outerCircleExpanAnimation =
+                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
 
         innerCircleInitialAnimation.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {}
@@ -60,7 +66,6 @@ class QuickStartFocusPoint : FrameLayout {
             override fun onAnimationRepeat(animation: Animation) {}
         })
 
-
         innerCircleCollapseAnimation.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {}
 
@@ -71,7 +76,6 @@ class QuickStartFocusPoint : FrameLayout {
 
             override fun onAnimationRepeat(animation: Animation) {}
         })
-
 
         innerCircleExpanAnimation.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {}

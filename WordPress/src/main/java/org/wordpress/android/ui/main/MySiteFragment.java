@@ -148,6 +148,11 @@ public class MySiteFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        if (savedInstanceState != null) {
+            mActiveTutorialPrompt =
+                    (InitialTutorialPrompts) savedInstanceState.getSerializable(InitialTutorialPrompts.KEY);
+        }
     }
 
     @Override
@@ -173,6 +178,11 @@ public class MySiteFragment extends Fragment implements
                 mActivityLogContainer.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    @Override public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(InitialTutorialPrompts.KEY, mActiveTutorialPrompt);
     }
 
     private void initSiteSettings() {
@@ -376,6 +386,13 @@ public class MySiteFragment extends Fragment implements
         return rootView;
     }
 
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mActiveTutorialPrompt != null) {
+            showQuickStartFocusPoint();
+        }
+    }
+
     private void showAddSiteIconDialog() {
         BasicFragmentDialog dialog = new BasicFragmentDialog();
         String tag = TAG_ADD_SITE_ICON_DIALOG;
@@ -501,6 +518,11 @@ public class MySiteFragment extends Fragment implements
                 if (data != null && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
                     QuickStartTask task =
                             (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
+
+                    // remove previous quick start indicator if necessary
+                    if (mActiveTutorialPrompt != null) {
+                        removeQuickStartFocusPoint();
+                    }
 
                     mActiveTutorialPrompt = InitialTutorialPrompts.getPromptDetailsForTask(task);
                     showActiveQuickStartTutorial();
@@ -851,6 +873,66 @@ public class MySiteFragment extends Fragment implements
     public void onCredentialsValidated(Exception error) {
     }
 
+    private Runnable mAddQuickStartFocusPointTask = new Runnable() {
+        @Override public void run() {
+            // technically there is no situation (yet) where fragment is not added but we need to show focus point
+            if (!isAdded()) {
+                return;
+            }
+
+            int horizontalOffset;
+            int verticalOffset;
+
+            ViewGroup parentView = getActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
+            final View quickStartTarget = getActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
+
+            if (quickStartTarget == null || parentView == null) {
+                return;
+            }
+
+            int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+
+            if (InitialTutorialPrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
+                horizontalOffset = (quickStartTarget.getWidth() / 2) - focusPointSize + getResources()
+                        .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+                verticalOffset = 0;
+            } else {
+                horizontalOffset =
+                        getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
+                verticalOffset = (((quickStartTarget.getHeight()) - focusPointSize) / 2);
+            }
+
+            QuickStartUtils.addQuickStartFocusPointAboveTheView(parentView, quickStartTarget, horizontalOffset,
+                    verticalOffset);
+
+            // highlighting MySite row and scrolling to it
+            if (!InitialTutorialPrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
+                mScrollView.post(new Runnable() {
+                    @Override public void run() {
+                        mScrollView.smoothScrollTo(0, quickStartTarget.getBottom());
+                        quickStartTarget.setPressed(true);
+                    }
+                });
+            }
+        }
+    };
+
+    private void showQuickStartFocusPoint() {
+        if (getView() == null || !hasActiveQuickStartTask()) {
+            return;
+        }
+        getView().post(mAddQuickStartFocusPointTask);
+    }
+
+    private void removeQuickStartFocusPoint() {
+        if (getView() == null || !isAdded()) {
+            return;
+        }
+        // processing activity result there might be pending task that adds quick start indicator that we need to cancel
+        getView().removeCallbacks(mAddQuickStartFocusPointTask);
+        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getActivity().findViewById(R.id.root_view_main));
+    }
+
     private boolean hasActiveQuickStartTask() {
         return mActiveTutorialPrompt != null;
     }
@@ -859,6 +941,8 @@ public class MySiteFragment extends Fragment implements
         if (!hasActiveQuickStartTask() || getActivity() == null || !(getActivity() instanceof WPMainActivity)) {
             return;
         }
+
+        showQuickStartFocusPoint();
 
         Spannable shortQuickStartMessage = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
                 mActiveTutorialPrompt.getShortMessagePrompt(),
