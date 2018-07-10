@@ -123,6 +123,7 @@ class HelpActivity : AppCompatActivity() {
         SIGNUP_SCREEN("origin:signup-screen"),
         ME_SCREEN_HELP("origin:me-screen-help"),
         DELETE_SITE("origin:delete-site"),
+        DISCARD_CHANGES("origin:discard-changes"),
         FEEDBACK_AZTEC("origin:aztec-feedback"),
         LOGIN_EMAIL("origin:login-email"),
         LOGIN_MAGIC_LINK("origin:login-magic-link"),
