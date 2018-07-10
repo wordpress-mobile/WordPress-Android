@@ -443,6 +443,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return (mContent.history.getHistoryEnabled() && !mContent.history.getHistoryList().isEmpty());
     }
 
+    public boolean canUndo() {
+        return (hasHistory() && mContent.history.undoValid());
+    }
+
     public boolean isHistoryEnabled() {
         return mContent.history.getHistoryEnabled();
     }
