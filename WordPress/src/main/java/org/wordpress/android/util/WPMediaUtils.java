@@ -422,14 +422,10 @@ public class WPMediaUtils {
     /*
      * returns true if the current user has permission to upload new media to the passed site
      */
-    @SuppressWarnings("SimplifiableIfStatement")
     public static boolean currentUserCanUploadMedia(@NonNull SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            return site.getHasCapabilityUploadFiles();
-        } else {
-            // self-hosted sites don't have capabilities so always return true
-            return true;
-        }
+        boolean isSelfHosted = !site.isUsingWpComRestApi();
+        // self-hosted sites don't have capabilities so always return true
+        return isSelfHosted || site.getHasCapabilityUploadFiles();
     }
 
     public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {
