@@ -1,12 +1,9 @@
 package org.wordpress.android.widgets;
 
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.Snackbar.SnackbarLayout;
-import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -43,28 +40,6 @@ public class WPDialogSnackbar {
             message.setVisibility(View.GONE);
         } else {
             message.setVisibility(View.VISIBLE);
-
-            // bring the image spans in the message to standard size
-            if (text instanceof Spannable) {
-                ImageSpan[] spans = ((Spannable) text).getSpans(0, text.length(), ImageSpan.class);
-
-                for (ImageSpan span : spans) {
-                    int spanStart = ((Spannable) text).getSpanStart(span);
-                    int spanEnd = ((Spannable) text).getSpanEnd(span);
-                    int flags = ((Spannable) text).getSpanFlags(span);
-
-                    ((Spannable) text).removeSpan(span);
-
-                    Drawable drawable = span.getDrawable();
-                    int iconSize =
-                            message.getResources().getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size);
-
-                    drawable.setBounds(0, 0, iconSize, iconSize);
-
-                    ((Spannable) text).setSpan(new ImageSpan(drawable), spanStart, spanEnd, flags);
-                }
-            }
-
             message.setText(text);
         }
 

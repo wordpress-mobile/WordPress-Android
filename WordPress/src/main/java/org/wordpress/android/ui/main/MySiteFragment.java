@@ -503,10 +503,7 @@ public class MySiteFragment extends Fragment implements
                             (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
 
                     mActiveTutorialPrompt = InitialTutorialPrompts.getPromptDetailsForTask(task);
-
-                    if (hasActiveQuickStartTask()) {
-                        showActiveQuickStartTutorial();
-                    }
+                    showActiveQuickStartTutorial();
                 }
                 break;
         }
@@ -863,10 +860,9 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        Spannable shortQuickStartMessage = QuickStartUtils.stylizeQuickStartPrompt(
-                getString(mActiveTutorialPrompt.getShortMessagePrompt()),
-                getResources().getColor(R.color.blue_light),
-                getResources().getDrawable(mActiveTutorialPrompt.getIconId()));
+        Spannable shortQuickStartMessage = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                mActiveTutorialPrompt.getShortMessagePrompt(),
+                mActiveTutorialPrompt.getIconId());
 
         ((WPMainActivity) getActivity()).showQuickStartSnackBar(shortQuickStartMessage);
     }
