@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -503,9 +502,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         // no-op
                         break;
                     default:
-                        if (BuildConfig.DEBUG) {
-                            throw new IllegalStateException("Missing switch case.");
-                        }
+                        // no-op
+                        return;
                 }
             }
 
