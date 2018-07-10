@@ -202,18 +202,6 @@ public class WPMediaUtils {
                 return context.getString(R.string.error_media_parse_error);
             case GENERIC_ERROR:
                 return context.getString(R.string.error_generic_error);
-            case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
-                return null;
-            case NOT_AUTHENTICATED:
-                return null;
-            case INVALID_ID:
-                return null;
-            case NULL_MEDIA_ARG:
-                return null;
-            case MALFORMED_MEDIA_ARG:
-                return null;
-            case DB_QUERY_FAILURE:
-                return null;
         }
         return null;
     }
