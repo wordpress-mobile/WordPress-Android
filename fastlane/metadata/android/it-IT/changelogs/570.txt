@@ -1,3 +1,0 @@
-10.2:
-* Nuova funzionalità: qualcosa ha attirato la tua attenzione? Leggilo in qualsiasi momento con Salva per dopo. Anche quando sei offline.
-* Diverse correzioni di bug.
