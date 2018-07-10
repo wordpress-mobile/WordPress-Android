@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 07:54:07+0000
+Translation-Revision-Date: 2018-06-25 14:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="plugin_auto_managed">Automatisch beheerd</string>
+    <string name="reader_save_posts_locally_dialog_message">Sla dit bericht op en keer op elk gewenst moment terug om het te lezen. Het bericht is alleen op deze device beschikbaar; opgeslagen berichten worden niet gesynchroniseerd met andere apparaten. (Nog niet, tenminste! We zijn ermee bezig.)</string>
+    <string name="reader_save_posts_locally_dialog_title">Berichten opslaan voor later</string>
+    <string name="reader_empty_search_request_failed">Kan zoekopdracht niet uitvoeren</string>
+    <string name="reader_empty_search_title">Geen resultaten gevonden</string>
+    <string name="reader_label_post_search_explainer">WordPress doorzoeken\nvoor een site of bericht</string>
+    <string name="comment_read_source_post">Lees het oorspronkelijke bericht</string>
+    <string name="sites">Sites</string>
     <string name="reader_empty_saved_posts_description">Tik op %s om een bericht op te slaan in je lijst.</string>
-    <string name="reader_empty_saved_posts_title">Nog geen berichten opgeslagen!</string>
     <string name="reader_bookmark_snack_title">Bericht opgeslagen</string>
     <string name="reader_bookmark_snack_btn">Alles weergeven</string>
     <string name="reader_btn_bookmarked">Opgeslagen</string>
@@ -849,11 +856,7 @@ Language: nl
     <string name="send_link">Stuur link</string>
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
-    <string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
-    <string name="reader_empty_posts_in_search_title">Geen berichten gevonden.</string>
     <string name="reader_label_post_search_running">Zoeken …</string>
-    <string name="reader_label_post_search_explainer">Zoek alle openbare WordPress.com–blogs</string>
-    <string name="reader_hint_post_search">Zoek op WordPress.com</string>
     <string name="reader_title_related_post_detail">Gerelateerd bericht</string>
     <string name="preview_screen_links_disabled">Links uitgeschakeld op voorbeeldscherm</string>
     <string name="draft_explainer">Dit bericht is een concept dat niet is gepubliceerd</string>
@@ -1154,7 +1157,6 @@ Language: nl
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d volgers</string>
     <string name="reader_short_like_count_one">1 like</string>
-    <string name="reader_menu_tags">Tags en blogs bijwerken</string>
     <string name="reader_title_post_detail">Reader–bericht</string>
     <string name="local_draft_explainer">Dit bericht is een lokaal concept dat niet is gepubliceerd</string>
     <string name="local_changes_explainer">Dit bericht bevat lokale wijzigingen die niet zijn gepubliceerd</string>
@@ -1187,8 +1189,6 @@ Language: nl
     <string name="post_trashed">Bericht naar de prullenbak verplaatst</string>
     <string name="post_deleted">Bericht verwijderd</string>
     <string name="page_trashed">Pagina naar de prullenbak verplaatst.</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Je hebt geen rechten om dit blog te openen</string>
-    <string name="reader_toast_err_follow_blog_not_found">Dit blog kon niet worden gevonden</string>
     <string name="undo">Ongedaan maken</string>
     <string name="passcodelock_prompt_message">Je PIN invullen.</string>
     <string name="push_auth_expired">Je verzoek is verlopen. Log in bij WordPress.com probeer opnieuw.</string>
@@ -1255,7 +1255,6 @@ Language: nl
     <string name="error_copy_to_clipboard">Er is een fout opgetreden tijdens het kopiëren van de tekst naar het klembord</string>
     <string name="stats_recent_weeks">Laatste weken</string>
     <string name="stats_average_per_day">Gemiddelde per dag</string>
-    <string name="reader_empty_posts_in_blog">Deze blog is leeg</string>
     <string name="reader_label_new_posts">Nieuwe berichten</string>
     <string name="logs_copied_to_clipboard">Applicatielogs zijn gekopieerd naar het klembord</string>
     <string name="stats_period">Periode</string>
@@ -1350,9 +1349,6 @@ Language: nl
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_empty_posts_liked">Je hebt nog geen enkel bericht geliked</string>
     <string name="reader_empty_followed_blogs_title">Je volgt nog geen sites</string>
-    <string name="reader_menu_block_blog">Blokkeer deze blog</string>
-    <string name="reader_toast_blog_blocked">Berichten van deze blog zullen niet meer getoond worden</string>
-    <string name="reader_toast_err_block_blog">Blokkeren van deze blog is mislukt</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
     <string name="hs__invalid_email_error">Voer een geldig e–mailadres in</string>
     <string name="hs__username_blank_error">Voer een geldige naam in</string>
@@ -1362,18 +1358,10 @@ Language: nl
     <string name="contact_us">Contact</string>
     <string name="schedule_verb">Inplannen</string>
     <string name="update_verb">Bijwerken</string>
-    <string name="reader_empty_recommended_blogs">Geen aanbevolen blogs</string>
-    <string name="reader_toast_err_unfollow_blog">Kan deze blog niet ontvolgen</string>
-    <string name="reader_toast_err_follow_blog">Kan deze blog niet volgen</string>
-    <string name="reader_toast_err_already_follow_blog">Je volgt deze blog al</string>
-    <string name="reader_toast_err_get_blog_info">Kan deze blog niet tonen</string>
-    <string name="reader_label_followed_blog">Blog gevolgd</string>
     <string name="reader_hint_add_tag_or_url">Voer een tag of URL in om te volgen</string>
     <string name="reader_page_followed_blogs">Gevolgde sites</string>
     <string name="reader_page_followed_tags">Gevolgde tags</string>
-    <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_tag_preview">Reader–tag</string>
-    <string name="reader_title_blog_preview">Reader–blog</string>
     <string name="media_empty_list">Geen media</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL–certificaat</string>

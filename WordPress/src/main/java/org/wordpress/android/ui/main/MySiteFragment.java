@@ -672,6 +672,11 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             if (mToolbar != null) {
                 mToolbar.setTitle(mToolbarTitle);
             }
+
+        mToolbarTitle = title;
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
+
         }
     }
 

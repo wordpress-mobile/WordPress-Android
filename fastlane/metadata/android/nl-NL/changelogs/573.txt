@@ -1,0 +1,6 @@
+10.3:
+* Reader: De zoekfunctie is nu verbeterd en maakt het mogelijk om sites te zoeken.
+* Editor: Verbeterde ondersteuning van Gutenberg-berichten.
+* Meldingen: Pingback- en opmerkingenbeheer is verbeterd.
+* Een hoop kleine UI-verbeteringen en verfijningen.
+* Verschillende bugfixes.

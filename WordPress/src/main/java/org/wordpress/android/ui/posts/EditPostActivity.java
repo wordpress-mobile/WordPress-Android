@@ -7,6 +7,8 @@ import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -20,6 +22,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +44,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
@@ -98,14 +102,17 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
@@ -205,6 +212,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
+    private static final String STATE_KEY_IS_DIALOG_ERROR_SHOWN = "stateIsDialogErrorShown";
+    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateIsDialogProgressShown";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
@@ -254,6 +263,7 @@ public class EditPostActivity extends AppCompatActivity implements
     WPViewPager mViewPager;
 
     private PostModel mPost;
+    private PostModel mPostWithLocalChanges;
     private PostModel mOriginalPost;
 
     private EditorFragmentAbstract mEditorFragment;
@@ -262,9 +272,15 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
+    private ProgressDialog mProgressDialog;
+
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private boolean mIsDialogErrorShown;
+    private boolean mIsDialogProgressShown;
+    private boolean mIsDiscardingChanges;
+    private boolean mIsUpdatingPost;
 
     private View mPhotoPickerContainer;
     private PhotoPickerFragment mPhotoPickerFragment;
@@ -283,6 +299,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject UploadStore mUploadStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject ZendeskHelper mZendeskHelper;
 
     private SiteModel mSite;
 
@@ -385,6 +402,14 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
+            mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
+            mIsDialogErrorShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, false);
+
+            showDialogProgress(mIsDialogProgressShown);
+
+            if (mIsDialogErrorShown) {
+                showDialogError();
+            }
 
             // if we have a remote id saved, let's first try with that, as the local Id might have changed
             // after FETCH_POSTS
@@ -654,6 +679,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!mPost.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
+        outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
+        outState.putBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, mIsDialogErrorShown);
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
@@ -964,6 +991,7 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
+        MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
@@ -983,6 +1011,14 @@ public class EditPostActivity extends AppCompatActivity implements
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
+        }
+
+        if (discardChanges != null) {
+            if (mPost != null) {
+                discardChanges.setVisible(showMenuItems && mPost.isLocallyChanged());
+            } else {
+                discardChanges.setVisible(false);
+            }
         }
 
         // Set text of the save button in the ActionBar
@@ -1126,9 +1162,59 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                 }
+            } else if (itemId == R.id.menu_discard_changes) {
+                AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
+                showDialogProgress(true);
+                mPostWithLocalChanges = mPost.clone();
+                mIsDiscardingChanges = true;
+                RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+                mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
             }
         }
         return false;
+    }
+
+    private void refreshEditorContent() {
+        mHasSetPostContent = false;
+        fillContentEditorFields();
+    }
+
+    private void showDialogError() {
+        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
+                .setMessage(R.string.local_changes_discarding_error)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        mZendeskHelper.createNewTicket(EditPostActivity.this, Origin.DISCARD_CHANGES, mSite);
+                    }
+                })
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override public void onCancel(DialogInterface dialog) {
+                        mIsDialogErrorShown = false;
+                    }
+                })
+                .setOnDismissListener(new OnDismissListener() {
+                    @Override public void onDismiss(DialogInterface dialog) {
+                        mIsDialogErrorShown = false;
+                    }
+                })
+                .show();
+
+        mIsDialogErrorShown = true;
+    }
+
+    private void showDialogProgress(boolean show) {
+        if (show) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setMessage(getString(R.string.local_changes_discarding));
+            mProgressDialog.show();
+        } else if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+
+        mIsDialogProgressShown = show;
     }
 
     private void toggleHtmlModeOnMenu() {
@@ -1400,9 +1486,8 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onLinkClicked(@NotNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
-                Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
-                intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL, WHAT_IS_NEW_IN_MOBILE_URL);
-                startActivity(intent);
+                startActivity(ReleaseNotesActivity.createIntent(EditPostActivity.this, WHAT_IS_NEW_IN_MOBILE_URL,
+                        null, mSite));
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -3315,6 +3400,41 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
                 invalidateOptionsMenu();
+
+                if (mIsUpdatingPost) {
+                    mIsUpdatingPost = false;
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    refreshEditorContent();
+
+                    if (mViewPager != null) {
+                        Snackbar.make(mViewPager, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
+                                .setAction(getString(R.string.undo), new OnClickListener() {
+                                    @Override public void onClick(View view) {
+                                        AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
+                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                                        mPost = mPostWithLocalChanges.clone();
+                                        refreshEditorContent();
+                                    }
+                                })
+                                .show();
+                    }
+
+                    showDialogProgress(false);
+                }
+
+                if (mIsDiscardingChanges) {
+                    mIsDiscardingChanges = false;
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+                    mIsUpdatingPost = true;
+                }
+            } else {
+                mIsDiscardingChanges = false;
+                mIsUpdatingPost = false;
+                showDialogProgress(false);
+                showDialogError();
+                AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         }
     }

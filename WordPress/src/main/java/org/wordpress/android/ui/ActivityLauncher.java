@@ -22,12 +22,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
-import org.wordpress.android.ui.activitylog.ActivityLogDetailActivity;
-import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
+import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -60,8 +61,6 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -72,6 +71,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -270,18 +270,21 @@ public class ActivityLauncher {
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_LIST, site);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
     }
 
-    public static void viewActivityLogDetail(Activity activity, SiteModel site, String activityId) {
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_DETAIL, site);
+    public static void viewActivityLogDetailForResult(Activity activity, SiteModel site, String activityId) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
+
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
@@ -408,10 +411,9 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewHelpAndSupport(Context context, Tag origin) {
-        Intent intent = new Intent(context, HelpActivity.class);
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
-        context.startActivity(intent);
+    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
+                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+        context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {

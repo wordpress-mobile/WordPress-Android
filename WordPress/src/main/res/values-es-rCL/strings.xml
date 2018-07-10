@@ -50,7 +50,6 @@ Language: es_CL
     <string name="reader_short_like_count_one">1 Me gusta</string>
     <string name="reader_label_follow_count">%,d seguidores</string>
     <string name="reader_short_like_count_none">Me gusta</string>
-    <string name="reader_menu_tags">Editar etiquetas y blogs</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
     <string name="local_draft_explainer">Esta entrada tiene un borrador local que no ha sido publicado</string>
     <string name="local_changes_explainer">Esta entrada tiene cambios en local que no han sido publicados</string>
@@ -82,8 +81,6 @@ Language: es_CL
     <string name="button_view">Ver</string>
     <string name="button_edit">Editar</string>
     <string name="button_publish">Publicar</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este blog</string>
-    <string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar dicho blog</string>
     <string name="undo">Deshacer</string>
     <string name="passcodelock_prompt_message">Escribe tu PIN</string>
     <string name="ignore">Ignorar</string>
@@ -142,7 +139,6 @@ Language: es_CL
     <string name="stats_period">Periodo</string>
     <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
-    <string name="reader_empty_posts_in_blog">Este blog está vacío</string>
     <string name="stats_average_per_day">Media diaria</string>
     <string name="stats_recent_weeks">Últimas Semanas</string>
     <string name="error_copy_to_clipboard">Ocurrió un error al copiar el texto en el portapapeles</string>
@@ -234,9 +230,6 @@ Language: es_CL
     <string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
     <string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes.</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
-    <string name="reader_toast_err_block_blog">No es posible bloquear este blog</string>
-    <string name="reader_toast_blog_blocked">Las entradas de este blog no volverán a mostrarse</string>
-    <string name="reader_menu_block_blog">Bloquear este blog</string>
     <string name="contact_us">Contacta con nosotros</string>
     <string name="hs__conversation_detail_error">Describe el problema que estás teniendo</string>
     <string name="hs__new_conversation_header">Chat de soporte</string>
@@ -245,18 +238,10 @@ Language: es_CL
     <string name="hs__invalid_email_error">Escribe una dirección de correo electrónico válida</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
-    <string name="reader_title_blog_preview">Blog del lector</string>
     <string name="reader_title_tag_preview">Etiqueta del lector</string>
-    <string name="reader_title_subs">Etiquetas y blogs</string>
     <string name="reader_page_followed_tags">Etiquetas que se siguen</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
     <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
-    <string name="reader_label_followed_blog">Blog que se sigue</string>
-    <string name="reader_toast_err_get_blog_info">No se puede mostrar este blog</string>
-    <string name="reader_toast_err_already_follow_blog">Ya estás siguiendo este blog</string>
-    <string name="reader_toast_err_follow_blog">No se puede seguir este blog</string>
-    <string name="reader_toast_err_unfollow_blog">No se puede dejar de seguir este blog</string>
-    <string name="reader_empty_recommended_blogs">Sin blogs recomendados</string>
     <string name="media_empty_list">Sin elementos multimedia</string>
     <string name="help">Ayuda</string>
     <string name="forgot_password">¿Has olvidado la contraseña?</string>

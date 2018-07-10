@@ -505,11 +505,11 @@
 
         <!--Plugins-->
         <activity
-            android:name=".ui.activitylog.ActivityLogListActivity"
+            android:name=".ui.activitylog.list.ActivityLogListActivity"
             android:label="@string/activity_log"
             android:theme="@style/Calypso.NoActionBar"/>
         <activity
-            android:name=".ui.activitylog.ActivityLogDetailActivity"
+            android:name=".ui.activitylog.detail.ActivityLogDetailActivity"
             android:label="@string/activity_log_event"
             android:theme="@style/Calypso.NoActionBar"/>
 
@@ -682,18 +682,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".ui.HelpshiftDeepLinkReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="helpshift"
-                    android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
 
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
