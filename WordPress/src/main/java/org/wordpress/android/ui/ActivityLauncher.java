@@ -180,9 +180,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewQuickStart(Context context) {
-        Intent intent = new Intent(context, QuickStartActivity.class);
-        context.startActivity(intent);
+    public static void viewQuickStartForResult(Activity activity) {
+        Intent intent = new Intent(activity, QuickStartActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.QUICK_START);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
