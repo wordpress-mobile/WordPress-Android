@@ -1021,7 +1021,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     if (((AztecEditorFragment) mEditorFragment).hasHistory()
                         && ((AztecEditorFragment) mEditorFragment).canUndo()) {
-                        //TODO set locallychanged here? mPost.setIsLocallyChanged(true);
                         showDiscardChanges = true;
                     } else {
                         // we don't have history, so hide/show depending on the original post flag value
