@@ -2113,6 +2113,7 @@
     <string name="change_photo">Change photo</string>
 
     <!-- Content description for accessibility  -->
+    <string name="featured_image_desc">featured image</string>
     <string name="comment_checkmark_desc">check mark</string>
     <string name="profile_picture">%s\'s profile picture</string>
     <string name="invite_user_delete_desc">remove %s</string>
@@ -2132,7 +2133,6 @@
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="post_cardview_featured_desc">featured image</string>
-    <string name="post_settings_featured_desc">featured image</string>
     <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>

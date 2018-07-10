@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:maxHeight="@dimen/post_settings_featured_image_height_max"
                         android:minHeight="@dimen/post_settings_featured_image_height_min"
-                        android:contentDescription="@string/post_settings_featured_desc"
+                        android:contentDescription="@string/featured_image_desc"
                         android:adjustViewBounds="true"
                         android:visibility="gone"/>
                 </LinearLayout>
