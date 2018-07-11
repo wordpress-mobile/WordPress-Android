@@ -388,6 +388,7 @@ public class MySiteFragment extends Fragment implements
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         if (mActiveTutorialPrompt != null) {
             showQuickStartFocusPoint();
         }
@@ -519,7 +520,7 @@ public class MySiteFragment extends Fragment implements
                     QuickStartTask task =
                             (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
 
-                    // remove previous quick start indicator if necessary
+                    // remove any existing quick start indicator if necessary
                     if (mActiveTutorialPrompt != null) {
                         removeQuickStartFocusPoint();
                     }
@@ -880,9 +881,6 @@ public class MySiteFragment extends Fragment implements
                 return;
             }
 
-            int horizontalOffset;
-            int verticalOffset;
-
             ViewGroup parentView = getActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
             final View quickStartTarget = getActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
 
@@ -891,6 +889,8 @@ public class MySiteFragment extends Fragment implements
             }
 
             int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+            int horizontalOffset;
+            int verticalOffset;
 
             if (InitialTutorialPrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
                 horizontalOffset = (quickStartTarget.getWidth() / 2) - focusPointSize + getResources()
@@ -928,7 +928,6 @@ public class MySiteFragment extends Fragment implements
         if (getView() == null || !isAdded()) {
             return;
         }
-        // processing activity result there might be pending task that adds quick start indicator that we need to cancel
         getView().removeCallbacks(mAddQuickStartFocusPointTask);
         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getActivity().findViewById(R.id.root_view_main));
     }
