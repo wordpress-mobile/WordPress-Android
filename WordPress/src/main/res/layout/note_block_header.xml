@@ -26,10 +26,11 @@
             android:paddingStart="@dimen/margin_extra_large"
             android:paddingEnd="@dimen/margin_extra_large">
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/header_avatar"
                 android:layout_width="@dimen/avatar_sz_small"
-                android:layout_height="@dimen/avatar_sz_small" />
+                android:layout_height="@dimen/avatar_sz_small"
+                tools:ignore="ContentDescription"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
