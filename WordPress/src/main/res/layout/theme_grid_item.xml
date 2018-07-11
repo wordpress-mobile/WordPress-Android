@@ -34,7 +34,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_preview_image_height"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
                     android:contentDescription="@string/theme_image_desc"/>
 
             </FrameLayout>

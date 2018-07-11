@@ -16,6 +16,7 @@ import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -169,7 +170,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId,
                                     final boolean isCurrent) {
         mImageManager
-                .load(themeViewHolder.mImageView, ImageType.THEME, screenshotURL + THEME_IMAGE_PARAMETER + mViewWidth);
+                .load(themeViewHolder.mImageView, ImageType.THEME, screenshotURL + THEME_IMAGE_PARAMETER + mViewWidth,
+                        ScaleType.FIT_CENTER);
 
         themeViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
