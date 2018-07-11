@@ -122,7 +122,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_PHOTO,
         ITEM_CHOOSE_VIDEO,
-        ITEM_CHOOSE_STOCK_MEDIA
+        ITEM_CHOOSE_STOCK_MEDIA,
+        ITEM_CHOOSE_AUDIO
     }
 
     @Override
@@ -359,12 +360,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void getMediaFromDeviceAndTrack(Uri imageUri, int requestCode) {
+    private void getMediaFromDeviceAndTrack(Uri imageUri, final int requestCode) {
         final String mimeType = getContentResolver().getType(imageUri);
         WPMediaUtils.fetchMediaAndDoNext(this, imageUri, new WPMediaUtils.MediaFetchDoNext() {
             @Override
             public void doNext(Uri uri) {
-                queueFileForUpload(getOptimizedPictureIfNecessary(uri), mimeType);
+                //We don't want to optimize if file is audio
+                if (requestCode != RequestCodes.AUDIO_LIBRARY) {
+                    uri = getOptimizedPictureIfNecessary(uri);
+                }
+                queueFileForUpload(uri, mimeType);
             }
         });
         trackAddMediaFromDeviceEvents(
@@ -407,6 +412,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     Uri uri = MediaUtils.getLastRecordedVideoUri(this);
                     queueFileForUpload(uri, getContentResolver().getType(uri));
                     trackAddMediaFromDeviceEvents(true, true, uri);
+                }
+                break;
+            case RequestCodes.AUDIO_LIBRARY:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getData();
+                    getMediaFromDeviceAndTrack(uri, requestCode);
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
@@ -828,6 +839,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     });
         }
 
+        popup.getMenu().add(R.string.photo_picker_choose_audio).setOnMenuItemClickListener(
+            new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_AUDIO);
+                    return true;
+                }
+            });
+
         if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()) {
             popup.getMenu().add(R.string.photo_picker_stock_media).setOnMenuItemClickListener(
                     new MenuItem.OnMenuItemClickListener() {
@@ -871,6 +891,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case ITEM_CHOOSE_VIDEO:
                 WPMediaUtils.launchVideoLibrary(this, true);
+                break;
+            case ITEM_CHOOSE_AUDIO:
+                WPMediaUtils.launchAudioLibrary(this, false);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(this,
