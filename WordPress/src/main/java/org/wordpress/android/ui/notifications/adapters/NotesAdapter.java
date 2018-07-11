@@ -58,7 +58,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
-    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener, ImageManager imageManager) {
+    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener,
+                        ImageManager imageManager) {
         super();
 
         mImageManager = imageManager;
