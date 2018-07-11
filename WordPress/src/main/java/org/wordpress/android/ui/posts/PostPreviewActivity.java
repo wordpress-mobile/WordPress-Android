@@ -275,7 +275,7 @@ public class PostPreviewActivity extends AppCompatActivity {
             }
 
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
-            marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
+            marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.snackbar_message_margin_bottom);
 
             ViewGroup buttonsView = mMessageView.findViewById(R.id.layout_buttons);
             RelativeLayout.LayoutParams paramsButtons = (RelativeLayout.LayoutParams) buttonsView.getLayoutParams();
