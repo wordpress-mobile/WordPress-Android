@@ -465,17 +465,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
                 statusIconResId = R.drawable.ic_gridicons_page;
-                statusColorResId = R.color.alert_yellow;
+                statusColorResId = R.color.alert_yellow_dark;
             } else if (post.isLocallyChanged()) {
                 statusTextResId = R.string.local_changes;
                 statusIconResId = R.drawable.ic_gridicons_page;
-                statusColorResId = R.color.alert_yellow;
+                statusColorResId = R.color.alert_yellow_dark;
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
                         statusTextResId = R.string.post_status_draft;
                         statusIconResId = R.drawable.ic_gridicons_page;
-                        statusColorResId = R.color.alert_yellow;
+                        statusColorResId = R.color.alert_yellow_dark;
                         break;
                     case PRIVATE:
                         statusTextResId = R.string.post_status_post_private;
@@ -483,7 +483,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     case PENDING:
                         statusTextResId = R.string.post_status_pending_review;
                         statusIconResId = R.drawable.ic_gridicons_page;
-                        statusColorResId = R.color.alert_yellow;
+                        statusColorResId = R.color.alert_yellow_dark;
                         break;
                     case SCHEDULED:
                         statusTextResId = R.string.post_status_scheduled;

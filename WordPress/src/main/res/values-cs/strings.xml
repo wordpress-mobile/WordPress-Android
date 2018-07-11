@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-13 10:34:05+0000
+Translation-Revision-Date: 2018-06-20 08:33:51+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -889,10 +889,8 @@ Language: cs_CZ
     <string name="send_link">Poslat URL</string>
     <string name="label_clear_search_history">Smazat historii prohlížení</string>
     <string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
-    <string name="reader_empty_posts_in_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
-    <string name="reader_empty_posts_in_search_title">Nenalezeny žádné příspěvky</string>
+    <string name="reader_empty_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
     <string name="reader_label_post_search_running">Hledání…</string>
-    <string name="reader_label_post_search_explainer">Hledat všechny veřejné WordPress.com blogy</string>
     <string name="reader_hint_post_search">Prohledat WordPress.com</string>
     <string name="reader_title_related_post_detail">Související příspěvky </string>
     <string name="preview_screen_links_disabled">Odkazy jsou zakázány v náhledu na obrazovce</string>

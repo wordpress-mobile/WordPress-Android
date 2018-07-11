@@ -190,7 +190,6 @@ Language: hi_IN
     <string name="button_trash">ट्रैश</string>
     <string name="button_stats">आकड़े</string>
     <string name="post_deleted">पोस्ट नष्ट कर दिया गया</string>
-    <string name="reader_toast_err_follow_blog_not_found">इस ब्लॉग को पाया नहीं जा सका</string>
     <string name="ignore">ध्यान न दें</string>
     <string name="stats_insights_most_popular_hour">सबसे लोकप्रिय घण्टा</string>
     <string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>
@@ -217,7 +216,6 @@ Language: hi_IN
     <string name="stats_view_authors">लेखक</string>
     <string name="stats_search_terms_unknown_search_terms">अज्ञात खोज शब्द</string>
     <string name="stats_total">टोटल</string>
-    <string name="reader_empty_posts_in_blog">यह ब्लॉग रिक्त है</string>
     <string name="stats_view_videos">वीडियो</string>
     <string name="stats_empty_geoviews">कोई देश दर्ज नहीं की गई</string>
     <string name="stats_followers_days">%1$d दिन</string>
@@ -246,10 +244,7 @@ Language: hi_IN
     <string name="reader_title_photo_viewer">%1$d का %2$d</string>
     <string name="comment">टिप्पणी</string>
     <string name="comment_trashed">टिप्पणी ट्रैश किया गया</string>
-    <string name="reader_menu_block_blog">इस ब्लॉग को ब्लॉक करे</string>
-    <string name="reader_toast_err_block_blog">इस ब्लॉग को ब्लॉक करने में असमर्थ</string>
     <string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
-    <string name="reader_toast_blog_blocked">इस ब्लॉग से पोस्ट अब नहीं दिखाया जाएगा</string>
     <string name="hs__new_conversation_header">सहायता चैट</string>
     <string name="hs__conversation_header">सहायता चैट</string>
     <string name="hs__username_blank_error">एक मान्य नाम दर्ज करें</string>
@@ -258,15 +253,7 @@ Language: hi_IN
     <string name="contact_us">हमसे संपर्क करें</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>
-    <string name="reader_label_followed_blog">अनुसरण किये गए ब्लॉग</string>
-    <string name="reader_toast_err_already_follow_blog">आप पहले से ही इस ब्लॉग का अनुसरण कर रहे है</string>
-    <string name="reader_title_blog_preview">ब्लॉग पूर्वावलोकन</string>
     <string name="reader_title_tag_preview">टैग पूर्वावलोकन</string>
-    <string name="reader_title_subs">टैग और ब्लॉग</string>
-    <string name="reader_toast_err_follow_blog">इस ब्लॉग का अनुसरण करने में असमर्थ</string>
-    <string name="reader_toast_err_get_blog_info">इस ब्लॉग को दिखाने में असमर्थ</string>
-    <string name="reader_toast_err_unfollow_blog">इस ब्लॉग अनुसरण रद्द करने में असमर्थ</string>
-    <string name="reader_empty_recommended_blogs">कोई अनुशंसित ब्लॉग नहीं</string>
     <string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>
     <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
     <string name="reader_page_followed_tags">अनुसरण किये गए टैग्स </string>

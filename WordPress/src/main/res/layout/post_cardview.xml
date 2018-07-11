@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/postlist_featured_image_height"
             android:visibility="gone"
-            android:contentDescription="@string/post_cardview_featured_desc"
+            android:contentDescription="@string/featured_image_desc"
             tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView

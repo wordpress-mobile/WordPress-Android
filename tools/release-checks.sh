@@ -77,7 +77,7 @@ function printVersion() {
 function checkGradleProperties() {
   /bin/echo -n "Check gradle.properties..."
   checksum=`cat gradle.properties | grep -v "^wp.debug." | grep "^wp."|tr "[A-Z]" "[a-z]" | sed "s/ //g" | sort | sha1sum | cut -d- -f1 | sed "s/ //g"`
-  known_checksum="fdb31db64e23a859935960ace1fda847d209113b"
+  known_checksum="0b736c33e6c9645b430550db08b09f513e2e8549"
   if [ x$checksum != x$known_checksum ]; then
     pFail
     exit 5
@@ -104,7 +104,7 @@ function checkKeystore() {
 
 function checkGoogleServiceConfig() {
   /bin/echo -n "Check Google Services configuration..."
-  checkFileAgainstHash WordPress/google-services.json 633ce74402644df1073d97260cdca6d33abfc6df
+  checkFileAgainstHash WordPress/google-services.json c711d7f3f0b2be2d2027eb8bedd43a4bb27270d3
 }
 
 checkNewLanguages
