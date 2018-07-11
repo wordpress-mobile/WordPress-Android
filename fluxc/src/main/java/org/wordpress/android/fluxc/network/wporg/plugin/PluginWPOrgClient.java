@@ -140,7 +140,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                             new FetchedWPOrgPluginPayload(pluginSlug, error)));
                                     return;
                                 }
-                                if (!TextUtils.isEmpty(response.errorMessage)) {
+                                if (!TextUtils.isEmpty(response.getErrorMessage())) {
                                     // Plugin does not exist error returned with success code
                                     FetchWPOrgPluginError error = new FetchWPOrgPluginError(
                                             FetchWPOrgPluginErrorType.PLUGIN_DOES_NOT_EXIST);
@@ -228,27 +228,27 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     private WPOrgPluginModel wpOrgPluginFromResponse(WPOrgPluginResponse response) {
         WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
-        wpOrgPluginModel.setAuthorAsHtml(response.authorAsHtml);
-        wpOrgPluginModel.setBanner(response.banner);
-        wpOrgPluginModel.setDescriptionAsHtml(response.descriptionAsHtml);
-        wpOrgPluginModel.setFaqAsHtml(response.faqAsHtml);
-        wpOrgPluginModel.setHomepageUrl(response.homepageUrl);
-        wpOrgPluginModel.setIcon(response.icon);
-        wpOrgPluginModel.setInstallationInstructionsAsHtml(response.installationInstructionsAsHtml);
-        wpOrgPluginModel.setLastUpdated(response.lastUpdated);
-        wpOrgPluginModel.setDisplayName(StringEscapeUtils.unescapeHtml4(response.name));
-        wpOrgPluginModel.setRating(response.rating);
-        wpOrgPluginModel.setRequiredWordPressVersion(response.requiredWordPressVersion);
-        wpOrgPluginModel.setSlug(response.slug);
-        wpOrgPluginModel.setVersion(response.version);
-        wpOrgPluginModel.setWhatsNewAsHtml(response.whatsNewAsHtml);
-        wpOrgPluginModel.setDownloadCount(response.downloadCount);
-        wpOrgPluginModel.setNumberOfRatings(response.numberOfRatings);
-        wpOrgPluginModel.setNumberOfRatingsOfOne(response.numberOfRatingsOfOne);
-        wpOrgPluginModel.setNumberOfRatingsOfTwo(response.numberOfRatingsOfTwo);
-        wpOrgPluginModel.setNumberOfRatingsOfThree(response.numberOfRatingsOfThree);
-        wpOrgPluginModel.setNumberOfRatingsOfFour(response.numberOfRatingsOfFour);
-        wpOrgPluginModel.setNumberOfRatingsOfFive(response.numberOfRatingsOfFive);
+        wpOrgPluginModel.setAuthorAsHtml(response.getAuthorAsHtml());
+        wpOrgPluginModel.setBanner(response.getBanner());
+        wpOrgPluginModel.setDescriptionAsHtml(response.getDescriptionAsHtml());
+        wpOrgPluginModel.setFaqAsHtml(response.getFaqAsHtml());
+        wpOrgPluginModel.setHomepageUrl(response.getHomepageUrl());
+        wpOrgPluginModel.setIcon(response.getIcon());
+        wpOrgPluginModel.setInstallationInstructionsAsHtml(response.getInstallationInstructionsAsHtml());
+        wpOrgPluginModel.setLastUpdated(response.getLastUpdated());
+        wpOrgPluginModel.setDisplayName(StringEscapeUtils.unescapeHtml4(response.getName()));
+        wpOrgPluginModel.setRating(response.getRating());
+        wpOrgPluginModel.setRequiredWordPressVersion(response.getRequiredWordPressVersion());
+        wpOrgPluginModel.setSlug(response.getSlug());
+        wpOrgPluginModel.setVersion(response.getVersion());
+        wpOrgPluginModel.setWhatsNewAsHtml(response.getWhatsNewAsHtml());
+        wpOrgPluginModel.setDownloadCount(response.getDownloadCount());
+        wpOrgPluginModel.setNumberOfRatings(response.getNumberOfRatings());
+        wpOrgPluginModel.setNumberOfRatingsOfOne(response.getNumberOfRatingsOfOne());
+        wpOrgPluginModel.setNumberOfRatingsOfTwo(response.getNumberOfRatingsOfTwo());
+        wpOrgPluginModel.setNumberOfRatingsOfThree(response.getNumberOfRatingsOfThree());
+        wpOrgPluginModel.setNumberOfRatingsOfFour(response.getNumberOfRatingsOfFour());
+        wpOrgPluginModel.setNumberOfRatingsOfFive(response.getNumberOfRatingsOfFive());
         return wpOrgPluginModel;
     }
 }
