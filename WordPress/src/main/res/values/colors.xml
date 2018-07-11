@@ -192,6 +192,10 @@
     <!-- Login -->
     <color name="login_background_color">@color/grey_light</color>
 
+    <!-- Quick Start -->
+    <color name="quickstart_focus_inner_circle">@color/blue_wordpress</color>
+    <color name="quickstart_focus_outer_circle">#7e0087be</color>
+
     <color name="switch_tint">@color/blue_medium</color>
 
     <!-- Quick Start -->
