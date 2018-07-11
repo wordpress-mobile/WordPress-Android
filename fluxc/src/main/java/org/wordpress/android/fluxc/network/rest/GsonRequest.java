@@ -79,7 +79,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
             } else {
                 res = mGson.fromJson(json, mClass);
             }
-            return Response.success(res, HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(res, createCacheEntry(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {
