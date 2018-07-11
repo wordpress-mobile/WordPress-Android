@@ -98,17 +98,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
 
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
     companion object {
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, imgUrl, placeholder, scaleType)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        fun loadImage(
-            imageView: ImageView,
-            imageType: ImageType,
-            imgUrl: String,
-            scaleType: ImageView.ScaleType
-        ) {
-            ImageManager(ImagePlaceholderManager()).load(imageView, imageType, imgUrl, scaleType)
-        }
+        @Deprecated("Use injected ImageManager")
+        val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager()) }
     }
 }
