@@ -365,7 +365,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         WPMediaUtils.fetchMediaAndDoNext(this, imageUri, new WPMediaUtils.MediaFetchDoNext() {
             @Override
             public void doNext(Uri uri) {
-                //We don't want to optimize if file is audio
+                // We don't want to optimize if file is audio
                 if (requestCode != RequestCodes.AUDIO_LIBRARY) {
                     uri = getOptimizedPictureIfNecessary(uri);
                 }
