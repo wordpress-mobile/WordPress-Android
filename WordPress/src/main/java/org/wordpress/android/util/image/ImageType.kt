@@ -4,5 +4,6 @@ enum class ImageType {
     PHOTO,
     VIDEO,
     AVATAR,
-    BLAVATAR
+    BLAVATAR,
+    THEME
 }
