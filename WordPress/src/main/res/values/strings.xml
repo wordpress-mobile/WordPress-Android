@@ -2254,5 +2254,7 @@
     <string name="quick_start_list_view_site_title">@string/quick_start_dialog_view_site_title</string>
     <string name="quick_start_sites">Quick Start</string>
     <string name="quick_start_sites_progress" tools:ignore="UnusedResources" translatable="false">%1$d/%2$d</string>
+    <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
+    <string name="quick_start_span_start" translatable="false">&#160;&lt;span style=&quot;color:#78dcfa&quot;&gt;</string>
 
 </resources>
