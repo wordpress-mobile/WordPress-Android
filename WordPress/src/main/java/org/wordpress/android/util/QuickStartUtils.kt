@@ -1,6 +1,8 @@
 package org.wordpress.android.util
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.text.Spannable
@@ -24,9 +26,14 @@ class QuickStartUtils {
          * @param iconId resource if of the icon that goes before the highlighted area
          */
         @JvmStatic
-        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int): Spannable {
+        @JvmOverloads
+        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int = -1): Spannable {
             val message = context.resources.getString(messageId)
-            val icon = ContextCompat.getDrawable(context, iconId)
+            val icon : Drawable? = try{
+                ContextCompat.getDrawable(context, iconId)
+            }catch (e: Resources.NotFoundException){
+                null
+            }
 
             val highlightColor = ContextCompat.getColor(context, R.color.blue_light)
 
