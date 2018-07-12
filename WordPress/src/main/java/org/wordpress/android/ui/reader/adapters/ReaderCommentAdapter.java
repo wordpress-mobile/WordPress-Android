@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,7 +43,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.Date;
 
@@ -77,6 +79,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
+    @Inject ImageManager mImageManager;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -93,7 +96,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final TextView mTxtText;
         private final TextView mTxtDate;
 
-        private final WPNetworkImageView mImgAvatar;
+        private final ImageView mImgAvatar;
         private final View mSpacerIndent;
         private final View mAuthorContainer;
         private final ProgressBar mProgress;
@@ -104,20 +107,20 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         CommentHolder(View view) {
             super(view);
 
-            mContainer = (ViewGroup) view.findViewById(R.id.layout_container);
+            mContainer = view.findViewById(R.id.layout_container);
 
-            mTxtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
-            mTxtText = (TextView) view.findViewById(R.id.text_comment_text);
-            mTxtDate = (TextView) view.findViewById(R.id.text_comment_date);
+            mTxtAuthor = view.findViewById(R.id.text_comment_author);
+            mTxtText = view.findViewById(R.id.text_comment_text);
+            mTxtDate = view.findViewById(R.id.text_comment_date);
 
-            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
+            mImgAvatar = view.findViewById(R.id.image_comment_avatar);
             mSpacerIndent = view.findViewById(R.id.spacer_comment_indent);
-            mProgress = (ProgressBar) view.findViewById(R.id.progress_comment);
+            mProgress = view.findViewById(R.id.progress_comment);
 
             mAuthorContainer = view.findViewById(R.id.layout_author);
 
-            mReplyView = (ViewGroup) view.findViewById(R.id.reply_container);
-            mCountLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
+            mReplyView = view.findViewById(R.id.reply_container);
+            mCountLikes = view.findViewById(R.id.count_likes);
 
             mTxtText.setLinksClickable(true);
             mTxtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
@@ -239,12 +242,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
         commentHolder.mTxtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished, WordPress.getContext()));
 
-        if (comment.hasAuthorAvatar()) {
-            String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);
-            commentHolder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            commentHolder.mImgAvatar.showDefaultGravatarImageAndNullifyUrl();
-        }
+        String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);
+        mImageManager.loadIntoCircle(commentHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
 
         // tapping avatar or author name opens blog preview
         if (comment.hasAuthorBlogId()) {
