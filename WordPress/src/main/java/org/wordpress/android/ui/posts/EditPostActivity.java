@@ -7,8 +7,6 @@ import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -213,11 +211,11 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
-    private static final String STATE_KEY_IS_DIALOG_ERROR_SHOWN = "stateIsDialogErrorShown";
     private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateIsDialogProgressShown";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
+    private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
 
@@ -278,7 +276,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
-    private boolean mIsDialogErrorShown;
     private boolean mIsDialogProgressShown;
     private boolean mIsDiscardingChanges;
     private boolean mIsUpdatingPost;
@@ -404,13 +401,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
-            mIsDialogErrorShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, false);
 
             showDialogProgress(mIsDialogProgressShown);
-
-            if (mIsDialogErrorShown) {
-                showDialogError();
-            }
 
             // if we have a remote id saved, let's first try with that, as the local Id might have changed
             // after FETCH_POSTS
@@ -681,7 +673,6 @@ public class EditPostActivity extends AppCompatActivity implements
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
         outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
-        outState.putBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, mIsDialogErrorShown);
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
@@ -1181,27 +1172,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showDialogError() {
-        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
-                .setMessage(R.string.local_changes_discarding_error)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        mZendeskHelper.createNewTicket(EditPostActivity.this, Origin.DISCARD_CHANGES, mSite);
-                    }
-                })
-                .setOnCancelListener(new OnCancelListener() {
-                    @Override public void onCancel(DialogInterface dialog) {
-                        mIsDialogErrorShown = false;
-                    }
-                })
-                .setOnDismissListener(new OnDismissListener() {
-                    @Override public void onDismiss(DialogInterface dialog) {
-                        mIsDialogErrorShown = false;
-                    }
-                })
-                .show();
-
-        mIsDialogErrorShown = true;
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        dialog.initialize(TAG_DISCARDING_CHANGES_ERROR_DIALOG, "", getString(R.string.local_changes_discarding_error),
+                getString(R.string.contact_support), getString(R.string.cancel), null);
+        dialog.show(getSupportFragmentManager(), TAG_DISCARDING_CHANGES_ERROR_DIALOG);
     }
 
     private void showDialogProgress(boolean show) {
@@ -1452,6 +1426,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
+            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+                mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
+                break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 publishPost();
@@ -1473,6 +1450,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
+            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 // the dialog is automatically dismissed
