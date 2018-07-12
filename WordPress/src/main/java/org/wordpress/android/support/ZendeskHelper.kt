@@ -428,6 +428,8 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
         tags.addAll(plans)
     }
     tags.add(origin.toString())
+    // Add Android tag to make it easier to filter tickets by platform
+    tags.add(ZendeskConstants.platformTag)
     extraTags?.let {
         tags.addAll(it)
     }
@@ -471,6 +473,8 @@ private object ZendeskConstants {
     const val networkCarrierLabel = "Carrier:"
     const val networkCountryCodeLabel = "Country Code:"
     const val noneValue = "none"
+    // We rely on this platform tag to filter tickets in Zendesk, so should be kept separate from the `articleLabel`
+    const val platformTag = "Android"
     const val ticketSubject = "WordPress for Android Support"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
