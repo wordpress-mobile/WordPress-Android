@@ -428,6 +428,8 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
         tags.addAll(plans)
     }
     tags.add(origin.toString())
+    // Add Android tag to make it easier to filter tickets by platform
+    tags.add(ZendeskConstants.androidTag)
     extraTags?.let {
         tags.addAll(it)
     }
@@ -462,6 +464,7 @@ private val wpcomPushNotificationDeviceToken: String?
 
 private object ZendeskConstants {
     const val articleLabel = "Android"
+    const val androidTag = "Android"
     const val blogSeparator = "\n----------\n"
     const val jetpackTag = "jetpack"
     const val mobileCategoryId = 360000041586
