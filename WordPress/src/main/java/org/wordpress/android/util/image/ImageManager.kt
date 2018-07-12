@@ -98,6 +98,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
 
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
     companion object {
+        @JvmStatic
         @Deprecated("Use injected ImageManager")
         val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager()) }
     }
