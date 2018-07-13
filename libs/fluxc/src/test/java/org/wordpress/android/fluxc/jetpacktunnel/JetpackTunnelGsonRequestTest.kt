@@ -24,7 +24,8 @@ class JetpackTunnelGsonRequestTest {
         val request = JetpackTunnelGsonRequest.buildGetRequest(url, 567, params,
                 Any::class.java,
                 { _: Any? -> },
-                WPComErrorListener { _ -> }
+                WPComErrorListener { _ -> },
+                {}
         )
 
         // Verify that the request was built and wrapped as expected
