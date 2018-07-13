@@ -18,12 +18,12 @@ class JetpackTimeoutRequestHandler<T>(
     url: String,
     params: Map<String, String>,
     type: Type,
-    listener: Listener<JetpackTunnelResponse<T>>,
+    listener: Listener<T>,
     errorListener: WPComErrorListener,
     retryListener: (WPComGsonRequest<*>) -> Unit,
     private val maxRetries: Int = DEFAULT_MAX_RETRIES
 ) {
-    private val gsonRequest: WPComGsonRequest<JetpackTunnelResponse<T>>
+    private val gsonRequest: WPComGsonRequest<T>
     private var numRetries = 0
 
     init {
@@ -36,7 +36,7 @@ class JetpackTimeoutRequestHandler<T>(
         const val ADDITIONAL_RETRY_DELAY_MS = 5000L
     }
 
-    fun getRequest(): WPComGsonRequest<JetpackTunnelResponse<T>> {
+    fun getRequest(): WPComGsonRequest<T> {
         return gsonRequest
     }
 
@@ -47,7 +47,7 @@ class JetpackTimeoutRequestHandler<T>(
     private fun buildJPTimeoutRetryListener(
         wpApiEndpoint: String,
         wpComErrorListener: WPComErrorListener,
-        jpTimeoutListener: (WPComGsonRequest<JetpackTunnelResponse<T>>) -> Unit
+        jpTimeoutListener: (WPComGsonRequest<T>) -> Unit
     ): WPComErrorListener {
         return WPComErrorListener { error ->
             if (error.isJetpackTimeoutError()) {
