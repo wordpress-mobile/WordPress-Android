@@ -3410,10 +3410,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     mIsUpdatingPost = true;
                 }
             } else {
+                if (mIsDiscardingChanges) {
+                    showDialogError();
+                }
+
                 mIsDiscardingChanges = false;
                 mIsUpdatingPost = false;
                 showDialogProgress(false);
-                showDialogError();
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         }
