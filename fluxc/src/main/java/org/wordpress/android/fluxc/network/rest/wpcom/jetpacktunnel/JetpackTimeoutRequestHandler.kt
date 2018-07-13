@@ -4,6 +4,7 @@ import android.os.Handler
 import com.android.volley.Response.Listener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.util.AppLog
 import java.lang.reflect.Type
 
@@ -49,7 +50,7 @@ class JetpackTimeoutRequestHandler<T>(
         jpTimeoutListener: (WPComGsonRequest<JetpackTunnelResponse<T>>) -> Unit
     ): WPComErrorListener {
         return WPComErrorListener { error ->
-            if (error.apiError == "http_request_failed" && error.message.startsWith("cURL error 28")) {
+            if (error.isJetpackTimeoutError()) {
                 if (numRetries < maxRetries) {
                     AppLog.e(AppLog.T.API, "5-second timeout reached for endpoint $wpApiEndpoint, retrying...")
                     if (numRetries > 0) {
@@ -70,5 +71,9 @@ class JetpackTimeoutRequestHandler<T>(
                 wpComErrorListener.onErrorResponse(error)
             }
         }
+    }
+
+    private fun WPComGsonNetworkError.isJetpackTimeoutError(): Boolean {
+        return apiError == "http_request_failed" && message.startsWith("cURL error 28")
     }
 }
