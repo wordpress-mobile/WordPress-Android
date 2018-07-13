@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
-import org.wordpress.android.util.AppLog
 import java.lang.reflect.Type
 import java.net.URLEncoder
 
@@ -118,12 +117,11 @@ object JetpackTunnelGsonRequest {
         val wrappedType = TypeToken.getParameterized(JetpackTunnelResponse::class.java, type).type
         val wrappedListener = Response.Listener<JetpackTunnelResponse<T>> { listener(it.data) }
 
-        val retryRequest = WPComGsonRequest.buildGetRequest(tunnelRequestUrl, wrappedParams, wrappedType,
+        return jpTimeoutListener?.let { retryListener ->
+            JetpackTimeoutRequestHandler(tunnelRequestUrl, wrappedParams, wrappedType,
+                    wrappedListener, errorListener, retryListener).getRequest()
+        } ?: WPComGsonRequest.buildGetRequest(tunnelRequestUrl, wrappedParams, wrappedType,
                 wrappedListener, errorListener)
-        val wrappedErrorListener = buildJPTimeoutRetryListener(errorListener, retryRequest, jpTimeoutListener)
-
-        return WPComGsonRequest.buildGetRequest(tunnelRequestUrl, wrappedParams, wrappedType,
-                wrappedListener, wrappedErrorListener)
     }
 
     /**
@@ -273,26 +271,5 @@ object JetpackTunnelGsonRequest {
             }
         }
         return result
-    }
-
-    /**
-     * Wraps the given [WPComErrorListener] in a new one that recognizes Jetpack timeout errors and triggers the
-     * [jpTimeoutListener] (if provided) to do custom handling.
-     */
-    private fun <T> buildJPTimeoutRetryListener(
-        wpComErrorListener: WPComErrorListener,
-        retryRequest: WPComGsonRequest<JetpackTunnelResponse<T>>,
-        jpTimeoutListener: ((WPComGsonRequest<JetpackTunnelResponse<T>>) -> Unit)?
-    ): WPComErrorListener {
-        return jpTimeoutListener?.let {
-            WPComErrorListener { error ->
-                if (error.apiError == "http_request_failed" && error.message.startsWith("cURL error 28")) {
-                    AppLog.e(AppLog.T.API, "5-second Jetpack timeout reached, retrying...")
-                    it(retryRequest)
-                } else {
-                    wpComErrorListener.onErrorResponse(error)
-                }
-            }
-        } ?: wpComErrorListener
     }
 }
