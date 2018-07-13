@@ -109,7 +109,7 @@ object JetpackTunnelGsonRequest {
         type: Type,
         listener: (T?) -> Unit,
         errorListener: WPComErrorListener,
-        jpTimeoutListener: ((WPComGsonRequest<*>) -> Unit)? = null
+        jpTimeoutListener: ((WPComGsonRequest<*>) -> Unit)?
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val wrappedParams = createTunnelParams(params, wpApiEndpoint)
 
