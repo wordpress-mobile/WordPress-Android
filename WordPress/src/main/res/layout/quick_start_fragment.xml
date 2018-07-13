@@ -34,14 +34,14 @@
                 android:id="@+id/text_list_complete_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/img_emoji_party_popper_24sp"
                 android:drawablePadding="@dimen/margin_small_medium"
-                android:drawableRight="@drawable/img_emoji_party_popper_24sp"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="bottom"
                 android:text="@string/quick_start_list_complete_title"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/quick_start_completed_text">
+                android:textSize="@dimen/quick_start_completed_text"
+                tools:drawableEnd="@drawable/img_emoji_party_popper_24sp"
+                tools:drawableRight="@drawable/img_emoji_party_popper_24sp">
             </TextView>
 
             <TextView

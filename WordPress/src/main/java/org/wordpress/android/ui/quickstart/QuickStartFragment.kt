@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Paint
 import android.os.Bundle
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AlertDialog.Builder
@@ -60,6 +61,8 @@ class QuickStartFragment : Fragment() {
             }
 
             if (allTasksCompleted) {
+                val drawableRight = VectorDrawableCompat.create(resources, R.drawable.img_emoji_party_popper_24sp, null)
+                text_list_complete_title.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null)
                 layout_list_complete.visibility = View.VISIBLE
                 layout_skip_all.visibility = View.GONE
             }
