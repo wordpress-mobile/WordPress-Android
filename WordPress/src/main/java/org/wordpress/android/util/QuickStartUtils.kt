@@ -49,9 +49,9 @@ class QuickStartUtils {
                 mutableSpannedMessage.setSpan(ForegroundColorSpan(highlightColor),
                         startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-                val icon : Drawable? = try{
+                val icon: Drawable? = try {
                     ContextCompat.getDrawable(context, iconId)
-                }catch (e: Resources.NotFoundException){
+                } catch (e: Resources.NotFoundException) {
                     null
                 }
 
