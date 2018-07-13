@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 /**
  * Static data about initial tutorial prompts you see when selecting one from Quick Start task list
  **/
-enum class InitialTutorialPrompts constructor(
+enum class QuickStartMySitePrompts constructor(
     val task: QuickStartTask,
     val shortMessagePrompt: Int,
     val iconId: Int
@@ -38,8 +38,8 @@ enum class InitialTutorialPrompts constructor(
 
     companion object {
         @JvmStatic
-        fun getPromptDetailsForTask(task: QuickStartTask): InitialTutorialPrompts? {
-            InitialTutorialPrompts.values().forEach {
+        fun getPromptDetailsForTask(task: QuickStartTask): QuickStartMySitePrompts? {
+            QuickStartMySitePrompts.values().forEach {
                 if (it.task == task) return it
             }
             return null
