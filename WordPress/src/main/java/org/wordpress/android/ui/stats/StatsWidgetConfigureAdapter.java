@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -17,7 +18,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,21 +50,22 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
 
     private OnSiteClickListener mSiteSelectedListener;
     @Inject SiteStore mSiteStore;
+    @Inject ImageManager mImageManager;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mLayoutContainer;
         private final TextView mTxtTitle;
         private final TextView mTxtDomain;
-        private final WPNetworkImageView mImgBlavatar;
+        private final ImageView mImgBlavatar;
         private final View mDivider;
         private Boolean mIsSiteHidden;
 
         SiteViewHolder(View view) {
             super(view);
-            mLayoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
-            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
-            mTxtDomain = (TextView) view.findViewById(R.id.text_domain);
-            mImgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
+            mLayoutContainer = view.findViewById(R.id.layout_container);
+            mTxtTitle = view.findViewById(R.id.text_title);
+            mTxtDomain = view.findViewById(R.id.text_domain);
+            mImgBlavatar = view.findViewById(R.id.image_blavatar);
             mDivider = view.findViewById(R.id.divider);
             mIsSiteHidden = null;
 
@@ -127,7 +130,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
 
         holder.mTxtTitle.setText(site.getBlogNameOrHomeURL());
         holder.mTxtDomain.setText(site.getHomeURL());
-        holder.mImgBlavatar.setImageUrl(site.getBlavatarUrl(), WPNetworkImageView.ImageType.BLAVATAR);
+        mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR, site.getBlavatarUrl());
 
         if (site.getLocalId() == mPrimarySiteId) {
             holder.mLayoutContainer.setBackgroundDrawable(mSelectedItemBackground);
