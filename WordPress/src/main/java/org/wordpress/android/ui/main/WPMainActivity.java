@@ -72,6 +72,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -85,6 +86,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.List;
 
@@ -123,6 +125,7 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_READER = "show_reader";
 
     private WPMainNavigationView mBottomNav;
+    private WPDialogSnackbar mQuickStartSnackbar;
 
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
@@ -677,6 +680,12 @@ public class WPMainActivity extends AppCompatActivity implements
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.QUICK_START:
+                MySiteFragment msf = getMySiteFragment();
+                if (msf != null) {
+                    msf.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
     }
 
@@ -988,5 +997,32 @@ public class WPMainActivity extends AppCompatActivity implements
         if (fragment != null) {
             fragment.onLinkClicked(instanceTag);
         }
+    }
+
+    // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
+    // to manage SnackBar in Activity, instead of Fragment
+    public void showQuickStartSnackBar(CharSequence message) {
+        hideQuickStartSnackBar();
+
+        mQuickStartSnackbar = WPDialogSnackbar.make(findViewById(R.id.coordinator),
+                message,
+                AccessibilityUtils.getSnackbarDuration(this,
+                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+
+        mQuickStartSnackbar.show();
+    }
+
+    private void hideQuickStartSnackBar() {
+        if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
+            mQuickStartSnackbar.dismiss();
+            mQuickStartSnackbar = null;
+        }
+    }
+
+    // We dismiss the QuickStart SnackBar every time activity is paused because
+    // SnackBar sometimes do not appear when another SnackBar is still visible, even in other activities (weird)
+    @Override protected void onPause() {
+        super.onPause();
+        hideQuickStartSnackBar();
     }
 }
