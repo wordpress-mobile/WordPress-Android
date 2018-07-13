@@ -13,6 +13,4 @@
     <item type="id" name="stats_top_posts" />
     <item type="id" name="note_block_tag_id" />
     <item type="id" name="note_comment_fragment_container_base_id" />
-    <item type="id" name="bottom_nav_reader_button" />
-    <item type="id" name="bottom_nav_new_post_button" />
 </resources>

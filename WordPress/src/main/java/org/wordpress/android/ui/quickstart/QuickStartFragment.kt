@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.quickstart
 
-import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -83,27 +81,27 @@ class QuickStartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         layout_view_site.setOnClickListener {
-            startQuickStartTask(VIEW_SITE)
+            viewModel.completeTask(QuickStartTask.VIEW_SITE, true)
         }
 
         layout_browse_themes.setOnClickListener {
-            startQuickStartTask(CHOOSE_THEME)
+            viewModel.completeTask(QuickStartTask.CHOOSE_THEME, true)
         }
 
         layout_customize_site.setOnClickListener {
-            startQuickStartTask(CUSTOMIZE_SITE)
+            viewModel.completeTask(QuickStartTask.CUSTOMIZE_SITE, true)
         }
 
         layout_share_site.setOnClickListener {
-            startQuickStartTask(SHARE_SITE)
+            viewModel.completeTask(QuickStartTask.SHARE_SITE, true)
         }
 
         layout_publish_post.setOnClickListener {
-            startQuickStartTask(PUBLISH_POST)
+            viewModel.completeTask(QuickStartTask.PUBLISH_POST, true)
         }
 
         layout_follow_site.setOnClickListener {
-            startQuickStartTask(FOLLOW_SITE)
+            viewModel.completeTask(QuickStartTask.FOLLOW_SITE, true)
         }
 
         button_skip_all.setOnClickListener {
@@ -120,13 +118,6 @@ class QuickStartFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putBoolean(STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE,
                 skipAllTasksDialog != null && skipAllTasksDialog!!.isShowing)
-    }
-
-    private fun startQuickStartTask(task: QuickStartTask) {
-        val intent = Intent()
-        intent.putExtra(QuickStartActivity.ARG_QUICK_START_TASK, task)
-        activity?.setResult(RESULT_OK, intent)
-        activity?.finish()
     }
 
     private fun showSkipDialog() {
