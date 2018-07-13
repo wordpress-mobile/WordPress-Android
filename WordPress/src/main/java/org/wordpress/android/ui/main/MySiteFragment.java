@@ -537,7 +537,7 @@ public class MySiteFragment extends Fragment implements
                     QuickStartTask task =
                             (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
 
-                    // remove any existing quick start indicator if necessary
+                    // remove existing quick start indicator if necessary
                     if (mActiveTutorialPrompt != null) {
                         removeQuickStartFocusPoint();
                     }

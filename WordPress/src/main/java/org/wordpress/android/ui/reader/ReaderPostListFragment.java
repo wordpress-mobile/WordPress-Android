@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
@@ -53,10 +54,13 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
@@ -74,6 +78,7 @@ import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -98,6 +103,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -171,11 +177,13 @@ public class ReaderPostListFragment extends Fragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     private AlertDialog mBookmarksSavedLocallyDialog;
+    private QuickStartEvent mQuickStartEvent;
 
     @Inject AccountStore mAccountStore;
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject QuickStartStore mQuickStartStore;
 
     private static class HistoryStack extends Stack<String> {
         private final String mKeyName;
@@ -258,6 +266,14 @@ public class ReaderPostListFragment extends Fragment
         return fragment;
     }
 
+    public @Nullable SiteModel getSelectedSite() {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        }
+        return null;
+    }
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
@@ -312,6 +328,7 @@ public class ReaderPostListFragment extends Fragment
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
+            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -399,7 +416,7 @@ public class ReaderPostListFragment extends Fragment
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().registerSticky(this);
 
         reloadTags();
 
@@ -476,6 +493,27 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(final QuickStartEvent event) {
+        if (!isAdded() || getView() == null) {
+            return;
+        }
+
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
+
+        if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
+            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                    R.string.quick_start_dialog_follow_sites_message_short_search,
+                    R.drawable.ic_search_grey_24dp);
+
+            if (getActivity() != null && getActivity() instanceof WPMainActivity) {
+                ((WPMainActivity) getActivity()).showQuickStartSnackBar(title);
+            }
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(T.READER, "reader post list > saving instance state");
@@ -501,6 +539,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
 
         if (isSearchTabsShowing()) {
             int tabPosition = getSearchTabsPosition();
@@ -703,6 +742,11 @@ public class ReaderPostListFragment extends Fragment
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestHideBottomNavigation();
+                }
+
+                if (mQuickStartEvent != null
+                    && mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE && getSelectedSite() != null) {
+                    mQuickStartStore.setDoneTask(getSelectedSite().getId(), mQuickStartEvent.getTask(), true);
                 }
 
                 return true;
@@ -914,6 +958,7 @@ public class ReaderPostListFragment extends Fragment
                         }
                     }
                 }
+
                 @Override public void onTabUnselected(Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
                         mPostSearchAdapterPos = mRecyclerView.getCurrentPosition();
@@ -921,6 +966,7 @@ public class ReaderPostListFragment extends Fragment
                         mSiteSearchAdapterPos = mRecyclerView.getCurrentPosition();
                     }
                 }
+
                 @Override public void onTabReselected(Tab tab) {
                     mRecyclerView.smoothScrollToPosition(0);
                 }
@@ -1454,6 +1500,7 @@ public class ReaderPostListFragment extends Fragment
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             getActivity(), site.getSiteId(), site.getFeedId());
                 }
+
                 @Override
                 public void onLoadMore(int offset) {
                     showLoadingProgress(true);
@@ -2158,4 +2205,3 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 }
-
