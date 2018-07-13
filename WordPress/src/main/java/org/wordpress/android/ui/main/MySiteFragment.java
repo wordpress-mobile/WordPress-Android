@@ -52,7 +52,7 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
-import org.wordpress.android.ui.quickstart.InitialTutorialPrompts;
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -121,7 +121,7 @@ public class MySiteFragment extends Fragment implements
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
-    private InitialTutorialPrompts mActiveTutorialPrompt;
+    private QuickStartMySitePrompts mActiveTutorialPrompt;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -542,7 +542,7 @@ public class MySiteFragment extends Fragment implements
                         removeQuickStartFocusPoint();
                     }
 
-                    mActiveTutorialPrompt = InitialTutorialPrompts.getPromptDetailsForTask(task);
+                    mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task);
                     showActiveQuickStartTutorial();
                 }
                 break;
