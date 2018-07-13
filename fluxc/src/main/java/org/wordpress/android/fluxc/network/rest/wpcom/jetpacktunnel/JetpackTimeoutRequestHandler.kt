@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
+import android.os.Handler
 import com.android.volley.Response.Listener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
@@ -31,6 +32,7 @@ class JetpackTimeoutRequestHandler<T>(
 
     companion object {
         const val DEFAULT_MAX_RETRIES = 2
+        const val ADDITIONAL_RETRY_DELAY_MS = 5000L
     }
 
     fun getRequest(): WPComGsonRequest<JetpackTunnelResponse<T>> {
@@ -50,8 +52,15 @@ class JetpackTimeoutRequestHandler<T>(
             if (error.apiError == "http_request_failed" && error.message.startsWith("cURL error 28")) {
                 if (numRetries < maxRetries) {
                     AppLog.e(AppLog.T.API, "5-second timeout reached for endpoint $wpApiEndpoint, retrying...")
+                    if (numRetries > 0) {
+                        // Delay retries after the first by a bit
+                        with (Handler()) {
+                            postDelayed({ jpTimeoutListener(gsonRequest) }, ADDITIONAL_RETRY_DELAY_MS)
+                        }
+                    } else {
+                        jpTimeoutListener(gsonRequest)
+                    }
                     numRetries++
-                    jpTimeoutListener(gsonRequest)
                 } else {
                     AppLog.e(AppLog.T.API,
                             "5-second timeout reached for endpoint $wpApiEndpoint - maximum retries reached")
