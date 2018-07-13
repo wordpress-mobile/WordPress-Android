@@ -2255,7 +2255,7 @@
     <string name="quick_start_sites">Quick Start</string>
     <string name="quick_start_sites_progress" translatable="false" tools:ignore="UnusedResources">%1$d/%2$d</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
-    <string name="quick_start_span_start" translatable="false">&#160;&lt;span style=&quot;color:#0&quot;&gt;</string> 
+    <string name="quick_start_span_start" translatable="false">&#160;&lt;span style=&quot;color:#n&quot;&gt;</string>
     <string name="quick_start_focus_point_description" tools:ignore="UnusedResources">tap here</string>
 
 </resources>
