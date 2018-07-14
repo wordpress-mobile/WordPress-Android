@@ -276,10 +276,8 @@ public class WPMediaUtils {
     private static Intent prepareAudioLibraryIntent(String title, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(MIME_DATA_TYPE_AUDIO);
-        if (multiSelect) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        if (multiSelect && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
         }
         return Intent.createChooser(intent, title);
     }
