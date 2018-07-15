@@ -35,7 +35,7 @@
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
-    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
+    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar"/>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.WordPress.Widget" parent="Theme.AppCompat">
@@ -146,15 +146,18 @@
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
 
-    <style name="MediaSettings" />
+    <style name="MediaSettings"/>
+
     <style name="MediaSettings.Activity" parent="WordPress">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
     <style name="MediaSettings.TextInputStyle">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
+
     <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/grey_darken_10</item>
@@ -165,11 +168,13 @@
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
+
     <style name="MediaSettings.Divider">
         <item name="android:background">@color/divider_grey</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
+
     <style name="MediaSettings.Label">
         <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
         <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
@@ -178,6 +183,7 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
+
     <style name="MediaSettings.Value">
         <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
         <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
@@ -301,7 +307,9 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
-        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/my_site_list_row_icon_margin_right</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">
+            @dimen/my_site_list_row_icon_margin_right
+        </item>
         <item name="android:layout_marginRight">@dimen/my_site_list_row_icon_margin_right</item>
         <item name="android:gravity">center_vertical</item>
     </style>
@@ -451,7 +459,9 @@
         <item name="android:focusable">true</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:padding">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_large</item>
     </style>
 
     <style name="QuickStartIcon">
@@ -479,6 +489,8 @@
     </style>
 
     <style name="QuickStartDone">
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_height">24dp</item>
@@ -488,6 +500,8 @@
     </style>
 
     <style name="QuickStartDivider">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:background">@color/grey_lighten_20</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
         <item name="android:layout_width">match_parent</item>
@@ -508,7 +522,7 @@
     </style>
 
     <!-- Plans Styles -->
-    <style name="PlansProgressBar" parent="@android:style/Widget.Holo.ProgressBar" />
+    <style name="PlansProgressBar" parent="@android:style/Widget.Holo.ProgressBar"/>
 
     <style name="SwitchBlueLight">
         <item name="colorControlActivated">@color/blue_light</item>

@@ -15,6 +15,7 @@ import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -35,6 +36,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
@@ -72,6 +74,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -82,9 +85,11 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.List;
 
@@ -126,6 +131,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
+    private WPDialogSnackbar mQuickStartSnackbar;
     private boolean mIsMagicLinkLogin;
     private boolean mIsMagicLinkSignup;
 
@@ -498,11 +504,23 @@ public class WPMainActivity extends AppCompatActivity implements
     public void onPageChanged(int position) {
         updateTitle(position);
         trackLastVisiblePage(position, true);
+        if (position == PAGE_READER && getMySiteFragment() != null
+            && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+            // MySite fragment might not be attached to activity, so we need to remove focus point from here
+            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+            getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+        }
     }
-
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
+        if (getSelectedSite() != null
+            && getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+            // MySite fragment might not be attached to activity, so we need to remove focus point from here
+            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+            getMySiteFragment().completeActiveQuickStartTask(getSelectedSite().getId());
+        }
+
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
     }
 
@@ -677,6 +695,12 @@ public class WPMainActivity extends AppCompatActivity implements
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.QUICK_START:
+                MySiteFragment msf = getMySiteFragment();
+                if (msf != null) {
+                    msf.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
     }
 
@@ -691,8 +715,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 R.drawable.img_promo_quick_start,
                 getString(R.string.quick_start_dialog_need_help_button_negative),
                 "",
-                getString(R.string.quick_start_dialog_need_help_button_neutral)
-        );
+                getString(R.string.quick_start_dialog_need_help_button_neutral));
 
         promoDialog.show(getSupportFragmentManager(), tag);
     }
@@ -988,5 +1011,32 @@ public class WPMainActivity extends AppCompatActivity implements
         if (fragment != null) {
             fragment.onLinkClicked(instanceTag);
         }
+    }
+
+    // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
+    // to manage SnackBar in Activity, instead of Fragment
+    public void showQuickStartSnackBar(CharSequence message) {
+        hideQuickStartSnackBar();
+
+        mQuickStartSnackbar = WPDialogSnackbar.make(findViewById(R.id.coordinator),
+                message,
+                AccessibilityUtils.getSnackbarDuration(this,
+                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+
+        mQuickStartSnackbar.show();
+    }
+
+    private void hideQuickStartSnackBar() {
+        if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
+            mQuickStartSnackbar.dismiss();
+            mQuickStartSnackbar = null;
+        }
+    }
+
+    // We dismiss the QuickStart SnackBar every time activity is paused because
+    // SnackBar sometimes do not appear when another SnackBar is still visible, even in other activities (weird)
+    @Override protected void onPause() {
+        super.onPause();
+        hideQuickStartSnackBar();
     }
 }
