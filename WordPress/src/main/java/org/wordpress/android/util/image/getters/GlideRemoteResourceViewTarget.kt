@@ -17,7 +17,10 @@ import com.bumptech.glide.request.transition.Transition
 
 import org.wordpress.android.util.R
 
-internal class GlideRemoteResourceViewTarget(view: TextView, private val maxSize: Int) : ViewTarget<TextView, Drawable>(view) {
+internal class GlideRemoteResourceViewTarget(
+    view: TextView,
+    private val maxSize: Int
+) : ViewTarget<TextView, Drawable>(view) {
     private val drawableWrapper = RemoteDrawableWrapper()
     private var request: Request? = null
 
