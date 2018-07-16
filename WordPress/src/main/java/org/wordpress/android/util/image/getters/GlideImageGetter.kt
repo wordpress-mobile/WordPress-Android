@@ -5,23 +5,27 @@ import android.graphics.drawable.Drawable
 import android.text.Html
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import org.wordpress.android.modules.GlideApp
+import org.wordpress.android.WordPress
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.R
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import java.lang.ref.WeakReference
 import java.util.HashSet
+import javax.inject.Inject
 
 class GlideImageGetter(
     textView: TextView,
-    private val maxWidth: Int,
-    private val placeholderDrawable: Drawable,
-    private val errorDrawable: Drawable
+    private val maxWidth: Int
 ) : Html.ImageGetter, Drawable.Callback {
     private val textView: WeakReference<TextView> = WeakReference(textView)
 
     private val targets = HashSet<GlideRemoteResourceViewTarget>()
 
+    @Inject lateinit var imageManager: ImageManager
+
     init {
+        (WordPress.getContext() as WordPress).component().inject(this)
         clear(textView)
         textView.setTag(R.id.glide_image_loader_view_tag, this)
     }
@@ -53,11 +57,8 @@ class GlideImageGetter(
 
         return textView.get()?.let {
             val target = GlideRemoteResourceViewTarget(it, maxWidth)
-            targets.add(GlideApp.with(it.context)
-                    .load(source)
-                    .placeholder(placeholderDrawable)
-                    .error(errorDrawable)
-                    .into(target))
+            imageManager.load(target, ImageType.UNKNOWN_DIMENSIONS, source)
+            targets.add(target)
 
             return target.drawable
         } ?: return null

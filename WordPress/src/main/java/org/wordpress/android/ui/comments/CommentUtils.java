@@ -2,8 +2,6 @@ package org.wordpress.android.ui.comments;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -11,7 +9,6 @@ import android.text.style.LeadingMarginSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-import org.wordpress.android.R;
 import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.image.getters.GlideImageGetter;
@@ -47,11 +44,7 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            Drawable loading = ContextCompat.getDrawable(textView.getContext(),
-                                                         R.drawable.legacy_dashicon_format_image_big_grey);
-            Drawable failed = ContextCompat.getDrawable(textView.getContext(),
-                                                        R.drawable.ic_notice_grey_500_48dp);
-            html = HtmlUtils.fromHtml(content, new GlideImageGetter(textView, maxImageSize, loading, failed));
+            html = HtmlUtils.fromHtml(content, new GlideImageGetter(textView, maxImageSize));
         } else {
             html = HtmlUtils.fromHtml(content);
         }

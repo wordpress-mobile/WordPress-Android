@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
+import android.widget.TextView
+import com.bumptech.glide.request.target.ViewTarget
+import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
@@ -45,6 +48,14 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .load(drawable)
                 .applyScaleType(scaleType)
                 .into(imageView)
+    }
+
+    fun load(viewTarget: ViewTarget<TextView, Drawable>, imageType: ImageType, imgUrl: String) {
+        GlideApp.with(WordPress.getContext())
+                .load(imgUrl)
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .into(viewTarget)
     }
 
     fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
