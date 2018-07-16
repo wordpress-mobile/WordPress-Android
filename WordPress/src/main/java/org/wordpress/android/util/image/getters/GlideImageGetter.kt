@@ -13,13 +13,13 @@ import java.util.HashSet
 
 class GlideImageGetter(
     textView: TextView,
-    private val mMaxWidth: Int,
-    private val mPlaceholderDrawable: Drawable,
-    private val mErrorDrawable: Drawable
+    private val maxWidth: Int,
+    private val placeholderDrawable: Drawable,
+    private val errorDrawable: Drawable
 ) : Html.ImageGetter, Drawable.Callback {
-    private val mTextView: WeakReference<TextView> = WeakReference(textView)
+    private val textView: WeakReference<TextView> = WeakReference(textView)
 
-    private val mTargets = HashSet<GlideRemoteResourceViewTarget>()
+    private val targets = HashSet<GlideRemoteResourceViewTarget>()
 
     init {
         clear(textView)
@@ -29,9 +29,9 @@ class GlideImageGetter(
     private fun clear(textView: TextView) {
         val prevGetter = textView.getTag(R.id.glide_image_loader_view_tag) as GlideImageGetter?
         prevGetter?.let {
-            clear(textView.context, it.mTargets)
+            clear(textView.context, it.targets)
         }
-        clear(textView.context, mTargets)
+        clear(textView.context, targets)
     }
 
     private fun clear(context: Context, targets: MutableSet<GlideRemoteResourceViewTarget>) {
@@ -49,14 +49,14 @@ class GlideImageGetter(
             source = "http:$source"
         }
 
-        source = if (mMaxWidth > 0) PhotonUtils.getPhotonImageUrl(url, mMaxWidth, 0) else url
+        source = if (maxWidth > 0) PhotonUtils.getPhotonImageUrl(url, maxWidth, 0) else url
 
-        return mTextView.get()?.let {
-            val target = GlideRemoteResourceViewTarget(it, mMaxWidth)
-            mTargets.add(GlideApp.with(it.context)
+        return textView.get()?.let {
+            val target = GlideRemoteResourceViewTarget(it, maxWidth)
+            targets.add(GlideApp.with(it.context)
                     .load(source)
-                    .placeholder(mPlaceholderDrawable)
-                    .error(mErrorDrawable)
+                    .placeholder(placeholderDrawable)
+                    .error(errorDrawable)
                     .into(target))
 
             return target.drawable
@@ -64,7 +64,7 @@ class GlideImageGetter(
     }
 
     override fun invalidateDrawable(who: Drawable) {
-        mTextView.get()?.invalidate()
+        textView.get()?.invalidate()
     }
 
     override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {}

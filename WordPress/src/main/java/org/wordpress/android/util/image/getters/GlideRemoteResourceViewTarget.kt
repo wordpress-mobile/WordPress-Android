@@ -17,11 +17,11 @@ import com.bumptech.glide.request.transition.Transition
 
 import org.wordpress.android.util.R
 
-internal class GlideRemoteResourceViewTarget(view: TextView, private val mMaxSize: Int) : ViewTarget<TextView, Drawable>(view) {
-    private val mDrawableWrapper = RemoteDrawableWrapper()
-    private var mRequest: Request? = null
+internal class GlideRemoteResourceViewTarget(view: TextView, private val maxSize: Int) : ViewTarget<TextView, Drawable>(view) {
+    private val drawableWrapper = RemoteDrawableWrapper()
+    private var request: Request? = null
 
-    val drawable: Drawable get() = mDrawableWrapper
+    val drawable: Drawable get() = drawableWrapper
 
     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
         if (resource is Animatable) {
@@ -30,7 +30,7 @@ internal class GlideRemoteResourceViewTarget(view: TextView, private val mMaxSiz
             resource.callback = getView().getTag(R.id.glide_image_loader_view_tag) as Drawable.Callback
             (resource as Animatable).start()
         }
-        replaceDrawable(resource, getScaledBounds(resource, mMaxSize))
+        replaceDrawable(resource, getScaledBounds(resource, maxSize))
     }
 
     override fun onLoadFailed(errorDrawable: Drawable?) {
@@ -59,18 +59,18 @@ internal class GlideRemoteResourceViewTarget(view: TextView, private val mMaxSiz
     }
 
     private fun replaceDrawable(drawable: Drawable, bounds: Rect) {
-        mDrawableWrapper.setDrawable(drawable)
-        mDrawableWrapper.bounds = bounds
+        drawableWrapper.setDrawable(drawable)
+        drawableWrapper.bounds = bounds
         // force textView to resize correctly by resetting the content to itself
         getView().text = getView().text
     }
 
     override fun getRequest(): Request? {
-        return mRequest
+        return request
     }
 
     override fun setRequest(request: Request?) {
-        this.mRequest = request
+        this.request = request
     }
 
     /**
@@ -79,35 +79,35 @@ internal class GlideRemoteResourceViewTarget(view: TextView, private val mMaxSiz
      */
     @SuppressLint("MissingSuperCall")
     override fun getSize(cb: SizeReadyCallback) {
-        cb.onSizeReady(mMaxSize, Target.SIZE_ORIGINAL)
+        cb.onSizeReady(maxSize, Target.SIZE_ORIGINAL)
     }
 
     private class RemoteDrawableWrapper : Drawable() {
-        internal var mDrawable: Drawable? = null
+        internal var drawable: Drawable? = null
 
         fun setDrawable(drawable: Drawable) {
-            mDrawable = drawable
+            this.drawable = drawable
         }
 
         override fun draw(canvas: Canvas) {
-            mDrawable?.draw(canvas)
+            drawable?.draw(canvas)
         }
 
         override fun setAlpha(alpha: Int) {
-            mDrawable?.alpha = alpha
+            drawable?.alpha = alpha
         }
 
         override fun setColorFilter(colorFilter: ColorFilter?) {
-            mDrawable?.colorFilter = colorFilter
+            drawable?.colorFilter = colorFilter
         }
 
         override fun getOpacity(): Int {
-            return mDrawable?.opacity ?: PixelFormat.UNKNOWN
+            return drawable?.opacity ?: PixelFormat.UNKNOWN
         }
 
         override fun setBounds(bounds: Rect) {
             super.setBounds(bounds)
-            mDrawable?.bounds = bounds
+            drawable?.bounds = bounds
         }
     }
 }
