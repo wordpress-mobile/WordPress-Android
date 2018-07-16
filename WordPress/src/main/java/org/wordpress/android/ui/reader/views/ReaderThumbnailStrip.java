@@ -95,7 +95,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
             mView.addView(view);
 
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailWidth, mThumbnailHeight);
-            ImageManager.loadImage(imageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP);
+            ImageManager.getInstance().load(imageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP);
 
             // tapping a thumbnail opens the photo viewer
             imageView.setOnClickListener(new OnClickListener() {
