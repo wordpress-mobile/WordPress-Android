@@ -98,6 +98,7 @@ object JetpackTunnelGsonRequest {
      * @param type the Type defining the expected response
      * @param listener the success listener
      * @param errorListener the error listener
+     * @param jpTimeoutListener the listener for Jetpack timeout errors (can be used to silently retry the request)
      *
      * @param T the expected response object from the WP-API endpoint
      */
@@ -107,7 +108,8 @@ object JetpackTunnelGsonRequest {
         params: Map<String, String>,
         type: Type,
         listener: (T?) -> Unit,
-        errorListener: WPComErrorListener
+        errorListener: WPComErrorListener,
+        jpTimeoutListener: ((WPComGsonRequest<*>) -> Unit)?
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         val wrappedParams = createTunnelParams(params, wpApiEndpoint)
 
@@ -115,7 +117,10 @@ object JetpackTunnelGsonRequest {
         val wrappedType = TypeToken.getParameterized(JetpackTunnelResponse::class.java, type).type
         val wrappedListener = Response.Listener<JetpackTunnelResponse<T>> { listener(it.data) }
 
-        return WPComGsonRequest.buildGetRequest(tunnelRequestUrl, wrappedParams, wrappedType,
+        return jpTimeoutListener?.let { retryListener ->
+            JetpackTimeoutRequestHandler(tunnelRequestUrl, wrappedParams, wrappedType,
+                    wrappedListener, errorListener, retryListener).getRequest()
+        } ?: WPComGsonRequest.buildGetRequest(tunnelRequestUrl, wrappedParams, wrappedType,
                 wrappedListener, errorListener)
     }
 
