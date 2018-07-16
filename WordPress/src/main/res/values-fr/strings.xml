@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-20 07:59:43+0000
+Translation-Revision-Date: 2018-07-05 14:18:41+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="reader_avatar_desc">photo de profil</string>
+    <string name="reader_blavatar_desc">icône du site</string>
+    <string name="notification_channel_transient_title">Transient</string>
+    <string name="support_identity_input_dialog_email_label">E–mail</string>
+    <string name="support_identity_input_dialog_enter_email">Veuillez saisir votre adresse e–mail</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Pour continuer, veuillez saisir votre adresse e–mail et votre nom</string>
+    <string name="support_push_notification_message">Nouveau message depuis \'Aide &amp; Support\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Non configuré</string>
+    <string name="support_contact_email">E–mail de contact</string>
+    <string name="application_log_button">Journal d’application</string>
+    <string name="my_tickets">Mes tickets</string>
+    <string name="activity_log_rewind_dialog_message">Voulez vous vraiment faire retourner votre site en arrière de %s à %s ? Ceci va supprimer tout le contenu et les options créées ou changées depuis.</string>
+    <string name="activity_log_rewind_site">Retour en arrière du site</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Retour en arrière en cours</string>
+    <string name="activity_log_currently_restoring_message">Retour en arrière de %s %s</string>
+    <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Votre site a bien été restauré</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %s %s</string>
+    <string name="activity_log_button">Bouton d’action de journal d’activité</string>
     <string name="plugin_auto_managed">Auto–géré</string>
     <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article, et revenez pour le lire quand vous le souhaitez. Il ne sera disponible que sur cet appareil -– les articles enregistrés ne sont pas encore synchronisés avec les autres périphériques. (On y travaille.)</string>
     <string name="reader_save_posts_locally_dialog_title">Enregistrer les articles pour plus tard</string>
@@ -98,8 +119,6 @@ Language: fr
     <string name="dialog_confirm_delete_permanently_page">Voulez–vous vraiment supprimer définitivement cette page ?</string>
     <string name="dialog_confirm_delete_permanently_post">Voulez–vous vraiment supprimer définitivement cet article ?</string>
     <string name="notification_site_creation_title_in_progress">Création du site… Cette opération peut prendre quelques minutes.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_general_title">Général</string>
     <string name="photo_picker_use_photo">Utiliser cette photo</string>
@@ -1412,7 +1431,6 @@ Language: fr
     <string name="reader_empty_posts_in_tag">Pas d\'articles avec ce tag</string>
     <string name="reader_empty_comments">Pas encore de commentaires</string>
     <string name="create_new_blog_wpcom">Créer votre blog WordPress.com</string>
-    <string name="nux_help_description">Visitez le centre d\'aide pour obtenir des réponses aux questions les plus communes ou bien visitez le forum pour en poser de nouvelles.</string>
     <string name="browse_our_faq_button">Feuilleter notre FAQ</string>
     <string name="reader_empty_posts_liked">Vous n\'aimez aucun article</string>
     <string name="reader_empty_followed_blogs_title">Vous ne suivez aucun site pour le moment</string>
@@ -1420,11 +1438,6 @@ Language: fr
     <string name="reader_toast_blog_blocked">Les articles de ce site ne seront plus affichés</string>
     <string name="reader_toast_err_block_blog">Impossible de bloquer ce site</string>
     <string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
-    <string name="hs__invalid_email_error">Entrer une adresse email valide</string>
-    <string name="hs__username_blank_error">Entrer un nom valide</string>
-    <string name="hs__conversation_header">Discussion support</string>
-    <string name="hs__new_conversation_header">Discussion support</string>
-    <string name="hs__conversation_detail_error">Décrivez le problème rencontré</string>
     <string name="contact_us">Contactez nous</string>
     <string name="schedule_verb">Programmer</string>
     <string name="update_verb">Mettre à jour</string>

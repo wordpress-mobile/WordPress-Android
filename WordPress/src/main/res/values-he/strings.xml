@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-25 16:54:06+0000
+Translation-Revision-Date: 2018-07-09 18:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="reader_avatar_desc">תמונת פרופיל</string>
+    <string name="reader_blavatar_desc">סמל אתר</string>
+    <string name="notification_channel_transient_title">זמני</string>
+    <string name="support_identity_input_dialog_email_label">אימייל</string>
+    <string name="support_identity_input_dialog_enter_email">יש להזין את כתובת האימייל שלך</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">יש להזין את כתובת האימייל והשם שלך כדי להמשיך</string>
+    <string name="support_push_notification_message">הודעה חדשה מ\'עזרה ותמיכה\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">לא הוגדר</string>
+    <string name="support_contact_email">אימייל ליצירת קשר</string>
+    <string name="application_log_button">יומן יישום</string>
+    <string name="my_tickets">הפנייה שלי</string>
+    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד %s בשעה %s? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
+    <string name="activity_log_rewind_site">שחזור גרסה קודמת של האתר</string>
+    <string name="activity_log_currently_restoring_message_no_dates">השחזור בתהליך</string>
+    <string name="activity_log_currently_restoring_message">משחזר לתאריך %s %s</string>
+    <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
+    <string name="activity_log_rewind_finished_snackbar_message">האתר שלך שוחזר בהצלחה\nשוחזר לתאריך %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %s %s</string>
+    <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
     <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד – פוסטים שנשמרו לא מסתנכרנים בין מכשירים. (עדיין! אנחנו עובדים על זה).</string>
     <string name="reader_save_posts_locally_dialog_title">שמירת פוסטים למועד מאוחר יותר</string>
@@ -98,8 +119,6 @@ Language: he_IL
     <string name="dialog_confirm_delete_permanently_page">האם ברצונך למחוק את העמוד לצמיתות?</string>
     <string name="dialog_confirm_delete_permanently_post">האם ברצונך למחוק את הפוסט לצמיתות?</string>
     <string name="notification_site_creation_title_in_progress">יוצר את האתר… הפעולה תימשך מספר דקות.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">חשוב</string>
     <string name="notification_channel_general_title">כללי</string>
     <string name="photo_picker_use_photo">שימוש בתמונה זו</string>
@@ -1405,7 +1424,6 @@ Language: he_IL
     <string name="pages_empty_list">אין עמודים עדיין. למה לא ליצור אחד?</string>
     <string name="reader_empty_posts_liked">לא עשית לייק על אף פוסט</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
-    <string name="nux_help_description">אפשר לבקר במרכז העזרה כדי לקבל תשובות לשאלות נפוצות, או לבקר בפורומים כדי לשאול שאלות חדשות</string>
     <string name="reader_label_like">לייק</string>
     <string name="reader_label_liked_by">קיבל לייקים מאת</string>
     <string name="error_refresh_unauthorized_comments">איך לך הרשאה להציג או לערוך תגובות</string>
@@ -1421,11 +1439,6 @@ Language: he_IL
     <string name="reader_toast_err_block_blog">לא ניתן לחסום אתר זה</string>
     <string name="reader_toast_err_generic">לא ניתן לבצע את הפעולה</string>
     <string name="contact_us">ליצור קשר</string>
-    <string name="hs__conversation_detail_error">תאר/י את הבעיה בה נתקלת</string>
-    <string name="hs__new_conversation_header">צ׳אט תמיכה</string>
-    <string name="hs__conversation_header">צ׳אט תמיכה</string>
-    <string name="hs__username_blank_error">נא להזין שם</string>
-    <string name="hs__invalid_email_error">נא להזין כתובת אימייל</string>
     <string name="update_verb">עדכן</string>
     <string name="schedule_verb">תזמן</string>
     <string name="reader_toast_err_unfollow_blog">לא ניתן לבטל את המעקב אחר אתר זה</string>
