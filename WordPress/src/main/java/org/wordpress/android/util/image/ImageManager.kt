@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.target.Target
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
@@ -16,18 +19,25 @@ import javax.inject.Singleton
  */
 @Singleton
 class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderManager) {
+    interface RequestListener {
+        fun onLoadFailed(e: Exception?)
+        fun onResourceReady(resource: Drawable)
+    }
+
     @JvmOverloads
     fun load(
         imageView: ImageView,
         imageType: ImageType,
         imgUrl: String,
-        scaleType: ImageView.ScaleType = CENTER
+        scaleType: ImageView.ScaleType = CENTER,
+        requestListener: RequestListener? = null
     ) {
         GlideApp.with(imageView.context)
                 .load(imgUrl)
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .applyScaleType(scaleType)
+                .attachRequestListener(requestListener)
                 .into(imageView)
     }
 
@@ -86,6 +96,22 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     private fun GlideRequest<Drawable>.addFallback(imageType: ImageType): GlideRequest<Drawable> {
         val errorImageRes = placeholderManager.getErrorResource(imageType)
         return if (errorImageRes == null) this else this.error(errorImageRes)
+    }
+
+    private fun GlideRequest<Drawable>.attachRequestListener(requestListener: RequestListener?): GlideRequest<Drawable> {
+        return if (requestListener == null) this else this.listener(object : com.bumptech.glide.request.RequestListener<Drawable> {
+            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                requestListener.onLoadFailed(e)
+                return false
+            }
+
+            override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                resource?.let {
+                    requestListener.onResourceReady(it)
+                }
+                return false
+            }
+        })
     }
 
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
