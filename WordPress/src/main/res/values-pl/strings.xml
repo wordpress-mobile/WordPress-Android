@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-13 21:45:40+0000
+Translation-Revision-Date: 2018-07-10 10:27:39+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="reader_avatar_desc">zdjęcie profilowe</string>
+    <string name="reader_blavatar_desc">ikona witryny</string>
+    <string name="notification_channel_transient_title">Krótkotrwały</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_enter_email">Proszę wprowadzić swój adres email</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Aby kontynuować, proszę wprowadzić swój adres email i imię</string>
+    <string name="support_push_notification_message">Nowe wiadomości od zespołu \'Pomocy i wsparcia\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Nie ustawiono</string>
+    <string name="support_contact_email">Email kontaktowy</string>
+    <string name="application_log_button">Log/dziennik aplikacji</string>
+    <string name="my_tickets">Moje bilety</string>
+    <string name="activity_log_rewind_dialog_message">Czy na pewno chcesz przywrócić swoją witrynę do %s na %s? Spowoduje to usunięcie całej zawartości i opcji ustawionych lub zmienionych po tym terminie.</string>
+    <string name="activity_log_rewind_site">Przywróć wcześniejszy stan witryny</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Przywracanie witryny w toku</string>
+    <string name="activity_log_currently_restoring_message">Przywracanie stanu do %s %s</string>
+    <string name="activity_log_currently_restoring_title">Trwa przywracanie twojej witryny</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Twoja witryna została z powodzeniem przywrócona</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Twoja witryna została z powodzeniem przywrócona.\nOdtworzono stan z %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Twoja witryna jest w trakcie przywracania\nPrzywracanie do stanu z %s %s</string>
+    <string name="activity_log_button">Przycisk aktywności logu/dziennika aktywności</string>
+    <string name="plugin_auto_managed">Zarządzane automatycznie</string>
+    <string name="reader_save_posts_locally_dialog_message">Zapisz ten wpis i wróć do niego w późniejszym czasie. Będzie dostępny jedynie na tym urządzeniu – zapisane wpisy nie synchronizują się na innych urządzeniach. (Jeszcze nie! Pracujemy nad tym.)</string>
+    <string name="reader_save_posts_locally_dialog_title">Zapisz wpis na później</string>
+    <string name="reader_empty_search_request_failed">Nie można było wykonać wyszukiwania</string>
+    <string name="reader_empty_search_title">Nie znaleziono wyników wyszukiwania</string>
+    <string name="reader_label_post_search_explainer">Przeszukaj WordPressa\nw poszukiwaniu witryny lub wpisu</string>
+    <string name="comment_read_source_post">Przeczytaj wpis źródłowy</string>
+    <string name="sites">Witryny</string>
     <string name="signup_magic_link_title">Wysłano Magic Linka</string>
     <string name="signup_email_screen_title">Rejestracja przy użyciu emaila</string>
     <string name="verification_2fa_screen_title">Weryfikacja kodu</string>
@@ -16,6 +45,7 @@ Language: pl
     <string name="email_address_login_title">Logowanie adresem email</string>
     <string name="alternatively">Alternatywnie:</string>
     <string name="reader_empty_saved_posts_description">Stuknij %s aby zapisać wpis na swojej liście.</string>
+    <string name="reader_empty_saved_posts_title">Nie zapisano jeszcze żadnych wpisów!</string>
     <string name="reader_bookmark_snack_title">Wpis zapisano</string>
     <string name="reader_bookmark_snack_btn">Zobacz wszystkie</string>
     <string name="reader_btn_bookmarked">Zapisano</string>
@@ -83,13 +113,12 @@ Language: pl
     <string name="notification_settings_followed_dialog_email_posts_switch">Prześlij do mnie emailem nowe wpisy</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Wszystkie witryny, które obserwuję</string>
     <string name="notification_settings_category_followed_sites">Obserwowane witryny</string>
+    <string name="content_description_person_reading_device_notification">Osoba czytająca na urządzeniu z powiadomieniami</string>
     <string name="content_description_people_looking_charts">Ludzie analizujący grafiki i wykresy</string>
     <string name="comment_title">%s na %s</string>
     <string name="dialog_confirm_delete_permanently_page">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć tę stronę?</string>
     <string name="dialog_confirm_delete_permanently_post">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć ten wpis?</string>
     <string name="notification_site_creation_title_in_progress">Tworzenie witryny… To może zająć kilka minut.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Ważne</string>
     <string name="notification_channel_general_title">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
@@ -907,11 +936,9 @@ Language: pl
     <string name="send_link">Wyślij odnośnik</string>
     <string name="label_clear_search_history">Usuń historię wyszukiwania</string>
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
-    <string name="reader_empty_posts_in_search_description">Nie odnaleziono żadnych wpisów zawierających %s w twoim języku</string>
-    <string name="reader_empty_posts_in_search_title">Nie odnaleziono wpisów</string>
+    <string name="reader_empty_search_description">Nie odnaleziono żadnych wyników wyszukiwania zawierających %s w twoim języku</string>
     <string name="reader_label_post_search_running">Szukanie…</string>
-    <string name="reader_label_post_search_explainer">Przeszukaj wszystkie publiczne blogi WordPress.com</string>
-    <string name="reader_hint_post_search">Przeszukaj WordPress.com</string>
+    <string name="reader_hint_post_search">Przeszukaj WordPressa</string>
     <string name="reader_title_related_post_detail">Powiązany wpis</string>
     <string name="preview_screen_links_disabled">Odnośniki są wyłączone na ekranie podglądu</string>
     <string name="draft_explainer">Ten wpis jest szkicem, który nie został opublikowany</string>
@@ -1212,7 +1239,7 @@ Language: pl
     <string name="reader_short_like_count_none">Polubienie</string>
     <string name="reader_label_follow_count">%,d obserwujących</string>
     <string name="reader_short_like_count_one">1 polubienie</string>
-    <string name="reader_menu_tags">Edytuj tagi i blogi</string>
+    <string name="reader_menu_tags">Edytuj tagi i witryny</string>
     <string name="reader_title_post_detail">Wpis czytnika</string>
     <string name="local_draft_explainer">Ten wpis posiada lokalny szkic, który nie został opublikowany</string>
     <string name="local_changes_explainer">Ten wpis posiada lokalne zmiany, które nie zostały opuplikowane</string>
@@ -1245,8 +1272,8 @@ Language: pl
     <string name="post_trashed">Wpis został przeniesiony do kosza</string>
     <string name="post_deleted">Wpis usunięty</string>
     <string name="page_trashed">Strona przeniesiona do kosza</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Nie masz uprawnień do tego blogu</string>
-    <string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć blogu</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">Nie masz uprawnień dostępu do tej witryny</string>
+    <string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć tej witryny</string>
     <string name="undo">Cofnij</string>
     <string name="passcodelock_prompt_message">Wprowadź PIN</string>
     <string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com aby spróbować ponownie.</string>
@@ -1313,7 +1340,7 @@ Language: pl
     <string name="error_copy_to_clipboard">Wystąpił błąd podczas kopiowania tekstu do schowka</string>
     <string name="stats_recent_weeks">Ostatnie tygodnie</string>
     <string name="stats_average_per_day">Średnia na dzień</string>
-    <string name="reader_empty_posts_in_blog">Ten blog jest pusty</string>
+    <string name="reader_empty_posts_in_blog">Ta witryna jest pusta</string>
     <string name="reader_label_new_posts">Nowe wpisy</string>
     <string name="logs_copied_to_clipboard">Dziennik aplikacji został skopiowany do schowka</string>
     <string name="stats_period">Okres</string>
@@ -1404,34 +1431,28 @@ Language: pl
     <string name="reader_empty_posts_in_tag">Brak wpisów z tym tagiem</string>
     <string name="reader_empty_comments">Nie ma jeszcze komentarzy</string>
     <string name="create_new_blog_wpcom">Stwórz blog na WordPress.com</string>
-    <string name="nux_help_description">Przejdź do centrum pomocy, aby uzyskać odpowiedzi na najczęściej zadawane pytania lub odwiedź forum, aby zadać nowe</string>
     <string name="browse_our_faq_button">Przejrzyj nasze FAQ</string>
     <string name="reader_empty_posts_liked">Nie polubiłeś jeszcze żadnych wpisów</string>
     <string name="reader_empty_followed_blogs_title">Nie obserwujesz jeszcze żadnych blogów</string>
-    <string name="reader_menu_block_blog">Zablokuj ten blog</string>
-    <string name="reader_toast_blog_blocked">Wpisy z tego blogu nie będą już widoczne</string>
-    <string name="reader_toast_err_block_blog">Nie można zablokować tego blogu</string>
+    <string name="reader_menu_block_blog">Zablokuj tę witrynę</string>
+    <string name="reader_toast_blog_blocked">Wpisy z tej witryny nie będą więcej pokazywane</string>
+    <string name="reader_toast_err_block_blog">Nie można zablokować tej witryny</string>
     <string name="reader_toast_err_generic">Nie można wykonać tego działania</string>
-    <string name="hs__invalid_email_error">Wpisz poprawny adres email</string>
-    <string name="hs__username_blank_error">Wpisz poprawną nazwę użytkownika</string>
-    <string name="hs__conversation_header">Chat pomocy technicznej</string>
-    <string name="hs__new_conversation_header">Chat pomocy technicznej</string>
-    <string name="hs__conversation_detail_error">Opisz problem, który zaobserwowano</string>
     <string name="contact_us">Kontakt</string>
     <string name="schedule_verb">Zaplanuj</string>
     <string name="update_verb">Zaktualizuj</string>
-    <string name="reader_empty_recommended_blogs">Brak polecanych blogów</string>
-    <string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć obserwowania tego blogu</string>
-    <string name="reader_toast_err_follow_blog">Nie udało się włączyć obserwowania tego blogu</string>
-    <string name="reader_toast_err_already_follow_blog">Już obserwujesz ten blog</string>
-    <string name="reader_toast_err_get_blog_info">Nie udało się pobrać informacji o blogu</string>
-    <string name="reader_label_followed_blog">Blog obserwowany</string>
+    <string name="reader_empty_recommended_blogs">Brak polecanych witryn</string>
+    <string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć obserwowania tej witryny</string>
+    <string name="reader_toast_err_follow_blog">Nie udało się włączyć obserwowania tego witryny</string>
+    <string name="reader_toast_err_already_follow_blog">Już obserwujesz tą witrynę</string>
+    <string name="reader_toast_err_get_blog_info">Nie udało się pokazać tej witryny</string>
+    <string name="reader_label_followed_blog">Witryna obserwowana</string>
     <string name="reader_hint_add_tag_or_url">Wpisz adres lub tag aby obserwować</string>
     <string name="reader_page_followed_blogs">Obserwowane blogi</string>
     <string name="reader_page_followed_tags">Obserwowane tagi</string>
-    <string name="reader_title_subs">Tagi i blogi</string>
+    <string name="reader_title_subs">Tagi i Witryny</string>
     <string name="reader_title_tag_preview">Tag Czytnika</string>
-    <string name="reader_title_blog_preview">Blog Czytnika</string>
+    <string name="reader_title_blog_preview">Witryna Czytnika</string>
     <string name="media_empty_list">Brak mediów</string>
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
     <string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>

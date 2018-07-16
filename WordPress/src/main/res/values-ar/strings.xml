@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 16:54:06+0000
+Translation-Revision-Date: 2018-07-10 15:54:06+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="reader_avatar_desc">صورة ملف التعريف</string>
+    <string name="reader_blavatar_desc">أيقونة الموقع</string>
+    <string name="notification_channel_transient_title">عابر</string>
+    <string name="support_identity_input_dialog_email_label">البريد الإلكتروني</string>
+    <string name="support_identity_input_dialog_enter_email">يرجى إدخال عنوان بريدك الإلكتروني</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">للاستمرار، يرجى إدخال عنوان بريدك الإلكتروني واسمك</string>
+    <string name="support_push_notification_message">رسالة جديدة من \"التعليمات والدعم\"</string>
+    <string name="support_push_notification_title">وردبرس</string>
+    <string name="support_contact_email_not_set">لم يتم التعيين</string>
+    <string name="support_contact_email">البريد الإلكتروني الخاص بجهة الاتصال</string>
+    <string name="application_log_button">سجل التطبيق</string>
+    <string name="my_tickets">تذاكري</string>
+    <string name="activity_log_rewind_dialog_message">هل تريد بالتأكيد إرجاع موقعك مجددًا إلى %s في %s؟ سيقوم هذا بإزالة كل المحتوى والخيارات التي تم إنشاؤها أو تغييرها منذ ذلك الحين.</string>
+    <string name="activity_log_rewind_site">إرجاع الموقع</string>
+    <string name="activity_log_currently_restoring_message_no_dates">الإرجاع قيد التقدّم</string>
+    <string name="activity_log_currently_restoring_message">الإرجاع إلى %s %s</string>
+    <string name="activity_log_currently_restoring_title">استعادة موقعك حاليًا</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">تمت استعادة موقعك بنجاح</string>
+    <string name="activity_log_rewind_finished_snackbar_message">تمت استعادة موقعك بنجاح\nتم الإرجاع إلى %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">تجري استعادة موقعك\nالإرجاع إلى %s %s</string>
+    <string name="activity_log_button">زر الإجراء في سجل النشاط</string>
+    <string name="plugin_auto_managed">إدارة تلقائية</string>
+    <string name="reader_save_posts_locally_dialog_message">احفظ هذه المقالة، وعُد إلى قراءتها وقتما تشاء. لن تكون متاحة إلا على هذا الجهاز — لا تقوم المقالات المحفوظة بالمزامنة مع الأجهزة الأخرى. (ومع ذلك! نحن نعمل على إيجاد حل لهذا الأمر.)</string>
+    <string name="reader_save_posts_locally_dialog_title">حفظ المقالات لوقت لاحق</string>
+    <string name="reader_empty_search_request_failed">يتعذر إجراء البحث</string>
+    <string name="reader_empty_search_title">لم يتم العثور على نتائج</string>
+    <string name="reader_label_post_search_explainer">البحث في وردبرس\nعن موقع أو مقالة</string>
+    <string name="comment_read_source_post">قراءة مقالة المصدر</string>
+    <string name="sites">المواقع</string>
     <string name="reader_empty_saved_posts_description">انقر على %s لحفظ مقالة في القائمة لديك.</string>
-    <string name="reader_empty_saved_posts_title">لم يتم حفظ أي مقالات – حتى الآن!</string>
     <string name="reader_bookmark_snack_title">تم حفظ المقالة</string>
     <string name="reader_bookmark_snack_btn">عرض الكل</string>
     <string name="reader_btn_bookmarked">تم الحفظ</string>
@@ -81,8 +109,6 @@ Language: ar
     <string name="dialog_confirm_delete_permanently_page">هل ترغب بالتأكيد في حذف هذه الصفحة بشكل دائم؟</string>
     <string name="dialog_confirm_delete_permanently_post">هل ترغب بالتأكيد في حذف هذه المقالة بشكل دائم؟</string>
     <string name="notification_site_creation_title_in_progress">جارٍ إنشاء الموقع… قد يستغرق هذا الأمر بضع دقائق.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">مهم</string>
     <string name="notification_channel_general_title">عام</string>
     <string name="photo_picker_use_photo">استخدام هذه الصورة</string>
@@ -859,11 +885,7 @@ Language: ar
     <string name="send_link">إرسال رابط</string>
     <string name="label_clear_search_history">مسح محفوظات البحث</string>
     <string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
-    <string name="reader_empty_posts_in_search_description">لم يتم العثور على مقالات عن %s للغة الخاصة بك</string>
-    <string name="reader_empty_posts_in_search_title">لم يتم العثور على مقالات</string>
     <string name="reader_label_post_search_running">البحث…</string>
-    <string name="reader_label_post_search_explainer">البحث في جميع مدونات WordPress.com العامة</string>
-    <string name="reader_hint_post_search">البحث في WordPress.com</string>
     <string name="reader_title_related_post_detail">مقالة ذات صلة</string>
     <string name="preview_screen_links_disabled">تم تعطيل الروابط في شاشة المعاينة</string>
     <string name="draft_explainer">هذه المقالة مسود والتي لم تنشر بعد.</string>
@@ -1159,7 +1181,6 @@ Language: ar
     <string name="reader_short_like_count_none">أعجبني</string>
     <string name="reader_label_follow_count">%,d متابعين</string>
     <string name="reader_short_like_count_one">إعجاب واحد</string>
-    <string name="reader_menu_tags">تحرير الوسوم والمدوّنات</string>
     <string name="reader_title_post_detail">مقالة القارئ</string>
     <string name="local_draft_explainer">هذه المقالة مسودة محلية لم تُنشَر بعد</string>
     <string name="local_changes_explainer">تشتمل هذه المقالة على تغييرات محلية لم تُنشَر بعد</string>
@@ -1191,8 +1212,6 @@ Language: ar
     <string name="post_trashed">تم إرسال المقالة إلى سلة المهملات</string>
     <string name="post_deleted">تم حذف المقالة</string>
     <string name="page_trashed">تم إرسال الصفحة إلى سلة المهملات</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">أنت غير معتمد للوصول إلى هذه المدونة</string>
-    <string name="reader_toast_err_follow_blog_not_found">تعذر العثور على هذه المدونة</string>
     <string name="undo">تراجع</string>
     <string name="passcodelock_prompt_message">أدخل مفتاح الـ PIN</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% من المشاهدات</string>
@@ -1251,7 +1270,6 @@ Language: ar
     <string name="error_copy_to_clipboard">حدث خطأ أثناء نسخ النص إلى الحافظة</string>
     <string name="stats_recent_weeks">الأسابيع الأخيرة</string>
     <string name="stats_average_per_day">المتوسط لكل يوم</string>
-    <string name="reader_empty_posts_in_blog">هذه المدونة فارغة</string>
     <string name="reader_label_new_posts">مقالات جديدة</string>
     <string name="logs_copied_to_clipboard">تم نسخ سجلات التطبيق إلى الحافظة</string>
     <string name="stats_period">الفترة</string>
@@ -1339,34 +1357,17 @@ Language: ar
     <string name="reader_empty_posts_in_tag">لا توجد مقالات تحمل هذا الوسم</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="create_new_blog_wpcom">إنشاء مدونة WordPress.com</string>
-    <string name="nux_help_description">تفضل بزيارة مركز المساعدة للاطلاع على إجابات الأسئلة الشائعة أو تفضل بزيارة المنتديات لطرح أسئلة جديدة</string>
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
     <string name="reader_empty_posts_liked">لم تُعجب بأي مقالات</string>
     <string name="reader_empty_followed_blogs_title">لم تتابع أي مواقع حتى الآن</string>
-    <string name="reader_menu_block_blog">حظر هذه المدونة</string>
-    <string name="reader_toast_blog_blocked">لن يتم عرض مقالات هذه المدونة بعد الآن</string>
-    <string name="reader_toast_err_block_blog">غير قادر على حظر المدونة</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
-    <string name="hs__invalid_email_error">أدخل عنوان بريد إلكتروني صالحًا</string>
-    <string name="hs__username_blank_error">أدخل اسمًا صالحًا</string>
-    <string name="hs__conversation_header">محادثة الدعم الفني</string>
-    <string name="hs__new_conversation_header">محادثة الدعم الفني</string>
-    <string name="hs__conversation_detail_error">أوصف المشكلة التي تراها</string>
     <string name="contact_us">اتصل بنا</string>
     <string name="schedule_verb">جدولة</string>
     <string name="update_verb">تحديث</string>
-    <string name="reader_empty_recommended_blogs">لا يوجد مدونات موصى بها</string>
-    <string name="reader_toast_err_unfollow_blog">غير قادر على عدم متابعة هذه المدونة </string>
-    <string name="reader_toast_err_follow_blog">غير قادر على متابعة هذه المدونة </string>
-    <string name="reader_toast_err_already_follow_blog">أنت متابع لهذه المدونة بالفعل</string>
-    <string name="reader_toast_err_get_blog_info">غير قادر على إظهار هذه المدونة</string>
-    <string name="reader_label_followed_blog">مدونة تمت متابعتها</string>
     <string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
     <string name="reader_page_followed_blogs">المواقع المتابَعة</string>
     <string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
-    <string name="reader_title_subs">الوسوم والمدونات</string>
     <string name="reader_title_tag_preview">وسم القارئ</string>
-    <string name="reader_title_blog_preview">مدوّنة القارئ</string>
     <string name="media_empty_list">لا وسائط</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
