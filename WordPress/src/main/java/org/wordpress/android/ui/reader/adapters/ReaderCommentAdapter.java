@@ -20,7 +20,6 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -78,7 +77,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
-    @Inject FluxCImageLoader mImageLoader;
     @Inject ImageManager mImageManager;
 
     public interface RequestReplyListener {
@@ -281,7 +279,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
-        CommentUtils.displayHtmlComment(commentHolder.mTxtText, comment.getText(), maxImageWidth, mImageLoader);
+        CommentUtils.displayHtmlComment(commentHolder.mTxtText, comment.getText(), maxImageWidth);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
