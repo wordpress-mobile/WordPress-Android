@@ -314,4 +314,6 @@
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <dimen name="snackbar_message_margin_bottom">18dp</dimen>
 </resources>

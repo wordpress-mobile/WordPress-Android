@@ -99,11 +99,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 blogNames[i] = SiteUtils.getSiteNameOrHomeURL(site);
                 accountUsers[i] = site.getUsername();
                 siteIds[i] = site.getId();
-                if (site.getUrl() != null) {
-                    blavatars[i] = SiteUtils.getSiteIconUrl(site, 60);
-                } else {
-                    blavatars[i] = "";
-                }
+                blavatars[i] = SiteUtils.getSiteIconUrl(site, 60);
                 accountNames.add(i, blogNames[i]);
             }
 

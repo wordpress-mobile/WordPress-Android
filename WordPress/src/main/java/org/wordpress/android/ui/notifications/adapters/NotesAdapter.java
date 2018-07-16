@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -20,8 +21,9 @@ import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.NoticonTextView;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +39,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final OnLoadMoreListener mOnLoadMoreListener;
     private final ArrayList<Note> mNotes = new ArrayList<>();
     private final ArrayList<Note> mFilteredNotes = new ArrayList<>();
+    private final ImageManager mImageManager;
 
     public enum FILTERS {
         FILTER_ALL, FILTER_LIKE, FILTER_COMMENT, FILTER_UNREAD,
@@ -55,9 +58,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
-    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener) {
+    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener,
+                        ImageManager imageManager) {
         super();
 
+        mImageManager = imageManager;
         mDataLoadedListener = dataLoadedListener;
         mOnLoadMoreListener = onLoadMoreListener;
 
@@ -256,7 +261,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         String avatarUrl = GravatarUtils.fixGravatarUrl(note.getIconURL(), mAvatarSz);
-        noteViewHolder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        mImageManager.loadIntoCircle(noteViewHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
 
         boolean isUnread = note.isUnread();
 
@@ -332,19 +337,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
-        private final WPNetworkImageView mImgAvatar;
+        private final ImageView mImgAvatar;
         private final NoticonTextView mNoteIcon;
 
         NoteViewHolder(View view) {
             super(view);
             mHeaderView = view.findViewById(R.id.time_header);
             mContentView = view.findViewById(R.id.note_content_container);
-            mHeaderText = (TextView) view.findViewById(R.id.header_date_text);
-            mTxtSubject = (TextView) view.findViewById(R.id.note_subject);
-            mTxtSubjectNoticon = (TextView) view.findViewById(R.id.note_subject_noticon);
-            mTxtDetail = (TextView) view.findViewById(R.id.note_detail);
-            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
-            mNoteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
+            mHeaderText = view.findViewById(R.id.header_date_text);
+            mTxtSubject = view.findViewById(R.id.note_subject);
+            mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
+            mTxtDetail = view.findViewById(R.id.note_detail);
+            mImgAvatar = view.findViewById(R.id.note_avatar);
+            mNoteIcon = view.findViewById(R.id.note_icon);
 
             itemView.setOnClickListener(mOnClickListener);
         }

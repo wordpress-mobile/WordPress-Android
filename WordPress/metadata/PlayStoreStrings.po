@@ -96,7 +96,7 @@ msgctxt "play_store_screenshot_4"
 msgid "Get notified in real-time"
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the fififthrst screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_5"
 msgid "All the stats in your hand"

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -21,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -69,8 +71,8 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -112,7 +114,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
-    private WPNetworkImageView mFeaturedImageView;
+    private ImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
     private PostLocation mPostLocation;
@@ -124,6 +126,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ImageManager mImageManager;
 
 
     interface EditPostActivityHook {
@@ -210,26 +213,27 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
         if (rootView == null) {
             return null;
         }
 
-        mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
-        mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
-        mLocationTextView = (TextView) rootView.findViewById(R.id.post_location);
-        mCategoriesTextView = (TextView) rootView.findViewById(R.id.post_categories);
-        mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
-        mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
-        mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
-        mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
-        mPublishDateTextView = (TextView) rootView.findViewById(R.id.publish_date);
+        mExcerptTextView = rootView.findViewById(R.id.post_excerpt);
+        mSlugTextView = rootView.findViewById(R.id.post_slug);
+        mLocationTextView = rootView.findViewById(R.id.post_location);
+        mCategoriesTextView = rootView.findViewById(R.id.post_categories);
+        mTagsTextView = rootView.findViewById(R.id.post_tags);
+        mStatusTextView = rootView.findViewById(R.id.post_status);
+        mPostFormatTextView = rootView.findViewById(R.id.post_format);
+        mPasswordTextView = rootView.findViewById(R.id.post_password);
+        mPublishDateTextView = rootView.findViewById(R.id.publish_date);
 
-        mFeaturedImageView = (WPNetworkImageView) rootView.findViewById(R.id.post_featured_image);
-        mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
-        CardView featuredImageCardView = (CardView) rootView.findViewById(R.id.post_featured_image_card_view);
+        mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
+        mFeaturedImageButton = rootView.findViewById(R.id.post_add_featured_image_button);
+        CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
@@ -249,7 +253,7 @@ public class EditPostSettingsFragment extends Fragment {
             featuredImageCardView.setVisibility(View.GONE);
         }
 
-        mExcerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
+        mExcerptContainer = rootView.findViewById(R.id.post_excerpt_container);
         mExcerptContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -257,7 +261,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout slugContainer = (LinearLayout) rootView.findViewById(R.id.post_slug_container);
+        final LinearLayout slugContainer = rootView.findViewById(R.id.post_slug_container);
         slugContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -265,7 +269,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout locationContainer = (LinearLayout) rootView.findViewById(R.id.post_location_container);
+        final LinearLayout locationContainer = rootView.findViewById(R.id.post_location_container);
         locationContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -273,7 +277,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        mCategoriesContainer = (LinearLayout) rootView.findViewById(R.id.post_categories_container);
+        mCategoriesContainer = rootView.findViewById(R.id.post_categories_container);
         mCategoriesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,7 +285,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        mTagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
+        mTagsContainer = rootView.findViewById(R.id.post_tags_container);
         mTagsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -289,7 +293,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout statusContainer = (LinearLayout) rootView.findViewById(R.id.post_status_container);
+        final LinearLayout statusContainer = rootView.findViewById(R.id.post_status_container);
         statusContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -297,7 +301,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        mFormatContainer = (LinearLayout) rootView.findViewById(R.id.post_format_container);
+        mFormatContainer = rootView.findViewById(R.id.post_format_container);
         mFormatContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -305,7 +309,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout passwordContainer = (LinearLayout) rootView.findViewById(R.id.post_password_container);
+        final LinearLayout passwordContainer = rootView.findViewById(R.id.post_password_container);
         passwordContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -313,7 +317,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout publishDateContainer = (LinearLayout) rootView.findViewById(R.id.publish_date_container);
+        final LinearLayout publishDateContainer = rootView.findViewById(R.id.publish_date_container);
         publishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -511,7 +515,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         int index = getCurrentPostStatusIndex();
-        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         PostSettingsListDialogFragment fragment =
                 PostSettingsListDialogFragment.newInstance(DialogType.POST_STATUS, index);
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
@@ -533,7 +537,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         }
 
-        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         PostSettingsListDialogFragment fragment =
                 PostSettingsListDialogFragment.newInstance(DialogType.POST_FORMAT, checkedIndex);
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
@@ -564,7 +568,7 @@ public class EditPostSettingsFragment extends Fragment {
         Calendar calendar = getCurrentPublishDateAsCalendar();
         PostDatePickerDialogFragment fragment =
                 PostDatePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
-        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         fragment.show(fm, PostDatePickerDialogFragment.TAG_DATE);
     }
 
@@ -576,7 +580,7 @@ public class EditPostSettingsFragment extends Fragment {
         Calendar calendar = getCurrentPublishDateAsCalendar();
         PostDatePickerDialogFragment fragment =
                 PostDatePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
-        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         fragment.show(fm, PostDatePickerDialogFragment.TAG_TIME);
     }
 
@@ -762,10 +766,13 @@ public class EditPostSettingsFragment extends Fragment {
                 return 2;
             case PRIVATE:
                 return 3;
-            default:
-                // PUBLISHED, SCHEDULED, UNKNOWN
+            case TRASHED:
+            case UNKNOWN:
+            case PUBLISHED:
+            case SCHEDULED:
                 return 0;
         }
+        return 0;
     }
 
     // Post Format Helpers
@@ -856,7 +863,7 @@ public class EditPostSettingsFragment extends Fragment {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
 
-        WPMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView);
+        mImageManager.load(mFeaturedImageView, ImageType.PHOTO, mediaUri, ScaleType.FIT_CENTER);
     }
 
     private void launchFeaturedMediaPicker() {
@@ -899,10 +906,8 @@ public class EditPostSettingsFragment extends Fragment {
             AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type);
             return;
         }
-        switch (event.causeOfChange) {
-            case FETCH_CATEGORIES:
-                updateCategoriesTextView();
-                break;
+        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) {
+            updateCategoriesTextView();
         }
     }
 

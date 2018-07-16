@@ -58,6 +58,7 @@ import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
+import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.pages.PageListFragment;
@@ -333,6 +334,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(NotificationsProcessingService object);
 
     void inject(NotificationsPendingDraftsReceiver object);
+
+    void inject(NotificationsDetailListFragment notificationsDetailListFragment);
 
     void inject(ReaderCommentListActivity object);
 
