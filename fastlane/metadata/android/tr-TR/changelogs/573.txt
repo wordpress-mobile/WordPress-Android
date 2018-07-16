@@ -1,6 +1,0 @@
-10.3:
-* Okuyucu: Arama işlevi artık sitelerin aranmasına izin vermek için geliştirildi.
-* Editör: Gutenberg yazılarının işlenmesi iyileştirildi.
-* Bildirimler: Geri bildirim ve yorum yönetimi iyileştirildi.
-* Çok sayıda küçük kullanıcı arayüzü geliştirmesi ve iyileştirmesi.
-* Çeşitli hata düzeltmeleri.
