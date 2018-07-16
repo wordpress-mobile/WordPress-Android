@@ -14,6 +14,10 @@ import kotlin.test.assertNull
 
 @RunWith(RobolectricTestRunner::class)
 class JetpackTunnelGsonRequestTest {
+    companion object {
+        private const val DUMMY_SITE_ID = 567L
+    }
+
     private val gson by lazy { Gson() }
 
     @Test
@@ -21,14 +25,15 @@ class JetpackTunnelGsonRequestTest {
         val url = "/"
         val params = mapOf("context" to "view")
 
-        val request = JetpackTunnelGsonRequest.buildGetRequest(url, 567, params,
+        val request = JetpackTunnelGsonRequest.buildGetRequest(url, DUMMY_SITE_ID, params,
                 Any::class.java,
                 { _: Any? -> },
-                WPComErrorListener { _ -> }
+                WPComErrorListener { _ -> },
+                {}
         )
 
         // Verify that the request was built and wrapped as expected
-        assertEquals(WPCOMREST.jetpack_blogs.site(567).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
+        assertEquals(WPCOMREST.jetpack_blogs.site(DUMMY_SITE_ID).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
         val parsedUri = Uri.parse(request?.url)
         assertEquals(2, parsedUri.queryParameterNames.size)
         assertEquals("/&_method=get&context=view", parsedUri.getQueryParameter("path"))
@@ -46,14 +51,14 @@ class JetpackTunnelGsonRequestTest {
 
         val requestBody = mapOf<String, Any>("title" to "New Title", "description" to "New Description")
 
-        val request = JetpackTunnelGsonRequest.buildPostRequest(url, 567, requestBody,
+        val request = JetpackTunnelGsonRequest.buildPostRequest(url, DUMMY_SITE_ID, requestBody,
                 Any::class.java,
                 { _: Any? -> },
                 WPComErrorListener { _ -> }
         )
 
         // Verify that the request was built and wrapped as expected
-        assertEquals(WPCOMREST.jetpack_blogs.site(567).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
+        assertEquals(WPCOMREST.jetpack_blogs.site(DUMMY_SITE_ID).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
         val parsedUri = Uri.parse(request?.url)
         assertEquals(0, parsedUri.queryParameterNames.size)
         val body = String(request?.body!!)
@@ -70,14 +75,14 @@ class JetpackTunnelGsonRequestTest {
 
         val requestBody = mapOf<String, Any>("title" to "New Title", "description" to "New Description")
 
-        val request = JetpackTunnelGsonRequest.buildPutRequest(url, 567, requestBody,
+        val request = JetpackTunnelGsonRequest.buildPutRequest(url, DUMMY_SITE_ID, requestBody,
                 Any::class.java,
                 { _: Any? -> },
                 WPComErrorListener { _ -> }
         )
 
         // Verify that the request was built and wrapped as expected
-        assertEquals(WPCOMREST.jetpack_blogs.site(567).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
+        assertEquals(WPCOMREST.jetpack_blogs.site(DUMMY_SITE_ID).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
         val parsedUri = Uri.parse(request?.url)
         assertEquals(0, parsedUri.queryParameterNames.size)
         val body = String(request?.body!!)
@@ -94,14 +99,14 @@ class JetpackTunnelGsonRequestTest {
 
         val requestBody = mapOf<String, Any>("title" to "New Title", "description" to "New Description")
 
-        val request = JetpackTunnelGsonRequest.buildPatchRequest(url, 567, requestBody,
+        val request = JetpackTunnelGsonRequest.buildPatchRequest(url, DUMMY_SITE_ID, requestBody,
                 Any::class.java,
                 { _: Any? -> },
                 WPComErrorListener { _ -> }
         )
 
         // Verify that the request was built and wrapped as expected
-        assertEquals(WPCOMREST.jetpack_blogs.site(567).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
+        assertEquals(WPCOMREST.jetpack_blogs.site(DUMMY_SITE_ID).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
         val parsedUri = Uri.parse(request?.url)
         assertEquals(0, parsedUri.queryParameterNames.size)
         val body = String(request?.body!!)
@@ -117,14 +122,14 @@ class JetpackTunnelGsonRequestTest {
         val url = "/wp/v2/posts/6"
         val params = mapOf("force" to "true")
 
-        val request = JetpackTunnelGsonRequest.buildDeleteRequest(url, 567, params,
+        val request = JetpackTunnelGsonRequest.buildDeleteRequest(url, DUMMY_SITE_ID, params,
                 Any::class.java,
                 { _: Any? -> },
                 WPComErrorListener { _ -> }
         )
 
         // Verify that the request was built and wrapped as expected
-        assertEquals(WPCOMREST.jetpack_blogs.site(567).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
+        assertEquals(WPCOMREST.jetpack_blogs.site(DUMMY_SITE_ID).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
         val parsedUri = Uri.parse(request?.url)
         assertEquals(0, parsedUri.queryParameterNames.size)
         val body = String(request?.body!!)
