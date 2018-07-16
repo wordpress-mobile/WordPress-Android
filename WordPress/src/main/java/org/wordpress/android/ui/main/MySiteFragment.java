@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -49,6 +51,8 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -60,6 +64,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -114,6 +119,7 @@ public class MySiteFragment extends Fragment implements
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
+    private QuickStartMySitePrompts mActiveTutorialPrompt;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -227,7 +233,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewQuickStart(getActivity());
+                ActivityLauncher.viewQuickStartForResult(getActivity());
             }
         });
 
@@ -360,7 +366,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
-                                           mAccountStore.getAccount().getUserName());
+                        mAccountStore.getAccount().getUserName());
             }
         });
 
@@ -489,6 +495,15 @@ public class MySiteFragment extends Fragment implements
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
+                }
+                break;
+            case RequestCodes.QUICK_START:
+                if (data != null && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
+                    QuickStartTask task =
+                            (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
+
+                    mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task);
+                    showActiveQuickStartTutorial();
                 }
                 break;
         }
@@ -660,7 +675,7 @@ public class MySiteFragment extends Fragment implements
         } else {
             Date dateCreated = DateTimeUtils.dateFromIso8601(mAccountStore.getAccount().getDate());
             GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH,
-                                                               HIDE_WP_ADMIN_DAY);
+                    HIDE_WP_ADMIN_DAY);
             calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
             return dateCreated != null && dateCreated.after(calendar.getTime());
         }
@@ -697,7 +712,6 @@ public class MySiteFragment extends Fragment implements
      * We can't just use fluxc OnSiteChanged event, as the order of events is not guaranteed -> getSelectedSite()
      * method might return an out of date SiteModel, if the OnSiteChanged event handler in the WPMainActivity wasn't
      * called yet.
-     *
      */
     public void onSiteChanged(SiteModel site) {
         refreshSelectedSiteDetails(site);
@@ -835,5 +849,21 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void onCredentialsValidated(Exception error) {
+    }
+
+    private boolean hasActiveQuickStartTask() {
+        return mActiveTutorialPrompt != null;
+    }
+
+    private void showActiveQuickStartTutorial() {
+        if (!hasActiveQuickStartTask() || getActivity() == null || !(getActivity() instanceof WPMainActivity)) {
+            return;
+        }
+
+        Spannable shortQuickStartMessage = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                mActiveTutorialPrompt.getShortMessagePrompt(),
+                mActiveTutorialPrompt.getIconId());
+
+        ((WPMainActivity) getActivity()).showQuickStartSnackBar(shortQuickStartMessage);
     }
 }
