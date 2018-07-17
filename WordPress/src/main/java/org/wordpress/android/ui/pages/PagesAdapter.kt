@@ -32,7 +32,7 @@ class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean)
     }
 
     fun onNext(result: List<PageItem>) {
-        val diffResult = DiffUtil.calculateDiff(PageItemDiffUtil(items, result))
+        val diffResult = DiffUtil.calculateDiff(PageItemDiffUtil(items.toList(), result))
         items.clear()
         items.addAll(result)
         diffResult.dispatchUpdatesTo(this)
