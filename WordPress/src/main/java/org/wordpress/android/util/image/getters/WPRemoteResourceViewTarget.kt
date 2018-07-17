@@ -104,7 +104,7 @@ internal class WPRemoteResourceViewTarget(
     /**
      * Drawable wrapper so we can replace placeholder with remote/error resource, after the requests finishes.
      */
-    private inner class RemoteDrawableWrapper : Drawable() {
+    private class RemoteDrawableWrapper : Drawable() {
         internal var drawable: Drawable? = null
 
         fun setDrawable(drawable: Drawable) {
