@@ -306,7 +306,7 @@ public class WPMainActivity extends AppCompatActivity
     }
 
     private void launchZendeskMyTickets() {
-        if (isFinishing() || getIntent() == null) {
+        if (isFinishing()) {
             return;
         }
 
