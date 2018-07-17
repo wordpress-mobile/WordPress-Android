@@ -314,12 +314,10 @@ public class WPMainActivity extends AppCompatActivity
         // the right section.
         mBottomNav.setCurrentPosition(PAGE_ME);
 
-        // init selected site, this is the same as in
+        // init selected site, this is the same as in onResume
         initSelectedSite();
 
-        ActivityLauncher.viewZendeskTickets(
-                this,
-                getSelectedSite(), null);
+        ActivityLauncher.viewZendeskTickets(this, getSelectedSite());
     }
 
     /*

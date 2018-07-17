@@ -417,8 +417,8 @@ public class ActivityLauncher {
     }
 
     public static void viewZendeskTickets(@NonNull Context context,
-                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
-        viewHelpAndSupport(context, Origin.ZENDESK_NOTIFICATION, selectedSite, extraSupportTags);
+                                          @Nullable SiteModel selectedSite) {
+        viewHelpAndSupport(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
