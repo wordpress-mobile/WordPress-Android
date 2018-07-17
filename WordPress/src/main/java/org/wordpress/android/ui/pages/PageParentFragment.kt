@@ -18,6 +18,7 @@ import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import javax.inject.Inject
 
 class PageParentFragment : Fragment() {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
