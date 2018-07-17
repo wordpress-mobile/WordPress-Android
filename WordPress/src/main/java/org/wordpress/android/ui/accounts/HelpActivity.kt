@@ -77,6 +77,10 @@ class HelpActivity : AppCompatActivity() {
             }
             AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
         }
+
+        if (originFromExtras == Origin.ZENDESK_NOTIFICATION) {
+            showZendeskTickets()
+        }
     }
 
     override fun onResume() {
@@ -117,6 +121,7 @@ class HelpActivity : AppCompatActivity() {
 
     enum class Origin(private val stringValue: String) {
         UNKNOWN("origin:unknown"),
+        ZENDESK_NOTIFICATION("origin:zendesk-notification"),
         LOGIN_SCREEN_WPCOM("origin:wpcom-login-screen"),
         LOGIN_SCREEN_SELF_HOSTED("origin:wporg-login-screen"),
         LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),
