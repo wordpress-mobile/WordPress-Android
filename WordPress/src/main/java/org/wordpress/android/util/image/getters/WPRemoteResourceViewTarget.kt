@@ -20,6 +20,11 @@ import org.wordpress.android.util.R
 /**
  * A class that we can load a remote resource into. Automatically displays placeholder while the remote img is
  * loading and displays an error image if the loading fails.
+ *
+ * We could probably subclass BaseTarget instead of ViewTarget, since we basically override most of its functionality.
+ * However, we might want to use ViewTarget.clearOnDetach(..) when it becomes stable (it's experimental now).
+ * It clears the View's Request when the View is detached from its Window and restarts the Request when the View is
+ * re-attached from its Window.
  */
 internal class WPRemoteResourceViewTarget(
     view: TextView,

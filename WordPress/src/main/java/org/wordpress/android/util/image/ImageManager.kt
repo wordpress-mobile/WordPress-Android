@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.TextView
-import android.widget.TextView
 import com.bumptech.glide.request.target.ViewTarget
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
