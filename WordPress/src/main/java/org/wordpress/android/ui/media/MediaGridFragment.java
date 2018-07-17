@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,6 +33,7 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
@@ -146,7 +146,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
-    private TextView mEmptyView;
+    private ActionableEmptyView mEmptyView;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
     private SiteModel mSite;
@@ -241,7 +241,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         });
 
-        mEmptyView = (TextView) view.findViewById(R.id.empty_view);
+        mEmptyView = (ActionableEmptyView) view.findViewById(R.id.actionable_empty_view);
         mRecycler.setEmptyView(mEmptyView);
 
         // swipe to refresh setup
@@ -599,7 +599,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     break;
             }
 
-            mEmptyView.setText(getText(stringId));
+            mEmptyView.setTitleText(getText(stringId));
             mEmptyView.setVisibility(View.VISIBLE);
         } else {
             mEmptyView.setVisibility(View.GONE);
