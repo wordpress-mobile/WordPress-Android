@@ -906,7 +906,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             bookmarkButton.setVisibility(View.GONE);
         }
-        bookmarkButton.setImageResource(post.isBookmarked
+        mImageManager.load(bookmarkButton, post.isBookmarked
                 ? R.drawable.ic_bookmark_blue_medium_18dp
                 : R.drawable.ic_bookmark_grey_min_18dp);
         if (post.isBookmarked) {
