@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -242,6 +243,13 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         });
 
         mEmptyView = (ActionableEmptyView) view.findViewById(R.id.actionable_empty_view);
+        mEmptyView.setButtonClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
+                    ((MediaBrowserActivity) getActivity()).showAddMediaPopup();
+                }
+            }
+        });
         mRecycler.setEmptyView(mEmptyView);
 
         // swipe to refresh setup
