@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -53,6 +54,11 @@ class PagesFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PagesViewModel>(PagesViewModel::class.java)
+
+        val site = (savedInstanceState?.getSerializable(WordPress.SITE)
+                ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
+
+        viewModel.start(site)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
