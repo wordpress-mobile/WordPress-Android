@@ -20,7 +20,6 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.pages_activity.*
 import kotlinx.android.synthetic.main.pages_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
