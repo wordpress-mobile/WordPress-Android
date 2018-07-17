@@ -296,7 +296,7 @@ public class WPMainActivity extends AppCompatActivity
                     mBottomNav.setCurrentPosition(PAGE_ME);
                     if (intent.getBooleanExtra(WPMainActivity.ARG_SHOW_ZENDESK_HINT_SNACKBAR, false)) {
                         Snackbar.make(findViewById(R.id.coordinator),
-                                R.string.support_push_notification_message_hint_snackbar, Snackbar.LENGTH_LONG).show();
+                                R.string.support_push_notification_message_hint_snackbar, 5000).show();
                     }
                     break;
             }
