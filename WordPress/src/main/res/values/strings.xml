@@ -2120,6 +2120,7 @@
     <!-- Content description for accessibility  -->
     <string name="featured_image_desc">featured image</string>
     <string name="theme_image_desc">theme image</string>
+    <string name="blavatar_desc">site icon</string>
     <string name="comment_checkmark_desc">check mark</string>
     <string name="profile_picture">%s\'s profile picture</string>
     <string name="invite_user_delete_desc">remove %s</string>

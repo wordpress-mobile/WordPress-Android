@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.TextView
+import android.widget.TextView
 import com.bumptech.glide.request.target.ViewTarget
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
@@ -46,6 +47,14 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     fun load(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
         GlideApp.with(imageView.context)
                 .load(drawable)
+                .applyScaleType(scaleType)
+                .into(imageView)
+    }
+
+    @JvmOverloads
+    fun load(imageView: ImageView, resourceId: Int, scaleType: ImageView.ScaleType = CENTER) {
+        GlideApp.with(imageView.context)
+                .load(resourceId)
                 .applyScaleType(scaleType)
                 .into(imageView)
     }
@@ -102,50 +111,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
     companion object {
         @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, imgUrl, placeholder, scaleType)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        fun loadImage(
-            imageView: ImageView,
-            imageType: ImageType,
-            imgUrl: String,
-            scaleType: ImageView.ScaleType
-        ) {
-            ImageManager(ImagePlaceholderManager()).load(imageView, imageType, imgUrl, scaleType)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, bitmap, scaleType)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        @JvmOverloads
-        fun loadImage(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
-            ImageManager(ImagePlaceholderManager()).load(imageView, bitmap, scaleType)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, drawable, scaleType)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        @JvmOverloads
-        fun loadImage(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
-            ImageManager(ImagePlaceholderManager()).load(imageView, drawable, scaleType)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.loadIntoCircle(imageView, imgType, imgUrl)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        fun loadImageIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
-            ImageManager(ImagePlaceholderManager()).loadIntoCircle(imageView, imageType, imgUrl)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.clear(imageView)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        fun clear(imageView: ImageView) {
-            ImageManager(ImagePlaceholderManager()).cancelRequestAndClearImageView(imageView)
-        }
+        @Deprecated("Use injected ImageManager")
+        val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager()) }
     }
 }
