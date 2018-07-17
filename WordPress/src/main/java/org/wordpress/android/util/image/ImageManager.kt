@@ -106,14 +106,29 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         return if (errorImageRes == null) this else this.error(errorImageRes)
     }
 
-    private fun GlideRequest<Drawable>.attachRequestListener(requestListener: RequestListener?): GlideRequest<Drawable> {
-        return if (requestListener == null) this else this.listener(object : com.bumptech.glide.request.RequestListener<Drawable> {
-            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+    private fun GlideRequest<Drawable>.attachRequestListener(
+        requestListener: RequestListener?
+    ): GlideRequest<Drawable> {
+        return if (requestListener == null)
+            this
+        else this.listener(object : com.bumptech.glide.request.RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
                 requestListener.onLoadFailed(e)
                 return false
             }
 
-            override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
                 resource?.let {
                     requestListener.onResourceReady(it)
                 }
