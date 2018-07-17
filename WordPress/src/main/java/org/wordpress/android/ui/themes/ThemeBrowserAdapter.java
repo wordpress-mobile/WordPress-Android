@@ -15,6 +15,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,8 +25,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.HeaderGridView;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragmentCallback mCallback;
+    private final ImageManager mImageManager;
 
     private int mViewWidth;
     private String mQuery;
@@ -43,16 +47,17 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private final List<ThemeModel> mAllThemes = new ArrayList<>();
     private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
 
-    ThemeBrowserAdapter(Context context, ThemeBrowserFragmentCallback callback) {
+    ThemeBrowserAdapter(Context context, ThemeBrowserFragmentCallback callback, ImageManager imageManager) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
+        mImageManager = imageManager;
     }
 
     private static class ThemeViewHolder {
         private final CardView mCardView;
-        private final WPNetworkImageView mImageView;
+        private final ImageView mImageView;
         private final TextView mNameView;
         private final TextView mActiveView;
         private final TextView mPriceView;
@@ -164,19 +169,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
 
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId,
                                     final boolean isCurrent) {
-        String requestURL = (String) themeViewHolder.mImageView.getTag();
-        if (requestURL == null) {
-            requestURL = screenshotURL;
-            themeViewHolder.mImageView.setDefaultImageResId(R.drawable.theme_loading);
-            themeViewHolder.mImageView.setTag(requestURL);
-        }
+        mImageManager
+                .load(themeViewHolder.mImageView, ImageType.THEME, screenshotURL + THEME_IMAGE_PARAMETER + mViewWidth,
+                        ScaleType.FIT_CENTER);
 
-        if (!requestURL.equals(screenshotURL)) {
-            requestURL = screenshotURL;
-        }
-
-        themeViewHolder.mImageView
-                .setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WPNetworkImageView.ImageType.PHOTO);
         themeViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

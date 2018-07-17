@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -41,10 +42,13 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private static final String KEY_NOTE_ID = "noteId";
@@ -63,6 +67,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private NoteBlockAdapter mNoteBlockAdapter;
 
+    @Inject ImageManager mImageManager;
+
     public NotificationsDetailListFragment() {
     }
 
@@ -75,7 +81,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
             // The note will be set in onResume()
             // See WordPress.deferredInit()
@@ -329,7 +335,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         mNote.getHeader(),
                         imageType,
                         mOnNoteBlockTextClickListener,
-                        mOnGravatarClickedListener
+                        mOnGravatarClickedListener,
+                        mImageManager
                 );
 
                 headerNoteBlock.setIsComment(mNote.isCommentType());
@@ -366,7 +373,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
-                                        mOnGravatarClickedListener
+                                        mOnGravatarClickedListener,
+                                        mImageManager
                                 );
                                 pingbackUrl = noteBlock.getMetaSiteUrl();
 
@@ -380,7 +388,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
-                                        mOnGravatarClickedListener
+                                        mOnGravatarClickedListener,
+                                        mImageManager
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {

@@ -43,6 +43,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.inject.Inject;
@@ -84,6 +85,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private boolean mShouldRefreshNotifications;
 
     @Inject AccountStore mAccountStore;
+    @Inject ImageManager mImageManager;
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
@@ -264,7 +266,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     private NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), this, null);
+            mNotesAdapter = new NotesAdapter(getActivity(), this, null, mImageManager);
             mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
         }
 

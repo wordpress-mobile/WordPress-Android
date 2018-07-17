@@ -408,8 +408,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
-            GCMRegistrationIntentService.enqueueWork(this,
-                    new Intent(this, GCMRegistrationIntentService.class));
+            GCMRegistrationIntentService.enqueueWork(activity,
+                    new Intent(activity, GCMRegistrationIntentService.class));
         }
 
         // Refresh account informations

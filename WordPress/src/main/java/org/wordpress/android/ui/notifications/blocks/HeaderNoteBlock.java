@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -15,23 +16,27 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 // Note header, displayed at top of detail view
 public class HeaderNoteBlock extends NoteBlock {
     private final JSONArray mHeaderArray;
 
     private final UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
+    private final ImageManager mImageManager;
     private Boolean mIsComment;
     private int mAvatarSize;
 
-    private WPNetworkImageView.ImageType mImageType;
+    private ImageType mImageType;
 
-    public HeaderNoteBlock(Context context, JSONArray headerArray, WPNetworkImageView.ImageType imageType,
+    public HeaderNoteBlock(Context context, JSONArray headerArray, ImageType imageType,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                           UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
+                           UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener,
+                           ImageManager imageManager) {
         super(new JSONObject(), onNoteBlockTextClickListener);
 
+        mImageManager = imageManager;
         mHeaderArray = headerArray;
         mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;
@@ -57,8 +62,12 @@ public class HeaderNoteBlock extends NoteBlock {
 
         Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
         noteBlockHolder.mNameTextView.setText(spannable);
+        if (mImageType == ImageType.AVATAR) {
+            mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
+        } else {
+            mImageManager.load(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
+        }
 
-        noteBlockHolder.mAvatarImageView.setImageUrl(getAvatarUrl(), mImageType);
         final long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
         final long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
 
@@ -139,14 +148,14 @@ public class HeaderNoteBlock extends NoteBlock {
     private class NoteHeaderBlockHolder {
         private final TextView mNameTextView;
         private final TextView mSnippetTextView;
-        private final WPNetworkImageView mAvatarImageView;
+        private final ImageView mAvatarImageView;
 
         NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
             rootView.setOnClickListener(mOnClickListener);
-            mNameTextView = (TextView) view.findViewById(R.id.header_user);
-            mSnippetTextView = (TextView) view.findViewById(R.id.header_snippet);
-            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.header_avatar);
+            mNameTextView = view.findViewById(R.id.header_user);
+            mSnippetTextView = view.findViewById(R.id.header_snippet);
+            mAvatarImageView = view.findViewById(R.id.header_avatar);
         }
     }
 
