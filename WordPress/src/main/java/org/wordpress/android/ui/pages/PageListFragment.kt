@@ -14,7 +14,10 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.viewmodel.pages.PageListViewModel
+import org.wordpress.android.viewmodel.pages.PagesViewModel
 import javax.inject.Inject
 
 class PageListFragment : Fragment() {
@@ -63,11 +66,6 @@ class PageListFragment : Fragment() {
         return inflater.inflate(R.layout.pages_list_fragment, container, false)
     }
 
-    override fun onDestroyView() {
-        viewModel.stop()
-        super.onDestroyView()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -104,11 +102,23 @@ class PageListFragment : Fragment() {
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
                 ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
 
-        viewModel.start(site, key)
+        val pagesViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get<PagesViewModel>(PagesViewModel::class.java)
+
+        viewModel.start(site, getPageType(key), pagesViewModel)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         linearLayoutManager?.let { outState.putParcelable(listStateKey, it.onSaveInstanceState()) }
         super.onSaveInstanceState(outState)
+    }
+
+    private fun getPageType(key: String): PostStatus {
+        return when (key) {
+            "key0" -> PostStatus.PUBLISHED
+            "key1" -> PostStatus.DRAFT
+            "key2" -> PostStatus.SCHEDULED
+            else -> PostStatus.TRASHED
+        }
     }
 }
