@@ -67,16 +67,16 @@ class PagesFragment : Fragment() {
             supportActionBar!!.setHomeButtonEnabled(true)
         }
 
-        pages_pager.adapter = PagesPagerAdapter(activity!!, activity!!.supportFragmentManager)
-        tabLayout.setupWithViewPager(pages_pager)
+        pagesPager.adapter = PagesPagerAdapter(activity!!, activity!!.supportFragmentManager)
+        tabLayout.setupWithViewPager(pagesPager)
 
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
         val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
         recyclerView.adapter = adapter
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<PagesViewModel>(PagesViewModel::class.java)
+
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get<PagesViewModel>(PagesViewModel::class.java)
         viewModel.searchResult.observe(this, Observer { result ->
             if (result != null) {
                 adapter.onNext(result)
@@ -92,20 +92,21 @@ class PagesFragment : Fragment() {
         val myActionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
         }
+
         val newPageButton = activity?.findViewById<FloatingActionButton>(R.id.newPageButton)
         viewModel.searchExpanded.observe(activity!!, Observer {
             if (it == true) {
-                pages_pager.visibility = View.GONE
+                pagesPager.visibility = View.GONE
                 tabLayout.visibility = View.GONE
-                pages_search_result.visibility = View.VISIBLE
+                pagesSearchResult.visibility = View.VISIBLE
                 if (!myActionMenuItem.isActionViewExpanded) {
                     myActionMenuItem.expandActionView()
                 }
                 newPageButton?.hide()
             } else {
-                pages_pager.visibility = View.VISIBLE
+                pagesPager.visibility = View.VISIBLE
                 tabLayout.visibility = View.VISIBLE
-                pages_search_result.visibility = View.GONE
+                pagesSearchResult.visibility = View.GONE
                 if (myActionMenuItem.isActionViewExpanded) {
                     myActionMenuItem.collapseActionView()
                 }
@@ -122,6 +123,7 @@ class PagesFragment : Fragment() {
                 return viewModel.searchCollapsed()
             }
         })
+
         val searchView = myActionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
