@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.image.getters.GlideImageGetter;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 public class CommentUtils {
     /*
@@ -44,7 +44,7 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            html = HtmlUtils.fromHtml(content, new GlideImageGetter(textView, maxImageSize));
+            html = HtmlUtils.fromHtml(content, new WPCustomImageGetter(textView, maxImageSize));
         } else {
             html = HtmlUtils.fromHtml(content);
         }

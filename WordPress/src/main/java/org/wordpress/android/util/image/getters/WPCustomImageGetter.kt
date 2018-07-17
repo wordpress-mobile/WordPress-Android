@@ -14,37 +14,57 @@ import java.lang.ref.WeakReference
 import java.util.HashSet
 import javax.inject.Inject
 
-class GlideImageGetter(
+/**
+ * ImageGetter for Html.fromHtml(). Retrieves images for HTML &lt;img&gt; tags using Glide library.
+ *
+ * The class extends Drawable.Callback, so we can support animated drawables (gifs).
+ *
+ * See {@link android.text.Html} for more details.
+ */
+class WPCustomImageGetter(
     textView: TextView,
     private val maxWidth: Int
 ) : Html.ImageGetter, Drawable.Callback {
     private val textView: WeakReference<TextView> = WeakReference(textView)
 
-    private val targets = HashSet<GlideRemoteResourceViewTarget>()
+    /**
+     * We store all targets, so we can cancel any pending/ongoing requests when we want to load other content
+     * into the TextView.
+     */
+    private val targets = HashSet<WPRemoteResourceViewTarget>()
 
     @Inject lateinit var imageManager: ImageManager
 
     init {
         (WordPress.getContext() as WordPress).component().inject(this)
         clear(textView)
+        // store the WPCustomImageGetter into the textView's tag, so we can cancel any pending/ongoing requests when the
+        // TextView is reused.
         textView.setTag(R.id.glide_image_loader_view_tag, this)
     }
 
+    /**
+     * Cancels all pending/ongoing requests.
+     */
     private fun clear(textView: TextView) {
-        val prevGetter = textView.getTag(R.id.glide_image_loader_view_tag) as GlideImageGetter?
+        val prevGetter = textView.getTag(R.id.glide_image_loader_view_tag) as WPCustomImageGetter?
         prevGetter?.let {
             clear(textView.context, it.targets)
         }
         clear(textView.context, targets)
     }
 
-    private fun clear(context: Context, targets: MutableSet<GlideRemoteResourceViewTarget>) {
+    private fun clear(context: Context, targets: MutableSet<WPRemoteResourceViewTarget>) {
         for (target in targets) {
             Glide.with(context).clear(target)
         }
         targets.clear()
     }
 
+    /**
+     * This method is called when the HTML parser encounters an
+     * &lt;img&gt; tag.
+     */
     override fun getDrawable(url: String): Drawable? {
         var source = url
 
@@ -56,7 +76,7 @@ class GlideImageGetter(
         source = if (maxWidth > 0) PhotonUtils.getPhotonImageUrl(url, maxWidth, 0) else url
 
         return textView.get()?.let {
-            val target = GlideRemoteResourceViewTarget(it, maxWidth)
+            val target = WPRemoteResourceViewTarget(it, maxWidth)
             imageManager.load(target, ImageType.UNKNOWN_DIMENSIONS, source)
             targets.add(target)
 

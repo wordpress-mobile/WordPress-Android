@@ -17,7 +17,11 @@ import com.bumptech.glide.request.transition.Transition
 
 import org.wordpress.android.util.R
 
-internal class GlideRemoteResourceViewTarget(
+/**
+ * A class that we can load a remote resource into. Automatically displays placeholder while the remote img is
+ * loading and displays an error image if the loading fails.
+ */
+internal class WPRemoteResourceViewTarget(
     view: TextView,
     private val maxSize: Int
 ) : ViewTarget<TextView, Drawable>(view) {
@@ -68,6 +72,13 @@ internal class GlideRemoteResourceViewTarget(
         getView().text = getView().text
     }
 
+    /**
+     * Since this target can be used for loading multiple images into a single TextView, we can't use the default
+     * implementation which supports only one request per view. On the other hand, by using field to store the request
+     * we lose the ability to clear previous requests if the client creates new instance of the
+     * WPRemoteResourceViewTarget for the new request on the same view. Canceling any previous requests for the same
+     * View must be handled by the client (see WPCustomImageGetter.clear(..) methods for reference).
+     */
     override fun getRequest(): Request? {
         return request
     }
@@ -85,7 +96,10 @@ internal class GlideRemoteResourceViewTarget(
         cb.onSizeReady(maxSize, Target.SIZE_ORIGINAL)
     }
 
-    private class RemoteDrawableWrapper : Drawable() {
+    /**
+     * Drawable wrapper so we can replace placeholder with remote/error resource, after the requests finishes.
+     */
+    private inner class RemoteDrawableWrapper : Drawable() {
         internal var drawable: Drawable? = null
 
         fun setDrawable(drawable: Drawable) {
