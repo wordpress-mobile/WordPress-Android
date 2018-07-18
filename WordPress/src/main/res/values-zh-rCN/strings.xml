@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-27 07:54:06+0000
+Translation-Revision-Date: 2018-07-10 10:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="reader_avatar_desc">个人资料照片</string>
+    <string name="reader_blavatar_desc">站点图标</string>
+    <string name="notification_channel_transient_title">暂时</string>
+    <string name="support_identity_input_dialog_email_label">电子邮件</string>
+    <string name="support_identity_input_dialog_enter_email">请输入您的电子邮件地址</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">请输入您的电子邮件地址和名称以继续</string>
+    <string name="support_push_notification_message">来自“帮助与支持”的新消息</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">未设置</string>
+    <string name="support_contact_email">联系人电子邮件</string>
+    <string name="application_log_button">应用程序日志</string>
+    <string name="my_tickets">我的工单</string>
+    <string name="activity_log_rewind_dialog_message">是否确定要在 %s 将站点还原至 %s？此操作将删除在此时间之后创建或更改的所有内容和选项。</string>
+    <string name="activity_log_rewind_site">还原站点</string>
+    <string name="activity_log_currently_restoring_message_no_dates">正在还原</string>
+    <string name="activity_log_currently_restoring_message">正在还原至 %s %s</string>
+    <string name="activity_log_currently_restoring_title">目前正在恢复您的站点</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功恢复您的站点</string>
+    <string name="activity_log_rewind_finished_snackbar_message">已成功恢复您的站点\n已还原至 %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">正在恢复您的站点\n正在还原至 %s %s</string>
+    <string name="activity_log_button">活动日志操作按钮</string>
     <string name="plugin_auto_managed">已自动托管</string>
     <string name="reader_save_posts_locally_dialog_message">保存此文章，方便您随时回来阅读。但您只能在此设备上阅读该文章，也就是说已保存的文章不会同步到其他设备（但我们正在努力改进）。</string>
     <string name="reader_save_posts_locally_dialog_title">保存文章供稍后查看</string>
@@ -97,8 +118,6 @@ Language: zh_CN
     <string name="dialog_confirm_delete_permanently_page">是否确定要永久删除此页面？</string>
     <string name="dialog_confirm_delete_permanently_post">是否确定要永久删除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在创建站点…这可能需要几分钟的时间。</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">重要提示</string>
     <string name="notification_channel_general_title">常规</string>
     <string name="photo_picker_use_photo">使用此照片</string>
@@ -1389,16 +1408,10 @@ Language: zh_CN
     <string name="reader_empty_posts_in_tag">没有包含此标签的文章</string>
     <string name="reader_empty_comments">尚无评论</string>
     <string name="create_new_blog_wpcom">创建 WordPress.com 博客</string>
-    <string name="nux_help_description">访问帮助中心，以获取常见问题的答案；或访问论坛，以提出新问题。</string>
     <string name="browse_our_faq_button">浏览我们的常见问题解答</string>
     <string name="reader_empty_posts_liked">您尚未给任何文章点赞</string>
     <string name="reader_empty_followed_blogs_title">您尚未关注任何博客。</string>
     <string name="reader_toast_err_generic">无法执行此操作</string>
-    <string name="hs__invalid_email_error">请输入有效电子邮件地址</string>
-    <string name="hs__username_blank_error">请输入有效名称</string>
-    <string name="hs__conversation_header">支持聊天</string>
-    <string name="hs__new_conversation_header">支持聊天</string>
-    <string name="hs__conversation_detail_error">描述您所遇到的问题</string>
     <string name="contact_us">联系我们</string>
     <string name="schedule_verb">计划</string>
     <string name="update_verb">更新</string>

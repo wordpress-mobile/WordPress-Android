@@ -221,16 +221,10 @@ Language: da_DK
     <string name="reader_empty_posts_in_tag">Ingen indlæg med dette tag</string>
     <string name="reader_empty_comments">Endnu ingen kommentarer</string>
     <string name="create_new_blog_wpcom">Opret en WordPress.com–blog</string>
-    <string name="nux_help_description">Besøg hjælpecenteret for at få svar på almindelige spørgsmål eller besøg forumene for at stille nogle nye</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>
     <string name="reader_empty_posts_liked">Du har ikke synes om nogen indlæg</string>
     <string name="reader_empty_followed_blogs_title">Du følger ikke nogen websteder endnu</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
-    <string name="hs__invalid_email_error">Indtast en gyldig e–mailadresse</string>
-    <string name="hs__username_blank_error">Indtast et gyldigt navn</string>
-    <string name="hs__conversation_header">Support chat</string>
-    <string name="hs__new_conversation_header">Support chat</string>
-    <string name="hs__conversation_detail_error">Beskriv det problem du oplever</string>
     <string name="contact_us">Kontakt os</string>
     <string name="schedule_verb">Planlæg</string>
     <string name="update_verb">Opdater</string>

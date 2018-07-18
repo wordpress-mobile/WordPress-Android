@@ -768,16 +768,10 @@ Language: bg
     <string name="reader_empty_posts_in_tag">Няма публикации с този таг</string>
     <string name="reader_empty_comments">Все още няма коментари</string>
     <string name="create_new_blog_wpcom">Създаване блог в WordPress.com</string>
-    <string name="nux_help_description">Посете помощния център за да намерите отговор на често задавани въпроси или посете форума за да зададете нови</string>
     <string name="browse_our_faq_button">Преглед на секцията за ЧЗВ</string>
     <string name="reader_empty_posts_liked">Не сте харесали нито една публикация</string>
     <string name="reader_empty_followed_blogs_title">Все още не следвате блогове</string>
     <string name="reader_toast_err_generic">Действието беше неуспешно</string>
-    <string name="hs__invalid_email_error">Въведете валидна електронна поща</string>
-    <string name="hs__username_blank_error">Въведете валидно име</string>
-    <string name="hs__conversation_header">Чат за поддръжка</string>
-    <string name="hs__new_conversation_header">Чат за поддръжка</string>
-    <string name="hs__conversation_detail_error">Опишете проблема</string>
     <string name="contact_us">Връзка с нас</string>
     <string name="schedule_verb">Планиране</string>
     <string name="update_verb">Актуализиране</string>
