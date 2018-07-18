@@ -342,7 +342,15 @@ public class PostRestClient extends BaseWPComRestClient {
 
         params.put("password", StringUtils.notNullStr(post.getPassword()));
 
-        params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
+        // construct a json object with a `category` field holding a json array with the tags
+        JsonObject termsById = new JsonObject();
+        JsonArray categoryIds = new JsonArray();
+        for (Long categoryId : post.getCategoryIdList()) {
+            categoryIds.add(categoryId);
+        }
+        termsById.add(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY, categoryIds);
+        // categories are transmitted via the `term_by_id.categories` field
+        params.put("terms_by_id", termsById);
 
         // construct a json object with a `post_tag` field holding a json array with the tags
         JsonArray tags = new JsonArray();
