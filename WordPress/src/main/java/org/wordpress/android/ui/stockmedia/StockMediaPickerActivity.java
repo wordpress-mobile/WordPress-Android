@@ -585,6 +585,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnail(), mThumbWidth, mThumbHeight);
             holder.mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
 
+            holder.mImageView.setContentDescription(media.getTitle());
+
             boolean isSelected = isItemSelected(position);
             holder.mSelectionCountTextView.setSelected(isSelected);
             if (enableMultiselect()) {
