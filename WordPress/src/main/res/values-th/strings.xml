@@ -332,7 +332,6 @@ Language: th
     <string name="more">กว่า</string>
     <string name="reader_empty_posts_liked">คุณยังไม่ได้ชื่นชอบเรื่องใด ๆ</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
-    <string name="nux_help_description">เยี่ยมชมศูนย์กลางช่วยเหลือเพื่อหาคำตอบของคำถามทั่ว ๆ ไป หรือเยี่ยมชมฟอรั่มเพื่อตั้งคำถามใหม่</string>
     <string name="create_new_blog_wpcom">สร้างบล็อก WordPress.com</string>
     <string name="reader_empty_comments">ยังไม่มีความเห็น</string>
     <string name="reader_empty_posts_in_tag">ไม่มีเรื่องกับป้ายกำกับนี้</string>
@@ -343,11 +342,6 @@ Language: th
     <string name="reader_label_liked_by">ชื่นชอบโดย</string>
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
     <string name="contact_us">ติดต่อเรา</string>
-    <string name="hs__conversation_detail_error">อธิบายปัญหาที่คุณเห็น</string>
-    <string name="hs__new_conversation_header">การคุยช่วยเหลือ</string>
-    <string name="hs__conversation_header">การคุยช่วยเหลือ</string>
-    <string name="hs__username_blank_error">ใส่ชื่อที่ใช้งานได้</string>
-    <string name="hs__invalid_email_error">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
     <string name="update_verb">อัปเดต</string>
     <string name="schedule_verb">ตารางงาน</string>
     <string name="reader_page_followed_tags">ป้ายกำกับที่ติดตามแล้ว</string>

@@ -1,6 +1,0 @@
-10.3:
-* Pembaca: Fungsi pencarian sekarang telah ditingkatkan untuk memungkinkan pencarian situs.
-* Penyunting: Penanganan pos Gutenberg lebih baik.
-* Pemberitahuan: Manajemen moderasi pingback dan komentar telah ditingkatkan.
-* Sejumlah perubahan dan perbaikan kecil pada UI.
-* Beragam perbaikan bug.

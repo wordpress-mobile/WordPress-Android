@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-20 15:29:45+0000
+Translation-Revision-Date: 2018-07-05 13:34:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="reader_avatar_desc">Profilbild</string>
+    <string name="reader_blavatar_desc">webblatsikon</string>
+    <string name="notification_channel_transient_title">Tillfälligt</string>
+    <string name="support_identity_input_dialog_email_label">E–post</string>
+    <string name="support_identity_input_dialog_enter_email">Ange din e–postadress</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Ange din e–postadress och ditt namn för att fortsätta</string>
+    <string name="support_push_notification_message">Nytt meddelande från ”Hjälp och support”</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Inte angivet</string>
+    <string name="support_contact_email">E–postadress för kontakt</string>
+    <string name="application_log_button">Logg för applikationen</string>
+    <string name="my_tickets">Mina ärenden</string>
+    <string name="activity_log_rewind_dialog_message">Är du säker på att du vill återställa din webbplats till %s kl. %s? Detta kommer att avlägsna innehåll och inställningar som skapats eller ändrats sedan dess.</string>
+    <string name="activity_log_rewind_site">Återställ webbplats</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Återställning pågår</string>
+    <string name="activity_log_currently_restoring_message">Återställer till %s %s</string>
+    <string name="activity_log_currently_restoring_title">Din webbplats återställs just nu</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Din webbplats har återställts</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Din webbplats har återställts\nBackat till %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Din webbplats håller på att återställas\nBackar till %s %s</string>
+    <string name="activity_log_button">Åtgärdsknapp för akitivitetslogg</string>
     <string name="plugin_auto_managed">Automatiskt hanterad</string>
     <string name="reader_save_posts_locally_dialog_message">Spara detta inlägg och läs det senare, närhelst det passar dig. Det kommer endast att vara tillgängligt på denna enhet – sparade inlägg synkroniseras inte till dina andra enheter. (Än så länge, men vi jobbar på det!)</string>
     <string name="reader_save_posts_locally_dialog_title">Spara inlägg till senare</string>
@@ -98,8 +119,6 @@ Language: sv_SE
     <string name="dialog_confirm_delete_permanently_page">Är du säker på att du vill radera denna sida permanent?</string>
     <string name="dialog_confirm_delete_permanently_post">Är du säker på att du vill radera detta inlägg permanent?</string>
     <string name="notification_site_creation_title_in_progress">Skapar webbplatsen… Det kan ta några minuter.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Viktigt</string>
     <string name="notification_channel_general_title">Allmänt</string>
     <string name="photo_picker_use_photo">Använd detta foto</string>
@@ -1412,7 +1431,6 @@ Language: sv_SE
     <string name="reader_empty_posts_in_tag">Inga inlägg med denna etikett</string>
     <string name="reader_empty_comments">Inga kommentarer än</string>
     <string name="create_new_blog_wpcom">Skapa en blogg på WordPress.com</string>
-    <string name="nux_help_description">Besök hjälpsektionen för att få svar på vanliga frågor eller besök forumet för att ställa nya frågor</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
     <string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
     <string name="reader_empty_followed_blogs_title">Du följer inga webbplatser än</string>
@@ -1420,11 +1438,6 @@ Language: sv_SE
     <string name="reader_toast_blog_blocked">Inlägg från denna webbplats kommer inte längre att visas</string>
     <string name="reader_toast_err_block_blog">Kunde inte blockera denna webbplats</string>
     <string name="reader_toast_err_generic">Kunde inte genomföra denna åtgärd</string>
-    <string name="hs__invalid_email_error">Ange en giltig e–postadress</string>
-    <string name="hs__username_blank_error">Ange ett giltigt namn</string>
-    <string name="hs__conversation_header">Supportchatt</string>
-    <string name="hs__new_conversation_header">Supportchatt</string>
-    <string name="hs__conversation_detail_error">Beskriv problemet du upplever</string>
     <string name="contact_us">Kontakta oss</string>
     <string name="schedule_verb">Tidinställ</string>
     <string name="update_verb">Uppdatera</string>
