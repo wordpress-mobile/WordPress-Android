@@ -454,7 +454,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // see if we have a cached thumbnail before retrieving it
         Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
         if (bitmap != null) {
-            imageView.setImageBitmap(bitmap);
             mImageManager.load(imageView, bitmap, ScaleType.CENTER_CROP);
             return;
         }
