@@ -524,17 +524,11 @@ Language: vi_VN
     <string name="reader_empty_followed_blogs_title">Bạn chưa theo dõi bất kì site nào</string>
     <string name="reader_empty_posts_liked">Bạn chưa thích bất kì bài viết nào</string>
     <string name="browse_our_faq_button">Duyệt FAQ của chúng tôi</string>
-    <string name="nux_help_description">Ghé thăm trung tâm trợ giúp để có các câu trả lời cho các câu hỏi thông thường hoặc vào diễn đàn để yêu cầu các câu hỏi mới</string>
     <string name="stats_no_blog">Thống kê không thể được nạp cho các blog yêu cầu</string>
     <string name="comment_trashed">Bình luận cho vào thùng rác</string>
     <string name="older_last_week">Cũ hơn 1 tuần</string>
     <string name="reader_toast_err_generic">khong lam duoc</string>
     <string name="contact_us">lien lac voi chung toi</string>
-    <string name="hs__conversation_detail_error">Mo ta van de ma ban thay</string>
-    <string name="hs__new_conversation_header">Chat giup do</string>
-    <string name="hs__conversation_header">Chat giup do</string>
-    <string name="hs__username_blank_error">Bam vao ten </string>
-    <string name="hs__invalid_email_error">bam vao dia chi email</string>
     <string name="update_verb">Cập nhật</string>
     <string name="schedule_verb">Lich trinh</string>
     <string name="reader_title_tag_preview">Thẻ người đọc</string>

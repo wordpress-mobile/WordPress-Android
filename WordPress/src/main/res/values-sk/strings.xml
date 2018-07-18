@@ -466,16 +466,10 @@ Language: sk
     <string name="reader_empty_posts_in_tag">Neexistuje žiadny príspevok s touto značkou</string>
     <string name="reader_empty_comments">Zatiaľ nie sú žiadne komentáre</string>
     <string name="create_new_blog_wpcom">Vytvoriť WordPress blog</string>
-    <string name="nux_help_description">Pre odpovede na časté otázky navštívte naše centrum pomoci alebo fórum</string>
     <string name="browse_our_faq_button">Prehľadávať časté otázky</string>
     <string name="reader_empty_posts_liked">Zatiaľ ste nelajkli žiaden príspevok</string>
     <string name="reader_empty_followed_blogs_title">Nesledujete zatiaľ žiadne webové stránky</string>
     <string name="reader_toast_err_generic">Nie je možné vykonať túto akciu</string>
-    <string name="hs__invalid_email_error">Vložte platnú emailovú adresu</string>
-    <string name="hs__username_blank_error">Vložte platné meno</string>
-    <string name="hs__conversation_header">Chat technickej podpory</string>
-    <string name="hs__new_conversation_header">Chat technickej podpory</string>
-    <string name="hs__conversation_detail_error">Popíšte váš problém</string>
     <string name="contact_us">Kontaktujte nás</string>
     <string name="schedule_verb">Rozvrh</string>
     <string name="update_verb">Aktualizovať</string>
