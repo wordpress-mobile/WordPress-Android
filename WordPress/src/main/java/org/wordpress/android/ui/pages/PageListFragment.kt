@@ -63,32 +63,13 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViews(savedInstanceState)
+        initViewModels(savedInstanceState)
+    }
+
+    private fun initViewModels(savedInstanceState: Bundle?) {
         (activity!!.application as WordPress).component()!!.inject(this)
 
-        initViewModel(savedInstanceState)
-        initRecyclerView(savedInstanceState)
-    }
-
-    private fun initRecyclerView(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
-            layoutManager.onRestoreInstanceState(it)
-        }
-
-        recyclerView.layoutManager = linearLayoutManager
-        linearLayoutManager = layoutManager
-
-        val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
-        recyclerView.adapter = adapter
-
-        viewModel.data.observe(this, Observer { data ->
-            if (data != null) {
-                adapter.update(data)
-            }
-        })
-    }
-
-    private fun initViewModel(savedInstanceState: Bundle?) {
         val key = arguments!!.getString(fragmentKey)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PageListViewModel>(checkNotNull(key), PageListViewModel::class.java)
@@ -99,7 +80,25 @@ class PageListFragment : Fragment() {
         val pagesViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get<PagesViewModel>(PagesViewModel::class.java)
 
+        setupObservers()
+
         viewModel.start(site, getPageType(key), pagesViewModel)
+    }
+
+    private fun initViews(savedInstanceState: Bundle?) {
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+            layoutManager.onRestoreInstanceState(it)
+        }
+
+        recyclerView.layoutManager = linearLayoutManager
+        linearLayoutManager = layoutManager
+    }
+
+    private fun setupObservers() {
+        viewModel.pages.observe(this, Observer { data ->
+            data?.let { setPages(data) }
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -113,6 +112,19 @@ class PageListFragment : Fragment() {
             "key1" -> PostStatus.DRAFT
             "key2" -> PostStatus.SCHEDULED
             else -> PostStatus.TRASHED
+        }
+    }
+
+    private fun setPages(pages: List<PageItem>) {
+        context?.let {
+            val adapter: PagesAdapter
+            if (recyclerView.adapter == null) {
+                adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+                recyclerView.adapter = adapter
+            } else {
+                adapter = recyclerView.adapter as PagesAdapter
+            }
+            adapter.update(pages)
         }
     }
 }
