@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<android.support.design.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,18 +11,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/newPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_create_white_24dp"
-        android:contentDescription="@string/fab_create_desc"
-        app:borderWidth="0dp"
-        app:rippleColor="@color/fab_pressed"
-        android:layout_marginEnd="@dimen/fab_margin"/>
-
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>
