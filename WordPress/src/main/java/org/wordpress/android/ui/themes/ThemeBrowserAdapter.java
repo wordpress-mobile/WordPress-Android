@@ -201,12 +201,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
                 if (i == R.id.menu_activate) {
-                    if (!isPremium || (mSitePlanId == PlansConstants.PREMIUM_PLAN_ID
-                                      || mSitePlanId == PlansConstants.BUSINESS_PLAN_ID)) {
-                        // Activate the theme directly if it's a free one or the site is on the premium|business plan
+                    if (canActivateThemeDirectly(isPremium, mSitePlanId)) {
                         mCallback.onActivateSelected(themeId);
                     } else {
-                        // Need to forward the user online to purchase the theme
+                        // forward the user online to complete the activation
                         mCallback.onDetailsSelected(themeId);
                     }
                 } else if (i == R.id.menu_try_and_customize) {
@@ -228,6 +226,21 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
                 popupMenu.show();
             }
         });
+    }
+
+    private boolean canActivateThemeDirectly(final boolean isPremiumTheme, final long sitePlanId) {
+        if (!isPremiumTheme) {
+            // It's a free theme so, can always activate directly
+            return true;
+        }
+
+        if (sitePlanId == PlansConstants.PREMIUM_PLAN_ID || mSitePlanId == PlansConstants.BUSINESS_PLAN_ID) {
+            // Can activate any theme on a Premium and Business site plan
+            return true;
+        }
+
+        // Theme cannot be activated directly and needs to be purchased
+        return false;
     }
 
     private void configureMenuForTheme(Menu menu, boolean isCurrent) {
