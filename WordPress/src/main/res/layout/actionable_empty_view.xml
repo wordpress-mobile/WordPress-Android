@@ -27,7 +27,6 @@
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_width="wrap_content"
-                android:maxHeight="@dimen/actionable_empty_view_image_maximum_height"
                 android:visibility="gone"
                 tools:srcCompat="@drawable/jetpack_connection_notifications"
                 tools:visibility="visible" >
