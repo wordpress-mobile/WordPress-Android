@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -115,6 +116,7 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
+    public static final String ARG_SHOW_ZENDESK_HINT_SNACKBAR = "show_zendesk_hint_snackbar";
     public static final String ARG_ME = "show_me";
 
     private WPMainNavigationView mBottomNav;
@@ -292,6 +294,10 @@ public class WPMainActivity extends AppCompatActivity
                     break;
                 case ARG_ME:
                     mBottomNav.setCurrentPosition(PAGE_ME);
+                    if (intent.getBooleanExtra(WPMainActivity.ARG_SHOW_ZENDESK_HINT_SNACKBAR, false)) {
+                        Snackbar.make(findViewById(R.id.coordinator),
+                                R.string.support_push_notification_message_hint_snackbar, 5000).show();
+                    }
                     break;
             }
         } else {
