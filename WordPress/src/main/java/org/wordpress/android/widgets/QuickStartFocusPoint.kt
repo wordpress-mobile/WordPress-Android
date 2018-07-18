@@ -19,6 +19,11 @@ import org.wordpress.android.R
  * - Expand
  */
 class QuickStartFocusPoint : FrameLayout {
+    companion object {
+        const val OUTER_CIRCLE_ANIMATION_START_OFFSET_MS = 1000L
+        const val INNER_CIRCLE_ANIMATION_START_OFFSET_MS = OUTER_CIRCLE_ANIMATION_START_OFFSET_MS + 50L
+    }
+
     constructor(context: Context) : super(context) {
         initView()
     }
@@ -56,8 +61,8 @@ class QuickStartFocusPoint : FrameLayout {
             override fun onAnimationStart(animation: Animation) {}
 
             override fun onAnimationEnd(animation: Animation) {
-                outerCircleCollapseAnimation.startOffset = 1000
-                innerCircleCollapseAnimation.startOffset = 1050
+                outerCircleCollapseAnimation.startOffset = OUTER_CIRCLE_ANIMATION_START_OFFSET_MS
+                innerCircleCollapseAnimation.startOffset = INNER_CIRCLE_ANIMATION_START_OFFSET_MS
 
                 outerCircle.startAnimation(outerCircleCollapseAnimation)
                 innerCircle.startAnimation(innerCircleCollapseAnimation)
@@ -81,8 +86,8 @@ class QuickStartFocusPoint : FrameLayout {
             override fun onAnimationStart(animation: Animation) {}
 
             override fun onAnimationEnd(animation: Animation) {
-                outerCircleCollapseAnimation.startOffset = 1000
-                innerCircleCollapseAnimation.startOffset = 1050
+                outerCircleCollapseAnimation.startOffset = OUTER_CIRCLE_ANIMATION_START_OFFSET_MS
+                innerCircleCollapseAnimation.startOffset = INNER_CIRCLE_ANIMATION_START_OFFSET_MS
 
                 outerCircle.startAnimation(outerCircleCollapseAnimation)
                 innerCircle.startAnimation(innerCircleCollapseAnimation)
@@ -91,9 +96,9 @@ class QuickStartFocusPoint : FrameLayout {
             override fun onAnimationRepeat(animation: Animation) {}
         })
 
-        outerCircleInitialAnimation.startOffset = 1000
+        outerCircleInitialAnimation.startOffset = OUTER_CIRCLE_ANIMATION_START_OFFSET_MS
         outerCircle.startAnimation(outerCircleInitialAnimation)
-        innerCircleInitialAnimation.startOffset = 1050
+        innerCircleInitialAnimation.startOffset = INNER_CIRCLE_ANIMATION_START_OFFSET_MS
         innerCircle.startAnimation(innerCircleInitialAnimation)
     }
 }
