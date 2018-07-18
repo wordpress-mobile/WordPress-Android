@@ -180,8 +180,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
             // icon.
             holder.networkImageView.setVisibility(View.VISIBLE);
-            holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_tag_blue_wordpress_12dp));
-
+            mImageManager
+                    .load(holder.networkImageView, getResources().getDrawable(R.drawable.ic_tag_blue_wordpress_12dp));
             return convertView;
         }
 
@@ -269,7 +269,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
                 int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized")
                         ? R.drawable.ic_folder_blue_wordpress_12dp
                         : R.drawable.ic_tag_blue_wordpress_12dp;
-                holder.networkImageView.setImageDrawable(getResources().getDrawable(drawableResource));
+                mImageManager.load(holder.networkImageView, getResources().getDrawable(drawableResource));
+            } else {
+              mImageManager.cancelRequestAndClearImageView(holder.networkImageView);
             }
 
             return convertView;

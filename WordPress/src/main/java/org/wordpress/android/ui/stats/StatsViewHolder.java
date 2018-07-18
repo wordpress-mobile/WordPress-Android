@@ -16,7 +16,6 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * View holder for stats_list_cell layout
@@ -24,7 +23,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class StatsViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
-    public final WPNetworkImageView networkImageView;
+    public final ImageView networkImageView;
     public final TextView alternativeImage;
     public final ImageView chevronImageView;
     public final ImageView linkImageView;
@@ -32,14 +31,14 @@ public class StatsViewHolder {
     public final LinearLayout rowContent;
 
     public StatsViewHolder(View view) {
-        rowContent = (LinearLayout) view.findViewById(R.id.layout_content);
-        entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-        totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-        chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
-        linkImageView = (ImageView) view.findViewById(R.id.stats_list_cell_link);
-        networkImageView = (WPNetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-        alternativeImage = (TextView) view.findViewById(R.id.stats_list_cell_image_alt);
-        imgMore = (ImageView) view.findViewById(R.id.image_more);
+        rowContent = view.findViewById(R.id.layout_content);
+        entryTextView = view.findViewById(R.id.stats_list_cell_entry);
+        totalsTextView = view.findViewById(R.id.stats_list_cell_total);
+        chevronImageView = view.findViewById(R.id.stats_list_cell_chevron);
+        linkImageView = view.findViewById(R.id.stats_list_cell_link);
+        networkImageView = view.findViewById(R.id.stats_list_cell_image);
+        alternativeImage = view.findViewById(R.id.stats_list_cell_image_alt);
+        imgMore = view.findViewById(R.id.image_more);
     }
 
     /*
