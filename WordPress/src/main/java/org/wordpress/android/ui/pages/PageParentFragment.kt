@@ -66,7 +66,7 @@ class PageParentFragment : Fragment() {
 
         viewModel.data.observe(this, Observer { data ->
             if (data != null) {
-                adapter.onNext(data)
+                adapter.update(data)
             }
         })
 

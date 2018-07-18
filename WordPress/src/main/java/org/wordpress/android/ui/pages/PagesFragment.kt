@@ -46,7 +46,6 @@ class PagesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as WordPress).component()?.inject(this)
         setHasOptionsMenu(true)
     }
 
@@ -67,6 +66,9 @@ class PagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity?.application as WordPress).component()?.inject(this)
+
         val toolbar = view.findViewById<Toolbar>(org.wordpress.android.login.R.id.toolbar)
         (activity as AppCompatActivity).apply {
             setSupportActionBar(toolbar)
@@ -85,7 +87,7 @@ class PagesFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get<PagesViewModel>(PagesViewModel::class.java)
         viewModel.searchResult.observe(this, Observer { result ->
             if (result != null) {
-                adapter.onNext(result)
+                adapter.update(result)
             }
         })
 
@@ -122,11 +124,11 @@ class PagesFragment : Fragment() {
 
         myActionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return viewModel.searchExpanded()
+                return viewModel.onSearchExpanded()
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                return viewModel.searchCollapsed()
+                return viewModel.onSearchCollapsed()
             }
         })
 

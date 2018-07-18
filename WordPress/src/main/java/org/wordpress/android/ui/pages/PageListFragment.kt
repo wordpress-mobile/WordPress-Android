@@ -15,7 +15,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import javax.inject.Inject
@@ -57,11 +56,6 @@ class PageListFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component()!!.inject(this)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.pages_list_fragment, container, false)
     }
@@ -69,8 +63,9 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViewModel(savedInstanceState)
+        (activity!!.application as WordPress).component()!!.inject(this)
 
+        initViewModel(savedInstanceState)
         initRecyclerView(savedInstanceState)
     }
 
@@ -79,6 +74,7 @@ class PageListFragment : Fragment() {
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
+
         recyclerView.layoutManager = linearLayoutManager
         linearLayoutManager = layoutManager
 
@@ -87,11 +83,9 @@ class PageListFragment : Fragment() {
 
         viewModel.data.observe(this, Observer { data ->
             if (data != null) {
-                adapter.onNext(data)
+                adapter.update(data)
             }
         })
-
-        (activity!!.application as WordPress).component()?.inject(this)
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {

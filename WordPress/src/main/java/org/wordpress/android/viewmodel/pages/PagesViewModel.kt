@@ -38,6 +38,10 @@ class PagesViewModel
 
     fun start(site: SiteModel) {
         clear()
+        loadPagesAsync(site)
+    }
+
+    private fun loadPagesAsync(site: SiteModel) {
         launch(UI) {
             val result = pageStore.fetchPagesAsync(site, false)
             if (!result.isError) {
@@ -61,12 +65,12 @@ class PagesViewModel
         return true
     }
 
-    fun searchExpanded(): Boolean {
+    fun onSearchExpanded(): Boolean {
         mutableSearchExpanded.postValue(true)
         return true
     }
 
-    fun searchCollapsed(): Boolean {
+    fun onSearchCollapsed(): Boolean {
         mutableSearchExpanded.postValue(false)
         return true
     }
