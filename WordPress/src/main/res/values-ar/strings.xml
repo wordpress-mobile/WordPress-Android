@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-25 16:54:06+0000
+Translation-Revision-Date: 2018-07-10 15:54:06+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="reader_avatar_desc">صورة ملف التعريف</string>
+    <string name="reader_blavatar_desc">أيقونة الموقع</string>
+    <string name="notification_channel_transient_title">عابر</string>
+    <string name="support_identity_input_dialog_email_label">البريد الإلكتروني</string>
+    <string name="support_identity_input_dialog_enter_email">يرجى إدخال عنوان بريدك الإلكتروني</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">للاستمرار، يرجى إدخال عنوان بريدك الإلكتروني واسمك</string>
+    <string name="support_push_notification_message">رسالة جديدة من \"التعليمات والدعم\"</string>
+    <string name="support_push_notification_title">وردبرس</string>
+    <string name="support_contact_email_not_set">لم يتم التعيين</string>
+    <string name="support_contact_email">البريد الإلكتروني الخاص بجهة الاتصال</string>
+    <string name="application_log_button">سجل التطبيق</string>
+    <string name="my_tickets">تذاكري</string>
+    <string name="activity_log_rewind_dialog_message">هل تريد بالتأكيد إرجاع موقعك مجددًا إلى %s في %s؟ سيقوم هذا بإزالة كل المحتوى والخيارات التي تم إنشاؤها أو تغييرها منذ ذلك الحين.</string>
+    <string name="activity_log_rewind_site">إرجاع الموقع</string>
+    <string name="activity_log_currently_restoring_message_no_dates">الإرجاع قيد التقدّم</string>
+    <string name="activity_log_currently_restoring_message">الإرجاع إلى %s %s</string>
+    <string name="activity_log_currently_restoring_title">استعادة موقعك حاليًا</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">تمت استعادة موقعك بنجاح</string>
+    <string name="activity_log_rewind_finished_snackbar_message">تمت استعادة موقعك بنجاح\nتم الإرجاع إلى %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">تجري استعادة موقعك\nالإرجاع إلى %s %s</string>
+    <string name="activity_log_button">زر الإجراء في سجل النشاط</string>
     <string name="plugin_auto_managed">إدارة تلقائية</string>
     <string name="reader_save_posts_locally_dialog_message">احفظ هذه المقالة، وعُد إلى قراءتها وقتما تشاء. لن تكون متاحة إلا على هذا الجهاز — لا تقوم المقالات المحفوظة بالمزامنة مع الأجهزة الأخرى. (ومع ذلك! نحن نعمل على إيجاد حل لهذا الأمر.)</string>
     <string name="reader_save_posts_locally_dialog_title">حفظ المقالات لوقت لاحق</string>
@@ -88,8 +109,6 @@ Language: ar
     <string name="dialog_confirm_delete_permanently_page">هل ترغب بالتأكيد في حذف هذه الصفحة بشكل دائم؟</string>
     <string name="dialog_confirm_delete_permanently_post">هل ترغب بالتأكيد في حذف هذه المقالة بشكل دائم؟</string>
     <string name="notification_site_creation_title_in_progress">جارٍ إنشاء الموقع… قد يستغرق هذا الأمر بضع دقائق.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">مهم</string>
     <string name="notification_channel_general_title">عام</string>
     <string name="photo_picker_use_photo">استخدام هذه الصورة</string>
@@ -1338,16 +1357,10 @@ Language: ar
     <string name="reader_empty_posts_in_tag">لا توجد مقالات تحمل هذا الوسم</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="create_new_blog_wpcom">إنشاء مدونة WordPress.com</string>
-    <string name="nux_help_description">تفضل بزيارة مركز المساعدة للاطلاع على إجابات الأسئلة الشائعة أو تفضل بزيارة المنتديات لطرح أسئلة جديدة</string>
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
     <string name="reader_empty_posts_liked">لم تُعجب بأي مقالات</string>
     <string name="reader_empty_followed_blogs_title">لم تتابع أي مواقع حتى الآن</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
-    <string name="hs__invalid_email_error">أدخل عنوان بريد إلكتروني صالحًا</string>
-    <string name="hs__username_blank_error">أدخل اسمًا صالحًا</string>
-    <string name="hs__conversation_header">محادثة الدعم الفني</string>
-    <string name="hs__new_conversation_header">محادثة الدعم الفني</string>
-    <string name="hs__conversation_detail_error">أوصف المشكلة التي تراها</string>
     <string name="contact_us">اتصل بنا</string>
     <string name="schedule_verb">جدولة</string>
     <string name="update_verb">تحديث</string>
