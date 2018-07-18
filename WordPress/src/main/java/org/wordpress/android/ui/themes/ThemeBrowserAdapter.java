@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.ThemeModel;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.image.ImageManager;
@@ -37,6 +38,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
     private final Context mContext;
+    private final long mSitePlanId;
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragmentCallback mCallback;
     private final ImageManager mImageManager;
@@ -47,8 +49,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private final List<ThemeModel> mAllThemes = new ArrayList<>();
     private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
 
-    ThemeBrowserAdapter(Context context, ThemeBrowserFragmentCallback callback, ImageManager imageManager) {
+    ThemeBrowserAdapter(Context context, long sitePlanId, ThemeBrowserFragmentCallback callback,
+                        ImageManager imageManager) {
         mContext = context;
+        mSitePlanId = sitePlanId;
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
@@ -197,10 +201,11 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
                 if (i == R.id.menu_activate) {
-                    if (isPremium) {
-                        mCallback.onDetailsSelected(themeId);
-                    } else {
+                    if (canActivateThemeDirectly(isPremium, mSitePlanId)) {
                         mCallback.onActivateSelected(themeId);
+                    } else {
+                        // forward the user online to complete the activation
+                        mCallback.onDetailsSelected(themeId);
                     }
                 } else if (i == R.id.menu_try_and_customize) {
                     mCallback.onTryAndCustomizeSelected(themeId);
@@ -221,6 +226,21 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
                 popupMenu.show();
             }
         });
+    }
+
+    private boolean canActivateThemeDirectly(final boolean isPremiumTheme, final long sitePlanId) {
+        if (!isPremiumTheme) {
+            // It's a free theme so, can always activate directly
+            return true;
+        }
+
+        if (sitePlanId == PlansConstants.PREMIUM_PLAN_ID || mSitePlanId == PlansConstants.BUSINESS_PLAN_ID) {
+            // Can activate any theme on a Premium and Business site plan
+            return true;
+        }
+
+        // Theme cannot be activated directly and needs to be purchased
+        return false;
     }
 
     private void configureMenuForTheme(Menu menu, boolean isCurrent) {
