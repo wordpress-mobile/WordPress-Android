@@ -351,6 +351,7 @@ public class PostRestClient extends BaseWPComRestClient {
         }
         JsonObject terms = new JsonObject();
         terms.add(TaxonomyStore.DEFAULT_TAXONOMY_TAG, tags);
+        // categories are transmitted via the `terms.post_tag` field
         params.put("terms", terms);
 
         if (post.hasFeaturedImage()) {
