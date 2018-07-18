@@ -317,6 +317,7 @@
     <dimen name="quick_start_dot_size">8dp</dimen>
     <dimen name="quick_start_completed_row_height">56dp</dimen>
     <dimen name="quick_start_completed_text">14sp</dimen>
+    <dimen name="quick_start_focus_point_size">40dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
