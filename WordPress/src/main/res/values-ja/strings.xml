@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-20 06:14:01+0000
+Translation-Revision-Date: 2018-07-11 02:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="reader_avatar_desc">プロフィール写真</string>
+    <string name="reader_blavatar_desc">サイトアイコン</string>
+    <string name="notification_channel_transient_title">Transient</string>
+    <string name="support_identity_input_dialog_email_label">メール</string>
+    <string name="support_identity_input_dialog_enter_email">メールアドレスを入力してください</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">続行するには、メールアドレスと名前を入力してください</string>
+    <string name="support_push_notification_message">「ヘルプ &amp; サポート」からの新しいメッセージ</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">未設定</string>
+    <string name="support_contact_email">連絡先メールアドレス</string>
+    <string name="application_log_button">アプリケーションログ</string>
+    <string name="my_tickets">自分のチケット</string>
+    <string name="activity_log_rewind_dialog_message">お使いのサイトを%sの%sに巻き戻してもよいですか ?この操作により、作成したすべてのコンテンツとオプション、および作成後に行ったすべての変更が削除されます。</string>
+    <string name="activity_log_rewind_site">サイトの巻き戻し</string>
+    <string name="activity_log_currently_restoring_message_no_dates">巻き戻し中</string>
+    <string name="activity_log_currently_restoring_message">%s %sまで巻き戻しています</string>
+    <string name="activity_log_currently_restoring_title">現在サイトを復元中です</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">サイトが正常に復元されました</string>
+    <string name="activity_log_rewind_finished_snackbar_message">サイトが正常に復元されました\n%s %sまで巻き戻しました</string>
+    <string name="activity_log_rewind_started_snackbar_message">現在サイトを復元中です\n%s %sまで巻き戻しています</string>
+    <string name="activity_log_button">「アクティビティログ」アクションボタン</string>
     <string name="plugin_auto_managed">自動管理中</string>
     <string name="reader_save_posts_locally_dialog_message">この投稿を保存し、いつでも戻ってきたときに読むことができます。この端末上のみで利用でき、保存した投稿は他の端末とは同期されません (ただし、現在開発中です)。</string>
     <string name="reader_save_posts_locally_dialog_title">投稿を保存</string>
@@ -97,8 +118,6 @@ Language: ja_JP
     <string name="dialog_confirm_delete_permanently_page">このページを完全に削除しますか ?</string>
     <string name="dialog_confirm_delete_permanently_post">この投稿を完全に削除しますか ?</string>
     <string name="notification_site_creation_title_in_progress">サイトの作成中… これには1、2分かかる場合があります。</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">重要</string>
     <string name="notification_channel_general_title">一般</string>
     <string name="photo_picker_use_photo">この写真を使用</string>
@@ -1399,16 +1418,10 @@ Language: ja_JP
     <string name="reader_empty_posts_in_tag">このタグを使った投稿はありません</string>
     <string name="reader_empty_comments">コメントはまだありません</string>
     <string name="create_new_blog_wpcom">WordPress.com ブログを作成</string>
-    <string name="nux_help_description">ヘルプセンターにアクセスして一般的な質問の答えを探すか、フォーラムにアクセスして新しい質問を尋ねてください。</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
     <string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
     <string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
     <string name="reader_toast_err_generic">操作を実行できませんでした</string>
-    <string name="hs__invalid_email_error">正しいメールアドレスを入力してください</string>
-    <string name="hs__username_blank_error">正しいお名前を入力してください</string>
-    <string name="hs__conversation_header">サポートチャット</string>
-    <string name="hs__new_conversation_header">サポートチャット</string>
-    <string name="hs__conversation_detail_error">発生している問題を説明してください</string>
     <string name="contact_us">お問い合わせ</string>
     <string name="schedule_verb">予約</string>
     <string name="update_verb">更新</string>

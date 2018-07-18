@@ -319,4 +319,6 @@
     <dimen name="actionable_empty_view_image_maximum_height">120dp</dimen>
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
     <dimen name="actionable_empty_view_text_maximum_width">300dp</dimen>
+
+    <dimen name="snackbar_message_margin_bottom">18dp</dimen>
 </resources>

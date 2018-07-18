@@ -377,7 +377,6 @@ Language: hr
     <string name="posts_empty_list">Još nemate objava. Zašto ne napišete jednu?</string>
     <string name="comment_reply_to_user">Odgovor na %s</string>
     <string name="pages_empty_list">Još nemate stranica. Zašto ne kreirate jednu?</string>
-    <string name="nux_help_description">Posjetite centar za pomoć kako bi dobili odgovore na učestala pitanja, ili posjetite forume kako bi postavili nova pitanja</string>
     <string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
     <string name="stats_no_blog">Nije moguće učitati statistiku za navedeni blog</string>
     <string name="more">Više</string>
@@ -387,12 +386,7 @@ Language: hr
     <string name="reader_toast_err_block_blog">Nije moguće blokirati ovu web–stranicu</string>
     <string name="reader_toast_blog_blocked">Objave sa ove web–stranice više neće biti prikazane</string>
     <string name="reader_menu_block_blog">Blokiraj ovu web–stranicu</string>
-    <string name="hs__invalid_email_error">Unesite valjanu adresu e–pošte</string>
     <string name="contact_us">Kontaktirajte nas</string>
-    <string name="hs__username_blank_error">Unesite valjano ime</string>
-    <string name="hs__conversation_detail_error">Opišite problem koji se pojavljuje</string>
-    <string name="hs__new_conversation_header">Razgovor s podrškom</string>
-    <string name="hs__conversation_header">Razgovor s podrškom</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
     <string name="reader_page_followed_tags">Praćene oznake</string>

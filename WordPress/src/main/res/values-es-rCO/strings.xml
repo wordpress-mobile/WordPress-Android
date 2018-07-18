@@ -922,16 +922,10 @@ Language: es_CO
     <string name="reader_empty_posts_in_tag">No hay entradas con esta etiqueta</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
     <string name="create_new_blog_wpcom">Crear un blog de WordPress.com</string>
-    <string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
     <string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
-    <string name="hs__invalid_email_error">Escribe una dirección de correo electrónico válida</string>
-    <string name="hs__username_blank_error">Escribe un nombre válido</string>
-    <string name="hs__conversation_header">Chat de soporte</string>
-    <string name="hs__new_conversation_header">Chat de soporte</string>
-    <string name="hs__conversation_detail_error">Describe el problema que estás teniendo</string>
     <string name="contact_us">Contacta con nosotros</string>
     <string name="schedule_verb">Programación</string>
     <string name="update_verb">Actualizar</string>
