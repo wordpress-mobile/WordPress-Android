@@ -2,7 +2,6 @@ package org.wordpress.android.ui.pages
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
@@ -11,14 +10,22 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean) :
         RecyclerView.Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
+
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
-        val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            PageItem.Type.PAGE.viewType -> PageViewHolder(layoutInflater, parent, onAction)
-            PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(layoutInflater, parent)
-            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(layoutInflater, parent)
+            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onAction)
+            PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
+            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
+    }
+
+    override fun getItemId(position: Int): Long {
+        return items[position].id ?: -1
     }
 
     override fun getItemCount(): Int = items.size

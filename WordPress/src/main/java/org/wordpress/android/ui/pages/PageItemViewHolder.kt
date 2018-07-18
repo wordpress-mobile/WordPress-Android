@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.pages
 
+import android.support.annotation.LayoutRes
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
@@ -16,15 +18,14 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.DisplayUtils
 
-sealed class PageItemViewHolder(parentView: View) :
-        ViewHolder(parentView) {
+sealed class PageItemViewHolder(parent: ViewGroup, @LayoutRes layout: Int) :
+        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
 
     class PageViewHolder(
-        layoutInflater: LayoutInflater,
         parentView: ViewGroup,
         private val onAction: (PageItem.Action, PageItem) -> Boolean
-    ) : PageItemViewHolder(layoutInflater.inflate(layout.page_list_item, parentView, false)) {
+    ) : PageItemViewHolder(parentView, layout.page_list_item) {
         private val indentContainer = itemView.findViewById<FrameLayout>(id.indent_container)
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
@@ -58,8 +59,7 @@ sealed class PageItemViewHolder(parentView: View) :
         }
     }
 
-    class PageDividerViewHolder(layoutInflater: LayoutInflater, parentView: ViewGroup) :
-            PageItemViewHolder(layoutInflater.inflate(layout.page_divider_item, parentView, false)) {
+    class PageDividerViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_divider_item) {
         private val dividerTitle = itemView.findViewById<TextView>(id.divider_text)
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
@@ -68,8 +68,7 @@ sealed class PageItemViewHolder(parentView: View) :
         }
     }
 
-    class EmptyViewHolder(layoutInflater: LayoutInflater, parentView: ViewGroup) :
-            PageItemViewHolder(layoutInflater.inflate(layout.page_empty_item, parentView, false)) {
+    class EmptyViewHolder(parentView: ViewGroup) :  PageItemViewHolder(parentView, layout.page_empty_item) {
         private val emptyView = itemView.findViewById<TextView>(id.empty_view)
         override fun onBind(pageItem: PageItem) {
             (pageItem as Empty).apply {
