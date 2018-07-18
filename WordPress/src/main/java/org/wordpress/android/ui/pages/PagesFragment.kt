@@ -102,6 +102,11 @@ class PagesFragment : Fragment() {
         }
 
         val newPageButton = activity?.findViewById<FloatingActionButton>(R.id.newPageButton)
+        // fix the search view margins to match the action bar
+        val searchEditFrame = myActionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
+        (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
+                .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
+                .apply { this.rightMargin = DisplayUtils.dpToPx(activity, -12) }
         viewModel.searchExpanded.observe(activity!!, Observer {
             if (it == true) {
                 pagesPager.visibility = View.GONE
