@@ -1,6 +1,0 @@
-10.3:
-* Czytnik: Funkcja wyszukiwania została ulepszona aby umożliwić wyszukiwanie witryn.
-* Edytor: Ulepszona obsługa wpisów Gutenberga.
-* Powiadomienia: ulepszono moderację Pingbacków i zarządzanie komentarzami.
-* Duża liczba małych usprawnień interfejsu.
-* Różne poprawki.
