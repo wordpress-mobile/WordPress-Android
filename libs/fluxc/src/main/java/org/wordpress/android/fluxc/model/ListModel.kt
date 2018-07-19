@@ -10,7 +10,8 @@ import com.yarolegovich.wellsql.core.annotation.Table
 @RawConstraints("UNIQUE (type)")
 class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     enum class ListType(val value: String) {
-        POSTS_ALL("posts_all");
+        POSTS_ALL("posts_all"),
+        POSTS_SCHEDULED("post_scheduled"); // only added for test purposes (for now)
     }
 
     @Column var dateCreated: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z

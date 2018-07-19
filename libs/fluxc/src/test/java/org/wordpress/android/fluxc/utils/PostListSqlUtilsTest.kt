@@ -35,8 +35,8 @@ class PostListSqlUtilsTest {
     @Test
     fun testInsertOrUpdatePostList() {
         val testSite = SiteModel()
-        testSite.id = 123
-        val postCount = 20
+        testSite.id = 123 // value doesn't matter
+        val postCount = 20 // value doesn't matter
         val listType = ListType.POSTS_ALL
 
         /**
@@ -54,9 +54,9 @@ class PostListSqlUtilsTest {
     @Test
     fun testDeletePostList() {
         val testSite = SiteModel()
-        testSite.id = 123
+        testSite.id = 123 // value doesn't matter
+        val postCount = 20 // value doesn't matter
         val listType = ListType.POSTS_ALL
-        val postCount = 20
 
         /**
          * 1. Since a [PostListModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
@@ -77,6 +77,34 @@ class PostListSqlUtilsTest {
         assertEquals(postListSqlUtils.getPostList(testList.id)?.size, 0)
     }
 
+    @Test
+    fun testDeletePost() {
+        val testSite = SiteModel()
+        testSite.id = 123 // value doesn't matter
+        val testPostId = 1245 // value doesn't matter
+
+        /**
+         * 1. Insert a test list for every list type. There should at least be 2 list types for a good test.
+         * 2. Generate a [PostListModel] for every list type with the same id and insert it
+         * 3. Verify that the [PostListModel] was inserted correctly
+         */
+        val testLists = ListType.values().map { insertTestList(testSite, it) }
+        val postList = testLists.map { generatePostListModel(it.id, testPostId) }
+        postListSqlUtils.insertPostList(postList)
+        testLists.forEach {
+            assertEquals(postListSqlUtils.getPostList(it.id)?.size, 1)
+        }
+
+        /**
+         * 1. Delete [PostListModel]s for which [PostListModel.postId] == `testPostId`
+         * 2. Verify that [PostListModel]s from every list is deleted
+         */
+        postListSqlUtils.deletePost(testPostId)
+        testLists.forEach {
+            assertEquals(postListSqlUtils.getPostList(it.id)?.size, 0)
+        }
+    }
+
     /**
      * Creates and inserts a [ListModel] for a random test site. It also verifies that the list is inserted correctly.
      */
@@ -91,16 +119,21 @@ class PostListSqlUtilsTest {
      * Helper function that creates a list of [PostListModel] to be used in tests.
      * The [PostListModel.date] will be the same date for all [PostListModel]s.
      */
-    private fun generatePostList(listModel: ListModel, count: Int): List<PostListModel> {
-        val postList = ArrayList<PostListModel>()
-        val testDate = "1955-11-05T14:15:00Z"
-        (1..count).forEach { index ->
-            val postListModel = PostListModel()
-            postListModel.listId = listModel.id
-            postListModel.postId = index
-            postListModel.date = testDate
-            postList.add(postListModel)
-        }
-        return postList
+    private fun generatePostList(listModel: ListModel, count: Int): List<PostListModel> =
+            (1..count).map { generatePostListModel(listModel.id, it) }
+
+    /**
+     * Helper function that generates a [PostListModel] instance.
+     */
+    private fun generatePostListModel(
+        listId: Int,
+        postId: Int,
+        date: String = "1955-11-05T14:15:00Z" // just a random valid date since most test don't care about it
+    ): PostListModel {
+        val postListModel = PostListModel()
+        postListModel.listId = listId
+        postListModel.postId = postId
+        postListModel.date = date
+        return postListModel
     }
 }
