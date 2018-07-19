@@ -65,7 +65,13 @@ class QuickStartUtils {
                     icon.setBounds(0, 0, iconSize, iconSize)
 
                     DrawableCompat.setTint(icon, highlightColor)
-                    mutableSpannedMessage.setSpan(ImageSpan(icon), startOfHighlight - 1, startOfHighlight,
+                    if (startOfHighlight > 0) {
+                        mutableSpannedMessage.insert(startOfHighlight - 1, "  ")
+                    } else {
+                        mutableSpannedMessage.insert(startOfHighlight, "  ")
+                    }
+
+                    mutableSpannedMessage.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }
