@@ -27,6 +27,7 @@ import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -46,7 +47,7 @@ public class PeopleListFragment extends Fragment {
     private SiteModel mSite;
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchPeopleListener mOnFetchPeopleListener;
-
+    private ActionableEmptyView mActionableEmptyView;
     private FilteredRecyclerView mFilteredRecyclerView;
     private PeopleListFilter mPeopleListFilter;
 
@@ -96,6 +97,7 @@ public class PeopleListFragment extends Fragment {
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         final boolean isPrivate = mSite != null && mSite.isPrivate();
 
+        mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView
                 .addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
@@ -153,48 +155,46 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-                int stringId = 0;
                 switch (emptyViewMsgType) {
                     case LOADING:
-                        stringId = R.string.people_fetching;
-                        break;
+                        return getString(R.string.people_fetching);
                     case NETWORK_ERROR:
-                        stringId = R.string.no_network_message;
-                        break;
+                        return getString(R.string.no_network_message);
                     case NO_CONTENT:
+                        String title = "";
+
                         switch (mPeopleListFilter) {
                             case TEAM:
-                                stringId = R.string.people_empty_list_filtered_users;
+                                title = getString(R.string.people_empty_list_filtered_users);
                                 break;
                             case FOLLOWERS:
-                                stringId = R.string.people_empty_list_filtered_followers;
+                                title = getString(R.string.people_empty_list_filtered_followers);
                                 break;
                             case EMAIL_FOLLOWERS:
-                                stringId = R.string.people_empty_list_filtered_email_followers;
+                                title = getString(R.string.people_empty_list_filtered_email_followers);
                                 break;
                             case VIEWERS:
-                                stringId = R.string.people_empty_list_filtered_viewers;
+                                title = getString(R.string.people_empty_list_filtered_viewers);
                                 break;
                         }
-                        break;
+
+                        mActionableEmptyView.setTitleText(title);
+                        mActionableEmptyView.setVisibility(View.VISIBLE);
+                        return "";
                     case GENERIC_ERROR:
                         switch (mPeopleListFilter) {
                             case TEAM:
-                                stringId = R.string.error_fetch_users_list;
-                                break;
+                                return getString(R.string.error_fetch_users_list);
                             case FOLLOWERS:
-                                stringId = R.string.error_fetch_followers_list;
-                                break;
+                                return getString(R.string.error_fetch_followers_list);
                             case EMAIL_FOLLOWERS:
-                                stringId = R.string.error_fetch_email_followers_list;
-                                break;
+                                return getString(R.string.error_fetch_email_followers_list);
                             case VIEWERS:
-                                stringId = R.string.error_fetch_viewers_list;
-                                break;
+                                return getString(R.string.error_fetch_viewers_list);
                         }
-                        break;
+                    default:
+                        return "";
                 }
-                return getString(stringId);
             }
 
             @Override
@@ -278,6 +278,7 @@ public class PeopleListFragment extends Fragment {
         if (!peopleList.isEmpty()) {
             // if the list is not empty, don't show any message
             mFilteredRecyclerView.hideEmptyView();
+            mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
             mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
