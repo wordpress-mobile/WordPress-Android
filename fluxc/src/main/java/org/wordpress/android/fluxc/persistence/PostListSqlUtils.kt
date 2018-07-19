@@ -8,6 +8,11 @@ import javax.inject.Singleton
 
 @Singleton
 class PostListSqlUtils @Inject constructor() {
+    /**
+     * This function inserts the [postList] in the [PostListModelTable].
+     *
+     * To avoid duplicate rows, it'll first delete the existing records for [postList].
+     */
     fun insertPostList(postList: List<PostListModel>) {
         for (postListModel in postList) {
             WellSql.delete(PostListModel::class.java)
@@ -20,6 +25,9 @@ class PostListSqlUtils @Inject constructor() {
         WellSql.insert(postList).asSingleTransaction(true).execute()
     }
 
+    /**
+     * This function returns a list of [PostListModel] records for the given [listId].
+     */
     fun getPostList(listId: Int): List<PostListModel>? =
             WellSql.select(PostListModel::class.java)
                     .where()
@@ -27,6 +35,9 @@ class PostListSqlUtils @Inject constructor() {
                     .endWhere()
                     .asModel
 
+    /**
+     * This function deletes every [PostListModel] record for the given [postId].
+     */
     fun deletePost(postId: Int) {
         WellSql.delete(PostListModel::class.java)
                 .where()

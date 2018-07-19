@@ -13,6 +13,13 @@ import javax.inject.Singleton
 
 @Singleton
 class ListSqlUtils @Inject constructor() {
+    /**
+     * This function either creates a new [ListModel] for the [siteModel] and [listType] or updates the existing record.
+     *
+     * If there is an existing record, only the [ListModel.lastModified] will be updated with the current [Date].
+     * If there is no existing record, a new [ListModel] will be created for [siteModel] and [listType]. The current
+     * [Date] will be assigned to both [ListModel.dateCreated] and [ListModel.lastModified].
+     */
     fun insertOrUpdateList(siteModel: SiteModel, listType: ListType) {
         val now = DateTimeUtils.iso8601FromDate(Date())
         val listModel = ListModel()
@@ -35,6 +42,11 @@ class ListSqlUtils @Inject constructor() {
         }
     }
 
+    /**
+     * This function returns the [ListModel] record for the given [siteModel] and [type] if there is one.
+     *
+     * Since there shouldn't be more than one record for a [siteModel] and [type] combination, [firstOrNull] is used.
+     */
     fun getList(siteModel: SiteModel, type: ListType): ListModel? {
         return WellSql.select(ListModel::class.java)
                 .where()
@@ -45,6 +57,11 @@ class ListSqlUtils @Inject constructor() {
                 .firstOrNull()
     }
 
+    /**
+     * This function deletes the [ListModel] record for the given [siteModel] and [type] if there is one.
+     *
+     * To ensure that we have the same `where` queries for both `select` and `delete` queries, [getList] is utilized.
+     */
     fun deleteList(siteModel: SiteModel, type: ListType) {
         val existing = getList(siteModel, type)
         existing?.let {
