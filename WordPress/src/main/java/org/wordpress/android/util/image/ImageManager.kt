@@ -21,7 +21,7 @@ import javax.inject.Singleton
 class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener {
         fun onLoadFailed(e: Exception?)
-        fun onResourceReady(resource: Drawable)
+        fun onResourceReady(resource: Drawable?)
     }
 
     @JvmOverloads
@@ -129,9 +129,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 dataSource: DataSource?,
                 isFirstResource: Boolean
             ): Boolean {
-                resource?.let {
-                    requestListener.onResourceReady(it)
-                }
+                requestListener.onResourceReady(resource)
                 return false
             }
         })

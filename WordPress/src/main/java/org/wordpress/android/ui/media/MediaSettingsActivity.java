@@ -51,7 +51,6 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.EditorImageMetaData;
@@ -754,11 +753,15 @@ public class MediaSettingsActivity extends AppCompatActivity
         mImageManager.load(mImageView, ImageType.FULLSCREEN_PHOTO, imageUrl, ScaleType.CENTER,
                 new RequestListener() {
                     @Override
-                    public void onResourceReady(@NotNull Drawable resource) {
+                    public void onResourceReady(@org.jetbrains.annotations.Nullable Drawable resource) {
                         if (!isFinishing()) {
-                            showProgress(false);
-                            if (isMediaFromEditor()) {
-                                showImageDimensions(resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                            if (resource != null) {
+                                showProgress(false);
+                                if (isMediaFromEditor()) {
+                                    showImageDimensions(resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                                }
+                            } else {
+                                AppLog.e(T.MEDIA, "Loading image preview failed - resource is null");
                             }
                         }
                     }
