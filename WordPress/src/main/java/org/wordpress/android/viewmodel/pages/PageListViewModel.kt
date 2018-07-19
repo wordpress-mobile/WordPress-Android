@@ -4,21 +4,22 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import javax.inject.Inject
 
 class PageListViewModel
 @Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
-    private val mutableData: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val data: LiveData<List<PageItem>> = mutableData
+    private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
+    val pages: LiveData<List<PageItem>> = _pages
+
+    private val _listState = MutableLiveData<PageListState>()
+    val listState: LiveData<PageListState>
+        get() = _listState
 
     private var isStarted: Boolean = false
     private var site: SiteModel? = null
@@ -34,7 +35,7 @@ class PageListViewModel
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
                 .map { Page(it.pageId.toLong(), it.title, null) }
-        mutableData.postValue(newPages)
+        _pages.value = newPages
     }
 
     fun start(site: SiteModel, pageType: PostStatus, pagesViewModel: PagesViewModel) {
@@ -57,5 +58,13 @@ class PageListViewModel
 
     fun onAction(action: Action, pageItem: PageItem): Boolean {
         TODO("not implemented")
+    }
+
+    enum class PageListState {
+        CAN_LOAD_MORE,
+        DONE,
+        ERROR,
+        FETCHING,
+        LOADING_MORE
     }
 }
