@@ -104,6 +104,40 @@ class PostListSqlUtilsTest {
         }
     }
 
+    @Test
+    fun insertDuplicatePostListModel() {
+        val testSite = SiteModel()
+        testSite.id = 123 // value doesn't matter
+        val testPostId = 1245 // value doesn't matter
+        val listType = ListType.POSTS_ALL
+        val date1 = "1955-11-05T14:15:00Z"
+        val date2 = "1955-11-05T14:25:00Z"
+
+        /**
+         * 1. Since a [PostListModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
+         * will be inserted in the DB.
+         * 2. Generate a [PostListModel] for `date1` and insert it in the DB
+         * 3. Verify that it's inserted correctly and [PostListModel.date] equals to `date1`
+         */
+        val testList = insertTestList(testSite, listType)
+        val postListModel = generatePostListModel(testList.id, testPostId, date1)
+        postListSqlUtils.insertPostList(testList.id, arrayListOf(postListModel))
+        val insertedPostList = postListSqlUtils.getPostList(testList.id)
+        assertEquals(date1, insertedPostList?.firstOrNull()?.date)
+
+        /**
+         * 1. Update the `date` of `postListModel` to a different date: `date2`
+         * 2. Insert the updated `postListModel` to DB
+         * 3. Verify that no new record is created and the list size is the same.
+         * 4. Verify that the `date` is correctly updated after the second insertion.
+         */
+        postListModel.date = date2
+        postListSqlUtils.insertPostList(testList.id, arrayListOf(postListModel))
+        val updatedPostList = postListSqlUtils.getPostList(testList.id)
+        assertEquals(insertedPostList?.size, updatedPostList?.size)
+        assertEquals(date2, updatedPostList?.firstOrNull()?.date)
+    }
+
     /**
      * Creates and inserts a [ListModel] for a random test site. It also verifies that the list is inserted correctly.
      */
