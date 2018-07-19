@@ -5,18 +5,18 @@ import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
 
-sealed class PageItem(open val id: Long? = null, val type: Type) {
+sealed class PageItem(val type: Type) {
     data class Page(
-        override val id: Long,
+        val id: Long,
         val title: String,
         val icon: String?,
         val indent: Int = 0,
         val enabledActions: Set<Action> = setOf()
-    ) : PageItem(id, PAGE)
+    ) : PageItem(PAGE)
 
-    data class Divider(override val id: Long, val title: String) : PageItem(id, DIVIDER)
+    data class Divider(val id: Long, val title: String) : PageItem(DIVIDER)
 
-    data class Empty(val textResource: Int? = null) : PageItem(type = EMPTY)
+    data class Empty(val textResource: Int? = null) : PageItem(EMPTY)
 
     enum class Type(val viewType: Int) {
         PAGE(1), DIVIDER(2), EMPTY(3)

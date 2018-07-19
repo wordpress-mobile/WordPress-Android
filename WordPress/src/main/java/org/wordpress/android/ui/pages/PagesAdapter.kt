@@ -1,19 +1,16 @@
 package org.wordpress.android.ui.pages
 
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 
-class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean) :
-        RecyclerView.Adapter<PageItemViewHolder>() {
+class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
-
-    init {
-        setHasStableIds(true)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
@@ -22,10 +19,6 @@ class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
-    }
-
-    override fun getItemId(position: Int): Long {
-        return items[position].id ?: -1
     }
 
     override fun getItemCount(): Int = items.size
@@ -49,7 +42,11 @@ class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean)
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = items[oldItemPosition]
             val newItem = result[newItemPosition]
-            return oldItem.id == newItem.id && oldItem.type == newItem.type
+            return oldItem.type == newItem.type && when (oldItem) {
+                is Page -> oldItem.id == (newItem as Page).id
+                is Divider -> oldItem.id == (newItem as Divider).id
+                else -> false
+            }
         }
 
         override fun getOldListSize(): Int = items.size
