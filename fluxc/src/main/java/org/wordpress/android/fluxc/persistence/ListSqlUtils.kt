@@ -35,8 +35,7 @@ class ListSqlUtils @Inject constructor() {
         }
     }
 
-    fun getList(siteModel: SiteModel, type: ListType?): ListModel? {
-        if (type == null) return null
+    fun getList(siteModel: SiteModel, type: ListType): ListModel? {
         return WellSql.select(ListModel::class.java)
                 .where()
                 .equals(ListModelTable.LOCAL_SITE_ID, siteModel.id)
@@ -44,5 +43,12 @@ class ListSqlUtils @Inject constructor() {
                 .endWhere()
                 .asModel
                 .firstOrNull()
+    }
+
+    fun deleteList(siteModel: SiteModel, type: ListType) {
+        val existing = getList(siteModel, type)
+        existing?.let {
+            WellSql.delete(ListModel::class.java).whereId(it.id)
+        }
     }
 }
