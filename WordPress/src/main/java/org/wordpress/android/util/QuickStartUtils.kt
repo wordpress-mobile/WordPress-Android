@@ -105,8 +105,8 @@ class QuickStartUtils {
                 val focusPointTargetViewLocation = IntArray(2)
                 targetedView.getLocationOnScreen(focusPointTargetViewLocation)
 
-                val x = focusPointTargetViewLocation[0] - topLevelParentsHorizontalOffset + targetedView.width
-                - focusPointSize - rightOffset
+                val x = focusPointTargetViewLocation[0] - topLevelParentsHorizontalOffset + targetedView.width -
+                focusPointSize - rightOffset
                 val y = focusPointTargetViewLocation[1] - topLevelParentsVerticalOffset + topOffset
 
                 val params = quickStartFocusPointView.layoutParams as MarginLayoutParams
