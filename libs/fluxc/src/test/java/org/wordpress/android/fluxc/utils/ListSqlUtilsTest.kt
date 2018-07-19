@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @RunWith(RobolectricTestRunner::class)
 class ListSqlUtilsTest {
@@ -65,5 +66,18 @@ class ListSqlUtilsTest {
          * Verify that initially created list and updated list has the same `dateCreated`
          */
         assertEquals(insertedList?.dateCreated, updatedList?.dateCreated)
+    }
+
+    @Test
+    fun testDeleteList() {
+        val testSite = SiteModel()
+        testSite.id = 123 // value doesn't matter
+        val listType = ListType.POSTS_ALL
+
+        listSqlUtils.insertOrUpdateList(testSite, listType)
+        assertNotNull(listSqlUtils.getList(testSite, listType))
+
+        listSqlUtils.deleteList(testSite, listType)
+        assertNull(listSqlUtils.getList(testSite, listType))
     }
 }
