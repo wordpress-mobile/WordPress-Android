@@ -109,30 +109,32 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     private fun GlideRequest<Drawable>.attachRequestListener(
         requestListener: RequestListener?
     ): GlideRequest<Drawable> {
-        return if (requestListener == null)
+        return if (requestListener == null) {
             this
-        else this.listener(object : com.bumptech.glide.request.RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                requestListener.onLoadFailed(e)
-                return false
-            }
+        } else {
+            this.listener(object : com.bumptech.glide.request.RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    requestListener.onLoadFailed(e)
+                    return false
+                }
 
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                requestListener.onResourceReady(resource)
-                return false
-            }
-        })
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    requestListener.onResourceReady(resource)
+                    return false
+                }
+            })
+        }
     }
 
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
