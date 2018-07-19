@@ -26,4 +26,12 @@ class PostListSqlUtils @Inject constructor() {
                     .equals(PostListModelTable.LIST_ID, listId)
                     .endWhere()
                     .asModel
+
+    fun deletePost(postId: Int) {
+        WellSql.delete(PostListModel::class.java)
+                .where()
+                .equals(PostListModelTable.POST_ID, postId)
+                .endWhere()
+                .execute()
+    }
 }
