@@ -22,7 +22,7 @@ import javax.inject.Inject
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageListViewModel
-    private var linearLayoutManager: LinearLayoutManager? = null
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     private val listStateKey = "list_state"
 
@@ -91,8 +91,8 @@ class PageListFragment : Fragment() {
             layoutManager.onRestoreInstanceState(it)
         }
 
-        recyclerView.layoutManager = linearLayoutManager
         linearLayoutManager = layoutManager
+        recyclerView.layoutManager = linearLayoutManager
     }
 
     private fun setupObservers() {
