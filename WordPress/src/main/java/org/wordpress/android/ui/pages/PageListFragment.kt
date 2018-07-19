@@ -116,15 +116,13 @@ class PageListFragment : Fragment() {
     }
 
     private fun setPages(pages: List<PageItem>) {
-        context?.let {
-            val adapter: PagesAdapter
-            if (recyclerView.adapter == null) {
-                adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
-                recyclerView.adapter = adapter
-            } else {
-                adapter = recyclerView.adapter as PagesAdapter
-            }
-            adapter.update(pages)
+        val adapter: PagesAdapter
+        if (recyclerView.adapter == null) {
+            adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+            recyclerView.adapter = adapter
+        } else {
+            adapter = recyclerView.adapter as PagesAdapter
         }
+        adapter.update(pages)
     }
 }
