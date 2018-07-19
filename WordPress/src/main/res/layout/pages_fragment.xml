@@ -20,12 +20,21 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v4.view.ViewPager
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/pagesPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:visibility="visible"/>
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -84,11 +93,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible"/>
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/searchRecyclerView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scrollbars="vertical"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
