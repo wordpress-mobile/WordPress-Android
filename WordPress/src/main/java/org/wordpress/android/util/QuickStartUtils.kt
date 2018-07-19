@@ -106,7 +106,7 @@ class QuickStartUtils {
                 targetedView.getLocationOnScreen(focusPointTargetViewLocation)
 
                 val realFocusPointContainerX = focusPointTargetViewLocation[0] - topLevelParentsHorizontalOffset
-                val realFocusPointOffsetFromTheLeft =  targetedView.width - focusPointSize - rightOffset
+                val realFocusPointOffsetFromTheLeft = targetedView.width - focusPointSize - rightOffset
 
                 val focusPointContainerY = focusPointTargetViewLocation[1] - topLevelParentsVerticalOffset
 
