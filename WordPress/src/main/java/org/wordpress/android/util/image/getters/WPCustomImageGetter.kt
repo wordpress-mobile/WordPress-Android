@@ -15,7 +15,7 @@ import java.util.HashSet
 import javax.inject.Inject
 
 /**
- * ImageGetter for Html.fromHtml(). Retrieves images for HTML &lt;img&gt; tags using Glide library.
+ * ImageGetter for Html.fromHtml(). Retrieves images for HTML img tags using Glide library.
  *
  * The class extends Drawable.Callback, so we can support animated drawables (gifs).
  *
@@ -63,7 +63,7 @@ class WPCustomImageGetter(
 
     /**
      * This method is called when the HTML parser encounters an
-     * &lt;img&gt; tag.
+     * img tag.
      */
     override fun getDrawable(url: String): Drawable? {
         var source = url
