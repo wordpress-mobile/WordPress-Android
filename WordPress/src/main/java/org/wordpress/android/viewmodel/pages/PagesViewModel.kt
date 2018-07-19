@@ -36,7 +36,11 @@ class PagesViewModel
     var pages: List<PageModel> = _pages
         get() = _pages
 
+    private lateinit var site: SiteModel
+
     fun start(site: SiteModel) {
+        this.site = site
+
         clear()
         loadPagesAsync(site)
     }
@@ -46,7 +50,7 @@ class PagesViewModel
             val result = pageStore.fetchPagesAsync(site, false)
             if (!result.isError) {
                 _pages = pageStore.loadPostsAsync(site)
-                _refreshPages.asyncCall()
+                _refreshPages.call()
             }
         }
     }
@@ -58,7 +62,7 @@ class PagesViewModel
     fun onSearchTextChange(query: String?): Boolean {
         if (!query.isNullOrEmpty()) {
             val listOf = mockResult(query)
-            mutableSearchResult.postValue(listOf)
+            mutableSearchResult.value = listOf
         } else {
             clear()
         }
@@ -66,16 +70,17 @@ class PagesViewModel
     }
 
     fun onSearchExpanded(): Boolean {
-        mutableSearchExpanded.postValue(true)
+        mutableSearchExpanded.value = true
         return true
     }
 
     fun onSearchCollapsed(): Boolean {
-        mutableSearchExpanded.postValue(false)
+        mutableSearchExpanded.value = false
         return true
     }
 
     fun refresh() {
+        loadPagesAsync(site)
     }
 
     fun onAction(action: Action, pageItem: PageItem): Boolean {
@@ -83,7 +88,7 @@ class PagesViewModel
     }
 
     private fun clear() {
-        mutableSearchResult.postValue(listOf(Empty(string.empty_list_default)))
+        mutableSearchResult.value = listOf(Empty(string.empty_list_default))
     }
 }
 
