@@ -75,7 +75,7 @@ class QuickStartUtils {
 
         /**
          * Adds animated quick start focus point targetedView to the top level parent,
-         * and places it in the top-right cornere of the specified targetedView.
+         * and places it in the top-right corner of the specified targetedView.
          *
          * @param topLevelParent Parent where quick start focus targetedView will be added.
          * Usually Relative or Frame layout
@@ -98,15 +98,21 @@ class QuickStartUtils {
                         topLevelParent.context.resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
 
                 val topLevelParentViewLocation = IntArray(2)
-                topLevelParent.getLocationInWindow(topLevelParentViewLocation)
+                topLevelParent.getLocationOnScreen(topLevelParentViewLocation)
 
+                val topLevelParentsHorizontalOffset = topLevelParentViewLocation[0]
                 val topLevelParentsVerticalOffset = topLevelParentViewLocation[1]
 
                 val focusPointTargetViewLocation = IntArray(2)
                 targetedView.getLocationOnScreen(focusPointTargetViewLocation)
 
-                val x = focusPointTargetViewLocation[0] + targetedView.width - focusPointSize - rightOffset
-                val y = focusPointTargetViewLocation[1] - topLevelParentsVerticalOffset + topOffset
+                val realFocusPointContainerX = focusPointTargetViewLocation[0] - topLevelParentsHorizontalOffset
+                val realFocusPointOffsetFromTheLeft = targetedView.width - focusPointSize - rightOffset
+
+                val focusPointContainerY = focusPointTargetViewLocation[1] - topLevelParentsVerticalOffset
+
+                val x = realFocusPointContainerX + realFocusPointOffsetFromTheLeft
+                val y = focusPointContainerY + topOffset
 
                 val params = quickStartFocusPointView.layoutParams as MarginLayoutParams
                 params.leftMargin = x
