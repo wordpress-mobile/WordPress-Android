@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
+import android.content.ContentValues
 import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.ListModel
@@ -15,17 +16,20 @@ class ListSqlUtils @Inject constructor() {
     fun insertOrUpdateList(siteModel: SiteModel, listType: ListType) {
         val now = DateTimeUtils.iso8601FromDate(Date())
         val listModel = ListModel()
-        listModel.type = listType.value
-        listModel.localSiteId = siteModel.id
         listModel.lastModified = now
+
         val existing = getList(siteModel, listType)
         if (existing != null) {
-            listModel.dateCreated = existing.dateCreated
-            WellSql.update(ListModel::class.java)
+            WellSql.update<ListModel>(ListModel::class.java)
                     .whereId(existing.id)
-                    .put(listModel, UpdateAllExceptId<ListModel>(ListModel::class.java))
-                    .execute()
+                    .put(listModel) { item ->
+                        val cv = ContentValues()
+                        cv.put(ListModelTable.LAST_MODIFIED, item.lastModified)
+                        cv
+                    }.execute()
         } else {
+            listModel.type = listType.value
+            listModel.localSiteId = siteModel.id
             listModel.dateCreated = now
             WellSql.insert(listModel).execute()
         }
