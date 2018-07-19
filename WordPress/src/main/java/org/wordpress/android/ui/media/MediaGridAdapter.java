@@ -181,7 +181,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             loadVideoThumbnail(media, holder.mImageView);
         } else {
             // not an image or video, so show file name and file type
-            mImageManager.cancelRequestAndClearImageView(holder.mImageView);
             String fileName = media.getFileName();
             String title = media.getTitle();
             String fileExtension = MediaUtils.getExtensionForMimeType(media.getMimeType());
