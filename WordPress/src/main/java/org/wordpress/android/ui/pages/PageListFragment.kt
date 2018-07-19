@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.util.ifNotNull
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import javax.inject.Inject
@@ -63,29 +65,38 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews(savedInstanceState)
-        initViewModels(savedInstanceState)
+        val siteArgument = if (savedInstanceState == null) {
+            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
+
+        val key = checkNotNull(arguments?.getString(fragmentKey))
+
+        ifNotNull(activity, siteArgument) { activity, site ->
+            (activity.application as? WordPress)?.component()?.inject(this)
+
+            initializeViews(savedInstanceState)
+            initializeViewModels(activity, site, key)
+        }
     }
 
-    private fun initViewModels(savedInstanceState: Bundle?) {
-        (activity!!.application as WordPress).component()!!.inject(this)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(listStateKey, linearLayoutManager.onSaveInstanceState())
+        super.onSaveInstanceState(outState)
+    }
 
-        val key = arguments!!.getString(fragmentKey)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<PageListViewModel>(checkNotNull(key), PageListViewModel::class.java)
-
-        val site = (savedInstanceState?.getSerializable(WordPress.SITE)
-                ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
-
-        val pagesViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<PagesViewModel>(PagesViewModel::class.java)
+    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel, key: String) {
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get<PageListViewModel>(key, PageListViewModel::class.java)
 
         setupObservers()
 
+        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
         viewModel.start(site, getPageType(key), pagesViewModel)
     }
 
-    private fun initViews(savedInstanceState: Bundle?) {
+    private fun initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -99,11 +110,6 @@ class PageListFragment : Fragment() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
         })
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        linearLayoutManager?.let { outState.putParcelable(listStateKey, it.onSaveInstanceState()) }
-        super.onSaveInstanceState(outState)
     }
 
     private fun getPageType(key: String): PostStatus {
