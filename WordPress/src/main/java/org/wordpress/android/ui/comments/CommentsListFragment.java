@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -96,7 +97,7 @@ public class CommentsListFragment extends Fragment {
     private CommentAdapter mAdapter;
     private ActionMode mActionMode;
     private CommentStatusCriteria mCommentStatusFilter = CommentStatusCriteria.ALL;
-
+    private ActionableEmptyView mActionableEmptyView;
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
@@ -149,6 +150,7 @@ public class CommentsListFragment extends Fragment {
                     if (!isEmpty) {
                         // Hide the empty view if there are already some displayed comments
                         mFilteredCommentsView.hideEmptyView();
+                        mActionableEmptyView.setVisibility(View.GONE);
                     } else if (!mIsUpdatingComments) {
                         // Change LOADING to NO_CONTENT message
                         mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
@@ -275,6 +277,7 @@ public class CommentsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
+        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
         mFilteredCommentsView = (FilteredRecyclerView) view.findViewById(R.id.filtered_recycler_view);
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
@@ -313,22 +316,32 @@ public class CommentsListFragment extends Fragment {
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
                 if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
                     FilterCriteria filter = mFilteredCommentsView.getCurrentFilter();
+                    String title;
+
                     if (filter == null || filter == CommentStatusCriteria.ALL) {
-                        return getString(R.string.comments_empty_list);
+                        title = getString(R.string.comments_empty_list);
                     } else {
                         switch (mCommentStatusFilter) {
                             case APPROVED:
-                                return getString(R.string.comments_empty_list_filtered_approved);
+                                title = getString(R.string.comments_empty_list_filtered_approved);
+                                break;
                             case UNAPPROVED:
-                                return getString(R.string.comments_empty_list_filtered_pending);
+                                title = getString(R.string.comments_empty_list_filtered_pending);
+                                break;
                             case SPAM:
-                                return getString(R.string.comments_empty_list_filtered_spam);
+                                title = getString(R.string.comments_empty_list_filtered_spam);
+                                break;
                             case TRASH:
-                                return getString(R.string.comments_empty_list_filtered_trashed);
+                                title = getString(R.string.comments_empty_list_filtered_trashed);
+                                break;
                             default:
-                                return getString(R.string.comments_empty_list);
+                                title = getString(R.string.comments_empty_list);
                         }
                     }
+
+                    mActionableEmptyView.setTitleText(title);
+                    mActionableEmptyView.setVisibility(View.VISIBLE);
+                    return "";
                 } else {
                     int stringId = 0;
                     switch (emptyViewMsgType) {
@@ -345,6 +358,8 @@ public class CommentsListFragment extends Fragment {
                             stringId = R.string.error_refresh_comments;
                             break;
                     }
+
+                    mActionableEmptyView.setVisibility(View.GONE);
                     return getString(stringId);
                 }
             }
