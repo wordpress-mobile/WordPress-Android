@@ -47,7 +47,7 @@ class PostListSqlUtilsTest {
          */
         val testList = insertTestList(testSite, listType)
         val postList = generatePostList(testList, postCount)
-        postListSqlUtils.insertPostList(postList)
+        postListSqlUtils.insertPostList(testList.id, postList)
         assertEquals(postListSqlUtils.getPostList(testList.id)?.size, postCount)
     }
 
@@ -66,7 +66,7 @@ class PostListSqlUtilsTest {
          */
         val testList = insertTestList(testSite, listType)
         val postList = generatePostList(testList, postCount)
-        postListSqlUtils.insertPostList(postList)
+        postListSqlUtils.insertPostList(testList.id, postList)
         assertEquals(postListSqlUtils.getPostList(testList.id)?.size, postCount)
 
         /**
@@ -89,10 +89,9 @@ class PostListSqlUtilsTest {
          * 3. Verify that the [PostListModel] was inserted correctly
          */
         val testLists = ListType.values().map { insertTestList(testSite, it) }
-        val postList = testLists.map { generatePostListModel(it.id, testPostId) }
-        postListSqlUtils.insertPostList(postList)
-        testLists.forEach {
-            assertEquals(postListSqlUtils.getPostList(it.id)?.size, 1)
+        testLists.forEach { list ->
+            postListSqlUtils.insertPostList(list.id, arrayListOf(generatePostListModel(list.id, testPostId)))
+            assertEquals(postListSqlUtils.getPostList(list.id)?.size, 1)
         }
 
         /**
