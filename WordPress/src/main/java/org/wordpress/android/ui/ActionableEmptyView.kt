@@ -77,6 +77,10 @@ class ActionableEmptyView : LinearLayout {
         button.setOnClickListener(listener)
     }
 
+    fun setButtonText(@NonNull charSequence: CharSequence) {
+        button.text = charSequence
+    }
+
     fun setImageResource(@NonNull @DrawableRes resId: Int) {
         image.setImageResource(resId)
     }
