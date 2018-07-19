@@ -74,9 +74,17 @@ class ListSqlUtilsTest {
         testSite.id = 123 // value doesn't matter
         val listType = ListType.POSTS_ALL
 
+        /**
+         * 1. Insert a test list
+         * 2. Verify that the list is inserted correctly
+         */
         listSqlUtils.insertOrUpdateList(testSite, listType)
         assertNotNull(listSqlUtils.getList(testSite, listType))
 
+        /**
+         * 1. Delete the inserted test list
+         * 2. Verify that the list is deleted correctly
+         */
         listSqlUtils.deleteList(testSite, listType)
         assertNull(listSqlUtils.getList(testSite, listType))
     }
