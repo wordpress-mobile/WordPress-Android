@@ -74,7 +74,7 @@ class QuickStartUtils {
 
         /**
          * Adds animated quick start focus point targetedView to the top level parent,
-         * and places it in the top-right cornere of the specified targetedView.
+         * and places it in the top-right corner of the specified targetedView.
          *
          * @param topLevelParent Parent where quick start focus targetedView will be added.
          * Usually Relative or Frame layout
