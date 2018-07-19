@@ -14,6 +14,7 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import org.wordpress.android.ui.WPTextViewDrawableCallback
+import org.wordpress.android.util.ImageUtils
 
 /**
  * A class that we can load a remote resource into. Automatically displays placeholder while the remote img is
@@ -40,7 +41,7 @@ internal class WPRemoteResourceViewTarget(
             resource.callback = WPTextViewDrawableCallback(getView())
             (resource as Animatable).start()
         }
-        replaceDrawable(resource, getScaledBounds(resource, maxSize))
+        replaceDrawable(resource, ImageUtils.getScaledBounds(resource.intrinsicWidth, resource.intrinsicHeight, maxSize))
     }
 
     override fun onLoadFailed(errorDrawable: Drawable?) {
@@ -54,14 +55,6 @@ internal class WPRemoteResourceViewTarget(
         res?.let {
             replaceDrawable(it, Rect(0, 0, it.intrinsicWidth, it.intrinsicHeight))
         }
-    }
-
-    private fun getScaledBounds(resource: Drawable, maxWidth: Int): Rect {
-        val imgWidth = resource.intrinsicWidth
-        val imgHeight = resource.intrinsicHeight
-        val xScale = Math.max(1.0f, imgWidth.toFloat() / maxWidth.toFloat())
-
-        return Rect(0, 0, Math.round(imgWidth / xScale), Math.round(imgHeight / xScale))
     }
 
     private fun replaceDrawable(drawable: Drawable, bounds: Rect) {
