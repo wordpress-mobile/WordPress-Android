@@ -17,14 +17,13 @@ import javax.inject.Inject
 /**
  * ImageGetter for Html.fromHtml(). Retrieves images for HTML img tags using Glide library.
  *
- * The class extends Drawable.Callback, so we can support animated drawables (gifs).
  *
  * See {@link android.text.Html} for more details.
  */
 class WPCustomImageGetter(
     textView: TextView,
     private val maxWidth: Int
-) : Html.ImageGetter, Drawable.Callback {
+) : Html.ImageGetter {
     private val textView: WeakReference<TextView> = WeakReference(textView)
 
     /**
@@ -83,12 +82,4 @@ class WPCustomImageGetter(
             target.drawable
         }
     }
-
-    override fun invalidateDrawable(who: Drawable) {
-        textView.get()?.invalidate()
-    }
-
-    override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {}
-
-    override fun unscheduleDrawable(who: Drawable, what: Runnable) {}
 }

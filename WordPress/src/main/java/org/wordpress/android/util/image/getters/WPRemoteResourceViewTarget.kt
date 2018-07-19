@@ -8,14 +8,12 @@ import android.graphics.Rect
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.widget.TextView
-
 import com.bumptech.glide.request.Request
 import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
-
-import org.wordpress.android.util.R
+import org.wordpress.android.ui.WPTextViewDrawableCallback
 
 /**
  * A class that we can load a remote resource into. Automatically displays placeholder while the remote img is
@@ -39,7 +37,7 @@ internal class WPRemoteResourceViewTarget(
         if (resource is Animatable) {
             // Bind a Callback object to this Drawable.  Required for clients that want to support
             // animated drawables.
-            resource.callback = getView().getTag(R.id.glide_image_loader_view_tag) as Drawable.Callback
+            resource.callback = WPTextViewDrawableCallback(getView())
             (resource as Animatable).start()
         }
         replaceDrawable(resource, getScaledBounds(resource, maxSize))
