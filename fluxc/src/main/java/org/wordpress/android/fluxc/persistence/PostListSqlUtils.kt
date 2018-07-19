@@ -24,7 +24,7 @@ class PostListSqlUtils @Inject constructor() {
         WellSql.delete(PostListModel::class.java)
                 .where()
                 .equals(PostListModelTable.LIST_ID, listId)
-                .isIn(PostListModelTable.POST_ID,postIds)
+                .isIn(PostListModelTable.POST_ID, postIds)
                 .endWhere()
                 .execute()
         WellSql.insert(postList).asSingleTransaction(true).execute()
