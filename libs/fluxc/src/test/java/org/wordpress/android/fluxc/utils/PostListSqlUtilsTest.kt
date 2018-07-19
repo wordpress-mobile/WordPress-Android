@@ -34,31 +34,55 @@ class PostListSqlUtilsTest {
 
     @Test
     fun testInsertOrUpdatePostList() {
+        val testSite = SiteModel()
+        testSite.id = 123
+        val postCount = 20
+        val listType = ListType.POSTS_ALL
+
         /**
          * 1. Since a [PostListModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
          * will be inserted in the DB.
          * 2. A list of test [PostListModel]s will be generated and inserted in the DB
+         * 3. Verify that the [PostListModel] instances are inserted correctly
          */
-        val postCount = 20
-        val testList = insertTestList()
+        val testList = insertTestList(testSite, listType)
         val postList = generatePostList(testList, postCount)
         postListSqlUtils.insertPostList(postList)
+        assertEquals(postListSqlUtils.getPostList(testList.id)?.size, postCount)
+    }
+
+    @Test
+    fun testDeletePostList() {
+        val testSite = SiteModel()
+        testSite.id = 123
+        val listType = ListType.POSTS_ALL
+        val postCount = 20
 
         /**
-         * Verify that the [PostListModel] instances are inserted correctly
+         * 1. Since a [PostListModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
+         * will be inserted in the DB.
+         * 2. A list of test [PostListModel]s will be generated and inserted in the DB
+         * 3. Verify that the [PostListModel] instances are inserted correctly
          */
+        val testList = insertTestList(testSite, listType)
+        val postList = generatePostList(testList, postCount)
+        postListSqlUtils.insertPostList(postList)
         assertEquals(postListSqlUtils.getPostList(testList.id)?.size, postCount)
+
+        /**
+         * 1. Delete the inserted list
+         * 2. Verify that deleting the list also deletes the inserted [PostListModel]s due to foreign key restriction
+         */
+        listSqlUtils.deleteList(testSite, listType)
+        assertEquals(postListSqlUtils.getPostList(testList.id)?.size, 0)
     }
 
     /**
      * Creates and inserts a [ListModel] for a random test site. It also verifies that the list is inserted correctly.
      */
-    private fun insertTestList(): ListModel {
-        val testSite = SiteModel()
-        testSite.id = 123
-        val listType = ListType.POSTS_ALL
-        listSqlUtils.insertOrUpdateList(testSite, listType)
-        val list = listSqlUtils.getList(testSite, listType)
+    private fun insertTestList(siteModel: SiteModel, listType: ListType): ListModel {
+        listSqlUtils.insertOrUpdateList(siteModel, listType)
+        val list = listSqlUtils.getList(siteModel, listType)
         assertNotNull(list)
         return list!!
     }

@@ -8,7 +8,7 @@ import com.yarolegovich.wellsql.core.annotation.Table
 
 @Table
 @RawConstraints("FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE")
-class PostListModel(@PrimaryKey @Column private var id: Int = 0): Identifiable {
+class PostListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     @Column var listId: Int = 0
     @Column var postId: Int = 0
     @Column var date: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
