@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference
  * Class extends Drawable.Callback, so we can support animated drawables (gifs).
  * Upon retrieving a drawable, call Drawable.setCallback(...).
  */
-class WPTextViewDrawableCallback(textView: TextView) : Drawable.Callback {
+class WPTextViewDrawableCallback(textView: TextView): Drawable.Callback {
     private val weakView : WeakReference<TextView> = WeakReference(textView)
 
     override fun invalidateDrawable(who: Drawable) {

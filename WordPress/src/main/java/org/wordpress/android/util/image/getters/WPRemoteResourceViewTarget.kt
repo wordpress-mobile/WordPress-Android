@@ -34,14 +34,14 @@ internal class WPRemoteResourceViewTarget(
 
     val drawable: Drawable get() = drawableWrapper
 
-    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-        if (resource is Animatable) {
+    override fun onResourceReady(res: Drawable, transition: Transition<in Drawable>?) {
+        if (res is Animatable) {
             // Bind a Callback object to this Drawable.  Required for clients that want to support
             // animated drawables.
-            resource.callback = WPTextViewDrawableCallback(getView())
-            (resource as Animatable).start()
+            res.callback = WPTextViewDrawableCallback(getView())
+            (res as Animatable).start()
         }
-        replaceDrawable(resource, ImageUtils.getScaledBounds(resource.intrinsicWidth, resource.intrinsicHeight, maxSize))
+        replaceDrawable(res, ImageUtils.getScaledBounds(res.intrinsicWidth, res.intrinsicHeight, maxSize))
     }
 
     override fun onLoadFailed(errorDrawable: Drawable?) {
