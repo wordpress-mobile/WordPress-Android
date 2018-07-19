@@ -6,5 +6,5 @@ enum class ImageType {
     AVATAR,
     BLAVATAR,
     THEME,
-    UNKNOWN_DIMENSIONS
+    UNKNOWN
 }

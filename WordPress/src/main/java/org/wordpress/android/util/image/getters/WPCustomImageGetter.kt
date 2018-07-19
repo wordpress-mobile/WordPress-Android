@@ -77,11 +77,11 @@ class WPCustomImageGetter(
 
         return textView.get()?.let {
             val target = WPRemoteResourceViewTarget(it, maxWidth)
-            imageManager.load(target, ImageType.UNKNOWN_DIMENSIONS, source)
+            imageManager.load(target, ImageType.UNKNOWN, source)
             targets.add(target)
 
-            return target.drawable
-        } ?: return null
+            target.drawable
+        }
     }
 
     override fun invalidateDrawable(who: Drawable) {
