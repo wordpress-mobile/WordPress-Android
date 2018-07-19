@@ -61,13 +61,9 @@ internal class WPRemoteResourceViewTarget(
     private fun getScaledBounds(resource: Drawable, maxWidth: Int): Rect {
         val imgWidth = resource.intrinsicWidth
         val imgHeight = resource.intrinsicHeight
-        val xScale = imgWidth.toFloat() / maxWidth.toFloat()
+        val xScale = Math.max(1.0f, imgWidth.toFloat() / maxWidth.toFloat())
 
-        return if (xScale > 1.0f) {
-            Rect(0, 0, Math.round(imgWidth / xScale), Math.round(imgHeight / xScale))
-        } else {
-            Rect(0, 0, imgWidth, imgHeight)
-        }
+        return Rect(0, 0, Math.round(imgWidth / xScale), Math.round(imgHeight / xScale))
     }
 
     private fun replaceDrawable(drawable: Drawable, bounds: Rect) {
