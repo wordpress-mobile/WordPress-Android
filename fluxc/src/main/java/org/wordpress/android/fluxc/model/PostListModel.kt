@@ -7,7 +7,10 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints
 import com.yarolegovich.wellsql.core.annotation.Table
 
 @Table
-@RawConstraints("FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE")
+@RawConstraints(
+        "FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE",
+        "UNIQUE(LIST_ID, POST_ID)"
+)
 class PostListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     @Column var listId: Int = 0
     @Column var postId: Int = 0
