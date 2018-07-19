@@ -7,6 +7,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+    <!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
     <RelativeLayout
         android:id="@+id/publicize_scroll_view_child"
         android:layout_width="match_parent"
