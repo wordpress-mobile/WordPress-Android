@@ -38,8 +38,6 @@ class HelpActivity : AppCompatActivity() {
         intent.extras?.get(WordPress.SITE) as SiteModel?
     }
 
-    private var mTicketsBeingShown: Boolean = false
-
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
@@ -80,12 +78,13 @@ class HelpActivity : AppCompatActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
         }
 
-        if (savedInstanceState != null) {
-            mTicketsBeingShown = savedInstanceState.getBoolean(HelpActivity.MY_TICKETS_SHOWN_KEY)
-        }
-
-        if (originFromExtras == Origin.ZENDESK_NOTIFICATION && !mTicketsBeingShown) {
-            mTicketsBeingShown = true
+        /**
+        * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
+        * should only be triggered when the activity is first created, otherwise if the user comes back from
+        * `My Tickets` and rotates the screen (or triggers the activity re-creation in any other way) it'll navigate
+        * them to `My Tickets` again since the `originFromExtras` will still be [Origin.ZENDESK_NOTIFICATION].
+         */
+        if (savedInstanceState == null && originFromExtras == Origin.ZENDESK_NOTIFICATION) {
             showZendeskTickets()
         }
     }
@@ -94,11 +93,6 @@ class HelpActivity : AppCompatActivity() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.HELP_SCREEN)
         refreshContactEmailText()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putBoolean(HelpActivity.MY_TICKETS_SHOWN_KEY, mTicketsBeingShown)
-        super.onSaveInstanceState(outState)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -166,7 +160,6 @@ class HelpActivity : AppCompatActivity() {
     companion object {
         private const val ORIGIN_KEY = "ORIGIN_KEY"
         private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
-        private const val MY_TICKETS_SHOWN_KEY = "MY_TICKETS_SHOWN_KEY"
 
         @JvmStatic
         fun createIntent(
