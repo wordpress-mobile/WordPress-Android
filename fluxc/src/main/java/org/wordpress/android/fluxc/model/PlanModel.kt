@@ -6,8 +6,4 @@ class PlanModel {
     var name: String? = null
     var isCurrentPlan: Boolean = false
     var hasDomainCredit: Boolean = false
-    override fun toString(): String {
-        return "PlanModel(id=$id, slug=$slug, name=$name, isCurrentPlan=$isCurrentPlan, hasDomainCredit=$hasDomainCredit)"
-    }
-
 }
