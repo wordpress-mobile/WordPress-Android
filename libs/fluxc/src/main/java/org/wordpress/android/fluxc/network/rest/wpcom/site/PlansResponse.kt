@@ -45,12 +45,10 @@ class PlansResponse {
         var hasDomainCredit: Boolean = false
     }
 }
+
 internal class PlansDeserializer : JsonDeserializer<PlansResponse> {
     @Throws(JsonParseException::class)
-    override fun deserialize(
-            json: JsonElement,
-            typeOfT: Type,
-            context: JsonDeserializationContext): PlansResponse {
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): PlansResponse {
         val response = PlansResponse()
         val tokenType = object : TypeToken<Map<Long, PlansResponse.Plan>>() {}.type
         response.plansMap = Gson().fromJson<Map<Long, PlansResponse.Plan>>(json, tokenType)
