@@ -1,13 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 08:54:07+0000
+Translation-Revision-Date: 2018-07-10 10:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="reader_avatar_desc">个人资料照片</string>
+    <string name="reader_blavatar_desc">站点图标</string>
+    <string name="notification_channel_transient_title">暂时</string>
+    <string name="support_identity_input_dialog_email_label">电子邮件</string>
+    <string name="support_identity_input_dialog_enter_email">请输入您的电子邮件地址</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">请输入您的电子邮件地址和名称以继续</string>
+    <string name="support_push_notification_message">来自“帮助与支持”的新消息</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">未设置</string>
+    <string name="support_contact_email">联系人电子邮件</string>
+    <string name="application_log_button">应用程序日志</string>
+    <string name="my_tickets">我的工单</string>
+    <string name="activity_log_rewind_dialog_message">是否确定要在 %s 将站点还原至 %s？此操作将删除在此时间之后创建或更改的所有内容和选项。</string>
+    <string name="activity_log_rewind_site">还原站点</string>
+    <string name="activity_log_currently_restoring_message_no_dates">正在还原</string>
+    <string name="activity_log_currently_restoring_message">正在还原至 %s %s</string>
+    <string name="activity_log_currently_restoring_title">目前正在恢复您的站点</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功恢复您的站点</string>
+    <string name="activity_log_rewind_finished_snackbar_message">已成功恢复您的站点\n已还原至 %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">正在恢复您的站点\n正在还原至 %s %s</string>
+    <string name="activity_log_button">活动日志操作按钮</string>
+    <string name="plugin_auto_managed">已自动托管</string>
+    <string name="reader_save_posts_locally_dialog_message">保存此文章，方便您随时回来阅读。但您只能在此设备上阅读该文章，也就是说已保存的文章不会同步到其他设备（但我们正在努力改进）。</string>
+    <string name="reader_save_posts_locally_dialog_title">保存文章供稍后查看</string>
+    <string name="reader_empty_search_request_failed">无法执行搜索</string>
+    <string name="reader_empty_search_title">未找到结果</string>
+    <string name="reader_label_post_search_explainer">搜索 WordPress\n查找站点或文章</string>
+    <string name="comment_read_source_post">阅读源文章</string>
+    <string name="sites">站点</string>
+    <string name="signup_magic_link_title">免密登录链接已发送</string>
+    <string name="signup_email_screen_title">电子邮件注册</string>
+    <string name="verification_2fa_screen_title">代码验证</string>
+    <string name="selfhosted_site_login_title">登录凭据</string>
+    <string name="magic_link_sent_login_title">免密登录链接已发送</string>
+    <string name="magic_link_login_title">使用免密登录链接登录</string>
+    <string name="site_address_login_title">使用站点地址登录</string>
+    <string name="email_address_login_title">使用电子邮件地址登录</string>
+    <string name="alternatively">其他方式：</string>
     <string name="reader_empty_saved_posts_description">轻点“%s”以将文章保存到您的列表中。</string>
-    <string name="reader_empty_saved_posts_title">尚未保存任何文章u2014！</string>
     <string name="reader_bookmark_snack_title">文章已保存</string>
     <string name="reader_bookmark_snack_btn">查看所有</string>
     <string name="reader_btn_bookmarked">已保存</string>
@@ -81,8 +118,6 @@ Language: zh_CN
     <string name="dialog_confirm_delete_permanently_page">是否确定要永久删除此页面？</string>
     <string name="dialog_confirm_delete_permanently_post">是否确定要永久删除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在创建站点…这可能需要几分钟的时间。</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">重要提示</string>
     <string name="notification_channel_general_title">常规</string>
     <string name="photo_picker_use_photo">使用此照片</string>
@@ -887,11 +922,7 @@ Language: zh_CN
     <string name="send_link">发送链接</string>
     <string name="label_clear_search_history">清除搜索历史记录</string>
     <string name="dlg_confirm_clear_search_history">清除搜索历史记录？</string>
-    <string name="reader_empty_posts_in_search_description">未找到与您的语言对应的符合「%s」搜索条件的文章</string>
-    <string name="reader_empty_posts_in_search_title">未找到文章</string>
     <string name="reader_label_post_search_running">正在搜索…</string>
-    <string name="reader_label_post_search_explainer">搜索所有公开的 WordPress.com 博客</string>
-    <string name="reader_hint_post_search">搜索 WordPress.com</string>
     <string name="reader_title_related_post_detail">相关文章</string>
     <string name="preview_screen_links_disabled">预览屏幕禁用链接</string>
     <string name="draft_explainer">此文章为尚未发布的草稿</string>
@@ -1191,7 +1222,6 @@ Language: zh_CN
     <string name="reader_short_like_count_none">顶</string>
     <string name="reader_label_follow_count">%,d 个粉丝</string>
     <string name="reader_short_like_count_one">1 个赞</string>
-    <string name="reader_menu_tags">编辑标签和博客</string>
     <string name="reader_title_post_detail">读者文章</string>
     <string name="local_draft_explainer">此文章为尚未发布的本地草稿</string>
     <string name="local_changes_explainer">此文章存在尚未发布的本地更改</string>
@@ -1224,8 +1254,6 @@ Language: zh_CN
     <string name="post_trashed">文章已放入回收站</string>
     <string name="post_deleted">已删除文章</string>
     <string name="page_trashed">页面已放入回收站</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">您无权访问此博客。</string>
-    <string name="reader_toast_err_follow_blog_not_found">找不到此博客</string>
     <string name="undo">撤消</string>
     <string name="passcodelock_prompt_message">输入 PIN</string>
     <string name="push_auth_expired">请求已过期。请登录 WordPress.com 再试一次。</string>
@@ -1290,7 +1318,6 @@ Language: zh_CN
     <string name="error_copy_to_clipboard">复制文本到剪贴板时出错</string>
     <string name="stats_recent_weeks">最近几个星期</string>
     <string name="stats_average_per_day">每日平均</string>
-    <string name="reader_empty_posts_in_blog">此博客没有任何内容</string>
     <string name="reader_label_new_posts">新文章</string>
     <string name="logs_copied_to_clipboard">已将应用程序日志复制到剪贴板</string>
     <string name="stats_period">时段</string>
@@ -1381,34 +1408,17 @@ Language: zh_CN
     <string name="reader_empty_posts_in_tag">没有包含此标签的文章</string>
     <string name="reader_empty_comments">尚无评论</string>
     <string name="create_new_blog_wpcom">创建 WordPress.com 博客</string>
-    <string name="nux_help_description">访问帮助中心，以获取常见问题的答案；或访问论坛，以提出新问题。</string>
     <string name="browse_our_faq_button">浏览我们的常见问题解答</string>
     <string name="reader_empty_posts_liked">您尚未给任何文章点赞</string>
     <string name="reader_empty_followed_blogs_title">您尚未关注任何博客。</string>
-    <string name="reader_menu_block_blog">阻止此博客</string>
-    <string name="reader_toast_blog_blocked">此博客中的文章不会再显示</string>
-    <string name="reader_toast_err_block_blog">无法阻止此博客</string>
     <string name="reader_toast_err_generic">无法执行此操作</string>
-    <string name="hs__invalid_email_error">请输入有效电子邮件地址</string>
-    <string name="hs__username_blank_error">请输入有效名称</string>
-    <string name="hs__conversation_header">支持聊天</string>
-    <string name="hs__new_conversation_header">支持聊天</string>
-    <string name="hs__conversation_detail_error">描述您所遇到的问题</string>
     <string name="contact_us">联系我们</string>
     <string name="schedule_verb">计划</string>
     <string name="update_verb">更新</string>
-    <string name="reader_empty_recommended_blogs">没有推荐的博客</string>
-    <string name="reader_toast_err_unfollow_blog">无法取消关注此博客</string>
-    <string name="reader_toast_err_follow_blog">无法关注此博客</string>
-    <string name="reader_toast_err_already_follow_blog">您已经关注此博客</string>
-    <string name="reader_toast_err_get_blog_info">无法显示此博客</string>
-    <string name="reader_label_followed_blog">关注的博客</string>
     <string name="reader_hint_add_tag_or_url">输入要关注的 URL 或标签</string>
     <string name="reader_page_followed_blogs">已关注的博客</string>
     <string name="reader_page_followed_tags">关注的标签</string>
-    <string name="reader_title_subs">标签 &amp; 博客</string>
     <string name="reader_title_tag_preview">阅读器标签</string>
-    <string name="reader_title_blog_preview">阅读器博客</string>
     <string name="media_empty_list">没有媒体</string>
     <string name="ssl_certificate_ask_trust">如果你平时连接到这个网站没有任何问题，这个错误可能意味着有人试图冒充该网站，你不应该继续下去。你想仍然信任这个证书？</string>
     <string name="ssl_certificate_error">无效的SSL证书</string>

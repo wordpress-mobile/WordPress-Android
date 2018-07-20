@@ -247,7 +247,8 @@
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_back">Back</string>
-    <string name="button_revert">Revert</string>
+    <string name="button_discard">Discard</string>
+    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
 
     <!-- post uploads -->
@@ -1142,10 +1143,11 @@
     <string name="menu_publish_now">Publish Now</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode.</string>
+    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode.</string>
+    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_undo_snackbar_action">UNDO</string>
+    <string name="menu_discard_changes">Discard Local Changes</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -1242,6 +1244,9 @@
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
+    <string name="local_changes_discarded">Local changes discarded</string>
+    <string name="local_changes_discarding">Discarding local changes</string>
+    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
 
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
@@ -1549,6 +1554,7 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
+    <string name="support_push_notification_message_hint_snackbar">Find your support conversation by tapping \'Help &amp; Support\' and then \'My Tickets\'</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1846,7 +1852,7 @@
     <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
     <string name="site_settings_export_content_title">Export content</string>
     <string name="error_deleting_site">Error deleting site</string>
-    <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>
+    <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance.</string>
     <string name="primary_domain">Primary Domain</string>
     <string name="export_site_hint">Export your site to an XML file</string>
     <string name="delete_site_warning_title">Delete site?</string>
@@ -2113,6 +2119,9 @@
     <string name="change_photo">Change photo</string>
 
     <!-- Content description for accessibility  -->
+    <string name="featured_image_desc">featured image</string>
+    <string name="theme_image_desc">theme image</string>
+    <string name="blavatar_desc">site icon</string>
     <string name="comment_checkmark_desc">check mark</string>
     <string name="profile_picture">%s\'s profile picture</string>
     <string name="invite_user_delete_desc">remove %s</string>
@@ -2131,7 +2140,6 @@
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
-    <string name="post_cardview_featured_desc">featured image</string>
     <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
@@ -2168,6 +2176,7 @@
     <string name="stats_followers_many_desc">%d followers</string>
     <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
+    <string name="reader_gallery_images_desc">image gallery</string>
 
 
     <!-- Site Creation -->

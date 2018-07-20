@@ -111,6 +111,7 @@ public final class AnalyticsTracker {
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
         EDITOR_DISCARDED_CHANGES,
+        EDITOR_DISCARDED_CHANGES_UNDO,
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_HYBRID_ENABLED, // Visual editor only
         EDITOR_HYBRID_TOGGLED_OFF, // Visual editor only

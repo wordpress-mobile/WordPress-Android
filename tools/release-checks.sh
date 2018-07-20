@@ -104,7 +104,7 @@ function checkKeystore() {
 
 function checkGoogleServiceConfig() {
   /bin/echo -n "Check Google Services configuration..."
-  checkFileAgainstHash WordPress/google-services.json c711d7f3f0b2be2d2027eb8bedd43a4bb27270d3
+  checkFileAgainstHash WordPress/google-services.json 73a065e71c9819e81ac6a7347b11c649c89e641c 
 }
 
 checkNewLanguages

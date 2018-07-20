@@ -1,20 +1,26 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 0;
@@ -25,6 +31,8 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     private @StringRes int mErrorMessage;
     private SiteCreationListener mSiteCreationListener;
 
+    @Inject ImageManager mImageManager;
+
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         public final View progressContainer;
         public final View progress;
@@ -34,18 +42,18 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
             super(itemView);
             this.progressContainer = itemView.findViewById(R.id.progress_container);
             this.progress = itemView.findViewById(R.id.progress_bar);
-            this.label = (TextView) itemView.findViewById(R.id.progress_label);
+            this.label = itemView.findViewById(R.id.progress_label);
         }
     }
 
     public static class ThemeViewHolder extends RecyclerView.ViewHolder {
-        private final WPNetworkImageView mImageView;
+        private final ImageView mImageView;
         private final TextView mNameView;
 
         ThemeViewHolder(View view) {
             super(view);
-            mImageView = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
-            mNameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
+            mImageView = view.findViewById(R.id.theme_grid_item_image);
+            mNameView = view.findViewById(R.id.theme_grid_item_name);
         }
     }
 
@@ -64,7 +72,7 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_HEADER) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_header,
                                                                              parent, false);
@@ -77,7 +85,7 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
 
         if (viewType == VIEW_TYPE_HEADER) {
@@ -127,20 +135,9 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL) {
-        String requestURL = (String) themeViewHolder.mImageView.getTag();
-        if (requestURL == null) {
-            requestURL = screenshotURL;
-            themeViewHolder.mImageView.setDefaultImageResId(R.drawable.theme_loading);
-            themeViewHolder.mImageView.showDefaultImage(); // force showing the default image so layout is computed
-            themeViewHolder.mImageView.setTag(requestURL);
-        }
-
-        if (!requestURL.equals(screenshotURL)) {
-            requestURL = screenshotURL;
-        }
-
         int mViewWidth = AppPrefs.getThemeImageSizeWidth();
-        themeViewHolder.mImageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth,
-                                               WPNetworkImageView.ImageType.PHOTO);
+        mImageManager
+                .load(themeViewHolder.mImageView, ImageType.THEME, screenshotURL + THEME_IMAGE_PARAMETER + mViewWidth,
+                        ScaleType.FIT_CENTER);
     }
 }

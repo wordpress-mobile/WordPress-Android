@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-15 08:50:23+0000
+Translation-Revision-Date: 2018-07-04 10:17:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
@@ -311,11 +311,8 @@ Language: el_GR
     <string name="invite_people">Πρόσκαλέστε Άτομα</string>
     <string name="label_clear_search_history">Καθαρισμός ιστορικού αναζήτησης</string>
     <string name="dlg_confirm_clear_search_history">Καθαρισμός ιστορικού αναζήτησης;</string>
-    <string name="reader_empty_posts_in_search_description">Δεν βρέθηκαν άρθρα στην γλώσσα σας για %s</string>
+    <string name="reader_empty_search_description">Δεν βρέθηκαν άρθρα στην γλώσσα σας για %s</string>
     <string name="reader_label_post_search_running">Γίνεται αναζήτηση…</string>
-    <string name="reader_empty_posts_in_search_title">Δεν βρέθηκαν άρθρα</string>
-    <string name="reader_label_post_search_explainer">Αναζήτηση σε όλα τα δημόσια ιστολόγια του WordPress.com</string>
-    <string name="reader_hint_post_search">Αναζήτηση στο WordPress.com</string>
     <string name="reader_title_related_post_detail">Σχετικό Άρθρο</string>
     <string name="preview_screen_links_disabled">Οι σύνδεσμοι είναι απενεργοποιημένοι στην οθόνη προεπισκόπησης</string>
     <string name="draft_explainer">Αυτό το άρθρο είναι ένα προσχέδιο που δεν έχει δημοσιευθεί</string>
@@ -616,7 +613,7 @@ Language: el_GR
     <string name="reader_short_like_count_one">1 \"Like\"</string>
     <string name="reader_label_follow_count">%,d ακόλουθοι</string>
     <string name="reader_short_like_count_none">\"Like\"</string>
-    <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστολογίων</string>
+    <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστότοπων</string>
     <string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
     <string name="local_draft_explainer">Αυτό το άρθρο είναι ένα τοπικό προσχέδιο που δεν έχει δημοσιευτεί</string>
     <string name="local_changes_explainer">Αυτό το άρθρο έχει τοπικές αλλαγές που δεν έχουν δημοσιευθεί</string>
@@ -649,8 +646,8 @@ Language: el_GR
     <string name="button_view">Προβολή</string>
     <string name="button_edit">Αλλαγή</string>
     <string name="button_publish">Δημοσίευση</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Δεν έχετε εξουσιοδότηση για να συνδεθείτε σε αυτό το ιστολόγιο</string>
-    <string name="reader_toast_err_follow_blog_not_found">Αδυναμία εύρεσης αυτού του ιστολογίου</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">Δεν έχετε εξουσιοδότηση για να συνδεθείτε σε αυτό τον ιστότοπο</string>
+    <string name="reader_toast_err_follow_blog_not_found">Αδυναμία εύρεσης αυτού του ιστότοπου</string>
     <string name="undo">Αναίρεση</string>
     <string name="passcodelock_prompt_message">Εισάγετε το PIN σας</string>
     <string name="push_auth_expired">Το αίτημα έληξε. Συνδεθείτε στο WordPress.com για να προσπαθήσετε ξανά.</string>
@@ -719,7 +716,6 @@ Language: el_GR
     <string name="stats_period">Περίοδος</string>
     <string name="logs_copied_to_clipboard">Τα αρχεία καταγραφής της εφαρμογής έχουν αντιγραφεί στο πρόχειρο</string>
     <string name="reader_label_new_posts">Νέα άρθρα</string>
-    <string name="reader_empty_posts_in_blog">Αυτό το ιστολόγιο είναι κενό</string>
     <string name="stats_average_per_day">Μέσος όρος ανά Ημέρα</string>
     <string name="stats_recent_weeks">Πρόσφατες Εβδομάδες</string>
     <string name="error_copy_to_clipboard">Προέκυψε σφάλμα κατά την αντιγραφή κειμένου στο πρόχειρο</string>
@@ -800,7 +796,6 @@ Language: el_GR
     <string name="reader_empty_followed_blogs_title">Δεν ακολουθείτε ιστολόγια ακόμη</string>
     <string name="reader_empty_posts_liked">Δεν έχετε κάνει \"like\" σε άρθρα</string>
     <string name="browse_our_faq_button">Περιηγηθείτε στις Συχνές Ερωτήσεις</string>
-    <string name="nux_help_description">Επισκεφθείτε το κέντρο βοήθειας για να βρείτε απαντήσεις σε κοινές ερωτήσεις ή επισκεφθείτε τα φόρουμ για να ρωτήσετε καινούριες</string>
     <string name="create_new_blog_wpcom">Δημιουργίας ιστολογίου στο WordPress.com</string>
     <string name="reader_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
     <string name="reader_empty_posts_in_tag">Δεν υπάρχουν άρθρα με αυτή την ετικέτα</string>
@@ -813,29 +808,15 @@ Language: el_GR
     <string name="pages_empty_list">Δεν υπάρχουν σελίδες ακόμη. Γιατί να μη δημιουργήσετε μία;</string>
     <string name="signing_out">Αποσύνδεση…</string>
     <string name="reader_toast_err_generic">Αδυναμία εκτέλεσης αυτής της ενέργειας</string>
-    <string name="reader_toast_err_block_blog">Αδυναμία μπλοκαρίσματος αυτού του ιστολογίου</string>
-    <string name="reader_toast_blog_blocked">Δεν εμφανίζονται πλέον άρθρα από αυτό το ιστολόγιο</string>
-    <string name="reader_menu_block_blog">Μπλοκάρισμα αυτού του ιστολογίου</string>
+    <string name="reader_menu_block_blog">Μπλοκάρισμα του ιστότοπου</string>
     <string name="contact_us">Επικοινωνήστε μαζί μας</string>
-    <string name="hs__username_blank_error">Συμπληρώστε ένα έγκυρο όνομα</string>
-    <string name="hs__invalid_email_error">Εισάγετε μία έγκυρη διεύθυνση email</string>
-    <string name="hs__conversation_detail_error">Περιγράψτε το πρόβλημα που βλέπετε</string>
-    <string name="hs__new_conversation_header">Συζήτηση υποστήριξης</string>
-    <string name="hs__conversation_header">Συζήτηση υποστήριξης</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
     <string name="reader_title_tag_preview">Προεπισκόπηση Ετικέτας</string>
-    <string name="reader_title_subs">Ετικέτες &amp; Ιστολόγια</string>
     <string name="reader_page_followed_tags">Παρακολουθούμενες ετικέτες</string>
     <string name="reader_page_followed_blogs">Παρακολουθούμενα ιστολόγια</string>
     <string name="reader_hint_add_tag_or_url">Εισάγετε μια ετικέτα ή URL για παρακολούθηση</string>
-    <string name="reader_label_followed_blog">Παρακολουθούμενο ιστολόγιο</string>
-    <string name="reader_toast_err_get_blog_info">Αδυναμία εμφάνισης αυτού του ιστολογίου</string>
-    <string name="reader_toast_err_already_follow_blog">Ακολουθείτε ήδη αυτό το ιστολόγιο</string>
-    <string name="reader_toast_err_follow_blog">Αδυναμία παρακολούθησης αυτού του ιστολογίου</string>
-    <string name="reader_toast_err_unfollow_blog">Αδυναμία διακοπής παρακολούθησης αυτού του ιστολογίου</string>
-    <string name="reader_empty_recommended_blogs">Δεν υπάρχουν προτεινόμενα ιστολόγια</string>
-    <string name="reader_title_blog_preview">Προεπισκόπηση Ιστολογίου</string>
+    <string name="reader_title_subs">Ετικέτες &amp; Ιστότοποι</string>
     <string name="media_empty_list">Δεν υπάρχουν πολυμέσα</string>
     <string name="help">Βοήθεια</string>
     <string name="forgot_password">Έχασες τον κωδικό σου;</string>

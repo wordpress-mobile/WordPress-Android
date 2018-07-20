@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-17 00:17:52+0000
+Translation-Revision-Date: 2018-06-26 08:16:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
@@ -110,11 +110,9 @@ Language: gl_ES
     <string name="invite_people">Invitar xente</string>
     <string name="label_clear_search_history">Limpar o historial de busca</string>
     <string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
-    <string name="reader_empty_posts_in_search_description">Non se atoparon artigos para %s na túa lingua</string>
+    <string name="reader_empty_search_description">Non se atoparon artigos para %s na túa lingua</string>
     <string name="reader_label_post_search_running">Buscando…</string>
-    <string name="reader_empty_posts_in_search_title">Non se atoparon artigos</string>
-    <string name="reader_label_post_search_explainer">Buscar en todos os blogues públicos de WordPress.com</string>
-    <string name="reader_hint_post_search">Buscar en WordPress.com</string>
+    <string name="reader_hint_post_search">Buscar en WordPress</string>
     <string name="reader_title_related_post_detail">Artigos relacionados</string>
     <string name="preview_screen_links_disabled">Os enlaces están inhabilitados na vista previa</string>
     <string name="draft_explainer">Este artigo é un borrador sen publicar</string>
@@ -240,6 +238,7 @@ Language: gl_ES
     <string name="error_post_account_settings">Non foi posible gardar a configuración da conta</string>
     <string name="error_fetch_account_settings">Non foi posible acceder á configuración da conta</string>
     <string name="error_fetch_my_profile">Non foi posible acceder ao teu perfil</string>
+    <string name="stats_widget_promo_ok_btn_label">Vale, entendido.</string>
     <string name="stats_widget_promo_desc">Engade o widget á pantalla de inicio para acceder ás estatísticas cun toque</string>
     <string name="stats_widget_promo_title">Widget de estatísticas para a pantalla de inicio</string>
     <string name="site_settings_unknown_language_code_error">Código de idioma no aceptado</string>
@@ -469,6 +468,8 @@ Language: gl_ES
     <string name="account_settings">Configuración da conta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
     <string name="me_btn_support">Axuda e soporte</string>
+    <string name="site_picker_create_wpcom">Crear un sitio en WordPress.com</string>
+    <string name="site_picker_add_site">Engadir sitio</string>
     <string name="site_picker_edit_visibility">Mostrar/ocultar sitios</string>
     <string name="site_picker_add_self_hosted">Engadir un sitio autoaloxado</string>
     <string name="my_site_btn_view_site">Ver o sitio</string>
@@ -605,19 +606,13 @@ Language: gl_ES
     <string name="reader_label_like">Gústame</string>
     <string name="reader_label_liked_by">Gustoulle a</string>
     <string name="mnu_comment_liked">Gustou</string>
-    <string name="nux_help_description">Vai ao centro de axuda para obter respostas a preguntas comúns ou visita os foros para tratar outras cuestións.</string>
     <string name="browse_our_faq_button">Ves as FAQ</string>
     <string name="signing_out">Saíndo…</string>
     <string name="reader_menu_block_blog">Bloquear este blogue</string>
     <string name="reader_toast_err_block_blog">Non foi posible bloquear este blogue</string>
     <string name="reader_toast_blog_blocked">Os artigos deste blogue non se mostrarán máis</string>
     <string name="reader_toast_err_generic">Non foi posible realizar esta acción</string>
-    <string name="hs__username_blank_error">Introduce un nome válido</string>
-    <string name="hs__invalid_email_error">Introduce un correo electrónico válido</string>
     <string name="contact_us">Contacta connosco</string>
-    <string name="hs__conversation_detail_error">Describe o problema que estás tendo</string>
-    <string name="hs__new_conversation_header">Chat de soporte</string>
-    <string name="hs__conversation_header">Chat de soporte</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programar</string>
     <string name="reader_page_followed_tags">Etiquetas que sigo</string>
@@ -698,6 +693,8 @@ Language: gl_ES
     <string name="local_draft">Borrador local</string>
     <string name="horizontal_alignment">Aliñamento horizontal</string>
     <string name="post_settings">Configuración do artigo</string>
+    <string name="delete_post">Eliminar o artigo</string>
+    <string name="delete_page">Eliminar a páxina</string>
     <string name="comment_status_approved">Aprobado</string>
     <string name="comment_status_unapproved">Pendente</string>
     <string name="comment_status_spam">Spam</string>
