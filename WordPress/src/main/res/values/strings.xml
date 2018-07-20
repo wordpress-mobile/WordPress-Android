@@ -226,6 +226,7 @@
     <!-- page view -->
     <string name="title">Title</string>
     <string name="pages_empty_list">No pages yet. Why not create one?</string>
+    <string name="pages_empty_list_button">Create a page</string>
     <string name="page_settings">Page settings</string>
 
     <!-- posts tab -->
@@ -235,6 +236,7 @@
     <string name="post_uploading">Uploading post</string>
     <string name="post_queued">Queued post</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
+    <string name="posts_empty_list_button">Create a post</string>
     <string name="empty_list_default">This list is empty</string>
 
     <!-- buttons on post cards -->

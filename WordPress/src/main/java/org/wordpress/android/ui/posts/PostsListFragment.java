@@ -19,10 +19,9 @@ import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -44,6 +43,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -91,10 +91,8 @@ public class PostsListFragment extends Fragment
     private View mFabView;
 
     private RecyclerView mRecyclerView;
-    private View mEmptyView;
+    private ActionableEmptyView mActionableEmptyView;
     private ProgressBar mProgressLoadMore;
-    private TextView mEmptyViewTitle;
-    private ImageView mEmptyViewImage;
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
@@ -180,9 +178,7 @@ public class PostsListFragment extends Fragment
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
 
-        mEmptyView = view.findViewById(R.id.empty_view);
-        mEmptyViewTitle = (TextView) mEmptyView.findViewById(R.id.title_empty);
-        mEmptyViewImage = (ImageView) mEmptyView.findViewById(R.id.image_empty);
+        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -417,15 +413,23 @@ public class PostsListFragment extends Fragment
                 return;
         }
 
-        mEmptyViewTitle.setText(getText(stringId));
-        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE
-                                              : View.GONE);
-        mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
+        boolean hasNoContent = emptyViewMessageType == EmptyViewMessageType.NO_CONTENT;
+        mActionableEmptyView.setImageVisibility(hasNoContent);
+        mActionableEmptyView.setTitleText(getText(stringId));
+        mActionableEmptyView.setButtonText(getString(mIsPage ? R.string.pages_empty_list_button
+                : R.string.posts_empty_list_button));
+        mActionableEmptyView.setButtonVisibility(hasNoContent);
+        mActionableEmptyView.setButtonClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
+            }
+        });
+        mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void hideEmptyView() {
-        if (isAdded() && mEmptyView != null) {
-            mEmptyView.setVisibility(View.GONE);
+        if (isAdded() && mActionableEmptyView != null) {
+            mActionableEmptyView.setVisibility(View.GONE);
         }
     }
 
