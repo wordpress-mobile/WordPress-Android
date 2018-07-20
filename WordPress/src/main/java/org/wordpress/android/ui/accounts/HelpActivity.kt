@@ -38,6 +38,8 @@ class HelpActivity : AppCompatActivity() {
         intent.extras?.get(WordPress.SITE) as SiteModel?
     }
 
+    private var mTicketsBeingShown: Boolean = false
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
@@ -78,7 +80,12 @@ class HelpActivity : AppCompatActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
         }
 
-        if (originFromExtras == Origin.ZENDESK_NOTIFICATION) {
+        if (savedInstanceState != null) {
+            mTicketsBeingShown = savedInstanceState.getBoolean(HelpActivity.MY_TICKETS_SHOWN_KEY)
+        }
+
+        if (originFromExtras == Origin.ZENDESK_NOTIFICATION && !mTicketsBeingShown) {
+            mTicketsBeingShown = true
             showZendeskTickets()
         }
     }
@@ -87,6 +94,11 @@ class HelpActivity : AppCompatActivity() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.HELP_SCREEN)
         refreshContactEmailText()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putBoolean(HelpActivity.MY_TICKETS_SHOWN_KEY, mTicketsBeingShown)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -153,6 +165,7 @@ class HelpActivity : AppCompatActivity() {
     companion object {
         private const val ORIGIN_KEY = "ORIGIN_KEY"
         private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
+        private const val MY_TICKETS_SHOWN_KEY = "MY_TICKETS_SHOWN_KEY"
 
         @JvmStatic
         fun createIntent(
