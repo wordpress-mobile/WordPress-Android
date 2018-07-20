@@ -11,14 +11,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.pages_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ifNotNull
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class PageListFragment : Fragment() {
@@ -104,6 +107,7 @@ class PageListFragment : Fragment() {
 
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
+        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
     }
 
     private fun setupObservers() {

@@ -4,11 +4,13 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import javax.inject.Inject
 
@@ -16,10 +18,6 @@ class PageListViewModel
 @Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
-
-    private val _listState = MutableLiveData<PageListState>()
-    val listState: LiveData<PageListState>
-        get() = _listState
 
     private var isStarted: Boolean = false
     private var site: SiteModel? = null
@@ -35,7 +33,12 @@ class PageListViewModel
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
                 .map { Page(it.pageId.toLong(), it.title, null) }
-        _pages.value = newPages
+
+        if (newPages.isEmpty()) {
+            _pages.value = listOf(Empty(string.empty_list_default))
+        } else {
+            _pages.value = newPages
+        }
     }
 
     fun start(site: SiteModel, pageType: PostStatus, pagesViewModel: PagesViewModel) {

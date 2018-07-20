@@ -16,24 +16,34 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.CAN_LOAD_MORE
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class PagesViewModel
 @Inject constructor(private val pageStore: PageStore) : ViewModel() {
-    private val mutableSearchExpanded: MutableLiveData<Boolean> = MutableLiveData()
-    val searchExpanded: LiveData<Boolean> = mutableSearchExpanded
+    private val _isSearchExpanded = SingleLiveEvent<Boolean>()
+    val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
-    private val mutableSearchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val searchResult: LiveData<List<PageItem>> = mutableSearchResult
+    private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
+    val searchResult: LiveData<List<PageItem>> = _searchResult
+
+    private val _listState = MutableLiveData<PageListState>()
+    val listState: LiveData<PageListState>
+        get() = _listState
 
     private val _refreshPages = SingleLiveEvent<Unit>()
     val refreshPages: LiveData<Unit>
         get() = _refreshPages
 
     private var _pages: List<PageModel> = emptyList()
-    var pages: List<PageModel> = _pages
+    val pages: List<PageModel>
         get() = _pages
 
     private lateinit var site: SiteModel
@@ -41,18 +51,28 @@ class PagesViewModel
     fun start(site: SiteModel) {
         this.site = site
 
-        clear()
-        loadPagesAsync(site)
+        clearSearch()
+        reloadPagesAsync()
     }
 
-    private fun loadPagesAsync(site: SiteModel) {
-        launch(UI) {
-            val result = pageStore.fetchPagesAsync(site, false)
-            if (!result.isError) {
-                _pages = pageStore.loadPostsAsync(site)
-                _refreshPages.call()
-            }
+    private fun reloadPagesAsync() = launch {
+        _pages = pageStore.loadPagesFromDb(site)
+        refreshPagesAsync()
+    }
+
+    private fun refreshPagesAsync(isLoadingMore: Boolean = false)  = launch(UI) {
+        _listState.value = if (isLoadingMore) LOADING_MORE else FETCHING
+
+        val result = pageStore.requestPagesFromServer(site, isLoadingMore)
+        if (result.isError) {
+            _listState.value = ERROR
+            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
+        } else if (result.rowsAffected > 0) {
+            _pages = pageStore.loadPagesFromDb(site)
+            _refreshPages.call()
         }
+
+        _listState.value = if (result.canLoadMore) CAN_LOAD_MORE else DONE
     }
 
     fun onSearchTextSubmit(query: String?): Boolean {
@@ -62,33 +82,33 @@ class PagesViewModel
     fun onSearchTextChange(query: String?): Boolean {
         if (!query.isNullOrEmpty()) {
             val listOf = mockResult(query)
-            mutableSearchResult.value = listOf
+            _searchResult.value = listOf
         } else {
-            clear()
+            clearSearch()
         }
         return true
     }
 
     fun onSearchExpanded(): Boolean {
-        mutableSearchExpanded.value = true
+        _isSearchExpanded.value = true
         return true
     }
 
     fun onSearchCollapsed(): Boolean {
-        mutableSearchExpanded.value = false
+        _isSearchExpanded.value = false
         return true
     }
 
     fun refresh() {
-        loadPagesAsync(site)
+        refreshPagesAsync()
     }
 
     fun onAction(action: Action, pageItem: PageItem): Boolean {
         TODO("not implemented")
     }
 
-    private fun clear() {
-        mutableSearchResult.value = listOf(Empty(string.empty_list_default))
+    private fun clearSearch() {
+        _searchResult.value = listOf(Empty(string.empty_list_default))
     }
 }
 
