@@ -29,14 +29,14 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         return post?.let { PageModel.fromPost(it) }
     }
 
-    suspend fun loadPostsAsync(site: SiteModel): List<PageModel> {
+    suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> {
         return withContext(CommonPool) {
             val pages = postStore.getPagesForSite(site).filter { it != null }
             pages.map { PageModel.fromPost(it)!! }
         }
     }
 
-    suspend fun fetchPagesAsync(site: SiteModel, loadMore: Boolean): OnPostChanged {
+    suspend fun requestPagesFromServer(site: SiteModel, loadMore: Boolean): OnPostChanged {
         return suspendCoroutine { cont ->
             val payload = FetchPostsPayload(site, loadMore)
             postLoadContinuation = cont
