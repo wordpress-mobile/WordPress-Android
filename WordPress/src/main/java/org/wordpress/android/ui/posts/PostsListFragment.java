@@ -414,6 +414,8 @@ public class PostsListFragment extends Fragment
         }
 
         boolean hasNoContent = emptyViewMessageType == EmptyViewMessageType.NO_CONTENT;
+        mActionableEmptyView.setImageResource(mIsPage ? R.drawable.img_illustration_pages_104dp
+                : R.drawable.img_illustration_posts_75dp);
         mActionableEmptyView.setImageVisibility(hasNoContent);
         mActionableEmptyView.setTitleText(getText(stringId));
         mActionableEmptyView.setButtonText(getString(mIsPage ? R.string.pages_empty_list_button
