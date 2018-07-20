@@ -83,11 +83,12 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <ProgressBar
-        android:id="@+id/progress"
+        android:id="@+id/pagesListProgress"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
