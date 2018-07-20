@@ -17,7 +17,7 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.DisplayUtils
 
-sealed class PageItemViewHolder(parent: ViewGroup, @LayoutRes layout: Int) :
+sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
 
@@ -38,7 +38,11 @@ sealed class PageItemViewHolder(parent: ViewGroup, @LayoutRes layout: Int) :
                     val indent = View(indentContainer.context)
                     indentContainer.addView(indent, layoutParams)
                 }
-                pageTitle.text = pageItem.title
+                pageTitle.text = if (pageItem.title.isEmpty())
+                    parent.context.getString(R.string.untitled_in_parentheses)
+                else
+                    pageItem.title
+
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
                 pageMore.visibility = if (pageItem.enabledActions.isNotEmpty()) View.VISIBLE else View.GONE
             }
