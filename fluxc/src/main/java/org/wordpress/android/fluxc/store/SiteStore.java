@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -86,6 +87,16 @@ public class SiteStore extends Store {
         public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
             this.site = site;
             this.roles = roles;
+        }
+    }
+
+    public static class FetchedPlansPayload extends Payload<PlansError> {
+        public SiteModel site;
+        public List<PlanModel> plans;
+
+        public FetchedPlansPayload(@NonNull SiteModel site, @NonNull List<PlanModel> plans) {
+            this.site = site;
+            this.plans = plans;
         }
     }
 
@@ -344,6 +355,17 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnPlanFetched extends OnChanged<PlansError> {
+        public SiteModel site;
+        public List<PlanModel> plans;
+
+        public OnPlanFetched(SiteModel site, List<PlanModel> plans, PlansError error) {
+            this.site = site;
+            this.plans = plans;
+            this.error = error;
+        }
+    }
+
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
@@ -383,6 +405,21 @@ public class SiteStore extends Store {
         public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
+        }
+    }
+
+    public static class PlansError implements OnChangedError {
+        public PlanErrorType type;
+        public String message;
+
+        public PlansError(@NonNull PlanErrorType type) {
+            this.type = type;
+            this.message = "";
+        }
+
+        public PlansError(@NonNull PlanErrorType type, String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -468,6 +505,10 @@ public class SiteStore extends Store {
         INVALID_SITE,
         INVALID_RESPONSE,
         GENERIC_ERROR;
+    }
+
+    public enum PlanErrorType {
+        GENERIC_ERROR
     }
 
     public enum UserRolesErrorType {
@@ -958,6 +999,12 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            case FETCH_PLANS:
+                fetchPlans((SiteModel) action.getPayload());
+                break;
+            case FETCHED_PLANS:
+                handleFetchedPlans((FetchedPlansPayload) action.getPayload());
+                break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
@@ -1236,6 +1283,14 @@ public class SiteStore extends Store {
             event.error = payload.error;
         }
         emitChange(event);
+    }
+
+    private void fetchPlans(SiteModel siteModel) {
+        mSiteRestClient.fetchPlans(siteModel);
+    }
+
+    private void handleFetchedPlans(FetchedPlansPayload payload) {
+        emitChange(new OnPlanFetched(payload.site, payload.plans, payload.error));
     }
 
     // Automated Transfers
