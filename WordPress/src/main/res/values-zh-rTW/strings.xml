@@ -1,13 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 08:54:07+0000
+Translation-Revision-Date: 2018-07-10 06:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="reader_avatar_desc">個人檔案圖像</string>
+    <string name="reader_blavatar_desc">網站圖示</string>
+    <string name="notification_channel_transient_title">暫時性</string>
+    <string name="support_identity_input_dialog_email_label">電子郵件</string>
+    <string name="support_identity_input_dialog_enter_email">請輸入你的電子郵件地址</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">若要繼續，請輸入你的電子郵件地址和姓名</string>
+    <string name="support_push_notification_message">來自「說明與客戶服務」的新郵件</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">未設定</string>
+    <string name="support_contact_email">聯絡電子郵件</string>
+    <string name="application_log_button">應用程式記錄檔</string>
+    <string name="my_tickets">我的票證</string>
+    <string name="activity_log_rewind_dialog_message">確定要將你的網站還原至 %s 的 %s？這將移除在該時間點之後所建立或變更的全部內容和選項。</string>
+    <string name="activity_log_rewind_site">還原網站</string>
+    <string name="activity_log_currently_restoring_message_no_dates">正在還原</string>
+    <string name="activity_log_currently_restoring_message">正在還原至 %s %s</string>
+    <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功還原你的網站</string>
+    <string name="activity_log_rewind_finished_snackbar_message">已成功還原你的網站\n已還原至 %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">正在還原網站\n正在還原至 %s %s</string>
+    <string name="activity_log_button">活動記錄動作按鈕</string>
+    <string name="plugin_auto_managed">自動管理</string>
+    <string name="reader_save_posts_locally_dialog_message">儲存這篇文章，即可隨時返回閱讀。儲存的文章不會同步至其他裝置，因此你只能在這部裝置上存取文章。(不過，我們正努力提供此功能！)</string>
+    <string name="reader_save_posts_locally_dialog_title">儲存文章以供稍後使用</string>
+    <string name="reader_empty_search_request_failed">無法執行搜尋</string>
+    <string name="reader_empty_search_title">找不到結果</string>
+    <string name="reader_label_post_search_explainer">搜尋 WordPress\n網站或文章</string>
+    <string name="comment_read_source_post">參閱原始文章</string>
+    <string name="sites">網站</string>
+    <string name="signup_magic_link_title">神奇連結已傳送</string>
+    <string name="signup_email_screen_title">電子郵件註冊</string>
+    <string name="verification_2fa_screen_title">代碼驗證</string>
+    <string name="selfhosted_site_login_title">登入憑證</string>
+    <string name="magic_link_sent_login_title">神奇連結已傳送</string>
+    <string name="magic_link_login_title">神奇連結登入</string>
+    <string name="site_address_login_title">網站位址登入</string>
+    <string name="email_address_login_title">電子郵件地址登入</string>
+    <string name="alternatively">替代作法：</string>
     <string name="reader_empty_saved_posts_description">點選「%s」即可將文章儲存至你的清單。</string>
-    <string name="reader_empty_saved_posts_title">尚未儲存任何文章 u2014！</string>
     <string name="reader_bookmark_snack_title">文章已儲存</string>
     <string name="reader_bookmark_snack_btn">檢視全部</string>
     <string name="reader_btn_bookmarked">已儲存</string>
@@ -81,8 +118,6 @@ Language: zh_TW
     <string name="dialog_confirm_delete_permanently_page">確定要永久刪除此頁面？</string>
     <string name="dialog_confirm_delete_permanently_post">確定要永久刪除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在建立網站… 可能需要一點時間。</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">重要</string>
     <string name="notification_channel_general_title">一般</string>
     <string name="photo_picker_use_photo">使用此相片</string>
@@ -883,11 +918,7 @@ Language: zh_TW
     <string name="invite_people">邀請他人</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
-    <string name="reader_empty_posts_in_search_description">無法以你的語言找到與「%s」相關的文章</string>
     <string name="reader_label_post_search_running">搜尋中…</string>
-    <string name="reader_empty_posts_in_search_title">找不到文章</string>
-    <string name="reader_label_post_search_explainer">搜尋所有公開的 WordPress.com 網誌</string>
-    <string name="reader_hint_post_search">搜尋 WordPress.com</string>
     <string name="reader_title_related_post_detail">相關文章</string>
     <string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
     <string name="draft_explainer">這篇文章只是草稿，尚未發表</string>
@@ -1184,7 +1215,6 @@ Language: zh_TW
     <string name="reader_short_like_count_one">1 個讚</string>
     <string name="reader_label_follow_count">%,d 個關注者</string>
     <string name="reader_short_like_count_none">讚</string>
-    <string name="reader_menu_tags">編輯標籤和網誌</string>
     <string name="reader_title_post_detail">讀者文章</string>
     <string name="local_draft_explainer">這篇文章是儲存在本機上的草稿，尚未發表</string>
     <string name="local_changes_explainer">這篇文章的本機存檔經過變更，變更內容尚未發表</string>
@@ -1216,8 +1246,6 @@ Language: zh_TW
     <string name="button_view">檢視</string>
     <string name="button_edit">編輯</string>
     <string name="button_publish">發表</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網誌的權限</string>
-    <string name="reader_toast_err_follow_blog_not_found">無法找到這個部落格</string>
     <string name="undo">復原</string>
     <string name="passcodelock_prompt_message">輸入 PIN 碼</string>
     <string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
@@ -1282,7 +1310,6 @@ Language: zh_TW
     <string name="stats_recent_weeks">最近幾星期</string>
     <string name="error_copy_to_clipboard">將文字複製到剪貼簿時發生錯誤</string>
     <string name="reader_label_new_posts">新文章</string>
-    <string name="reader_empty_posts_in_blog">這個部落格沒有內容</string>
     <string name="stats_period">期間</string>
     <string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
     <string name="stats_total">總計</string>
@@ -1350,7 +1377,6 @@ Language: zh_TW
     <string name="cab_selected">已選取：%d</string>
     <string name="reader_empty_posts_liked">你未對任何文章按讚</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
-    <string name="nux_help_description">造訪說明中心以取得常見問題的解答，或前往論壇提出新問題</string>
     <string name="create_new_blog_wpcom">建立 WordPress.com 網誌</string>
     <string name="reader_empty_comments">尚未有留言</string>
     <string name="reader_empty_posts_in_tag">沒有任何含有此標籤的文章</string>
@@ -1377,26 +1403,10 @@ Language: zh_TW
     <string name="signing_out">正在登出…</string>
     <string name="reader_empty_followed_blogs_title">你尚未關注任何網站</string>
     <string name="reader_toast_err_generic">無法執行此動作</string>
-    <string name="reader_toast_err_block_blog">無法封鎖此網誌</string>
-    <string name="reader_toast_blog_blocked">將不再顯示此網誌的文章</string>
-    <string name="reader_menu_block_blog">封鎖此網誌</string>
     <string name="contact_us">聯絡我們</string>
-    <string name="hs__conversation_detail_error">描述你遇到的問題</string>
-    <string name="hs__new_conversation_header">支援交談</string>
-    <string name="hs__conversation_header">支援交談</string>
-    <string name="hs__username_blank_error">輸入有效的名稱</string>
-    <string name="hs__invalid_email_error">輸入有效的電子郵件地址</string>
     <string name="update_verb">更新</string>
     <string name="schedule_verb">排程</string>
-    <string name="reader_title_subs">標籤和網誌</string>
     <string name="reader_page_followed_tags">關注的標籤</string>
-    <string name="reader_label_followed_blog">網誌已關注</string>
-    <string name="reader_toast_err_get_blog_info">無法顯示此網誌</string>
-    <string name="reader_toast_err_already_follow_blog">你已經在關注此網誌</string>
-    <string name="reader_toast_err_follow_blog">無法關注此網誌</string>
-    <string name="reader_toast_err_unfollow_blog">無法取消關注此網誌</string>
-    <string name="reader_empty_recommended_blogs">沒有推薦的網誌</string>
-    <string name="reader_title_blog_preview">讀者網誌</string>
     <string name="reader_title_tag_preview">讀者標籤</string>
     <string name="reader_page_followed_blogs">關注的網站</string>
     <string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或標籤</string>

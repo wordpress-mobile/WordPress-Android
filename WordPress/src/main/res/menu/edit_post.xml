@@ -6,25 +6,27 @@
         app:showAsAction="always"
         android:title="@string/post_status_publish_post"/>
 
-    <group android:id="@+id/group_save_preview" android:orderInCategory="1">
+    <group
+        android:orderInCategory="1" >
         <item
             android:id="@+id/menu_save_as_draft_or_publish"
             android:title="@string/menu_save_as_draft"/>
         <item
             android:id="@+id/menu_preview_post"
             android:title="@string/menu_preview"/>
-    </group>
-
-    <group android:id="@+id/group_html_mode" android:orderInCategory="1">
         <item
             android:id="@+id/menu_html_mode"
             android:title="@string/menu_html_mode"/>
-    </group>
-
-    <group android:id="@+id/group_post_settings" android:orderInCategory="1">
         <item
             android:id="@+id/menu_post_settings"
             android:title="@string/post_settings"/>
+    </group>
+
+    <group
+        android:orderInCategory="2" >
+        <item
+            android:id="@+id/menu_discard_changes"
+            android:title="@string/menu_discard_changes"/>
     </group>
 
 </menu>

@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-18 14:54:07+0000
+Translation-Revision-Date: 2018-07-09 18:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="reader_avatar_desc">תמונת פרופיל</string>
+    <string name="reader_blavatar_desc">סמל אתר</string>
+    <string name="notification_channel_transient_title">זמני</string>
+    <string name="support_identity_input_dialog_email_label">אימייל</string>
+    <string name="support_identity_input_dialog_enter_email">יש להזין את כתובת האימייל שלך</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">יש להזין את כתובת האימייל והשם שלך כדי להמשיך</string>
+    <string name="support_push_notification_message">הודעה חדשה מ\'עזרה ותמיכה\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">לא הוגדר</string>
+    <string name="support_contact_email">אימייל ליצירת קשר</string>
+    <string name="application_log_button">יומן יישום</string>
+    <string name="my_tickets">הפנייה שלי</string>
+    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד %s בשעה %s? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
+    <string name="activity_log_rewind_site">שחזור גרסה קודמת של האתר</string>
+    <string name="activity_log_currently_restoring_message_no_dates">השחזור בתהליך</string>
+    <string name="activity_log_currently_restoring_message">משחזר לתאריך %s %s</string>
+    <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
+    <string name="activity_log_rewind_finished_snackbar_message">האתר שלך שוחזר בהצלחה\nשוחזר לתאריך %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %s %s</string>
+    <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
+    <string name="plugin_auto_managed">ניהול אוטומטי</string>
+    <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד – פוסטים שנשמרו לא מסתנכרנים בין מכשירים. (עדיין! אנחנו עובדים על זה).</string>
+    <string name="reader_save_posts_locally_dialog_title">שמירת פוסטים למועד מאוחר יותר</string>
+    <string name="reader_empty_search_request_failed">אין אפשרות לבצע את החיפוש</string>
+    <string name="reader_empty_search_title">לא נמצאו תוצאות</string>
+    <string name="reader_label_post_search_explainer">חיפוש ב–WordPress\nאתר או פוסט</string>
+    <string name="sites">אתרים</string>
+    <string name="comment_read_source_post">קריאת הפוסט המקורי</string>
     <string name="signup_magic_link_title">הקישור הישיר נשלח</string>
     <string name="signup_email_screen_title">הרשמה באימייל</string>
     <string name="verification_2fa_screen_title">אימות קוד</string>
@@ -16,7 +45,6 @@ Language: he_IL
     <string name="email_address_login_title">התחברות באמצעות כתובת אימייל</string>
     <string name="alternatively">לחלופין:</string>
     <string name="reader_empty_saved_posts_description">יש להקיש על %s כדי לשמור את הפוסט ברשימה שלך.</string>
-    <string name="reader_empty_saved_posts_title">לא נשמרו פוסטים u2014 עדיין!</string>
     <string name="reader_bookmark_snack_title">הפוסט נשמר</string>
     <string name="reader_bookmark_snack_btn">להציג הכול</string>
     <string name="reader_btn_bookmarked">נשמר</string>
@@ -26,6 +54,7 @@ Language: he_IL
     <string name="reader_save_for_later_title">פוסטים שנשמרו</string>
     <string name="activity_log_empty_list">עדיין לא נרשמו אירועים</string>
     <string name="removed">נמחק</string>
+    <string name="reader_empty_saved_posts_title">עדיין לא נשמרו פוסטים! </string>
     <string name="tabbar_accessibility_label_write">פוסט חדש. כתיבת פוסט חדש.</string>
     <string name="my_site_icon_content_description">שינוי סמל אתר</string>
     <string name="my_site_icon_dialog_cancel_button">ביטול</string>
@@ -90,8 +119,6 @@ Language: he_IL
     <string name="dialog_confirm_delete_permanently_page">האם ברצונך למחוק את העמוד לצמיתות?</string>
     <string name="dialog_confirm_delete_permanently_post">האם ברצונך למחוק את הפוסט לצמיתות?</string>
     <string name="notification_site_creation_title_in_progress">יוצר את האתר… הפעולה תימשך מספר דקות.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">חשוב</string>
     <string name="notification_channel_general_title">כללי</string>
     <string name="photo_picker_use_photo">שימוש בתמונה זו</string>
@@ -161,6 +188,7 @@ Language: he_IL
     <string name="profile_picture">תמונת הפרופיל של %s</string>
     <string name="comment_checkmark_desc">סימן ביקורת</string>
     <string name="signup_with_google_progress">מתחבר ל–Google…</string>
+    <string name="post_cardview_featured_desc">תמונה ראשית</string>
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל–Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב–Jetpack כבר מחובר</string>
     <string name="menu_undo_snackbar_action">ביטול פעולה אחרונה</string>
@@ -216,6 +244,7 @@ Language: he_IL
     <string name="sharing_disabled_description">אין לך גישה להגדרות השיתוף מכיוון שמודול השיתוף של Jetpack מושבת.</string>
     <string name="sharing_disabled">מודול השיתוף מושבת</string>
     <string name="version_with_name_param">גרסה %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">פורסם על ידי: %s</string>
     <string name="async_promo_publish_now">לפרסם כעת</string>
     <string name="notification_sound_has_invalid_path">הנתיב של הצליל שנבחר לא חוקי. יש לבחור נתיב אחר.</string>
@@ -258,6 +287,8 @@ Language: he_IL
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">פוסט אחד עם קובץ אחד לא הועלה</string>
     <string name="untitled_in_parentheses">(ללא כותרת)</string>
     <string name="at_username">‎@‎%s‎</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_epilogue_write">כתיבת הפוסט הראשון</string>
     <string name="site_creation_epilogue_configure">הגדרות</string>
     <string name="site_creation_epilogue_congrats">ברכותינו!\nהאתר שלך מוכן.</string>
@@ -329,6 +360,7 @@ Language: he_IL
     <string name="signup_epilogue_error_avatar">אירעה בעיה בטעינה של תמונת פרופיל שלך.</string>
     <string name="signup_email_header">כדי ליצור חשבון WordPress.com חדש, יש להזין את כתובת האימייל שלך.</string>
     <string name="signup_email_error_generic">אירעה בעיה בבדיקה של כתובת האימייל.</string>
+    <string name="signup_magic_link_error">אירעה תקלה בשליחת האימייל. אפשר לנסות שוב עכשיו או לסגור ולנסות שוב מאוחר יותר.</string>
     <string name="sign_up">הרשמה ל–WordPress.com</string>
     <string name="enter_username_instead">התחברות באמצעות שם המשתמש שלך.</string>
     <string name="enter_site_address_instead">התחברות באמצעות הזנת כתובת האתר.</string>
@@ -353,6 +385,7 @@ Language: he_IL
     <string name="site_settings_serve_images_from_our_servers">הצגת תמונות מהשרתים שלנו</string>
     <string name="site_settings_speed_up_your_site">הגברת המהירות של האתר שלך</string>
     <string name="stats_jetpack_connection_setup">הגדרת Jetpack</string>
+    <string name="stats_jetpack_connection_setup_info">כדי לצפות בסטטיסטיקות אודות אתר ה–WordPress שלך, עליך להתקין את התוסף של Jetpack. רוצה להגדיר את Jetpack?</string>
     <string name="plugin_chevron_icon_content_description">החלפה בין המלל</string>
     <string name="plugin_info_your_version">הגרסה של WordPress שמותקנת אצלך</string>
     <string name="plugin_info_requires_version">גרסת WordPress נדרשת</string>
@@ -412,6 +445,12 @@ Language: he_IL
     <string name="plugin_remove_progress_dialog_message">מסיר את %s…</string>
     <string name="plugin_disable_progress_dialog_message">משבית את %s…</string>
     <string name="plugin_configuration_failed">אירעה שגיאה בעת ההגדרה של התוסף: %s</string>
+    <string name="plugin_remove_failed">שגיאה בעת ההסרה של %s</string>
+    <string name="plugin_removed_successfully">%s הוסר בהצלחה</string>
+    <string name="plugin_updated_failed_detailed">שגיאה בעת העדכון של %1$s: %2$s</string>
+    <string name="plugin_updated_failed">שגיאה בעת העדכון של %s.</string>
+    <string name="plugin_updated_successfully">העדכון של %s בוצע בהצלחה</string>
+    <string name="plugin_available_version">גרסה %s זמינה כעת</string>
     <string name="plugin_detail_label_state_autoupdates">עדכונים אוטומטיים</string>
     <string name="plugin_detail_label_state_active">פעיל</string>
     <string name="plugin_inactive">לא פעיל</string>
@@ -776,6 +815,7 @@ Language: he_IL
     <string name="media_upload_error">אירעה שגיאה בהעלאת פריטי מדיה</string>
     <string name="retry">יש לנסות שנית</string>
     <string name="confirm">אישור</string>
+    <string name="xmlrpc_endpoint_forbidden_error">לא ניתן להתחבר. התקבלה שגיאת 403 בניסיון לגשת ל–\n נקודת הקצה XMLRPC של האתר שלך. כדי שהאפליקציה תוכל לבצע התקשרות עם האתר שלך, יש להפעיל אפשרות זו. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="xmlrpc_post_blocked_error">לא ניתן להתחבר. חברת האחסון שלך חוסמת בקשות POST, והאפליקציה דורשת את\n הפעלת האפשרות הזו כדי לבצע התקשרות עם האתר שלך. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="reader_empty_followed_blogs_search_title">לא נמצאו אתרים תואמים</string>
     <string name="reader_hint_search_followed_sites">חיפוש באתרים תחת מעקב</string>
@@ -790,7 +830,7 @@ Language: he_IL
     <string name="pending_draft_one_day_2">שמת לב ש–\'%1$s\' עדיין טיוטה בלבד? קדימה, לפרסם!</string>
     <string name="pending_draft_one_day_1">אתמול שמרת את \'%1$s\' בתור טיוטה. לא לשכוח לפרסם אותה!</string>
     <string name="reader_photo_by">צולם על ידי %s</string>
-    <string name="reader_label_visit">ניתן לבקר בכתובת</string>
+    <string name="reader_label_visit">אל האתר</string>
     <string name="swipe_for_more">יש להחליק לקבלת מידע נוסף</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל–WordPress.com תחילה או להשתמש בכפתור הפעולה העליון כדי לפתוח דפדפן במקום.</string>
     <string name="reader_err_get_post_not_authorized_signin">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל–WordPress.com תחילה.</string>
@@ -814,7 +854,7 @@ Language: he_IL
     <string name="signout">התנתק</string>
     <string name="comment_liked">סימנת לייק לתגובה</string>
     <string name="sign_in_wpcom">התחברות ל–WordPress.com</string>
-    <string name="reader_label_global_related_posts">מידע נוסף ב–WordPress.com</string>
+    <string name="reader_label_global_related_posts">עוד מ–WordPress.com</string>
     <string name="reader_label_local_related_posts">מידע נוסף ב–%s</string>
     <string name="preference_open_device_settings">פתיחת הגדרות מכשיר</string>
     <string name="invite_user_blocked_invites">%s: משתמש חסם הזמנות</string>
@@ -896,10 +936,8 @@ Language: he_IL
     <string name="invite_people">הזמנת אנשים</string>
     <string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
-    <string name="reader_empty_posts_in_search_description">לא נמצאו פוסטים עבור %s בשפה שבחרת</string>
+    <string name="reader_empty_search_description">לא נמצאו תוצאות עבור %s בשפה שבחרת</string>
     <string name="reader_label_post_search_running">מחפש…</string>
-    <string name="reader_empty_posts_in_search_title">לא נמצאו תוצאות</string>
-    <string name="reader_label_post_search_explainer">חיפוש בכל הבלוגים הציבוריים של WordPress.com</string>
     <string name="reader_hint_post_search">חיפוש ב–WordPress.com</string>
     <string name="reader_title_related_post_detail">באותו נושא</string>
     <string name="preview_screen_links_disabled">קישורים מושבתים במסך התצוגה המקדימה</string>
@@ -1026,6 +1064,7 @@ Language: he_IL
     <string name="error_post_account_settings">לא ניתן לשמור הגדרות החשבון</string>
     <string name="error_fetch_account_settings">לא ניתן לאחזר את הגדרות החשבון שלך</string>
     <string name="error_fetch_my_profile">לא ניתן לאחזר את הפרופיל שלך</string>
+    <string name="stats_widget_promo_ok_btn_label">אוקי, הבנתי</string>
     <string name="stats_widget_promo_desc">להוסיף את הווידג׳ט למסך הבית כדי להגיע לסטטיסטיקות בקליק אחד.</string>
     <string name="stats_widget_promo_title">וידג׳ט סטטיסטיקות למסך הבית</string>
     <string name="site_settings_unknown_language_code_error">קוד שפה לא מזוהה</string>
@@ -1169,7 +1208,7 @@ Language: he_IL
     <string name="reader_label_gap_marker">פוסטים נוספים</string>
     <string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
     <string name="search_sites">חיפוש אתרים</string>
-    <string name="notifications_empty_view_reader">הצד קורא</string>
+    <string name="notifications_empty_view_reader">לקרוא פוסטים</string>
     <string name="notifications_empty_action_followers_likes">קבל תשומת לב: תגובה לפוסטים שכבר קראת.</string>
     <string name="notifications_empty_action_comments">הצטרף לדיון: תגובות לפוסטים באתרים אחריהם אתה עוקב.</string>
     <string name="notifications_empty_action_unread">הצת מחדש את הדיון: כתוב פוסט חדש.</string>
@@ -1200,8 +1239,8 @@ Language: he_IL
     <string name="reader_short_like_count_one">לייק אחד</string>
     <string name="reader_short_like_count_none">לייק</string>
     <string name="reader_label_follow_count">%,d עוקבים</string>
-    <string name="reader_menu_tags">עריכת תגיות ובלוגים</string>
-    <string name="reader_title_post_detail">קורא פוטס</string>
+    <string name="reader_menu_tags">עריכת תגיות ואתרים</string>
+    <string name="reader_title_post_detail">פוסט</string>
     <string name="local_draft_explainer">לפוסט זה יש טיוטה מקומית שלא פורסמה</string>
     <string name="local_changes_explainer">לפוסט זה יש שינויים מקומיים שטרם פורסמו</string>
     <string name="notifications_push_summary">הגדרת התראות יוצגו במכשיר שלך. </string>
@@ -1233,8 +1272,8 @@ Language: he_IL
     <string name="button_view">הצגה</string>
     <string name="button_edit">עריכה</string>
     <string name="button_publish">פרסום</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לבלוג</string>
-    <string name="reader_toast_err_follow_blog_not_found">הבלוג לא נמצא</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לאתר זה</string>
+    <string name="reader_toast_err_follow_blog_not_found">האתר לא נמצא</string>
     <string name="undo">ביטול פעולה אחרונה</string>
     <string name="passcodelock_prompt_message">הזנת קוד PIN</string>
     <string name="push_auth_expired">פג תוקף הבקשה. יש להיכנס לוורדפרס.קום כדי לנסות שוב.</string>
@@ -1255,8 +1294,10 @@ Language: he_IL
     <string name="site_picker_cant_hide_current_site">\"%s\" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
     <string name="account_settings">הגדרות חשבון</string>
     <string name="me_btn_support">עזרה ותמיכה</string>
+    <string name="site_picker_create_wpcom">יצירת אתר וורדפרס.קום</string>
     <string name="site_picker_edit_visibility">הצגת/הסתרת אתרים</string>
     <string name="site_picker_add_self_hosted">הוספת אתר באחסון עצמי</string>
+    <string name="site_picker_add_site">הוספת אתר חדש</string>
     <string name="site_picker_title">בחירת אתר</string>
     <string name="my_site_btn_switch_site">החלפת אתר</string>
     <string name="my_site_btn_view_admin">הצגת מנהל מערכת</string>
@@ -1299,13 +1340,13 @@ Language: he_IL
     <string name="logs_copied_to_clipboard">הלוגים של האפליקציה הועתקו אל ה–clipboard</string>
     <string name="stats_overall">מבט כללי</string>
     <string name="stats_period">תקופה</string>
-    <string name="reader_empty_posts_in_blog">אתר ריק</string>
     <string name="stats_average_per_day">ממוצע יומי</string>
-    <string name="reader_page_recommended_blogs">אתרים שאתה עשוי לאהוב</string>
     <string name="stats_months_and_years">חודשים ושנים</string>
     <string name="reader_label_new_posts">פוסטים חדשים</string>
     <string name="stats_total">סה\"כ</string>
     <string name="post_uploading">מעלה פוסט</string>
+    <string name="reader_empty_posts_in_blog">האתר הזה ריק</string>
+    <string name="reader_page_recommended_blogs">אתרים מומלצים עבורך </string>
     <string name="stats_comments_total_comments_followers">סה\"כ פוסטים עם עוקבים אחר תגובות: %1$s</string>
     <string name="stats_empty_video">לא הופעל וידאו</string>
     <string name="stats_view_videos">וידאו</string>
@@ -1383,7 +1424,6 @@ Language: he_IL
     <string name="pages_empty_list">אין עמודים עדיין. למה לא ליצור אחד?</string>
     <string name="reader_empty_posts_liked">לא עשית לייק על אף פוסט</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
-    <string name="nux_help_description">אפשר לבקר במרכז העזרה כדי לקבל תשובות לשאלות נפוצות, או לבקר בפורומים כדי לשאול שאלות חדשות</string>
     <string name="reader_label_like">לייק</string>
     <string name="reader_label_liked_by">קיבל לייקים מאת</string>
     <string name="error_refresh_unauthorized_comments">איך לך הרשאה להציג או לערוך תגובות</string>
@@ -1399,25 +1439,20 @@ Language: he_IL
     <string name="reader_toast_err_block_blog">לא ניתן לחסום אתר זה</string>
     <string name="reader_toast_err_generic">לא ניתן לבצע את הפעולה</string>
     <string name="contact_us">ליצור קשר</string>
-    <string name="hs__conversation_detail_error">תאר/י את הבעיה בה נתקלת</string>
-    <string name="hs__new_conversation_header">צ׳אט תמיכה</string>
-    <string name="hs__conversation_header">צ׳אט תמיכה</string>
-    <string name="hs__username_blank_error">נא להזין שם</string>
-    <string name="hs__invalid_email_error">נא להזין כתובת אימייל</string>
     <string name="update_verb">עדכן</string>
     <string name="schedule_verb">תזמן</string>
     <string name="reader_toast_err_unfollow_blog">לא ניתן לבטל את המעקב אחר אתר זה</string>
     <string name="reader_empty_recommended_blogs">אין אתרים מומלצים</string>
     <string name="reader_toast_err_follow_blog">לא ניתן לעקוב אחר אתר זה</string>
-    <string name="reader_toast_err_already_follow_blog">אתה כבר עוקב אחר אתר זה</string>
     <string name="reader_toast_err_get_blog_info">לא ניתן להציג אתר זה</string>
-    <string name="reader_label_followed_blog">אתר נעקב</string>
     <string name="reader_title_subs">תגיות ואתרים</string>
-    <string name="reader_page_followed_blogs">אתרים נעקבים</string>
-    <string name="reader_page_followed_tags">תגיות נעקבות</string>
     <string name="reader_hint_add_tag_or_url">הזן תגית או כתובת אתר למעקב</string>
-    <string name="reader_title_blog_preview">קורא בלוג</string>
     <string name="reader_title_tag_preview">קורא תגית</string>
+    <string name="reader_toast_err_already_follow_blog">אתר זה כבר במעקב שלך</string>
+    <string name="reader_label_followed_blog">האתר נעקב</string>
+    <string name="reader_title_blog_preview">אתר</string>
+    <string name="reader_page_followed_tags">תגיות במעקב</string>
+    <string name="reader_page_followed_blogs">אתרים במעקב</string>
     <string name="media_empty_list">אין מדיה</string>
     <string name="help">עזרה</string>
     <string name="forgot_password">איבדת את הסיסמה שלך?</string>
@@ -1515,6 +1550,8 @@ Language: he_IL
     <string name="error_refresh_media">לא ניתן לרענן את פריטי המדיה כעת</string>
     <string name="error_deleting_page">אירעה שגיאה בעת מחיקת העמוד</string>
     <string name="plugin_not_found">אירעה שגיאה במהלך הגישה לתוסף זה</string>
+    <string name="delete_post">למחוק פוסט? </string>
+    <string name="delete_page">למחוק עמוד? </string>
     <string name="share_link">קישור לשיתוף</string>
     <string name="creating_your_site">יוצר את האתר שלך</string>
     <string name="reader_empty_posts_in_tag_updating">מביא רשומות…</string>
