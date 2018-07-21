@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.PlansResponse.Plan;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
@@ -68,7 +67,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Singleton;
 
@@ -294,22 +292,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new Listener<PlansResponse>() {
                             @Override
                             public void onResponse(PlansResponse response) {
-                                Map<Long, PlansResponse.Plan> plansResponseMap =
-                                        response != null
-                                                ? response.getPlansMap()
-                                                : Collections.<Long, Plan>emptyMap();
-
-                                Set<Long> keys = plansResponseMap.keySet();
-                                List<PlanModel> plans = new ArrayList<>();
-                                for (Long key : keys) {
-                                    PlanModel plan = planResponseToPlan(plansResponseMap.get(key));
-                                    plans.add(plan);
-                                }
-                                mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(
-                                        new FetchedPlansPayload(site, plans)));
+                                List<PlanModel> plans = response.getPlansList();
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newFetchedPlansAction(new FetchedPlansPayload(site, plans)));
                             }
                         },
-
                         new WPComErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
@@ -741,14 +728,5 @@ public class SiteRestClient extends BaseWPComRestClient {
         info.isWPCom = response.isWordPressDotCom; // CHECKSTYLE IGNORE
         info.urlAfterRedirects = response.urlAfterRedirects;
         return info;
-    }
-
-    private PlanModel planResponseToPlan(PlansResponse.Plan planResponse) {
-        Long productId = planResponse.getId();
-        String productName = planResponse.getProductName() != null ? planResponse.getProductName() : "";
-        String productSlug = planResponse.getProductSlug() != null ? planResponse.getProductSlug() : "";
-        Boolean isCurrentPlan = planResponse.getCurrentPlan();
-        Boolean hasDomainCredit = planResponse.getHasDomainCredit();
-        return new PlanModel(productId, productName, productSlug, isCurrentPlan, hasDomainCredit);
     }
 }
