@@ -92,7 +92,7 @@ public class SiteStore extends Store {
     }
 
     public static class FetchedPlansPayload extends Payload<PlansError> {
-        public SiteModel site;
+        @NonNull public SiteModel site;
         @Nullable public List<PlanModel> plans;
 
         public FetchedPlansPayload(@NonNull SiteModel site, List<PlanModel> plans) {
