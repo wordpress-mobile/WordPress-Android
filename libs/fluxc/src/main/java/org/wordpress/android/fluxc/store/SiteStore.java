@@ -93,11 +93,16 @@ public class SiteStore extends Store {
 
     public static class FetchedPlansPayload extends Payload<PlansError> {
         public SiteModel site;
-        public List<PlanModel> plans;
+        @Nullable public List<PlanModel> plans;
 
-        public FetchedPlansPayload(@NonNull SiteModel site, @NonNull List<PlanModel> plans) {
+        public FetchedPlansPayload(@NonNull SiteModel site, List<PlanModel> plans) {
             this.site = site;
             this.plans = plans;
+        }
+
+        public FetchedPlansPayload(@NonNull SiteModel site, @NonNull PlansError error) {
+            this.site = site;
+            this.error = error;
         }
     }
 

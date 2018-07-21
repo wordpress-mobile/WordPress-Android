@@ -313,9 +313,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new WPComErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                FetchedPlansPayload payload =
-                                        new FetchedPlansPayload(site, Collections.<PlanModel>emptyList());
-                                payload.error = new PlansError(error.apiError, error.message);
+                                PlansError plansError = new PlansError(error.apiError, error.message);
+                                FetchedPlansPayload payload = new FetchedPlansPayload(site, plansError);
                                 mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(payload));
                             }
                         });
