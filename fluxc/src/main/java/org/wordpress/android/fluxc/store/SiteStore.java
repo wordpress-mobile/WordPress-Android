@@ -94,7 +94,7 @@ public class SiteStore extends Store {
         @NonNull public SiteModel site;
         @Nullable public List<PlanModel> plans;
 
-        public FetchedPlansPayload(@NonNull SiteModel site, List<PlanModel> plans) {
+        public FetchedPlansPayload(@NonNull SiteModel site, @Nullable List<PlanModel> plans) {
             this.site = site;
             this.plans = plans;
         }
@@ -361,10 +361,10 @@ public class SiteStore extends Store {
     }
 
     public static class OnPlansFetched extends OnChanged<PlansError> {
-        public SiteModel site;
-        public List<PlanModel> plans;
+        public @NonNull SiteModel site;
+        public @Nullable List<PlanModel> plans;
 
-        public OnPlansFetched(SiteModel site, List<PlanModel> plans, PlansError error) {
+        public OnPlansFetched(@NonNull SiteModel site, @Nullable List<PlanModel> plans, @Nullable PlansError error) {
             this.site = site;
             this.plans = plans;
             this.error = error;
