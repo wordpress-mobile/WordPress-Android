@@ -11,7 +11,6 @@ import com.yarolegovich.wellsql.mapper.SelectMapper;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
@@ -415,12 +414,16 @@ public class SiteStore extends Store {
     }
 
     public static class PlansError implements OnChangedError {
-        @NotNull public PlansErrorType type;
+        @NonNull public PlansErrorType type;
         @Nullable public String message;
 
         public PlansError(@Nullable String type, @Nullable String message) {
             this.type = PlansErrorType.fromString(type);
             this.message = message;
+        }
+
+        public PlansError(@NonNull PlansErrorType type) {
+            this.type = type;
         }
     }
 
@@ -509,8 +512,9 @@ public class SiteStore extends Store {
     }
 
     public enum PlansErrorType {
+        NOT_AVAILABLE,
         AUTHORIZATION_REQUIRED,
-        INVALID_SITE,
+        UNKNOWN_BLOG,
         GENERIC_ERROR;
 
         public static PlansErrorType fromString(String type) {
@@ -1299,8 +1303,13 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void fetchPlans(SiteModel siteModel) {
-        mSiteRestClient.fetchPlans(siteModel);
+    private void fetchPlans(@NonNull SiteModel siteModel) {
+        if (siteModel.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchPlans(siteModel);
+        } else {
+            PlansError plansError = new PlansError(PlansErrorType.NOT_AVAILABLE);
+            handleFetchedPlans(new FetchedPlansPayload(siteModel, plansError));
+        }
     }
 
     private void handleFetchedPlans(FetchedPlansPayload payload) {
