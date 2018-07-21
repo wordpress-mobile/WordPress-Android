@@ -45,7 +45,6 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.PlanErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
@@ -316,7 +315,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                                 FetchedPlansPayload payload =
                                         new FetchedPlansPayload(site, Collections.<PlanModel>emptyList());
-                                payload.error = new PlansError(PlanErrorType.GENERIC_ERROR);
+                                payload.error = new PlansError(error.apiError, error.message);
                                 mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(payload));
                             }
                         });

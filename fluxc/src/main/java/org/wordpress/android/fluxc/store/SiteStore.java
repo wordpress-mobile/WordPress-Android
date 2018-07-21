@@ -11,6 +11,7 @@ import com.yarolegovich.wellsql.mapper.SelectMapper;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
@@ -409,16 +410,11 @@ public class SiteStore extends Store {
     }
 
     public static class PlansError implements OnChangedError {
-        public PlanErrorType type;
-        public String message;
+        @NotNull public PlansErrorType type;
+        @Nullable public String message;
 
-        public PlansError(@NonNull PlanErrorType type) {
-            this.type = type;
-            this.message = "";
-        }
-
-        public PlansError(@NonNull PlanErrorType type, String message) {
-            this.type = type;
+        public PlansError(@Nullable String type, @Nullable String message) {
+            this.type = PlansErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -507,8 +503,21 @@ public class SiteStore extends Store {
         GENERIC_ERROR;
     }
 
-    public enum PlanErrorType {
-        GENERIC_ERROR
+    public enum PlansErrorType {
+        AUTHORIZATION_REQUIRED,
+        INVALID_SITE,
+        GENERIC_ERROR;
+
+        public static PlansErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (PlansErrorType v : PlansErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum UserRolesErrorType {
