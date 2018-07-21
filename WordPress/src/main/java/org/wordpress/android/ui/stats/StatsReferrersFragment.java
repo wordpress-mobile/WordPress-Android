@@ -15,9 +15,7 @@ import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,11 +231,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // site icon
             holder.networkImageView.setVisibility(View.GONE);
-            if (!TextUtils.isEmpty(currentChild.icon)) {
-                holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.mHeaderAvatarSizePx),
-                        WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
-            }
 
             // no more btm
             holder.imgMore.setVisibility(View.GONE);
@@ -307,13 +300,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                             R.string.stats_views_many_desc,
                             total));
 
-            // Site icon
             holder.networkImageView.setVisibility(View.GONE);
-            if (!TextUtils.isEmpty(icon)) {
-                holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
-                        WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
-            }
 
             if (children == 0) {
                 holder.showLinkIcon();

@@ -768,14 +768,15 @@
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_title">No activity yet</string>
     <string name="activity_log_empty_subtitle">When you make changes to your site you\'ll be able to see your activity history here</string>
-    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %s %s</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %s %s</string>
+    <string name="activity_log_empty_list">No events recorded yet</string>
+    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
-    <string name="activity_log_currently_restoring_message">Rewinding to %s %s</string>
+    <string name="activity_log_currently_restoring_message">Rewinding to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
     <string name="activity_log_rewind_site">Rewind Site</string>
-    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %s at %s? This will remove all content and options created or changed since then.</string>
+    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -1558,6 +1559,7 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
+    <string name="support_push_notification_message_hint_snackbar">Find your support conversation by tapping \'Help &amp; Support\' and then \'My Tickets\'</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
