@@ -15,7 +15,7 @@ class PlansResponse {
     var plansMap: Map<Long, Plan>? = emptyMap()
 
     inner class Plan {
-        var id: String? = null
+        var id: Long = 0
         var interval: Long = 0
         @SerializedName("formatted_original_price")
         var formattedOriginalPrice: String? = null
