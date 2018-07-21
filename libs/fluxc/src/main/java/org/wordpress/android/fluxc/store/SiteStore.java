@@ -355,11 +355,11 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnPlanFetched extends OnChanged<PlansError> {
+    public static class OnPlansFetched extends OnChanged<PlansError> {
         public SiteModel site;
         public List<PlanModel> plans;
 
-        public OnPlanFetched(SiteModel site, List<PlanModel> plans, PlansError error) {
+        public OnPlansFetched(SiteModel site, List<PlanModel> plans, PlansError error) {
             this.site = site;
             this.plans = plans;
             this.error = error;
@@ -1290,7 +1290,7 @@ public class SiteStore extends Store {
     }
 
     private void handleFetchedPlans(FetchedPlansPayload payload) {
-        emitChange(new OnPlanFetched(payload.site, payload.plans, payload.error));
+        emitChange(new OnPlansFetched(payload.site, payload.plans, payload.error));
     }
 
     // Automated Transfers
