@@ -744,12 +744,11 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     private PlanModel planResponseToPlan(PlansResponse.Plan planResponse) {
-        PlanModel planModel = new PlanModel();
-        planModel.setId(planResponse.getId());
-        planModel.setName(planResponse.getProductName());
-        planModel.setSlug(planResponse.getProductSlug());
-        planModel.setCurrentPlan(planResponse.getCurrentPlan());
-        planModel.setHasDomainCredit(planResponse.getHasDomainCredit());
-        return planModel;
+        Long productId = planResponse.getId();
+        String productName = planResponse.getProductName() != null ? planResponse.getProductName() : "";
+        String productSlug = planResponse.getProductSlug() != null ? planResponse.getProductSlug() : "";
+        Boolean isCurrentPlan = planResponse.getCurrentPlan();
+        Boolean hasDomainCredit = planResponse.getHasDomainCredit();
+        return new PlanModel(productId, productName, productSlug, isCurrentPlan, hasDomainCredit);
     }
 }
