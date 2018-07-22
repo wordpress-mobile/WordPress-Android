@@ -123,4 +123,9 @@ public class FluxCUtils {
 
         return media;
     }
+
+    public static boolean isAudioMimeType(Context context, Uri uri) {
+        String mimeType = context.getContentResolver().getType(uri);
+        return org.wordpress.android.fluxc.utils.MediaUtils.isAudioMimeType(mimeType);
+    }
 }

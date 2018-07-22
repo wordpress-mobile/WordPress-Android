@@ -417,7 +417,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.AUDIO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri uri = data.getData();
-                    getMediaFromDeviceAndTrack(uri, requestCode);
+                    if (FluxCUtils.isAudioMimeType(getApplicationContext(), uri)) {
+                        getMediaFromDeviceAndTrack(uri, requestCode);
+                    } else {
+                        ToastUtils.showToast(getApplicationContext(), R.string.media_error_incorrect_audio_format);
+                    }
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
