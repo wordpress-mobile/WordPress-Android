@@ -879,18 +879,29 @@ public class AccountRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    /**
+     * Performs an HTTP GET call to v1.1 /me/domain-contact-information/ endpoint.  Upon receiving a response
+     * (success or error) a {@link AccountAction#FETCHED_DOMAIN_CONTACT} action is dispatched with a
+     * payload of type {@link DomainContactPayload}.
+     *
+     * {@link DomainContactPayload#isError()} can be used to check the request result.
+     */
     public void fetchDomainContact() {
         String url = WPCOMREST.me.domain_contact_information.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, null, DomainContactResponse.class,
                 new Listener<DomainContactResponse>() {
                     @Override
                     public void onResponse(DomainContactResponse response) {
-                        DomainContactModel account = responseToDomainContactModel(response);
+                        DomainContactPayload payload = new DomainContactPayload(responseToDomainContactModel(response));
+                        mDispatcher.dispatch(AccountActionBuilder.newFetchedDomainContactAction(payload));
                     }
                 },
                 new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        DomainContactError contactError = new DomainContactError(error.apiError, error.message);
+                        DomainContactPayload payload = new DomainContactPayload(contactError);
+                        mDispatcher.dispatch(AccountActionBuilder.newFetchedDomainContactAction(payload));
                     }
                 }));
     }
