@@ -12,7 +12,8 @@ class PlanModel {
         productSlug: String,
         productName: String,
         isCurrentPlan: Boolean,
-        hasDomainCredit: Boolean) {
+        hasDomainCredit:
+    ) {
         this.productId = productId
         this.productSlug = productSlug
         this.productName = productName
