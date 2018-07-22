@@ -7,7 +7,11 @@ class PlanModel {
     val isCurrentPlan: Boolean
     val hasDomainCredit: Boolean
 
-    constructor(productId: Long, productSlug: String, productName: String, isCurrentPlan: Boolean,
+    constructor(
+        productId: Long,
+        productSlug: String,
+        productName: String,
+        isCurrentPlan: Boolean,
         hasDomainCredit: Boolean) {
         this.productId = productId
         this.productSlug = productSlug
