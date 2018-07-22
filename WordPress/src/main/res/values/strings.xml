@@ -152,7 +152,7 @@
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
-    <string name="media_error_incorrect_audio_format">Incorrect audio file format</string>
+    <string name="media_error_incorrect_audio_format">We\’re sorry, this type of audio file is not supported</string>
     <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
