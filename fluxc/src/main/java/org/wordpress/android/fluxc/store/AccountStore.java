@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.DomainContactModel;
 import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -361,6 +363,18 @@ public class AccountStore extends Store {
         public List<String> suggestions;
     }
 
+    public static class OnDomainContactFetched extends OnChanged<DomainContactError> {
+        @Nullable public DomainContactModel contactModel;
+
+        public OnDomainContactFetched(@Nullable DomainContactModel contactModel) {
+            this.contactModel = contactModel;
+        }
+
+        public OnDomainContactFetched(@NonNull DomainContactError error) {
+            this.error = error;
+        }
+    }
+
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
@@ -611,6 +625,32 @@ public class AccountStore extends Store {
                 }
             }
 
+            return GENERIC_ERROR;
+        }
+    }
+
+    public static class DomainContactError implements OnChangedError {
+        public DomainContactErrorType type;
+        public String message;
+
+        public DomainContactError(@NonNull String type, @NonNull String message) {
+            this.type = DomainContactErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public enum DomainContactErrorType {
+        INVALID_TOKEN,
+        GENERIC_ERROR;
+
+        public static DomainContactErrorType fromString(String string) {
+            if (string != null) {
+                for (DomainContactErrorType type : DomainContactErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
             return GENERIC_ERROR;
         }
     }
