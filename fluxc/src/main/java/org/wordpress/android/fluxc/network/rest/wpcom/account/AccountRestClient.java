@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.account;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -39,6 +40,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
+import org.wordpress.android.fluxc.store.AccountStore.DomainContactError;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -162,6 +164,18 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         public AccountFetchUsernameSuggestionsResponsePayload(List<String> suggestions) {
             this.suggestions = suggestions;
+        }
+    }
+
+    public static class DomainContactPayload extends Payload<DomainContactError> {
+        @Nullable public DomainContactModel contactModel;
+
+        public DomainContactPayload(@Nullable DomainContactModel contactModel) {
+            this.contactModel = contactModel;
+        }
+
+        public DomainContactPayload(@NonNull DomainContactError error) {
+            this.error = error;
         }
     }
 
