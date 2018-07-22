@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.account
 
-class AccountDomainContactResponse {
+class DomainContactResponse {
     var first_name: String? = null
     var last_name: String? = null
     var organization: String? = null

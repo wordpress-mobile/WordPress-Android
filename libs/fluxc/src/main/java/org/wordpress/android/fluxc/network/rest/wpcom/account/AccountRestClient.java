@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.DomainContactModel;
 import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -864,6 +865,22 @@ public class AccountRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchDomainContact() {
+        String url = WPCOMREST.me.domain_contact_information.getUrlV1_1();
+        add(WPComGsonRequest.buildGetRequest(url, null, DomainContactResponse.class,
+                new Listener<DomainContactResponse>() {
+                    @Override
+                    public void onResponse(DomainContactResponse response) {
+                        DomainContactModel account = responseToDomainContactModel(response);
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                    }
+                }));
+    }
+
     private SubscriptionModel responseToSubscriptionModel(SubscriptionRestResponse response) {
         SubscriptionModel subscription = new SubscriptionModel();
         subscription.setSubscriptionId(response.ID);
@@ -1089,5 +1106,21 @@ public class AccountRestClient extends BaseWPComRestClient {
             accountModel.setPrimarySiteId(((Double) from.get("primary_site_ID")).longValue());
         }
         return !old.equals(accountModel);
+    }
+
+    private DomainContactModel responseToDomainContactModel(DomainContactResponse response) {
+        DomainContactModel contactModel = new DomainContactModel();
+        contactModel.setFirstName(StringEscapeUtils.unescapeHtml4(response.getFirst_name()));
+        contactModel.setLastName(StringEscapeUtils.unescapeHtml4(response.getLast_name()));
+        contactModel.setOrganization(response.getOrganization());
+        contactModel.setAddressLine1(response.getAddress_1());
+        contactModel.setAddressLine2(response.getAddress_2());
+        contactModel.setCity(response.getCity());
+        contactModel.setState(response.getState());
+        contactModel.setPostalCode(response.getPostal_code());
+        contactModel.setCountryCode(response.getCountry_code());
+        contactModel.setPhone(response.getPhone());
+        contactModel.setFax(response.getFax());
+        return contactModel;
     }
 }
