@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.DomainContactPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
@@ -366,11 +367,8 @@ public class AccountStore extends Store {
     public static class OnDomainContactFetched extends OnChanged<DomainContactError> {
         @Nullable public DomainContactModel contactModel;
 
-        public OnDomainContactFetched(@Nullable DomainContactModel contactModel) {
+        public OnDomainContactFetched(@Nullable DomainContactModel contactModel, @Nullable DomainContactError error) {
             this.contactModel = contactModel;
-        }
-
-        public OnDomainContactFetched(@NonNull DomainContactError error) {
             this.error = error;
         }
     }
@@ -870,6 +868,12 @@ public class AccountStore extends Store {
             case UPDATED_SUBSCRIPTION:
                 handleUpdatedSubscription((SubscriptionResponsePayload) payload);
                 break;
+            case FETCH_DOMAIN_CONTACT:
+                mAccountRestClient.fetchDomainContact();
+                break;
+            case FETCHED_DOMAIN_CONTACT:
+                handleFetchedDomainContact((DomainContactPayload) payload);
+                break;
         }
     }
 
@@ -1237,5 +1241,9 @@ public class AccountStore extends Store {
             event.type = payload.type;
         }
         emitChange(event);
+    }
+
+    private void handleFetchedDomainContact(DomainContactPayload payload) {
+        emitChange(new OnDomainContactFetched(payload.contactModel, payload.error));
     }
 }
