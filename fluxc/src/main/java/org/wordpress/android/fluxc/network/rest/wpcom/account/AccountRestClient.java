@@ -1146,6 +1146,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         contactModel.setCountryCode(response.getCountry_code());
         contactModel.setPhone(response.getPhone());
         contactModel.setFax(response.getFax());
+        contactModel.setEmail(response.getEmail());
         return contactModel;
     }
 }
