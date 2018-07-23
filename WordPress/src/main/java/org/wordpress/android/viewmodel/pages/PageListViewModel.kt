@@ -35,9 +35,9 @@ class PageListViewModel
                 .map { Page(it.pageId.toLong(), it.title, null) }
 
         if (newPages.isEmpty()) {
-            _pages.value = listOf(Empty(string.empty_list_default))
+            _pages.postValue(listOf(Empty(string.empty_list_default)))
         } else {
-            _pages.value = newPages
+            _pages.postValue(newPages)
         }
     }
 

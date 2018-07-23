@@ -60,19 +60,21 @@ class PagesViewModel
         refreshPagesAsync()
     }
 
-    private fun refreshPagesAsync(isLoadingMore: Boolean = false)  = launch(UI) {
-        _listState.value = if (isLoadingMore) LOADING_MORE else FETCHING
+    private fun refreshPagesAsync(isLoadingMore: Boolean = false) = launch(UI) {
+        var newState = if (isLoadingMore) LOADING_MORE else FETCHING
+        _listState.postValue(newState)
 
         val result = pageStore.requestPagesFromServer(site, isLoadingMore)
         if (result.isError) {
-            _listState.value = ERROR
+            _listState.postValue(ERROR)
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
             _pages = pageStore.loadPagesFromDb(site)
-            _refreshPages.call()
+            _refreshPages.asyncCall()
         }
 
-        _listState.value = if (result.canLoadMore) CAN_LOAD_MORE else DONE
+        newState = if (result.canLoadMore) CAN_LOAD_MORE else DONE
+        _listState.postValue(newState)
     }
 
     fun onSearchTextSubmit(query: String?): Boolean {
@@ -82,7 +84,7 @@ class PagesViewModel
     fun onSearchTextChange(query: String?): Boolean {
         if (!query.isNullOrEmpty()) {
             val listOf = mockResult(query)
-            _searchResult.value = listOf
+            _searchResult.postValue(listOf)
         } else {
             clearSearch()
         }
@@ -90,12 +92,12 @@ class PagesViewModel
     }
 
     fun onSearchExpanded(): Boolean {
-        _isSearchExpanded.value = true
+        _isSearchExpanded.postValue(true)
         return true
     }
 
     fun onSearchCollapsed(): Boolean {
-        _isSearchExpanded.value = false
+        _isSearchExpanded.postValue(false)
         return true
     }
 
@@ -108,7 +110,7 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
-        _searchResult.value = listOf(Empty(string.empty_list_default))
+        _searchResult.postValue(listOf(Empty(string.empty_list_default)))
     }
 }
 
