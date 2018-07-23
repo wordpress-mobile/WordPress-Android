@@ -30,7 +30,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private List<Suggestion> mOrigSuggestionList;
     private int mAvatarSz;
 
-    protected @Inject ImageManager mImageManager;
+    @Inject protected ImageManager mImageManager;
 
     public SuggestionAdapter(Context context) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
