@@ -52,13 +52,15 @@ public class ReaderUpdateLogic {
     private ServiceCompletionListener mCompletionListener;
     private Object mListenerCompanion;
     private String mLanguage;
+    private Context mContext;
 
     @Inject AccountStore mAccountStore;
 
-    public ReaderUpdateLogic(WordPress app, ServiceCompletionListener listener) {
+    public ReaderUpdateLogic(Context context, WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
         app.component().inject(this);
         mLanguage = LocaleManager.getLanguage(app);
+        mContext = context;
     }
 
     public void performTasks(EnumSet<UpdateTask> tasks, Object companion) {
@@ -131,7 +133,7 @@ public class ReaderUpdateLogic {
 
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
                 serverTopics.add(new ReaderTag("", "",
-                        WordPress.getContext().getString(R.string.reader_save_for_later_title), "",
+                        mContext.getString(R.string.reader_save_for_later_title), "",
                         ReaderTagType.BOOKMARKED));
 
                 // parse topics from the response, detect whether they're different from local
