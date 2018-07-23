@@ -48,7 +48,7 @@ class PostListSqlUtilsTest {
         val testList = insertTestList(testSite, listType)
         val postList = generatePostList(testList, postCount)
         postListSqlUtils.insertPostList(testList.id, postList)
-        assertEquals(postListSqlUtils.getPostList(testList.id)?.size, postCount)
+        assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
     }
 
     @Test
@@ -67,14 +67,14 @@ class PostListSqlUtilsTest {
         val testList = insertTestList(testSite, listType)
         val postList = generatePostList(testList, postCount)
         postListSqlUtils.insertPostList(testList.id, postList)
-        assertEquals(postListSqlUtils.getPostList(testList.id)?.size, postCount)
+        assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
 
         /**
          * 1. Delete the inserted list
          * 2. Verify that deleting the list also deletes the inserted [PostListModel]s due to foreign key restriction
          */
         listSqlUtils.deleteList(testSite, listType)
-        assertEquals(postListSqlUtils.getPostList(testList.id)?.size, 0)
+        assertEquals(0, postListSqlUtils.getPostList(testList.id)?.size)
     }
 
     @Test
@@ -91,7 +91,7 @@ class PostListSqlUtilsTest {
         val testLists = ListType.values().map { insertTestList(testSite, it) }
         testLists.forEach { list ->
             postListSqlUtils.insertPostList(list.id, arrayListOf(generatePostListModel(list.id, testPostId)))
-            assertEquals(postListSqlUtils.getPostList(list.id)?.size, 1)
+            assertEquals(1, postListSqlUtils.getPostList(list.id)?.size)
         }
 
         /**
@@ -100,7 +100,7 @@ class PostListSqlUtilsTest {
          */
         postListSqlUtils.deletePost(testPostId)
         testLists.forEach {
-            assertEquals(postListSqlUtils.getPostList(it.id)?.size, 0)
+            assertEquals(0, postListSqlUtils.getPostList(it.id)?.size)
         }
     }
 
