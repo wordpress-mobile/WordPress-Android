@@ -47,7 +47,7 @@ class PostListSqlUtilsTest {
          * 2. A list of test [PostListModel]s will be generated and inserted in the DB
          * 3. Verify that the [PostListModel] instances are inserted correctly
          */
-        val testList = insertTestList(testSite, listType)
+        val testList = insertTestList(testSite.id, listType)
         val postList = generatePostList(testList, testSite.id, postCount)
         postListSqlUtils.insertPostList(postList)
         assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
@@ -65,7 +65,7 @@ class PostListSqlUtilsTest {
          * 2. A list of test [PostListModel]s will be generated and inserted in the DB
          * 3. Verify that the [PostListModel] instances are inserted correctly
          */
-        val testList = insertTestList(testSite, listType)
+        val testList = insertTestList(testSite.id, listType)
         val postList = generatePostList(testList, testSite.id, postCount)
         postListSqlUtils.insertPostList(postList)
         assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
@@ -74,7 +74,7 @@ class PostListSqlUtilsTest {
          * 1. Delete the inserted list
          * 2. Verify that deleting the list also deletes the inserted [PostListModel]s due to foreign key restriction
          */
-        listSqlUtils.deleteList(testSite, listType)
+        listSqlUtils.deleteList(testSite.id, listType)
         assertEquals(0, postListSqlUtils.getPostList(testList.id)?.size)
     }
 
@@ -88,7 +88,7 @@ class PostListSqlUtilsTest {
          * 2. Generate a [PostListModel] for every list type with the same id and insert it
          * 3. Verify that the [PostListModel] was inserted correctly
          */
-        val testLists = ListType.values().map { insertTestList(testSite, it) }
+        val testLists = ListType.values().map { insertTestList(testSite.id, it) }
         val postList = testLists.map { generatePostListModel(it.id, testSite.id, testPostId) }
         postListSqlUtils.insertPostList(postList)
         testLists.forEach { list ->
@@ -121,7 +121,7 @@ class PostListSqlUtilsTest {
         val testPostId = 1245 // value doesn't matter
         val listType = ListType.POSTS_ALL
 
-        val testLists = listOf(testSite1, testSite2).map { insertTestList(it, listType) }
+        val testLists = listOf(testSite1, testSite2).map { insertTestList(it.id, listType) }
         val postList = testLists.map {
             generatePostListModel(it.id, it.localSiteId, testPostId)
         }
@@ -161,7 +161,7 @@ class PostListSqlUtilsTest {
          * 2. Generate a [PostListModel] for `date1` and insert it in the DB
          * 3. Verify that it's inserted correctly and [PostListModel.date] equals to `date1`
          */
-        val testList = insertTestList(testSite, listType)
+        val testList = insertTestList(testSite.id, listType)
         val postListModel = generatePostListModel(testList.id, testSite.id, testPostId, date1)
         postListSqlUtils.insertPostList(listOf(postListModel))
         val insertedPostList = postListSqlUtils.getPostList(testList.id)
@@ -181,11 +181,11 @@ class PostListSqlUtilsTest {
     }
 
     /**
-     * Creates and inserts a [ListModel] for a random test site. It also verifies that the list is inserted correctly.
+     * Creates and inserts a [ListModel] for the given site. It also verifies that the list is inserted correctly.
      */
-    private fun insertTestList(siteModel: SiteModel, listType: ListType): ListModel {
-        listSqlUtils.insertOrUpdateList(siteModel, listType)
-        val list = listSqlUtils.getList(siteModel, listType)
+    private fun insertTestList(localSiteId: Int, listType: ListType): ListModel {
+        listSqlUtils.insertOrUpdateList(localSiteId, listType)
+        val list = listSqlUtils.getList(localSiteId, listType)
         assertNotNull(list)
         return list!!
     }
