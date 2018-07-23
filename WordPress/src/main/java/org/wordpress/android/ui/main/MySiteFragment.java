@@ -52,9 +52,9 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
-import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -112,6 +112,7 @@ public class MySiteFragment extends Fragment implements
     private LinearLayout mPlanContainer;
     private LinearLayout mPluginsContainer;
     private LinearLayout mActivityLogContainer;
+    private View mQuickStartContainer;
     private WPTextView mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
@@ -221,6 +222,7 @@ public class MySiteFragment extends Fragment implements
         mNoSiteDrakeImageView = rootView.findViewById(R.id.my_site_no_site_view_drake);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
+        mQuickStartContainer = rootView.findViewById(R.id.row_quick_start);
 
         setupClickListeners(rootView);
 
@@ -255,7 +257,7 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
+        mQuickStartContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -667,6 +669,13 @@ public class MySiteFragment extends Fragment implements
         // if either people or settings is visible, configuration header should be visible
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
+
+
+        boolean isQuickStartAvailable = site.getHasCapabilityManageOptions()
+                                        && ThemeBrowserActivity.isAccessible(site)
+                                        && SiteUtils.isAccessedViaWPComRest(site);
+
+        mQuickStartContainer.setVisibility(isQuickStartAvailable ? View.VISIBLE : View.GONE);
 
         mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView
                 .ImageType.BLAVATAR);
