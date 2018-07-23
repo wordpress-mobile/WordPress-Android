@@ -3,10 +3,12 @@ package org.wordpress.android.ui.reader.services.update;
 import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.Context;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 
 import java.util.EnumSet;
 
@@ -15,6 +17,11 @@ import static org.wordpress.android.ui.reader.services.update.ReaderUpdateServic
 @TargetApi(21)
 public class ReaderUpdateJobService extends JobService implements ServiceCompletionListener {
     private ReaderUpdateLogic mReaderUpdateLogic;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -40,7 +47,7 @@ public class ReaderUpdateJobService extends JobService implements ServiceComplet
     @Override
     public void onCreate() {
         super.onCreate();
-        mReaderUpdateLogic = new ReaderUpdateLogic((WordPress) getApplication(), this);
+        mReaderUpdateLogic = new ReaderUpdateLogic(this, (WordPress) getApplication(), this);
         AppLog.i(AppLog.T.READER, "reader job service > created");
     }
 

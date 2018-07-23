@@ -13,6 +13,8 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.AVATAR -> R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
             ImageType.BLAVATAR -> R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp
             ImageType.THEME -> R.color.grey_lighten_30
+            ImageType.UNKNOWN -> R.drawable.ic_notice_grey_500_48dp
+            ImageType.PLUGIN -> R.drawable.plugin_placeholder
         }
     }
 
@@ -23,6 +25,8 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.AVATAR -> R.drawable.shape_oval_grey_light
             ImageType.BLAVATAR -> R.color.grey_light
             ImageType.THEME -> R.drawable.theme_loading
+            ImageType.UNKNOWN -> R.drawable.legacy_dashicon_format_image_big_grey
+            ImageType.PLUGIN -> R.drawable.plugin_placeholder
         }
     }
 }

@@ -128,6 +128,7 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 import javax.inject.Singleton;
 
@@ -390,6 +391,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PluginDetailActivity object);
 
     void inject(WordPressGlideModule object);
+
+    void inject(WPCustomImageGetter object);
 
     void inject(PublicizeAccountChooserListAdapter object);
 

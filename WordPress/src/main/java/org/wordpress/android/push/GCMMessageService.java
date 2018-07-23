@@ -1055,8 +1055,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             String message = context.getString(R.string.support_push_notification_message);
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            resultIntent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_ME);
-            resultIntent.putExtra(WPMainActivity.ARG_SHOW_ZENDESK_HINT_SNACKBAR, true);
+            resultIntent.putExtra(WPMainActivity.ARG_SHOW_ZENDESK_NOTIFICATIONS, true);
             showSimpleNotification(context, title, message, resultIntent, ZENDESK_PUSH_NOTIFICATION_ID);
         }
     }
