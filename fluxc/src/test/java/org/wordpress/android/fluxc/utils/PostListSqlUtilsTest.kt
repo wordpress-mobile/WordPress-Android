@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.PostListSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
+import org.wordpress.android.fluxc.site.SiteUtils.generateJetpackSiteOverXMLRPC
 import org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -104,6 +105,48 @@ class PostListSqlUtilsTest {
         }
     }
 
+    /**
+     * This is a test to ensure that if there are multiple [PostListModel]s with the same `postId`, only the one with
+     * the correct `siteId` will be deleted.
+     */
+    @Test
+    fun testDeletePostOnlyForTheCorrectSite() {
+        /**
+         * 1. Generate and insert 2 different test sites
+         * 2. Insert a [ListModel] for each test site
+         * 3. Insert a [PostListModel] for each test list with the same postId
+         */
+        val testSite1 = generateAndInsertSelfHostedNonJPTestSite()
+        val testSite2 = generateAndInsertJetpackSiteOverXMLRPCTestSite()
+        val testPostId = 1245 // value doesn't matter
+        val listType = ListType.POSTS_ALL
+
+        val testLists = listOf(testSite1, testSite2).map { insertTestList(it, listType) }
+        val postList = testLists.map {
+            generatePostListModel(it.id, it.localSiteId, testPostId)
+        }
+        postListSqlUtils.insertPostList(postList)
+
+        /**
+         * 1. Verify that for each list, a single post is inserted
+         * 2. Verify that inserted post has the expected id
+         */
+        testLists.forEach {
+            val insertedPostList = postListSqlUtils.getPostList(it.id)
+            assertEquals(1, insertedPostList?.size)
+            assertEquals(testPostId, insertedPostList?.get(0)?.postId)
+        }
+
+        /**
+         * 1. Delete the post for the first site
+         * 2. Verify that it's deleted from the first list which corresponds to the first list
+         * 3. Verify that it's NOT deleted from the second list
+         */
+        postListSqlUtils.deletePost(testSite1.id, testPostId)
+        assertEquals(0, postListSqlUtils.getPostList(testLists[0].id)?.size)
+        assertEquals(1, postListSqlUtils.getPostList(testLists[1].id)?.size)
+    }
+
     @Test
     fun insertDuplicatePostListModel() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
@@ -120,7 +163,7 @@ class PostListSqlUtilsTest {
          */
         val testList = insertTestList(testSite, listType)
         val postListModel = generatePostListModel(testList.id, testSite.id, testPostId, date1)
-        postListSqlUtils.insertPostList(arrayListOf(postListModel))
+        postListSqlUtils.insertPostList(listOf(postListModel))
         val insertedPostList = postListSqlUtils.getPostList(testList.id)
         assertEquals(date1, insertedPostList?.firstOrNull()?.date)
 
@@ -131,7 +174,7 @@ class PostListSqlUtilsTest {
          * 4. Verify that the `date` is correctly updated after the second insertion.
          */
         postListModel.date = date2
-        postListSqlUtils.insertPostList(arrayListOf(postListModel))
+        postListSqlUtils.insertPostList(listOf(postListModel))
         val updatedPostList = postListSqlUtils.getPostList(testList.id)
         assertEquals(insertedPostList?.size, updatedPostList?.size)
         assertEquals(date2, updatedPostList?.firstOrNull()?.date)
@@ -177,6 +220,16 @@ class PostListSqlUtilsTest {
      */
     private fun generateAndInsertSelfHostedNonJPTestSite(): SiteModel {
         val site = generateSelfHostedNonJPSite()
+        SiteSqlUtils.insertOrUpdateSite(site)
+        return site
+    }
+
+    /**
+     * Helper function that generates a self-hosted test site with Jetpack and inserts it into the DB. Since we have a
+     * FK restriction for [PostListModel.localSiteId] we need to do this before we can insert [PostListModel] instances.
+     */
+    private fun generateAndInsertJetpackSiteOverXMLRPCTestSite(): SiteModel {
+        val site = generateJetpackSiteOverXMLRPC()
         SiteSqlUtils.insertOrUpdateSite(site)
         return site
     }
