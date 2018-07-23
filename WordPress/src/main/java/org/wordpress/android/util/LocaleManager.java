@@ -73,7 +73,7 @@ public class LocaleManager {
      * language code, else just return the device default language code.
      * @return The 2-letter language code (example "en")
      */
-    private static String getLanguage(Context context) {
+    public static String getLanguage(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(LANGUAGE_KEY, LanguageUtils.getCurrentDeviceLanguageCode());
     }
