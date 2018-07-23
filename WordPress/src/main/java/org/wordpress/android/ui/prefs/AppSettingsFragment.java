@@ -372,7 +372,7 @@ public class AppSettingsFragment extends PreferenceFragment
         getActivity().setResult(LANGUAGE_CHANGED);
         getActivity().finish();
 
-        // update Reader tags as they need be localized - use the app context as the Activity is being finished
+        // update Reader tags as they need be localized
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
     }
 
