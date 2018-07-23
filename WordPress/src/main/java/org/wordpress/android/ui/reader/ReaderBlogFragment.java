@@ -63,7 +63,7 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
 
         // options menu (with search) only appears for followed blogs
         setHasOptionsMenu(getBlogType() == ReaderBlogType.FOLLOWED);
@@ -76,7 +76,7 @@ public class ReaderBlogFragment extends Fragment
             return;
         }
 
-        TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
+        TextView emptyView = getView().findViewById(R.id.text_empty);
         if (emptyView == null) {
             return;
         }
@@ -203,7 +203,7 @@ public class ReaderBlogFragment extends Fragment
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderBlogAdapter(getBlogType(), mSearchFilter);
+            mAdapter = new ReaderBlogAdapter(getActivity(), getBlogType(), mSearchFilter);
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
