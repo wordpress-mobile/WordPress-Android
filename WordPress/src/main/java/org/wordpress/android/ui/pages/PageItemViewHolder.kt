@@ -71,7 +71,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
     }
 
-    class EmptyViewHolder(parentView: ViewGroup) :  PageItemViewHolder(parentView, layout.page_empty_item) {
+    class EmptyViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_empty_item) {
         private val emptyView = itemView.findViewById<TextView>(id.empty_view)
         override fun onBind(pageItem: PageItem) {
             (pageItem as Empty).apply {
