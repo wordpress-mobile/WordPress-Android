@@ -43,27 +43,28 @@ class ListSqlUtils @Inject constructor() {
     }
 
     /**
-     * This function returns the [ListModel] record for the given [localSiteId] and [type] if there is one.
+     * This function returns the [ListModel] record for the given [localSiteId] and [listType] if there is one.
      *
-     * Since there shouldn't be more than one record for a [localSiteId] and [type] combination, [firstOrNull] is used.
+     * Since there shouldn't be more than one record for a [localSiteId] and [listType] combination,
+     * [firstOrNull] is used.
      */
-    fun getList(localSiteId: Int, type: ListType): ListModel? {
+    fun getList(localSiteId: Int, listType: ListType): ListModel? {
         return WellSql.select(ListModel::class.java)
                 .where()
                 .equals(ListModelTable.LOCAL_SITE_ID, localSiteId)
-                .equals(ListModelTable.TYPE, type.value)
+                .equals(ListModelTable.TYPE, listType.value)
                 .endWhere()
                 .asModel
                 .firstOrNull()
     }
 
     /**
-     * This function deletes the [ListModel] record for the given [localSiteId] and [type] if there is one.
+     * This function deletes the [ListModel] record for the given [localSiteId] and [listType] if there is one.
      *
      * To ensure that we have the same `where` queries for both `select` and `delete` queries, [getList] is utilized.
      */
-    fun deleteList(localSiteId: Int, type: ListType) {
-        val existing = getList(localSiteId, type)
+    fun deleteList(localSiteId: Int, listType: ListType) {
+        val existing = getList(localSiteId, listType)
         existing?.let {
             WellSql.delete(ListModel::class.java).whereId(it.id)
         }
