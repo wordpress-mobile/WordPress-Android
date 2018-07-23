@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -95,6 +96,7 @@ public class ThemeBrowserFragment extends Fragment
     private RelativeLayout mEmptyView;
     private TextView mNoResultText;
     private TextView mCurrentThemeTextView;
+    private View mHeaderCustomizeButton;
 
     private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
@@ -162,6 +164,33 @@ public class ThemeBrowserFragment extends Fragment
         return view;
     }
 
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
+            showQuickStartFocusPoint();
+        }
+    }
+
+    private void showQuickStartFocusPoint() {
+        if (getView() == null) {
+            return;
+        }
+
+        mHeaderCustomizeButton.post(new Runnable() {
+            @Override public void run() {
+                int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+                int horizontalOffset = (mHeaderCustomizeButton.getWidth() / 2) - focusPointSize + getResources()
+                        .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+
+                QuickStartUtils.addQuickStartFocusPointAboveTheView((ViewGroup) getView(), mHeaderCustomizeButton,
+                        horizontalOffset, 0);
+
+                mHeaderCustomizeButton.setPressed(true);
+            }
+        });
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(final QuickStartEvent event) {
@@ -177,8 +206,7 @@ public class ThemeBrowserFragment extends Fragment
         } else if (mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
             getView().post(new Runnable() {
                 @Override public void run() {
-                    LinearLayout customize = getView().findViewById(R.id.customize);
-                    customize.setPressed(true);
+                    showQuickStartFocusPoint();
 
                     Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
                             R.string.quick_start_dialog_customize_site_message_short_customize,
@@ -319,8 +347,8 @@ public class ThemeBrowserFragment extends Fragment
         mCurrentThemeTextView = header.findViewById(R.id.header_theme_text);
 
         setThemeNameIfAlreadyAvailable();
-        LinearLayout customize = header.findViewById(R.id.customize);
-        customize.setOnClickListener(new View.OnClickListener() {
+        mHeaderCustomizeButton = header.findViewById(R.id.customize);
+        mHeaderCustomizeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, mSite);
@@ -328,14 +356,13 @@ public class ThemeBrowserFragment extends Fragment
 
                 if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
                     mQuickStartStore.setDoneTask(mSite.getId(), mQuickStartEvent.getTask(), true);
+                    if (getView() != null) {
+                        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
+                    }
                     mQuickStartEvent = null;
                 }
             }
         });
-
-        if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
-            customize.setPressed(true);
-        }
 
         LinearLayout details = header.findViewById(R.id.details);
         details.setOnClickListener(new View.OnClickListener() {
