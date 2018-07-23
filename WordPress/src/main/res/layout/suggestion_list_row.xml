@@ -8,11 +8,12 @@
     android:orientation="horizontal"
     android:padding="@dimen/margin_large">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/suggest_list_row_avatar"
         android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:contentDescription="@null"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/suggestion_list_row_user_login_label"
