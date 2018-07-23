@@ -93,7 +93,7 @@ public class FluxCUtils {
 
         MediaModel media = mediaStore.instantiateMediaModel();
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
-        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
+        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(filename);
 
         if (TextUtils.isEmpty(mimeType)) {
             mimeType = context.getContentResolver().getType(uri);
@@ -122,5 +122,10 @@ public class FluxCUtils {
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
 
         return media;
+    }
+
+    public static boolean isAudioMimeType(Context context, Uri uri) {
+        String mimeType = context.getContentResolver().getType(uri);
+        return org.wordpress.android.fluxc.utils.MediaUtils.isAudioMimeType(mimeType);
     }
 }

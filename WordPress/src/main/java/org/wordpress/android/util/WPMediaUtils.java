@@ -42,6 +42,8 @@ public class WPMediaUtils {
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
 
+    private static final String MIME_DATA_TYPE_AUDIO = "audio/*";
+
     public static Uri getOptimizedMedia(Activity activity, String path, boolean isVideo) {
         if (isVideo) {
             return null;
@@ -260,6 +262,22 @@ public class WPMediaUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             }
+        }
+        return Intent.createChooser(intent, title);
+    }
+
+    public static void launchAudioLibrary(Activity activity, boolean multiSelect) {
+        AppLockManager.getInstance().setExtendedTimeout();
+        activity.startActivityForResult(
+            prepareAudioLibraryIntent(activity.getString(R.string.pick_audio), multiSelect),
+            RequestCodes.AUDIO_LIBRARY);
+    }
+
+    private static Intent prepareAudioLibraryIntent(String title, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(MIME_DATA_TYPE_AUDIO);
+        if (multiSelect && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, title);
     }

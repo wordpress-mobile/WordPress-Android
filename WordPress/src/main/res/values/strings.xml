@@ -141,6 +141,7 @@
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="pick_audio">Select audio</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
@@ -151,6 +152,7 @@
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
+    <string name="media_error_incorrect_audio_format">We\'re sorry, this type of audio file is not supported</string>
     <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
@@ -1939,6 +1941,7 @@
     <string name="photo_picker_title">Choose photo</string>
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
+    <string name="photo_picker_choose_audio">Choose audio from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
