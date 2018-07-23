@@ -673,9 +673,8 @@ public class PostsListFragment extends Fragment
             text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         }
 
-        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.actionable_empty_view), text,
-                AccessibilityUtils.getSnackbarDuration(getActivity()))
-                                    .setAction(R.string.undo, undoListener);
+        Snackbar snackbar = Snackbar.make(mActionableEmptyView, text,
+                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.undo, undoListener);
 
         // wait for the undo snackbar to disappear before actually deleting the post
         snackbar.setCallback(new Snackbar.Callback() {
