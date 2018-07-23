@@ -47,7 +47,7 @@ class PostListSqlUtilsTest {
          */
         val testList = insertTestList(testSite, listType)
         val postList = generatePostList(testList, postCount)
-        postListSqlUtils.insertPostList(testList.id, postList)
+        postListSqlUtils.insertPostList(postList)
         assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
     }
 
@@ -66,7 +66,7 @@ class PostListSqlUtilsTest {
          */
         val testList = insertTestList(testSite, listType)
         val postList = generatePostList(testList, postCount)
-        postListSqlUtils.insertPostList(testList.id, postList)
+        postListSqlUtils.insertPostList(postList)
         assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
 
         /**
@@ -89,8 +89,9 @@ class PostListSqlUtilsTest {
          * 3. Verify that the [PostListModel] was inserted correctly
          */
         val testLists = ListType.values().map { insertTestList(testSite, it) }
+        val postList = testLists.map { generatePostListModel(it.id, testPostId) }
+        postListSqlUtils.insertPostList(postList)
         testLists.forEach { list ->
-            postListSqlUtils.insertPostList(list.id, arrayListOf(generatePostListModel(list.id, testPostId)))
             assertEquals(1, postListSqlUtils.getPostList(list.id)?.size)
         }
 
@@ -121,7 +122,7 @@ class PostListSqlUtilsTest {
          */
         val testList = insertTestList(testSite, listType)
         val postListModel = generatePostListModel(testList.id, testPostId, date1)
-        postListSqlUtils.insertPostList(testList.id, arrayListOf(postListModel))
+        postListSqlUtils.insertPostList(arrayListOf(postListModel))
         val insertedPostList = postListSqlUtils.getPostList(testList.id)
         assertEquals(date1, insertedPostList?.firstOrNull()?.date)
 
@@ -132,7 +133,7 @@ class PostListSqlUtilsTest {
          * 4. Verify that the `date` is correctly updated after the second insertion.
          */
         postListModel.date = date2
-        postListSqlUtils.insertPostList(testList.id, arrayListOf(postListModel))
+        postListSqlUtils.insertPostList(arrayListOf(postListModel))
         val updatedPostList = postListSqlUtils.getPostList(testList.id)
         assertEquals(insertedPostList?.size, updatedPostList?.size)
         assertEquals(date2, updatedPostList?.firstOrNull()?.date)
