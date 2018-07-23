@@ -90,6 +90,10 @@ internal class WPRemoteResourceViewTarget(
 
     /**
      * Drawable wrapper so we can replace placeholder with remote/error resource, after the requests finishes.
+     *
+     * We need to synchronously return drawable in WPCustomImageGetter.getDrawable(...).
+     * If we return regular drawable - let's say a placeholder, we won't be able to replace it with the actual image
+     * ==> This wrapper just adds us ability to change the content of the drawable after the asynchronous call finishes.
      */
     private class RemoteDrawableWrapper : Drawable() {
         internal var drawable: Drawable? = null
