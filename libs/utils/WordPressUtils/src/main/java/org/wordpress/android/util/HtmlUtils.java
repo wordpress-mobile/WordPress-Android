@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.Html;
+import android.text.Html.ImageGetter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -11,7 +12,6 @@ import android.text.style.QuoteSpan;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.util.helpers.WPHtmlTagHandler;
-import org.wordpress.android.util.helpers.WPImageGetter;
 import org.wordpress.android.util.helpers.WPQuoteSpan;
 
 public class HtmlUtils {
@@ -117,16 +117,16 @@ public class HtmlUtils {
      * An alternative to Html.fromHtml() supporting {@code <ul>}, {@code <ol>}, {@code <blockquote>}
      * tags and replacing EmoticonsUtils with Emojis
      * @param source
-     * @param wpImageGetter
+     * @param imageGetter
      */
-    public static SpannableStringBuilder fromHtml(String source, WPImageGetter wpImageGetter) {
+    public static SpannableStringBuilder fromHtml(String source, ImageGetter imageGetter) {
         source = replaceListTagsWithCustomTags(source);
         SpannableStringBuilder html;
         try {
-            html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, new WPHtmlTagHandler());
+            html = (SpannableStringBuilder) Html.fromHtml(source, imageGetter, new WPHtmlTagHandler());
         } catch (RuntimeException runtimeException) {
             // In case our tag handler fails
-            html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, null);
+            html = (SpannableStringBuilder) Html.fromHtml(source, imageGetter, null);
         }
         EmoticonsUtils.replaceEmoticonsWithEmoji(html);
         QuoteSpan[] spans = html.getSpans(0, html.length(), QuoteSpan.class);
