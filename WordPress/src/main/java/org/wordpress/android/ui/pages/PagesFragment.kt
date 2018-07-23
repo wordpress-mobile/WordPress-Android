@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -34,8 +36,6 @@ class PagesFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-
-    private val listStateKey = "list_state"
 
     companion object {
         fun newInstance(): PagesFragment {
@@ -92,6 +92,7 @@ class PagesFragment : Fragment() {
         val myActionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
         }
+        val newPageButton = activity?.findViewById<FloatingActionButton>(R.id.newPageButton)
         viewModel.searchExpanded.observe(activity!!, Observer {
             if (it == true) {
                 pages_pager.visibility = View.GONE
@@ -100,6 +101,7 @@ class PagesFragment : Fragment() {
                 if (!myActionMenuItem.isActionViewExpanded) {
                     myActionMenuItem.expandActionView()
                 }
+                newPageButton?.hide()
             } else {
                 pages_pager.visibility = View.VISIBLE
                 tabLayout.visibility = View.VISIBLE
@@ -107,6 +109,7 @@ class PagesFragment : Fragment() {
                 if (myActionMenuItem.isActionViewExpanded) {
                     myActionMenuItem.collapseActionView()
                 }
+                newPageButton?.show()
             }
         })
 

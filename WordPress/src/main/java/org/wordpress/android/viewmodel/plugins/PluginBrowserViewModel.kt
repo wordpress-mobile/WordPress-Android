@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel
+package org.wordpress.android.viewmodel.plugins
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -29,6 +29,11 @@ import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.FEATURED
+import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.NEW
+import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.POPULAR
+import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.SEARCH
+import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.SITE
 import java.util.ArrayList
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -148,10 +153,10 @@ class PluginBrowserViewModel @Inject constructor(
         updateListStateToReady(PluginDirectoryType.POPULAR)
         updateListStateToReady(PluginDirectoryType.SITE)
 
-        fetchPlugins(PluginListType.SITE, false)
-        fetchPlugins(PluginListType.FEATURED, false)
-        fetchPlugins(PluginListType.POPULAR, false)
-        fetchPlugins(PluginListType.NEW, false)
+        fetchPlugins(SITE, false)
+        fetchPlugins(FEATURED, false)
+        fetchPlugins(POPULAR, false)
+        fetchPlugins(NEW, false)
 
         isStarted = true
     }
@@ -200,27 +205,27 @@ class PluginBrowserViewModel @Inject constructor(
             return
         }
         when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> {
+            SITE -> {
                 sitePlugins = ListState.Loading(sitePlugins, loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
-            PluginBrowserViewModel.PluginListType.FEATURED -> {
+            FEATURED -> {
                 featuredPlugins = ListState.Loading(featuredPlugins, loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
-            PluginBrowserViewModel.PluginListType.POPULAR -> {
+            POPULAR -> {
                 popularPlugins = ListState.Loading(popularPlugins, loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
-            PluginBrowserViewModel.PluginListType.NEW -> {
+            NEW -> {
                 newPlugins = ListState.Loading(newPlugins, loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
-            PluginBrowserViewModel.PluginListType.SEARCH -> {
+            SEARCH -> {
                 searchResults = ListState.Loading(searchResults, loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
@@ -229,18 +234,18 @@ class PluginBrowserViewModel @Inject constructor(
     }
 
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
-        if (listType == PluginListType.SITE && SiteUtils.isNonAtomicBusinessPlanSite(site)) {
+        if (listType == SITE && SiteUtils.isNonAtomicBusinessPlanSite(site)) {
             return false
         }
         return when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> sitePlugins.shouldFetch(loadMore)
-            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPlugins.shouldFetch(loadMore)
-            PluginBrowserViewModel.PluginListType.POPULAR -> popularPlugins.shouldFetch(loadMore)
-            PluginBrowserViewModel.PluginListType.NEW -> newPlugins.shouldFetch(loadMore)
+            SITE -> sitePlugins.shouldFetch(loadMore)
+            FEATURED -> featuredPlugins.shouldFetch(loadMore)
+            POPULAR -> popularPlugins.shouldFetch(loadMore)
+            NEW -> newPlugins.shouldFetch(loadMore)
             // We should always do the initial search because the string might have changed and it is
             // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
             // pages of search, so if we are trying to load more, we can ignore it
-            PluginBrowserViewModel.PluginListType.SEARCH -> !loadMore
+            SEARCH -> !loadMore
         }
     }
 
@@ -371,7 +376,7 @@ class PluginBrowserViewModel @Inject constructor(
             searchResults = ListState.Ready(ArrayList())
 
             if (shouldSearch) {
-                fetchPlugins(PluginListType.SEARCH, false)
+                fetchPlugins(SEARCH, false)
             }
         }
     }

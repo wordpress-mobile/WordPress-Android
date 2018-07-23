@@ -62,6 +62,7 @@ import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.pages.PageListFragment;
+import org.wordpress.android.ui.pages.PageParentFragment;
 import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
@@ -397,6 +398,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PagesFragment object);
 
     void inject(PageListFragment object);
+
+    void inject(PageParentFragment object);
 
     void inject(WPCustomImageGetter object);
 

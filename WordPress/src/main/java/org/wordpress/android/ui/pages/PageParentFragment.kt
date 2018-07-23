@@ -14,49 +14,34 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.viewmodel.pages.PageListViewModel
+import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import javax.inject.Inject
 
-class PageListFragment : Fragment() {
+class PageParentFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: PageListViewModel
-    private var linearLayoutManager: LinearLayoutManager? = null
+    private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
 
+    private var linearLayoutManager: LinearLayoutManager? = null
+
     companion object {
-        const val fragmentKey = "fragment_key"
-        private const val typeKey = "type_key"
-
-        enum class Type(val text: Int) {
-            PUBLISHED(R.string.pages_published),
-            DRAFTS(R.string.pages_drafts),
-            SCHEDULED(R.string.pages_scheduled),
-            TRASH(R.string.pages_trashed);
-
-            companion object {
-                fun getType(position: Int): Type {
-                    if (position >= values().size) {
-                        throw IllegalArgumentException("Selected position $position is out of range of page list types")
-                    }
-                    return values()[position]
-                }
-            }
-        }
-
-        fun newInstance(key: String, type: Type): PageListFragment {
-            val fragment = PageListFragment()
-            val bundle = Bundle()
-            bundle.putString(fragmentKey, key)
-            bundle.putSerializable(typeKey, type)
-            fragment.arguments = bundle
-            return fragment
+        fun newInstance(): PagesFragment {
+            return PagesFragment()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component()!!.inject(this)
+        (activity?.application as WordPress).component()?.inject(this)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViewModel(savedInstanceState)
+        initRecyclerView(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,14 +51,6 @@ class PageListFragment : Fragment() {
     override fun onDestroyView() {
         viewModel.stop()
         super.onDestroyView()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initViewModel(savedInstanceState)
-
-        initRecyclerView(savedInstanceState)
     }
 
     private fun initRecyclerView(savedInstanceState: Bundle?) {
@@ -97,9 +74,9 @@ class PageListFragment : Fragment() {
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        val key = arguments!!.getString(fragmentKey)
+        val key = arguments!!.getString(PageListFragment.fragmentKey)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<PageListViewModel>(checkNotNull(key), PageListViewModel::class.java)
+                .get<PageParentViewModel>(checkNotNull(key), PageParentViewModel::class.java)
 
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
                 ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
