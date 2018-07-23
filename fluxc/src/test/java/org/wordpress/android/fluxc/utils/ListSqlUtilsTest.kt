@@ -42,8 +42,8 @@ class ListSqlUtilsTest {
          * 3. Verify the `localSiteId` value
          * 4. Verify that `dateCreated` and `lastModified` are equal since this is the first time it's created
          */
-        listSqlUtils.insertOrUpdateList(testSite, listType)
-        val insertedList = listSqlUtils.getList(testSite, listType)
+        listSqlUtils.insertOrUpdateList(testSite.id, listType)
+        val insertedList = listSqlUtils.getList(testSite.id, listType)
         assertNotNull(insertedList)
         assertEquals(testSite.id, insertedList?.localSiteId)
         assertEquals(insertedList?.dateCreated, insertedList?.lastModified)
@@ -56,8 +56,8 @@ class ListSqlUtilsTest {
          * 5. Verify the `dateCreated` and `lastModified` values are different since this is an update. (See point 1)
          */
         Thread.sleep(1000)
-        listSqlUtils.insertOrUpdateList(testSite, listType)
-        val updatedList = listSqlUtils.getList(testSite, listType)
+        listSqlUtils.insertOrUpdateList(testSite.id, listType)
+        val updatedList = listSqlUtils.getList(testSite.id, listType)
         assertNotNull(updatedList)
         assertEquals(testSite.id, updatedList?.localSiteId)
         assertNotEquals(updatedList?.dateCreated, updatedList?.lastModified)
@@ -78,14 +78,14 @@ class ListSqlUtilsTest {
          * 1. Insert a test list
          * 2. Verify that the list is inserted correctly
          */
-        listSqlUtils.insertOrUpdateList(testSite, listType)
-        assertNotNull(listSqlUtils.getList(testSite, listType))
+        listSqlUtils.insertOrUpdateList(testSite.id, listType)
+        assertNotNull(listSqlUtils.getList(testSite.id, listType))
 
         /**
          * 1. Delete the inserted test list
          * 2. Verify that the list is deleted correctly
          */
-        listSqlUtils.deleteList(testSite, listType)
-        assertNull(listSqlUtils.getList(testSite, listType))
+        listSqlUtils.deleteList(testSite.id, listType)
+        assertNull(listSqlUtils.getList(testSite.id, listType))
     }
 }
