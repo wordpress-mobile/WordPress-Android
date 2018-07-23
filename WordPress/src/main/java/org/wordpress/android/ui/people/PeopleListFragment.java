@@ -160,6 +160,8 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
+                mActionableEmptyView.setVisibility(View.GONE);
+
                 switch (emptyViewMsgType) {
                     case LOADING:
                         return getString(R.string.people_fetching);
