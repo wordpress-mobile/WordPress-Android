@@ -6,11 +6,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.model.ListModel
 import org.wordpress.android.fluxc.model.ListModel.ListType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.persistence.WellSqlConfig
+import org.wordpress.android.fluxc.site.SiteUtils
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
@@ -23,7 +25,7 @@ class ListSqlUtilsTest {
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
-        val config = SingleStoreWellSqlConfigForTests(appContext, ListModel::class.java)
+        val config = WellSqlConfig(appContext)
         WellSql.init(config)
         config.reset()
 
@@ -32,8 +34,7 @@ class ListSqlUtilsTest {
 
     @Test
     fun testInsertOrUpdateList() {
-        val testSite = SiteModel()
-        testSite.id = 123 // value doesn't matter
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val listType = ListType.POSTS_ALL
 
         /**
@@ -70,8 +71,7 @@ class ListSqlUtilsTest {
 
     @Test
     fun testDeleteList() {
-        val testSite = SiteModel()
-        testSite.id = 123 // value doesn't matter
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val listType = ListType.POSTS_ALL
 
         /**
@@ -87,5 +87,15 @@ class ListSqlUtilsTest {
          */
         listSqlUtils.deleteList(testSite.id, listType)
         assertNull(listSqlUtils.getList(testSite.id, listType))
+    }
+
+    /**
+     * Helper function that generates a self-hosted test site and inserts it into the DB. Since we have a FK restriction
+     * for [ListModel.localSiteId] we need to do this before we can insert [ListModel] instances.
+     */
+    private fun generateAndInsertSelfHostedNonJPTestSite(): SiteModel {
+        val site = SiteUtils.generateSelfHostedNonJPSite()
+        SiteSqlUtils.insertOrUpdateSite(site)
+        return site
     }
 }
