@@ -12,7 +12,9 @@ import org.wordpress.android.fluxc.model.PostListModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.PostListSqlUtils
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
+import org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -34,8 +36,7 @@ class PostListSqlUtilsTest {
 
     @Test
     fun testInsertOrUpdatePostList() {
-        val testSite = SiteModel()
-        testSite.id = 123 // value doesn't matter
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val postCount = 20 // value doesn't matter
         val listType = ListType.POSTS_ALL
 
@@ -46,15 +47,14 @@ class PostListSqlUtilsTest {
          * 3. Verify that the [PostListModel] instances are inserted correctly
          */
         val testList = insertTestList(testSite, listType)
-        val postList = generatePostList(testList, postCount)
+        val postList = generatePostList(testList, testSite.id, postCount)
         postListSqlUtils.insertPostList(postList)
         assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
     }
 
     @Test
     fun testDeletePostList() {
-        val testSite = SiteModel()
-        testSite.id = 123 // value doesn't matter
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val postCount = 20 // value doesn't matter
         val listType = ListType.POSTS_ALL
 
@@ -65,7 +65,7 @@ class PostListSqlUtilsTest {
          * 3. Verify that the [PostListModel] instances are inserted correctly
          */
         val testList = insertTestList(testSite, listType)
-        val postList = generatePostList(testList, postCount)
+        val postList = generatePostList(testList, testSite.id, postCount)
         postListSqlUtils.insertPostList(postList)
         assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
 
@@ -79,8 +79,7 @@ class PostListSqlUtilsTest {
 
     @Test
     fun testDeletePost() {
-        val testSite = SiteModel()
-        testSite.id = 123 // value doesn't matter
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val testPostId = 1245 // value doesn't matter
 
         /**
@@ -89,7 +88,7 @@ class PostListSqlUtilsTest {
          * 3. Verify that the [PostListModel] was inserted correctly
          */
         val testLists = ListType.values().map { insertTestList(testSite, it) }
-        val postList = testLists.map { generatePostListModel(it.id, testPostId) }
+        val postList = testLists.map { generatePostListModel(it.id, testSite.id, testPostId) }
         postListSqlUtils.insertPostList(postList)
         testLists.forEach { list ->
             assertEquals(1, postListSqlUtils.getPostList(list.id)?.size)
@@ -99,7 +98,7 @@ class PostListSqlUtilsTest {
          * 1. Delete [PostListModel]s for which [PostListModel.postId] == `testPostId`
          * 2. Verify that [PostListModel]s from every list is deleted
          */
-        postListSqlUtils.deletePost(testPostId)
+        postListSqlUtils.deletePost(testSite.id, testPostId)
         testLists.forEach {
             assertEquals(0, postListSqlUtils.getPostList(it.id)?.size)
         }
@@ -107,8 +106,7 @@ class PostListSqlUtilsTest {
 
     @Test
     fun insertDuplicatePostListModel() {
-        val testSite = SiteModel()
-        testSite.id = 123 // value doesn't matter
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val testPostId = 1245 // value doesn't matter
         val listType = ListType.POSTS_ALL
         val date1 = "1955-11-05T14:15:00Z"
@@ -121,7 +119,7 @@ class PostListSqlUtilsTest {
          * 3. Verify that it's inserted correctly and [PostListModel.date] equals to `date1`
          */
         val testList = insertTestList(testSite, listType)
-        val postListModel = generatePostListModel(testList.id, testPostId, date1)
+        val postListModel = generatePostListModel(testList.id, testSite.id, testPostId, date1)
         postListSqlUtils.insertPostList(arrayListOf(postListModel))
         val insertedPostList = postListSqlUtils.getPostList(testList.id)
         assertEquals(date1, insertedPostList?.firstOrNull()?.date)
@@ -153,21 +151,33 @@ class PostListSqlUtilsTest {
      * Helper function that creates a list of [PostListModel] to be used in tests.
      * The [PostListModel.date] will be the same date for all [PostListModel]s.
      */
-    private fun generatePostList(listModel: ListModel, count: Int): List<PostListModel> =
-            (1..count).map { generatePostListModel(listModel.id, it) }
+    private fun generatePostList(listModel: ListModel, localSiteId: Int, count: Int): List<PostListModel> =
+            (1..count).map { generatePostListModel(listModel.id, localSiteId, it) }
 
     /**
      * Helper function that generates a [PostListModel] instance.
      */
     private fun generatePostListModel(
         listId: Int,
+        localSiteId: Int,
         postId: Int,
         date: String = "1955-11-05T14:15:00Z" // just a random valid date since most test don't care about it
     ): PostListModel {
         val postListModel = PostListModel()
         postListModel.listId = listId
+        postListModel.localSiteId = localSiteId
         postListModel.postId = postId
         postListModel.date = date
         return postListModel
+    }
+
+    /**
+     * Helper function that generates a self-hosted test site and inserts it into the DB. Since we have a FK restriction
+     * for [PostListModel.localSiteId] we need to do this before we can insert [PostListModel] instances.
+     */
+    private fun generateAndInsertSelfHostedNonJPTestSite(): SiteModel {
+        val site = generateSelfHostedNonJPSite()
+        SiteSqlUtils.insertOrUpdateSite(site)
+        return site
     }
 }
