@@ -201,9 +201,7 @@ public class ThemeBrowserFragment extends Fragment
         EventBus.getDefault().removeStickyEvent(event);
         mQuickStartEvent = event;
 
-        if (mQuickStartEvent.getTask() == QuickStartTask.CHOOSE_THEME) {
-            mQuickStartStore.setDoneTask(mSite.getId(), mQuickStartEvent.getTask(), true);
-        } else if (mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
+        if (mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
             getView().post(new Runnable() {
                 @Override public void run() {
                     showQuickStartFocusPoint();
@@ -353,9 +351,10 @@ public class ThemeBrowserFragment extends Fragment
             public void onClick(View v) {
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, mSite);
                 mCallback.onTryAndCustomizeSelected(mCurrentThemeId);
+                // TODO check if Quick Start completed
+                mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.CUSTOMIZE_SITE, true);
 
                 if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
-                    mQuickStartStore.setDoneTask(mSite.getId(), mQuickStartEvent.getTask(), true);
                     if (getView() != null) {
                         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
                     }

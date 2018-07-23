@@ -516,10 +516,10 @@ public class WPMainActivity extends AppCompatActivity implements
     @Override
     public void onNewPostButtonClicked() {
         if (getSelectedSite() != null
-            && getMySiteFragment() != null && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+            && getMySiteFragment() != null) {
             // MySite fragment might not be attached to activity, so we need to remove focus point from here
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
-            getMySiteFragment().completeActiveQuickStartTask(getSelectedSite().getId());
+            getMySiteFragment().completeQuickStarTask(getSelectedSite().getId(), QuickStartTask.PUBLISH_POST);
         }
 
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
@@ -717,7 +717,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 getString(R.string.quick_start_dialog_need_help_button_negative),
                 "",
                 getString(R.string.quick_start_dialog_need_help_button_neutral)
-        );
+                              );
 
         promoDialog.show(getSupportFragmentManager(), tag);
     }

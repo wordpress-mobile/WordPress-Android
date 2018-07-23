@@ -250,9 +250,8 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.VIEW_SITE)) {
-                    completeActiveQuickStartTask();
-                }
+                // TODO check if Quick Start completed
+                completeQuickStarTask(QuickStartTask.VIEW_SITE);
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
             }
         });
@@ -342,8 +341,9 @@ public class MySiteFragment extends Fragment implements
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.CHOOSE_THEME)
-                    || isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
+                // TODO check if Quick Start completed
+                completeQuickStarTask(QuickStartTask.CHOOSE_THEME);
+                if (isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
                     requestNextStepOfActiveQuickStartTask();
                 }
                 ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
@@ -962,19 +962,15 @@ public class MySiteFragment extends Fragment implements
         return hasActiveQuickStartTask() && mActiveTutorialPrompt.getTask() == task;
     }
 
-    // we might need to call this one when the fragment is not attached to WPMainActivity
-    public void completeActiveQuickStartTask(int siteId) {
-        if (!hasActiveQuickStartTask()) {
-            return;
-        }
+    public void completeQuickStarTask(int siteId, QuickStartTask quickStartTask) {
         removeQuickStartFocusPoint();
-        mQuickStartStore.setDoneTask(siteId, mActiveTutorialPrompt.getTask(), true);
+        mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
         clearActiveQuickStartTask();
     }
 
-    public void completeActiveQuickStartTask() {
+    private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
-            completeActiveQuickStartTask(getSelectedSite().getId());
+            completeQuickStarTask(getSelectedSite().getId(), quickStartTask);
         }
     }
 

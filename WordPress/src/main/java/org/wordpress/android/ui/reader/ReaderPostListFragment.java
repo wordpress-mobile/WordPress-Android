@@ -744,9 +744,9 @@ public class ReaderPostListFragment extends Fragment
                     mBottomNavController.onRequestHideBottomNavigation();
                 }
 
-                if (mQuickStartEvent != null
-                    && mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE && getSelectedSite() != null) {
-                    mQuickStartStore.setDoneTask(getSelectedSite().getId(), mQuickStartEvent.getTask(), true);
+                // TODO check if Quick Start completed
+                if (getSelectedSite() != null) {
+                    mQuickStartStore.setDoneTask(getSelectedSite().getId(), QuickStartTask.FOLLOW_SITE, true);
                 }
 
                 return true;
