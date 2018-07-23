@@ -9,24 +9,23 @@ import javax.inject.Singleton
 @Singleton
 class PostListSqlUtils @Inject constructor() {
     /**
-     * This function inserts the [postList] for a [listId] in the [PostListModelTable]. Every post in the [postList]
-     * needs to have the same [PostListModel.listId] as the passed in [listId].
+     * This function inserts the [postList] in the [PostListModelTable].
      *
-     * To avoid duplicate rows, it'll first delete the existing records for [postList].
-     *
-     * The [listId] parameter is passed in to optimize the delete query. If it's not passed in, we'd need to run
-     * several `delete` queries for different [PostListModel.listId] & [PostListModel.postId] combinations. Since this
-     * function is intended to be used for inserting a set of [PostListModel]s for a single list, this is a nice
-     * optimization especially when the post list gets larger.
+     * To avoid duplicate rows, it'll first delete the existing records for [postList]. In order to optimize the
+     * queries, it will first group the [postList] by the [PostListModel.listId]. It will then run the `delete` query
+     * for each `listId`. In practice, it's likely that the [postList] will have a single `listId` which means
+     * there will be a single `delete` query, but it does allow for inserting a [postList] with multiple `listId`s.
      */
-    fun insertPostList(listId: Int, postList: List<PostListModel>) {
-        val postIds = postList.map { it.postId }
-        WellSql.delete(PostListModel::class.java)
-                .where()
-                .equals(PostListModelTable.LIST_ID, listId)
-                .isIn(PostListModelTable.POST_ID, postIds)
-                .endWhere()
-                .execute()
+    fun insertPostList(postList: List<PostListModel>) {
+        val listIdToPostIdsMap = postList.groupBy({ it.listId }, { it.postId })
+        listIdToPostIdsMap.keys.forEach { listId ->
+            WellSql.delete(PostListModel::class.java)
+                    .where()
+                    .equals(PostListModelTable.LIST_ID, listId)
+                    .isIn(PostListModelTable.POST_ID, listIdToPostIdsMap[listId])
+                    .endWhere()
+                    .execute()
+        }
         WellSql.insert(postList).asSingleTransaction(true).execute()
     }
 
