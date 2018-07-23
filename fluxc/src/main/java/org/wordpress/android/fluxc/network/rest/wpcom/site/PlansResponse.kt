@@ -4,6 +4,4 @@ import com.google.gson.annotations.JsonAdapter
 import org.wordpress.android.fluxc.model.PlanModel
 
 @JsonAdapter(PlansDeserializer::class)
-class PlansResponse {
-    var plansList: List<PlanModel>? = emptyList()
-}
+class PlansResponse (val plansList: List<PlanModel>)
