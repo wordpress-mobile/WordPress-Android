@@ -11,7 +11,6 @@ import java.lang.reflect.Type
 class PlansDeserializer : JsonDeserializer<PlansResponse> {
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): PlansResponse {
-        val response = PlansResponse()
         val jsonObject = json.asJsonObject
         val planModels = ArrayList<PlanModel>()
         val entries = jsonObject.entrySet()
@@ -33,7 +32,6 @@ class PlansDeserializer : JsonDeserializer<PlansResponse> {
                     planJsonObj.has("has_domain_credit") && planJsonObj.get("has_domain_credit").asBoolean
             planModels.add(PlanModel(productId, productSlug, productName, isCurrentPlan, hasDomainCredit))
         }
-        response.plansList = planModels
-        return response
+        return PlansResponse(planModels)
     }
 }
