@@ -698,4 +698,32 @@
         <item name="android:layout_height">@dimen/list_divider_height</item>
         <item name="android:background">@color/grey_lighten_20</item>
     </style>
+
+    <style name="ActionableEmptyStateTitle" parent="TextAppearance.AppCompat">
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginRight">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+    </style>
+
+    <style name="ActionableEmptyStateSubtitle" parent="@style/ActionableEmptyStateTitle">
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
+        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginRight">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
+    </style>
+
 </resources>

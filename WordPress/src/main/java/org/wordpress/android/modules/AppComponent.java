@@ -94,11 +94,14 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
+import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
+import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
+import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -389,7 +392,13 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(WordPressGlideModule object);
 
-    void inject(WPCustomImageGetter wpCustomImageGetter);
+    void inject(WPCustomImageGetter object);
+
+    void inject(PublicizeAccountChooserListAdapter object);
+
+    void inject(PublicizeConnectionAdapter object);
+
+    void inject(PublicizeServiceAdapter object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

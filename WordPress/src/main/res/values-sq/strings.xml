@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-21 08:43:18+0000
+Translation-Revision-Date: 2018-07-06 10:30:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="reader_avatar_desc">foto profili</string>
+    <string name="reader_blavatar_desc">ikonë sajti</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_enter_email">Ju lutemi, jepni adresën tuaj email</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Që të vazhdohet, ju lutemi, jepni adresën tuaj email dhe emrin</string>
+    <string name="support_push_notification_message">Mesazh i ri nga \'Ndihmë &amp; Asistencë\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">S’është caktuar</string>
+    <string name="support_contact_email">Email kontaktesh</string>
+    <string name="application_log_button">Regjistër aplikacioni</string>
+    <string name="my_tickets">Çështjet e Mia</string>
+    <string name="activity_log_rewind_dialog_message">Jeni i sigurt se doni të rikthehet sajti juaj në %s më %s? Kjo të sjellë heqjen e krejt lëndës së krijuar apo ndryshuar dhe mundësive të ndryshuara që nga ajo datë.</string>
+    <string name="activity_log_rewind_site">Riktheni Sajtin Në Një Datë të Dikurshme</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Rikthim në ecuri e sipër</string>
+    <string name="activity_log_currently_restoring_message">Po rikthehet te %s %s</string>
+    <string name="activity_log_currently_restoring_title">Sajti juaj po rikthehet</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Sajti juaj u rikthye me sukses</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Sajti juaj u rikthye me sukses\nU rikthye te %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Sajti juaj po rikthehet\nRikthim te %s %s</string>
+    <string name="activity_log_button">Buton veprimesh Regjistri Veprimtarie</string>
     <string name="plugin_auto_managed">E vetëadministruar</string>
     <string name="reader_save_posts_locally_dialog_message">Ruajeni këtë postim, dhe rikthejuni leximit kur të doni. Do ta keni vetëm në këtë pajisje — postimet e ruajtur nuk njëkohësohen në pajisje të tjera (Ende jo! Po punojmë për këtë).</string>
     <string name="reader_save_posts_locally_dialog_title">Ruani Postime për Më Vonë</string>
@@ -97,8 +117,6 @@ Language: sq_AL
     <string name="dialog_confirm_delete_permanently_page">Jeni i sigurt se doni të fshihet përgjithmonë kjo faqe?</string>
     <string name="dialog_confirm_delete_permanently_post">Jeni i sigurt se doni të fshihet përgjithmonë ky postim?</string>
     <string name="notification_site_creation_title_in_progress">Po krijohet sajti… Kjo mund të dojë ca minuta.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">E rëndësishme</string>
     <string name="notification_channel_general_title">Të përgjithshme</string>
     <string name="photo_picker_use_photo">Përdor këtë foto</string>
@@ -1411,7 +1429,6 @@ Language: sq_AL
     <string name="reader_empty_posts_in_tag">S’ka postime me këtë etiketë</string>
     <string name="reader_empty_comments">Ende pa komente</string>
     <string name="create_new_blog_wpcom">Krijoni blog WordPress.com</string>
-    <string name="nux_help_description">Vizitoni qendrën e ndihmës që të merrni përgjigje për pyetje të rëndomta, ose vizitoni forumet që të bëni pyetje të reja</string>
     <string name="browse_our_faq_button">Shfletoni FAQ–en tonë</string>
     <string name="reader_empty_posts_liked">S\'keni pëlqyer ende ndonjë postim</string>
     <string name="reader_empty_followed_blogs_title">S’ndiqni ende ndonjë sajt</string>
@@ -1419,11 +1436,6 @@ Language: sq_AL
     <string name="reader_toast_blog_blocked">Postimet prej këtij sajti s’do të shfaqen më</string>
     <string name="reader_toast_err_block_blog">S’arrihet të bllokohet ky sajt</string>
     <string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
-    <string name="hs__invalid_email_error">Jepni një adresë email të vlefshme</string>
-    <string name="hs__username_blank_error">Jepni një emër të vlefshëm</string>
-    <string name="hs__conversation_header">Asistencë me bisedë</string>
-    <string name="hs__new_conversation_header">Asistencë me bisedë</string>
-    <string name="hs__conversation_detail_error">Përshkruani problemin që po shihni</string>
     <string name="contact_us">Lidhuni me ne</string>
     <string name="schedule_verb">Planifikoje</string>
     <string name="update_verb">Përditësoje</string>

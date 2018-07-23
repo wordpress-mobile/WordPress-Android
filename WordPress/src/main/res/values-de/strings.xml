@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-27 10:54:08+0000
+Translation-Revision-Date: 2018-07-11 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="reader_avatar_desc">Profilbild</string>
+    <string name="reader_blavatar_desc">Website–Icon</string>
+    <string name="notification_channel_transient_title">Transient</string>
+    <string name="support_identity_input_dialog_email_label">E–Mail</string>
+    <string name="support_identity_input_dialog_enter_email">Bitte gib deine E-Mail–Adresse ein</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Bitte gib deine E-Mail–Adresse und deinen Namen ein, um fortzufahren.</string>
+    <string name="support_push_notification_message">Neue Nachricht von „Hilfe &amp; Support“</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Nicht festgelegt</string>
+    <string name="support_contact_email">Kontakt-E-Mail–Adresse</string>
+    <string name="application_log_button">Anwendungsprotokoll</string>
+    <string name="my_tickets">Meine Tickets</string>
+    <string name="activity_log_rewind_dialog_message">Bist du sicher, dass du deine Website auf %s um %s zurücksetzen willst? Damit werden alle Inhalte und Optionen, die seit diesem Zeitpunkt erstellt oder geändert wurden, entfernt.</string>
+    <string name="activity_log_rewind_site">Website zurücksetzen</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Zurücksetzung in Bearbeitung</string>
+    <string name="activity_log_currently_restoring_message">Wird zurückgesetzt auf %s %s</string>
+    <string name="activity_log_currently_restoring_title">Deine Website wird derzeit wiederhergestellt</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Deine Website wurde erfolgreich wiederhergestellt</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Deine Website wurde erfolgreich wiederhergestellt\nZurückgesetzt auf %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Deine Website wird wiederhergestellt\nWird zurückgesetzt auf %s %s</string>
+    <string name="activity_log_button">Aktions–Button für Aktivitätsprotokoll</string>
     <string name="plugin_auto_managed">Automatisch verwaltet</string>
     <string name="reader_save_posts_locally_dialog_message">Speichere diesen Beitrag und lese ihn später. Er wird nur auf diesem Gerät zur Verfügung stehen – gespeicherte Beiträge werden (noch) nicht mit deinen anderen Geräten synchronisiert. (Aber wir arbeiten daran!).</string>
     <string name="reader_save_posts_locally_dialog_title">Beiträge für später speichern</string>
@@ -97,8 +118,6 @@ Language: de
     <string name="dialog_confirm_delete_permanently_page">Bist du sicher, dass du diese Seite endgültig löschen möchtest?</string>
     <string name="dialog_confirm_delete_permanently_post">Bist du sicher, dass du diesen Beitrag endgültig löschen möchtest?</string>
     <string name="notification_site_creation_title_in_progress">Website wird erstellt … Dies kann ein paar Minuten dauern.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Wichtig</string>
     <string name="notification_channel_general_title">Allgemein</string>
     <string name="photo_picker_use_photo">Dieses Foto verwenden</string>
@@ -1398,16 +1417,10 @@ Language: de
     <string name="reader_empty_posts_in_tag">Keine Beiträge mit diesem Tag.</string>
     <string name="reader_empty_comments">Keine Kommentare bisher</string>
     <string name="create_new_blog_wpcom">Erstelle ein WordPress.com Blog</string>
-    <string name="nux_help_description">Besuche das Helpcenter um Antworten auf die häufig gestellten Fragen zu erhalten oder besuche die Foren um eine neue Frage zu stellen</string>
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
     <string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
     <string name="reader_empty_followed_blogs_title">Du folgst bisher noch keiner Website</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
-    <string name="hs__invalid_email_error">Gib eine gültige E-Mail–Adresse ein</string>
-    <string name="hs__username_blank_error">Gib einen gültigen Namen ein</string>
-    <string name="hs__conversation_header">Support–Chat</string>
-    <string name="hs__new_conversation_header">Support–Chat</string>
-    <string name="hs__conversation_detail_error">Beschreibe das Problem, das du siehst</string>
     <string name="contact_us">Kontaktiere uns</string>
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Update</string>

@@ -25,13 +25,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <org.wordpress.android.widgets.WPNetworkImageView
+                <ImageView
                     android:id="@+id/activityActorIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
                     android:layout_marginRight="12dp"
                     app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+                    android:contentDescription="@null"
                     tools:src="@drawable/badge"/>
 
                 <ImageView

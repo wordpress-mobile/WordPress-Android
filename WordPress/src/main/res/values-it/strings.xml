@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-26 10:54:06+0000
+Translation-Revision-Date: 2018-07-10 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="support_contact_email">E–mail di contatto</string>
+    <string name="application_log_button">Registro applicazione</string>
+    <string name="my_tickets">I miei biglietti</string>
+    <string name="activity_log_rewind_site">Ripristina sito</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Ripristino in corso</string>
+    <string name="activity_log_currently_restoring_message">Ripristino al giorno %s %s</string>
+    <string name="activity_log_currently_restoring_title">Al momento stiamo ripristinando il tuo sito</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Il tuo sito è stato ripristinato correttamente</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Il tuo sito è stato ripristinato correttamente\nRipristinato al giorno %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Il tuo sito è in fase di ripristino\nRipristino al giorno %s %s</string>
+    <string name="activity_log_button">Pulsante di azione Registro applicazione</string>
     <string name="plugin_auto_managed">Auto–gestito</string>
     <string name="reader_save_posts_locally_dialog_message">Salva questo articolo e torna a leggerlo quando vorrai. Sarà disponibile solo su questo dispositivo: gli articoli salvati non vengono sincronizzati con gli altri dispositivi. (Ma ce ne stiamo occupando!)</string>
     <string name="reader_save_posts_locally_dialog_title">Salva articoli per dopo</string>
@@ -97,8 +108,6 @@ Language: it
     <string name="dialog_confirm_delete_permanently_page">Desideri eliminare in modo permanente questa pagina?</string>
     <string name="dialog_confirm_delete_permanently_post">Desideri eliminare in modo permanente questo articolo?</string>
     <string name="notification_site_creation_title_in_progress">Creazione del sito… Questa operazione potrebbe richiedere qualche minuto.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Importante</string>
     <string name="notification_channel_general_title">Generale</string>
     <string name="photo_picker_use_photo">Usa questa foto</string>
@@ -1403,16 +1412,10 @@ Language: it
     <string name="reader_empty_posts_in_tag">Nessun articolo con questo tag</string>
     <string name="reader_empty_comments">Ancora nessun commento</string>
     <string name="create_new_blog_wpcom">Crea un blog su WordPress.com</string>
-    <string name="nux_help_description">Visita il nostro centro assistenza per ottenere le risposte alle domande più frequenti o visita il forum per porne di nuove</string>
     <string name="browse_our_faq_button">Scorri le nostre FAQ</string>
     <string name="reader_empty_posts_liked">Non hai ancora fatto un like ad un articolo</string>
     <string name="reader_empty_followed_blogs_title">Non stai ancora seguendo alcun sito</string>
     <string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
-    <string name="hs__invalid_email_error">Inserisci un email valida</string>
-    <string name="hs__username_blank_error">Inserisce un nome valido</string>
-    <string name="hs__conversation_header">Chat di supporto</string>
-    <string name="hs__new_conversation_header">Chat di supporto</string>
-    <string name="hs__conversation_detail_error">Descrivi il problema che si è presentato</string>
     <string name="contact_us">Contattaci</string>
     <string name="schedule_verb">Pianifica</string>
     <string name="update_verb">Aggiorna</string>

@@ -198,11 +198,12 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="media_empty_list">No media</string>
+    <string name="media_empty_list">You don\'t have any media</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
     <string name="media_empty_videos_list">You don\'t have any videos</string>
     <string name="media_empty_documents_list">You don\'t have any documents</string>
     <string name="media_empty_audio_list">You don\'t have any audio</string>
+    <string name="media_empty_upload_media">Upload media</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
     <string name="confirm_remove_media_image">Remove this image from the post?</string>
@@ -764,14 +765,14 @@
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_list">No events recorded yet</string>
-    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %s %s</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
-    <string name="activity_log_currently_restoring_message">Rewinding to %s %s</string>
+    <string name="activity_log_currently_restoring_message">Rewinding to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
     <string name="activity_log_rewind_site">Rewind Site</string>
-    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %s at %s? This will remove all content and options created or changed since then.</string>
+    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>

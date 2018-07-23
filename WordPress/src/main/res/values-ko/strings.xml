@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-26 09:54:06+0000
+Translation-Revision-Date: 2018-07-10 08:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="reader_avatar_desc">프로필 사진</string>
+    <string name="reader_blavatar_desc">사이트 아이콘</string>
+    <string name="notification_channel_transient_title">임시</string>
+    <string name="support_identity_input_dialog_email_label">이메일</string>
+    <string name="support_identity_input_dialog_enter_email">이메일 주소를 입력하세요.</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">계속하려면 이메일 주소와 이름을 입력하세요.</string>
+    <string name="support_push_notification_message">\'도움 &amp; 지원\'의 새 메시지</string>
+    <string name="support_push_notification_title">워드프레스</string>
+    <string name="support_contact_email_not_set">설정되지 않음</string>
+    <string name="support_contact_email">연락처 이메일</string>
+    <string name="application_log_button">애플리케이션 로그</string>
+    <string name="my_tickets">내 티켓</string>
+    <string name="activity_log_rewind_dialog_message">사이트를 %s(%s)(으)로 되돌리시겠습니까? 이렇게 하면 이 날짜 이후로 만들거나 변경한 콘텐츠와 옵션이 모두 제거됩니다.</string>
+    <string name="activity_log_rewind_site">사이트 되돌리기</string>
+    <string name="activity_log_currently_restoring_message_no_dates">되돌리기 진행 중</string>
+    <string name="activity_log_currently_restoring_message">%s %s(으)로 되돌리는 중</string>
+    <string name="activity_log_currently_restoring_title">현재 사이트 복원 중</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">사이트가 성공적으로 복원되었습니다.</string>
+    <string name="activity_log_rewind_finished_snackbar_message">사이트가 성공적으로 복원되었습니다.\n%s %s(으)로 되돌림</string>
+    <string name="activity_log_rewind_started_snackbar_message">사이트 복원 중\n%s %s(으)로 되돌리는 중</string>
+    <string name="activity_log_button">활동 로그 작업 버튼</string>
     <string name="plugin_auto_managed">자동 관리</string>
     <string name="reader_save_posts_locally_dialog_message">이 글을 저장하고 원할 때마다 돌아와서 다시 읽으세요. 글은 이 기기에서만 읽을 수 있습니다. 저장된 글은 다른 기기와 동기화되지 않습니다. (아직은 그렇습니다! 현재 동기화를 위한 작업이 진행 중입니다.)</string>
     <string name="reader_save_posts_locally_dialog_title">나중에 보기 위해 글 저장</string>
@@ -97,8 +118,6 @@ Language: ko_KR
     <string name="dialog_confirm_delete_permanently_page">이 페이지를 영구적으로 삭제하시겠습니까?</string>
     <string name="dialog_confirm_delete_permanently_post">이 글을 영구적으로 삭제하시겠습니까?</string>
     <string name="notification_site_creation_title_in_progress">사이트를 만드는 중… 수 분이 걸릴 수 있습니다.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">중요</string>
     <string name="notification_channel_general_title">일반</string>
     <string name="photo_picker_use_photo">이 사진 사용</string>
@@ -1381,16 +1400,10 @@ Language: ko_KR
     <string name="reader_empty_posts_in_tag">이 태그가 지정된 게시물이 없음</string>
     <string name="reader_empty_comments">아직 댓글이 없음</string>
     <string name="create_new_blog_wpcom">WordPress.com 블로그 만들기</string>
-    <string name="nux_help_description">일반적인 질문에 대한 답변을 얻으려면 도움말 센터를 방문하고 새로운 질문을 하려면 포럼을 방문하세요.</string>
     <string name="browse_our_faq_button">FAQ 찾아보기</string>
     <string name="reader_empty_posts_liked">좋아하는 게시물이 없군요.</string>
     <string name="reader_empty_followed_blogs_title">아직 팔로우하는 블로그가 없습니다.</string>
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
-    <string name="hs__invalid_email_error">유효한 이메일 주소를 입력하세요</string>
-    <string name="hs__username_blank_error">유효한 이름을 입력하세요</string>
-    <string name="hs__conversation_header">지원 채팅</string>
-    <string name="hs__new_conversation_header">지원 채팅</string>
-    <string name="hs__conversation_detail_error">나타나는 문제점을 설명해주세요</string>
     <string name="contact_us">문의하기</string>
     <string name="schedule_verb">예약</string>
     <string name="update_verb">업데이트</string>

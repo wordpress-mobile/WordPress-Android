@@ -116,6 +116,7 @@ public class WPMainActivity extends AppCompatActivity
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
     public static final String ARG_ME = "show_me";
+    public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
 
     private WPMainNavigationView mBottomNav;
 
@@ -196,7 +197,12 @@ public class WPMainActivity extends AppCompatActivity
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedPage = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_PAGE));
-                if (openedFromPush) {
+                boolean openZendeskTicketsFromPush = (getIntent() != null && getIntent()
+                        .getBooleanExtra(ARG_SHOW_ZENDESK_NOTIFICATIONS, false));
+
+                if (openZendeskTicketsFromPush) {
+                    launchZendeskMyTickets();
+                } else if (openedFromPush) {
                     // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
@@ -297,6 +303,21 @@ public class WPMainActivity extends AppCompatActivity
         } else {
             AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
         }
+    }
+
+    private void launchZendeskMyTickets() {
+        if (isFinishing()) {
+            return;
+        }
+
+        // leave the Main activity showing the ME page, so when the user comes back from Help&Support the app is in
+        // the right section.
+        mBottomNav.setCurrentPosition(PAGE_ME);
+
+        // init selected site, this is the same as in onResume
+        initSelectedSite();
+
+        ActivityLauncher.viewZendeskTickets(this, getSelectedSite());
     }
 
     /*

@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stats.service.StatsServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.image.ImageManager;
 
 import javax.inject.Inject;
 
@@ -48,6 +49,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ImageManager mImageManager;
 
     /**
      * Wheter or not previous data is available.
