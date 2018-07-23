@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
@@ -14,7 +15,9 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 
@@ -27,6 +30,7 @@ public class ReaderLikingUsersView extends LinearLayout {
     private final int mLikeAvatarSz;
 
     @Inject AccountStore mAccountStore;
+    @Inject ImageManager mImageManager;
 
     public ReaderLikingUsersView(Context context) {
         this(context, null);
@@ -100,15 +104,15 @@ public class ReaderLikingUsersView extends LinearLayout {
         int index = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (String url : avatarUrls) {
-            WPNetworkImageView imgAvatar;
+            ImageView imgAvatar;
             // reuse existing view when possible, otherwise inflate a new one
             if (index < numExistingViews) {
-                imgAvatar = (WPNetworkImageView) getChildAt(index);
+                imgAvatar = (ImageView) getChildAt(index);
             } else {
-                imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, this, false);
+                imgAvatar = (ImageView) inflater.inflate(R.layout.reader_like_avatar, this, false);
                 addView(imgAvatar);
             }
-            imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR, StringUtils.notNullStr(url));
             index++;
         }
     }

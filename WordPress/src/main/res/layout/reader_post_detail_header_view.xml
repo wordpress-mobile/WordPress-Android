@@ -2,7 +2,6 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
@@ -15,21 +14,23 @@
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/image_header_blavatar"
             android:layout_width="@dimen/reader_detail_header_blavatar"
             android:layout_height="@dimen/reader_detail_header_blavatar"
             android:layout_gravity="top|start"
-            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
+            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            android:contentDescription="@null"/>
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/image_header_avatar"
             android:layout_width="@dimen/reader_detail_header_avatar"
             android:layout_height="@dimen/reader_detail_header_avatar"
             android:layout_gravity="bottom|end"
             android:background="@drawable/shape_oval_white"
             android:padding="2dp"
-            app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
+            tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+            android:contentDescription="@null"/>
     </FrameLayout>
 
 
