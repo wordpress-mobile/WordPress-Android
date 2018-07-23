@@ -45,7 +45,7 @@ class ListSqlUtilsTest {
         listSqlUtils.insertOrUpdateList(testSite, listType)
         val insertedList = listSqlUtils.getList(testSite, listType)
         assertNotNull(insertedList)
-        assertEquals(insertedList?.localSiteId, testSite.id)
+        assertEquals(testSite.id, insertedList?.localSiteId)
         assertEquals(insertedList?.dateCreated, insertedList?.lastModified)
 
         /**
@@ -59,7 +59,7 @@ class ListSqlUtilsTest {
         listSqlUtils.insertOrUpdateList(testSite, listType)
         val updatedList = listSqlUtils.getList(testSite, listType)
         assertNotNull(updatedList)
-        assertEquals(updatedList?.localSiteId, testSite.id)
+        assertEquals(testSite.id, updatedList?.localSiteId)
         assertNotEquals(updatedList?.dateCreated, updatedList?.lastModified)
 
         /**
