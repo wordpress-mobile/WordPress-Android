@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 39;
+        return 40;
     }
 
     @Override
@@ -323,6 +323,16 @@ public class WellSqlConfig extends DefaultWellConfig {
                     fluxCPreferences.edit().putString("ACCOUNT_TOKEN_PREF_KEY", token).apply();
                     defaultSharedPrefs.edit().remove("ACCOUNT_TOKEN_PREF_KEY").apply();
                 }
+                oldVersion++;
+            case 39:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PostListModel (LIST_ID INTEGER,LOCAL_SITE_ID INTEGER,POST_ID INTEGER,"
+                           + "DATE TEXT,_id INTEGER PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LIST_ID) "
+                           + "REFERENCES ListModel(_id) ON DELETE CASCADE,FOREIGN KEY(LOCAL_SITE_ID) "
+                           + "REFERENCES SiteModel(_id) ON DELETE CASCADE,UNIQUE(LIST_ID, LOCAL_SITE_ID, POST_ID))");
+                db.execSQL("CREATE TABLE ListModel (DATE_CREATED TEXT,LAST_MODIFIED TEXT,LOCAL_SITE_ID INTEGER,"
+                           + "TYPE TEXT,_id INTEGER PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LOCAL_SITE_ID) "
+                           + "REFERENCES SiteModel(_id) ON DELETE CASCADE,UNIQUE(LOCAL_SITE_ID, TYPE))");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
