@@ -670,7 +670,6 @@ public class MySiteFragment extends Fragment implements
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
-
         boolean isQuickStartAvailable = site.getHasCapabilityManageOptions()
                                         && ThemeBrowserActivity.isAccessible(site)
                                         && SiteUtils.isAccessedViaWPComRest(site);
@@ -962,6 +961,7 @@ public class MySiteFragment extends Fragment implements
         return hasActiveQuickStartTask() && mActiveTutorialPrompt.getTask() == task;
     }
 
+    // we might need to call this one when the fragment is not attached to WPMainActivity
     public void completeQuickStarTask(int siteId, QuickStartTask quickStartTask) {
         removeQuickStartFocusPoint();
         mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
