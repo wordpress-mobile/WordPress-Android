@@ -108,6 +108,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -373,6 +374,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(SelectCategoriesActivity object);
 
+    void inject(ReaderUserAdapter object);
+
     void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
@@ -396,6 +399,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeConnectionAdapter object);
 
     void inject(PublicizeServiceAdapter object);
+
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
