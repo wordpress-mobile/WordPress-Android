@@ -425,6 +425,11 @@ public class ActivityLauncher {
         context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
     }
 
+    public static void viewZendeskTickets(@NonNull Context context,
+                                          @Nullable SiteModel selectedSite) {
+        viewHelpAndSupport(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+    }
+
     public static void viewSSLCerts(Context context, String certificateString) {
         Intent intent = new Intent(context, SSLCertsViewActivity.class);
         intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, certificateString.replaceAll("\n", "<br/>"));

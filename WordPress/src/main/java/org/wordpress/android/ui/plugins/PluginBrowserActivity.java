@@ -41,11 +41,12 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +58,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject ImageManager mImageManager;
     private PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
@@ -410,7 +412,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
             holder.mNameText.setText(plugin.getDisplayName());
             holder.mAuthorText.setText(plugin.getAuthorName());
-            holder.mIcon.setImageUrl(plugin.getIcon(), ImageType.PLUGIN_ICON);
+            mImageManager.load(holder.mIcon, ImageType.PLUGIN, StringUtils.notNullStr(plugin.getIcon()));
 
             if (plugin.isInstalled()) {
                 @StringRes int textResId;
@@ -453,7 +455,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             private final ViewGroup mStatusContainer;
             private final TextView mStatusText;
             private final ImageView mStatusIcon;
-            private final WPNetworkImageView mIcon;
+            private final ImageView mIcon;
             private final RatingBar mRatingBar;
 
             PluginBrowserViewHolder(View view) {

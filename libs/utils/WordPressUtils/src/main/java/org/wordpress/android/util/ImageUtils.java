@@ -912,4 +912,9 @@ public class ImageUtils {
 
         return Math.min(scaleWidth, scaleHeight);
     }
+
+    public static Rect getScaledBounds(int width, int height, int maxWidth) {
+        float xScale = Math.max(1.0f, (float) width / maxWidth);
+        return new Rect(0, 0, Math.round(width / xScale), Math.round(height / xScale));
+    }
 }

@@ -43,7 +43,7 @@
             android:contentDescription="@string/stats_list_cell_chevron_expand_desc"
             app:srcCompat="@drawable/ic_chevron_right_blue_wordpress_24dp" />
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/stats_list_cell_image"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"

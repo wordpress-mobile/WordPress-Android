@@ -328,7 +328,7 @@ public class ThemeBrowserFragment extends Fragment
 
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), mCallback, mImageManager);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.getPlanId(), mCallback, mImageManager);
         }
         return mAdapter;
     }
