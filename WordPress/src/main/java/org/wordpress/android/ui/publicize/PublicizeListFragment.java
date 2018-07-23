@@ -144,6 +144,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
                     quickStartTarget.post(new Runnable() {
                         @Override public void run() {
+                            if (getView() == null) {
+                                return;
+                            }
                             ViewGroup focusPointContainer = getView().findViewById(R.id.publicize_scroll_view_child);
                             int focusPointSize =
                                     getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
