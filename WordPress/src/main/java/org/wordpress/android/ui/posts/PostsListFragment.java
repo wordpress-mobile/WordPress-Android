@@ -90,6 +90,7 @@ public class PostsListFragment extends Fragment
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
 
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private ActionableEmptyView mActionableEmptyView;
     private ProgressBar mProgressLoadMore;
@@ -174,6 +175,7 @@ public class PostsListFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_list_fragment, container, false);
 
+        mSwipeRefreshLayout = view.findViewById(R.id.ptr_layout);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
@@ -215,7 +217,7 @@ public class PostsListFragment extends Fragment
             }
         }
 
-        initSwipeToRefreshHelper(view);
+        initSwipeToRefreshHelper();
 
         return view;
     }
@@ -249,9 +251,9 @@ public class PostsListFragment extends Fragment
                 });
     }
 
-    private void initSwipeToRefreshHelper(View view) {
+    private void initSwipeToRefreshHelper() {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                mSwipeRefreshLayout,
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -427,6 +429,7 @@ public class PostsListFragment extends Fragment
             }
         });
         mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
+        mSwipeRefreshLayout.setEnabled(!isPostAdapterEmpty());
     }
 
     private void hideEmptyView() {
