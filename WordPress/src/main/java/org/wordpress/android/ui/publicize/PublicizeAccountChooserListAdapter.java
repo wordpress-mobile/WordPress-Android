@@ -1,17 +1,23 @@
 package org.wordpress.android.ui.publicize;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PublicizeConnection;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class PublicizeAccountChooserListAdapter
         extends RecyclerView.Adapter<PublicizeAccountChooserListAdapter.ViewHolder> {
@@ -20,8 +26,11 @@ public class PublicizeAccountChooserListAdapter
     private boolean mAreAccountsConnected;
     private int mSelectedPosition;
 
-    public PublicizeAccountChooserListAdapter(List<PublicizeConnection> connectionItems,
+    @Inject ImageManager mImageManager;
+
+    public PublicizeAccountChooserListAdapter(Context context, List<PublicizeConnection> connectionItems,
                                               OnPublicizeAccountChooserListener listener, boolean isConnected) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mConnectionItems = connectionItems;
         mListener = listener;
         mAreAccountsConnected = isConnected;
@@ -39,8 +48,7 @@ public class PublicizeAccountChooserListAdapter
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PublicizeConnection connection = mConnectionItems.get(position);
-        holder.mProfileImageView
-                .setImageUrl(connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.PHOTO);
+        mImageManager.load(holder.mProfileImageView, ImageType.PHOTO, connection.getExternalProfilePictureUrl());
         holder.mNameTextView.setText(connection.getExternalDisplayName());
         holder.mRadioButton.setChecked(position == mSelectedPosition);
 
@@ -65,17 +73,17 @@ public class PublicizeAccountChooserListAdapter
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final RadioButton mRadioButton;
-        public final WPNetworkImageView mProfileImageView;
-        public final TextView mNameTextView;
+        final View mView;
+        final RadioButton mRadioButton;
+        final ImageView mProfileImageView;
+        final TextView mNameTextView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mRadioButton = (RadioButton) view.findViewById(R.id.radio_button);
-            mProfileImageView = (WPNetworkImageView) view.findViewById(R.id.profile_pic);
-            mNameTextView = (TextView) view.findViewById(R.id.name);
+            mRadioButton = view.findViewById(R.id.radio_button);
+            mProfileImageView = view.findViewById(R.id.profile_pic);
+            mNameTextView = view.findViewById(R.id.name);
         }
     }
 

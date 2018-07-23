@@ -1,3 +1,3 @@
-* New: Activity Log Rewind: bring back your site to a previous state.
-* A bunch of small UI improvements and refinements.
-* Various bug-fixes
+* New: Users can now easily discard local changes to a post in the editor.
+* Some small UI improvements and refinements.
+* A bunch of small bug-fixes

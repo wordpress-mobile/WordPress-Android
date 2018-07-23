@@ -96,11 +96,14 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
+import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
+import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
+import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -127,6 +130,7 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 import javax.inject.Singleton;
 
@@ -393,6 +397,14 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PagesFragment object);
 
     void inject(PageListFragment object);
+
+    void inject(WPCustomImageGetter object);
+
+    void inject(PublicizeAccountChooserListAdapter object);
+
+    void inject(PublicizeConnectionAdapter object);
+
+    void inject(PublicizeServiceAdapter object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

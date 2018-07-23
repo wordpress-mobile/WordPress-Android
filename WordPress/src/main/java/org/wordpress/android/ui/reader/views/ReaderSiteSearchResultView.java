@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,10 +14,11 @@ import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 /**
  * single feed search result
@@ -62,7 +64,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
 
         TextView txtTitle = findViewById(R.id.text_title);
         TextView txtUrl = findViewById(R.id.text_url);
-        WPNetworkImageView imgBlavatar = findViewById(R.id.image_blavatar);
+        ImageView imgBlavatar = findViewById(R.id.image_blavatar);
 
         if (!TextUtils.isEmpty(site.getTitle())) {
             txtTitle.setText(site.getTitle());
@@ -70,7 +72,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
             txtTitle.setText(R.string.untitled_in_parentheses);
         }
         txtUrl.setText(UrlUtils.getHost(site.getUrl()));
-        imgBlavatar.setImageUrl(site.getIconUrl(), ImageType.BLAVATAR);
+        ImageManager.getInstance().load(imgBlavatar, ImageType.BLAVATAR, StringUtils.notNullStr(site.getIconUrl()));
         mFollowButton.setIsFollowed(site.isFollowing());
     }
 
