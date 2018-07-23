@@ -1555,7 +1555,6 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
-    <string name="support_push_notification_message_hint_snackbar">Find your support conversation by tapping \'Help &amp; Support\' and then \'My Tickets\'</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
