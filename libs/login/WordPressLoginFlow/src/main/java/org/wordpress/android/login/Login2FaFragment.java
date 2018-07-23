@@ -376,7 +376,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private void handleAuthError(AuthenticationErrorType error, String errorMessage) {
         switch (error) {
             case INVALID_OTP:
-                show2FaError(errorMessage);
+                show2FaError(getString(R.string.invalid_verification_code));
                 break;
             case NEEDS_2FA:
                 // we get this error when requesting a verification code sent via SMS so, just ignore it.

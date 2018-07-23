@@ -200,11 +200,12 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="media_empty_list">No media</string>
+    <string name="media_empty_list">You don\'t have any media</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
     <string name="media_empty_videos_list">You don\'t have any videos</string>
     <string name="media_empty_documents_list">You don\'t have any documents</string>
     <string name="media_empty_audio_list">You don\'t have any audio</string>
+    <string name="media_empty_upload_media">Upload media</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
     <string name="confirm_remove_media_image">Remove this image from the post?</string>
@@ -1556,7 +1557,6 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
-    <string name="support_push_notification_message_hint_snackbar">Find your support conversation by tapping \'Help &amp; Support\' and then \'My Tickets\'</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
