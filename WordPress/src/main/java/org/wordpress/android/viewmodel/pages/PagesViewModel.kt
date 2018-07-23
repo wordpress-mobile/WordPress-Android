@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
@@ -55,12 +56,12 @@ class PagesViewModel
         reloadPagesAsync()
     }
 
-    private fun reloadPagesAsync() = launch {
+    private fun reloadPagesAsync() = launch(CommonPool) {
         _pages = pageStore.loadPagesFromDb(site)
         refreshPagesAsync()
     }
 
-    private fun refreshPagesAsync(isLoadingMore: Boolean = false) = launch(UI) {
+    private fun refreshPagesAsync(isLoadingMore: Boolean = false) = launch(CommonPool) {
         var newState = if (isLoadingMore) LOADING_MORE else FETCHING
         _listState.postValue(newState)
 
