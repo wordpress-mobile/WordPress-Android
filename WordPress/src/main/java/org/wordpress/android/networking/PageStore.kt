@@ -29,19 +29,15 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         return post?.let { PageModel.fromPost(it) }
     }
 
-    suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> {
-        return withContext(CommonPool) {
-            val pages = postStore.getPagesForSite(site).filter { it != null }
-            pages.map { PageModel.fromPost(it)!! }
-        }
+    suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
+        val pages = postStore.getPagesForSite(site).filter { it != null }
+        pages.map { PageModel.fromPost(it)!! }
     }
 
-    suspend fun requestPagesFromServer(site: SiteModel, loadMore: Boolean): OnPostChanged {
-        return suspendCoroutine { cont ->
-            val payload = FetchPostsPayload(site, loadMore)
-            postLoadContinuation = cont
-            dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))
-        }
+    suspend fun requestPagesFromServer(site: SiteModel, loadMore: Boolean): OnPostChanged = suspendCoroutine { cont ->
+        val payload = FetchPostsPayload(site, loadMore)
+        postLoadContinuation = cont
+        dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))
     }
 
     @SuppressWarnings("unused")
