@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModel
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -21,7 +21,7 @@ class PageListViewModel
 
     private var isStarted: Boolean = false
     private var site: SiteModel? = null
-    private lateinit var pageType: PostStatus
+    private lateinit var pageType: PageStatus
 
     private lateinit var pagesViewModel: PagesViewModel
 
@@ -41,7 +41,7 @@ class PageListViewModel
         }
     }
 
-    fun start(site: SiteModel, pageType: PostStatus, pagesViewModel: PagesViewModel) {
+    fun start(site: SiteModel, pageType: PageStatus, pagesViewModel: PagesViewModel) {
         this.site = site
         this.pageType = pageType
         this.pagesViewModel = pagesViewModel

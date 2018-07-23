@@ -11,12 +11,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.pages_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ifNotNull
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -116,12 +115,12 @@ class PageListFragment : Fragment() {
         })
     }
 
-    private fun getPageType(key: String): PostStatus {
+    private fun getPageType(key: String): PageStatus {
         return when (key) {
-            "key0" -> PostStatus.PUBLISHED
-            "key1" -> PostStatus.DRAFT
-            "key2" -> PostStatus.SCHEDULED
-            else -> PostStatus.TRASHED
+            "key0" -> PageStatus.PUBLISHED
+            "key1" -> PageStatus.DRAFT
+            "key2" -> PageStatus.SCHEDULED
+            else -> PageStatus.TRASHED
         }
     }
 
