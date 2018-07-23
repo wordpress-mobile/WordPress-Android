@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-118"
-        versionCode 584
+        versionName "alpha-120"
+        versionCode 590
         minSdkVersion 16
         targetSdkVersion 26
 
@@ -122,7 +122,7 @@ dependencies {
     implementation 'com.android.support:percent:27.1.1'
     implementation 'com.android.support:preference-v7:27.1.1'
 
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$arch_components_version"

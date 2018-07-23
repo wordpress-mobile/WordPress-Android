@@ -31,12 +31,14 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.models.networkresource.ListState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -48,6 +50,7 @@ public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject ImageManager mImageManager;
 
     private static final String ARG_LIST_TYPE = "list_type";
 
@@ -254,7 +257,7 @@ public class PluginListFragment extends Fragment {
             PluginViewHolder holder = (PluginViewHolder) viewHolder;
             holder.mName.setText(plugin.getDisplayName());
             holder.mAuthor.setText(plugin.getAuthorName());
-            holder.mIcon.setImageUrl(plugin.getIcon(), WPNetworkImageView.ImageType.PLUGIN_ICON);
+            mImageManager.load(holder.mIcon, ImageType.PLUGIN, StringUtils.notNullStr(plugin.getIcon()));
 
             if (plugin.isInstalled()) {
                 @StringRes int textResId;
@@ -300,7 +303,7 @@ public class PluginListFragment extends Fragment {
             private final TextView mAuthor;
             private final TextView mStatusText;
             private final ImageView mStatusIcon;
-            private final WPNetworkImageView mIcon;
+            private final ImageView mIcon;
             private final RatingBar mRatingBar;
 
             PluginViewHolder(View view) {
