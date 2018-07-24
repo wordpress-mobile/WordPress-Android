@@ -435,6 +435,7 @@ public class PostsListFragment extends Fragment
     private void hideEmptyView() {
         if (isAdded() && mActionableEmptyView != null) {
             mActionableEmptyView.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setEnabled(true);
         }
     }
 
