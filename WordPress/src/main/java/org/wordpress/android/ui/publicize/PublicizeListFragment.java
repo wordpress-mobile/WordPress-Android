@@ -4,22 +4,35 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
     public interface PublicizeButtonPrefsListener {
@@ -32,7 +45,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private RecyclerView mRecycler;
     private TextView mEmptyView;
 
+    private QuickStartEvent mQuickStartEvent;
+
     @Inject AccountStore mAccountStore;
+    @Inject QuickStartStore mQuickStartStore;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -55,6 +71,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
+        }
+
+        if (savedInstanceState != null) {
+            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -86,7 +106,67 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             }
         });
 
+        if (mQuickStartEvent != null) {
+            showQuickStartFocusPoint();
+        }
+
         return rootView;
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(final QuickStartEvent event) {
+        if (!isAdded() || getView() == null) {
+            return;
+        }
+
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
+
+        if (mQuickStartEvent.getTask() == QuickStartTask.SHARE_SITE) {
+            showQuickStartFocusPoint();
+
+            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                    R.string.quick_start_dialog_share_site_message_short_connections);
+
+            WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity(),
+                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
+        }
+    }
+
+    private void showQuickStartFocusPoint() {
+        // we are waiting for RecyclerView to populate itself with views and then grab the first one when it's ready
+        mRecycler.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                RecyclerView.ViewHolder holder = mRecycler.findViewHolderForAdapterPosition(0);
+                if (holder != null) {
+                    final View quickStartTarget = holder.itemView;
+
+                    quickStartTarget.post(new Runnable() {
+                        @Override public void run() {
+                            if (getView() == null) {
+                                return;
+                            }
+                            ViewGroup focusPointContainer = getView().findViewById(R.id.publicize_scroll_view_child);
+                            int focusPointSize =
+                                    getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+
+                            int verticalOffset = (((quickStartTarget.getHeight()) - focusPointSize) / 2);
+
+                            QuickStartUtils.addQuickStartFocusPointAboveTheView(focusPointContainer, quickStartTarget,
+                                    0, verticalOffset);
+                        }
+                    });
+                    mRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
     }
 
     @Override
@@ -132,7 +212,17 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                     mAccountStore.getAccount().getUserId());
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
-                mAdapter.setOnServiceClickListener((OnServiceClickListener) getActivity());
+                mAdapter.setOnServiceClickListener(new OnServiceClickListener() {
+                    @Override public void onServiceClicked(PublicizeService service) {
+                        // TODO check if Quick Start completed
+                        mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.SHARE_SITE, true);
+                        if (getView() != null) {
+                            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
+                        }
+                        mQuickStartEvent = null;
+                        ((OnServiceClickListener) getActivity()).onServiceClicked(service);
+                    }
+                });
             }
         }
         return mAdapter;
@@ -140,5 +230,15 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     void reload() {
         getAdapter().reload();
+    }
+
+    @Override public void onStart() {
+        super.onStart();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -51,8 +52,9 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
-import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartActivity;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -110,6 +112,7 @@ public class MySiteFragment extends Fragment implements
     private LinearLayout mPlanContainer;
     private LinearLayout mPluginsContainer;
     private LinearLayout mActivityLogContainer;
+    private View mQuickStartContainer;
     private WPTextView mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
@@ -131,6 +134,7 @@ public class MySiteFragment extends Fragment implements
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject QuickStartStore mQuickStartStore;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -218,7 +222,17 @@ public class MySiteFragment extends Fragment implements
         mNoSiteDrakeImageView = rootView.findViewById(R.id.my_site_no_site_view_drake);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
+        mQuickStartContainer = rootView.findViewById(R.id.row_quick_start);
 
+        setupClickListeners(rootView);
+
+        mToolbar = rootView.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
+
+        return rootView;
+    }
+
+    private void setupClickListeners(View rootView) {
         rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,11 +250,13 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO check if Quick Start completed
+                completeQuickStarTask(QuickStartTask.VIEW_SITE);
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
             }
         });
 
-        rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
+        mQuickStartContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -325,6 +341,11 @@ public class MySiteFragment extends Fragment implements
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO check if Quick Start completed
+                completeQuickStarTask(QuickStartTask.CHOOSE_THEME);
+                if (isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
+                    requestNextStepOfActiveQuickStartTask();
+                }
                 ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
             }
         });
@@ -361,6 +382,9 @@ public class MySiteFragment extends Fragment implements
         mSharingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isQuickStartTaskActive(QuickStartTask.SHARE_SITE)) {
+                    requestNextStepOfActiveQuickStartTask();
+                }
                 ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
             }
         });
@@ -379,11 +403,6 @@ public class MySiteFragment extends Fragment implements
                         mAccountStore.getAccount().getUserName());
             }
         });
-
-        mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
-
-        return rootView;
     }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -520,7 +539,7 @@ public class MySiteFragment extends Fragment implements
                     QuickStartTask task =
                             (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
 
-                    // remove any existing quick start indicator if necessary
+                    // remove existing quick start indicator if necessary
                     if (mActiveTutorialPrompt != null) {
                         removeQuickStartFocusPoint();
                     }
@@ -650,6 +669,12 @@ public class MySiteFragment extends Fragment implements
         // if either people or settings is visible, configuration header should be visible
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
+
+        boolean isQuickStartAvailable = site.getHasCapabilityManageOptions()
+                                        && ThemeBrowserActivity.isAccessible(site)
+                                        && SiteUtils.isAccessedViaWPComRest(site);
+
+        mQuickStartContainer.setVisibility(isQuickStartAvailable ? View.VISIBLE : View.GONE);
 
         mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView
                 .ImageType.BLAVATAR);
@@ -930,6 +955,38 @@ public class MySiteFragment extends Fragment implements
         }
         getView().removeCallbacks(mAddQuickStartFocusPointTask);
         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getActivity().findViewById(R.id.root_view_main));
+    }
+
+    public boolean isQuickStartTaskActive(QuickStartTask task) {
+        return hasActiveQuickStartTask() && mActiveTutorialPrompt.getTask() == task;
+    }
+
+    // we might need to call this one when the fragment is not attached to WPMainActivity
+    public void completeQuickStarTask(int siteId, QuickStartTask quickStartTask) {
+        mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
+        if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
+            removeQuickStartFocusPoint();
+            clearActiveQuickStartTask();
+        }
+    }
+
+    private void completeQuickStarTask(QuickStartTask quickStartTask) {
+        if (getSelectedSite() != null) {
+            completeQuickStarTask(getSelectedSite().getId(), quickStartTask);
+        }
+    }
+
+    public void requestNextStepOfActiveQuickStartTask() {
+        if (!hasActiveQuickStartTask()) {
+            return;
+        }
+        removeQuickStartFocusPoint();
+        EventBus.getDefault().postSticky(new QuickStartEvent(mActiveTutorialPrompt.getTask()));
+        clearActiveQuickStartTask();
+    }
+
+    private void clearActiveQuickStartTask() {
+        mActiveTutorialPrompt = null;
     }
 
     private boolean hasActiveQuickStartTask() {

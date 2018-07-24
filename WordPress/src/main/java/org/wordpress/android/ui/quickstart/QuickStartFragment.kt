@@ -149,56 +149,43 @@ class QuickStartFragment : Fragment() {
     private fun crossOutTask(task: QuickStartTask) {
         val titleView: TextView
         val checkMarkView: View
-        val containerView: View
 
         when (task) {
             CREATE_SITE -> {
                 titleView = title_create_site
                 checkMarkView = done_create_site
-                containerView = layout_create_site
             }
             VIEW_SITE -> {
                 titleView = title_view_site
                 checkMarkView = done_view_site
-                containerView = layout_view_site
             }
             CHOOSE_THEME -> {
                 titleView = title_browse_themes
                 checkMarkView = done_browse_themes
-                containerView = layout_browse_themes
             }
             CUSTOMIZE_SITE -> {
                 titleView = title_customize_site
                 checkMarkView = done_customize_site
-                containerView = layout_customize_site
             }
             SHARE_SITE -> {
                 titleView = title_share_site
                 checkMarkView = done_share_site
-                containerView = layout_share_site
             }
             PUBLISH_POST -> {
                 titleView = title_publish_post
                 checkMarkView = done_publish_post
-                containerView = layout_publish_post
             }
             FOLLOW_SITE -> {
                 titleView = title_follow_site
                 checkMarkView = done_follow_site
-                containerView = layout_follow_site
             }
         }
 
         visuallyMarkTaskAsCompleted(titleView, checkMarkView)
-        disableTaskContainer(containerView)
     }
 
     private fun visuallyMarkTaskAsCompleted(taskTitleTextView: TextView, taskDoneCheckMark: View) {
         taskTitleTextView.let { it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG }
         taskDoneCheckMark.visibility = View.VISIBLE
-    }
-
-    private fun disableTaskContainer(container: View) {
-        container.isClickable = false
     }
 }

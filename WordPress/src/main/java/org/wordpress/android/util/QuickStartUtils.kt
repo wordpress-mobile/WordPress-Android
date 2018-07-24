@@ -27,7 +27,8 @@ class QuickStartUtils {
          * @param iconId resource if of the icon that goes before the highlighted area
          */
         @JvmStatic
-        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int): Spannable {
+        @JvmOverloads
+        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int = -1): Spannable {
             val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
             val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
             val formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
@@ -64,7 +65,13 @@ class QuickStartUtils {
                     icon.setBounds(0, 0, iconSize, iconSize)
 
                     DrawableCompat.setTint(icon, highlightColor)
-                    mutableSpannedMessage.setSpan(ImageSpan(icon), startOfHighlight - 1, startOfHighlight,
+                    if (startOfHighlight > 0) {
+                        mutableSpannedMessage.insert(startOfHighlight - 1, "  ")
+                    } else {
+                        mutableSpannedMessage.insert(startOfHighlight, "  ")
+                    }
+
+                    mutableSpannedMessage.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }

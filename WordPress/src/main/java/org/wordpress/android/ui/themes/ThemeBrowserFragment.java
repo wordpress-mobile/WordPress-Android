@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,21 +23,29 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -43,6 +53,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
@@ -84,6 +96,7 @@ public class ThemeBrowserFragment extends Fragment
     private RelativeLayout mEmptyView;
     private TextView mNoResultText;
     private TextView mCurrentThemeTextView;
+    private View mHeaderCustomizeButton;
 
     private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
@@ -94,8 +107,10 @@ public class ThemeBrowserFragment extends Fragment
     private SearchView mSearchView;
 
     private ThemeBrowserFragmentCallback mCallback;
+    private QuickStartEvent mQuickStartEvent;
 
     @Inject ThemeStore mThemeStore;
+    @Inject QuickStartStore mQuickStartStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +127,7 @@ public class ThemeBrowserFragment extends Fragment
 
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -148,6 +164,60 @@ public class ThemeBrowserFragment extends Fragment
         return view;
     }
 
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
+            showQuickStartFocusPoint();
+        }
+    }
+
+    private void showQuickStartFocusPoint() {
+        if (getView() == null) {
+            return;
+        }
+
+        mHeaderCustomizeButton.post(new Runnable() {
+            @Override public void run() {
+                int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+                int horizontalOffset = (mHeaderCustomizeButton.getWidth() / 2) - focusPointSize + getResources()
+                        .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+
+                QuickStartUtils.addQuickStartFocusPointAboveTheView((ViewGroup) getView(), mHeaderCustomizeButton,
+                        horizontalOffset, 0);
+
+                mHeaderCustomizeButton.setPressed(true);
+            }
+        });
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(final QuickStartEvent event) {
+        if (!isAdded() || getView() == null) {
+            return;
+        }
+
+        EventBus.getDefault().removeStickyEvent(event);
+        mQuickStartEvent = event;
+
+        if (mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
+            getView().post(new Runnable() {
+                @Override public void run() {
+                    showQuickStartFocusPoint();
+
+                    Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                            R.string.quick_start_dialog_customize_site_message_short_customize,
+                            R.drawable.ic_customize_white_24dp);
+
+                    WPDialogSnackbar.make(getView(), title,
+                            AccessibilityUtils.getSnackbarDuration(getActivity(),
+                                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
+                }
+            });
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -163,6 +233,7 @@ public class ThemeBrowserFragment extends Fragment
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
         }
+        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
     }
 
     @Override
@@ -274,8 +345,8 @@ public class ThemeBrowserFragment extends Fragment
         mCurrentThemeTextView = header.findViewById(R.id.header_theme_text);
 
         setThemeNameIfAlreadyAvailable();
-        LinearLayout customize = header.findViewById(R.id.customize);
-        customize.setOnClickListener(new View.OnClickListener() {
+        mHeaderCustomizeButton = header.findViewById(R.id.customize);
+        mHeaderCustomizeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, mSite);
@@ -301,6 +372,19 @@ public class ThemeBrowserFragment extends Fragment
 
         mGridView.addHeaderView(header);
     }
+
+    public void completeQuickStartCustomizeTask() {
+        // TODO check if Quick Start completed
+        mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.CUSTOMIZE_SITE, true);
+
+        if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
+            if (getView() != null) {
+                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
+            }
+            mQuickStartEvent = null;
+        }
+    }
+
 
     private void setThemeNameIfAlreadyAvailable() {
         ThemeModel currentTheme = mThemeStore.getActiveThemeForSite(mSite);
@@ -451,5 +535,15 @@ public class ThemeBrowserFragment extends Fragment
                || planId == PlansConstants.BUSINESS_PLAN_ID
                || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
                || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
+    }
+
+    @Override public void onStart() {
+        super.onStart();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }
