@@ -97,6 +97,10 @@ class PageListViewModel
         pagesViewModel.refreshPages.removeObserver(refreshPagesObserver)
     }
 
+    fun onScrolledToBottom() {
+        pagesViewModel.refreshPagesAsync(true)
+    }
+
     fun onAction(action: Action, pageItem: Page): Boolean {
         when (action) {
             else -> _editPage.postValue(pagesViewModel.pages.first { it.pageId == pageItem.id })

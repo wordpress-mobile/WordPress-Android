@@ -8,9 +8,11 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -108,6 +110,14 @@ class PageListFragment : Fragment() {
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                if (!recyclerView!!.canScrollVertically(1) && dy != 0) {
+                    viewModel.onScrolledToBottom()
+                }
+            }
+        })
     }
 
     private fun setupObservers() {

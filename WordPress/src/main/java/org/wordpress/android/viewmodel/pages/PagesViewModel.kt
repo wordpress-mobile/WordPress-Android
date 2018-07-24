@@ -56,7 +56,7 @@ class PagesViewModel
         refreshPagesAsync()
     }
 
-    private fun refreshPagesAsync(isLoadingMore: Boolean = false) = launch(CommonPool) {
+    fun refreshPagesAsync(isLoadingMore: Boolean = false) = launch(CommonPool) {
         var newState = if (isLoadingMore) LOADING_MORE else FETCHING
         _listState.postValue(newState)
 
