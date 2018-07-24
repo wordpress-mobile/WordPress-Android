@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.SearchPostsResponsePayload;
-import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -348,7 +347,7 @@ public class PostRestClient extends BaseWPComRestClient {
         for (Long categoryId : post.getCategoryIdList()) {
             categoryIds.add(categoryId);
         }
-        termsById.add(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY, categoryIds);
+        termsById.add("category", categoryIds);
         // categories are transmitted via the `term_by_id.categories` field
         params.put("terms_by_id", termsById);
 
@@ -358,7 +357,7 @@ public class PostRestClient extends BaseWPComRestClient {
             tags.add(tag);
         }
         JsonObject terms = new JsonObject();
-        terms.add(TaxonomyStore.DEFAULT_TAXONOMY_TAG, tags);
+        terms.add("post_tag", tags);
         // categories are transmitted via the `terms.post_tag` field
         params.put("terms", terms);
 
