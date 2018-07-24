@@ -59,7 +59,8 @@ public class NoteBlock {
         void showSitePreview(long siteId, String siteUrl);
     }
 
-    public NoteBlock(JSONObject noteObject, ImageManager imageManager, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    public NoteBlock(JSONObject noteObject, ImageManager imageManager,
+                     OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         mNoteData = noteObject;
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
         mImageManager = imageManager;

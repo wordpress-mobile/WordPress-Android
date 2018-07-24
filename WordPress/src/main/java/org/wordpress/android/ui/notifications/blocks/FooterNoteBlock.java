@@ -16,7 +16,8 @@ import org.wordpress.android.util.image.ImageManager;
 public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
 
-    public FooterNoteBlock(JSONObject noteObject, ImageManager imageManager, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    public FooterNoteBlock(JSONObject noteObject, ImageManager imageManager,
+                           OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         super(noteObject, imageManager, onNoteBlockTextClickListener);
     }
 
