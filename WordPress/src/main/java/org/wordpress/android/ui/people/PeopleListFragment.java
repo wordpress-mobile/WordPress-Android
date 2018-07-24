@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -161,6 +162,8 @@ public class PeopleListFragment extends Fragment {
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
                 mActionableEmptyView.setVisibility(View.GONE);
+                mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                        | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
 
                 switch (emptyViewMsgType) {
                     case LOADING:
@@ -187,6 +190,7 @@ public class PeopleListFragment extends Fragment {
 
                         mActionableEmptyView.setTitleText(title);
                         mActionableEmptyView.setVisibility(View.VISIBLE);
+                        mFilteredRecyclerView.setToolbarScrollFlags(0);
                         return "";
                     case GENERIC_ERROR:
                         switch (mPeopleListFilter) {
@@ -285,6 +289,8 @@ public class PeopleListFragment extends Fragment {
         if (!peopleList.isEmpty()) {
             // if the list is not empty, don't show any message
             mFilteredRecyclerView.hideEmptyView();
+            mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
