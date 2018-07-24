@@ -11,12 +11,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.RtlUtils;
+import org.wordpress.android.util.image.ImageManager;
 
 public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
 
-    public FooterNoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        super(noteObject, onNoteBlockTextClickListener);
+    public FooterNoteBlock(JSONObject noteObject, ImageManager imageManager, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+        super(noteObject, imageManager, onNoteBlockTextClickListener);
     }
 
     public void setClickableSpan(JSONObject rangeObject, String noteType) {
