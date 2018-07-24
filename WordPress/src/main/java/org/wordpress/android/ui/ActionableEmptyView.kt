@@ -77,12 +77,28 @@ class ActionableEmptyView : LinearLayout {
         button.setOnClickListener(listener)
     }
 
+    fun setButtonText(@NonNull charSequence: CharSequence) {
+        button.text = charSequence
+    }
+
+    fun setButtonVisibility(isVisible: Boolean) {
+        button.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
     fun setImageResource(@NonNull @DrawableRes resId: Int) {
         image.setImageResource(resId)
     }
 
+    fun setImageVisibility(isVisible: Boolean) {
+        image.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
     fun setSubtitleText(@NonNull charSequence: CharSequence) {
         subtitle.text = charSequence
+    }
+
+    fun setSubtitleVisibility(isVisible: Boolean) {
+        subtitle.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     fun setTitleText(@NonNull charSequence: CharSequence) {

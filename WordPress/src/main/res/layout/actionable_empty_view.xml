@@ -3,7 +3,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -27,9 +26,7 @@
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_width="wrap_content"
-                android:visibility="gone"
-                tools:srcCompat="@drawable/jetpack_connection_notifications"
-                tools:visibility="visible" >
+                android:visibility="gone" >
             </ImageView>
 
             <org.wordpress.android.widgets.WPTextView
@@ -37,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 app:fixWidowWords="true"
-                tools:text="No comments yet"
                 style="@style/ActionableEmptyStateTitle" >
             </org.wordpress.android.widgets.WPTextView>
 
@@ -47,8 +43,6 @@
                 android:layout_width="wrap_content"
                 android:visibility="gone"
                 app:fixWidowWords="true"
-                tools:text="Join a conversation: comment on posts from blogs you follow"
-                tools:visibility="visible"
                 style="@style/ActionableEmptyStateSubtitle" >
             </org.wordpress.android.widgets.WPTextView>
 
@@ -58,9 +52,7 @@
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_width="wrap_content"
                 android:theme="@style/ActionableEmptyStateButton"
-                android:visibility="gone"
-                tools:text="Go to Reader"
-                tools:visibility="visible" >
+                android:visibility="gone" >
             </android.support.v7.widget.AppCompatButton>
 
         </LinearLayout>
