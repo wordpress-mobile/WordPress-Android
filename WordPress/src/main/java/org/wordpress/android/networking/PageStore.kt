@@ -24,14 +24,29 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         dispatcher.register(this)
     }
 
-    fun getPageById(pageId: Int): PageModel? {
+    fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? {
         val post = postStore.getPostByLocalPostId(pageId)
-        return post?.let { PageModel.fromPost(it) }
+        return post?.let {
+            val page = PageModel.fromPost(it)
+            page.parent = getPageByRemoteId(page.parentId, site)
+            page
+        }
     }
 
-    suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        val pages = postStore.getPagesForSite(site).filter { it != null }
-        pages.map { PageModel.fromPost(it)!! }
+    fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? {
+        val post = postStore.getPostByRemotePostId(remoteId, site)
+        return post?.let {
+            val page = PageModel.fromPost(it)
+            page.parent = getPageByRemoteId(page.parentId, site)
+            page
+        }
+    }
+
+    suspend fun getPages(site: SiteModel): List<PageModel> = withContext(CommonPool) {
+        val posts = postStore.getPagesForSite(site).filter { it != null }
+        val pages = posts.map { PageModel.fromPost(it) }
+        pages.forEach { page -> page.parent = pages.firstOrNull { it.remoteId == page.parentId } }
+        pages.sortedBy { it.remoteId }
     }
 
     suspend fun requestPagesFromServer(site: SiteModel, loadMore: Boolean): OnPostChanged = suspendCoroutine { cont ->

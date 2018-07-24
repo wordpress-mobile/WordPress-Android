@@ -11,11 +11,7 @@ import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
-import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
-import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
@@ -56,7 +52,7 @@ class PagesViewModel
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
-        _pages = pageStore.loadPagesFromDb(site)
+        _pages = pageStore.getPages(site)
         refreshPagesAsync()
     }
 
@@ -69,7 +65,7 @@ class PagesViewModel
             _listState.postValue(ERROR)
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
-            _pages = pageStore.loadPagesFromDb(site)
+            _pages = pageStore.getPages(site)
             _refreshPages.asyncCall()
         }
 
