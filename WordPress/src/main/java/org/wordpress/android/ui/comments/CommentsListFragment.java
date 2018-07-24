@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -150,6 +151,8 @@ public class CommentsListFragment extends Fragment {
                     if (!isEmpty) {
                         // Hide the empty view if there are already some displayed comments
                         mFilteredCommentsView.hideEmptyView();
+                        mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                         mActionableEmptyView.setVisibility(View.GONE);
                     } else if (!mIsUpdatingComments) {
                         // Change LOADING to NO_CONTENT message
@@ -341,6 +344,7 @@ public class CommentsListFragment extends Fragment {
 
                     mActionableEmptyView.setTitleText(title);
                     mActionableEmptyView.setVisibility(View.VISIBLE);
+                    mFilteredCommentsView.setToolbarScrollFlags(0);
                     return "";
                 } else {
                     int stringId = 0;
@@ -360,6 +364,8 @@ public class CommentsListFragment extends Fragment {
                     }
 
                     mActionableEmptyView.setVisibility(View.GONE);
+                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                            | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                     return getString(stringId);
                 }
             }
