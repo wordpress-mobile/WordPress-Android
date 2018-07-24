@@ -30,13 +30,12 @@
                 android:layout_height="wrap_content"
                 app:layout_collapseMode="parallax">
 
-                <org.wordpress.android.widgets.WPNetworkImageView
+                <ImageView
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/plugin_banner_size"
                     android:background="@color/grey_lighten_20"
-                    android:contentDescription="@string/plugin_detail_banner_desc"
-                    android:scaleType="centerCrop" />
+                    android:contentDescription="@string/plugin_detail_banner_desc" />
 
                 <ImageView
                     android:id="@+id/image_gradient_scrim"
@@ -84,7 +83,7 @@
                         android:background="@color/grey_lighten_30"
                         android:padding="@dimen/margin_extra_large">
 
-                        <org.wordpress.android.widgets.WPNetworkImageView
+                        <ImageView
                             android:id="@+id/image_icon"
                             android:layout_width="@dimen/plugin_icon_size"
                             android:layout_height="@dimen/plugin_icon_size"

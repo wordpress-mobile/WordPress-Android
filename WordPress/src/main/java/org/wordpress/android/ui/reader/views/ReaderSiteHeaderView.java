@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,8 +18,12 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.PhotonUtils.Quality;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
 
@@ -27,6 +32,8 @@ import javax.inject.Inject;
  * count, and follow button
  */
 public class ReaderSiteHeaderView extends LinearLayout {
+    private final int mBlavatarSz;
+
     public interface OnBlogInfoLoadedListener {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
     }
@@ -39,6 +46,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private OnFollowListener mFollowListener;
 
     @Inject AccountStore mAccountStore;
+    @Inject ImageManager mImageManager;
 
     public ReaderSiteHeaderView(Context context) {
         this(context, null);
@@ -51,6 +59,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     public ReaderSiteHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         ((WordPress) context.getApplicationContext()).component().inject(this);
+        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         initView(context);
     }
 
@@ -114,6 +123,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         TextView txtDomain = layoutInfo.findViewById(R.id.text_domain);
         TextView txtDescription = layoutInfo.findViewById(R.id.text_blog_description);
         TextView txtFollowCount = layoutInfo.findViewById(R.id.text_blog_follow_count);
+        ImageView blavatarImg = layoutInfo.findViewById(R.id.image_blavatar);
 
         if (blogInfo.hasName()) {
             txtBlogName.setText(blogInfo.getName());
@@ -133,6 +143,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
             txtDescription.setVisibility(View.VISIBLE);
         } else {
             txtDescription.setVisibility(View.GONE);
+        }
+
+        if (blogInfo.hasImageUrl()) {
+            mImageManager.load(blavatarImg, ImageType.BLAVATAR,
+                    PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.MEDIUM));
         }
 
         txtFollowCount.setText(String.format(

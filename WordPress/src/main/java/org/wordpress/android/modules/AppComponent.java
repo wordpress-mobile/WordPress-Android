@@ -68,6 +68,7 @@ import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.plans.PlanFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -109,6 +110,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -129,6 +131,7 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 import javax.inject.Singleton;
 
@@ -350,6 +353,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderPostAdapter object);
 
+    void inject(PlanFragment object);
+
     void inject(ReaderSiteHeaderView object);
 
     void inject(ReaderTagHeaderView object);
@@ -376,6 +381,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(SelectCategoriesActivity object);
 
+    void inject(ReaderUserAdapter object);
+
     void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
@@ -393,6 +400,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PluginDetailActivity object);
 
     void inject(WordPressGlideModule object);
+
+    void inject(WPCustomImageGetter object);
 
     void inject(PublicizeAccountChooserListAdapter object);
 
