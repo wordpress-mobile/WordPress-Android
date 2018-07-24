@@ -515,10 +515,11 @@ public class WPMainActivity extends AppCompatActivity implements
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
-        if (getSelectedSite() != null
-            && getMySiteFragment() != null) {
-            // MySite fragment might not be attached to activity, so we need to remove focus point from here
-            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+        if (getSelectedSite() != null && getMySiteFragment() != null) {
+            if (getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+                // MySite fragment might not be attached to activity, so we need to remove focus point from here
+                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+            }
             getMySiteFragment().completeQuickStarTask(getSelectedSite().getId(), QuickStartTask.PUBLISH_POST);
         }
 

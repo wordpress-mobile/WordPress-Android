@@ -351,15 +351,7 @@ public class ThemeBrowserFragment extends Fragment
             public void onClick(View v) {
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, mSite);
                 mCallback.onTryAndCustomizeSelected(mCurrentThemeId);
-                // TODO check if Quick Start completed
-                mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.CUSTOMIZE_SITE, true);
 
-                if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
-                    if (getView() != null) {
-                        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
-                    }
-                    mQuickStartEvent = null;
-                }
             }
         });
 
@@ -381,6 +373,19 @@ public class ThemeBrowserFragment extends Fragment
 
         mGridView.addHeaderView(header);
     }
+
+    public void completeQuickStartCustomizeTask(){
+        // TODO check if Quick Start completed
+        mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.CUSTOMIZE_SITE, true);
+
+        if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
+            if (getView() != null) {
+                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
+            }
+            mQuickStartEvent = null;
+        }
+    }
+
 
     private void setThemeNameIfAlreadyAvailable() {
         ThemeModel currentTheme = mThemeStore.getActiveThemeForSite(mSite);

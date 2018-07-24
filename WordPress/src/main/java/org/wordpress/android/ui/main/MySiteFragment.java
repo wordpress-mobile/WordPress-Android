@@ -963,9 +963,11 @@ public class MySiteFragment extends Fragment implements
 
     // we might need to call this one when the fragment is not attached to WPMainActivity
     public void completeQuickStarTask(int siteId, QuickStartTask quickStartTask) {
-        removeQuickStartFocusPoint();
         mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
-        clearActiveQuickStartTask();
+        if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
+            removeQuickStartFocusPoint();
+            clearActiveQuickStartTask();
+        }
     }
 
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
