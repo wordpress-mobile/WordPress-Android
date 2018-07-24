@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.annotations.JsonAdapter
 import org.wordpress.android.fluxc.model.PlanModel
@@ -19,14 +18,11 @@ class PlansDeserializer : JsonDeserializer<PlansResponse> {
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): PlansResponse {
         val jsonObject = json.asJsonObject
         val planModels = ArrayList<PlanModel>()
-        jsonObject.entrySet().forEach { (_, value) ->
+        jsonObject.entrySet().forEach { (key, value) ->
             val planJsonObj = value.asJsonObject
             val productSlug = planJsonObj.getString("product_slug") ?: String()
             val productName = planJsonObj.getString("product_name") ?: String()
-
-            // 'id' attribute is sometimes null, even though the it should be a long value
-            // Check if it is JsonObject (i.e. not null and not JsonNull), before casting it to long
-            val productId = (planJsonObj.get("id") as? JsonObject)?.asLong ?: 0
+            val productId = key.toLong()
 
             // 'current_plan' and 'has_domain_credit' attributes might be missing,
             // consider them as false, if they are missing
