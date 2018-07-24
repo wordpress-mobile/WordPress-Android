@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -139,9 +141,9 @@ public class PostRestClient extends BaseWPComRestClient {
         String url;
 
         if (post.isLocalDraft()) {
-            url = WPCOMREST.sites.site(site.getSiteId()).posts.new_.getUrlV1_1();
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.new_.getUrlV1_2();
         } else {
-            url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_2();
         }
 
         Map<String, Object> body = postModelToParams(post);
@@ -339,8 +341,25 @@ public class PostRestClient extends BaseWPComRestClient {
 
         params.put("password", StringUtils.notNullStr(post.getPassword()));
 
-        params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
-        params.put("tags", TextUtils.join(",", post.getTagNameList()));
+        // construct a json object with a `category` field holding a json array with the tags
+        JsonObject termsById = new JsonObject();
+        JsonArray categoryIds = new JsonArray();
+        for (Long categoryId : post.getCategoryIdList()) {
+            categoryIds.add(categoryId);
+        }
+        termsById.add("category", categoryIds);
+        // categories are transmitted via the `term_by_id.categories` field
+        params.put("terms_by_id", termsById);
+
+        // construct a json object with a `post_tag` field holding a json array with the tags
+        JsonArray tags = new JsonArray();
+        for (String tag : post.getTagNameList()) {
+            tags.add(tag);
+        }
+        JsonObject terms = new JsonObject();
+        terms.add("post_tag", tags);
+        // categories are transmitted via the `terms.post_tag` field
+        params.put("terms", terms);
 
         if (post.hasFeaturedImage()) {
             params.put("featured_image", post.getFeaturedImageId());
