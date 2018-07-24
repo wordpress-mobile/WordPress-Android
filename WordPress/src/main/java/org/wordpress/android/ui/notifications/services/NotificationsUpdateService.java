@@ -1,16 +1,23 @@
 package org.wordpress.android.ui.notifications.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 
 public class NotificationsUpdateService extends Service implements NotificationsUpdateLogic.ServiceCompletionListener {
     public static final String IS_TAPPED_ON_NOTIFICATION = "is-tapped-on-notification";
 
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -21,7 +28,7 @@ public class NotificationsUpdateService extends Service implements Notifications
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications update service > created");
-        mNotificationsUpdateLogic = new NotificationsUpdateLogic(this);
+        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(this), this);
     }
 
     @Override
