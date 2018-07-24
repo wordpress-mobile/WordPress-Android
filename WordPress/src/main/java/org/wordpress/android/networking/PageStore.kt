@@ -24,18 +24,18 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         dispatcher.register(this)
     }
 
-    fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? {
+    suspend fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? = withContext(CommonPool) {
         val post = postStore.getPostByLocalPostId(pageId)
-        return post?.let {
+        return@withContext post?.let {
             val page = PageModel.fromPost(it, site)
             page.parent = getPageByRemoteId(page.parentId, site)
             page
         }
     }
 
-    fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? {
+    suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
         val post = postStore.getPostByRemotePostId(remoteId, site)
-        return post?.let {
+        return@withContext post?.let {
             val page = PageModel.fromPost(it, site)
             page.parent = getPageByRemoteId(page.parentId, site)
             page
@@ -45,7 +45,12 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     suspend fun getPages(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val posts = postStore.getPagesForSite(site).filter { it != null }
         val pages = posts.map { PageModel.fromPost(it, site) }
-        pages.forEach { page -> page.parent = pages.firstOrNull { it.remoteId == page.parentId } }
+        pages.forEach { page ->
+            page.parent = pages.firstOrNull { it.remoteId == page.parentId }
+            if (page.parentId != 0L && page.parent == null) {
+                page.parent = getPageByRemoteId(page.parentId, site)
+            }
+        }
         pages.sortedBy { it.remoteId }
     }
 
