@@ -7,13 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <org.wordpress.android.ui.FilteredRecyclerView
-        android:id="@+id/filtered_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"/>
-
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
         android:layout_height="match_parent"
@@ -23,6 +16,13 @@
         app:aevTitle="@string/people_empty_list_filtered_followers"
         tools:visibility="visible" >
     </org.wordpress.android.ui.ActionableEmptyView>
+
+    <org.wordpress.android.ui.FilteredRecyclerView
+        android:id="@+id/filtered_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"/>
 
     <ProgressBar
         android:id="@+id/progress_footer"
