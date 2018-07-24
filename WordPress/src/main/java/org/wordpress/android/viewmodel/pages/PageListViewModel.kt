@@ -40,7 +40,9 @@ class PageListViewModel
     private fun loadPages() {
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
-                .map { Page(it.pageId.toLong(), it.title, null) }
+                .let {
+                    topologicalSort(it, 0)
+                }
                 .map {
                     when (it.status) {
                         PUBLISHED -> PublishedPage(it.pageId, it.title, getPageItemIndent(it))
@@ -55,6 +57,15 @@ class PageListViewModel
         } else {
             _pages.postValue(newPages)
         }
+    }
+
+    private fun topologicalSort(pages: List<PageModel>, parentId: Long): List<PageModel> {
+        val sortedList = mutableListOf<PageModel>()
+        pages.filter { it.parentId == parentId }.forEach {
+            sortedList += it
+            sortedList += topologicalSort(pages, it.remoteId)
+        }
+        return sortedList
     }
 
     private fun getPageItemIndent(page: PageModel?): Int {
