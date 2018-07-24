@@ -73,6 +73,10 @@ class PagesViewModel
         _listState.postValue(newState)
     }
 
+    fun onPageEditFinished() {
+        refreshPagesAsync()
+    }
+
     fun onSearchTextSubmit(query: String?): Boolean {
         return onSearchTextChange(query)
     }

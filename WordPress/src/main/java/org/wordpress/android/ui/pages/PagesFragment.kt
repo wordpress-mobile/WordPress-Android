@@ -76,6 +76,10 @@ class PagesFragment : Fragment() {
         }
     }
 
+    fun onPageEditFinished() {
+        viewModel.onPageEditFinished()
+    }
+
     private fun initializeViews(activity: FragmentActivity) {
         pagesPager.adapter = PagesPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(pagesPager)
