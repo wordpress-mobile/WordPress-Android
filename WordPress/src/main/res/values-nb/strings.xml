@@ -987,16 +987,10 @@ Language: nb_NO
     <string name="reader_empty_posts_in_tag">Ingen poster med dette merket</string>
     <string name="reader_empty_comments">Ingen kommentarer enda</string>
     <string name="create_new_blog_wpcom">Lag en WordPress.com–blogg</string>
-    <string name="nux_help_description">Besøk hjelpesenteret vårt for å få svar på vanlige spørsmål, eller besøk forumet vårt for å stille nye spørsmål.</string>
     <string name="browse_our_faq_button">Bla gjennom vår FAQ</string>
     <string name="reader_empty_posts_liked">Du har ikke likt noen innlegg</string>
     <string name="reader_empty_followed_blogs_title">Du følger ikke noen sider ennå</string>
     <string name="reader_toast_err_generic">Kan ikke gjøre dette</string>
-    <string name="hs__invalid_email_error">Skriv inn en gyldig epost–adresse</string>
-    <string name="hs__username_blank_error">Skriv inn et gyldig brukernavn</string>
-    <string name="hs__conversation_header">Kundestøtte–chat</string>
-    <string name="hs__new_conversation_header">Kundestøtte–chat</string>
-    <string name="hs__conversation_detail_error">Beskriv problemet du opplever</string>
     <string name="contact_us">Kontakt oss</string>
     <string name="schedule_verb">Publiser</string>
     <string name="update_verb">Oppdater</string>

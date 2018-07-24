@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.reader.services.update;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 
 import java.util.EnumSet;
 
@@ -27,9 +29,14 @@ public class ReaderUpdateService extends Service implements ServiceCompletionLis
     }
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
-        mReaderUpdateLogic = new ReaderUpdateLogic((WordPress) getApplication(), this);
+        mReaderUpdateLogic = new ReaderUpdateLogic(this, (WordPress) getApplication(), this);
         AppLog.i(AppLog.T.READER, "reader service > created");
     }
 

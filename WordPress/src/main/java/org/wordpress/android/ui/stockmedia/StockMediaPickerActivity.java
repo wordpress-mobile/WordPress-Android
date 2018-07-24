@@ -589,6 +589,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnail(), mThumbWidth, mThumbHeight);
             mImageManager.load(holder.mImageView, ImageType.PHOTO, imageUrl, ScaleType.CENTER_CROP);
 
+            holder.mImageView.setContentDescription(media.getTitle());
+
             boolean isSelected = isItemSelected(position);
             holder.mSelectionCountTextView.setSelected(isSelected);
             if (enableMultiselect()) {

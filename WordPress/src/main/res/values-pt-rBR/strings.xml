@@ -8,8 +8,6 @@ Language: pt_BR
 <resources>
     <string name="login_email_button_signup">Não tem uma conta? %1$sRegistre–se%2$s</string>
     <string name="notification_site_creation_title_in_progress">Criando site… Isto pode levar alguns minutos.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Importante</string>
     <string name="notification_channel_general_title">Geral</string>
     <string name="photo_picker_use_photo">Usar esta foto</string>
@@ -1245,16 +1243,10 @@ Language: pt_BR
     <string name="reader_empty_posts_in_tag">Nenhum post com esta tag</string>
     <string name="reader_empty_comments">Nenhum comentário</string>
     <string name="create_new_blog_wpcom">Crie um blog do WordPress.com</string>
-    <string name="nux_help_description">Visite a central de ajuda para obter respostas para perguntas frequentes, ou visite os fóruns para fazer novas perguntas.</string>
     <string name="browse_our_faq_button">Veja nossa seção de Perguntas Frequentes</string>
     <string name="reader_empty_posts_liked">Você não curtiu posts ainda</string>
     <string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um site</string>
     <string name="reader_toast_err_generic">Não é possível executar esta ação</string>
-    <string name="hs__invalid_email_error">Digite um e–mail válido</string>
-    <string name="hs__username_blank_error">Digite um nome válido</string>
-    <string name="hs__conversation_header">Chat de Suporte</string>
-    <string name="hs__new_conversation_header">Chat de Suporte</string>
-    <string name="hs__conversation_detail_error">Descreva o problema que está experimentando</string>
     <string name="contact_us">Contate nos</string>
     <string name="schedule_verb">Agendar</string>
     <string name="update_verb">Atualizar</string>

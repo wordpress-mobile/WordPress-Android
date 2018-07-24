@@ -245,11 +245,6 @@ Language: hi_IN
     <string name="comment">टिप्पणी</string>
     <string name="comment_trashed">टिप्पणी ट्रैश किया गया</string>
     <string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
-    <string name="hs__new_conversation_header">सहायता चैट</string>
-    <string name="hs__conversation_header">सहायता चैट</string>
-    <string name="hs__username_blank_error">एक मान्य नाम दर्ज करें</string>
-    <string name="hs__invalid_email_error">मान्य ईमेल पता दर्ज करें</string>
-    <string name="hs__conversation_detail_error">आप जो समस्या देख रहे है उसका वर्णन करें</string>
     <string name="contact_us">हमसे संपर्क करें</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>

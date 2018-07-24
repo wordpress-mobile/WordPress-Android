@@ -46,11 +46,6 @@ Language: hu
     <string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
     <string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
     <string name="contact_us">Kapcsolat</string>
-    <string name="hs__invalid_email_error">Adjunk meg valós e–mail címet</string>
-    <string name="hs__username_blank_error">Adjunk meg valós nevet</string>
-    <string name="hs__conversation_detail_error">Írjuk le a problémát, amivel találkoztunk</string>
-    <string name="hs__new_conversation_header">Támogató chat</string>
-    <string name="hs__conversation_header">Támogató chat</string>
     <string name="update_verb">Frissítést</string>
     <string name="schedule_verb">Időzítés</string>
     <string name="reader_page_followed_tags">Követett címkék</string>
