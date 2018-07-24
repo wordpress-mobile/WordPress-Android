@@ -68,6 +68,7 @@ import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.plans.PlanFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -350,6 +351,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderCommentAdapter object);
 
     void inject(ReaderPostAdapter object);
+
+    void inject(PlanFragment object);
 
     void inject(ReaderSiteHeaderView object);
 

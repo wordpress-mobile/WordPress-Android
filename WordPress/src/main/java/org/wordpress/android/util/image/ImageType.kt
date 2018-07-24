@@ -5,6 +5,7 @@ enum class ImageType {
     VIDEO,
     AVATAR,
     BLAVATAR,
+    PLAN,
     THEME,
     UNKNOWN,
     PLUGIN
