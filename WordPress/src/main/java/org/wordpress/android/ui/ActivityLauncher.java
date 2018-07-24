@@ -21,6 +21,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.models.pages.PageModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -367,6 +368,16 @@ public class ActivityLauncher {
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void editPageForResult(Activity activity, PageModel page) {
+        Intent intent = new Intent(activity, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, page.getSite());
+        // PostModel objects can be quite large, since content field is not size restricted,
+        // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
+        // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

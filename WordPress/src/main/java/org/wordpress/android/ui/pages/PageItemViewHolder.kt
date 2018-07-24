@@ -23,7 +23,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageViewHolder(
         parentView: ViewGroup,
-        private val onAction: (PageItem.Action, PageItem) -> Boolean
+        private val onAction: (PageItem.Action, Page) -> Boolean
     ) : PageItemViewHolder(parentView, layout.page_list_item) {
         private val indentContainer = itemView.findViewById<FrameLayout>(id.indent_container)
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)

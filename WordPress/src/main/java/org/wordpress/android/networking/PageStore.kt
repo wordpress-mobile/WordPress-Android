@@ -27,7 +27,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? {
         val post = postStore.getPostByLocalPostId(pageId)
         return post?.let {
-            val page = PageModel.fromPost(it)
+            val page = PageModel.fromPost(it, site)
             page.parent = getPageByRemoteId(page.parentId, site)
             page
         }
@@ -36,7 +36,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? {
         val post = postStore.getPostByRemotePostId(remoteId, site)
         return post?.let {
-            val page = PageModel.fromPost(it)
+            val page = PageModel.fromPost(it, site)
             page.parent = getPageByRemoteId(page.parentId, site)
             page
         }
@@ -44,7 +44,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
 
     suspend fun getPages(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val posts = postStore.getPagesForSite(site).filter { it != null }
-        val pages = posts.map { PageModel.fromPost(it) }
+        val pages = posts.map { PageModel.fromPost(it, site) }
         pages.forEach { page -> page.parent = pages.firstOrNull { it.remoteId == page.parentId } }
         pages.sortedBy { it.remoteId }
     }

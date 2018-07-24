@@ -17,15 +17,21 @@ import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class PageListViewModel
 @Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
+
+    private val _editPage = SingleLiveEvent<PageModel>()
+    val editPage: LiveData<PageModel>
+        get() = _editPage
 
     private var isStarted: Boolean = false
     private var site: SiteModel? = null
@@ -90,8 +96,11 @@ class PageListViewModel
         pagesViewModel.refreshPages.removeObserver(refreshPagesObserver)
     }
 
-    fun onAction(action: Action, pageItem: PageItem): Boolean {
-        TODO("not implemented")
+    fun onAction(action: Action, pageItem: Page): Boolean {
+        when (action) {
+            else -> _editPage.postValue(pagesViewModel.pages.first { it.pageId == pageItem.id })
+        }
+        return true
     }
 
     enum class PageListState {

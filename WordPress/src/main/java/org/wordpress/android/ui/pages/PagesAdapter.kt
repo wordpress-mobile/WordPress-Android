@@ -9,7 +9,7 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 
-class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean) : Adapter<PageItemViewHolder>() {
+class PagesAdapter(private val onAction: (PageItem.Action, Page) -> Boolean) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {

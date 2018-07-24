@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageStatus
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ifNotNull
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -112,6 +113,10 @@ class PageListFragment : Fragment() {
     private fun setupObservers() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
+        })
+
+        viewModel.editPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.editPageForResult(activity, page) }
         })
     }
 

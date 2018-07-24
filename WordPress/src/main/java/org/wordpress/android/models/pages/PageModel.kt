@@ -1,8 +1,10 @@
 package org.wordpress.android.models.pages
 
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 
 data class PageModel(
+    val site: SiteModel,
     val pageId: Int,
     val title: String,
     var status: PageStatus,
@@ -10,8 +12,8 @@ data class PageModel(
     val remoteId: Long
 ) {
     companion object {
-        fun fromPost(post: PostModel): PageModel {
-            return PageModel(post.id, post.title, PageStatus.fromPost(post), post.parentId, post.remotePostId)
+        fun fromPost(post: PostModel, site: SiteModel): PageModel {
+            return PageModel(site, post.id, post.title, PageStatus.fromPost(post), post.parentId, post.remotePostId)
         }
     }
 
