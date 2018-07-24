@@ -27,6 +27,7 @@ sealed class PageItem(val type: Type) {
         SET_PARENT(R.id.set_parent),
         PUBLISH_NOW(R.id.publish_now),
         MOVE_TO_DRAFT(R.id.move_to_draft),
+        DELETE_PERMANENTLY(R.id.delete_permanently),
         MOVE_TO_TRASH(R.id.move_to_trash);
 
         companion object {
