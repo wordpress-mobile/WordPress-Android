@@ -48,7 +48,7 @@ class PageListViewModel
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
                 .let {
-                    topologicalSort(it, it.firstOrNull()?.parentId ?: 0)
+                    topologicalSort(it, it.map { it.parentId }.min() ?: 0)
                 }
                 .map {
                     when (it.status) {
