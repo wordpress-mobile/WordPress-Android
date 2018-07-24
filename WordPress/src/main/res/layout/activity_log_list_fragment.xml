@@ -7,6 +7,17 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevSubtitle="@string/activity_log_empty_subtitle"
+        app:aevTitle="@string/activity_log_empty_title"
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
+
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/activityLogPullToRefresh"
         android:layout_width="match_parent"
@@ -20,17 +31,6 @@
             android:scrollbars="vertical"/>
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
-
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevSubtitle="@string/activity_log_empty_subtitle"
-        app:aevTitle="@string/activity_log_empty_title"
-        tools:visibility="visible" >
-    </org.wordpress.android.ui.ActionableEmptyView>
 
     <ProgressBar
         android:id="@+id/activityLogListProgress"
