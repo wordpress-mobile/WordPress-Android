@@ -374,7 +374,7 @@ public class ThemeBrowserFragment extends Fragment
         mGridView.addHeaderView(header);
     }
 
-    public void completeQuickStartCustomizeTask(){
+    public void completeQuickStartCustomizeTask() {
         // TODO check if Quick Start completed
         mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.CUSTOMIZE_SITE, true);
 
