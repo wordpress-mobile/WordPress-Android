@@ -113,11 +113,11 @@ class PagesViewModel
 fun mockResult(query: String?): List<PageItem> {
     // TODO remove with real data
     return listOf(
-            Divider(1, "Data for $query"),
-            Page(1, "item 1", null, 0, setOf(VIEW_PAGE)),
-            Page(2, "item 2", null, 1),
-            Page(3, "item 3", null, 2, setOf(VIEW_PAGE, PUBLISH_NOW)),
-            Divider(2, "Divider 2"),
-            Page(4, "item 4", null, 0)
+//            Divider(1, "Data for $query"),
+//            Page(1, "item 1", setOf(VIEW_PAGE), 0, null),
+//            Page(2, "item 2", indent = 1, icon = null),
+//            Page(3, "item 3", setOf(VIEW_PAGE, PUBLISH_NOW), 2, null),
+//            Divider(2, "Divider 2"),
+//            Page(4, "item 4", indent = 0, icon = null)
     )
 }

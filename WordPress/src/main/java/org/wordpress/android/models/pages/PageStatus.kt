@@ -4,7 +4,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 
 enum class PageStatus {
-    UNKNOWN,
     PUBLISHED,
     DRAFT,
     TRASHED,
@@ -21,7 +20,7 @@ enum class PageStatus {
                 PostStatus.DRAFT -> DRAFT
                 PostStatus.TRASHED -> TRASHED
                 PostStatus.SCHEDULED -> SCHEDULED
-                else -> UNKNOWN
+                else -> throw IllegalArgumentException("Unexpected Page status")
             }
         }
     }
