@@ -14,7 +14,6 @@ import java.lang.reflect.Type
 @JsonAdapter(PlansDeserializer::class)
 class PlansResponse (val plansList: List<PlanModel>)
 
-
 class PlansDeserializer : JsonDeserializer<PlansResponse> {
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): PlansResponse {
