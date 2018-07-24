@@ -41,14 +41,14 @@ class PageListViewModel
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
                 .let {
-                    topologicalSort(it, 0)
+                    topologicalSort(it, it.firstOrNull()?.parentId ?: 0)
                 }
                 .map {
                     when (it.status) {
                         PUBLISHED -> PublishedPage(it.pageId, it.title, getPageItemIndent(it))
-                        DRAFT -> DraftPage(it.pageId, it.title, getPageItemIndent(it))
-                        SCHEDULED -> ScheduledPage(it.pageId, it.title, getPageItemIndent(it))
-                        TRASHED -> TrashedPage(it.pageId, it.title, getPageItemIndent(it))
+                        DRAFT -> DraftPage(it.pageId, it.title)
+                        SCHEDULED -> ScheduledPage(it.pageId, it.title)
+                        TRASHED -> TrashedPage(it.pageId, it.title)
                     }
                 }
 
