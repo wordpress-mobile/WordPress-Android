@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -40,10 +41,10 @@ class PageListViewModel
     private lateinit var pagesViewModel: PagesViewModel
 
     private val refreshPagesObserver = Observer<Unit> {
-        loadPages()
+        loadPagesAsync()
     }
 
-    private fun loadPages() {
+    private fun loadPagesAsync() = launch {
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
                 .let {
@@ -85,7 +86,7 @@ class PageListViewModel
 
         if (!isStarted) {
             isStarted = true
-            loadPages()
+            loadPagesAsync()
 
             pagesViewModel.refreshPages.observeForever(refreshPagesObserver)
         }
