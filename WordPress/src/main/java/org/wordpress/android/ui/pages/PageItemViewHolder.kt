@@ -44,7 +44,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     pageItem.title
 
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
-                pageMore.visibility = if (pageItem.enabledActions.isNotEmpty()) View.VISIBLE else View.GONE
+                pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
             }
         }
 
@@ -56,7 +56,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             }
             popup.menuInflater.inflate(R.menu.page_more, popup.menu)
             PageItem.Action.values().forEach {
-                popup.menu.findItem(it.itemId).isVisible = pageItem.enabledActions.contains(it)
+                popup.menu.findItem(it.itemId).isVisible = pageItem.actions.contains(it)
             }
             popup.show()
         }

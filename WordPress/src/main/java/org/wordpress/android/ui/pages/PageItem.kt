@@ -1,20 +1,54 @@
 package org.wordpress.android.ui.pages
 
 import org.wordpress.android.R
+import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
+import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
 
 sealed class PageItem(val type: Type) {
-    data class Page(
-        val id: Long,
-        val title: String,
-        val icon: String?,
-        val indent: Int = 0,
-        val enabledActions: Set<Action> = setOf()
+    abstract class Page(
+        open val id: Int,
+        open val title: String,
+        open var indent: Int = 0,
+        open val actions: Set<Action> = setOf(),
+        open val icon: String? = null
     ) : PageItem(PAGE)
 
-    data class Divider(val id: Long, val title: String) : PageItem(DIVIDER)
+    data class PublishedPage(
+        override val id: Int,
+        override val title: String,
+        override var indent: Int = 0,
+        override val actions: Set<Action> = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH)
+    ) : Page(id, title, indent, actions)
+
+    data class DraftPage(
+        override val id: Int,
+        override val title: String,
+        override var indent: Int = 0,
+        override val actions: Set<Action> = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH)
+    ) : Page(id, title, indent, actions)
+
+    data class ScheduledPage(
+        override val id: Int,
+        override val title: String,
+        override var indent: Int = 0,
+        override val actions: Set<Action> = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH)
+    ) : Page(id, title, indent, actions)
+
+    data class TrashedPage(
+        override val id: Int,
+        override val title: String,
+        override var indent: Int = 0,
+        override val actions: Set<Action> = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY)
+    ) : Page(id, title, indent, actions)
+
+    data class Divider(val id: Int, val title: String) : PageItem(DIVIDER)
 
     data class Empty(val textResource: Int? = null) : PageItem(EMPTY)
 

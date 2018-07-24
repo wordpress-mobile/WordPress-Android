@@ -7,11 +7,19 @@ import android.arch.lifecycle.ViewModel
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.models.pages.PageStatus
+import org.wordpress.android.models.pages.PageStatus.DRAFT
+import org.wordpress.android.models.pages.PageStatus.PUBLISHED
+import org.wordpress.android.models.pages.PageStatus.SCHEDULED
+import org.wordpress.android.models.pages.PageStatus.TRASHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
-import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.PublishedPage
+import org.wordpress.android.ui.pages.PageItem.ScheduledPage
+import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import javax.inject.Inject
 
 class PageListViewModel
@@ -33,12 +41,24 @@ class PageListViewModel
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
                 .map { Page(it.pageId.toLong(), it.title, null) }
+                .map {
+                    when (it.status) {
+                        PUBLISHED -> PublishedPage(it.pageId, it.title, getPageItemIndent(it))
+                        DRAFT -> DraftPage(it.pageId, it.title, getPageItemIndent(it))
+                        SCHEDULED -> ScheduledPage(it.pageId, it.title, getPageItemIndent(it))
+                        TRASHED -> TrashedPage(it.pageId, it.title, getPageItemIndent(it))
+                    }
+                }
 
         if (newPages.isEmpty()) {
             _pages.postValue(listOf(Empty(string.empty_list_default)))
         } else {
             _pages.postValue(newPages)
         }
+    }
+
+    private fun getPageItemIndent(page: PageModel?): Int {
+        return if (page == null) -1 else getPageItemIndent(page.parent) + 1
     }
 
     fun start(site: SiteModel, pageType: PageStatus, pagesViewModel: PagesViewModel) {
