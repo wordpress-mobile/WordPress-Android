@@ -17,13 +17,14 @@
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/image_blog"
         android:layout_width="@dimen/avatar_sz_medium"
         android:layout_height="@dimen/avatar_sz_medium"
         android:layout_marginRight="@dimen/margin_large"
         android:layout_weight="0"
-        android:layout_marginEnd="@dimen/margin_large"/>
+        android:layout_marginEnd="@dimen/margin_large"
+        android:contentDescription="@null"/>
 
     <LinearLayout
         android:id="@+id/layout_content"

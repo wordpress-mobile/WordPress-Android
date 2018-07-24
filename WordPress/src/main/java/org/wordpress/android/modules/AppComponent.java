@@ -107,6 +107,7 @@ import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
@@ -363,6 +364,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderWebView object);
 
     void inject(ReaderPostPagerActivity object);
+
+    void inject(ReaderBlogAdapter object);
 
     void inject(ReleaseNotesActivity object);
 
