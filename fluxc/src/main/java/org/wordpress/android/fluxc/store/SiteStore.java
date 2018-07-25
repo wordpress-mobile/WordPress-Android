@@ -514,6 +514,7 @@ public class SiteStore extends Store {
     public enum PlansErrorType {
         NOT_AVAILABLE,
         AUTHORIZATION_REQUIRED,
+        UNAUTHORIZED,
         UNKNOWN_BLOG,
         GENERIC_ERROR;
 
