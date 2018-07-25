@@ -17,7 +17,10 @@ import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import org.wordpress.android.fluxc.site.SiteUtils.generateJetpackSiteOverXMLRPC
 import org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 class PostListSqlUtilsTest {
@@ -178,6 +181,62 @@ class PostListSqlUtilsTest {
         val updatedPostList = postListSqlUtils.getPostList(testList.id)
         assertEquals(insertedPostList.size, updatedPostList.size)
         assertEquals(date2, updatedPostList.firstOrNull()?.date)
+    }
+
+    @Test
+    fun testListIdForeignKeyCascadeDelete() {
+        val postCount = 20 // value doesn't matter
+        val listType = ListType.POSTS_ALL
+        /**
+         * 1. Generate and insert a self-hosted test site
+         * 2. Verify that the site is inserted
+         * 3. Generate and insert a [ListModel] for the test site
+         * 4. Generate a list of [PostListModel]s for the test list
+         * 5. Verify that the [PostListModel] was inserted correctly
+         */
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
+        assertFalse(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
+        val testList = insertTestList(testSite.id, listType)
+        val postList = generatePostList(testList, testSite.id, postCount)
+        postListSqlUtils.insertPostList(postList)
+        assertEquals(postCount, postListSqlUtils.getPostList(testList.id).size)
+
+        /**
+         * 1. Delete the test list
+         * 2. Verify that test list is deleted
+         * 3. Verify that [PostListModel]s for the test list are deleted
+         */
+        listSqlUtils.deleteList(testSite.id, listType)
+        assertNull(listSqlUtils.getList(testSite.id, listType))
+        assertTrue(postListSqlUtils.getPostList(testList.id).isEmpty())
+    }
+
+    @Test
+    fun testLocalSiteIdForeignKeyCascadeDelete() {
+        val postCount = 20 // value doesn't matter
+        val listType = ListType.POSTS_ALL
+        /**
+         * 1. Generate and insert a self-hosted test site
+         * 2. Verify that the site is inserted
+         * 3. Generate and insert a [ListModel] for the test site
+         * 4. Generate a list of [PostListModel]s for the test list
+         * 5. Verify that the [PostListModel] was inserted correctly
+         */
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
+        assertFalse(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
+        val testList = insertTestList(testSite.id, listType)
+        val postList = generatePostList(testList, testSite.id, postCount)
+        postListSqlUtils.insertPostList(postList)
+        assertEquals(postCount, postListSqlUtils.getPostList(testList.id).size)
+
+        /**
+         * 1. Delete the test site
+         * 2. Verify that test site is deleted
+         * 3. Verify that [PostListModel]s for the test site are deleted
+         */
+        SiteSqlUtils.deleteSite(testSite)
+        assertTrue(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
+        assertTrue(postListSqlUtils.getPostList(testList.id).isEmpty())
     }
 
     /**
