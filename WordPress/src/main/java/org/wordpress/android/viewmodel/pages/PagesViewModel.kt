@@ -81,8 +81,12 @@ class PagesViewModel
         _listState.postValue(newState)
     }
 
-    fun onPageEditFinished() {
-        refreshPagesAsync()
+    fun onPageEditFinished(pageId: Int) {
+        launch {
+            pageStore.getPageByLocalId(pageId, site)?.let {
+                refreshPagesAsync()
+            }
+        }
     }
 
     fun onSearchTextSubmit(query: String?): Boolean {
