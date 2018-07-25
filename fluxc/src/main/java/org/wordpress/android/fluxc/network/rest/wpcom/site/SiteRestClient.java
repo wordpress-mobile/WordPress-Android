@@ -305,7 +305,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(payload));
                             }
                         });
-        add(request, false);
+        add(request);
     }
 
     public void deleteSite(final SiteModel site) {
