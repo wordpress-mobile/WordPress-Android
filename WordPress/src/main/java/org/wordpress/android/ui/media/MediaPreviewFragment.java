@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.media;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,25 +13,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
+import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
 
@@ -75,10 +74,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private OnMediaTappedListener mMediaTapListener;
 
     @Inject MediaStore mMediaStore;
-    @Inject FluxCImageLoader mImageLoader;
+    @Inject ImageManager mImageManager;
 
     /**
-     * @param site optional site this media is associated with
+     * @param site       optional site this media is associated with
      * @param contentUri URI of media - can be local or remote
      */
     public static MediaPreviewFragment newInstance(
@@ -96,8 +95,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     /**
-     * @param site optional site this media is associated with
-     * @param media media model
+     * @param site     optional site this media is associated with
+     * @param media    media model
      * @param autoPlay true = play video/audio after fragment is created
      */
     public static MediaPreviewFragment newInstance(
@@ -278,92 +277,41 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
 
         mImageView.setVisibility(View.VISIBLE);
-
-        int width = DisplayUtils.getDisplayPixelWidth(getActivity());
-        int height = DisplayUtils.getDisplayPixelHeight(getActivity());
-        int size = Math.max(width, height);
-
-        if (mediaUri.startsWith("http")) {
-            showProgress(true);
-            String imageUrl = mediaUri;
-            if (mSite == null || SiteUtils.isPhotonCapable(mSite)) {
-                imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
-            }
-            mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (isAdded() && response.getBitmap() != null) {
-                        showProgress(false);
-                        setBitmap(response.getBitmap());
+        if (mSite == null || SiteUtils.isPhotonCapable(mSite)) {
+            int maxWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getActivity()),
+                    DisplayUtils.getDisplayPixelHeight(getActivity()));
+            mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0);
+        }
+        showProgress(true);
+        mImageManager.load(mImageView, ImageType.FULLSCREEN_PHOTO, mediaUri, ScaleType.CENTER,
+                new RequestListener() {
+                    @Override
+                    public void onResourceReady(@NotNull Drawable resource) {
+                        if (isAdded()) {
+                            // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
+                            // for it to be correctly resized upon loading
+                            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+                            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                                @Override
+                                public void onViewTap(View view, float x, float y) {
+                                    if (mMediaTapListener != null) {
+                                        mMediaTapListener.onMediaTapped();
+                                    }
+                                }
+                            });
+                            showProgress(false);
+                        }
                     }
-                }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    AppLog.e(AppLog.T.MEDIA, error);
-                    if (isAdded()) {
-                        showProgress(false);
-                        showLoadingError();
+                    @Override
+                    public void onLoadFailed(@Nullable Exception e) {
+                        if (isAdded()) {
+                            AppLog.e(T.MEDIA, e);
+                            showProgress(false);
+                            showLoadingError();
+                        }
                     }
-                }
-            }, size, 0);
-        } else {
-            new LocalImageTask(mediaUri, size).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    private class LocalImageTask extends AsyncTask<Void, Void, Bitmap> {
-        private final String mMediaUri;
-        private final int mSize;
-
-        LocalImageTask(@NonNull String mediaUri, int size) {
-            mMediaUri = mediaUri;
-            mSize = size;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgress(true);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            int orientation = ImageUtils.getImageOrientation(getActivity(), mMediaUri);
-            byte[] bytes = ImageUtils.createThumbnailFromUri(
-                    getActivity(), Uri.parse(mMediaUri), mSize, null, orientation);
-            if (bytes != null) {
-                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isAdded()) {
-                if (bitmap != null) {
-                    setBitmap(bitmap);
-                } else {
-                    showLoadingError();
-                }
-                showProgress(false);
-            }
-        }
-    }
-
-    private void setBitmap(@NonNull Bitmap bmp) {
-        // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
-        // for it to be correctly resized upon loading
-        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                if (mMediaTapListener != null) {
-                    mMediaTapListener.onMediaTapped();
-                }
-            }
-        });
-        mImageView.setImageBitmap(bmp);
+                });
     }
 
     /*

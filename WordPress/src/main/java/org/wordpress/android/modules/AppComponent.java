@@ -52,6 +52,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
+import org.wordpress.android.ui.media.MediaGridAdapter;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaPreviewFragment;
@@ -400,6 +401,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PluginDetailActivity object);
 
     void inject(WordPressGlideModule object);
+
+    void inject(MediaGridAdapter object);
 
     void inject(WPCustomImageGetter object);
 
