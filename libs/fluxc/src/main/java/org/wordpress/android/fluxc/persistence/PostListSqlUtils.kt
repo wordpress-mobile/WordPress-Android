@@ -30,12 +30,12 @@ class PostListSqlUtils @Inject constructor() {
                     .asModel
 
     /**
-     * This function deletes every [PostListModel] record of a site with [localSiteId] for the given [postId].
+     * This function deletes [PostListModel] records for the [listIds].
      */
-    fun deletePost(localSiteId: Int, postId: Int) {
+    fun deletePost(listIds: List<Int>, postId: Int) {
         WellSql.delete(PostListModel::class.java)
                 .where()
-                .equals(PostListModelTable.LOCAL_SITE_ID, localSiteId)
+                .isIn(PostListModelTable.LIST_ID, listIds)
                 .equals(PostListModelTable.POST_ID, postId)
                 .endWhere()
                 .execute()
