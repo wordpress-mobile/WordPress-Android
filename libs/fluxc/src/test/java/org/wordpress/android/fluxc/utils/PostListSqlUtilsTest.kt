@@ -155,38 +155,36 @@ class PostListSqlUtilsTest {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val testPostId = 1245 // value doesn't matter
         val listType = ListType.POSTS_ALL
-        val date1 = "1955-11-05T14:15:00Z"
-        val date2 = "1955-11-05T14:25:00Z"
 
         /**
          * 1. Since a [PostListModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
          * will be inserted in the DB.
-         * 2. Generate a [PostListModel] for `date1` and insert it in the DB
-         * 3. Verify that it's inserted correctly and [PostListModel.date] equals to `date1`
+         * 2. Generate 2 [PostListModel]s with the exact same values and insert the first one in the DB
+         * 3. Verify that first [PostListModel] is inserted correctly
          */
         val testList = insertTestList(testSite.id, listType)
-        val postListModel = generatePostListModel(testList.id, testSite.id, testPostId, date1)
+        val postListModel = generatePostListModel(testList.id, testSite.id, testPostId)
+        val postListModel2 = generatePostListModel(testList.id, testSite.id, testPostId)
         postListSqlUtils.insertPostList(listOf(postListModel))
         val insertedPostList = postListSqlUtils.getPostList(testList.id)
-        assertEquals(date1, insertedPostList.firstOrNull()?.date)
+        assertEquals(1, insertedPostList.size)
 
         /**
-         * 1. Update the `date` of `postListModel` to a different date: `date2`
-         * 2. Insert the updated `postListModel` to DB
-         * 3. Verify that no new record is created and the list size is the same.
-         * 4. Verify that the `date` is correctly updated after the second insertion.
+         * 1. Insert the second [PostListModel] in the DB
+         * 2. Verify that no new record is created and the list size is the same.
+         * 3. Verify that the [PostListModel.id] has not changed
          */
-        postListModel.date = date2
-        postListSqlUtils.insertPostList(listOf(postListModel))
+        postListSqlUtils.insertPostList(listOf(postListModel2))
         val updatedPostList = postListSqlUtils.getPostList(testList.id)
-        assertEquals(insertedPostList.size, updatedPostList.size)
-        assertEquals(date2, updatedPostList.firstOrNull()?.date)
+        assertEquals(1, updatedPostList.size)
+        assertEquals(insertedPostList[0].id, updatedPostList[0].id)
     }
 
     @Test
     fun testListIdForeignKeyCascadeDelete() {
         val postCount = 20 // value doesn't matter
         val listType = ListType.POSTS_ALL
+
         /**
          * 1. Generate and insert a self-hosted test site
          * 2. Verify that the site is inserted
@@ -215,6 +213,7 @@ class PostListSqlUtilsTest {
     fun testLocalSiteIdForeignKeyCascadeDelete() {
         val postCount = 20 // value doesn't matter
         val listType = ListType.POSTS_ALL
+
         /**
          * 1. Generate and insert a self-hosted test site
          * 2. Verify that the site is inserted
@@ -251,7 +250,6 @@ class PostListSqlUtilsTest {
 
     /**
      * Helper function that creates a list of [PostListModel] to be used in tests.
-     * The [PostListModel.date] will be the same date for all [PostListModel]s.
      */
     private fun generatePostList(listModel: ListModel, localSiteId: Int, count: Int): List<PostListModel> =
             (1..count).map { generatePostListModel(listModel.id, localSiteId, it) }
@@ -262,14 +260,12 @@ class PostListSqlUtilsTest {
     private fun generatePostListModel(
         listId: Int,
         localSiteId: Int,
-        postId: Int,
-        date: String = "1955-11-05T14:15:00Z" // just a random valid date since most test don't care about it
+        postId: Int
     ): PostListModel {
         val postListModel = PostListModel()
         postListModel.listId = listId
         postListModel.localSiteId = localSiteId
         postListModel.postId = postId
-        postListModel.date = date
         return postListModel
     }
 
