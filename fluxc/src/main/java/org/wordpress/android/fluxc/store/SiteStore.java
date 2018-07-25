@@ -91,15 +91,15 @@ public class SiteStore extends Store {
     }
 
     public static class FetchedPlansPayload extends Payload<PlansError> {
-        @NonNull public SiteModel site;
+        public SiteModel site;
         @Nullable public List<PlanModel> plans;
 
-        public FetchedPlansPayload(@NonNull SiteModel site, @Nullable List<PlanModel> plans) {
+        public FetchedPlansPayload(SiteModel site, @Nullable List<PlanModel> plans) {
             this.site = site;
             this.plans = plans;
         }
 
-        public FetchedPlansPayload(@NonNull SiteModel site, @NonNull PlansError error) {
+        public FetchedPlansPayload(SiteModel site, @NonNull PlansError error) {
             this.site = site;
             this.error = error;
         }
@@ -361,10 +361,10 @@ public class SiteStore extends Store {
     }
 
     public static class OnPlansFetched extends OnChanged<PlansError> {
-        public @NonNull SiteModel site;
+        public SiteModel site;
         public @Nullable List<PlanModel> plans;
 
-        public OnPlansFetched(@NonNull SiteModel site, @Nullable List<PlanModel> plans, @Nullable PlansError error) {
+        public OnPlansFetched(SiteModel site, @Nullable List<PlanModel> plans, @Nullable PlansError error) {
             this.site = site;
             this.plans = plans;
             this.error = error;
@@ -1303,7 +1303,7 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void fetchPlans(@NonNull SiteModel siteModel) {
+    private void fetchPlans(SiteModel siteModel) {
         if (siteModel.isUsingWpComRestApi()) {
             mSiteRestClient.fetchPlans(siteModel);
         } else {
