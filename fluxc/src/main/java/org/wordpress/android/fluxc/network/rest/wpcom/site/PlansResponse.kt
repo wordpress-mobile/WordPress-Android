@@ -22,7 +22,7 @@ class PlansDeserializer : JsonDeserializer<PlansResponse> {
             val planJsonObj = value.asJsonObject
             val productSlug = planJsonObj.getString("product_slug")
             val productName = planJsonObj.getString("product_name")
-            val productId = key.toLong()
+            val productId = key.toInt()
 
             // 'current_plan' and 'has_domain_credit' attributes might be missing,
             // consider them as false, if they are missing
