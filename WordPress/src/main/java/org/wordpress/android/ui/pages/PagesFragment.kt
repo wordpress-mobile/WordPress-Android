@@ -87,7 +87,7 @@ class PagesFragment : Fragment() {
         tabLayout.setupWithViewPager(pagesPager)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
-            viewModel.refresh()
+            viewModel.refreshPagesAsync()
         }
 
         newPageButton.setOnClickListener {

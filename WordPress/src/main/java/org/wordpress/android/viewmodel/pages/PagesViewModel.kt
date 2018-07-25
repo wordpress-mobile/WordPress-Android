@@ -105,10 +105,6 @@ class PagesViewModel
         return true
     }
 
-    fun refresh() {
-        refreshPagesAsync()
-    }
-
     fun onAction(action: Action, pageItem: PageItem): Boolean {
         TODO("not implemented")
     }
