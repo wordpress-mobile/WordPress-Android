@@ -8,6 +8,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.posts.EditPostActivity
 
 class PagesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,15 +32,16 @@ class PagesActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK) {
-            onPageEditFinished()
+        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
+            val pageId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+            onPageEditFinished(pageId)
         }
     }
 
-    private fun onPageEditFinished() {
+    private fun onPageEditFinished(pageId: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
-            fragment.onPageEditFinished()
+            fragment.onPageEditFinished(pageId)
         }
     }
 }

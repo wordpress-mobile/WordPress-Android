@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
@@ -26,6 +27,7 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -76,8 +78,8 @@ class PagesFragment : Fragment() {
         }
     }
 
-    fun onPageEditFinished() {
-        viewModel.onPageEditFinished()
+    fun onPageEditFinished(pageId: Int) {
+        viewModel.onPageEditFinished(pageId)
     }
 
     private fun initializeViews(activity: FragmentActivity) {
@@ -88,7 +90,9 @@ class PagesFragment : Fragment() {
             viewModel.refresh()
         }
 
-        newPageButton.setOnClickListener {}
+        newPageButton.setOnClickListener {
+            viewModel.onNewPageButtonTapped()
+        }
     }
 
     private fun initializeSearchView() {
@@ -129,12 +133,12 @@ class PagesFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get<PagesViewModel>(PagesViewModel::class.java)
 
-        setupObservers()
+        setupObservers(site)
 
         viewModel.start(site)
     }
 
-    private fun setupObservers() {
+    private fun setupObservers(site: SiteModel) {
         viewModel.searchResult.observe(this, Observer { result ->
             result?.let { setSearchResult(result) }
         })
@@ -149,6 +153,10 @@ class PagesFragment : Fragment() {
 
         viewModel.listState.observe(this, Observer {
             refreshProgressBars(it)
+        })
+
+        viewModel.createNewPage.observe(this, Observer {
+            ActivityLauncher.addNewPageForResult(activity, site)
         })
     }
 

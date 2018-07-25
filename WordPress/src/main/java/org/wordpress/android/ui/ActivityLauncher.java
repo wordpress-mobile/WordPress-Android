@@ -381,6 +381,18 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
+    public static void addNewPageForResult(Activity activity, SiteModel site) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
     /*
      * Load the post preview as an authenticated URL so stats aren't bumped
      */

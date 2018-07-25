@@ -38,6 +38,10 @@ class PagesViewModel
     val refreshPages: LiveData<Unit>
         get() = _refreshPages
 
+    private val _createNewPage = SingleLiveEvent<Unit>()
+    val createNewPage: LiveData<Unit>
+        get() = _createNewPage
+
     private var _pages: List<PageModel> = emptyList()
     val pages: List<PageModel>
         get() = _pages
@@ -111,6 +115,10 @@ class PagesViewModel
 
     private fun clearSearch() {
         _searchResult.postValue(listOf(Empty(string.empty_list_default)))
+    }
+
+    fun onNewPageButtonTapped() {
+        _createNewPage.asyncCall()
     }
 }
 
