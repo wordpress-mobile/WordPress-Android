@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
@@ -123,6 +124,8 @@ public class MySiteFragment extends Fragment implements
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
     private QuickStartMySitePrompts mActiveTutorialPrompt;
+    private TextView mQuickStartCounter;
+    private View mQuickStartDot;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -182,6 +185,8 @@ public class MySiteFragment extends Fragment implements
                 mActivityLogContainer.setVisibility(View.VISIBLE);
             }
         }
+
+        updateQuickStartCounter();
     }
 
     @Override public void onSaveInstanceState(Bundle outState) {
@@ -223,6 +228,8 @@ public class MySiteFragment extends Fragment implements
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
         mQuickStartContainer = rootView.findViewById(R.id.row_quick_start);
+        mQuickStartCounter = rootView.findViewById(R.id.my_site_quick_start_progress);
+        mQuickStartDot = rootView.findViewById(R.id.my_site_quick_start_dot);
 
         setupClickListeners(rootView);
 
@@ -403,6 +410,21 @@ public class MySiteFragment extends Fragment implements
                         mAccountStore.getAccount().getUserName());
             }
         });
+
+        mQuickStartContainer.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mQuickStartDot.getVisibility() == View.VISIBLE) {
+                    AppPrefs.setQuickStartActive(false);
+                    mQuickStartContainer.setVisibility(View.GONE);
+                }
+
+                ActivityLauncher.viewQuickStartForResult(getActivity());
+            }
+        });
+
+        mToolbar = rootView.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
     }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -410,6 +432,26 @@ public class MySiteFragment extends Fragment implements
 
         if (mActiveTutorialPrompt != null) {
             showQuickStartFocusPoint();
+        }
+    }
+
+    private void updateQuickStartCounter() {
+        int numberOfTasksCompleted = 0;
+        int totalNumberOfTasks = QuickStartTask.values().length;
+
+        for (QuickStartTask task : QuickStartTask.values()) {
+            if (task == QuickStartTask.CREATE_SITE || mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), task)) {
+                numberOfTasksCompleted++;
+            }
+        }
+
+        mQuickStartCounter.setText(getString(
+                R.string.quick_start_sites_progress, numberOfTasksCompleted, totalNumberOfTasks));
+
+        if (numberOfTasksCompleted == totalNumberOfTasks) {
+            mQuickStartDot.setVisibility(View.VISIBLE);
+        } else {
+            mQuickStartDot.setVisibility(View.GONE);
         }
     }
 
@@ -672,7 +714,8 @@ public class MySiteFragment extends Fragment implements
 
         boolean isQuickStartAvailable = site.getHasCapabilityManageOptions()
                                         && ThemeBrowserActivity.isAccessible(site)
-                                        && SiteUtils.isAccessedViaWPComRest(site);
+                                        && SiteUtils.isAccessedViaWPComRest(site)
+                                        && AppPrefs.isQuickStartActive();
 
         mQuickStartContainer.setVisibility(isQuickStartAvailable ? View.VISIBLE : View.GONE);
 

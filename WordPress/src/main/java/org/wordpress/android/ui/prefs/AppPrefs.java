@@ -706,7 +706,7 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, isActive);
     }
 
-    //TODO quick start is set to true by default for testing purposes. Remove in prod.
+    // TODO quick start is set to true by default for testing purposes. Remove in prod.
     public static boolean isQuickStartActive() {
         return getBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, true);
     }

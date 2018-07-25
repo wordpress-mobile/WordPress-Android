@@ -150,7 +150,7 @@
                 <LinearLayout
                     android:id="@+id/row_quick_start"
                     style="@style/MySiteListRowLayout"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     tools:visibility="visible">
 
                     <ImageView
