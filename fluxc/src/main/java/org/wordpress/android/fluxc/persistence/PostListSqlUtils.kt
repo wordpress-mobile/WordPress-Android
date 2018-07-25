@@ -32,7 +32,7 @@ class PostListSqlUtils @Inject constructor() {
     /**
      * This function returns a list of [PostListModel] records for the given [listId].
      */
-    fun getPostList(listId: Int): List<PostListModel>? =
+    fun getPostList(listId: Int): List<PostListModel> =
             WellSql.select(PostListModel::class.java)
                     .where()
                     .equals(PostListModelTable.LIST_ID, listId)

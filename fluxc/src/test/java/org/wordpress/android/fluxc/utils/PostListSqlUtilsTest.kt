@@ -50,7 +50,7 @@ class PostListSqlUtilsTest {
         val testList = insertTestList(testSite.id, listType)
         val postList = generatePostList(testList, testSite.id, postCount)
         postListSqlUtils.insertPostList(postList)
-        assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
+        assertEquals(postCount, postListSqlUtils.getPostList(testList.id).size)
     }
 
     @Test
@@ -68,14 +68,14 @@ class PostListSqlUtilsTest {
         val testList = insertTestList(testSite.id, listType)
         val postList = generatePostList(testList, testSite.id, postCount)
         postListSqlUtils.insertPostList(postList)
-        assertEquals(postCount, postListSqlUtils.getPostList(testList.id)?.size)
+        assertEquals(postCount, postListSqlUtils.getPostList(testList.id).size)
 
         /**
          * 1. Delete the inserted list
          * 2. Verify that deleting the list also deletes the inserted [PostListModel]s due to foreign key restriction
          */
         listSqlUtils.deleteList(testSite.id, listType)
-        assertEquals(0, postListSqlUtils.getPostList(testList.id)?.size)
+        assertEquals(0, postListSqlUtils.getPostList(testList.id).size)
     }
 
     @Test
@@ -92,7 +92,7 @@ class PostListSqlUtilsTest {
         val postList = testLists.map { generatePostListModel(it.id, testSite.id, testPostId) }
         postListSqlUtils.insertPostList(postList)
         testLists.forEach { list ->
-            assertEquals(1, postListSqlUtils.getPostList(list.id)?.size)
+            assertEquals(1, postListSqlUtils.getPostList(list.id).size)
         }
 
         /**
@@ -101,7 +101,7 @@ class PostListSqlUtilsTest {
          */
         postListSqlUtils.deletePost(testSite.id, testPostId)
         testLists.forEach {
-            assertEquals(0, postListSqlUtils.getPostList(it.id)?.size)
+            assertEquals(0, postListSqlUtils.getPostList(it.id).size)
         }
     }
 
@@ -133,8 +133,8 @@ class PostListSqlUtilsTest {
          */
         testLists.forEach {
             val insertedPostList = postListSqlUtils.getPostList(it.id)
-            assertEquals(1, insertedPostList?.size)
-            assertEquals(testPostId, insertedPostList?.get(0)?.postId)
+            assertEquals(1, insertedPostList.size)
+            assertEquals(testPostId, insertedPostList[0].postId)
         }
 
         /**
@@ -143,8 +143,8 @@ class PostListSqlUtilsTest {
          * 3. Verify that it's NOT deleted from the second list
          */
         postListSqlUtils.deletePost(testSite1.id, testPostId)
-        assertEquals(0, postListSqlUtils.getPostList(testLists[0].id)?.size)
-        assertEquals(1, postListSqlUtils.getPostList(testLists[1].id)?.size)
+        assertEquals(0, postListSqlUtils.getPostList(testLists[0].id).size)
+        assertEquals(1, postListSqlUtils.getPostList(testLists[1].id).size)
     }
 
     @Test
@@ -165,7 +165,7 @@ class PostListSqlUtilsTest {
         val postListModel = generatePostListModel(testList.id, testSite.id, testPostId, date1)
         postListSqlUtils.insertPostList(listOf(postListModel))
         val insertedPostList = postListSqlUtils.getPostList(testList.id)
-        assertEquals(date1, insertedPostList?.firstOrNull()?.date)
+        assertEquals(date1, insertedPostList.firstOrNull()?.date)
 
         /**
          * 1. Update the `date` of `postListModel` to a different date: `date2`
@@ -176,8 +176,8 @@ class PostListSqlUtilsTest {
         postListModel.date = date2
         postListSqlUtils.insertPostList(listOf(postListModel))
         val updatedPostList = postListSqlUtils.getPostList(testList.id)
-        assertEquals(insertedPostList?.size, updatedPostList?.size)
-        assertEquals(date2, updatedPostList?.firstOrNull()?.date)
+        assertEquals(insertedPostList.size, updatedPostList.size)
+        assertEquals(date2, updatedPostList.firstOrNull()?.date)
     }
 
     /**
