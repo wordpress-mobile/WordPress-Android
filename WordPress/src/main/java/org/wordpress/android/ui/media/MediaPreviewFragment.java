@@ -18,6 +18,7 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -285,24 +286,20 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mImageManager.load(mImageView, ImageType.FULLSCREEN_PHOTO, mediaUri, ScaleType.CENTER,
                 new RequestListener() {
                     @Override
-                    public void onResourceReady(@Nullable Drawable resource) {
+                    public void onResourceReady(@NotNull Drawable resource) {
                         if (isAdded()) {
-                            if (resource != null) {
-                                // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
-                                // for it to be correctly resized upon loading
-                                PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-                                attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                                    @Override
-                                    public void onViewTap(View view, float x, float y) {
-                                        if (mMediaTapListener != null) {
-                                            mMediaTapListener.onMediaTapped();
-                                        }
+                            // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
+                            // for it to be correctly resized upon loading
+                            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+                            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                                @Override
+                                public void onViewTap(View view, float x, float y) {
+                                    if (mMediaTapListener != null) {
+                                        mMediaTapListener.onMediaTapped();
                                     }
-                                });
-                                showProgress(false);
-                            } else {
-                                AppLog.e(T.MEDIA, "Loading media preview failed - resource is null.");
-                            }
+                                }
+                            });
+                            showProgress(false);
                         }
                     }
 
