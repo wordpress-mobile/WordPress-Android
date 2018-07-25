@@ -158,6 +158,13 @@ class PagesFragment : Fragment() {
         viewModel.createNewPage.observe(this, Observer {
             ActivityLauncher.addNewPageForResult(activity, site)
         })
+
+        viewModel.showSnackbarMessage.observe(this, Observer { message ->
+            val parent: View? = activity?.findViewById(android.R.id.content)
+            if (message != null && parent != null) {
+                Snackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

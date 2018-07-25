@@ -46,6 +46,10 @@ class PagesViewModel
     val pages: List<PageModel>
         get() = _pages
 
+    private val _showSnackbarMessage = SingleLiveEvent<String>()
+    val showSnackbarMessage: LiveData<String>
+        get() = _showSnackbarMessage
+
     private lateinit var site: SiteModel
 
     fun start(site: SiteModel) {
