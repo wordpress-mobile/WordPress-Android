@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -37,11 +38,13 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
@@ -279,6 +282,29 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 }
         );
+        add(request);
+    }
+
+    public void fetchPlans(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).plans.getUrlV1_3();
+        final WPComGsonRequest<PlansResponse> request =
+                WPComGsonRequest.buildGetRequest(url, null, PlansResponse.class,
+                        new Listener<PlansResponse>() {
+                            @Override
+                            public void onResponse(PlansResponse response) {
+                                List<PlanModel> plans = response.getPlansList();
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newFetchedPlansAction(new FetchedPlansPayload(site, plans)));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                PlansError plansError = new PlansError(error.apiError, error.message);
+                                FetchedPlansPayload payload = new FetchedPlansPayload(site, plansError);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(payload));
+                            }
+                        });
         add(request);
     }
 
