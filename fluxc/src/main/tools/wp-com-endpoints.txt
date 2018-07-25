@@ -53,6 +53,8 @@
 /sites/$site/media/$media_ID/delete/
 /sites/$site/media/new/
 
+/sites/$site/plans/
+
 /sites/$site/plugins
 /sites/$site/plugins/$name#String
 /sites/$site/plugins/$name#String/delete
