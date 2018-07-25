@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.models.pages.PageStatus.DRAFT
+import org.wordpress.android.models.pages.PageStatus.PENDING
 import org.wordpress.android.models.pages.PageStatus.PUBLISHED
 import org.wordpress.android.models.pages.PageStatus.SCHEDULED
 import org.wordpress.android.models.pages.PageStatus.TRASHED
@@ -53,7 +54,7 @@ class PageListViewModel
                 .map {
                     when (it.status) {
                         PUBLISHED -> PublishedPage(it.pageId, it.title, getPageItemIndent(it))
-                        DRAFT -> DraftPage(it.pageId, it.title)
+                        PENDING, DRAFT -> DraftPage(it.pageId, it.title)
                         SCHEDULED -> ScheduledPage(it.pageId, it.title)
                         TRASHED -> TrashedPage(it.pageId, it.title)
                     }
