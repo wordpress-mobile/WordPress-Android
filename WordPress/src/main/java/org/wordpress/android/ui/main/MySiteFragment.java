@@ -445,8 +445,9 @@ public class MySiteFragment extends Fragment implements
             }
         }
 
-        mQuickStartCounter.setText(getString(
-                R.string.quick_start_sites_progress, numberOfTasksCompleted, totalNumberOfTasks));
+        mQuickStartCounter.setText(getString(R.string.quick_start_sites_progress,
+                numberOfTasksCompleted,
+                totalNumberOfTasks));
 
         if (numberOfTasksCompleted == totalNumberOfTasks) {
             mQuickStartDot.setVisibility(View.VISIBLE);

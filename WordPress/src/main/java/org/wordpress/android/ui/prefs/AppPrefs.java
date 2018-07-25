@@ -701,7 +701,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
-
     public static void setQuickStartActive(Boolean isActive) {
         setBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, isActive);
     }
