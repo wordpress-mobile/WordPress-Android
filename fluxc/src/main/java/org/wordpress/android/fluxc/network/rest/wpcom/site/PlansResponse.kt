@@ -20,8 +20,8 @@ class PlansDeserializer : JsonDeserializer<PlansResponse> {
         val planModels = ArrayList<PlanModel>()
         jsonObject.entrySet().forEach { (key, value) ->
             val planJsonObj = value.asJsonObject
-            val productSlug = planJsonObj.getString("product_slug") ?: String()
-            val productName = planJsonObj.getString("product_name") ?: String()
+            val productSlug = planJsonObj.getString("product_slug")
+            val productName = planJsonObj.getString("product_name")
             val productId = key.toLong()
 
             // 'current_plan' and 'has_domain_credit' attributes might be missing,
