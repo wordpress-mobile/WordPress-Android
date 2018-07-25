@@ -14,9 +14,11 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import org.wordpress.android.fluxc.site.SiteUtils
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 class ListSqlUtilsTest {
@@ -87,6 +89,34 @@ class ListSqlUtilsTest {
          */
         listSqlUtils.deleteList(testSite.id, listType)
         assertNull(listSqlUtils.getList(testSite.id, listType))
+    }
+
+    @Test
+    fun testLocalSiteIdForeignKeyCascadeDelete() {
+        val listType1 = ListType.POSTS_ALL
+        val listType2 = ListType.POSTS_SCHEDULED
+        /**
+         * 1. Generate and insert a self-hosted test site
+         * 2. Verify that the site is inserted
+         * 3. Insert a 2 different [ListModel]s for that test site
+         * 4. Verify that lists are inserted
+         */
+        val testSite = generateAndInsertSelfHostedNonJPTestSite()
+        assertFalse(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
+        listSqlUtils.insertOrUpdateList(testSite.id, listType1)
+        listSqlUtils.insertOrUpdateList(testSite.id, listType2)
+        assertNotNull(listSqlUtils.getList(testSite.id, listType1))
+        assertNotNull(listSqlUtils.getList(testSite.id, listType2))
+
+        /**
+         * 1. Delete the test site
+         * 2. Verify that test site is deleted
+         * 3. Verify that both lists are deleted as a result of deleting the site
+         */
+        SiteSqlUtils.deleteSite(testSite)
+        assertTrue(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
+        assertNull(listSqlUtils.getList(testSite.id, listType1))
+        assertNull(listSqlUtils.getList(testSite.id, listType2))
     }
 
     /**
