@@ -28,7 +28,9 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         val post = postStore.getPostByLocalPostId(pageId)
         return@withContext post?.let {
             val page = PageModel.fromPost(it, site)
-            page.parent = getPageByRemoteId(page.parentId, site)
+            if (page.parentId != 0L) {
+                page.parent = getPageByRemoteId(page.parentId, site)
+            }
             page
         }
     }
@@ -37,7 +39,9 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         val post = postStore.getPostByRemotePostId(remoteId, site)
         return@withContext post?.let {
             val page = PageModel.fromPost(it, site)
-            page.parent = getPageByRemoteId(page.parentId, site)
+            if (page.parentId != 0L) {
+                page.parent = getPageByRemoteId(page.parentId, site)
+            }
             page
         }
     }
