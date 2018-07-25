@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSit
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
@@ -57,6 +58,8 @@ public enum SiteAction implements IAction {
     INITIATE_AUTOMATED_TRANSFER,
     @Action(payloadType = SiteModel.class)
     CHECK_AUTOMATED_TRANSFER_STATUS,
+    @Action(payloadType = SiteModel.class)
+    FETCH_PLANS,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)
@@ -85,6 +88,8 @@ public enum SiteAction implements IAction {
     INITIATED_AUTOMATED_TRANSFER,
     @Action(payloadType = AutomatedTransferStatusResponsePayload.class)
     CHECKED_AUTOMATED_TRANSFER_STATUS,
+    @Action(payloadType = FetchedPlansPayload.class)
+    FETCHED_PLANS,
 
     // Local actions
     @Action(payloadType = SiteModel.class)

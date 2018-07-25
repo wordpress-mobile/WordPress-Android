@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -86,6 +87,21 @@ public class SiteStore extends Store {
         public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
             this.site = site;
             this.roles = roles;
+        }
+    }
+
+    public static class FetchedPlansPayload extends Payload<PlansError> {
+        public SiteModel site;
+        @Nullable public List<PlanModel> plans;
+
+        public FetchedPlansPayload(SiteModel site, @Nullable List<PlanModel> plans) {
+            this.site = site;
+            this.plans = plans;
+        }
+
+        public FetchedPlansPayload(SiteModel site, @NonNull PlansError error) {
+            this.site = site;
+            this.error = error;
         }
     }
 
@@ -344,6 +360,17 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnPlansFetched extends OnChanged<PlansError> {
+        public SiteModel site;
+        public @Nullable List<PlanModel> plans;
+
+        public OnPlansFetched(SiteModel site, @Nullable List<PlanModel> plans, @Nullable PlansError error) {
+            this.site = site;
+            this.plans = plans;
+            this.error = error;
+        }
+    }
+
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
@@ -383,6 +410,20 @@ public class SiteStore extends Store {
         public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
+        }
+    }
+
+    public static class PlansError implements OnChangedError {
+        @NonNull public PlansErrorType type;
+        @Nullable public String message;
+
+        public PlansError(@Nullable String type, @Nullable String message) {
+            this.type = PlansErrorType.fromString(type);
+            this.message = message;
+        }
+
+        public PlansError(@NonNull PlansErrorType type) {
+            this.type = type;
         }
     }
 
@@ -468,6 +509,25 @@ public class SiteStore extends Store {
         INVALID_SITE,
         INVALID_RESPONSE,
         GENERIC_ERROR;
+    }
+
+    public enum PlansErrorType {
+        NOT_AVAILABLE,
+        AUTHORIZATION_REQUIRED,
+        UNAUTHORIZED,
+        UNKNOWN_BLOG,
+        GENERIC_ERROR;
+
+        public static PlansErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (PlansErrorType v : PlansErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum UserRolesErrorType {
@@ -958,6 +1018,12 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            case FETCH_PLANS:
+                fetchPlans((SiteModel) action.getPayload());
+                break;
+            case FETCHED_PLANS:
+                handleFetchedPlans((FetchedPlansPayload) action.getPayload());
+                break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
@@ -1236,6 +1302,19 @@ public class SiteStore extends Store {
             event.error = payload.error;
         }
         emitChange(event);
+    }
+
+    private void fetchPlans(SiteModel siteModel) {
+        if (siteModel.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchPlans(siteModel);
+        } else {
+            PlansError plansError = new PlansError(PlansErrorType.NOT_AVAILABLE);
+            handleFetchedPlans(new FetchedPlansPayload(siteModel, plansError));
+        }
+    }
+
+    private void handleFetchedPlans(FetchedPlansPayload payload) {
+        emitChange(new OnPlansFetched(payload.site, payload.plans, payload.error));
     }
 
     // Automated Transfers
