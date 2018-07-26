@@ -1707,6 +1707,7 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
+    <string name="themes_empty_list">No themes matching your search</string>
 
     <!--People Management-->
     <string name="people">People</string>
