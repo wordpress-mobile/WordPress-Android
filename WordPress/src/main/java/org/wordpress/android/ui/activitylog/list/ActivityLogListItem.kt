@@ -12,18 +12,14 @@ import java.util.Date
 import java.util.Locale
 
 sealed class ActivityLogListItem(val type: ViewType) {
-    abstract val title: String
-    abstract val description: String
-    abstract val header: String
-
     interface IActionableItem {
         val isButtonVisible: Boolean
     }
 
     data class Event(
         val activityId: String,
-        override val title: String,
-        override val description: String,
+        val title: String,
+        val description: String,
         private val gridIcon: String?,
         private val eventStatus: String?,
         val isRewindable: Boolean,
@@ -37,7 +33,6 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val formattedTime: String = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
         val icon = Icon.fromValue(gridIcon)
         val status = Status.fromValue(eventStatus)
-        override val header = formattedDate
 
         constructor(model: ActivityLogModel, rewindDisabled: Boolean = false) : this(
                 model.activityID,
@@ -52,16 +47,11 @@ sealed class ActivityLogListItem(val type: ViewType) {
     }
 
     data class Progress(
-        override val title: String,
-        override val description: String,
-        override val header: String
+        val title: String,
+        val description: String
     ) : ActivityLogListItem(PROGRESS)
 
-    data class Header(val text: String): ActivityLogListItem(HEADER) {
-        override val title: String = ""
-        override val description: String = ""
-        override val header: String = ""
-    }
+    data class Header(val text: String): ActivityLogListItem(HEADER)
 
     enum class ViewType(val id: Int) {
         EVENT(0),

@@ -20,6 +20,7 @@ import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -167,32 +168,24 @@ class ActivityLogViewModel @Inject constructor(
         displayProgressItem: Boolean = isRewindProgressItemShown
     ) {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
-        val items = ArrayList<ActivityLogListItem>(eventList.map { model ->
-            ActivityLogListItem.Event(model, disableActions)
-        })
-        areActionsEnabled = true
-
-        if (disableActions) {
-            disableListActions()
-        }
-
+        val items = mutableListOf<ActivityLogListItem>()
         if (displayProgressItem) {
-            insertRewindProgressItem(items)
+            val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
+            items.add(Header(resourceProvider.getString(string.now)))
+            items.add(getRewindProgressItem(activityLogModel))
             moveToTop()
         }
-
-        val listWithHeaders = mutableListOf<ActivityLogListItem>()
-        var shiftedIndex = 0
-        items.forEachIndexed { i, item ->
-            if (i == 0 || items[i - 1].header != items[i].header) {
-                listWithHeaders.add(shiftedIndex, ActivityLogListItem.Header(items[i].header))
-                shiftedIndex += 1
+        eventList.forEach { model ->
+            val currentItem = ActivityLogListItem.Event(model, disableActions)
+            val lastItem = items.lastOrNull() as? Event
+            if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
+                items.add(ActivityLogListItem.Header(currentItem.formattedDate))
             }
-            listWithHeaders.add(shiftedIndex, item)
-            shiftedIndex += 1
+            items.add(currentItem)
         }
+        areActionsEnabled = !disableActions
 
-        _events.postValue(listWithHeaders)
+        _events.postValue(items)
     }
 
     private fun moveToTop() {
@@ -201,25 +194,14 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun insertRewindProgressItem(items: ArrayList<ActivityLogListItem>) {
-        val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
-        items.add(0, getRewindProgressItem(activityLogModel))
-    }
-
-    private fun disableListActions() {
-        areActionsEnabled = false
-    }
-
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
         return activityLogModel?.let {
             val rewoundEvent = ActivityLogListItem.Event(it)
             ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                     resourceProvider.getString(R.string.activity_log_currently_restoring_message,
-                            rewoundEvent.formattedDate, rewoundEvent.formattedTime),
-                    resourceProvider.getString(R.string.now))
+                            rewoundEvent.formattedDate, rewoundEvent.formattedTime))
         } ?: ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates),
-                resourceProvider.getString(R.string.now))
+                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates))
     }
 
     private fun requestEventsUpdate(isLoadingMore: Boolean) {

@@ -29,6 +29,7 @@ import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
@@ -134,10 +135,17 @@ class ActivityLogViewModelTest {
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
 
-    private fun expectedActivityList(): List<Event> {
-        return activityLogList.mapIndexed { index, activityLogModel ->
-            Event(activityLogModel, true).copy(isHeaderVisible = index != 1)
-        }
+    private fun expectedActivityList(): List<ActivityLogListItem> {
+        val activityLogListItems = mutableListOf<ActivityLogListItem>()
+        val first = Event(activityLogList[0], true)
+        val second = Event(activityLogList[1], true)
+        val third = Event(activityLogList[2], true)
+        activityLogListItems.add(Header(first.formattedDate))
+        activityLogListItems.add(first)
+        activityLogListItems.add(second)
+        activityLogListItems.add(Header(third.formattedDate))
+        activityLogListItems.add(third)
+        return activityLogListItems
     }
 
     @Test
@@ -163,9 +171,8 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         viewModel.onEventsUpdated(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
-        assertTrue(events.last()?.get(0)?.isHeaderVisible == true)
-        assertTrue(events.last()?.get(1)?.isHeaderVisible == false)
-        assertTrue(events.last()?.get(2)?.isHeaderVisible == true)
+        assertTrue(events.last()?.get(0) is Header)
+        assertTrue(events.last()?.get(3) is Header)
     }
 
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
