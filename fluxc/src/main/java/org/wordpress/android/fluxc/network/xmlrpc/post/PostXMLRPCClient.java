@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
@@ -111,38 +113,36 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
         Map<String, Object> contentStruct = new HashMap<>();
-
         contentStruct.put("number", PostStore.NUM_POSTS_PER_FETCH);
         contentStruct.put("offset", offset);
-
         if (getPages) {
             contentStruct.put("post_type", "page");
         }
+
+        List<String> fields = new ArrayList<>();
+        fields.add("post_id");
 
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(contentStruct);
+        params.add(fields);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
                     @Override
                     public void onResponse(Object[] response) {
-                        boolean canLoadMore = false;
-                        if (response != null && response.length == PostStore.NUM_POSTS_PER_FETCH) {
-                            canLoadMore = true;
-                        }
+                        if (response != null) {
+                            boolean canLoadMore = response.length == PostStore.NUM_POSTS_PER_FETCH;
+                            List<Long> postIds = postIdsFromPostsResponse(response);
 
-                        PostsModel posts = postsResponseToPostsModel(response, site);
-
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
-                                offset > 0, canLoadMore);
-
-                        if (posts != null) {
+                            FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postIds, site, getPages,
+                                    offset > 0, canLoadMore);
                             mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         } else {
-                            payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
+                            PostError error = new PostError(PostErrorType.INVALID_RESPONSE);
+                            FetchPostsResponsePayload payload = new FetchPostsResponsePayload(error);
                             mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         }
                     }
@@ -277,28 +277,14 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site) {
-        List<Map<?, ?>> postsList = new ArrayList<>();
+    private @NotNull List<Long> postIdsFromPostsResponse(Object[] response) {
+        List<Long> postIds = new ArrayList<>();
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
-            postsList.add(postMap);
+            String postID = MapUtils.getMapStr(postMap, "post_id");
+            postIds.add(Long.parseLong(postID));
         }
-
-        List<PostModel> postArray = new ArrayList<>();
-        PostModel post;
-
-        for (Object postObject : postsList) {
-            post = postResponseObjectToPostModel(postObject, site);
-            if (post != null) {
-                postArray.add(post);
-            }
-        }
-
-        if (postArray.isEmpty()) {
-            return null;
-        }
-
-        return new PostsModel(postArray);
+        return postIds;
     }
 
     private static PostModel postResponseObjectToPostModel(Object postObject, SiteModel site) {

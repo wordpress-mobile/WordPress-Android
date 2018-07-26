@@ -89,6 +89,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         params.put("context", "edit");
         params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
+        params.put("fields", "ID");
 
         if (getPages) {
             params.put("type", "page");
@@ -107,17 +108,14 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        List<PostModel> postArray = new ArrayList<>();
-                        PostModel post;
+                        List<Long> postIds = new ArrayList<>();
                         for (PostWPComRestResponse postResponse : response.posts) {
-                            post = postResponseToPostModel(postResponse);
-                            post.setLocalSiteId(site.getId());
-                            postArray.add(post);
+                            postIds.add(postResponse.ID);
                         }
 
-                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
+                        boolean canLoadMore = postIds.size() == PostStore.NUM_POSTS_PER_FETCH;
 
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(new PostsModel(postArray),
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postIds,
                                 site, getPages, offset > 0, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }

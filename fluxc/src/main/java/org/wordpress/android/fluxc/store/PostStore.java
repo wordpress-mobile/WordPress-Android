@@ -98,15 +98,15 @@ public class PostStore extends Store {
     }
 
     public static class FetchPostsResponsePayload extends Payload<PostError> {
-        public PostsModel posts;
+        public List<Long> postIds;
         public SiteModel site;
         public boolean isPages;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public FetchPostsResponsePayload(PostsModel posts, SiteModel site, boolean isPages, boolean loadedMore,
+        public FetchPostsResponsePayload(List<Long> postIds, SiteModel site, boolean isPages, boolean loadedMore,
                                          boolean canLoadMore) {
-            this.posts = posts;
+            this.postIds = postIds;
             this.site = site;
             this.isPages = isPages;
             this.loadedMore = loadedMore;
@@ -486,9 +486,10 @@ public class PostStore extends Store {
             }
 
             int rowsAffected = 0;
-            for (PostModel post : payload.posts.getPosts()) {
-                rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
-            }
+            // TODO: Change this to handle postIds instead of full post models
+//            for (PostModel post : payload.posts.getPosts()) {
+//                rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
+//            }
 
             onPostChanged = new OnPostChanged(rowsAffected, payload.canLoadMore);
         }
