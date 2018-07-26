@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.screenshots;
 
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -29,8 +31,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wordpress.android.ui.WPLaunchActivity;
 
-import tools.fastlane.screengrab.FalconScreenshotStrategy;
 import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 
@@ -57,11 +59,11 @@ public class WPScreenshotTest {
     @Test
     public void wPScreenshotTest() {
         mActivityTestRule.launchActivity(null);
-        Screengrab.setDefaultScreenshotStrategy(new FalconScreenshotStrategy(mActivityTestRule.getActivity()));
+        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
         wPLogin();
         navigateReader();
-        createBlogPost();
+        editBlogPost();
         navigateNotifications();
         navigateStats();
         wPLogout();
@@ -146,6 +148,15 @@ public class WPScreenshotTest {
                         childAtPosition(withId(R.id.bottom_navigation), 0), 1)));
         waitForElementUntilDisplayed(navReaderButton).perform(click());
 
+        // Select Discover
+        ViewInteraction spinner = onView(
+                allOf(withId(R.id.filter_spinner), childAtPosition(
+                        withId(R.id.toolbar_with_spinner), 0)));
+        waitForElementUntilDisplayed(spinner).perform(click());
+
+        ViewInteraction spinnerOption = onView(allOf(withId(R.id.text), withText("Discover")));
+        waitForElementUntilDisplayed(spinnerOption).perform(click());
+
         // Waiting for the blog articles to load
         try {
             Thread.sleep(6000);
@@ -153,10 +164,10 @@ public class WPScreenshotTest {
             e.printStackTrace();
         }
 
-        Screengrab.screenshot("screenshot_1");
+        Screengrab.screenshot("screenshot_2");
     }
 
-    private void createBlogPost() {
+    private void editBlogPost() {
         // Blog button on Nav Bar
         ViewInteraction blogNavBar = onView(
                 allOf(withId(R.id.nav_sites), childAtPosition(
@@ -177,24 +188,21 @@ public class WPScreenshotTest {
             e.printStackTrace();
         }
 
-        // Create posts button
-        ViewInteraction createPostButton = onView(
-                allOf(withId(R.id.fab_button), childAtPosition(
-                        allOf(withId(R.id.coordinator), childAtPosition(withId(R.id.root_view), 1)), 1)));
-        waitForElementUntilDisplayed(createPostButton).perform(click());
-
-        // Write the post
-        ViewInteraction editTextWithKeyBackListener = onView(
-                allOf(withId(R.id.title), childAtPosition(
-                        childAtPosition(withClassName(is("android.widget.LinearLayout")), 0), 0)));
-        waitForElementUntilDisplayed(editTextWithKeyBackListener).perform(scrollTo(), replaceText("Awesome Post"));
+        // Edit the first post
+        ViewInteraction postCard = onView(
+                allOf(withId(R.id.card_view), childAtPosition(
+                        withId(R.id.recycler_view), 0)));
+        waitForElementUntilDisplayed(postCard).perform(click());
 
         ViewInteraction aztecText = onView(
                 allOf(withId(R.id.aztec), childAtPosition(
                         childAtPosition(withClassName(is("android.widget.LinearLayout")), 2), 0)));
-        waitForElementUntilDisplayed(aztecText).perform(scrollTo(),
-                replaceText("Today I want to share with everyone of you my awesome experience"));
-        aztecText.perform(click());
+        waitForElementUntilDisplayed(aztecText);
+
+        ViewInteraction postTitle = onView(
+                allOf(withId(R.id.title), childAtPosition(
+                        withClassName(is("android.widget.RelativeLayout")), 0)));
+        postTitle.perform(scrollTo(), click());
 
         // Wait a bit
         try {
@@ -202,11 +210,7 @@ public class WPScreenshotTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Screengrab.screenshot("screenshot_2");
-
-        // Clear the text
-        editTextWithKeyBackListener.perform(scrollTo(), replaceText(""), closeSoftKeyboard());
-        aztecText.perform(scrollTo(), replaceText(""), closeSoftKeyboard());
+        Screengrab.screenshot("screenshot_1");
 
         // Exit
         ViewInteraction navigateUpButton = onView(allOf(childAtPosition(
@@ -225,7 +229,7 @@ public class WPScreenshotTest {
                 allOf(withId(R.id.nav_notifications), childAtPosition(
                         childAtPosition(withId(R.id.bottom_navigation), 0), 4)));
         waitForElementUntilDisplayed(notificationButton).perform(click());
-        Screengrab.screenshot("screenshot_4");
+        Screengrab.screenshot("screenshot_5");
     }
 
     private void navigateStats() {
@@ -250,6 +254,16 @@ public class WPScreenshotTest {
             e.printStackTrace();
         }
 
+        // Select Days view
+        ViewInteraction spinner = onView(
+                allOf(withId(R.id.filter_spinner), childAtPosition(
+                        withId(R.id.toolbar_filter), 0)));
+        waitForElementUntilDisplayed(spinner).perform(click());
+
+        Context targetContext = InstrumentationRegistry.getTargetContext();
+        String daysOptionsString = targetContext.getResources().getString(R.string.stats_timeframe_days);
+        ViewInteraction spinnerOption = onView(allOf(withId(R.id.text), withText(daysOptionsString)));
+        waitForElementUntilDisplayed(spinnerOption).perform(click());
 
         // Wait a bit
         try {
@@ -257,7 +271,7 @@ public class WPScreenshotTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Screengrab.screenshot("screenshot_5");
+        Screengrab.screenshot("screenshot_4");
 
         // Navigate up
         ViewInteraction navUpButton = onView(allOf(childAtPosition(allOf(withId(R.id.toolbar),
