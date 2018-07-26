@@ -631,25 +631,14 @@ public class AccountStore extends Store {
         @NonNull public DomainContactErrorType type;
         @Nullable public String message;
 
-        public DomainContactError(@Nullable String type, @Nullable String message) {
-            this.type = DomainContactErrorType.fromString(type);
+        public DomainContactError(@NonNull DomainContactErrorType type, @Nullable String message) {
+            this.type = type;
             this.message = message;
         }
     }
 
     public enum DomainContactErrorType {
         GENERIC_ERROR;
-
-        public static DomainContactErrorType fromString(String string) {
-            if (string != null) {
-                for (DomainContactErrorType type : DomainContactErrorType.values()) {
-                    if (string.equalsIgnoreCase(type.name())) {
-                        return type;
-                    }
-                }
-            }
-            return GENERIC_ERROR;
-        }
     }
 
     public static class AuthEmailError implements OnChangedError {
