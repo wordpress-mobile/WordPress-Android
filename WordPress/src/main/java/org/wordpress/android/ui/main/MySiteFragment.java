@@ -159,7 +159,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
         SiteModel site = getSelectedSite();
         if (site != null) {
-            if (site.getHasFreePlan() && !site.isJetpackConnected()) {
+            if (!site.isJetpackConnected()) {
                 mActivityLogContainer.setVisibility(View.GONE);
             } else {
                 mActivityLogContainer.setVisibility(View.VISIBLE);
