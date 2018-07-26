@@ -582,23 +582,32 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     stringId = R.string.media_fetching;
                     break;
                 case NO_CONTENT:
-                    switch (mFilter) {
-                        case FILTER_IMAGES:
-                            stringId = R.string.media_empty_image_list;
-                            break;
-                        case FILTER_VIDEOS:
-                            stringId = R.string.media_empty_videos_list;
-                            break;
-                        case FILTER_DOCUMENTS:
-                            stringId = R.string.media_empty_documents_list;
-                            break;
-                        case FILTER_AUDIO:
-                            stringId = R.string.media_empty_audio_list;
-                            break;
-                        default:
-                            stringId = R.string.media_empty_list;
-                            break;
+                    if (!TextUtils.isEmpty(mSearchTerm)) {
+                        mActionableEmptyView.updateLayoutForSearch(true, 0);
+                        stringId = R.string.media_empty_search_list;
+                    } else {
+                        mActionableEmptyView.updateLayoutForSearch(false, 0);
+                        mActionableEmptyView.setImageVisibility(true);
+
+                        switch (mFilter) {
+                            case FILTER_IMAGES:
+                                stringId = R.string.media_empty_image_list;
+                                break;
+                            case FILTER_VIDEOS:
+                                stringId = R.string.media_empty_videos_list;
+                                break;
+                            case FILTER_DOCUMENTS:
+                                stringId = R.string.media_empty_documents_list;
+                                break;
+                            case FILTER_AUDIO:
+                                stringId = R.string.media_empty_audio_list;
+                                break;
+                            default:
+                                stringId = R.string.media_empty_list;
+                                break;
+                        }
                     }
+
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;
