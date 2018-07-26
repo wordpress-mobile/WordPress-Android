@@ -34,14 +34,15 @@
             android:paddingEnd="@dimen/reader_card_content_padding"
             android:paddingTop="@dimen/margin_large" >
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/image_avatar_or_blavatar"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
                 app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+                android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar" >
-            </org.wordpress.android.widgets.WPNetworkImageView>
+            </ImageView>
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
                 android:id="@+id/follow_button"
@@ -108,11 +109,11 @@
             android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:layout_width="match_parent" >
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/image_featured"
                 android:contentDescription="@null"
                 style="@style/ReaderImageView.Featured.CardView" >
-            </org.wordpress.android.widgets.WPNetworkImageView>
+            </ImageView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_photo_title"
@@ -198,15 +199,16 @@
             android:visibility="gone"
             tools:visibility="gone" >
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/image_discover_avatar"
                 android:background="?android:selectableItemBackground"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
                 app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar.Small" >
-            </org.wordpress.android.widgets.WPNetworkImageView>
+            </ImageView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_discover"

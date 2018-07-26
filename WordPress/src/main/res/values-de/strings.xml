@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-04 08:54:10+0000
+Translation-Revision-Date: 2018-07-11 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="reader_avatar_desc">Profilbild</string>
+    <string name="reader_blavatar_desc">Website–Icon</string>
+    <string name="notification_channel_transient_title">Transient</string>
+    <string name="support_identity_input_dialog_email_label">E–Mail</string>
+    <string name="support_identity_input_dialog_enter_email">Bitte gib deine E-Mail–Adresse ein</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Bitte gib deine E-Mail–Adresse und deinen Namen ein, um fortzufahren.</string>
+    <string name="support_push_notification_message">Neue Nachricht von „Hilfe &amp; Support“</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Nicht festgelegt</string>
+    <string name="support_contact_email">Kontakt-E-Mail–Adresse</string>
+    <string name="application_log_button">Anwendungsprotokoll</string>
+    <string name="my_tickets">Meine Tickets</string>
+    <string name="activity_log_rewind_dialog_message">Bist du sicher, dass du deine Website auf %s um %s zurücksetzen willst? Damit werden alle Inhalte und Optionen, die seit diesem Zeitpunkt erstellt oder geändert wurden, entfernt.</string>
+    <string name="activity_log_rewind_site">Website zurücksetzen</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Zurücksetzung in Bearbeitung</string>
+    <string name="activity_log_currently_restoring_message">Wird zurückgesetzt auf %s %s</string>
+    <string name="activity_log_currently_restoring_title">Deine Website wird derzeit wiederhergestellt</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Deine Website wurde erfolgreich wiederhergestellt</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Deine Website wurde erfolgreich wiederhergestellt\nZurückgesetzt auf %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Deine Website wird wiederhergestellt\nWird zurückgesetzt auf %s %s</string>
+    <string name="activity_log_button">Aktions–Button für Aktivitätsprotokoll</string>
+    <string name="plugin_auto_managed">Automatisch verwaltet</string>
+    <string name="reader_save_posts_locally_dialog_message">Speichere diesen Beitrag und lese ihn später. Er wird nur auf diesem Gerät zur Verfügung stehen – gespeicherte Beiträge werden (noch) nicht mit deinen anderen Geräten synchronisiert. (Aber wir arbeiten daran!).</string>
+    <string name="reader_save_posts_locally_dialog_title">Beiträge für später speichern</string>
+    <string name="reader_empty_search_request_failed">Suche konnte nicht ausgeführt werden</string>
+    <string name="reader_empty_search_title">Keine Ergebnisse gefunden</string>
+    <string name="reader_label_post_search_explainer">WordPress\nnach Website oder Beitrag durchsuchen</string>
+    <string name="comment_read_source_post">Den ursprünglichen Beitrag lesen</string>
+    <string name="sites">Websites</string>
+    <string name="signup_magic_link_title">Magischer Link gesendet</string>
+    <string name="signup_email_screen_title">E-Mail–Registrierung</string>
+    <string name="verification_2fa_screen_title">Code–Verifizierung</string>
+    <string name="selfhosted_site_login_title">Anmeldedaten</string>
+    <string name="magic_link_sent_login_title">Magischer Link gesendet</string>
+    <string name="magic_link_login_title">Magischer Link – Login</string>
+    <string name="site_address_login_title">Website–Adresse – Login</string>
+    <string name="email_address_login_title">E-Mail–Adresse – Login</string>
+    <string name="alternatively">Alternativ:</string>
+    <string name="reader_empty_saved_posts_description">Tippe auf %s, um einen Beitrag in deiner Liste zu speichern.</string>
+    <string name="reader_bookmark_snack_title">Beitrag gespeichert</string>
+    <string name="reader_bookmark_snack_btn">Alles anzeigen</string>
+    <string name="reader_btn_bookmarked">Gespeichert</string>
+    <string name="reader_btn_bookmark">Speichern</string>
+    <string name="reader_remove_bookmark">Aus gespeicherten Beiträgen entfernen</string>
+    <string name="reader_add_bookmark">Zu gespeicherten Beiträgen hinzufügen</string>
+    <string name="reader_save_for_later_title">Gespeicherte Beiträge</string>
+    <string name="activity_log_empty_list">Noch keine Events verzeichnet</string>
+    <string name="removed">Entfernt</string>
     <string name="tabbar_accessibility_label_write">Neuer Beitrag. Schreibe einen neuen Beitrag.</string>
     <string name="my_site_icon_content_description">Website–Symbol ändern</string>
     <string name="my_site_icon_dialog_cancel_button">Abbrechen</string>
@@ -70,8 +118,6 @@ Language: de
     <string name="dialog_confirm_delete_permanently_page">Bist du sicher, dass du diese Seite endgültig löschen möchtest?</string>
     <string name="dialog_confirm_delete_permanently_post">Bist du sicher, dass du diesen Beitrag endgültig löschen möchtest?</string>
     <string name="notification_site_creation_title_in_progress">Website wird erstellt … Dies kann ein paar Minuten dauern.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Wichtig</string>
     <string name="notification_channel_general_title">Allgemein</string>
     <string name="photo_picker_use_photo">Dieses Foto verwenden</string>
@@ -297,7 +343,6 @@ Language: de
     <string name="signup_magic_link_message">Wir haben dir einen magischen Link für die Registrierung gesendet! Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E–Mail, um die Registrierung abzuschließen.</string>
     <string name="signup_magic_link_error_button_positive">Erneut versuchen</string>
     <string name="signup_magic_link_error_button_negative">Schließen</string>
-    <string name="signup_magic_link_error">Es gab Probleme beim Senden dieser E–Mail. Du kannst es jetzt erneut versuchen oder die Seite schließen und es später erneut versuchen.</string>
     <string name="signup_epilogue_hint_username">Benutzername</string>
     <string name="signup_epilogue_hint_password_detail">Du kannst dich immer mit einem magischen Link wie dem gerade verwendeten anmelden, du kannst aber auch ein Passwort einrichten, wenn du dies bevorzugst.</string>
     <string name="signup_epilogue_hint_password">Passwort (optional)</string>
@@ -880,13 +925,10 @@ Language: de
     <string name="invite_names_title">Benutzernamen oder E–Mails</string>
     <string name="invite_people">Personen einladen</string>
     <string name="my_site_header_external">Extern</string>
+    <string name="send_link">Link senden</string>
     <string name="label_clear_search_history">Lösche Suchverlauf</string>
     <string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
-    <string name="reader_empty_posts_in_search_description">Keine Beiträge zu %s in deiner Sprache gefunden.</string>
-    <string name="reader_empty_posts_in_search_title">Keine Beiträge gefunden</string>
     <string name="reader_label_post_search_running">Suche…</string>
-    <string name="reader_label_post_search_explainer">Durchsuche alle öffentlichen WordPress.com–Blogs</string>
-    <string name="reader_hint_post_search">Durchsuche WordPress.com</string>
     <string name="reader_title_related_post_detail">Ähnliche Beiträge</string>
     <string name="preview_screen_links_disabled">Im Vorschaubildschirm sind Links deaktiviert.</string>
     <string name="draft_explainer">Dieser Beitrag ist ein Entwurf und wurde noch nicht veröffentlicht</string>
@@ -907,6 +949,7 @@ Language: de
     <string name="checking_email">Überprüfe E-Mail–Adresse</string>
     <string name="magic_link_unavailable_error_message">Zur Zeit nicht verfügbar. Bitte gib dein Passwort ein</string>
     <string name="logging_in">Anmeldung läuft</string>
+    <string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
     <string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
     <string name="new_editor_reflection_error">Der visuelle Editor ist mit deinem Gerät nicht kompatibel.\nEr wurde automatisch deaktiviert.</string>
     <string name="stats_insights_latest_post_no_title">(ohne Titel)</string>
@@ -1186,7 +1229,6 @@ Language: de
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d Follower</string>
     <string name="reader_short_like_count_one">1 Like</string>
-    <string name="reader_menu_tags">Schlagwörter und Blogs bearbeiten</string>
     <string name="reader_title_post_detail">Reader–Beitrag</string>
     <string name="local_draft_explainer">Dieser Beitrag ist ein lokaler Entwurf, der noch nicht veröffentlicht wurde</string>
     <string name="local_changes_explainer">Dieser Beitrag enthält lokale Änderungen, die noch nicht veröffentlicht wurden</string>
@@ -1219,8 +1261,6 @@ Language: de
     <string name="post_trashed">Beitrag in den Papierkorb verschoben</string>
     <string name="post_deleted">Beitrag gelöscht</string>
     <string name="page_trashed">Seite in den Papierkorb verschoben</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Du bist nicht berechtigt auf diesen Blog zuzugreifen</string>
-    <string name="reader_toast_err_follow_blog_not_found">Dieser Blog konnte nicht gefunden werden</string>
     <string name="undo">Rückgängig</string>
     <string name="passcodelock_prompt_message">Gib deine PIN ein</string>
     <string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
@@ -1263,6 +1303,7 @@ Language: de
     <string name="deselect_all">Alle abwählen</string>
     <string name="stats_generic_error">Erforderliche Statistiken konnten nicht geladen werden</string>
     <string name="auth_required">Melde dich erneut an, um fortzufahren.</string>
+    <string name="invalid_verification_code">Ungültiger Überprüfungscode</string>
     <string name="verification_code">Überprüfungscode</string>
     <string name="editor_toast_invalid_path">Ungültiger Dateipfad</string>
     <string name="language">Sprache</string>
@@ -1286,7 +1327,6 @@ Language: de
     <string name="error_copy_to_clipboard">Beim Kopieren von Text in die Zwischenablage ist ein Fehler aufgetreten</string>
     <string name="stats_recent_weeks">Letzte Wochen</string>
     <string name="stats_average_per_day">Durchschnitt pro Tag</string>
-    <string name="reader_empty_posts_in_blog">Dieser Blog ist leer</string>
     <string name="reader_label_new_posts">Neue Beiträge</string>
     <string name="logs_copied_to_clipboard">Anwendungsprotokolle wurden in die Zwischenablage kopiert</string>
     <string name="stats_period">Zeitraum</string>
@@ -1377,34 +1417,17 @@ Language: de
     <string name="reader_empty_posts_in_tag">Keine Beiträge mit diesem Tag.</string>
     <string name="reader_empty_comments">Keine Kommentare bisher</string>
     <string name="create_new_blog_wpcom">Erstelle ein WordPress.com Blog</string>
-    <string name="nux_help_description">Besuche das Helpcenter um Antworten auf die häufig gestellten Fragen zu erhalten oder besuche die Foren um eine neue Frage zu stellen</string>
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
     <string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
     <string name="reader_empty_followed_blogs_title">Du folgst bisher noch keiner Website</string>
-    <string name="reader_menu_block_blog">Blockiere diesen Blog</string>
-    <string name="reader_toast_blog_blocked">Beiträge von diesem Blog werden nicht länger angezeigt</string>
-    <string name="reader_toast_err_block_blog">Konnte diesen Blog nicht blockieren</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
-    <string name="hs__invalid_email_error">Gib eine gültige E-Mail–Adresse ein</string>
-    <string name="hs__username_blank_error">Gib einen gültigen Namen ein</string>
-    <string name="hs__conversation_header">Support–Chat</string>
-    <string name="hs__new_conversation_header">Support–Chat</string>
-    <string name="hs__conversation_detail_error">Beschreibe das Problem, das du siehst</string>
     <string name="contact_us">Kontaktiere uns</string>
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Update</string>
-    <string name="reader_empty_recommended_blogs">Keine empfohlenen Blogs</string>
-    <string name="reader_toast_err_unfollow_blog">Blog konnte nicht entfolgt werden</string>
-    <string name="reader_toast_err_follow_blog">Blog konnte nicht gefolgt werden </string>
-    <string name="reader_toast_err_already_follow_blog">Du folgst diesem Blog bereits</string>
-    <string name="reader_toast_err_get_blog_info">Dieser Blog kann nicht angezeigt werden.</string>
-    <string name="reader_label_followed_blog">Blog wird verfolgt</string>
     <string name="reader_hint_add_tag_or_url">Gib eine URL oder einen Tag zum Folgen ein</string>
     <string name="reader_page_followed_blogs">Abonnierte Websites</string>
     <string name="reader_page_followed_tags">Abonnierte Tags</string>
-    <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_tag_preview">Reader–Schlagwort</string>
-    <string name="reader_title_blog_preview">Reader–Blog</string>
     <string name="media_empty_list">Keine Medien</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>

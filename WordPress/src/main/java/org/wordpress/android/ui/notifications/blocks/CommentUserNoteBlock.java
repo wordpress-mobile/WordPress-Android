@@ -6,6 +6,7 @@ import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -16,7 +17,8 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
@@ -35,8 +37,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     public CommentUserNoteBlock(Context context, JSONObject noteObject,
                                 OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                OnGravatarClickedListener onGravatarClickedListener) {
-        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener);
+                                OnGravatarClickedListener onGravatarClickedListener,
+                                ImageManager imageManager) {
+        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager);
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
@@ -60,7 +63,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         noteBlockHolder.mNameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
-                                                                                 WordPress.getContext()));
+                WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.mBulletTextView.setVisibility(View.VISIBLE);
             noteBlockHolder.mSiteTextView.setVisibility(View.VISIBLE);
@@ -76,9 +79,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         noteBlockHolder.mSiteTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
+        String imageUrl = "";
         if (hasImageMediaItem()) {
-            String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
-            noteBlockHolder.mAvatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
+            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.mAvatarImageView.setContentDescription(
                     view.getContext().getString(R.string.profile_picture, getNoteText().toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
@@ -97,20 +100,14 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 noteBlockHolder.mAvatarImageView.setContentDescription(null);
             }
         } else {
-            noteBlockHolder.mAvatarImageView.showDefaultGravatarImageAndNullifyUrl();
             noteBlockHolder.mAvatarImageView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
             noteBlockHolder.mAvatarImageView.setContentDescription(null);
         }
+        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
 
-        noteBlockHolder.mCommentTextView.setText(
-                NotificationsUtils.getSpannableContentForRanges(
-                        getNoteData().optJSONObject("comment_text"),
-                        noteBlockHolder.mCommentTextView,
-                        getOnNoteBlockTextClickListener(),
-                        false)
-                                                );
+        noteBlockHolder.mCommentTextView.setText(getCommentTextOfNotification(noteBlockHolder));
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -162,6 +159,22 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return view;
     }
 
+    private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
+        String commentText = NotificationsUtils
+                .getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"),
+                        noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
+
+        return getStringWithNewlineInListsRemoved(commentText);
+    }
+
+    private String getStringWithNewlineInListsRemoved(String noteString) {
+        if (noteString == null) {
+            return "";
+        }
+
+        return noteString.replace("\n\t\n\t", "\n\t");
+    }
+
     private long getTimestamp() {
         return getNoteData().optInt("timestamp", 0);
     }
@@ -181,7 +194,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     private class CommentUserNoteBlockHolder {
-        private final WPNetworkImageView mAvatarImageView;
+        private final ImageView mAvatarImageView;
         private final TextView mNameTextView;
         private final TextView mAgoTextView;
         private final TextView mBulletTextView;
@@ -190,14 +203,14 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         private final View mDividerView;
 
         CommentUserNoteBlockHolder(View view) {
-            mNameTextView = (TextView) view.findViewById(R.id.user_name);
-            mAgoTextView = (TextView) view.findViewById(R.id.user_comment_ago);
+            mNameTextView = view.findViewById(R.id.user_name);
+            mAgoTextView = view.findViewById(R.id.user_comment_ago);
             mAgoTextView.setVisibility(View.VISIBLE);
-            mBulletTextView = (TextView) view.findViewById(R.id.user_comment_bullet);
-            mSiteTextView = (TextView) view.findViewById(R.id.user_comment_site);
-            mCommentTextView = (TextView) view.findViewById(R.id.user_comment);
+            mBulletTextView = view.findViewById(R.id.user_comment_bullet);
+            mSiteTextView = view.findViewById(R.id.user_comment_site);
+            mCommentTextView = view.findViewById(R.id.user_comment);
             mCommentTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
-            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.user_avatar);
+            mAvatarImageView = view.findViewById(R.id.user_avatar);
             mDividerView = view.findViewById(R.id.divider_view);
 
             mSiteTextView.setOnClickListener(new View.OnClickListener() {

@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -28,8 +29,10 @@ import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.FooterNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.GeneratedNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
+import org.wordpress.android.ui.notifications.blocks.NoteBlock.OnNoteBlockTextClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -39,10 +42,13 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private static final String KEY_NOTE_ID = "noteId";
@@ -61,6 +67,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private NoteBlockAdapter mNoteBlockAdapter;
 
+    @Inject ImageManager mImageManager;
+
     public NotificationsDetailListFragment() {
     }
 
@@ -73,7 +81,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
             // The note will be set in onResume()
             // See WordPress.deferredInit()
@@ -316,7 +324,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             requestReaderContentForNote();
-
             JSONArray bodyArray = mNote.getBody();
             final List<NoteBlock> noteList = new ArrayList<>();
 
@@ -328,13 +335,16 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         mNote.getHeader(),
                         imageType,
                         mOnNoteBlockTextClickListener,
-                        mOnGravatarClickedListener
+                        mOnGravatarClickedListener,
+                        mImageManager
                 );
 
                 headerNoteBlock.setIsComment(mNote.isCommentType());
                 noteList.add(headerNoteBlock);
             }
+            String pingbackUrl = null;
 
+            boolean isPingback = isPingback(mNote);
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i = 0; i < bodyArray.length(); i++) {
                     try {
@@ -363,8 +373,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
-                                        mOnGravatarClickedListener
+                                        mOnGravatarClickedListener,
+                                        mImageManager
                                 );
+                                pingbackUrl = noteBlock.getMetaSiteUrl();
 
                                 // Set listener for comment status changes, so we can update bg and text colors
                                 CommentUserNoteBlock commentUserNoteBlock = (CommentUserNoteBlock) noteBlock;
@@ -376,7 +388,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
-                                        mOnGravatarClickedListener
+                                        mOnGravatarClickedListener,
+                                        mImageManager
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
@@ -399,6 +412,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             noteBlock.setIsBadge();
                         }
 
+                        if (isPingback) {
+                            noteBlock.setIsPingback();
+                        }
+
                         noteList.add(noteBlock);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.NOTIFS, "Invalid note data, could not parse.");
@@ -406,7 +423,46 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 }
             }
 
+            if (isPingback) {
+                // Remove this when we start receiving "Read the source post block" from the backend
+                NoteBlock generatedBlock =
+                        buildGeneratedLinkBlock(mOnNoteBlockTextClickListener, pingbackUrl,
+                                getActivity().getString(R.string.comment_read_source_post));
+                generatedBlock.setIsPingback();
+                noteList.add(generatedBlock);
+            }
+
             return noteList;
+        }
+
+        private boolean isPingback(Note note) {
+            boolean hasRangeOfTypeSite = false;
+            boolean hasRangeOfTypePost = false;
+
+            JSONArray rangesArray = note.getSubject().optJSONArray("ranges");
+            if (rangesArray != null) {
+                for (int i = 0; i < rangesArray.length(); i++) {
+                    JSONObject rangeObject = rangesArray.optJSONObject(i);
+                    if (rangeObject == null) {
+                        continue;
+                    }
+                    if ("site".equals(rangeObject.optString("type"))) {
+                        hasRangeOfTypeSite = true;
+                    } else if ("post".equals(rangeObject.optString("type"))) {
+                        hasRangeOfTypePost = true;
+                    }
+                }
+            }
+            return hasRangeOfTypePost && hasRangeOfTypeSite;
+        }
+
+        private NoteBlock buildGeneratedLinkBlock(OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                                  String pingbackUrl,
+                                                  String message) {
+            return new GeneratedNoteBlock(
+                    message,
+                    onNoteBlockTextClickListener,
+                    pingbackUrl);
         }
 
         @Override

@@ -53,6 +53,8 @@ public class AnalyticsUtils {
     private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
+    public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
+
     public static void updateAnalyticsPreference(Context ctx,
                                                  Dispatcher mDispatcher,
                                                  AccountStore mAccountStore,

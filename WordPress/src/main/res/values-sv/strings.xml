@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-24 12:59:51+0000
+Translation-Revision-Date: 2018-07-05 13:34:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="reader_avatar_desc">Profilbild</string>
+    <string name="reader_blavatar_desc">webblatsikon</string>
+    <string name="notification_channel_transient_title">Tillfälligt</string>
+    <string name="support_identity_input_dialog_email_label">E–post</string>
+    <string name="support_identity_input_dialog_enter_email">Ange din e–postadress</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Ange din e–postadress och ditt namn för att fortsätta</string>
+    <string name="support_push_notification_message">Nytt meddelande från ”Hjälp och support”</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Inte angivet</string>
+    <string name="support_contact_email">E–postadress för kontakt</string>
+    <string name="application_log_button">Logg för applikationen</string>
+    <string name="my_tickets">Mina ärenden</string>
+    <string name="activity_log_rewind_dialog_message">Är du säker på att du vill återställa din webbplats till %s kl. %s? Detta kommer att avlägsna innehåll och inställningar som skapats eller ändrats sedan dess.</string>
+    <string name="activity_log_rewind_site">Återställ webbplats</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Återställning pågår</string>
+    <string name="activity_log_currently_restoring_message">Återställer till %s %s</string>
+    <string name="activity_log_currently_restoring_title">Din webbplats återställs just nu</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Din webbplats har återställts</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Din webbplats har återställts\nBackat till %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Din webbplats håller på att återställas\nBackar till %s %s</string>
+    <string name="activity_log_button">Åtgärdsknapp för akitivitetslogg</string>
+    <string name="plugin_auto_managed">Automatiskt hanterad</string>
+    <string name="reader_save_posts_locally_dialog_message">Spara detta inlägg och läs det senare, närhelst det passar dig. Det kommer endast att vara tillgängligt på denna enhet – sparade inlägg synkroniseras inte till dina andra enheter. (Än så länge, men vi jobbar på det!)</string>
+    <string name="reader_save_posts_locally_dialog_title">Spara inlägg till senare</string>
+    <string name="reader_empty_search_request_failed">Kan inte genomföra sökningen</string>
+    <string name="reader_empty_search_title">Inga resultat hittades</string>
+    <string name="reader_label_post_search_explainer">Sök i WordPress\nefter en webbplats eller ett inlägg</string>
+    <string name="comment_read_source_post">Läs käll–inlägget</string>
+    <string name="sites">Webbplatser</string>
+    <string name="signup_magic_link_title">Magisk länk har skickats</string>
+    <string name="signup_email_screen_title">Registrering via e–post</string>
+    <string name="verification_2fa_screen_title">Bekräftelse av kod</string>
+    <string name="selfhosted_site_login_title">Inloggningsuppgifter</string>
+    <string name="magic_link_sent_login_title">Magisk länk har skickats</string>
+    <string name="magic_link_login_title">Inloggning via magisk länk</string>
+    <string name="site_address_login_title">Webbplatsens inloggningsadress</string>
+    <string name="email_address_login_title">E–postadress för inloggning</string>
+    <string name="alternatively">Alternativt:</string>
+    <string name="reader_empty_saved_posts_description">Knacka på %s för att spara ett inlägg till din lista.</string>
+    <string name="reader_empty_saved_posts_title">Inga inlägg sparade – ännu!</string>
+    <string name="reader_bookmark_snack_title">Inlägget sparat</string>
+    <string name="reader_bookmark_snack_btn">Se alla</string>
+    <string name="reader_btn_bookmarked">Sparat</string>
+    <string name="reader_btn_bookmark">Spara</string>
+    <string name="reader_remove_bookmark">Ta bort från sparade inlägg</string>
+    <string name="reader_add_bookmark">Lägg till i sparade inlägg</string>
+    <string name="reader_save_for_later_title">Sparade inlägg</string>
+    <string name="activity_log_empty_list">Inga händelser har registrerats ännu</string>
+    <string name="removed">Borttaget</string>
     <string name="tabbar_accessibility_label_write">Nytt inlägg. Skriv ett nytt inlägg.</string>
     <string name="my_site_icon_content_description">Byt webbplatsikon</string>
     <string name="my_site_icon_dialog_cancel_button">Avbryt</string>
@@ -70,8 +119,6 @@ Language: sv_SE
     <string name="dialog_confirm_delete_permanently_page">Är du säker på att du vill radera denna sida permanent?</string>
     <string name="dialog_confirm_delete_permanently_post">Är du säker på att du vill radera detta inlägg permanent?</string>
     <string name="notification_site_creation_title_in_progress">Skapar webbplatsen… Det kan ta några minuter.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Viktigt</string>
     <string name="notification_channel_general_title">Allmänt</string>
     <string name="photo_picker_use_photo">Använd detta foto</string>
@@ -302,7 +349,7 @@ Language: sv_SE
     <string name="signup_magic_link_message">Vi har skickat dig en magisk länk för registrering! Kolla din e-post på denna telefon och knacka på länken i e–posten för att bekräfta registreringen.</string>
     <string name="signup_magic_link_error_button_positive">Försök igen</string>
     <string name="signup_magic_link_error_button_negative">Stäng</string>
-    <string name="signup_magic_link_error">Det gick inte att sända e–postmeddelandet. Du kan försöka en gång till eller stänga och försöka igen senare.</string>
+    <string name="signup_magic_link_error">Det gick inte att sända e–postmeddelandet. Du kan försöka igen nu eller stänga och göra ett nytt försök senare.</string>
     <string name="signup_epilogue_hint_username">Användarnamn</string>
     <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en magisk länk som den du just klickade på, men om du vill kan du också spara ett lösenord.</string>
     <string name="signup_epilogue_hint_password">Lösenord (valfritt)</string>
@@ -886,13 +933,12 @@ Language: sv_SE
     <string name="invite_names_title">Användarnamn eller e‑postmeddelanden</string>
     <string name="invite_people">Bjud in personer</string>
     <string name="my_site_header_external">Externt</string>
+    <string name="send_link">Skicka länk</string>
     <string name="label_clear_search_history">Rensa sökhistoriken</string>
     <string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
-    <string name="reader_empty_posts_in_search_description">Inga inlägg hittade för %s på ditt språk</string>
-    <string name="reader_empty_posts_in_search_title">Hittade inga inlägg</string>
+    <string name="reader_empty_search_description">Inga inlägg hittade för %s på ditt språk</string>
     <string name="reader_label_post_search_running">Söker…</string>
-    <string name="reader_label_post_search_explainer">Sök alla offentliga WordPress.com–bloggar</string>
-    <string name="reader_hint_post_search">Sök på WordPress.com</string>
+    <string name="reader_hint_post_search">Sök WordPress</string>
     <string name="reader_title_related_post_detail">Relaterade inlägg</string>
     <string name="preview_screen_links_disabled">Länkar har avaktiverats på förhandsvisningsskärmen</string>
     <string name="draft_explainer">Det här inlägget är ett utkast som inte har publicerats</string>
@@ -913,6 +959,7 @@ Language: sv_SE
     <string name="checking_email">Kontrollerar e–post</string>
     <string name="magic_link_unavailable_error_message">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
     <string name="logging_in">Loggar in</string>
+    <string name="enter_your_password_instead">Ange ditt lösenord istället</string>
     <string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
     <string name="new_editor_reflection_error">Den visuella redigeraren är inte kompatibel med din enhet. Den\n inaktiverades automatiskt.</string>
     <string name="stats_insights_latest_post_no_title">(ingen rubrik)</string>
@@ -1192,7 +1239,7 @@ Language: sv_SE
     <string name="reader_short_like_count_none">Gilla</string>
     <string name="reader_label_follow_count">%,d följare</string>
     <string name="reader_short_like_count_one">1 gillar</string>
-    <string name="reader_menu_tags">Redigera etiketter och bloggar</string>
+    <string name="reader_menu_tags">Redigera etiketter och webbplatser</string>
     <string name="reader_title_post_detail">Läsare–inlägg</string>
     <string name="local_draft_explainer">Det här inlägget är ett lokalt utkast som inte har publicerats</string>
     <string name="local_changes_explainer">Det här inlägget har lokala ändringar som inte har publicerats</string>
@@ -1225,8 +1272,8 @@ Language: sv_SE
     <string name="post_trashed">Inlägget placerat i papperskorgen</string>
     <string name="post_deleted">Inlägg raderat</string>
     <string name="page_trashed">Sidan placerad i papperskorgen</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för åtkomst till denna blogg</string>
-    <string name="reader_toast_err_follow_blog_not_found">Denna blogg kunde inte hittas</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för att komma åt denna blogg</string>
+    <string name="reader_toast_err_follow_blog_not_found">Denna webbplats kunde inte hittas</string>
     <string name="undo">Ångra</string>
     <string name="passcodelock_prompt_message">Ange din PIN</string>
     <string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
@@ -1269,6 +1316,7 @@ Language: sv_SE
     <string name="deselect_all">Avmarkera alla </string>
     <string name="stats_generic_error">Nödvändig statistik kunde inte laddas in. </string>
     <string name="auth_required">Logga in igen för att fortsätta.</string>
+    <string name="invalid_verification_code">Ogiltig verifieringskod</string>
     <string name="verification_code">Verifieringskod</string>
     <string name="editor_toast_invalid_path">Ogiltig sökväg till fil</string>
     <string name="language">Språk</string>
@@ -1292,7 +1340,7 @@ Language: sv_SE
     <string name="error_copy_to_clipboard">Ett fel uppstod när text skulle kopieras till urklipp</string>
     <string name="stats_recent_weeks">Senaste veckorna</string>
     <string name="stats_average_per_day">Medel per dag</string>
-    <string name="reader_empty_posts_in_blog">Denna blogg är tom</string>
+    <string name="reader_empty_posts_in_blog">Denna webbplats är tom</string>
     <string name="reader_label_new_posts">Nya inlägg</string>
     <string name="logs_copied_to_clipboard">App–loggar har kopierats till urklipp</string>
     <string name="stats_period">Period</string>
@@ -1383,34 +1431,28 @@ Language: sv_SE
     <string name="reader_empty_posts_in_tag">Inga inlägg med denna etikett</string>
     <string name="reader_empty_comments">Inga kommentarer än</string>
     <string name="create_new_blog_wpcom">Skapa en blogg på WordPress.com</string>
-    <string name="nux_help_description">Besök hjälpsektionen för att få svar på vanliga frågor eller besök forumet för att ställa nya frågor</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
     <string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
     <string name="reader_empty_followed_blogs_title">Du följer inga webbplatser än</string>
-    <string name="reader_menu_block_blog">Blockera denna blogg</string>
-    <string name="reader_toast_blog_blocked">Inlägg från denna blogg kommer inte längre att visas</string>
-    <string name="reader_toast_err_block_blog">Kunde inte blockera denna blogg</string>
+    <string name="reader_menu_block_blog">Blockera denna webbplats</string>
+    <string name="reader_toast_blog_blocked">Inlägg från denna webbplats kommer inte längre att visas</string>
+    <string name="reader_toast_err_block_blog">Kunde inte blockera denna webbplats</string>
     <string name="reader_toast_err_generic">Kunde inte genomföra denna åtgärd</string>
-    <string name="hs__invalid_email_error">Ange en giltig e–postadress</string>
-    <string name="hs__username_blank_error">Ange ett giltigt namn</string>
-    <string name="hs__conversation_header">Supportchatt</string>
-    <string name="hs__new_conversation_header">Supportchatt</string>
-    <string name="hs__conversation_detail_error">Beskriv problemet du upplever</string>
     <string name="contact_us">Kontakta oss</string>
     <string name="schedule_verb">Tidinställ</string>
     <string name="update_verb">Uppdatera</string>
-    <string name="reader_empty_recommended_blogs">Inga rekommenderade bloggar</string>
-    <string name="reader_toast_err_unfollow_blog">Kunde inte sluta följa denna blogg</string>
-    <string name="reader_toast_err_follow_blog">Kunde inte följa denna blogg</string>
-    <string name="reader_toast_err_already_follow_blog">Du följer redan denna blogg</string>
-    <string name="reader_toast_err_get_blog_info">Kunde inte visa denna blogg</string>
-    <string name="reader_label_followed_blog">Bloggen följs</string>
+    <string name="reader_empty_recommended_blogs">Inga rekommenderade webbplatser</string>
+    <string name="reader_toast_err_unfollow_blog">Kunde inte sluta följa denna webbplats</string>
+    <string name="reader_toast_err_follow_blog">Kunde inte följa denna webbplats</string>
+    <string name="reader_toast_err_already_follow_blog">Du följer redan denna webbplats</string>
+    <string name="reader_toast_err_get_blog_info">Kunde inte visa denna webbplats</string>
+    <string name="reader_label_followed_blog">Webbplatsen följs</string>
     <string name="reader_hint_add_tag_or_url">Ange en URL eller tagg att följa</string>
     <string name="reader_page_followed_blogs">Följda webbplatser</string>
     <string name="reader_page_followed_tags">Följda taggar</string>
-    <string name="reader_title_subs">Taggar &amp; bloggar</string>
+    <string name="reader_title_subs">Etiketter och webbplatser</string>
     <string name="reader_title_tag_preview">Läsare–etikett</string>
-    <string name="reader_title_blog_preview">Läsare–blogg</string>
+    <string name="reader_title_blog_preview">Läsarwebbplats</string>
     <string name="media_empty_list">Ingen media</string>
     <string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
     <string name="ssl_certificate_error">Ogiltigt SSL–ceritfikat</string>

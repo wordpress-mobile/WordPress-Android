@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -36,6 +37,8 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -66,7 +69,8 @@ import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
-        CommentActions.OnNoteCommentActionListener {
+        CommentActions.OnNoteCommentActionListener,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
@@ -458,6 +462,14 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             // no note found
             showErrorToastAndFinish();
             return;
+        }
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
+        Fragment fragment = mAdapter.getItem(mViewPager.getCurrentItem());
+        if (fragment instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
+            ((BasicDialogPositiveClickInterface) fragment).onPositiveClicked(instanceTag);
         }
     }
 

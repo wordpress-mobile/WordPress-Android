@@ -4,25 +4,30 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -31,15 +36,22 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -47,14 +59,22 @@ import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
-public class PostPreviewActivity extends AppCompatActivity {
+public class PostPreviewActivity extends AppCompatActivity implements
+        BasicFragmentDialog.BasicDialogNegativeClickInterface,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface {
+    private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
+
+    private boolean mIsDiscardingChanges;
     private boolean mIsUpdatingPost;
 
     private PostModel mPost;
+    private PostModel mPostWithLocalChanges;
     private SiteModel mSite;
+    private ViewGroup mMessageView;
 
     @Inject Dispatcher mDispatcher;
     @Inject PostStore mPostStore;
+    @Inject ZendeskHelper mZendeskHelper;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -68,7 +88,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         setContentView(R.layout.post_preview_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -189,18 +209,18 @@ public class PostPreviewActivity extends AppCompatActivity {
      * states mean, and hook up the publish and revert buttons
      */
     private void showMessageViewIfNecessary() {
-        final ViewGroup messageView = (ViewGroup) findViewById(R.id.message_container);
+        mMessageView = findViewById(R.id.message_container);
 
         if (mPost == null
             || mIsUpdatingPost
             || UploadService.isPostUploadingOrQueued(mPost)
             || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
-            messageView.setVisibility(View.GONE);
+            mMessageView.setVisibility(View.GONE);
             return;
         }
 
-        TextView messageText = (TextView) messageView.findViewById(R.id.message_text);
+        TextView messageText = mMessageView.findViewById(R.id.message_text);
         if (mPost.isLocallyChanged()) {
             messageText.setText(R.string.local_changes_explainer);
         } else if (mPost.isLocalDraft()) {
@@ -210,24 +230,24 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
 
         // publish applies to both local draft and local changes
-        View btnPublish = messageView.findViewById(R.id.btn_publish);
+        View btnPublish = mMessageView.findViewById(R.id.btn_publish);
         btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AniUtils.animateBottomBar(messageView, false);
+                AniUtils.animateBottomBar(mMessageView, false);
                 publishPost();
             }
         });
 
-        // revert applies to only local changes
-        View btnRevert = messageView.findViewById(R.id.btn_revert);
-        btnRevert.setVisibility(mPost.isLocallyChanged() ? View.VISIBLE : View.GONE);
+        // discard changes applies to only local changes
+        View btnDiscardChanges = mMessageView.findViewById(R.id.btn_discard_changes);
+        btnDiscardChanges.setVisibility(mPost.isLocallyChanged() ? View.VISIBLE : View.GONE);
         if (mPost.isLocallyChanged()) {
-            btnRevert.setOnClickListener(new View.OnClickListener() {
+            btnDiscardChanges.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AniUtils.animateBottomBar(messageView, false);
-                    revertPost();
+                    AniUtils.animateBottomBar(mMessageView, false);
+                    discardChanges();
                     AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 }
             });
@@ -236,13 +256,21 @@ public class PostPreviewActivity extends AppCompatActivity {
         // if both buttons are visible, show them below the message instead of to the right of it
         if (mPost.isLocallyChanged()) {
             RelativeLayout.LayoutParams paramsMessage = (RelativeLayout.LayoutParams) messageText.getLayoutParams();
-            // passing "0" removes the param (necessary since removeRule() is API 17+)
-            paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
-            paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
-            ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
-            marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
 
-            ViewGroup buttonsView = (ViewGroup) messageView.findViewById(R.id.layout_buttons);
+            if (VERSION.SDK_INT < 17) {
+                // passing "0" removes the param (necessary since removeRule() is API 17+)
+                paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
+                paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+            } else {
+                paramsMessage.removeRule(RelativeLayout.LEFT_OF);
+                paramsMessage.removeRule(RelativeLayout.START_OF);
+                paramsMessage.removeRule(RelativeLayout.CENTER_VERTICAL);
+            }
+
+            ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
+            marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.snackbar_message_margin_bottom);
+
+            ViewGroup buttonsView = mMessageView.findViewById(R.id.layout_buttons);
             RelativeLayout.LayoutParams paramsButtons = (RelativeLayout.LayoutParams) buttonsView.getLayoutParams();
             paramsButtons.addRule(RelativeLayout.BELOW, R.id.message_text);
             ViewGroup.MarginLayoutParams marginsButtons = (ViewGroup.MarginLayoutParams) buttonsView.getLayoutParams();
@@ -251,21 +279,21 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         // first set message bar to invisible so it takes up space, then animate it in
         // after a brief delay to give time for preview to render first
-        messageView.setVisibility(View.INVISIBLE);
+        mMessageView.setVisibility(View.INVISIBLE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!isFinishing() && messageView.getVisibility() != View.VISIBLE) {
-                    AniUtils.animateBottomBar(messageView, true);
+                if (!isFinishing() && mMessageView.getVisibility() != View.VISIBLE) {
+                    AniUtils.animateBottomBar(mMessageView, true);
                 }
             }
         }, 1000);
     }
 
     /*
-     * reverts local changes for this post, replacing it with the latest version from the server
+     * discard local changes for this post, replacing it with the latest version from the server
      */
-    private void revertPost() {
+    private void discardChanges() {
         if (isFinishing() || !NetworkUtils.checkConnection(this)) {
             return;
         }
@@ -273,8 +301,9 @@ public class PostPreviewActivity extends AppCompatActivity {
         if (mIsUpdatingPost) {
             AppLog.d(AppLog.T.POSTS, "post preview > already updating post");
         } else {
-            mIsUpdatingPost = true;
+            mIsDiscardingChanges = true;
             showProgress();
+            mPostWithLocalChanges = mPost.clone();
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
@@ -284,7 +313,10 @@ public class PostPreviewActivity extends AppCompatActivity {
     private void publishPost() {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
             if (!mPost.isLocalDraft()) {
-                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite);
+                Map<String, Object> properties = new HashMap<>();
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
+                        PostUtils.contentContainsGutenbergBlocks(mPost.getContent()));
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite, properties);
             }
 
             if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
@@ -320,20 +352,80 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
     }
 
+    private void showDialogError() {
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        dialog.initialize(TAG_DISCARDING_CHANGES_ERROR_DIALOG, "", getString(R.string.local_changes_discarding_error),
+                getString(R.string.contact_support), getString(R.string.cancel), null);
+        dialog.show(getSupportFragmentManager(), TAG_DISCARDING_CHANGES_ERROR_DIALOG);
+    }
+
+    @Override
+    public void onNegativeClicked(@NotNull String tag) {
+        switch (tag) {
+            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+                // noop
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog tag is not recognized");
+                throw new UnsupportedOperationException("Dialog tag is not recognized");
+        }
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String tag) {
+        switch (tag) {
+            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+                mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog tag is not recognized");
+                throw new UnsupportedOperationException("Dialog tag is not recognized");
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        switch (event.causeOfChange) {
-            case UPDATE_POST:
-                mIsUpdatingPost = false;
-                hideProgress();
-                if (event.isError()) {
-                    // TODO: Report error to user
-                    AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
-                } else {
+        if (event.causeOfChange == PostAction.UPDATE_POST) {
+            hideProgress();
+
+            if (!event.isError()) {
+                if (mIsUpdatingPost) {
+                    mIsUpdatingPost = false;
                     mPost = mPostStore.getPostByLocalPostId(mPost.getId());
                     refreshPreview();
+
+                    if (mMessageView != null) {
+                        Snackbar.make(mMessageView, getString(R.string.local_changes_discarded),
+                                AccessibilityUtils.getSnackbarDuration(PostPreviewActivity.this, Snackbar.LENGTH_LONG))
+                                .setAction(getString(R.string.undo), new OnClickListener() {
+                                    @Override public void onClick(View view) {
+                                        AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
+                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                                        mPost = mPostWithLocalChanges.clone();
+                                        refreshPreview();
+                                    }
+                                })
+                                .show();
+                    }
                 }
+
+                if (mIsDiscardingChanges) {
+                    mIsDiscardingChanges = false;
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+                    mIsUpdatingPost = true;
+                }
+            } else {
+                if (mIsDiscardingChanges) {
+                    showDialogError();
+                }
+
+                mIsDiscardingChanges = false;
+                mIsUpdatingPost = false;
+                AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
+            }
         }
     }
 

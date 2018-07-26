@@ -201,12 +201,15 @@
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_list_row_padding_left">12dp</dimen>
+    <dimen name="my_site_list_row_padding_left">20dp</dimen>
+    <dimen name="my_site_list_row_padding_left_switch">12dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
+    <dimen name="me_content_margin">@dimen/margin_large</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
+    <dimen name="me_list_row_padding_horizontal">@dimen/me_content_margin</dimen>
 
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
@@ -311,4 +314,10 @@
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <!-- actionable empty view -->
+    <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
+    <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
+
+    <dimen name="snackbar_message_margin_bottom">18dp</dimen>
 </resources>

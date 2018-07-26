@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-31 14:09:15+0000
+Translation-Revision-Date: 2018-06-20 08:33:51+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -70,8 +70,6 @@ Language: cs_CZ
     <string name="dialog_confirm_delete_permanently_page">Opravdu chcete tuto stránku smazat?</string>
     <string name="dialog_confirm_delete_permanently_post">Opravdu chcete tento příspěvek smazat?</string>
     <string name="notification_site_creation_title_in_progress">Vytváření webu … Může to trvat několik minut.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Důležité</string>
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použijte tuto fotku</string>
@@ -886,12 +884,11 @@ Language: cs_CZ
     <string name="invite_names_title">Uživatelská jména nebo emaily</string>
     <string name="invite_people">Přidat uživatele</string>
     <string name="my_site_header_external">Externí</string>
+    <string name="send_link">Poslat URL</string>
     <string name="label_clear_search_history">Smazat historii prohlížení</string>
     <string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
-    <string name="reader_empty_posts_in_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
-    <string name="reader_empty_posts_in_search_title">Nenalezeny žádné příspěvky</string>
+    <string name="reader_empty_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
     <string name="reader_label_post_search_running">Hledání…</string>
-    <string name="reader_label_post_search_explainer">Hledat všechny veřejné WordPress.com blogy</string>
     <string name="reader_hint_post_search">Prohledat WordPress.com</string>
     <string name="reader_title_related_post_detail">Související příspěvky </string>
     <string name="preview_screen_links_disabled">Odkazy jsou zakázány v náhledu na obrazovce</string>
@@ -913,6 +910,7 @@ Language: cs_CZ
     <string name="checking_email">Ověřuji email</string>
     <string name="magic_link_unavailable_error_message">Momentálně nedostupné. Prosím zadejte své heslo</string>
     <string name="logging_in">Přihlašování</string>
+    <string name="enter_your_password_instead">Zadejte vaše heslo místo tohoto</string>
     <string name="web_address_dialog_hint">Veřejně se zobrazí při komentování.</string>
     <string name="new_editor_reflection_error">Vizuální editor není kompatibilní s vaším zařízením.\n        Proto byl automaticky zakázán.</string>
     <string name="stats_insights_latest_post_no_title">(žádný nadpis)</string>
@@ -1269,6 +1267,7 @@ Language: cs_CZ
     <string name="deselect_all">Zrušit výběr</string>
     <string name="stats_generic_error">Požadované statistiky se nepodařilo načíst</string>
     <string name="auth_required">Pro pokračování, se přihlaste ještě jednou.</string>
+    <string name="invalid_verification_code">Neplatný ověřovací kód</string>
     <string name="verification_code">Ověřovací kód</string>
     <string name="editor_toast_invalid_path">Neplatná cesta k souboru</string>
     <string name="language">Jazyk</string>
@@ -1383,7 +1382,6 @@ Language: cs_CZ
     <string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
     <string name="reader_empty_comments">Žádné komentáře</string>
     <string name="create_new_blog_wpcom">Vytvořit web na WordPress.com</string>
-    <string name="nux_help_description">Pro odpovědi na časté dotazy navštivte naše centrum nápovědy nebo fórum</string>
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
     <string name="reader_empty_posts_liked">Žádné příspěvky jste neoznačili jako \"to se mi líbí\"</string>
     <string name="reader_empty_followed_blogs_title">Zatím nesledujete žádné weby</string>
@@ -1391,11 +1389,6 @@ Language: cs_CZ
     <string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>
     <string name="reader_toast_err_block_blog">Nepodařilo se zablokovat tento web</string>
     <string name="reader_toast_err_generic">Nepodařilo se provést tuto akci</string>
-    <string name="hs__invalid_email_error">Zadejte platnou emailovou adresu</string>
-    <string name="hs__username_blank_error">Zadejte platné jméno</string>
-    <string name="hs__conversation_header">Chat podpory</string>
-    <string name="hs__new_conversation_header">Chat podpory</string>
-    <string name="hs__conversation_detail_error">Popište problém, který vidíte</string>
     <string name="contact_us">Kontaktujte nás</string>
     <string name="schedule_verb">Rozvrh</string>
     <string name="update_verb">Aktualizovat</string>

@@ -380,10 +380,6 @@ public class AnalyticsTrackerNosara extends Tracker {
         mNosaraClient.clearQueues();
     }
 
-    @Override
-    public void registerPushNotificationToken(String regId) {
-    }
-
     @SuppressWarnings("checkstyle:methodlength")
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
         if (!isValidEvent(stat)) {
@@ -496,6 +492,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_draft_saved";
             case EDITOR_DISCARDED_CHANGES:
                 return "editor_discarded_changes";
+            case EDITOR_DISCARDED_CHANGES_UNDO:
+                return "editor_discarded_changes_undo";
             case EDITOR_EDITED_IMAGE:
                 return "editor_image_edited";
             case EDITOR_HYBRID_ENABLED:
@@ -516,6 +514,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_retried";
             case EDITOR_CLOSED:
                 return "editor_closed";
+            case POST_LIST_BUTTON_PRESSED:
+                return "post_list_button_pressed";
+            case EDITOR_OPENED:
+                return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
                 return "editor_photo_added";
             case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
@@ -761,18 +763,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:
                 return "push_notification_alert_tapped";
-            case SUPPORT_OPENED_HELPSHIFT_SCREEN:
-                return "support_helpshift_screen_opened";
-            case SUPPORT_USER_ACCEPTED_THE_SOLUTION:
-                return "support_user_accepted_the_solution";
-            case SUPPORT_USER_REJECTED_THE_SOLUTION:
-                return "support_user_rejected_the_solution";
-            case SUPPORT_USER_SENT_SCREENSHOT:
-                return "support_user_sent_screenshot";
-            case SUPPORT_USER_REVIEWED_THE_APP:
-                return "support_user_reviewed_the_app";
-            case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
-                return "support_user_replied_to_helpshift";
             case LOGIN_ACCESSED:
                 return "login_accessed";
             case LOGIN_MAGIC_LINK_EXITED:
@@ -1141,6 +1131,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "publicize_service_connected";
             case PUBLICIZE_SERVICE_DISCONNECTED:
                 return "publicize_service_disconnected";
+            case ACTIVITY_LOG_LIST_OPENED:
+                return "activity_log_list_opened";
+            case ACTIVITY_LOG_DETAIL_OPENED:
+                return "activity_log_detail_opened";
+            case ACTIVITY_LOG_REWIND_STARTED:
+                return "activity_log_rewind_started";
+            case SUPPORT_HELP_CENTER_VIEWED:
+                return "support_help_center_viewed";
+            case SUPPORT_IDENTITY_FORM_VIEWED:
+                return "support_identity_form_viewed";
+            case SUPPORT_IDENTITY_SET:
+                return "support_identity_set";
             default:
                 return null;
         }

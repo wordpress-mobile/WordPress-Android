@@ -1,14 +1,17 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
@@ -19,11 +22,14 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
@@ -48,8 +54,11 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private String mSearchFilter;
 
-    public ReaderBlogAdapter(ReaderBlogType blogType, String searchFilter) {
+    @Inject protected ImageManager mImageManager;
+
+    public ReaderBlogAdapter(Context context, ReaderBlogType blogType, String searchFilter) {
         super();
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         setHasStableIds(false);
         mBlogType = blogType;
         mSearchFilter = searchFilter;
@@ -123,7 +132,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blogHolder.mTxtTitle.setText(blog.getTitle());
                     blogHolder.mTxtDescription.setText(blog.getReason());
                     blogHolder.mTxtUrl.setText(UrlUtils.getHost(blog.getBlogUrl()));
-                    blogHolder.mImgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
+                    mImageManager.load(blogHolder.mImgBlog, ImageType.BLAVATAR, blog.getImageUrl());
                     break;
 
                 case FOLLOWED:
@@ -140,7 +149,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else {
                         blogHolder.mTxtUrl.setText("");
                     }
-                    blogHolder.mImgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
+                    mImageManager.load(blogHolder.mImgBlog, ImageType.BLAVATAR, blogInfo.getImageUrl());
                     break;
             }
 
@@ -170,15 +179,15 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtTitle;
         private final TextView mTxtDescription;
         private final TextView mTxtUrl;
-        private final WPNetworkImageView mImgBlog;
+        private final ImageView mImgBlog;
 
         BlogViewHolder(View view) {
             super(view);
 
-            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
-            mTxtDescription = (TextView) view.findViewById(R.id.text_description);
-            mTxtUrl = (TextView) view.findViewById(R.id.text_url);
-            mImgBlog = (WPNetworkImageView) view.findViewById(R.id.image_blog);
+            mTxtTitle = view.findViewById(R.id.text_title);
+            mTxtDescription = view.findViewById(R.id.text_description);
+            mTxtUrl = view.findViewById(R.id.text_url);
+            mImgBlog = view.findViewById(R.id.image_blog);
 
             // followed blogs don't have a description
             switch (getBlogType()) {

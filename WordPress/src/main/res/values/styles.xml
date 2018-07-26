@@ -370,6 +370,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:orientation">horizontal</item>
+        <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">@dimen/me_list_row_padding_horizontal</item>
+        <item name="android:paddingLeft">@dimen/me_list_row_padding_horizontal</item>
+        <item name="android:paddingRight">@dimen/me_list_row_padding_horizontal</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/me_list_row_padding_horizontal</item>
     </style>
 
     <style name="MeListRowIcon">
@@ -379,8 +383,6 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
-        <item name="android:layout_marginLeft">@dimen/margin_medium</item>
-        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_medium</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
     </style>
@@ -402,6 +404,10 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@color/me_divider</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/me_content_margin</item>
+        <item name="android:layout_marginLeft">@dimen/me_content_margin</item>
+        <item name="android:layout_marginRight">@dimen/me_content_margin</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/me_content_margin</item>
     </style>
 
     <!-- Used in Notifications and Site settings to animate nested preference screens -->
@@ -675,6 +681,49 @@
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support library compatibility -->
         <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <!--Help Activity Styles-->
+    <style name="HelpActivitySingleText">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="HelpActivityDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+    </style>
+
+    <style name="ActionableEmptyStateTitle" parent="TextAppearance.AppCompat">
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginRight">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+    </style>
+
+    <style name="ActionableEmptyStateSubtitle" parent="@style/ActionableEmptyStateTitle">
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
+        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginRight">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
     </style>
 
 </resources>

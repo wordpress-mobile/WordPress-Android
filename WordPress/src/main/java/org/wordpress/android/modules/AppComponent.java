@@ -36,9 +36,9 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeAdapter;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
-import org.wordpress.android.ui.activitylog.ActivityLogDetailFragment;
-import org.wordpress.android.ui.activitylog.ActivityLogListActivity;
-import org.wordpress.android.ui.activitylog.ActivityLogListFragment;
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
+import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -52,12 +52,14 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
+import org.wordpress.android.ui.media.MediaGridAdapter;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
+import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
@@ -67,6 +69,7 @@ import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.plans.PlanFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -93,17 +96,22 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
+import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
+import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
+import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -124,6 +132,7 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 import javax.inject.Singleton;
 
@@ -146,7 +155,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
-        LoginServiceModule.class
+        LoginServiceModule.class,
+        SupportModule.class
 })
 public interface AppComponent extends AndroidInjector<WordPress> {
     @Override
@@ -330,6 +340,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(NotificationsPendingDraftsReceiver object);
 
+    void inject(NotificationsDetailListFragment notificationsDetailListFragment);
+
     void inject(ReaderCommentListActivity object);
 
     void inject(ReaderUpdateLogic object);
@@ -342,6 +354,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderPostAdapter object);
 
+    void inject(PlanFragment object);
+
     void inject(ReaderSiteHeaderView object);
 
     void inject(ReaderTagHeaderView object);
@@ -351,6 +365,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderWebView object);
 
     void inject(ReaderPostPagerActivity object);
+
+    void inject(ReaderBlogAdapter object);
 
     void inject(ReleaseNotesActivity object);
 
@@ -365,6 +381,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
+
+    void inject(ReaderUserAdapter object);
 
     void inject(AddCategoryFragment object);
 
@@ -383,6 +401,16 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PluginDetailActivity object);
 
     void inject(WordPressGlideModule object);
+
+    void inject(MediaGridAdapter object);
+
+    void inject(WPCustomImageGetter object);
+
+    void inject(PublicizeAccountChooserListAdapter object);
+
+    void inject(PublicizeConnectionAdapter object);
+
+    void inject(PublicizeServiceAdapter object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

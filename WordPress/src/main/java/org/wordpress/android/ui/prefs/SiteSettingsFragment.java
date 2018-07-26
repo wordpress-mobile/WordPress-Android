@@ -44,7 +44,6 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.helpshift.network.util.InetAddressUtils;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -62,11 +61,12 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -74,6 +74,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.ValidationUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -151,6 +152,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ZendeskHelper mZendeskHelper;
 
     public SiteModel mSite;
 
@@ -1591,7 +1593,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // if any IP string is not a valid IP address then entry is not valid
         for (String ip : ipStrings) {
-            if (!InetAddressUtils.isIPv4Address(ip)) {
+            if (!ValidationUtils.validateIPv4(ip)) {
                 return false;
             }
         }
@@ -1788,9 +1790,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                                                               HelpshiftHelper.Tag.ORIGIN_DELETE_SITE,
-                                                               mAccountStore.getAccount().getUserName());
+                mZendeskHelper.createNewTicket(getActivity(), Origin.DELETE_SITE, mSite);
             }
         });
         builder.show();

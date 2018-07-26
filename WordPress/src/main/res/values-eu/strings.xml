@@ -89,6 +89,7 @@ Language: eu_ES
     <string name="invite">Gonbidatu</string>
     <string name="invite_names_title">Erabiltzaile-izenak edo e–postak</string>
     <string name="my_site_header_external">Kanpokoak</string>
+    <string name="send_link">Bidali esteka</string>
     <string name="invite_people">Gonbidatu jendea</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
@@ -102,6 +103,7 @@ Language: eu_ES
     <string name="error_refreshing_gravatar">Errorea zure Gravatarra birkargatzean</string>
     <string name="checking_email">E–posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
+    <string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
     <string name="stats_insights_latest_post_no_title">(izenbururik gabe)</string>
     <string name="plans_loading_error">Ezin izan dira planak kargatu</string>
@@ -272,7 +274,6 @@ Language: eu_ES
     <string name="button_view">Ikusi</string>
     <string name="button_edit">Editatu</string>
     <string name="button_publish">Argitaratu</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ezin izan da blog hori aurkitu</string>
     <string name="undo">Desegin</string>
     <string name="passcodelock_prompt_message">Sartu zure PINa</string>
     <string name="push_auth_expired">Eskaria iraungi da. Hasi saioa WordPress.com–en berriro saiatzeko.</string>
@@ -308,6 +309,7 @@ Language: eu_ES
     <string name="select_all">Aukeratu denak</string>
     <string name="language">Hizkuntza</string>
     <string name="verification_code">Egiaztaketa kodea</string>
+    <string name="invalid_verification_code">Egiaztaketa kode okerra</string>
     <string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
     <string name="editor_toast_invalid_path">Fitxategiaren bide okerra</string>
     <string name="reader_empty_posts_request_failed">Huts egin du bidalketak eskuratzeak</string>
@@ -321,7 +323,6 @@ Language: eu_ES
     <string name="stats_view_search_terms">Bilaketa terminoak</string>
     <string name="stats_total">Guztira</string>
     <string name="reader_label_new_posts">Bidalketa berriak</string>
-    <string name="reader_empty_posts_in_blog">Blog hau hutsik dago</string>
     <string name="stats_average_per_day">Eguneko bataz bestekoa</string>
     <string name="stats_recent_weeks">Azken asteak</string>
     <string name="error_copy_to_clipboard">Errore bat gertatu da testua arbelera kopiatzean</string>
@@ -375,19 +376,13 @@ Language: eu_ES
     <string name="posts_empty_list">Bidalketarik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
     <string name="pages_empty_list">Orrialderik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
     <string name="browse_our_faq_button">Arakatu Galdera eta Erantzunak</string>
-    <string name="nux_help_description">Bisitatu laguntza zentroa galdera ohikoenen erantzunak lortzeko edo bisitatu foroak galdera berriak egiteko</string>
     <string name="error_publish_empty_post">Ezin da bidalketa huts bat argitaratu</string>
     <string name="older_two_days">2 egun baino zaharragoa</string>
     <string name="older_last_week">Aste bat baino zaharragoa</string>
     <string name="contact_us">Kontaktatu gurekin</string>
-    <string name="hs__username_blank_error">Sartu izen egoki bat</string>
-    <string name="hs__invalid_email_error">Sartu e–posta egoki bat</string>
-    <string name="hs__conversation_header">Laguntza txata</string>
     <string name="update_verb">Eguneratu</string>
     <string name="schedule_verb">Programatu</string>
     <string name="reader_page_followed_blogs">Jarraitutako guneak</string>
-    <string name="reader_empty_recommended_blogs">Ez dago gomendatutako blogik</string>
-    <string name="reader_title_subs">Etiketak eta blogak</string>
     <string name="media_empty_list">Ez dago mediarik</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>

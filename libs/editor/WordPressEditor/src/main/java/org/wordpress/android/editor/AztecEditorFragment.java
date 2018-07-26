@@ -340,7 +340,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new CaptionShortcodePlugin(mContent))
                 .addPlugin(new VideoShortcodePlugin())
                 .addPlugin(new AudioShortcodePlugin())
-                .addPlugin(new HiddenGutenbergPlugin())
+                .addPlugin(new HiddenGutenbergPlugin(mContent))
                 .addPlugin(mediaToolbarGalleryButton)
                 .addPlugin(mediaToolbarCameraButton)
                 .addPlugin(mediaToolbarLibraryButton);
@@ -441,6 +441,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public boolean hasHistory() {
         return (mContent.history.getHistoryEnabled() && !mContent.history.getHistoryList().isEmpty());
+    }
+
+    public boolean canUndo() {
+        return (hasHistory() && mContent.history.undoValid());
     }
 
     public boolean isHistoryEnabled() {

@@ -10,21 +10,20 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
-msgctxt "release_note_102"
+msgctxt "release_note_105"
 msgid ""
-"10.2:\n"
-"* NEW: Something there caught your eye? Read it any time with Save for later! Even when you're offline!\n"
-"* Various bugfixes.\n"
+"10.5:\n"
+"* New: Users can now easily discard local changes to a post in the editor.\n"
+"* Some small UI improvements and refinements.\n"
+"* A bunch of small bug-fixes\n"
 msgstr ""
 
-msgctxt "release_note_101"
+msgctxt "release_note_104"
 msgid ""
-"10.1:\n"
-"* NEW: now you can get notifications for new posts of blogs you follow! Stay up to date with this new cool feature.\n"
-"* NEW: we now offer bottom navigation on the main screen! Thumbs up on that! ;).\n"
-"* NEW: Activity Log added! You can see all that has been going on with your site with this new feature.\n"
-"* Added site icon editing.\n"
-"* Bugfixes.\n"
+"10.4:\n"
+"* New: Activity Log Rewind: bring back your site to a previous state.\n"
+"* A bunch of small UI improvements and refinements.\n"
+"* Various bug-fixes\n"
 msgstr ""
 
 msgctxt "sample_post_content"
@@ -47,15 +46,57 @@ msgctxt "release_note_footer"
 msgid "If you enjoy using the WordPress Android app, please take a moment to write a review — your input is invaluable to us."
 msgstr ""
 
+#. translators: Short description of the app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
 msgctxt "play_store_promo"
-msgid "Write new posts, edit content, and manage comments on your WordPress blog."
+msgid "Share posts and photos, monitor stats, keep up with blogs you follow, and more!"
 msgstr ""
 
+#. translators: Multi-paragraph text used to display in the Play Store.
 msgctxt "play_store_desc"
 msgid ""
-"WordPress for Android puts the power of publishing in your hands, making it easy to create and consume content. Write, edit, and publish posts to your site, check stats, and get inspired with great posts in the Reader. What’s more? It’s open source.\n"
+"Manage or create your WordPress blog or website right from your Android device: create and edit posts and pages, upload your favorite photos and videos, view stats and reply to comments.\n"
 "\n"
-"WordPress for Android supports WordPress.com and self-hosted WordPress.org sites running WordPress 3.7 or higher.\n"
+"With WordPress for Android, you have the power to publish in the palm of your hand. Draft a spontaneous haiku from the couch. Snap and post a photo on your lunch break. Respond to your latest comments, or check your stats to see what new countries today's readers are coming from.\n"
 "\n"
-"Visit the forums to get help with the app: http://android.forums.wordpress.org"
+"WordPress for Android is an Open Source project, which means you too can contribute to its development. Learn more at https://apps.wordpress.com/contribute/.\n"
+"\n"
+"WordPress for Android supports WordPress.com and self-hosted WordPress.org sites running WordPress 4.0 or higher.\n"
+"\n"
+"Need help with the app? Visit the forums at https://android.forums.wordpress.org/forum/troubleshooting or tweet us @WPAndroid.\n"
 msgstr ""
+
+#. translators: Title to be displayed in the Play Store. Limit to 50 characters including spaces and commas!
+msgctxt "play_store_app_title"
+msgid "WordPress – Website & Blog Builder"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
+msgctxt "play_store_screenshot_1"
+msgid "Enjoy your favourite sites"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
+msgctxt "play_store_screenshot_2"
+msgid "Share your ideas with the world"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
+msgctxt "play_store_screenshot_3"
+msgid "Manage your site everywhere you go"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
+msgctxt "play_store_screenshot_4"
+msgid "Get notified in real-time"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one. 
+msgctxt "play_store_screenshot_5"
+msgid "All the stats in your hand"
+msgstr ""
+

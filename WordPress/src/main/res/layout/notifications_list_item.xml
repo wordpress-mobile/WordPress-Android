@@ -32,8 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="-3dp"
-                android:layout_marginStart="-3dp"
                 android:layout_marginBottom="-1dp"
                 android:textColor="@color/grey_darken_10"
                 android:textSize="18sp"
@@ -83,13 +81,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp">
 
-                <org.wordpress.android.widgets.WPNetworkImageView
+                <ImageView
                     android:id="@+id/note_avatar"
                     android:layout_width="@dimen/notifications_avatar_sz"
                     android:layout_height="@dimen/notifications_avatar_sz"
                     android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
-                    android:layout_marginTop="@dimen/margin_small" />
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.NoticonTextView
                     android:id="@+id/note_icon"

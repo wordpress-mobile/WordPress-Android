@@ -5,15 +5,19 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -27,13 +31,15 @@ import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,11 +52,12 @@ public class PeopleListFragment extends Fragment {
     private SiteModel mSite;
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchPeopleListener mOnFetchPeopleListener;
-
+    private ActionableEmptyView mActionableEmptyView;
     private FilteredRecyclerView mFilteredRecyclerView;
     private PeopleListFilter mPeopleListFilter;
 
     @Inject SiteStore mSiteStore;
+    @Inject ImageManager mImageManager;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -96,7 +103,8 @@ public class PeopleListFragment extends Fragment {
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         final boolean isPrivate = mSite != null && mSite.isPrivate();
 
-        mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
+        mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
+        mFilteredRecyclerView = rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView
                 .addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
@@ -153,48 +161,51 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-                int stringId = 0;
+                mActionableEmptyView.setVisibility(View.GONE);
+                mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                        | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+
                 switch (emptyViewMsgType) {
                     case LOADING:
-                        stringId = R.string.people_fetching;
-                        break;
+                        return getString(R.string.people_fetching);
                     case NETWORK_ERROR:
-                        stringId = R.string.no_network_message;
-                        break;
+                        return getString(R.string.no_network_message);
                     case NO_CONTENT:
+                        String title = "";
+
                         switch (mPeopleListFilter) {
                             case TEAM:
-                                stringId = R.string.people_empty_list_filtered_users;
+                                title = getString(R.string.people_empty_list_filtered_users);
                                 break;
                             case FOLLOWERS:
-                                stringId = R.string.people_empty_list_filtered_followers;
+                                title = getString(R.string.people_empty_list_filtered_followers);
                                 break;
                             case EMAIL_FOLLOWERS:
-                                stringId = R.string.people_empty_list_filtered_email_followers;
+                                title = getString(R.string.people_empty_list_filtered_email_followers);
                                 break;
                             case VIEWERS:
-                                stringId = R.string.people_empty_list_filtered_viewers;
+                                title = getString(R.string.people_empty_list_filtered_viewers);
                                 break;
                         }
-                        break;
+
+                        mActionableEmptyView.setTitleText(title);
+                        mActionableEmptyView.setVisibility(View.VISIBLE);
+                        mFilteredRecyclerView.setToolbarScrollFlags(0);
+                        return "";
                     case GENERIC_ERROR:
                         switch (mPeopleListFilter) {
                             case TEAM:
-                                stringId = R.string.error_fetch_users_list;
-                                break;
+                                return getString(R.string.error_fetch_users_list);
                             case FOLLOWERS:
-                                stringId = R.string.error_fetch_followers_list;
-                                break;
+                                return getString(R.string.error_fetch_followers_list);
                             case EMAIL_FOLLOWERS:
-                                stringId = R.string.error_fetch_email_followers_list;
-                                break;
+                                return getString(R.string.error_fetch_email_followers_list);
                             case VIEWERS:
-                                stringId = R.string.error_fetch_viewers_list;
-                                break;
+                                return getString(R.string.error_fetch_viewers_list);
                         }
-                        break;
+                    default:
+                        return "";
                 }
-                return getString(stringId);
             }
 
             @Override
@@ -278,6 +289,9 @@ public class PeopleListFragment extends Fragment {
         if (!peopleList.isEmpty()) {
             // if the list is not empty, don't show any message
             mFilteredRecyclerView.hideEmptyView();
+            mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+            mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
             mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
@@ -385,7 +399,7 @@ public class PeopleListFragment extends Fragment {
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
-                peopleViewHolder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+                mImageManager.loadIntoCircle(peopleViewHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
                 peopleViewHolder.mTxtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.mTxtRole.setVisibility(View.VISIBLE);
@@ -416,8 +430,14 @@ public class PeopleListFragment extends Fragment {
             }
         }
 
+        @Override public void onViewRecycled(@NonNull ViewHolder holder) {
+            super.onViewRecycled(holder);
+            PeopleViewHolder peopleViewHolder = (PeopleViewHolder) holder;
+            mImageManager.cancelRequestAndClearImageView(peopleViewHolder.mImgAvatar);
+        }
+
         public class PeopleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-            private final WPNetworkImageView mImgAvatar;
+            private final ImageView mImgAvatar;
             private final TextView mTxtDisplayName;
             private final TextView mTxtUsername;
             private final TextView mTxtRole;
@@ -425,11 +445,11 @@ public class PeopleListFragment extends Fragment {
 
             public PeopleViewHolder(View view) {
                 super(view);
-                mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.person_avatar);
-                mTxtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
-                mTxtUsername = (TextView) view.findViewById(R.id.person_username);
-                mTxtRole = (TextView) view.findViewById(R.id.person_role);
-                mTxtSubscribed = (TextView) view.findViewById(R.id.follower_subscribed_date);
+                mImgAvatar = view.findViewById(R.id.person_avatar);
+                mTxtDisplayName = view.findViewById(R.id.person_display_name);
+                mTxtUsername = view.findViewById(R.id.person_username);
+                mTxtRole = view.findViewById(R.id.person_role);
+                mTxtSubscribed = view.findViewById(R.id.follower_subscribed_date);
 
                 itemView.setOnClickListener(this);
             }

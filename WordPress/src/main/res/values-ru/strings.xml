@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-05-22 20:54:04+0000
+Translation-Revision-Date: 2018-07-05 14:35:18+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="reader_avatar_desc">изображение профиля</string>
+    <string name="reader_blavatar_desc">значок сайта</string>
+    <string name="notification_channel_transient_title">Транзиент</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_enter_email">Пожалуйста, введите ваш адрес эл.почты</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Для продолжения введите ваш адрес эл.почты и имя</string>
+    <string name="support_push_notification_message">Новое сообщение от \'Помощь и поддержка\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Не установлен</string>
+    <string name="support_contact_email">Контактный адрес эл.почты</string>
+    <string name="application_log_button">Журнал приложения</string>
+    <string name="my_tickets">Мои тикеты</string>
+    <string name="activity_log_rewind_dialog_message">Вы уверены, что хотите откатить ваш сайт назад на %s %s. Вы потеряете все изменения в содержимом и настройки, сделанные после этого времени.</string>
+    <string name="activity_log_rewind_site">Откат состояния сайта</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Откат в процессе</string>
+    <string name="activity_log_currently_restoring_message">Откат на %s %s</string>
+    <string name="activity_log_currently_restoring_title">Ваш сайт в процессе восстановления</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ваш сайт был успешно восстановлен</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Ваш сайт восстановлен\nСовершен откат на %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Ваш сайт в процессе восстановления\nОткат на %s %s</string>
+    <string name="activity_log_button">Кнопка действий с журналом активности</string>
+    <string name="plugin_auto_managed">Управляется автоматически</string>
+    <string name="reader_save_posts_locally_dialog_message">Сохраните эту запись и вернитесь к её чтению в любое время. Это будет доступно только на этом устройстве (Мы работаем над синхронизацией с другими устройствами!).</string>
+    <string name="reader_save_posts_locally_dialog_title">Сохранить запись на потом</string>
+    <string name="reader_empty_search_request_failed">Невозможно совершить поиск</string>
+    <string name="reader_empty_search_title">Результатов не найдено</string>
+    <string name="reader_label_post_search_explainer">Искать в WordPress\nсайт или запись</string>
+    <string name="comment_read_source_post">Прочесть исходную запись</string>
+    <string name="sites">Сайты</string>
+    <string name="signup_magic_link_title">Магическая ссылка отослана</string>
+    <string name="signup_email_screen_title">Email регистрация</string>
+    <string name="verification_2fa_screen_title">Проверка кода</string>
+    <string name="selfhosted_site_login_title">Данные для входа</string>
+    <string name="magic_link_sent_login_title">Магическая ссылка отослана</string>
+    <string name="magic_link_login_title">Вход по магической ссылке</string>
+    <string name="site_address_login_title">Вход по адресу сайта</string>
+    <string name="email_address_login_title">Вход по email адресу</string>
+    <string name="alternatively">Альтернативно:</string>
+    <string name="reader_empty_saved_posts_description">Нажмите %s для сохранения записи в ваш список.</string>
+    <string name="reader_empty_saved_posts_title">Пока не сохранено никаких записей!</string>
+    <string name="reader_bookmark_snack_title">Запись сохранена</string>
+    <string name="reader_bookmark_snack_btn">Посмотреть все</string>
+    <string name="reader_btn_bookmarked">Сохранено</string>
+    <string name="reader_btn_bookmark">Сохранить</string>
+    <string name="reader_remove_bookmark">Удалить из сохраненных записей</string>
+    <string name="reader_add_bookmark">Добавить в сохраненные записи</string>
+    <string name="reader_save_for_later_title">Сохраненные записи</string>
+    <string name="activity_log_empty_list">Никаких событий пока не зарегистрировано</string>
+    <string name="removed">Удалено</string>
     <string name="tabbar_accessibility_label_write">Новая запись. Написать новую запись.</string>
     <string name="my_site_icon_content_description">Сменить значок сайта</string>
     <string name="my_site_icon_dialog_cancel_button">Отменить</string>
@@ -70,8 +119,6 @@ Language: ru
     <string name="dialog_confirm_delete_permanently_page">Точно хотите навсегда удалить эту страницу?</string>
     <string name="dialog_confirm_delete_permanently_post">Точно хотите навсегда удалить эту запись?</string>
     <string name="notification_site_creation_title_in_progress">Создание сайта… Это займет пару минут.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Важное</string>
     <string name="notification_channel_general_title">Общее</string>
     <string name="photo_picker_use_photo">Использовать это фото</string>
@@ -886,13 +933,12 @@ Language: ru
     <string name="invite_names_title">Имена пользователей или адреса e–mail</string>
     <string name="invite_people">Пригласить людей</string>
     <string name="my_site_header_external">Внешние ссылки</string>
+    <string name="send_link">Отправить ссылку</string>
     <string name="label_clear_search_history">Очистить историю поиска</string>
     <string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
-    <string name="reader_empty_posts_in_search_description">По запросу «%s» на вашем языке записей не найдено</string>
-    <string name="reader_empty_posts_in_search_title">Записей не найдено</string>
+    <string name="reader_empty_search_description">По запросу «%s» на вашем языке записей не найдено</string>
     <string name="reader_label_post_search_running">Поиск…</string>
-    <string name="reader_label_post_search_explainer">Поиск по всем открытым блогам на WordPress.com</string>
-    <string name="reader_hint_post_search">Поиск по WordPress.com</string>
+    <string name="reader_hint_post_search">Поиск в WordPress</string>
     <string name="reader_title_related_post_detail">Похожая запись</string>
     <string name="preview_screen_links_disabled">На экране предпросмотра ссылки отключены</string>
     <string name="draft_explainer">Это черновик, который ещё не был опубликован</string>
@@ -913,6 +959,7 @@ Language: ru
     <string name="checking_email">Проверка адреса эл. почты</string>
     <string name="magic_link_unavailable_error_message">В настоящий момент ссылка недоступна. Введите пароль</string>
     <string name="logging_in">Вход в систему</string>
+    <string name="enter_your_password_instead">Введите пароль.</string>
     <string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
     <string name="new_editor_reflection_error">Визуальный редактор не поддерживается на вашем устройстве. Он был\n автоматически отключен.</string>
     <string name="stats_insights_latest_post_no_title">(без заголовка)</string>
@@ -1192,7 +1239,7 @@ Language: ru
     <string name="reader_short_like_count_none">Оценить</string>
     <string name="reader_label_follow_count">%,d подписчиков</string>
     <string name="reader_short_like_count_one">1 оценка</string>
-    <string name="reader_menu_tags">Редактировать метки и блоги</string>
+    <string name="reader_menu_tags">Редактировать метки и сайты</string>
     <string name="reader_title_post_detail">Запись из Чтива</string>
     <string name="local_draft_explainer">Эта запись — локальный черновик, который ещё не был опубликован</string>
     <string name="local_changes_explainer">В этой записи есть локальные изменения, которые ещё не опубликованы</string>
@@ -1225,8 +1272,8 @@ Language: ru
     <string name="post_trashed">Запись помещена в корзину</string>
     <string name="post_deleted">Запись удалена</string>
     <string name="page_trashed">Страница помещена в корзину</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">У вас нет разрешения на доступ к этому блогу.</string>
-    <string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот блог.</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">У вас нет разрешения на доступ к этому сайту.</string>
+    <string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот сайт.</string>
     <string name="undo">Назад</string>
     <string name="passcodelock_prompt_message">Введите ваш PIN–код</string>
     <string name="push_auth_expired">Время запроса истекло. Авторизуйтесь на WordPress.com и попробуйте еще раз.</string>
@@ -1269,6 +1316,7 @@ Language: ru
     <string name="deselect_all">Снять выделение</string>
     <string name="stats_generic_error">Не удалось загрузить необходимую статистику</string>
     <string name="auth_required">Войдите заново для продолжения.</string>
+    <string name="invalid_verification_code">Неверный код подтверждения</string>
     <string name="verification_code">Код подтверждения</string>
     <string name="editor_toast_invalid_path">Неверный путь к файлу</string>
     <string name="language">Язык</string>
@@ -1292,7 +1340,7 @@ Language: ru
     <string name="error_copy_to_clipboard">Произошла ошибка при копировании текста в буфер обмена.</string>
     <string name="stats_recent_weeks">Последние недели</string>
     <string name="stats_average_per_day">В среднем за день</string>
-    <string name="reader_empty_posts_in_blog">Этот блог пуст.</string>
+    <string name="reader_empty_posts_in_blog">Этот сайт пуст.</string>
     <string name="reader_label_new_posts">Новые записи</string>
     <string name="logs_copied_to_clipboard">Журналы приложения скопированы в буфер обмена.</string>
     <string name="stats_period">Период</string>
@@ -1383,34 +1431,28 @@ Language: ru
     <string name="reader_empty_posts_in_tag">Нет записей с этой меткой.</string>
     <string name="reader_empty_comments">Пока нет комментариев</string>
     <string name="create_new_blog_wpcom">Создать блог на WordPress.com</string>
-    <string name="nux_help_description">Перейдите в справочный центр, чтобы получить ответы на часто задаваемые вопросы, или обратитесь к другим участникам форума.</string>
     <string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
     <string name="reader_empty_posts_liked">Вы еще не поставили отметку «Нравится» ни одной записи.</string>
     <string name="reader_empty_followed_blogs_title">Вы еще не подписаны ни на один сайт.</string>
-    <string name="reader_menu_block_blog">Заблокировать этот блог</string>
-    <string name="reader_toast_blog_blocked">Записи из этого блога больше не будут отображаться</string>
-    <string name="reader_toast_err_block_blog">Не удалось заблокировать этот блог</string>
+    <string name="reader_menu_block_blog">Заблокировать этот сайт</string>
+    <string name="reader_toast_blog_blocked">Записи с этого сайта больше не будут отображаться</string>
+    <string name="reader_toast_err_block_blog">Не удалось заблокировать этот сайт</string>
     <string name="reader_toast_err_generic">Не удалось совершить это действие</string>
-    <string name="hs__invalid_email_error">Введите корректный адрес e–mail</string>
-    <string name="hs__username_blank_error">Введите корректное имя</string>
-    <string name="hs__conversation_header">Чат поддержки</string>
-    <string name="hs__new_conversation_header">Чат поддержки</string>
-    <string name="hs__conversation_detail_error">Опишите проблему, с которой вы столкнулись</string>
     <string name="contact_us">Обратная связь</string>
     <string name="schedule_verb">Запланировать</string>
     <string name="update_verb">Обновить</string>
-    <string name="reader_empty_recommended_blogs">Нет рекомендованных блогов</string>
+    <string name="reader_empty_recommended_blogs">Нет рекомендованных сайтов</string>
     <string name="reader_toast_err_unfollow_blog">Не удалось отписаться</string>
-    <string name="reader_toast_err_follow_blog">Не удалось подписаться на блог</string>
-    <string name="reader_toast_err_already_follow_blog">Вы уже подписаны на этот блог</string>
-    <string name="reader_toast_err_get_blog_info">Не удалось отобразить блог</string>
-    <string name="reader_label_followed_blog">Блог отслеживается</string>
+    <string name="reader_toast_err_follow_blog">Не удалось подписаться на этот сайт</string>
+    <string name="reader_toast_err_already_follow_blog">Вы уже подписаны на этот сайт</string>
+    <string name="reader_toast_err_get_blog_info">Не удалось отобразить сайт</string>
+    <string name="reader_label_followed_blog">Вы подписаны на этот сайт</string>
     <string name="reader_hint_add_tag_or_url">Введите URL или метку для подписки</string>
     <string name="reader_page_followed_blogs">Отслеживаемые сайты</string>
     <string name="reader_page_followed_tags">Отслеживаемые метки</string>
-    <string name="reader_title_subs">Метки и блоги</string>
+    <string name="reader_title_subs">Метки и сайты</string>
     <string name="reader_title_tag_preview">Метка из Чтива</string>
-    <string name="reader_title_blog_preview">Блог из Чтива</string>
+    <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="media_empty_list">Нет медиа</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто–то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>

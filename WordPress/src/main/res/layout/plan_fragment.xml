@@ -19,13 +19,14 @@
         android:paddingEnd="@dimen/content_margin"
         android:layout_marginStart="@dimen/margin_large">
 
-        <com.android.volley.toolbox.NetworkImageView
+        <ImageView
             android:id="@+id/image_plan_icon"
             android:layout_width="@dimen/plan_icon_size"
             android:layout_height="@dimen/plan_icon_size"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_extra_large"
-            tools:background="@drawable/penandink_223dp" />
+            tools:background="@drawable/penandink_223dp"
+            android:contentDescription="@null"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_product_name"
