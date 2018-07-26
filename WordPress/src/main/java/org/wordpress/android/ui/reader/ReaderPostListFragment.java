@@ -1277,7 +1277,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
-        ReaderTag tag = ReaderUtils.getDefaultTag();
+        ReaderTag tag;
 
         switch (button) {
             case DISCOVER:
@@ -1286,6 +1286,8 @@ public class ReaderPostListFragment extends Fragment
             case FOLLOWED:
                 tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
                 break;
+            default:
+                tag = ReaderUtils.getDefaultTag();
         }
 
         mRecyclerView.refreshFilterCriteriaOptions();
