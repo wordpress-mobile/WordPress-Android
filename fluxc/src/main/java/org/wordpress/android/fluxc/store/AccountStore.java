@@ -628,10 +628,10 @@ public class AccountStore extends Store {
     }
 
     public static class DomainContactError implements OnChangedError {
-        public DomainContactErrorType type;
-        public String message;
+        @NonNull public DomainContactErrorType type;
+        @Nullable public String message;
 
-        public DomainContactError(@NonNull String type, @NonNull String message) {
+        public DomainContactError(@Nullable String type, @Nullable String message) {
             this.type = DomainContactErrorType.fromString(type);
             this.message = message;
         }
