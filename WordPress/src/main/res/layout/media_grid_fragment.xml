@@ -1,37 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/ptr_layout"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="match_parent" >
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_filter_result_text"
+        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+            android:id="@+id/recycler"
+            android:fadeScrollbars="true"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:visibility="gone" />
+            android:scrollbars="vertical"
+            tools:listitem="@layout/media_grid_item" >
+        </org.wordpress.android.ui.prefs.EmptyViewRecyclerView>
 
-        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-            android:id="@+id/ptr_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fadeScrollbars="true"
-                android:scrollbars="vertical"
-                tools:listitem="@layout/media_grid_item" />
-
-        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
-    </LinearLayout>
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
