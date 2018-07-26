@@ -1134,19 +1134,19 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     private DomainContactModel responseToDomainContactModel(DomainContactResponse response) {
-        DomainContactModel contactModel = new DomainContactModel();
-        contactModel.setFirstName(StringEscapeUtils.unescapeHtml4(response.getFirst_name()));
-        contactModel.setLastName(StringEscapeUtils.unescapeHtml4(response.getLast_name()));
-        contactModel.setOrganization(response.getOrganization());
-        contactModel.setAddressLine1(response.getAddress_1());
-        contactModel.setAddressLine2(response.getAddress_2());
-        contactModel.setCity(response.getCity());
-        contactModel.setState(response.getState());
-        contactModel.setPostalCode(response.getPostal_code());
-        contactModel.setCountryCode(response.getCountry_code());
-        contactModel.setPhone(response.getPhone());
-        contactModel.setFax(response.getFax());
-        contactModel.setEmail(response.getEmail());
-        return contactModel;
+        String firstName = StringEscapeUtils.unescapeHtml4(response.getFirst_name());
+        String lastName = StringEscapeUtils.unescapeHtml4(response.getLast_name());
+        String organization = StringEscapeUtils.unescapeHtml4(response.getOrganization());
+        String addressLine1 = response.getAddress_1();
+        String addressLine2 = response.getAddress_2();
+        String city = response.getCity();
+        String state = response.getState();
+        String postalCode = response.getPostal_code();
+        String countryCode = response.getCountry_code();
+        String phone = response.getPhone();
+        String fax = response.getFax();
+        String email = response.getEmail();
+        return new DomainContactModel(firstName, lastName, organization, addressLine1, addressLine2, postalCode, city,
+                state, countryCode, email, phone, fax);
     }
 }

@@ -1,16 +1,16 @@
 package org.wordpress.android.fluxc.model
 
-class DomainContactModel {
-    var firstName: String? = null
-    var lastName: String? = null
-    var organization: String? = null
-    var addressLine1: String? = null
-    var addressLine2: String? = null
-    var postalCode: String? = null
-    var city: String? = null
-    var state: String? = null
-    var countryCode: String? = null
-    var email: String? = null
-    var phone: String? = null
-    var fax: String? = null
-}
+class DomainContactModel(
+    val firstName: String?,
+    val lastName: String?,
+    val organization: String?,
+    val addressLine1: String?,
+    val addressLine2: String?,
+    val postalCode: String?,
+    val city: String?,
+    val state: String?,
+    val countryCode: String?,
+    val email: String?,
+    val phone: String?,
+    val fax: String?
+)
