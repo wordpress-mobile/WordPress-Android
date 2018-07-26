@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import org.wordpress.android.R
 import org.wordpress.android.widgets.WPTextView
 
@@ -21,6 +22,7 @@ import org.wordpress.android.widgets.WPTextView
 class ActionableEmptyView : LinearLayout {
     lateinit var button: AppCompatButton
     lateinit var image: ImageView
+    lateinit var layout: View
     lateinit var subtitle: WPTextView
     lateinit var title: WPTextView
 
@@ -33,7 +35,7 @@ class ActionableEmptyView : LinearLayout {
     }
 
     private fun initView(context: Context, attrs: AttributeSet) {
-        val layout = View.inflate(context, R.layout.actionable_empty_view, this)
+        layout = View.inflate(context, R.layout.actionable_empty_view, this)
 
         image = layout.findViewById(R.id.image)
         title = layout.findViewById(R.id.title)
@@ -103,5 +105,28 @@ class ActionableEmptyView : LinearLayout {
 
     fun setTitleText(@NonNull charSequence: CharSequence) {
         title.text = charSequence
+    }
+
+    /**
+     * Update actionable empty view layout when used while searching.  The following characteristics are for each case:
+     *      Default - center in parent, use original top margin
+     *      Search  - center at top of parent, use original top margin plus 48dp, hide image, hide button
+     *
+     * @param isSearching   true when searching; false otherwise
+     * @param topMargin     top margin in pixels to offset with other views (e.g. toolbar or tabs)
+     */
+    fun updateLayoutForSearch(isSearching: Boolean, topMargin: Int) {
+        if (isSearching) {
+            val params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            params.topMargin = topMargin + context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large)
+            layout.layoutParams = params
+
+            image.visibility = View.GONE
+            button.visibility = View.GONE
+        } else {
+            val params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            params.topMargin = topMargin
+            layout.layoutParams = params
+        }
     }
 }
