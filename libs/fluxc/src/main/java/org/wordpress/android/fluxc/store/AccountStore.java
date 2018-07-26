@@ -638,7 +638,6 @@ public class AccountStore extends Store {
     }
 
     public enum DomainContactErrorType {
-        INVALID_TOKEN,
         GENERIC_ERROR;
 
         public static DomainContactErrorType fromString(String string) {
