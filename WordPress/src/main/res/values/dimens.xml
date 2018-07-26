@@ -322,5 +322,5 @@
     <dimen name="snackbar_message_margin_bottom">18dp</dimen>
 
     <!-- pages -->
-    <dimen name="page_item_horizontal_padding">16dp</dimen>
+    <dimen name="page_item_padding">16dp</dimen>
 </resources>
