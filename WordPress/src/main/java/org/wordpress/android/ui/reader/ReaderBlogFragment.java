@@ -76,28 +76,28 @@ public class ReaderBlogFragment extends Fragment
             return;
         }
 
-        ActionableEmptyView emptyView = getView().findViewById(R.id.actionable_empty_view);
-        if (emptyView == null) {
+        ActionableEmptyView actionableEmptyView = getView().findViewById(R.id.actionable_empty_view);
+        if (actionableEmptyView == null) {
             return;
         }
 
         if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
+            actionableEmptyView.setVisibility(View.VISIBLE);
 
             switch (getBlogType()) {
                 case RECOMMENDED:
-                    emptyView.setTitleText(getString(R.string.reader_empty_recommended_blogs));
+                    actionableEmptyView.setTitleText(getString(R.string.reader_empty_recommended_blogs));
                     break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
-                        emptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_search_title));
+                        actionableEmptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_search_title));
                     } else {
-                        emptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_title));
+                        actionableEmptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_title));
                     }
                     break;
             }
         } else {
-            emptyView.setVisibility(View.GONE);
+            actionableEmptyView.setVisibility(View.GONE);
         }
     }
 
