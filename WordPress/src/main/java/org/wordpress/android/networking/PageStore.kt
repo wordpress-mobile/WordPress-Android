@@ -93,9 +93,11 @@ class PageStore @Inject constructor(
         val posts = postStore.getPagesForSite(site).filter { it != null }
         val pages = posts.map { PageModel.fromPost(it, site) }
         pages.forEach { page ->
-            page.parent = pages.firstOrNull { it.remoteId == page.parentId }
-            if (page.parentId != 0L && page.parent == null) {
-                page.parent = getPageByRemoteId(page.parentId, site)
+            if (page.parentId != 0L) {
+                page.parent = pages.firstOrNull { it.remoteId == page.parentId }
+                if (page.parent == null) {
+                    page.parent = getPageByRemoteId(page.parentId, site)
+                }
             }
         }
         pages.sortedBy { it.remoteId }
