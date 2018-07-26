@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.DomainContactError;
+import org.wordpress.android.fluxc.store.AccountStore.DomainContactErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -899,7 +900,10 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        DomainContactError contactError = new DomainContactError(error.apiError, error.message);
+                        // Domain contact should always be available for a valid, authenticated user.
+                        // Therefore, only GENERIC_ERROR is identified here.
+                        DomainContactError contactError =
+                                new DomainContactError(DomainContactErrorType.GENERIC_ERROR, error.message);
                         DomainContactPayload payload = new DomainContactPayload(contactError);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedDomainContactAction(payload));
                     }
