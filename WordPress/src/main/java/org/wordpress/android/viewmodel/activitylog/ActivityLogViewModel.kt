@@ -20,7 +20,6 @@ import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -174,7 +173,7 @@ class ActivityLogViewModel @Inject constructor(
         areActionsEnabled = true
 
         if (disableActions) {
-            disableListActions(items.filter { it is IActionableItem }.map { it as IActionableItem })
+            disableListActions()
         }
 
         if (displayProgressItem) {
@@ -182,9 +181,18 @@ class ActivityLogViewModel @Inject constructor(
             moveToTop()
         }
 
-        prepareHeaders(items)
+        val listWithHeaders = mutableListOf<ActivityLogListItem>()
+        var shiftedIndex = 0
+        items.forEachIndexed { i, item ->
+            if (i == 0 || items[i - 1].header != items[i].header) {
+                listWithHeaders.add(shiftedIndex, ActivityLogListItem.Header(items[i].header))
+                shiftedIndex += 1
+            }
+            listWithHeaders.add(shiftedIndex, item)
+            shiftedIndex += 1
+        }
 
-        _events.postValue(items)
+        _events.postValue(listWithHeaders)
     }
 
     private fun moveToTop() {
@@ -193,20 +201,12 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun prepareHeaders(items: List<ActivityLogListItem>) {
-        items.forEachIndexed { i, _ ->
-            if (i == 0 || items[i - 1].header != items[i].header) {
-                items[i].isHeaderVisible = true
-            }
-        }
-    }
-
     private fun insertRewindProgressItem(items: ArrayList<ActivityLogListItem>) {
         val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
         items.add(0, getRewindProgressItem(activityLogModel))
     }
 
-    private fun disableListActions(items: List<IActionableItem>) {
+    private fun disableListActions() {
         areActionsEnabled = false
     }
 

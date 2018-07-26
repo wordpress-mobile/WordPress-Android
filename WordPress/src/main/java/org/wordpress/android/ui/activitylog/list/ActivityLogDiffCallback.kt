@@ -12,7 +12,6 @@ class ActivityLogDiffCallback(
 ) : DiffUtil.Callback() {
     companion object {
         const val LIST_ITEM_BUTTON_VISIBILITY_KEY = "list_item_button_visibility_key"
-        const val LIST_ITEM_HEADER_VISIBILITY_KEY = "list_item_header_visibility_key"
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -48,9 +47,6 @@ class ActivityLogDiffCallback(
             bundle.putBoolean(LIST_ITEM_BUTTON_VISIBILITY_KEY, newItem.isButtonVisible)
         }
 
-        if (oldItem.isHeaderVisible != newItem.isHeaderVisible) {
-            bundle.putBoolean(LIST_ITEM_HEADER_VISIBILITY_KEY, newItem.isHeaderVisible)
-        }
         if (bundle.size() == 0) return null
         return bundle
     }

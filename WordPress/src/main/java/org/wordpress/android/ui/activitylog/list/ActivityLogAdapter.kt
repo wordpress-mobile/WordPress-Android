@@ -5,6 +5,7 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType
 
@@ -27,6 +28,7 @@ class ActivityLogAdapter(
         when (holder) {
             is EventItemViewHolder -> holder.bind(list[position] as Event)
             is ProgressItemViewHolder -> holder.bind(list[position] as Progress)
+            is HeaderItemViewHolder -> holder.bind(list[position] as Header)
             else -> throw IllegalArgumentException("Unexpected view holder in ActivityLog")
         }
     }
@@ -52,6 +54,7 @@ class ActivityLogAdapter(
         return when (item) {
             is ActivityLogListItem.Event -> item.activityId.hashCode().toLong()
             is ActivityLogListItem.Progress -> item.hashCode().toLong()
+            is ActivityLogListItem.Header -> item.hashCode().toLong()
         }
     }
 
@@ -63,6 +66,7 @@ class ActivityLogAdapter(
         return when (viewType) {
             ViewType.PROGRESS.id -> ProgressItemViewHolder(parent)
             ViewType.EVENT.id -> EventItemViewHolder(parent, itemClickListener, rewindClickListener)
+            ViewType.HEADER.id -> HeaderItemViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in ActivityLog")
         }
     }
