@@ -5,6 +5,7 @@
     <dimen name="category_row_height">48dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
+    <dimen name="tab_height">48dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_subtitle_height">48dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>

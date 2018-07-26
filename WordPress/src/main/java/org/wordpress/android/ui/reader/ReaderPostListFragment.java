@@ -1121,6 +1121,10 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
+        int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
+        mActionableEmptyView.updateLayoutForSearch(false, heightToolbar);
+        boolean isSearching = false;
         String title;
         String description = null;
         ActionableEmptyViewButtonType button = null;
@@ -1165,15 +1169,20 @@ public class ReaderPostListFragment extends Fragment
                     title = getString(R.string.reader_empty_posts_in_blog);
                     break;
                 case SEARCH_RESULTS:
+                    isSearching = true;
+
                     if (isSearchViewEmpty() || TextUtils.isEmpty(mCurrentSearchQuery)) {
                         title = getString(R.string.reader_label_post_search_explainer);
+                        mActionableEmptyView.updateLayoutForSearch(true, heightToolbar);
                     } else if (isUpdating()) {
                         title = getString(R.string.reader_label_post_search_running);
+                        mActionableEmptyView.updateLayoutForSearch(true, heightToolbar);
                     } else {
                         title = getString(R.string.reader_empty_search_title);
                         String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
                         description = String.format(getString(R.string.reader_empty_search_description),
                                 formattedQuery);
+                        mActionableEmptyView.updateLayoutForSearch(true, heightToolbar + heightTabs);
                     }
                     break;
                 case TAG_PREVIEW:
@@ -1184,7 +1193,7 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        setEmptyTitleDescriptionAndButton(title, description, button);
+        setEmptyTitleDescriptionAndButton(title, description, button, isSearching);
     }
 
     /*
@@ -1218,12 +1227,12 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleDescriptionAndButton(@NonNull String title, String description,
-                                                   final ActionableEmptyViewButtonType button) {
+                                                   final ActionableEmptyViewButtonType button, boolean isSearching) {
         if (!isAdded()) {
             return;
         }
 
-        mActionableEmptyView.setImageVisibility(!isUpdating());
+        mActionableEmptyView.setImageVisibility(!isUpdating() && !isSearching);
         mActionableEmptyView.setTitleText(title);
 
         if (description == null) {
