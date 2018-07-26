@@ -8,12 +8,14 @@ data class PageModel(
     val pageId: Int,
     val title: String,
     var status: PageStatus,
+    var hasLocalChanges: Boolean,
     val parentId: Long,
     val remoteId: Long
 ) {
     companion object {
         fun fromPost(post: PostModel, site: SiteModel): PageModel {
-            return PageModel(site, post.id, post.title, PageStatus.fromPost(post), post.parentId, post.remotePostId)
+            return PageModel(site, post.id, post.title, PageStatus.fromPost(post), post.isLocallyChanged,
+                    post.parentId, post.remotePostId)
         }
     }
 

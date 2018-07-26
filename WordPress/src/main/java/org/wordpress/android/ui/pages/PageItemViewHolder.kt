@@ -26,6 +26,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     ) : PageItemViewHolder(parentView, layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
+        private val pageLabel = itemView.findViewById<TextView>(id.page_label)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
 
         override fun onBind(pageItem: PageItem) {
@@ -39,6 +40,13 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     parent.context.getString(R.string.untitled_in_parentheses)
                 else
                     pageItem.title
+
+                if (pageItem.labelRes == null) {
+                    pageLabel.visibility = View.GONE
+                } else {
+                    pageLabel.text = parent.context.getString(pageItem.labelRes!!)
+                    pageLabel.visibility = View.VISIBLE
+                }
 
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
                 pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
