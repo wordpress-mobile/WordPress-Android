@@ -478,6 +478,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mBrowserType.canMultiselect()
                 || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
+            mMediaGridFragment.showActionableEmptyViewButton(false);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -514,6 +515,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
+        mMediaGridFragment.showActionableEmptyViewButton(false);
 
         enableTabs(false);
 
@@ -528,6 +530,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
+        mMediaGridFragment.showActionableEmptyViewButton(true);
         invalidateOptionsMenu();
 
         enableTabs(true);

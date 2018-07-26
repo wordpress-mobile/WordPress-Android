@@ -496,6 +496,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         handleFetchAllMediaSuccess(event);
     }
 
+    public void showActionableEmptyViewButton(boolean show) {
+        mActionableEmptyView.setButtonVisibility(show);
+    }
+
     /*
      * load the adapter from the local store
      */
