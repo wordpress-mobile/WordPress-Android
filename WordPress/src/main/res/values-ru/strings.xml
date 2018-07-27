@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-20 03:54:27+0000
+Translation-Revision-Date: 2018-07-05 14:35:18+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="reader_avatar_desc">изображение профиля</string>
+    <string name="reader_blavatar_desc">значок сайта</string>
+    <string name="notification_channel_transient_title">Транзиент</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_enter_email">Пожалуйста, введите ваш адрес эл.почты</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Для продолжения введите ваш адрес эл.почты и имя</string>
+    <string name="support_push_notification_message">Новое сообщение от \'Помощь и поддержка\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Не установлен</string>
+    <string name="support_contact_email">Контактный адрес эл.почты</string>
+    <string name="application_log_button">Журнал приложения</string>
+    <string name="my_tickets">Мои тикеты</string>
+    <string name="activity_log_rewind_dialog_message">Вы уверены, что хотите откатить ваш сайт назад на %s %s. Вы потеряете все изменения в содержимом и настройки, сделанные после этого времени.</string>
+    <string name="activity_log_rewind_site">Откат состояния сайта</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Откат в процессе</string>
+    <string name="activity_log_currently_restoring_message">Откат на %s %s</string>
+    <string name="activity_log_currently_restoring_title">Ваш сайт в процессе восстановления</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ваш сайт был успешно восстановлен</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Ваш сайт восстановлен\nСовершен откат на %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Ваш сайт в процессе восстановления\nОткат на %s %s</string>
+    <string name="activity_log_button">Кнопка действий с журналом активности</string>
     <string name="plugin_auto_managed">Управляется автоматически</string>
     <string name="reader_save_posts_locally_dialog_message">Сохраните эту запись и вернитесь к её чтению в любое время. Это будет доступно только на этом устройстве (Мы работаем над синхронизацией с другими устройствами!).</string>
     <string name="reader_save_posts_locally_dialog_title">Сохранить запись на потом</string>
@@ -98,8 +119,6 @@ Language: ru
     <string name="dialog_confirm_delete_permanently_page">Точно хотите навсегда удалить эту страницу?</string>
     <string name="dialog_confirm_delete_permanently_post">Точно хотите навсегда удалить эту запись?</string>
     <string name="notification_site_creation_title_in_progress">Создание сайта… Это займет пару минут.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Важное</string>
     <string name="notification_channel_general_title">Общее</string>
     <string name="photo_picker_use_photo">Использовать это фото</string>
@@ -1412,7 +1431,6 @@ Language: ru
     <string name="reader_empty_posts_in_tag">Нет записей с этой меткой.</string>
     <string name="reader_empty_comments">Пока нет комментариев</string>
     <string name="create_new_blog_wpcom">Создать блог на WordPress.com</string>
-    <string name="nux_help_description">Перейдите в справочный центр, чтобы получить ответы на часто задаваемые вопросы, или обратитесь к другим участникам форума.</string>
     <string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
     <string name="reader_empty_posts_liked">Вы еще не поставили отметку «Нравится» ни одной записи.</string>
     <string name="reader_empty_followed_blogs_title">Вы еще не подписаны ни на один сайт.</string>
@@ -1420,11 +1438,6 @@ Language: ru
     <string name="reader_toast_blog_blocked">Записи с этого сайта больше не будут отображаться</string>
     <string name="reader_toast_err_block_blog">Не удалось заблокировать этот сайт</string>
     <string name="reader_toast_err_generic">Не удалось совершить это действие</string>
-    <string name="hs__invalid_email_error">Введите корректный адрес e–mail</string>
-    <string name="hs__username_blank_error">Введите корректное имя</string>
-    <string name="hs__conversation_header">Чат поддержки</string>
-    <string name="hs__new_conversation_header">Чат поддержки</string>
-    <string name="hs__conversation_detail_error">Опишите проблему, с которой вы столкнулись</string>
     <string name="contact_us">Обратная связь</string>
     <string name="schedule_verb">Запланировать</string>
     <string name="update_verb">Обновить</string>

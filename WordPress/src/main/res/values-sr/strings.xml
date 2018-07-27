@@ -195,14 +195,8 @@ Language: sr_RS
     <string name="reader_empty_posts_in_tag">Нема чланака са том ознаком</string>
     <string name="reader_empty_comments">Нема коментара</string>
     <string name="create_new_blog_wpcom">Направите блог на WordPress.com</string>
-    <string name="nux_help_description">Посетите центар за помоћ како бисте пронашли одговоре на честа питања или посетите форум и поставите питање</string>
     <string name="reader_empty_followed_blogs_title">Још увек не пратите ниједно веб место</string>
     <string name="reader_toast_err_generic">Није могуће обавити ову радњу</string>
-    <string name="hs__username_blank_error">Унесите исправно име</string>
-    <string name="hs__invalid_email_error">Унесите исправну адресу е–поште</string>
-    <string name="hs__conversation_detail_error">Опишите проблем који видите</string>
-    <string name="hs__new_conversation_header">Ћаскање са подршком</string>
-    <string name="hs__conversation_header">Ћаскање са подршком</string>
     <string name="contact_us">Контактирајте нас</string>
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Заказати</string>

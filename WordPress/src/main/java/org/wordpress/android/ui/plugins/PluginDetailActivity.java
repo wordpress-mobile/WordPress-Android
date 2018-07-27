@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -78,7 +79,8 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPLinkMovementMethod;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -93,8 +95,6 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PHOTO;
-import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_ICON;
 
 public class PluginDetailActivity extends AppCompatActivity {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
@@ -141,8 +141,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     protected TextView mFaqTextView;
     protected ImageView mFaqChevron;
 
-    private WPNetworkImageView mImageBanner;
-    private WPNetworkImageView mImageIcon;
+    private ImageView mImageBanner;
+    private ImageView mImageIcon;
 
     private boolean mIsConfiguringPlugin;
     private boolean mIsInstallingPlugin;
@@ -159,6 +159,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Inject PluginStore mPluginStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ImageManager mImageManager;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -470,8 +471,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         mTitleTextView.setText(mPlugin.getDisplayName());
-        mImageBanner.setImageUrl(mPlugin.getBanner(), PHOTO);
-        mImageIcon.setImageUrl(mPlugin.getIcon(), PLUGIN_ICON);
+        mImageManager.load(mImageBanner, ImageType.PHOTO, StringUtils.notNullStr(mPlugin.getBanner()),
+                ScaleType.CENTER_CROP);
+        mImageManager.load(mImageIcon, ImageType.PLUGIN, StringUtils.notNullStr(mPlugin.getIcon()));
         if (mPlugin.doesHaveWPOrgPluginDetails()) {
             mWPOrgPluginDetailsContainer.setVisibility(View.VISIBLE);
             setCollapsibleHtmlText(mDescriptionTextView, mPlugin.getDescriptionAsHtml());

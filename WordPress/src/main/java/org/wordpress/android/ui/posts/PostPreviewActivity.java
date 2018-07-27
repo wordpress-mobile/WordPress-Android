@@ -4,18 +4,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +21,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -45,9 +41,11 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -61,10 +59,11 @@ import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
-public class PostPreviewActivity extends AppCompatActivity {
-    private static final String STATE_KEY_IS_DIALOG_ERROR_SHOWN = "stateIsDialogErrorShown";
+public class PostPreviewActivity extends AppCompatActivity implements
+        BasicFragmentDialog.BasicDialogNegativeClickInterface,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface {
+    private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
 
-    private boolean mIsDialogErrorShown;
     private boolean mIsDiscardingChanges;
     private boolean mIsUpdatingPost;
 
@@ -104,11 +103,6 @@ public class PostPreviewActivity extends AppCompatActivity {
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
-            mIsDialogErrorShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, false);
-
-            if (mIsDialogErrorShown) {
-                showDialogError();
-            }
         }
         mPost = mPostStore.getPostByLocalPostId(localPostId);
         if (mSite == null || mPost == null) {
@@ -187,7 +181,6 @@ public class PostPreviewActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
-        outState.putBoolean(STATE_KEY_IS_DIALOG_ERROR_SHOWN, mIsDialogErrorShown);
         super.onSaveInstanceState(outState);
     }
 
@@ -275,7 +268,7 @@ public class PostPreviewActivity extends AppCompatActivity {
             }
 
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
-            marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
+            marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.snackbar_message_margin_bottom);
 
             ViewGroup buttonsView = mMessageView.findViewById(R.id.layout_buttons);
             RelativeLayout.LayoutParams paramsButtons = (RelativeLayout.LayoutParams) buttonsView.getLayoutParams();
@@ -360,27 +353,34 @@ public class PostPreviewActivity extends AppCompatActivity {
     }
 
     private void showDialogError() {
-        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
-                .setMessage(R.string.local_changes_discarding_error)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        mZendeskHelper.createNewTicket(PostPreviewActivity.this, Origin.DISCARD_CHANGES, mSite);
-                    }
-                })
-                .setOnCancelListener(new OnCancelListener() {
-                    @Override public void onCancel(DialogInterface dialog) {
-                        mIsDialogErrorShown = false;
-                    }
-                })
-                .setOnDismissListener(new OnDismissListener() {
-                    @Override public void onDismiss(DialogInterface dialog) {
-                        mIsDialogErrorShown = false;
-                    }
-                })
-                .show();
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        dialog.initialize(TAG_DISCARDING_CHANGES_ERROR_DIALOG, "", getString(R.string.local_changes_discarding_error),
+                getString(R.string.contact_support), getString(R.string.cancel), null);
+        dialog.show(getSupportFragmentManager(), TAG_DISCARDING_CHANGES_ERROR_DIALOG);
+    }
 
-        mIsDialogErrorShown = true;
+    @Override
+    public void onNegativeClicked(@NotNull String tag) {
+        switch (tag) {
+            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+                // noop
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog tag is not recognized");
+                throw new UnsupportedOperationException("Dialog tag is not recognized");
+        }
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String tag) {
+        switch (tag) {
+            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+                mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog tag is not recognized");
+                throw new UnsupportedOperationException("Dialog tag is not recognized");
+        }
     }
 
     @SuppressWarnings("unused")
@@ -396,7 +396,8 @@ public class PostPreviewActivity extends AppCompatActivity {
                     refreshPreview();
 
                     if (mMessageView != null) {
-                        Snackbar.make(mMessageView, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
+                        Snackbar.make(mMessageView, getString(R.string.local_changes_discarded),
+                                AccessibilityUtils.getSnackbarDuration(PostPreviewActivity.this, Snackbar.LENGTH_LONG))
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
@@ -417,9 +418,12 @@ public class PostPreviewActivity extends AppCompatActivity {
                     mIsUpdatingPost = true;
                 }
             } else {
+                if (mIsDiscardingChanges) {
+                    showDialogError();
+                }
+
                 mIsDiscardingChanges = false;
                 mIsUpdatingPost = false;
-                showDialogError();
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         }

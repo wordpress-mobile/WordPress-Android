@@ -654,14 +654,8 @@ Language: is
     <string name="reader_empty_posts_in_tag">Engar færslur með þetta merki</string>
     <string name="reader_empty_posts_liked">Þú hefur ekki líkað við neinar færslur</string>
     <string name="stats_no_blog">Ekki var hægt að hlaða tölfræði fyrir bloggið</string>
-    <string name="nux_help_description">Kíktu í hjálparmiðstöðina til þess að fá svör við algengum spurningum eða farðu á spjallborðin til þess að spyrja nýjar</string>
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
     <string name="contact_us">Hafðu samband við okkur</string>
-    <string name="hs__conversation_detail_error">Lýstu vandamálinu sem þú lentir í</string>
-    <string name="hs__conversation_header">Hjálparspjall</string>
-    <string name="hs__invalid_email_error">Sláðu inn gilt netfang</string>
-    <string name="hs__new_conversation_header">Hjálparspjall</string>
-    <string name="hs__username_blank_error">Sláðu inn gilt nafn</string>
     <string name="update_verb">Uppfæra</string>
     <string name="schedule_verb">Tímaáætla</string>
     <string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>

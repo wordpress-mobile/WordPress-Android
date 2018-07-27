@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-25 14:54:06+0000
+Translation-Revision-Date: 2018-07-10 07:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="reader_avatar_desc">profielafbeelding</string>
+    <string name="reader_blavatar_desc">favicon</string>
+    <string name="notification_channel_transient_title">Transient</string>
+    <string name="support_identity_input_dialog_email_label">E–mail</string>
+    <string name="support_identity_input_dialog_enter_email">Voer je e–mailadres in</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Voer je e–mailadres en naam in om door te gaan.</string>
+    <string name="support_push_notification_message">Nieuw bericht van \'Help en ondersteuning\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Niet ingesteld</string>
+    <string name="support_contact_email">E–mail voor contact</string>
+    <string name="application_log_button">Toepassingslog</string>
+    <string name="my_tickets">Mijn tickets</string>
+    <string name="activity_log_rewind_dialog_message">Weet je zeker dat je je site wilt terugbrengen naar %s op %s? Hierdoor wordt alle inhoud en worden alle opties verwijderd die sindsdien zijn aangemaakt of gewijzigd.</string>
+    <string name="activity_log_rewind_site">Site terugbrengen</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Bezig met terugzetten</string>
+    <string name="activity_log_currently_restoring_message">Terugzetten naar %s %s</string>
+    <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Het herstellen van je site is geslaagd</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Het herstellen van je site is geslaagd\nTeruggezet naar %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Je site wordt hersteld\nTerugzetten naar %s %s</string>
+    <string name="activity_log_button">Actieknop Activiteitenlog</string>
     <string name="plugin_auto_managed">Automatisch beheerd</string>
     <string name="reader_save_posts_locally_dialog_message">Sla dit bericht op en keer op elk gewenst moment terug om het te lezen. Het bericht is alleen op deze device beschikbaar; opgeslagen berichten worden niet gesynchroniseerd met andere apparaten. (Nog niet, tenminste! We zijn ermee bezig.)</string>
     <string name="reader_save_posts_locally_dialog_title">Berichten opslaan voor later</string>
@@ -88,8 +109,6 @@ Language: nl
     <string name="dialog_confirm_delete_permanently_page">Weet je zeker dat je deze pagina permanent wilt verwijderen?</string>
     <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wilt verwijderen?</string>
     <string name="notification_site_creation_title_in_progress">Site wordt aangemaakt. Dit kan een paar minuten duren.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Belangrijk</string>
     <string name="notification_channel_general_title">Algemeen</string>
     <string name="photo_picker_use_photo">Gebruik deze foto</string>
@@ -1345,16 +1364,10 @@ Language: nl
     <string name="reader_empty_posts_in_tag">Geen berichten met deze tag</string>
     <string name="reader_empty_comments">Nog geen reacties</string>
     <string name="create_new_blog_wpcom">Creëer WordPress.com blog</string>
-    <string name="nux_help_description">Bezoek het help centrum voor antwoorden op algemene vragen or bezoek de forums om nieuwe te stellen</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_empty_posts_liked">Je hebt nog geen enkel bericht geliked</string>
     <string name="reader_empty_followed_blogs_title">Je volgt nog geen sites</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
-    <string name="hs__invalid_email_error">Voer een geldig e–mailadres in</string>
-    <string name="hs__username_blank_error">Voer een geldige naam in</string>
-    <string name="hs__conversation_header">Ondersteuning chat</string>
-    <string name="hs__new_conversation_header">Ondersteuning chat</string>
-    <string name="hs__conversation_detail_error">Beschrijf het probleem dat je ziet</string>
     <string name="contact_us">Contact</string>
     <string name="schedule_verb">Inplannen</string>
     <string name="update_verb">Bijwerken</string>

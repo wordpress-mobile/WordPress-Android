@@ -44,11 +44,7 @@ public class SiteUtils {
     }
 
     public static String getSiteIconUrl(SiteModel site, int size) {
-        if (!TextUtils.isEmpty(site.getIconUrl())) {
-            return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH);
-        } else {
-            return null;
-        }
+        return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH);
     }
 
     public static ArrayList<Integer> getCurrentSiteIds(SiteStore siteStore, boolean selfhostedOnly) {

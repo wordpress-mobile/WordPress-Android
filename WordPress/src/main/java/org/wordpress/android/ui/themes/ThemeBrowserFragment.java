@@ -13,13 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -34,9 +31,9 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -96,6 +93,7 @@ public class ThemeBrowserFragment extends Fragment
     private ThemeBrowserFragmentCallback mCallback;
 
     @Inject ThemeStore mThemeStore;
+    @Inject ImageManager mImageManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -207,23 +205,9 @@ public class ThemeBrowserFragment extends Fragment
     @Override
     public void onMovedToScrapHeap(View view) {
         // cancel image fetch requests if the view has been moved to recycler.
-        WPNetworkImageView niv = view.findViewById(R.id.theme_grid_item_image);
+        ImageView niv = view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
-            // this tag is set in the ThemeBrowserAdapter class
-            String requestUrl = (String) niv.getTag();
-            if (requestUrl != null) {
-                // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.sImageLoader.get(requestUrl, new ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-
-                    @Override
-                    public void onResponse(ImageContainer response, boolean isImmediate) {
-                    }
-                });
-                container.cancelRequest();
-            }
+            mImageManager.cancelRequestAndClearImageView(niv);
         }
     }
 
@@ -344,7 +328,7 @@ public class ThemeBrowserFragment extends Fragment
 
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), mCallback);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.getPlanId(), mCallback, mImageManager);
         }
         return mAdapter;
     }

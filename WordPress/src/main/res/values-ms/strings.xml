@@ -964,16 +964,10 @@ Language: ms
     <string name="reader_empty_posts_in_tag">Tiada kiriman dengan tag ini</string>
     <string name="reader_empty_comments">Belum ada ulasan</string>
     <string name="create_new_blog_wpcom">Cipta blog WordPress.com</string>
-    <string name="nux_help_description">Lawat pusat bantuan untuk mendapatkan jawapan kepada soalan lazim atau lawat forum untuk bertanyakan soalan baharu</string>
     <string name="browse_our_faq_button">Layar Soalan Lazim kami</string>
     <string name="reader_empty_posts_liked">Anda belum menyukai mana–mana kiriman</string>
     <string name="reader_empty_followed_blogs_title">Anda belum mengikuti mana–mana laman</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
-    <string name="hs__invalid_email_error">Masukkan alamat emel yang sah</string>
-    <string name="hs__username_blank_error">Masukkan nama yang sah</string>
-    <string name="hs__conversation_header">Bualan sokongan</string>
-    <string name="hs__new_conversation_header">Bualan sokongan</string>
-    <string name="hs__conversation_detail_error">Terangkan masalah yang kelihatan</string>
     <string name="contact_us">Hubungi kami</string>
     <string name="schedule_verb">Jadual</string>
     <string name="update_verb">Kemas kini</string>

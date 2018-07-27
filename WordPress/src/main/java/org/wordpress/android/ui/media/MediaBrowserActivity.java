@@ -784,7 +784,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     };
 
-    private void showAddMediaPopup() {
+    public void showAddMediaPopup() {
         View anchor = findViewById(R.id.menu_new_media);
         PopupMenu popup = new PopupMenu(this, anchor);
 

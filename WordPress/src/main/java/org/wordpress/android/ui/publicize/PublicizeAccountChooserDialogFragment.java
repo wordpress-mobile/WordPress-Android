@@ -67,7 +67,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
 
     private void configureRecyclerViews(View view) {
         PublicizeAccountChooserListAdapter notConnectedAdapter =
-                new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
+                new PublicizeAccountChooserListAdapter(getActivity(), mNotConnectedAccounts, this, false);
         notConnectedAdapter.setHasStableIds(true);
         mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
         mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -88,7 +88,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
     private void populateConnectedListView(View view) {
         RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
         PublicizeAccountChooserListAdapter connectedAdapter =
-                new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
+                new PublicizeAccountChooserListAdapter(getActivity(), mConnectedAccounts, null, true);
 
         listViewConnected.setLayoutManager(new LinearLayoutManager(getActivity()));
         listViewConnected.setAdapter(connectedAdapter);

@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -32,6 +31,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
@@ -43,6 +43,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.inject.Inject;
@@ -68,7 +69,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
-    private ViewGroup mEmptyView;
+    private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mConnectJetpackView;
     private View mFilterView;
     private RadioGroup mFilterRadioGroup;
@@ -84,6 +85,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private boolean mShouldRefreshNotifications;
 
     @Inject AccountStore mAccountStore;
+    @Inject ImageManager mImageManager;
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
@@ -112,7 +114,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         mFilterRadioGroup = view.findViewById(R.id.notifications_radio_group);
         mFilterRadioGroup.setOnCheckedChangeListener(this);
         mFilterContainer = view.findViewById(R.id.notifications_filter_container);
-        mEmptyView = view.findViewById(R.id.empty_view);
+        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
         mFilterView = view.findViewById(R.id.notifications_filter);
 
@@ -264,7 +266,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     private NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), this, null);
+            mNotesAdapter = new NotesAdapter(getActivity(), this, null, mImageManager);
             mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
         }
 
@@ -331,31 +333,30 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     }
 
     private void showEmptyView(@StringRes int titleResId, @StringRes int descriptionResId, @StringRes int buttonResId) {
-        if (isAdded() && mEmptyView != null) {
-            mEmptyView.setVisibility(View.VISIBLE);
+        if (isAdded() && mActionableEmptyView != null) {
+            mActionableEmptyView.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
-            ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(titleResId);
+            mActionableEmptyView.setTitleText(getString(titleResId));
 
-            TextView descriptionTextView = mEmptyView.findViewById(R.id.text_empty_description);
             if (descriptionResId != 0) {
-                descriptionTextView.setText(descriptionResId);
+                mActionableEmptyView.setSubtitleText(getString(descriptionResId));
+                mActionableEmptyView.setSubtitleVisibility(true);
             } else {
-                descriptionTextView.setVisibility(View.GONE);
+                mActionableEmptyView.setSubtitleVisibility(false);
             }
 
-            TextView btnAction = mEmptyView.findViewById(R.id.button_empty_action);
             if (buttonResId != 0) {
-                btnAction.setText(buttonResId);
-                btnAction.setVisibility(View.VISIBLE);
+                mActionableEmptyView.setButtonText(getString(buttonResId));
+                mActionableEmptyView.setButtonVisibility(true);
             } else {
-                btnAction.setVisibility(View.GONE);
+                mActionableEmptyView.setButtonVisibility(false);
             }
 
-            btnAction.setOnClickListener(new View.OnClickListener() {
+            mActionableEmptyView.setButtonClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     performActionForActiveFilter();
                 }
             });
@@ -365,7 +366,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private void showConnectJetpackView() {
         if (isAdded() && mConnectJetpackView != null) {
             mConnectJetpackView.setVisibility(View.VISIBLE);
-            mEmptyView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(View.GONE);
             mFilterContainer.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
@@ -397,9 +398,9 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     }
 
     private void hideEmptyView() {
-        if (isAdded() && mEmptyView != null) {
+        if (isAdded() && mActionableEmptyView != null) {
             setFilterViewScrollable(true);
-            mEmptyView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
@@ -438,7 +439,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 showEmptyView(
                         R.string.notifications_empty_unread,
                         R.string.notifications_empty_action_unread,
-                        R.string.new_post
+                        R.string.posts_empty_list_button
                              );
             }
         } else if (i == R.id.notifications_filter_comments) {
