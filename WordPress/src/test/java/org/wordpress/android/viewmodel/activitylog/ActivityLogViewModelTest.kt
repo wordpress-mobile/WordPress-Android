@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
+import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.never
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
@@ -42,7 +44,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
     @Mock private lateinit var resourceProvider: ResourceProvider
-    private val actionCaptor = argumentCaptor<Action<Any>>()
+    private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
@@ -57,6 +59,7 @@ class ActivityLogViewModelTest {
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
+        actionCaptor = argumentCaptor()
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
@@ -135,7 +138,21 @@ class ActivityLogViewModelTest {
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
 
-    private fun expectedActivityList(): List<ActivityLogListItem> {
+    @Test
+    fun onDataFetchedShowsFooterIfCannotLoadMoreAndIsFreeSite() {
+        val canLoadMore = false
+        whenever(site.hasFreePlan).thenReturn(true)
+        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(true)
+        )
+
+        assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
+    }
+
+    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false): List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
         val first = Event(activityLogList[0], true)
         val second = Event(activityLogList[1], true)
@@ -145,6 +162,9 @@ class ActivityLogViewModelTest {
         activityLogListItems.add(second)
         activityLogListItems.add(Header(third.formattedDate))
         activityLogListItems.add(third)
+        if (isLastPageAndFreeSite) {
+            activityLogListItems.add(Footer)
+        }
         return activityLogListItems
     }
 
