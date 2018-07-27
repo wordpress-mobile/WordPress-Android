@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -174,6 +175,17 @@ public class PostStore extends Store {
         public OnPostChanged(int rowsAffected, boolean canLoadMore) {
             this.rowsAffected = rowsAffected;
             this.canLoadMore = canLoadMore;
+        }
+    }
+
+    public static class OnPostListChanged extends OnChanged<PostError> {
+        public SiteModel site;
+        public ListType listType;
+
+        public OnPostListChanged(SiteModel site, ListType listType, @Nullable PostError postError) {
+            this.site = site;
+            this.listType = listType;
+            this.error = postError;
         }
     }
 
@@ -478,35 +490,8 @@ public class PostStore extends Store {
     }
 
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
-        OnPostChanged onPostChanged;
-
-        if (payload.isError()) {
-            onPostChanged = new OnPostChanged(0);
-            onPostChanged.error = payload.error;
-        } else {
-            // Clear existing uploading posts if this is a fresh fetch (loadMore = false in the original request)
-            // This is the simplest way of keeping our local posts in sync with remote posts (in case of deletions,
-            // or if the user manual changed some post IDs)
-            if (!payload.loadedMore) {
-                PostSqlUtils.deleteUploadedPostsForSite(payload.site, payload.isPages);
-            }
-
-            int rowsAffected = 0;
-            // TODO: Change this to handle postIds instead of full post models
-//            for (PostModel post : payload.posts.getPosts()) {
-//                rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
-//            }
-
-            onPostChanged = new OnPostChanged(rowsAffected, payload.canLoadMore);
-        }
-
-        if (payload.isPages) {
-            onPostChanged.causeOfChange = PostAction.FETCH_PAGES;
-        } else {
-            onPostChanged.causeOfChange = PostAction.FETCH_POSTS;
-        }
-
-        emitChange(onPostChanged);
+        OnPostListChanged onPostListChanged = new OnPostListChanged(payload.site, payload.listType, payload.error);
+        emitChange(onPostListChanged);
     }
 
     private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
