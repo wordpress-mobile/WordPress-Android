@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.screenshots;
 
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -33,7 +31,6 @@ import org.wordpress.android.ui.WPLaunchActivity;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
-import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
@@ -47,7 +44,7 @@ public class WPScreenshotTest {
     private static final int WAITING_TIME = 300;
 
     @ClassRule
-    public static final LocaleTestRule LOCALE_TEST_RULE = new LocaleTestRule();
+    public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
 
 
     @Rule
