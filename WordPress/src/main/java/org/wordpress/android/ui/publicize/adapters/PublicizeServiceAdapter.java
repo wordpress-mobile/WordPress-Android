@@ -136,7 +136,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     }
 
     private boolean isHiddenService(PublicizeService service) {
-        boolean shouldHideGooglePlus = service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) || mShouldHideGPlus;
+        boolean shouldHideGooglePlus = service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) && mShouldHideGPlus;
         boolean isFacebook = service.getId().equals(PublicizeConstants.FACEBOOK_ID);
 
         return shouldHideGooglePlus || isFacebook;
