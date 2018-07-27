@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -43,14 +44,17 @@ public class PostStore extends Store {
 
     public static class FetchPostsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
+        public ListType listType;
         public boolean loadMore;
 
-        public FetchPostsPayload(SiteModel site) {
+        public FetchPostsPayload(SiteModel site, ListType listType) {
             this.site = site;
+            this.listType = listType;
         }
 
-        public FetchPostsPayload(SiteModel site, boolean loadMore) {
+        public FetchPostsPayload(SiteModel site, ListType listType, boolean loadMore) {
             this.site = site;
+            this.listType = listType;
             this.loadMore = loadMore;
         }
     }
@@ -100,14 +104,16 @@ public class PostStore extends Store {
     public static class FetchPostsResponsePayload extends Payload<PostError> {
         public List<Long> postIds;
         public SiteModel site;
+        public ListType listType;
         public boolean isPages;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public FetchPostsResponsePayload(List<Long> postIds, SiteModel site, boolean isPages, boolean loadedMore,
-                                         boolean canLoadMore) {
+        public FetchPostsResponsePayload(List<Long> postIds, SiteModel site, ListType listType, boolean isPages,
+                                         boolean loadedMore, boolean canLoadMore) {
             this.postIds = postIds;
             this.site = site;
+            this.listType = listType;
             this.isPages = isPages;
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
@@ -438,10 +444,10 @@ public class PostStore extends Store {
         }
 
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPosts(payload.site, pages, DEFAULT_POST_STATUS_LIST, offset);
+            mPostRestClient.fetchPosts(payload.site, payload.listType, pages, DEFAULT_POST_STATUS_LIST, offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
+            mPostXMLRPCClient.fetchPosts(payload.site, payload.listType, pages, offset);
         }
     }
 

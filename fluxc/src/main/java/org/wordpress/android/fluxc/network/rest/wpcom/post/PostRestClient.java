@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -81,8 +82,8 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final boolean getPages, final List<PostStatus> statusList,
-                           final int offset) {
+    public void fetchPosts(final SiteModel site, final ListType listType, final boolean getPages,
+                           final List<PostStatus> statusList, final int offset) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
@@ -116,7 +117,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         boolean canLoadMore = postIds.size() == PostStore.NUM_POSTS_PER_FETCH;
 
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postIds,
-                                site, getPages, offset > 0, canLoadMore);
+                                site, listType, getPages, offset > 0, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },

@@ -15,8 +15,8 @@ import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
+import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
@@ -111,7 +110,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
+    public void fetchPosts(final SiteModel site, final ListType listType, final boolean getPages, final int offset) {
         Map<String, Object> contentStruct = new HashMap<>();
         contentStruct.put("number", PostStore.NUM_POSTS_PER_FETCH);
         contentStruct.put("offset", offset);
@@ -137,8 +136,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                             boolean canLoadMore = response.length == PostStore.NUM_POSTS_PER_FETCH;
                             List<Long> postIds = postIdsFromPostsResponse(response);
 
-                            FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postIds, site, getPages,
-                                    offset > 0, canLoadMore);
+                            FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postIds, site, listType,
+                                    getPages, offset > 0, canLoadMore);
                             mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         } else {
                             PostError error = new PostError(PostErrorType.INVALID_RESPONSE);
