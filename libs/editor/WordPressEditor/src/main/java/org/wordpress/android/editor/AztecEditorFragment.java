@@ -59,6 +59,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
@@ -136,6 +137,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_IMAGE_WP_DASH = "wp-image-";
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
+    private static final String ANIMATED_MEDIA = "animated-media";
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
@@ -385,6 +387,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             hideActionBarIfNeeded();
         }
 
+        addOverlayToGifs();
         updateFailedAndUploadingMedia();
     }
 
@@ -554,6 +557,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         updateFailedAndUploadingMedia();
 
         mAztecReady = true;
+    }
+
+
+    private void addOverlayToGifs() {
+        AztecMediaSpan[] imageOrVideoSpans =
+                mContent.getText().getSpans(0, mContent.getText().length(), AztecMediaSpan.class);
+
+        // scans through all the MediaSpans and adds ANIMATED_MEDIA attribute to GIF images
+        for (AztecMediaSpan currentClass : imageOrVideoSpans) {
+            AttributesWithClass classes = getAttributesWithClass(currentClass.getAttributes());
+            AztecAttributes attributes = currentClass.getAttributes();
+
+            if (attributes.hasAttribute(ATTR_SRC)
+                && !attributes.hasAttribute(ANIMATED_MEDIA)
+                && !classes.hasClass(ATTR_STATUS_FAILED)
+                && !classes.hasClass(ATTR_STATUS_UPLOADING)
+                && MediaUtils.isGif(attributes.getValue(ATTR_SRC))) {
+                attributes.setValue(ANIMATED_MEDIA, ANIMATED_MEDIA);
+            }
+        }
+        overlayGifImages();
     }
 
     /*
@@ -793,6 +817,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    private void overlayGifImages() {
+        if (mContent == null) {
+            // discard any events if Aztec hasn't been initialized
+            return;
+        }
+
+        MediaPredicate predicate = MediaPredicate.getAnimatedMediaPredicate();
+
+        Drawable gifOverlay = getResources().getDrawable(R.drawable.gif_overlay_vector);
+        mContent.setOverlay(predicate, 0, gifOverlay, Gravity.TOP | Gravity.START);
+    }
+
     private void overlayProgressingMedia() {
         for (String localMediaId : mUploadingMediaProgressMax.keySet()) {
             overlayProgressingMediaForMediaId(localMediaId);
@@ -929,6 +965,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             currentClass.setDrawable(newDrawable);
                         }
                     }
+                    addOverlayToGifs();
                     mContent.refreshText();
                 }
 
@@ -1149,6 +1186,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 mContent.clearOverlays(predicate);
                 if (mediaType.equals(MediaType.VIDEO)) {
                     overlayVideoIcon(0, predicate);
+                } else {
+                    addOverlayToGifs();
                 }
                 mContent.resetAttributedMediaSpan(predicate);
                 // finally remove the local id as it won't be necessary anynmore
@@ -1180,6 +1219,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         static MediaPredicate getTempMediaIdPredicate(String id) {
             return new MediaPredicate(id, TEMP_IMAGE_ID);
+        }
+
+        static MediaPredicate getAnimatedMediaPredicate() {
+            return new MediaPredicate(ANIMATED_MEDIA, ANIMATED_MEDIA);
         }
 
         MediaPredicate(String id, String attributeName) {
