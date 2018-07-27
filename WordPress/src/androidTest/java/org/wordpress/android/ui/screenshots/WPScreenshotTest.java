@@ -35,8 +35,6 @@ import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
-
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
@@ -108,17 +106,17 @@ public class WPScreenshotTest {
 
         // Next Button
         nextButton = onView(
-                allOf(withId(R.id.primary_button), withText("Next"),
-                        childAtPosition(allOf(withId(R.id.bottom_buttons),
-                                childAtPosition(withClassName(is("android.widget.RelativeLayout")), 2)), 1)));
+                allOf(withId(R.id.primary_button), childAtPosition(
+                        allOf(withId(R.id.bottom_buttons), childAtPosition(
+                                withClassName(is("android.widget.RelativeLayout")), 2)), 1)));
         waitForElementUntilDisplayed(nextButton).perform(click());
 
 
         // Continue with this log button
         ViewInteraction continueButton = onView(
-                allOf(withId(R.id.primary_button), withText("Continue"),
-                        childAtPosition(allOf(withId(R.id.bottom_buttons),
-                                childAtPosition(withClassName(is("android.widget.RelativeLayout")), 3)), 1)));
+                allOf(withId(R.id.primary_button), childAtPosition(
+                        allOf(withId(R.id.bottom_buttons), childAtPosition(
+                                withClassName(is("android.widget.RelativeLayout")), 3)), 1)));
         waitForElementUntilDisplayed(continueButton).perform(click());
     }
 
@@ -154,8 +152,10 @@ public class WPScreenshotTest {
                         withId(R.id.toolbar_with_spinner), 0)));
         waitForElementUntilDisplayed(spinner).perform(click());
 
-        ViewInteraction spinnerOption = onView(allOf(withId(R.id.text), withText("Discover")));
-        waitForElementUntilDisplayed(spinnerOption).perform(click());
+        ViewInteraction spinnerItem = onView(
+                allOf(withId(R.id.text), childAtPosition(
+                        withClassName(is("android.widget.DropDownListView")), 1)));
+        waitForElementUntilDisplayed(spinnerItem).perform(click());
 
         // Waiting for the blog articles to load
         try {
@@ -260,10 +260,10 @@ public class WPScreenshotTest {
                         withId(R.id.toolbar_filter), 0)));
         waitForElementUntilDisplayed(spinner).perform(click());
 
-        Context targetContext = InstrumentationRegistry.getTargetContext();
-        String daysOptionsString = targetContext.getResources().getString(R.string.stats_timeframe_days);
-        ViewInteraction spinnerOption = onView(allOf(withId(R.id.text), withText(daysOptionsString)));
-        waitForElementUntilDisplayed(spinnerOption).perform(click());
+        ViewInteraction spinnerItem = onView(
+                allOf(withId(R.id.text), childAtPosition(
+                        withClassName(is("android.widget.DropDownListView")), 1)));
+        waitForElementUntilDisplayed(spinnerItem).perform(click());
 
         // Wait a bit
         try {
