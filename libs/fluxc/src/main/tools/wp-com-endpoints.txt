@@ -3,6 +3,8 @@
 
 /connect/site-info/
 
+/devices/new/
+
 /is-available/blog/
 /is-available/domain/
 /is-available/email/
