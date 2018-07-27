@@ -17,7 +17,9 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.ListSqlUtils;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.fluxc.persistence.PostListSqlUtils;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -41,8 +43,9 @@ import static org.junit.Assert.assertTrue;
 public class UploadStoreUnitTest {
     private Dispatcher mDispatcher = new Dispatcher();
     private UploadStore mUploadStore = new UploadStore(mDispatcher);
-    private PostStore mPostStore = new PostStore(mDispatcher, Mockito.mock(PostRestClient.class),
-            Mockito.mock(PostXMLRPCClient.class));
+    private PostStore mPostStore =
+            new PostStore(new Dispatcher(), Mockito.mock(PostRestClient.class), Mockito.mock(PostXMLRPCClient.class),
+                    Mockito.mock(ListSqlUtils.class), Mockito.mock(PostListSqlUtils.class));
 
     @Before
     public void setUp() {
