@@ -29,6 +29,7 @@ class ActivityLogAdapter(
             is EventItemViewHolder -> holder.bind(list[position] as Event)
             is ProgressItemViewHolder -> holder.bind(list[position] as Progress)
             is HeaderItemViewHolder -> holder.bind(list[position] as Header)
+            is FooterItemViewHolder -> {}
             else -> throw IllegalArgumentException("Unexpected view holder in ActivityLog")
         }
     }
@@ -55,6 +56,7 @@ class ActivityLogAdapter(
             is ActivityLogListItem.Event -> item.activityId.hashCode().toLong()
             is ActivityLogListItem.Progress -> item.hashCode().toLong()
             is ActivityLogListItem.Header -> item.hashCode().toLong()
+            ActivityLogListItem.Footer -> item.hashCode().toLong()
         }
     }
 
@@ -67,6 +69,7 @@ class ActivityLogAdapter(
             ViewType.PROGRESS.id -> ProgressItemViewHolder(parent)
             ViewType.EVENT.id -> EventItemViewHolder(parent, itemClickListener, rewindClickListener)
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
+            ViewType.FOOTER.id -> FooterItemViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in ActivityLog")
         }
     }

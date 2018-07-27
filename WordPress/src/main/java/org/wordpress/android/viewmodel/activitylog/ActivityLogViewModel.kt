@@ -20,10 +20,12 @@ import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.DONE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import javax.inject.Inject
 
@@ -74,6 +76,9 @@ class ActivityLogViewModel @Inject constructor(
     private val isRewindProgressItemShown: Boolean
         get() = _events.value?.getOrNull(0) is ActivityLogListItem.Progress
 
+    private val isDone: Boolean
+        get() = eventListStatus.value == DONE
+
     private var areActionsEnabled: Boolean = true
 
     private var lastRewindActivityId: String? = null
@@ -112,7 +117,7 @@ class ActivityLogViewModel @Inject constructor(
 
         activityLogStore.getRewindStatusForSite(site)
 
-        reloadEvents()
+        reloadEvents(done = true)
         requestEventsUpdate(false)
 
         isStarted = true
@@ -165,7 +170,8 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun reloadEvents(
         disableActions: Boolean = areActionsEnabled,
-        displayProgressItem: Boolean = isRewindProgressItemShown
+        displayProgressItem: Boolean = isRewindProgressItemShown,
+        done: Boolean = isDone
     ) {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
         val items = mutableListOf<ActivityLogListItem>()
@@ -182,6 +188,9 @@ class ActivityLogViewModel @Inject constructor(
                 items.add(ActivityLogListItem.Header(currentItem.formattedDate))
             }
             items.add(currentItem)
+        }
+        if (site.hasFreePlan && done) {
+            items.add(Footer)
         }
         areActionsEnabled = !disableActions
 
@@ -257,7 +266,11 @@ class ActivityLogViewModel @Inject constructor(
         }
 
         if (event.rowsAffected > 0) {
-            reloadEvents(!rewindStatusService.isRewindAvailable, rewindStatusService.isRewindInProgress)
+            reloadEvents(
+                    !rewindStatusService.isRewindAvailable,
+                    rewindStatusService.isRewindInProgress,
+                    !event.canLoadMore
+            )
             rewindStatusService.requestStatusUpdate()
             moveToTop()
         }
