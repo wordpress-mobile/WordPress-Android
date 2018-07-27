@@ -52,9 +52,9 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val description: String
     ) : ActivityLogListItem(PROGRESS)
 
-    data class Header(val text: String): ActivityLogListItem(HEADER)
+    data class Header(val text: String) : ActivityLogListItem(HEADER)
 
-    object Footer: ActivityLogListItem(FOOTER)
+    object Footer : ActivityLogListItem(FOOTER)
 
     enum class ViewType(val id: Int) {
         EVENT(0),

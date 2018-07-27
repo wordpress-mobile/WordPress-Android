@@ -189,7 +189,7 @@ class ActivityLogViewModel @Inject constructor(
             }
             items.add(currentItem)
         }
-        if (site.hasFreePlan && done) {
+        if (eventList.isNotEmpty() && site.hasFreePlan && done) {
             items.add(Footer)
         }
         areActionsEnabled = !disableActions
