@@ -13,7 +13,9 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.ListModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
+import org.wordpress.android.fluxc.model.PostListModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -21,10 +23,13 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.ListSqlUtils;
+import org.wordpress.android.fluxc.persistence.PostListSqlUtils;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -231,16 +236,21 @@ public class PostStore extends Store {
 
     private final PostRestClient mPostRestClient;
     private final PostXMLRPCClient mPostXMLRPCClient;
+    private final ListSqlUtils mListSqlUtils;
+    private final PostListSqlUtils mPostListSqlUtils;
     // Ensures that the UploadStore is initialized whenever the PostStore is,
     // to ensure actions are shadowed and repeated by the UploadStore
     @SuppressWarnings("unused")
     @Inject UploadStore mUploadStore;
 
     @Inject
-    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient) {
+    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
+                     ListSqlUtils listSqlUtils, PostListSqlUtils postListSqlUtils) {
         super(dispatcher);
         mPostRestClient = postRestClient;
         mPostXMLRPCClient = postXMLRPCClient;
+        mListSqlUtils = listSqlUtils;
+        mPostListSqlUtils = postListSqlUtils;
     }
 
     @Override
@@ -491,6 +501,23 @@ public class PostStore extends Store {
 
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
         OnPostListChanged onPostListChanged = new OnPostListChanged(payload.site, payload.listType, payload.error);
+        if (!payload.isError()) {
+            if (!payload.loadedMore) {
+                mListSqlUtils.deleteList(payload.site.getId(), payload.listType);
+            }
+            mListSqlUtils.insertOrUpdateList(payload.site.getId(), payload.listType);
+            ListModel listModel = mListSqlUtils.getList(payload.site.getId(), payload.listType);
+            if (listModel != null) { // Sanity check
+                List<PostListModel> postList = new ArrayList<>(payload.postIds.size());
+                for (Long postId : payload.postIds) {
+                    PostListModel postListModel = new PostListModel();
+                    postListModel.setListId(listModel.getId());
+                    postListModel.setRemotePostId(postId);
+                    postList.add(postListModel);
+                }
+                mPostListSqlUtils.insertPostList(postList);
+            }
+        }
         emitChange(onPostListChanged);
     }
 
