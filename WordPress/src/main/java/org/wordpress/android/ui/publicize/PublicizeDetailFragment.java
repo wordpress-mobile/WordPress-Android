@@ -116,6 +116,13 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
             TextView txtDescription = (TextView) mServiceCardView.findViewById(R.id.text_description);
             txtDescription.setText(description);
+
+            if (mService.getId().equals(PublicizeConstants.FACEBOOK_ID)) {
+                String noticeText = getString(R.string.connection_service_facebook_notice);
+                TextView txtNotice = (TextView) mServiceCardView.findViewById(R.id.text_description_notice);
+                txtNotice.setText(noticeText);
+                txtNotice.setVisibility(View.VISIBLE);
+            }
         }
 
         long currentUserId = mAccountStore.getAccount().getUserId();
