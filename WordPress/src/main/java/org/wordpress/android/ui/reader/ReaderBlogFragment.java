@@ -86,13 +86,13 @@ public class ReaderBlogFragment extends Fragment
 
             switch (getBlogType()) {
                 case RECOMMENDED:
-                    actionableEmptyView.setTitleText(getString(R.string.reader_empty_recommended_blogs));
+                    actionableEmptyView.title.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
-                        actionableEmptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_search_title));
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_search_title);
                     } else {
-                        actionableEmptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_title));
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_title);
                     }
                     break;
             }

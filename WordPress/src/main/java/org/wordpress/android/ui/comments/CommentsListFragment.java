@@ -342,7 +342,7 @@ public class CommentsListFragment extends Fragment {
                         }
                     }
 
-                    mActionableEmptyView.setTitleText(title);
+                    mActionableEmptyView.title.setText(title);
                     mActionableEmptyView.setVisibility(View.VISIBLE);
                     mFilteredCommentsView.setToolbarScrollFlags(0);
                     return "";

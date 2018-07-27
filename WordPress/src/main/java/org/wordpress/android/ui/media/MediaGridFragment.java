@@ -243,7 +243,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         });
 
         mActionableEmptyView = (ActionableEmptyView) view.findViewById(R.id.actionable_empty_view);
-        mActionableEmptyView.setButtonClickListener(new OnClickListener() {
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
                     ((MediaBrowserActivity) getActivity()).showAddMediaPopup();
@@ -497,7 +497,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void showActionableEmptyViewButton(boolean show) {
-        mActionableEmptyView.setButtonVisibility(show);
+        mActionableEmptyView.button.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     /*
@@ -587,7 +587,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         stringId = R.string.media_empty_search_list;
                     } else {
                         mActionableEmptyView.updateLayoutForSearch(false, 0);
-                        mActionableEmptyView.setImageVisibility(true);
+                        mActionableEmptyView.image.setVisibility(View.VISIBLE);
 
                         switch (mFilter) {
                             case FILTER_IMAGES:
@@ -620,7 +620,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     break;
             }
 
-            mActionableEmptyView.setTitleText(getText(stringId));
+            mActionableEmptyView.title.setText(stringId);
             mActionableEmptyView.setVisibility(View.VISIBLE);
         } else {
             mActionableEmptyView.setVisibility(View.GONE);

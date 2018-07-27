@@ -416,14 +416,14 @@ public class PostsListFragment extends Fragment
         }
 
         boolean hasNoContent = emptyViewMessageType == EmptyViewMessageType.NO_CONTENT;
-        mActionableEmptyView.setImageResource(mIsPage ? R.drawable.img_illustration_pages_104dp
+        mActionableEmptyView.image.setImageResource(mIsPage ? R.drawable.img_illustration_pages_104dp
                 : R.drawable.img_illustration_posts_75dp);
-        mActionableEmptyView.setImageVisibility(hasNoContent);
-        mActionableEmptyView.setTitleText(getText(stringId));
-        mActionableEmptyView.setButtonText(getString(mIsPage ? R.string.pages_empty_list_button
-                : R.string.posts_empty_list_button));
-        mActionableEmptyView.setButtonVisibility(hasNoContent);
-        mActionableEmptyView.setButtonClickListener(new OnClickListener() {
+        mActionableEmptyView.image.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.title.setText(stringId);
+        mActionableEmptyView.button.setText(mIsPage ? R.string.pages_empty_list_button
+                : R.string.posts_empty_list_button);
+        mActionableEmptyView.button.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
             }

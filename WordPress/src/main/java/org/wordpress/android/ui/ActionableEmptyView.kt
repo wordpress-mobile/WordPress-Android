@@ -1,8 +1,6 @@
 package org.wordpress.android.ui
 
 import android.content.Context
-import android.support.annotation.DrawableRes
-import android.support.annotation.NonNull
 import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
 import android.view.View
@@ -73,38 +71,6 @@ class ActionableEmptyView : LinearLayout {
 
             typedArray.recycle()
         }
-    }
-
-    fun setButtonClickListener(@NonNull listener: OnClickListener) {
-        button.setOnClickListener(listener)
-    }
-
-    fun setButtonText(@NonNull charSequence: CharSequence) {
-        button.text = charSequence
-    }
-
-    fun setButtonVisibility(isVisible: Boolean) {
-        button.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    fun setImageResource(@NonNull @DrawableRes resId: Int) {
-        image.setImageResource(resId)
-    }
-
-    fun setImageVisibility(isVisible: Boolean) {
-        image.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    fun setSubtitleText(@NonNull charSequence: CharSequence) {
-        subtitle.text = charSequence
-    }
-
-    fun setSubtitleVisibility(isVisible: Boolean) {
-        subtitle.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    fun setTitleText(@NonNull charSequence: CharSequence) {
-        title.text = charSequence
     }
 
     /**

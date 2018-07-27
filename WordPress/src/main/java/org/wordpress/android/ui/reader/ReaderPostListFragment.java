@@ -1206,13 +1206,13 @@ public class ReaderPostListFragment extends Fragment
         int imagePlaceholderPosition = description.indexOf("%s");
         addBookmarkImageSpan(ssb, imagePlaceholderPosition);
 
-        mActionableEmptyView.setImageVisibility(true);
-        mActionableEmptyView.setTitleText(getString(R.string.reader_empty_saved_posts_title));
-        mActionableEmptyView.setSubtitleText(ssb);
-        mActionableEmptyView.setSubtitleVisibility(true);
-        mActionableEmptyView.setButtonText(getString(R.string.reader_empty_followed_blogs_button_followed));
-        mActionableEmptyView.setButtonVisibility(true);
-        mActionableEmptyView.setButtonClickListener(new View.OnClickListener() {
+        mActionableEmptyView.image.setVisibility(View.VISIBLE);
+        mActionableEmptyView.title.setText(R.string.reader_empty_saved_posts_title);
+        mActionableEmptyView.subtitle.setText(ssb);
+        mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
+        mActionableEmptyView.button.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType.FOLLOWED);
             }
@@ -1232,36 +1232,36 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        mActionableEmptyView.setImageVisibility(!isUpdating() && !isSearching);
-        mActionableEmptyView.setTitleText(title);
+        mActionableEmptyView.image.setVisibility(!isUpdating() && !isSearching ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.title.setText(title);
 
         if (description == null) {
-            mActionableEmptyView.setSubtitleVisibility(false);
+            mActionableEmptyView.subtitle.setVisibility(View.GONE);
         } else {
-            mActionableEmptyView.setSubtitleVisibility(true);
+            mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
 
             if (description.contains("<") && description.contains(">")) {
-                mActionableEmptyView.setSubtitleText(Html.fromHtml(description));
+                mActionableEmptyView.subtitle.setText(Html.fromHtml(description));
             } else {
-                mActionableEmptyView.setSubtitleText(description);
+                mActionableEmptyView.subtitle.setText(description);
             }
         }
 
         if (button == null) {
-            mActionableEmptyView.setButtonVisibility(false);
+            mActionableEmptyView.button.setVisibility(View.GONE);
         } else {
-            mActionableEmptyView.setButtonVisibility(true);
+            mActionableEmptyView.button.setVisibility(View.VISIBLE);
 
             switch (button) {
                 case DISCOVER:
-                    mActionableEmptyView.setButtonText(getString(R.string.reader_empty_followed_blogs_button_discover));
+                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
                     break;
                 case FOLLOWED:
-                    mActionableEmptyView.setButtonText(getString(R.string.reader_empty_followed_blogs_button_followed));
+                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
                     break;
             }
 
-            mActionableEmptyView.setButtonClickListener(new View.OnClickListener() {
+            mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {
                     setCurrentTagFromEmptyViewButton(button);
                 }

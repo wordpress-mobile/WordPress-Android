@@ -300,16 +300,16 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 boolean isEmpty = mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE;
 
                 if (isEmpty) {
-                    actionableEmptyView.setTitleText(getString(R.string.stock_media_picker_initial_empty_text));
+                    actionableEmptyView.title.setText(R.string.stock_media_picker_initial_empty_text);
                     // Leave span with hard-coded #0087be to override jazzy orange until accent color is blue_wordpress.
                     String link = "<span style=\"color:#0087be\"><a href='https://pexels.com/'>Pexels</a></span>";
                     Spanned html = Html.fromHtml(getString(R.string.stock_media_picker_initial_empty_subtext, link));
-                    actionableEmptyView.setSubtitleText(html);
+                    actionableEmptyView.subtitle.setText(html);
                     actionableEmptyView.getSubtitle().setMovementMethod(WPLinkMovementMethod.getInstance());
-                    actionableEmptyView.setSubtitleVisibility(true);
+                    actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
                 } else {
-                    actionableEmptyView.setTitleText(getString(R.string.media_empty_search_list));
-                    actionableEmptyView.setSubtitleVisibility(false);
+                    actionableEmptyView.title.setText(R.string.media_empty_search_list);
+                    actionableEmptyView.subtitle.setVisibility(View.GONE);
                 }
             }
         }
