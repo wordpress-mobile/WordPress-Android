@@ -32,11 +32,11 @@ class PostListSqlUtils @Inject constructor() {
     /**
      * This function deletes [PostListModel] records for the [listIds].
      */
-    fun deletePost(listIds: List<Int>, postId: Int) {
+    fun deletePost(listIds: List<Int>, remotePostId: Long) {
         WellSql.delete(PostListModel::class.java)
                 .where()
                 .isIn(PostListModelTable.LIST_ID, listIds)
-                .equals(PostListModelTable.POST_ID, postId)
+                .equals(PostListModelTable.REMOTE_POST_ID, remotePostId)
                 .endWhere()
                 .execute()
     }

@@ -329,9 +329,9 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("CREATE TABLE ListModel (DATE_CREATED TEXT,LAST_MODIFIED TEXT,LOCAL_SITE_ID INTEGER,"
                            + "TYPE TEXT,_id INTEGER PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LOCAL_SITE_ID) "
                            + "REFERENCES SiteModel(_id) ON DELETE CASCADE,UNIQUE(LOCAL_SITE_ID, TYPE))");
-                db.execSQL("CREATE TABLE PostListModel (LIST_ID INTEGER,POST_ID INTEGER,_id INTEGER "
+                db.execSQL("CREATE TABLE PostListModel (LIST_ID INTEGER,REMOTE_POST_ID INTEGER,_id INTEGER "
                            + "PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) "
-                           + "ON DELETE CASCADE,UNIQUE(LIST_ID, POST_ID))");
+                           + "ON DELETE CASCADE,UNIQUE(LIST_ID, REMOTE_POST_ID))");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

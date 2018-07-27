@@ -80,7 +80,7 @@ class PostListSqlUtilsTest {
     @Test
     fun testDeletePost() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val testPostId = 1245 // value doesn't matter
+        val testRemotePostId = 1245L // value doesn't matter
 
         /**
          * 1. Insert a test list for every list type. There should at least be 2 list types for a good test.
@@ -88,17 +88,17 @@ class PostListSqlUtilsTest {
          * 3. Verify that the [PostListModel] was inserted correctly
          */
         val testLists = ListType.values().map { insertTestList(testSite.id, it) }
-        val postList = testLists.map { generatePostListModel(it.id, testPostId) }
+        val postList = testLists.map { generatePostListModel(it.id, testRemotePostId) }
         postListSqlUtils.insertPostList(postList)
         testLists.forEach { list ->
             assertEquals(1, postListSqlUtils.getPostList(list.id).size)
         }
 
         /**
-         * 1. Delete [PostListModel]s for which [PostListModel.postId] == `testPostId`
+         * 1. Delete [PostListModel]s for which [PostListModel.remotePostId] == `testRemotePostId`
          * 2. Verify that [PostListModel]s from every list is deleted
          */
-        postListSqlUtils.deletePost(testLists.map { it.id }, testPostId)
+        postListSqlUtils.deletePost(testLists.map { it.id }, testRemotePostId)
         testLists.forEach {
             assertEquals(0, postListSqlUtils.getPostList(it.id).size)
         }
@@ -107,7 +107,7 @@ class PostListSqlUtilsTest {
     @Test
     fun insertDuplicatePostListModel() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val testPostId = 1245 // value doesn't matter
+        val testRemotePostId = 1245L // value doesn't matter
         val listType = ListType.POSTS_ALL
 
         /**
@@ -117,8 +117,8 @@ class PostListSqlUtilsTest {
          * 3. Verify that first [PostListModel] is inserted correctly
          */
         val testList = insertTestList(testSite.id, listType)
-        val postListModel = generatePostListModel(testList.id, testPostId)
-        val postListModel2 = generatePostListModel(testList.id, testPostId)
+        val postListModel = generatePostListModel(testList.id, testRemotePostId)
+        val postListModel2 = generatePostListModel(testList.id, testRemotePostId)
         postListSqlUtils.insertPostList(listOf(postListModel))
         val insertedPostList = postListSqlUtils.getPostList(testList.id)
         assertEquals(1, insertedPostList.size)
@@ -148,18 +148,18 @@ class PostListSqlUtilsTest {
      * Helper function that creates a list of [PostListModel] to be used in tests.
      */
     private fun generatePostList(listModel: ListModel, count: Int): List<PostListModel> =
-            (1..count).map { generatePostListModel(listModel.id, it) }
+            (1..count).map { generatePostListModel(listModel.id, it.toLong()) }
 
     /**
      * Helper function that generates a [PostListModel] instance.
      */
     private fun generatePostListModel(
         listId: Int,
-        postId: Int
+        remotePostId: Long
     ): PostListModel {
         val postListModel = PostListModel()
         postListModel.listId = listId
-        postListModel.postId = postId
+        postListModel.remotePostId = remotePostId
         return postListModel
     }
 
