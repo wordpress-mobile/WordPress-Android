@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
@@ -20,12 +20,11 @@ repositories {
 dependencies {
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.mcxiaoke.volley:library:1.0.18'
-    implementation 'com.android.support:support-v13:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
-    implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'org.greenrobot:eventbus:3.0.0'
 
-    lintChecks 'org.wordpress:lint:1.0.0'
+    lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 android {
@@ -35,9 +34,9 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        versionName "1.20.1"
+        versionName "1.22"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
     }
 }
 

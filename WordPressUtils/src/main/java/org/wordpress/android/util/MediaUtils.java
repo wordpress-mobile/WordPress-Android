@@ -93,6 +93,10 @@ public class MediaUtils {
                || url.endsWith(".aiff") || url.endsWith(".aif") || url.endsWith(".aac") || url.endsWith(".m4a");
     }
 
+    public static boolean isGif(String url) {
+        return "gif".equals(MimeTypeMap.getFileExtensionFromUrl(url));
+    }
+
     /**
      * E.g. Jul 2, 2013 @ 21:57
      */
@@ -449,10 +453,14 @@ public class MediaUtils {
                 // TODO handle non-primary volumes
             } else if (isDownloadsDocument(uri)) { // DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
+                try {
+                    final Uri contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                    return getDataColumn(context, contentUri, null, null);
+                } catch (NumberFormatException e) {
+                    AppLog.e(AppLog.T.UTILS, "Can't read the path for file with ID " + id);
+                    return null;
+                }
             } else if (isMediaDocument(uri)) { // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -508,6 +516,8 @@ public class MediaUtils {
                     return cursor.getString(columnIndex);
                 }
             }
+        } catch (SecurityException errReadingContentResolver) {
+            AppLog.e(AppLog.T.UTILS, "Error reading _data column for URI: " + uri, errReadingContentResolver);
         } finally {
             if (cursor != null) {
                 cursor.close();
