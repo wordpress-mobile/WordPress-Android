@@ -104,7 +104,7 @@ public class PublicizeService {
                && other.getIconUrl().equals(this.getIconUrl())
                && other.getConnectUrl().equals(this.getConnectUrl())
                && other.getHasMultipleExternalUserIdSupport() == this.getHasMultipleExternalUserIdSupport()
-               && other.getIsExternalUsersOnly() == this.getIsExternalUsersOnly();
+               && other.getIsExternalUsersOnly() == this.getIsExternalUsersOnly()
                && other.isJetpackSupported() == this.isJetpackSupported();
     }
 }
