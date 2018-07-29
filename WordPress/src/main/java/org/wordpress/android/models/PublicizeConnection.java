@@ -131,6 +131,8 @@ public class PublicizeConnection {
     public ConnectStatus getStatusEnum() {
         if (getStatus().equalsIgnoreCase(ConnectStatus.BROKEN.toString())) {
             return ConnectStatus.BROKEN;
+        } else if (getStatus().equalsIgnoreCase(ConnectStatus.MUST_DISCONNECT.toString())) {
+            return ConnectStatus.MUST_DISCONNECT;
         } else {
             return ConnectStatus.OK;
         }
