@@ -20,6 +20,9 @@ public class PublicizeConnection {
             public String toString() {
                 return "broken";
             }
+        },
+        MUST_DISCONNECT {
+            public String toString() { return "must-disconnect"; }
         }
     }
 
