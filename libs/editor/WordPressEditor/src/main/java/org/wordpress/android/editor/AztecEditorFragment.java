@@ -114,6 +114,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnVideoTappedListener,
         AztecText.OnMediaDeletedListener,
         AztecText.OnVideoInfoRequestedListener,
+        AztecText.OnAudioTappedListener,
         View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
@@ -178,6 +179,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private Drawable mLoadingImagePlaceholder;
     private Drawable mLoadingVideoPlaceholder;
+    private Drawable mAudioPlaceholder;
 
     private int maxMediaSize;
     private int minMediaSize;
@@ -333,6 +335,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setHistoryListener(this)
                 .setOnImageTappedListener(this)
                 .setOnVideoTappedListener(this)
+                .setOnAudioTappedListener(this)
                 .setOnMediaDeletedListener(this)
                 .setOnVideoInfoRequestedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(mContent))
@@ -343,7 +346,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new HiddenGutenbergPlugin(mContent))
                 .addPlugin(mediaToolbarGalleryButton)
                 .addPlugin(mediaToolbarCameraButton)
-                .addPlugin(mediaToolbarLibraryButton);
+                .addPlugin(mediaToolbarLibraryButton)
+                .addPlugin(mediaToolbarMoreButton);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
@@ -893,80 +897,93 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
+            attributes.setValue(ATTR_ID_WP, mediaFile.getMediaId());
 
-            if (mediaFile.isVideo()) {
-                // VideoPress special case here
-                if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
-                    attributes.removeAttribute(ATTR_SRC);
-                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
-                            mediaFile.getVideoPressShortCode());
-                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId);
-                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), mediaUrl);
-                }
-                // Do not set default attributes here like for pictures
-                addVideoUploadingClassIfMissing(attributes);
-                mContent.insertVideo(getLoadingVideoPlaceholder(), attributes);
-                overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
-            } else {
-                setDefaultAttributes(attributes, mediaFile);
-                mContent.insertImage(getLoadingImagePlaceholder(), attributes);
+            MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
+
+            if (mediaType == MediaType.AUDIO) {
+                mContent.insertAudio(getAudioPlaceholder(), attributes);
+                MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(mediaFile.getMediaId());
+                mContent.clearOverlays(localMediaIdPredicate);
+                return;
             }
+            else {
+                if (mediaType == MediaType.VIDEO) {
+                    // VideoPress special case here
+                    if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                        attributes.removeAttribute(ATTR_SRC);
+                        String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                            mediaFile.getVideoPressShortCode());
+                        attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId);
+                        attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), mediaUrl);
+                    }
+                    // Do not set default attributes here like for pictures
+                    addVideoUploadingClassIfMissing(attributes);
+                    mContent.insertVideo(getLoadingVideoPlaceholder(), attributes);
+                    overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
+                }
+                else if (mediaType == MediaType.IMAGE) {
+                    setDefaultAttributes(attributes, mediaFile);
+                    mContent.insertImage(getLoadingImagePlaceholder(), attributes);
+                }
 
-            final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(
+                final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(
                     mediaFile.getThumbnailURL())) : mediaUrl;
-            imageLoader.get(posterURL, new ImageLoader.ImageListener() {
-                private void replaceDrawable(Drawable newDrawable) {
-                    AztecMediaSpan[] imageOrVideoSpans =
+
+                imageLoader.get(posterURL, new ImageLoader.ImageListener() {
+                    private void replaceDrawable(Drawable newDrawable) {
+                        AztecMediaSpan[] imageOrVideoSpans =
                             mContent.getText().getSpans(0, mContent.getText().length(), AztecMediaSpan.class);
-                    for (AztecMediaSpan currentClass : imageOrVideoSpans) {
-                        if (currentClass.getAttributes().hasAttribute(ATTR_SRC)
+                        for (AztecMediaSpan currentClass : imageOrVideoSpans) {
+                            if (currentClass.getAttributes().hasAttribute(ATTR_SRC)
                                 && mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
-                            currentClass.setDrawable(newDrawable);
-                        } else if (currentClass.getAttributes().hasAttribute(
+                                currentClass.setDrawable(newDrawable);
+                            } else if (currentClass.getAttributes().hasAttribute(
                                 VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC())
                                 && mediaUrl.equals(currentClass.getAttributes().getValue(
-                                        VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()))) {
-                            currentClass.setDrawable(newDrawable);
+                                VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()))) {
+                                currentClass.setDrawable(newDrawable);
+                            }
                         }
+                        mContent.refreshText();
                     }
-                    mContent.refreshText();
-                }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (!isAdded()) {
-                        // the fragment is detached
-                        return;
-                    }
-                    replaceDrawable(getLoadingMediaErrorPlaceholder(null));
-                }
-
-                @Override
-                public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
-                    if (!isAdded()) {
-                        // the fragment is detached
-                        return;
-                    }
-                    Bitmap downloadedBitmap = container.getBitmap();
-                    if (downloadedBitmap == null) {
-                        if (isImmediate) {
-                            // Bitmap is null but isImmediate is true (as soon as the request starts).
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (!isAdded()) {
+                            // the fragment is detached
                             return;
                         }
                         replaceDrawable(getLoadingMediaErrorPlaceholder(null));
-                        return;
                     }
 
-                    if (downloadedBitmap.getHeight() < minMediaSize || downloadedBitmap.getWidth() < minMediaSize) {
-                        // Bitmap is too small. Show image placeholder.
-                        replaceDrawable(getLoadingMediaErrorPlaceholder(getString(R.string.error_media_small)));
-                        return;
-                    }
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                        if (!isAdded()) {
+                            // the fragment is detached
+                            return;
+                        }
+                        Bitmap downloadedBitmap = container.getBitmap();
+                        if (downloadedBitmap == null) {
+                            if (isImmediate) {
+                                // Bitmap is null but isImmediate is true (as soon as the request starts).
+                                return;
+                            }
+                            replaceDrawable(getLoadingMediaErrorPlaceholder(null));
+                            return;
+                        }
 
-                    downloadedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                    replaceDrawable(new BitmapDrawable(getResources(), downloadedBitmap));
-                }
-            }, maxMediaSize, 0);
+                        if (downloadedBitmap.getHeight() < minMediaSize || downloadedBitmap.getWidth() < minMediaSize) {
+                            // Bitmap is too small. Show image placeholder.
+                            replaceDrawable(getLoadingMediaErrorPlaceholder(getString(R.string.error_media_small)));
+                            return;
+                        }
+
+                        downloadedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+                        replaceDrawable(new BitmapDrawable(getResources(), downloadedBitmap));
+                    }
+                }, maxMediaSize, 0);
+            }
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
@@ -1113,7 +1130,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
             MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
-            if (mediaType.equals(MediaType.IMAGE) || mediaType.equals(MediaType.VIDEO)) {
+            if (mediaType.equals(MediaType.IMAGE) || mediaType.equals(MediaType.VIDEO) || mediaType.equals(MediaType.AUDIO)) {
                 // clear overlay
                 MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
@@ -1121,7 +1138,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AztecAttributes attrs = mContent.getElementAttributes(predicate);
                 attrs.setValue("src", remoteUrl);
 
-                if (mediaType.equals(MediaType.IMAGE)) {
+                if (mediaType.equals(MediaType.IMAGE) || mediaType.equals(MediaType.AUDIO)) {
                     setDefaultAttributes(attrs, mediaFile);
                 }
 
@@ -1275,6 +1292,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             switch (mediaType) {
                 case IMAGE:
                 case VIDEO:
+                case AUDIO:
                     MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
                     AttributesWithClass attributesWithClass = getAttributesWithClass(
                             mContent.getElementAttributes(localMediaIdPredicate));
@@ -1526,6 +1544,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
     }
 
+    @Override
+    public void onAudioTapped(AztecAttributes attrs) {
+        onMediaTapped(attrs, 0, 0, MediaType.AUDIO);
+    }
+
     private void setIdAttributeOnMedia(AztecAttributes attrs, String idName, String localMediaId) {
         attrs.setValue(idName, localMediaId);
         mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
@@ -1580,6 +1603,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                     break;
                                 case VIDEO:
                                     mContent.removeMedia(mTappedMediaPredicate);
+                                    break;
+                                case AUDIO:
+                                    mContent.removeMedia(mTappedMediaPredicate);
+                                    break;
                             }
                             mUploadingMediaProgressMax.remove(localMediaId);
                         } else {
@@ -2209,12 +2236,28 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return defaultLoadingImagePlaceholder;
     }
 
+    private Drawable getAudioPlaceholder() {
+        if (mAudioPlaceholder != null) {
+            return mAudioPlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultAudioPlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_audio);
+        defaultAudioPlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
+                DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultAudioPlaceholder;
+    }
+
     public void setLoadingImagePlaceholder(Drawable loadingImagePlaceholder) {
-        this.mLoadingImagePlaceholder = loadingImagePlaceholder;
+        mLoadingImagePlaceholder = loadingImagePlaceholder;
     }
 
     public void setLoadingVideoPlaceholder(Drawable loadingVideoPlaceholder) {
-        this.mLoadingVideoPlaceholder = loadingVideoPlaceholder;
+        mLoadingVideoPlaceholder = loadingVideoPlaceholder;
+    }
+
+    public void setAudioPlaceholder(Drawable audioPlaceholder) {
+        mAudioPlaceholder = audioPlaceholder;
     }
 
     public int getMaxMediaSize() {
