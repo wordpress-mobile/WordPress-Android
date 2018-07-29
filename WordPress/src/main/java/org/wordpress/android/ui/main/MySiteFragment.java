@@ -422,9 +422,6 @@ public class MySiteFragment extends Fragment implements
                 ActivityLauncher.viewQuickStartForResult(getActivity());
             }
         });
-
-        mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
     }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
