@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.customdomain
+package org.wordpress.android.ui.registerdomain
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

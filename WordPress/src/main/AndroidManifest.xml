@@ -515,7 +515,7 @@
 
         <!--Register Domain-->
         <activity
-            android:name=".ui.customdomain.RegisterDomainActivity"
+            android:name=".ui.registerdomain.RegisterDomainActivity"
             android:label="@string/register_domain"
             android:theme="@style/Calypso.NoActionBar"/>
 
