@@ -513,6 +513,12 @@
             android:label="@string/activity_log_event"
             android:theme="@style/Calypso.NoActionBar"/>
 
+        <!--Register Domain-->
+        <activity
+            android:name=".ui.customdomain.RegisterDomainActivity"
+            android:label="@string/register_domain"
+            android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"
