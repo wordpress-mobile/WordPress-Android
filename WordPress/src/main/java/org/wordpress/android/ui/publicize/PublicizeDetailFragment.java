@@ -26,6 +26,8 @@ import javax.inject.Inject;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment
         implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
+    public static final String FACEBOOK_SHARING_CHANGE_BLOG_POST =
+            "https://en.blog.wordpress.com/2018/07/23/sharing-options-from-wordpress-com-to-facebook-are-changing/";
     private SiteModel mSite;
     private String mServiceId;
 
@@ -130,7 +132,8 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
                 TextView learnMoreButton = (TextView) mServiceCardView.findViewById(R.id.learn_more_button);
                 learnMoreButton.setOnClickListener(new OnClickListener() {
                     @Override public void onClick(View v) {
-                        WPWebViewActivity.openURL(getActivity(), "https://en.blog.wordpress.com/2018/07/23/sharing-options-from-wordpress-com-to-facebook-are-changing/");
+                        WPWebViewActivity.openURL(getActivity(),
+                                FACEBOOK_SHARING_CHANGE_BLOG_POST);
                     }
                 });
                 learnMoreButton.setVisibility(View.VISIBLE);
