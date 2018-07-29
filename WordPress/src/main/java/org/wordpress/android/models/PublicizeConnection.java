@@ -22,7 +22,9 @@ public class PublicizeConnection {
             }
         },
         MUST_DISCONNECT {
-            public String toString() { return "must-disconnect"; }
+            public String toString() {
+                return "must-disconnect";
+            }
         }
     }
 
