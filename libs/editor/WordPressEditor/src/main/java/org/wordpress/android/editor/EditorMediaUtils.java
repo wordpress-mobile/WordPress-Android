@@ -17,6 +17,11 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 
 public class EditorMediaUtils {
+
+    private static final String MIME_TYPE_IMAGE_PREFIX = "image/";
+    private static final String MIME_TYPE_VIDEO_PREFIX = "video/";
+    private static final String MIME_TYPE_AUDIO_PREFIX = "audio/";
+
     public static BitmapDrawable getAztecPlaceholderDrawableFromResID(Context context, @DrawableRes int drawableId,
                                                                       int maxImageSizeForVisualEditor) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
@@ -46,5 +51,26 @@ public class EditorMediaUtils {
         int padding = DisplayUtils.dpToPx(context, 48) * 2;
         maximumThumbnailWidthForEditor -= padding;
         return maximumThumbnailWidthForEditor;
+    }
+
+    public static boolean isImageMimeType(String type) {
+        return isExpectedMimeType(MIME_TYPE_IMAGE_PREFIX, type);
+    }
+
+    public static boolean isVideoMimeType(String type) {
+        return isExpectedMimeType(MIME_TYPE_VIDEO_PREFIX, type);
+    }
+
+    public static boolean isAudioMimeType(String type) {
+        return isExpectedMimeType(MIME_TYPE_AUDIO_PREFIX, type);
+    }
+
+    private static boolean isExpectedMimeType(String expected, String type) {
+        if (type == null) {
+            return false;
+        } else {
+            String[] split = type.split("/");
+            return split.length == 2 && expected.startsWith(split[0]);
+        }
     }
 }

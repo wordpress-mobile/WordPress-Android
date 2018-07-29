@@ -12,6 +12,7 @@ import android.view.DragEvent;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
@@ -41,7 +42,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract Spanned getSpannedContent();
 
     public enum MediaType {
-        IMAGE, VIDEO;
+        IMAGE, VIDEO, AUDIO;
 
         public static MediaType fromString(String value) {
             if (value != null) {
@@ -164,12 +165,17 @@ public abstract class EditorFragmentAbstract extends Fragment {
     }
 
     public static MediaType getEditorMimeType(MediaFile mediaFile) {
-        if (mediaFile == null) {
-            // default to image
-            return MediaType.IMAGE;
+        String mimeType = mediaFile.getMimeType();
+
+        if (EditorMediaUtils.isVideoMimeType(mimeType)) {
+            return MediaType.VIDEO;
         }
-        return mediaFile.isVideo() ? MediaType.VIDEO
-                : MediaType.IMAGE;
+
+        if (EditorMediaUtils.isAudioMimeType(mimeType)) {
+            return MediaType.AUDIO;
+        }
+
+        return MediaType.IMAGE;
     }
 
     /**
