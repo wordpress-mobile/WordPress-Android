@@ -84,6 +84,7 @@
             </TextView>
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_create_site"
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_create_site"
                 android:layout_toEndOf="@+id/icon_create_site"
@@ -94,11 +95,15 @@
                 app:fixWidowWords="true">
             </org.wordpress.android.widgets.WPTextView>
 
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignLeft="@+id/title_create_site"
+                android:layout_alignStart="@+id/title_create_site"
+                android:layout_below="@+id/subtitle_create_site">
+            </View>
+
         </RelativeLayout>
 
-        <View
-            style="@style/QuickStartDivider">
-        </View>
 
         <RelativeLayout
             android:id="@+id/layout_view_site"
@@ -129,6 +134,7 @@
             </TextView>
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_view_site"
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_view_site"
                 android:layout_toEndOf="@+id/icon_view_site"
@@ -139,11 +145,14 @@
                 app:fixWidowWords="true">
             </org.wordpress.android.widgets.WPTextView>
 
-        </RelativeLayout>
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignLeft="@+id/title_view_site"
+                android:layout_alignStart="@+id/title_view_site"
+                android:layout_below="@+id/subtitle_view_site">
+            </View>
 
-        <View
-            style="@style/QuickStartDivider">
-        </View>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_browse_themes"
@@ -174,6 +183,7 @@
             </TextView>
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_browse_themes"
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_browse_themes"
                 android:layout_toEndOf="@+id/icon_browse_themes"
@@ -184,11 +194,14 @@
                 app:fixWidowWords="true">
             </org.wordpress.android.widgets.WPTextView>
 
-        </RelativeLayout>
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignLeft="@+id/title_browse_themes"
+                android:layout_alignStart="@+id/title_browse_themes"
+                android:layout_below="@+id/subtitle_browse_themes">
+            </View>
 
-        <View
-            style="@style/QuickStartDivider">
-        </View>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_customize_site"
@@ -219,6 +232,7 @@
             </TextView>
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_customize_site"
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_customize_site"
                 android:layout_toEndOf="@+id/icon_customize_site"
@@ -229,11 +243,14 @@
                 app:fixWidowWords="true">
             </org.wordpress.android.widgets.WPTextView>
 
-        </RelativeLayout>
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignLeft="@+id/title_customize_site"
+                android:layout_alignStart="@+id/title_customize_site"
+                android:layout_below="@+id/subtitle_customize_site">
+            </View>
 
-        <View
-            style="@style/QuickStartDivider">
-        </View>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_share_site"
@@ -264,6 +281,7 @@
             </TextView>
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_share_site"
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_share_site"
                 android:layout_toEndOf="@+id/icon_share_site"
@@ -274,11 +292,14 @@
                 app:fixWidowWords="true">
             </org.wordpress.android.widgets.WPTextView>
 
-        </RelativeLayout>
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignLeft="@+id/title_share_site"
+                android:layout_alignStart="@+id/title_share_site"
+                android:layout_below="@+id/subtitle_share_site">
+            </View>
 
-        <View
-            style="@style/QuickStartDivider">
-        </View>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_publish_post"
@@ -309,6 +330,7 @@
             </TextView>
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_publish_post"
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_publish_post"
                 android:layout_toEndOf="@+id/icon_publish_post"
@@ -319,11 +341,14 @@
                 app:fixWidowWords="true">
             </org.wordpress.android.widgets.WPTextView>
 
-        </RelativeLayout>
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignLeft="@+id/title_publish_post"
+                android:layout_alignStart="@+id/title_publish_post"
+                android:layout_below="@+id/subtitle_publish_post">
+            </View>
 
-        <View
-            style="@style/QuickStartDivider">
-        </View>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_follow_site"
@@ -354,6 +379,7 @@
             </TextView>
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_follow_site"
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_follow_site"
                 android:layout_toEndOf="@+id/icon_follow_site"
@@ -364,11 +390,14 @@
                 app:fixWidowWords="true">
             </org.wordpress.android.widgets.WPTextView>
 
-        </RelativeLayout>
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignLeft="@+id/title_follow_site"
+                android:layout_alignStart="@+id/title_follow_site"
+                android:layout_below="@+id/subtitle_follow_site">
+            </View>
 
-        <View
-            style="@style/QuickStartDivider">
-        </View>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_skip_all"

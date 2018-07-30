@@ -139,6 +139,7 @@ class QuickStartFragment : Fragment() {
                 .setPositiveButton(getString(R.string.quick_start_button_skip_positive)) { _, _ ->
                     (view as ScrollView).smoothScrollTo(0, 0)
                     viewModel.skipAllTasks()
+                    AppPrefs.setQuickStartActive(false)
                 }
                 .setNegativeButton(getString(R.string.quick_start_button_skip_negative)) { _, _ ->
                 }

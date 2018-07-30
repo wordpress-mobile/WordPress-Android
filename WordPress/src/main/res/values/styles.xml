@@ -451,7 +451,9 @@
         <item name="android:focusable">true</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:padding">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_large</item>
     </style>
 
     <style name="QuickStartIcon">
@@ -479,6 +481,8 @@
     </style>
 
     <style name="QuickStartDone">
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_height">24dp</item>
@@ -488,6 +492,8 @@
     </style>
 
     <style name="QuickStartDivider">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:background">@color/grey_lighten_20</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
         <item name="android:layout_width">match_parent</item>
