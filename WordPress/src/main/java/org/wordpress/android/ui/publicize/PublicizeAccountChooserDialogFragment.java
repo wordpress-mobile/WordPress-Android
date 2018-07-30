@@ -19,8 +19,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeConnection;
+import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -148,10 +150,13 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
                 JSONObject currentConnectionJson = jsonArray.getJSONObject(i);
                 PublicizeConnection connection = PublicizeConnection.fromJson(currentConnectionJson);
                 if (connection.getService().equals(mServiceId)) {
-                    if (connection.isInSite(mSite.getSiteId())) {
-                        mConnectedAccounts.add(connection);
-                    } else {
-                        mNotConnectedAccounts.add(connection);
+                    PublicizeService service = PublicizeTable.getService(mServiceId);
+                    if (service != null && !service.isExternalUsersOnly()) {
+                        if (connection.isInSite(mSite.getSiteId())) {
+                            mConnectedAccounts.add(connection);
+                        } else {
+                            mNotConnectedAccounts.add(connection);
+                        }
                     }
 
                     JSONArray externalJsonArray = currentConnectionJson.getJSONArray("additional_external_users");
