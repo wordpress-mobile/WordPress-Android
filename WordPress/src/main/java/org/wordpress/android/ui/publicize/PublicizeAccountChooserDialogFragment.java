@@ -178,6 +178,10 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
     }
 
     private void configureConnectionName() {
+        if (mNotConnectedAccounts.isEmpty()) {
+            return;
+        }
+
         PublicizeConnection connection = mNotConnectedAccounts.get(0);
         if (connection != null) {
             mConnectionName = connection.getLabel();
