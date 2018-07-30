@@ -78,8 +78,8 @@ class ActionableEmptyView : LinearLayout {
      *      Default - center in parent, use original top margin
      *      Search  - center at top of parent, use original top margin plus 48dp, hide image, hide button
      *
-     * @param isSearching   true when searching; false otherwise
-     * @param topMargin     top margin in pixels to offset with other views (e.g. toolbar or tabs)
+     * @param isSearching true when searching; false otherwise
+     * @param topMargin top margin in pixels to offset with other views (e.g. toolbar or tabs)
      */
     fun updateLayoutForSearch(isSearching: Boolean, topMargin: Int) {
         if (isSearching) {
