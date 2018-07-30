@@ -41,7 +41,7 @@ public class PublicizeAccountChooserListAdapter
         final PublicizeConnection connection = mConnectionItems.get(position);
         holder.mProfileImageView
                 .setImageUrl(connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.PHOTO);
-        holder.mNameTextView.setText(connection.getExternalDisplayName());
+        holder.mNameTextView.setText(getName(connection));
         holder.mRadioButton.setChecked(position == mSelectedPosition);
 
         if (!mAreAccountsConnected) {
@@ -81,5 +81,15 @@ public class PublicizeAccountChooserListAdapter
 
     public interface OnPublicizeAccountChooserListener {
         void onAccountSelected(int selectedIndex);
+    }
+
+    private String getName(PublicizeConnection connection) {
+        String name = connection.getExternalDisplayName();
+
+        if (name.isEmpty()) {
+            name = connection.getExternalName();
+        }
+
+        return name;
     }
 }
