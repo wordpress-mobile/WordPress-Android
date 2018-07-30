@@ -145,12 +145,24 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("connections");
             for (int i = 0; i < jsonArray.length(); i++) {
-                PublicizeConnection connection = PublicizeConnection.fromJson(jsonArray.getJSONObject(i));
+                JSONObject currentConnectionJson = jsonArray.getJSONObject(i);
+                PublicizeConnection connection = PublicizeConnection.fromJson(currentConnectionJson);
                 if (connection.getService().equals(mServiceId)) {
                     if (connection.isInSite(mSite.getSiteId())) {
                         mConnectedAccounts.add(connection);
                     } else {
                         mNotConnectedAccounts.add(connection);
+                    }
+
+                    JSONArray externalJsonArray = currentConnectionJson.getJSONArray("additional_external_users");
+                    for (int j = 0; j < externalJsonArray.length(); j++) {
+                        JSONObject currentExternalConnectionJson = externalJsonArray.getJSONObject(j);
+                        PublicizeConnection externalConnection = PublicizeConnection.fromJson(currentExternalConnectionJson);
+                        if (connection.isInSite(mSite.getSiteId())) {
+                            mConnectedAccounts.add(externalConnection);
+                        } else {
+                            mNotConnectedAccounts.add(externalConnection);
+                        }
                     }
                 }
             }

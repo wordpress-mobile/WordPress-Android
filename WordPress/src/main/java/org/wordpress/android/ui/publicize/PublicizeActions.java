@@ -139,21 +139,31 @@ public class PublicizeActions {
 
     private static boolean shouldShowChooserDialog(long siteId, String serviceId, JSONObject jsonObject) {
         JSONArray jsonConnectionList = jsonObject.optJSONArray("connections");
+
         if (jsonConnectionList == null || jsonConnectionList.length() <= 1) {
             return false;
         }
 
         int totalAccounts = 0;
+        int totalExternalAccounts = 0;
         try {
             for (int i = 0; i < jsonConnectionList.length(); i++) {
                 JSONObject connectionObject = jsonConnectionList.getJSONObject(i);
                 PublicizeConnection publicizeConnection = PublicizeConnection.fromJson(connectionObject);
                 if (publicizeConnection.getService().equals(serviceId) && !publicizeConnection.isInSite(siteId)) {
                     totalAccounts++;
+                    JSONArray externalJsonArray = connectionObject.getJSONArray("additional_external_users");
+                    for (int j = 0; j < externalJsonArray.length(); j++) {
+                        totalExternalAccounts++;
+                    }
                 }
             }
 
-            return totalAccounts > 0;
+            if (PublicizeTable.onlyExternalConnections(serviceId)) {
+                return totalAccounts > 0;
+            } else {
+                return totalAccounts > 0 || totalExternalAccounts > 0;
+            }
         } catch (JSONException e) {
             return false;
         }
