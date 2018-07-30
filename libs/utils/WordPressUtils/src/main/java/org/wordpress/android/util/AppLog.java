@@ -48,6 +48,7 @@ public class AppLog {
         SHARING,
         PLUGINS,
         ACTIVITY_LOG,
+        DOMAIN_REGISTRATION,
         SUPPORT
     }
 
