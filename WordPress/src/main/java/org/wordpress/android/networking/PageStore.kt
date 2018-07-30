@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
@@ -38,7 +39,9 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
-        postLoadContinuation?.resume(event)
-        postLoadContinuation = null
+        if (event.causeOfChange == PostAction.FETCH_PAGES) {
+            postLoadContinuation?.resume(event)
+            postLoadContinuation = null
+        }
     }
 }
