@@ -57,10 +57,10 @@ class PagesViewModel
 
     private fun reloadPagesAsync() = launch(CommonPool) {
         _pages = pageStore.loadPagesFromDb(site)
-        refreshPagesAsync()
+        refreshPages()
     }
 
-    private fun refreshPagesAsync(isLoadingMore: Boolean = false) = launch(CommonPool) {
+    private suspend fun refreshPages(isLoadingMore: Boolean = false) {
         var newState = if (isLoadingMore) LOADING_MORE else FETCHING
         _listState.postValue(newState)
 
@@ -102,7 +102,9 @@ class PagesViewModel
     }
 
     fun refresh() {
-        refreshPagesAsync()
+        launch(CommonPool) {
+            refreshPages()
+        }
     }
 
     fun onAction(action: Action, pageItem: PageItem): Boolean {
