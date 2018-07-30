@@ -4,8 +4,8 @@
               android:id="@+id/activity_content_container"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="?android:selectableItemBackground"
               android:clickable="true"
+              android:background="@color/white"
               android:focusable="true"
               android:orientation="vertical">
 
@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="@color/white">
+            android:background="?android:selectableItemBackground">
 
             <ImageView
                 android:id="@+id/action_icon"

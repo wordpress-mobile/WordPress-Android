@@ -50,19 +50,9 @@ class ActivityLogAdapter(
         return list.size
     }
 
-    override fun getItemId(position: Int): Long {
-        val item = list[position]
-        return when (item) {
-            is ActivityLogListItem.Event -> item.activityId.hashCode().toLong()
-            is ActivityLogListItem.Progress -> item.hashCode().toLong()
-            is ActivityLogListItem.Header -> item.hashCode().toLong()
-            ActivityLogListItem.Footer -> item.hashCode().toLong()
-        }
-    }
+    override fun getItemId(position: Int): Long = list[position].longId()
 
-    override fun getItemViewType(position: Int): Int {
-        return list[position].type.id
-    }
+    override fun getItemViewType(position: Int): Int = list[position].type.id
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
         return when (viewType) {
