@@ -67,20 +67,20 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val siteArgument = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+        val site = if (savedInstanceState == null) {
+            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
         } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
+        val nonNullActivity = checkNotNull(activity)
+        val nonNullSite = checkNotNull(site)
         val key = checkNotNull(arguments?.getString(fragmentKey))
 
-        ifNotNull(activity, siteArgument) { activity, site ->
-            (activity.application as? WordPress)?.component()?.inject(this)
+        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
-            initializeViews(savedInstanceState)
-            initializeViewModels(activity, site, key)
-        }
+        initializeViews(savedInstanceState)
+        initializeViewModels(nonNullActivity, nonNullSite, key)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
