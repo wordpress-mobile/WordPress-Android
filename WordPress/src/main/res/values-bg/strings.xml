@@ -324,7 +324,6 @@ Language: bg
     <string name="delete_site_hint">Изтриване на сайт</string>
     <string name="export_site_hint">Експортиране на вашия сайт в XML файл</string>
     <string name="primary_domain">Основен домейн</string>
-    <string name="error_deleting_site_summary">Възникна грешка при изтриване на вашия сайт. Свържете се с отдела по поддръжката, за да получите помощ.</string>
     <string name="error_deleting_site">Грешка при изтриване на сайта</string>
     <string name="site_settings_export_content_title">Експортиране на съдържание</string>
     <string name="confirm_delete_site_prompt">Въведете %1$s в полето отдолу за финално потвърждение. След това сайтът ви ще бъде изтрит завинаги.</string>
@@ -598,7 +597,6 @@ Language: bg
     <string name="notification_settings_item_other_account_emails_summary">Винаги изпращаме имейли, съдържащи важна информация относно вашия профил. Но също така известяваме и за полезни екстри.</string>
     <string name="stats_insights_latest_post_trend">Мина %1$s от публикуването на %2$s. Ето как се представи публикацията досега…</string>
     <string name="stats_insights_latest_post_summary">Обзор на последната публикация</string>
-    <string name="button_revert">Връщане</string>
     <string name="yesterday">Вчера</string>
     <string name="days_ago">преди %d дни</string>
     <string name="connectionbar_no_connection">Няма връзка</string>

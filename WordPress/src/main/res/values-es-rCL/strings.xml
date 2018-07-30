@@ -65,7 +65,6 @@ Language: es_CL
     <string name="email">Correo electrónico</string>
     <string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
     <string name="stats_insights_latest_post_summary">Sumario de la Última Entrada</string>
-    <string name="button_revert">Deshacer</string>
     <string name="days_ago">Hace %d días</string>
     <string name="yesterday">Ayer</string>
     <string name="connectionbar_no_connection">Sin conexión</string>
