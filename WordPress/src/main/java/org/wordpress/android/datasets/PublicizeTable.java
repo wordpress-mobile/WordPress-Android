@@ -16,7 +16,7 @@ import org.wordpress.android.util.SqlUtils;
 public class PublicizeTable {
     private static final String SERVICES_TABLE = "tbl_publicize_services";
     private static final String CONNECTIONS_TABLE = "tbl_publicize_connections";
-    
+
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + SERVICES_TABLE + " ("
                    + " id TEXT NOT NULL COLLATE NOCASE,"
