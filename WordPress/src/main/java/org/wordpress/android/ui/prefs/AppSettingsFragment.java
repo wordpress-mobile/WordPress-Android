@@ -36,7 +36,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -95,13 +94,11 @@ public class AppSettingsFragment extends PreferenceFragment
                                 mDispatcher,
                                 mAccountStore,
                                 hasUserOptedOut);
-                        //if (!PackageUtils.isDebugBuild()) {
-                            if (hasUserOptedOut) {
-                                CrashlyticsUtils.disableCrashlytics();
-                            } else {
-                                Fabric.with(WordPress.getContext(), new Crashlytics());
-                            }
-                        //}
+                        if (CrashlyticsUtils.shouldEnableCrashlytics(getActivity())) {
+                            Fabric.with(WordPress.getContext(), new Crashlytics());
+                        } else {
+                            CrashlyticsUtils.disableCrashlytics();
+                        }
                         return true;
                     }
                 }

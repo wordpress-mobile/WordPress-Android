@@ -1,8 +1,14 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
 import java.lang.reflect.Field;
@@ -12,6 +18,16 @@ import io.fabric.sdk.android.Fabric;
 public class CrashlyticsUtils {
     private static final String TAG_KEY = "tag";
     private static final String MESSAGE_KEY = "message";
+
+    public static boolean shouldEnableCrashlytics(@NonNull Context context) {
+        if (PackageUtils.isDebugBuild()) {
+            //return false; // TODO: uncomment
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean hasUserOptedOut = !prefs.getBoolean(context.getString(R.string.pref_key_send_usage), true);
+        return !hasUserOptedOut;
+    }
 
     /**
      * Disables Crashlytics if it's already enabled

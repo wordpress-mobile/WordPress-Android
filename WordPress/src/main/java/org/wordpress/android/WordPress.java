@@ -230,9 +230,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean hasUserOptedOut = !prefs.getBoolean(getString(R.string.pref_key_send_usage), true);
-        if (!PackageUtils.isDebugBuild() && !hasUserOptedOut) {
+        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
             Fabric.with(this, new Crashlytics());
         }
 

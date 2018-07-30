@@ -136,6 +136,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun handlePostButtonClicked() {
+        throw IllegalArgumentException("fabric test") // TODO: remove this
         val postView = getItemView(PAGE_NEW_POST)
 
         // animate the button icon before telling the listener the post button was clicked - this way
