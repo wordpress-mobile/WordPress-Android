@@ -113,6 +113,7 @@ import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
+import org.wordpress.android.ui.registerdomain.DomainSuggestionsFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -396,6 +397,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeConnectionAdapter object);
 
     void inject(PublicizeServiceAdapter object);
+
+    void inject(DomainSuggestionsFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
