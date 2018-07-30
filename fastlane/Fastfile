@@ -34,7 +34,8 @@ platform :android do
         tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk", 
         use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest", 
         reinstall_app: true,
-        device_type: options[:device]
+        device_type: options[:device],
+        locales: ["ar", "de-DE", "en-US", "es-ES", "fr-CA", "fr-FR", "id", "it-IT", "iw-IL", "ja-JP", "ko-KR", "nl-NL", "pl-PL", "pt-BR", "ru-RU", "sr", "sv-SE", "th", "tr-TR", "vi", "zh-CN", "zh-TW"]
         )
         
     demo_mode_exit(device_serial: device.serial)
