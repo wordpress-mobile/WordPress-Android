@@ -9,7 +9,6 @@ public class PublicizeService {
     private String mGenericon;
     private String mIconUrl;
     private String mConnectUrl;
-    private boolean mhasMultipleExternalUserIdSupport;
     private boolean mIsExternalUsersOnly;
 
     private boolean mIsJetpackSupported;
@@ -63,22 +62,6 @@ public class PublicizeService {
         mConnectUrl = StringUtils.notNullStr(url);
     }
 
-    public boolean getHasMultipleExternalUserIdSupport() {
-        return mhasMultipleExternalUserIdSupport;
-    }
-
-    public void setHasMultipleExternalUserIdSupport(boolean hasMultipleExternalUserIdSupport) {
-        this.mhasMultipleExternalUserIdSupport = mhasMultipleExternalUserIdSupport;
-    }
-
-    public boolean getIsExternalUsersOnly() {
-        return mIsExternalUsersOnly;
-    }
-
-    public void setIsExternalUsersOnly(boolean isExternalUsersOnly) {
-        mIsExternalUsersOnly = isExternalUsersOnly;
-    }
-
     public boolean isJetpackSupported() {
         return mIsJetpackSupported;
     }
@@ -95,6 +78,14 @@ public class PublicizeService {
         mIsMultiExternalUserIdSupported = supported;
     }
 
+    public boolean isExternalUsersOnly() {
+        return mIsExternalUsersOnly;
+    }
+
+    public void setIsExternalUsersOnly(boolean isExternalUsersOnly) {
+        mIsExternalUsersOnly = isExternalUsersOnly;
+    }
+
     public boolean isSameAs(PublicizeService other) {
         return other != null
                && other.getId().equals(this.getId())
@@ -103,8 +94,7 @@ public class PublicizeService {
                && other.getGenericon().equals(this.getGenericon())
                && other.getIconUrl().equals(this.getIconUrl())
                && other.getConnectUrl().equals(this.getConnectUrl())
-               && other.getHasMultipleExternalUserIdSupport() == this.getHasMultipleExternalUserIdSupport()
-               && other.getIsExternalUsersOnly() == this.getIsExternalUsersOnly()
+               && other.isExternalUsersOnly() == this.isExternalUsersOnly()
                && other.isJetpackSupported() == this.isJetpackSupported();
     }
 }

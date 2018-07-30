@@ -172,8 +172,8 @@ public class WordPressDB {
                 // add site icon
                 mDb.execSQL(SiteSettingsModel.ADD_SITE_ICON);
             case 65:
-                // reset publicize services table
-                PublicizeTable.reset();
+                // add external users only to publicize services table
+                mDb.execSQL(PublicizeTable.ADD_EXTERNAL_USERS_ONLY);
         }
         mDb.setVersion(DATABASE_VERSION);
     }

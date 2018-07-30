@@ -16,6 +16,10 @@ import org.wordpress.android.util.SqlUtils;
 public class PublicizeTable {
     private static final String SERVICES_TABLE = "tbl_publicize_services";
     private static final String CONNECTIONS_TABLE = "tbl_publicize_connections";
+    private static final String IS_EXTERNAL_USERS_ONLY_COLUMN_NAME = "is_external_users_only";
+
+    public static final String ADD_EXTERNAL_USERS_ONLY = "alter table " + SERVICES_TABLE
+                                                 + " add " + IS_EXTERNAL_USERS_ONLY_COLUMN_NAME + " BOOLEAN;";
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + SERVICES_TABLE + " ("
@@ -111,8 +115,9 @@ public class PublicizeTable {
                     + " icon_url," // 5
                     + " connect_url," // 6
                     + " is_jetpack_supported," // 7
-                    + " is_multi_user_id_supported)" // 8
-                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)");
+                    + " is_multi_user_id_supported," // 8
+                    + " is_external_users_only)" // 9
+                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)");
             for (PublicizeService service : serviceList) {
                 stmt.bindString(1, service.getId());
                 stmt.bindString(2, service.getLabel());
@@ -122,6 +127,7 @@ public class PublicizeTable {
                 stmt.bindString(6, service.getConnectUrl());
                 stmt.bindLong(7, SqlUtils.boolToSql(service.isJetpackSupported()));
                 stmt.bindLong(8, SqlUtils.boolToSql(service.isMultiExternalUserIdSupported()));
+                stmt.bindLong(9, SqlUtils.boolToSql(service.isExternalUsersOnly()));
                 stmt.executeInsert();
             }
 
@@ -143,6 +149,7 @@ public class PublicizeTable {
         service.setConnectUrl(c.getString(c.getColumnIndex("connect_url")));
         service.setIsJetpackSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_jetpack_supported")));
         service.setIsMultiExternalUserIdSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_multi_user_id_supported")));
+        service.setIsExternalUsersOnly(SqlUtils.sqlToBool(c.getColumnIndex("is_external_users_only")));
 
         return service;
     }
