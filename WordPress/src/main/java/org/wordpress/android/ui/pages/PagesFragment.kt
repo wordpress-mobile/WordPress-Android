@@ -19,6 +19,7 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import kotlinx.android.synthetic.main.pages_fragment.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
@@ -28,7 +29,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.checkNotNull
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING

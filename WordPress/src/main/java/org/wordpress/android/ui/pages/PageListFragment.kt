@@ -17,7 +17,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.ifNotNull
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
