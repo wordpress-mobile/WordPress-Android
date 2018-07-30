@@ -161,7 +161,7 @@ public class PublicizeActions {
             }
 
             if (PublicizeTable.onlyExternalConnections(serviceId)) {
-                return totalAccounts > 0;
+                return totalExternalAccounts > 0;
             } else {
                 return totalAccounts > 0 || totalExternalAccounts > 0;
             }
