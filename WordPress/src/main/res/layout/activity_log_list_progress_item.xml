@@ -1,93 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/activity_content_container"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?android:selectableItemBackground"
-              android:clickable="true"
-              android:focusable="true"
-              android:orientation="vertical">
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_content_container"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/listPreferredItemHeight"
+    tools:layout_height="?attr/listPreferredItemHeightLarge" >
+
+    <RelativeLayout
+        android:background="?attr/selectableItemBackground"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+
+        <ImageView
+            android:id="@+id/action_icon"
+            android:background="@drawable/shape_oval_blue_wordpress"
+            android:contentDescription="@string/activity_log_icon"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_height="@dimen/activity_log_icon_size"
+            android:layout_margin="@dimen/activity_log_icon_margin"
+            android:layout_width="@dimen/activity_log_icon_size"
+            android:padding="@dimen/margin_medium"
+            app:srcCompat="@drawable/ic_notice_outline_white_24dp" >
+        </ImageView>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="@color/white">
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_log_icon_margin"
+            android:layout_marginRight="@dimen/activity_log_icon_margin"
+            android:layout_toEndOf="@id/action_icon"
+            android:layout_toRightOf="@id/action_icon"
+            android:layout_width="fill_parent"
+            android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/action_icon"
-                android:layout_width="@dimen/activity_log_icon_size"
-                android:layout_height="@dimen/activity_log_icon_size"
-                android:layout_margin="@dimen/activity_log_icon_margin"
-                android:contentDescription="@string/activity_log_icon"
-                app:srcCompat="@drawable/ic_notice_outline_white_24dp"
-                android:background="@drawable/shape_oval_blue_wordpress"
-                android:padding="8dp"
-                android:gravity="center" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/action_text"
+                android:ellipsize="end"
+                android:gravity="start"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/activity_log_icon_margin"
-                android:layout_marginEnd="@dimen/activity_log_icon_margin"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_dark"
+                tools:text="Rewinding to June 1 2018 12:22PM" >
+            </org.wordpress.android.widgets.WPTextView>
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/action_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:textColor="@color/grey_dark"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                    android:textAlignment="viewStart"
-                    android:gravity="start"
-                    android:singleLine="true"
-                    tools:text="Rewinding to June 1 2018 12:22PM" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/action_summary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-1dp"
-                    android:ellipsize="end"
-                    android:textColor="@color/grey_darken_10"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                    android:singleLine="true"
-                    tools:text="Rewind in progress"
-                    tools:visibility="visible" />
-
-            </LinearLayout>
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/action_summary"
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:textColor="@color/grey_darken_10"
+                tools:text="Rewind in progress" >
+            </org.wordpress.android.widgets.WPTextView>
 
         </LinearLayout>
 
+        <View
+            android:background="@drawable/notifications_list_divider_full_width"
+            android:layout_alignParentBottom="true"
+            android:layout_height="@dimen/list_divider_height"
+            android:layout_width="match_parent" >
+        </View>
+
         <FrameLayout
-            android:id="@+id/rewind_progress_bar_container"
-            android:layout_width="match_parent"
-            android:layout_height="5dp">
+            android:layout_alignParentBottom="true"
+            android:layout_height="@dimen/activity_progress_bar_height"
+            android:layout_width="match_parent" >
 
             <ProgressBar
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:theme="@style/LinearProgress"
                 android:id="@+id/rewind_progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginBottom="-7dp"
-                android:layout_marginTop="-8dp"
                 android:background="@color/wp_grey_lighten_20"
                 android:indeterminate="true"
-                android:progress="50"
-                />
+                android:layout_gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/activity_progress_bar_margin_vertical"
+                android:layout_marginTop="@dimen/activity_progress_bar_margin_vertical"
+                android:layout_width="match_parent"
+                android:theme="@style/LinearProgress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal" >
+            </ProgressBar>
 
         </FrameLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/notifications_list_divider_full_width" />
+    </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>
