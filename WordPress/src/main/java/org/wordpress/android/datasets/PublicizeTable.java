@@ -25,8 +25,6 @@ public class PublicizeTable {
                    + " genericon TEXT NOT NULL,"
                    + " icon_url TEXT NOT NULL,"
                    + " connect_url TEXT NOT NULL,"
-                   + " has_multiple_external_user_id_support INTEGER DEFAULT 0,"
-                   + " is_external_users_only INTEGER DEFAULT 0,"
                    + " is_jetpack_supported INTEGER DEFAULT 0,"
                    + " is_multi_user_id_supported INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (id))");
@@ -112,11 +110,9 @@ public class PublicizeTable {
                     + " genericon," // 4
                     + " icon_url," // 5
                     + " connect_url," // 6
-                    + " has_multiple_external_user_id_support," // 7
-                    + " is_external_users_only," // 8
-                    + " is_jetpack_supported," // 9
-                    + " is_multi_user_id_supported)" // 10
-                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)");
+                    + " is_jetpack_supported," // 7
+                    + " is_multi_user_id_supported)" // 8
+                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)");
             for (PublicizeService service : serviceList) {
                 stmt.bindString(1, service.getId());
                 stmt.bindString(2, service.getLabel());
@@ -124,10 +120,8 @@ public class PublicizeTable {
                 stmt.bindString(4, service.getGenericon());
                 stmt.bindString(5, service.getIconUrl());
                 stmt.bindString(6, service.getConnectUrl());
-                stmt.bindLong(7, SqlUtils.boolToSql(service.getHasMultipleExternalUserIdSupport()));
-                stmt.bindLong(8, SqlUtils.boolToSql(service.getIsExternalUsersOnly()));
-                stmt.bindLong(9, SqlUtils.boolToSql(service.isJetpackSupported()));
-                stmt.bindLong(10, SqlUtils.boolToSql(service.isMultiExternalUserIdSupported()));
+                stmt.bindLong(7, SqlUtils.boolToSql(service.isJetpackSupported()));
+                stmt.bindLong(8, SqlUtils.boolToSql(service.isMultiExternalUserIdSupported()));
                 stmt.executeInsert();
             }
 
@@ -147,8 +141,6 @@ public class PublicizeTable {
         service.setGenericon(c.getString(c.getColumnIndex("genericon")));
         service.setIconUrl(c.getString(c.getColumnIndex("icon_url")));
         service.setConnectUrl(c.getString(c.getColumnIndex("connect_url")));
-        service.setHasMultipleExternalUserIdSupport(SqlUtils.sqlToBool(c.getColumnIndex("has_multiple_external_user_id_support")));
-        service.setHasMultipleExternalUserIdSupport(SqlUtils.sqlToBool(c.getColumnIndex("is_external_users_only")));
         service.setIsJetpackSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_jetpack_supported")));
         service.setIsMultiExternalUserIdSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_multi_user_id_supported")));
 
