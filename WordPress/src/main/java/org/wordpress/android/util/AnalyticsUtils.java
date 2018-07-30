@@ -411,15 +411,18 @@ public class AnalyticsUtils {
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase(Locale.ROOT);
         properties.put("ext", fileExtension);
 
-        if (!isVideo) {
-            int[] dimensions = ImageUtils.getImageSize(Uri.fromFile(file), context);
-            double megapixels = dimensions[0] * dimensions[1];
-            megapixels = megapixels / 1000000;
-            megapixels = Math.floor(megapixels);
-            properties.put("megapixels", (int) megapixels);
-        } else {
-            long videoDurationMS = VideoUtils.getVideoDurationMS(context, file);
-            properties.put("duration_secs", (int) videoDurationMS / 1000);
+        boolean isAudioMimeType = org.wordpress.android.fluxc.utils.MediaUtils.isAudioMimeType(mimeType);
+        if (!isAudioMimeType) {
+            if (!isVideo) {
+                int[] dimensions = ImageUtils.getImageSize(Uri.fromFile(file), context);
+                double megapixels = dimensions[0] * dimensions[1];
+                megapixels = megapixels / 1000000;
+                megapixels = Math.floor(megapixels);
+                properties.put("megapixels", (int) megapixels);
+            } else {
+                long videoDurationMS = VideoUtils.getVideoDurationMS(context, file);
+                properties.put("duration_secs", (int) videoDurationMS / 1000);
+            }
         }
 
         properties.put("bytes", file.length());

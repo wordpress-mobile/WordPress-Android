@@ -53,6 +53,7 @@ public class PhotoPickerFragment extends Fragment {
     public enum PhotoPickerIcon {
         ANDROID_CHOOSE_PHOTO,
         ANDROID_CHOOSE_VIDEO,
+        ANDROID_CHOOSE_AUDIO,
         ANDROID_CAPTURE_PHOTO,
         ANDROID_CAPTURE_VIDEO,
         WP_MEDIA,
@@ -238,6 +239,9 @@ public class PhotoPickerFragment extends Fragment {
             case ANDROID_CHOOSE_VIDEO:
                 trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, true);
                 break;
+            case ANDROID_CHOOSE_AUDIO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
+                break;
             case WP_MEDIA:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
                 break;
@@ -302,6 +306,21 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    public void showMorePopupMenu(@NonNull View view) {
+        PopupMenu popup = new PopupMenu(getActivity(), view);
+
+        MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_choose_audio);
+        itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_AUDIO);
                 return true;
             }
         });

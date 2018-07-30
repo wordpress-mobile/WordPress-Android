@@ -12,12 +12,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum MediaToolbarAction implements IToolbarAction {
+
+
     GALLERY(R.id.media_bar_button_gallery, ToolbarActionType.OTHER,
             new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE))),
+
     CAMERA(R.id.media_bar_button_camera, ToolbarActionType.OTHER,
             new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE))),
+
     LIBRARY(R.id.media_bar_button_library, ToolbarActionType.OTHER,
-            new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE)));
+            new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE))),
+
+    MORE(R.id.media_bar_button_more, ToolbarActionType.OTHER,
+        new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE)));
 
     private final int mButtonId;
     private final ToolbarActionType mActionType;

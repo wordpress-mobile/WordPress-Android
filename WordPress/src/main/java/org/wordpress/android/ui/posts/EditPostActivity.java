@@ -36,6 +36,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -928,6 +929,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case LIBRARY:
                 mPhotoPickerFragment.doIconClicked(PhotoPickerIcon.WP_MEDIA);
                 break;
+            case MORE:
+                mPhotoPickerFragment.showMorePopupMenu(findViewById(action.getButtonId()));
+                break;
         }
     }
 
@@ -950,6 +954,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case ANDROID_CHOOSE_VIDEO:
                 launchVideoLibrary();
+                break;
+            case ANDROID_CHOOSE_AUDIO:
+                launchAudioLibrary();
                 break;
             case WP_MEDIA:
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
@@ -1287,6 +1294,11 @@ public class EditPostActivity extends AppCompatActivity implements
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
+    private void launchAudioLibrary() {
+        WPMediaUtils.launchAudioLibrary(this, false);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
     private void launchVideoCamera() {
         WPMediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
@@ -1387,10 +1399,17 @@ public class EditPostActivity extends AppCompatActivity implements
             Drawable loadingVideoPlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
                     this,
                     org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
-                    aztecEditorFragment.getMaxMediaSize()
-                                                                                                    );
+                    aztecEditorFragment.getMaxMediaSize());
+
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
+
+            Drawable audioPlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
+                this,
+                org.wordpress.android.editor.R.drawable.ic_gridicons_audio,
+                aztecEditorFragment.getMaxMediaSize());
+
+            aztecEditorFragment.setAudioPlaceholder(audioPlaceholder);
 
             if (getSite() != null && getSite().isWPCom() && !getSite().isPrivate()) {
                 // Add the content reporting for wpcom blogs that are not private
@@ -1433,6 +1452,12 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onImageSettingsRequested(EditorImageMetaData editorImageMetaData) {
         MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
+    }
+
+    @Override
+    public void onAudioSettingsRequested(String mediaModelId) {
+        MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Integer.parseInt(mediaModelId));
+        //TODO pass media model to MediaSettingsActivity
     }
 
     @Override
@@ -2671,6 +2696,14 @@ public class EditPostActivity extends AppCompatActivity implements
                             addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
                         }
                         savePostAsync(null);
+                    }
+                    break;
+                case RequestCodes.AUDIO_LIBRARY:
+                    Uri uri = data.getData();
+                    if (FluxCUtils.isAudioMimeType(getApplicationContext(), uri)) {
+                        addMediaItemGroupOrSingleItem(data);
+                    } else {
+                        ToastUtils.showToast(getApplicationContext(), R.string.media_error_incorrect_audio_format);
                     }
                     break;
             }

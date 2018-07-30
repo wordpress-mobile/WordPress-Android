@@ -328,6 +328,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         });
 
+        MediaToolbarMoreButton mediaToolbarMoreButton = new MediaToolbarMoreButton(mFormattingToolbar);
+        mediaToolbarMoreButton.setMediaToolbarButtonClickListener(
+            new IMediaToolbarButton.IMediaToolbarClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mMediaToolbarButtonClickListener != null) {
+                        mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.MORE);
+                    }
+                }
+            });
+
         Aztec.Factory.with(mContent, mSource, mFormattingToolbar, this)
                 .setImageGetter(mAztecImageLoader)
                 .setVideoThumbnailGetter(mAztecVideoLoader)
@@ -894,12 +905,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
+        MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
+
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
             attributes.setValue(ATTR_ID_WP, mediaFile.getMediaId());
-
-            MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
 
             if (mediaType == MediaType.AUDIO) {
                 mContent.insertAudio(getAudioPlaceholder(), attributes);
@@ -927,7 +938,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     mContent.insertImage(getLoadingImagePlaceholder(), attributes);
                 }
 
-                final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(
+                final String posterURL = mediaType == MediaType.VIDEO ? Utils.escapeQuotes(StringUtils.notNullStr(
                     mediaFile.getThumbnailURL())) : mediaUrl;
 
                 imageLoader.get(posterURL, new ImageLoader.ImageListener() {
@@ -988,9 +999,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
-            final String safeMediaPreviewUrl = mediaFile.isVideo()
-                    ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()))
-                    : Utils.escapeQuotes(mediaUrl);
 
             AztecAttributes attrs = new AztecAttributes();
             attrs.setValue(ATTR_ID_WP, localMediaId);
@@ -999,32 +1007,43 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                    getActivity(), safeMediaPreviewUrl, maxMediaSize
-            );
-            MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-            if (bitmapToShow != null) {
-                // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
-                // to correctly set the input density to 160 ourselves.
-                bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                if (mediaFile.isVideo()) {
-                    addVideoUploadingClassIfMissing(attrs);
-                    mContent.insertVideo(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+            if (mediaType == MediaType.IMAGE ||
+                mediaType == MediaType.VIDEO) {
+
+                final String safeMediaPreviewUrl = mediaType == MediaType.VIDEO
+                    ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()))
+                    : Utils.escapeQuotes(mediaUrl);
+
+                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(
+                    getActivity(), safeMediaPreviewUrl, maxMediaSize);
+
+                if (bitmapToShow != null) {
+                    // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+                    // to correctly set the input density to 160 ourselves.
+                    bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+                    if (mediaType == MediaType.VIDEO) {
+                        addVideoUploadingClassIfMissing(attrs);
+                        mContent.insertVideo(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                    } else {
+                        mContent.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                    }
                 } else {
-                    mContent.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                    // Failed to retrieve bitmap. Show failed placeholder.
+                    Drawable drawable = getLoadingMediaErrorPlaceholder(null);
+                    mContent.insertImage(drawable, attrs);
                 }
-            } else {
-                // Failed to retrieve bitmap. Show failed placeholder.
-                Drawable drawable = getLoadingMediaErrorPlaceholder(null);
-                mContent.insertImage(drawable, attrs);
+            }
+            else if (mediaType == MediaType.AUDIO) {
+                mContent.insertAudio(getAudioPlaceholder(), attrs);
             }
 
+            MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
             // set intermediate shade overlay
             overlayProgressingMedia(localMediaIdPredicate);
 
             mUploadingMediaProgressMax.put(localMediaId, 0f);
 
-            if (mediaFile.isVideo()) {
+            if (mediaType == MediaType.VIDEO) {
                 overlayVideoIcon(2, localMediaIdPredicate);
             }
 
@@ -1146,7 +1165,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
                 attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
 
-                if (mediaFile.isVideo()) {
+                if (mediaType == MediaType.VIDEO) {
                     attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
                 }
 
@@ -1636,6 +1655,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     switch (mediaType) {
                         case IMAGE:
                         case VIDEO:
+                        case AUDIO:
                             AttributesWithClass attributesWithClass = getAttributesWithClass(
                                     mContent.getElementAttributes(mTappedMediaPredicate));
 
@@ -1650,7 +1670,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             }
 
                             attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
-                            if (mediaType.equals(MediaType.VIDEO)) {
+                            if (mediaType == MediaType.VIDEO) {
                                 attributesWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
                             }
 
@@ -1669,7 +1689,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             mContent.updateElementAttributes(mTappedMediaPredicate,
                                                              attributesWithClass.getAttributes());
 
-                            if (mediaType.equals(MediaType.VIDEO)) {
+                            if (mediaType == MediaType.VIDEO) {
                                 overlayVideoIcon(2, mTappedMediaPredicate);
                             }
 
@@ -1681,7 +1701,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
                 break;
             default:
-                if (mediaType.equals(MediaType.VIDEO)) {
+                if (mediaType == MediaType.VIDEO) {
                     try {
                         // Open the video preview in the default browser for now.
                         // TODO open the preview activity already available in media?
@@ -1698,8 +1718,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     return;
                 }
 
+                if (mediaType == MediaType.AUDIO) {
+                    if (mEditorImageSettingsListener != null) {
+                        String mediaModelId = attrs.getValue(ATTR_ID_WP);
+                        mEditorImageSettingsListener.onAudioSettingsRequested(mediaModelId);
+                    }
+                    return;
+                }
+
                 // If it's not a picture skip the click
-                if (!mediaType.equals(MediaType.IMAGE)) {
+                if (mediaType != MediaType.IMAGE) {
                     return;
                 }
 
