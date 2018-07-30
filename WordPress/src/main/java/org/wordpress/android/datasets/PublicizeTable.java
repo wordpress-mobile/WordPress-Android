@@ -154,6 +154,16 @@ public class PublicizeTable {
         return service;
     }
 
+    public static boolean onlyExternalConnections(String serviceId) {
+        if (serviceId == null && serviceId.isEmpty()) {
+            return false;
+        }
+
+        String sql = "SELECT is_external_users_only FROM " + SERVICES_TABLE + " WHERE id=?";
+        String[] args = {serviceId};
+        return SqlUtils.boolForQuery(getReadableDb(), sql, args);
+    }
+
     public static String getConnectUrlForService(String serviceId) {
         if (TextUtils.isEmpty(serviceId)) {
             return "";
