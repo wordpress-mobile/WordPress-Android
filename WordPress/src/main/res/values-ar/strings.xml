@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 15:54:06+0000
+Translation-Revision-Date: 2018-07-23 20:54:08+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="reader_gallery_images_desc">معرض الصور</string>
+    <string name="blavatar_desc">أيقونة الموقع</string>
+    <string name="theme_image_desc">صورة القالب</string>
+    <string name="featured_image_desc">صورة مميزة</string>
+    <string name="support_push_notification_message_hint_snackbar">اعثر على محادثة الدعم الخاصة بك عن طريق الضغط على \"المساعدة والدعم\" ثم \"تذاكري\".</string>
+    <string name="local_changes_discarding_error">حدث خطأ أثناء تجاهل تغييراتك المحلية. يرجى الاتصال بالدعم للحصول على مزيد من المساعدة.</string>
+    <string name="local_changes_discarding">تجاهل التغييرات المحلية</string>
+    <string name="local_changes_discarded">تم تجاهل التغييرات المحلية</string>
+    <string name="menu_discard_changes">تجاهل التغييرات المحلية</string>
+    <string name="button_discard_changes">تجاهل التغييرات</string>
+    <string name="button_discard">تجاهل</string>
     <string name="reader_avatar_desc">صورة ملف التعريف</string>
     <string name="reader_blavatar_desc">أيقونة الموقع</string>
     <string name="notification_channel_transient_title">عابر</string>
@@ -181,9 +192,7 @@ Language: ar
     <string name="jetpack_connection_failed_with_reason">فشل الاتصال بـ Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">أنت متصل بالفعل بـ Jetpack</string>
     <string name="menu_undo_snackbar_action">تراجع</string>
-    <string name="menu_visual_mode_done_snackbar">تم التبديل إلى الوضع المرئي.</string>
     <string name="menu_visual_mode">الوضع المرئي</string>
-    <string name="menu_html_mode_done_snackbar">تم التبديل إلى وضع HTML.</string>
     <string name="menu_html_mode">وضع HTML</string>
     <string name="menu_preview">معاينة</string>
     <string name="menu_publish_now">النشر الآن</string>
@@ -927,7 +936,6 @@ Language: ar
     <string name="delete_site_hint">حذف الموقع</string>
     <string name="export_site_hint">تصدير موقعك إلى ملف XML</string>
     <string name="primary_domain">النطاق الرئيسي</string>
-    <string name="error_deleting_site_summary">حدث خطأ أثناء حذف موقعك. يرجى الاتصال بالدعم للحصول على مزيد من المساعدة</string>
     <string name="error_deleting_site">حدث خطأ أثناء حذف الموقع</string>
     <string name="site_settings_export_content_title">تصدير المحتوى</string>
     <string name="confirm_delete_site_prompt">يرجى كتابة %1$s في الحقل أدناه للتأكيد. لن يبقى لموقعك بعد ذلك أي أثر.</string>
@@ -1196,7 +1204,6 @@ Language: ar
     <string name="app_notifications">تنبيهات التطبيق</string>
     <string name="stats_insights_latest_post_trend">لم يتم نشر %2$s منذ %1$s. فيما يلي بيان لمستوى أداء المقالة حتى الآن…</string>
     <string name="stats_insights_latest_post_summary">ملخص آخر مقالة</string>
-    <string name="button_revert">إلغاء</string>
     <string name="yesterday">أمس</string>
     <string name="days_ago">منذ %d أيام ماضية</string>
     <string name="connectionbar_no_connection">لا يوجد اتصال</string>

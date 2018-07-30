@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 14:35:18+0000
+Translation-Revision-Date: 2018-07-20 08:21:41+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="reader_gallery_images_desc">галерея изображений</string>
+    <string name="blavatar_desc">значок сайта</string>
+    <string name="theme_image_desc">изображение темы</string>
+    <string name="featured_image_desc">изображение записи</string>
+    <string name="support_push_notification_message_hint_snackbar">Обратитесь в поддержку, нажав \'Помощь и поддержка\', а затем \'Мои обращения\'</string>
+    <string name="local_changes_discarding_error">Возникла ошибка при отмене локальных изменений. Пожалуйста, обратитесь в поддержку за помощью.</string>
+    <string name="local_changes_discarding">Отмена локальных изменений</string>
+    <string name="local_changes_discarded">Локальные изменения отменены</string>
+    <string name="menu_discard_changes">Отменить локальные изменения</string>
+    <string name="button_discard_changes">Отменить изменения</string>
+    <string name="button_discard">Отменить</string>
     <string name="reader_avatar_desc">изображение профиля</string>
     <string name="reader_blavatar_desc">значок сайта</string>
     <string name="notification_channel_transient_title">Транзиент</string>
@@ -170,7 +181,6 @@ Language: ru
     <string name="reader_list_item_suggestion_remove_desc">удалить</string>
     <string name="photo_picker_thumbnail_desc">Воспроизвести видео</string>
     <string name="reader_cardview_post_play_video_desc">воспроизвести видео</string>
-    <string name="post_cardview_featured_desc">изображение записи</string>
     <string name="plugin_detail_logo_desc">логотип плагина</string>
     <string name="plugin_detail_banner_desc">баннер плагина</string>
     <string name="photo_picker_wpmedia_desc">выбрать из медиатеки WordPress</string>
@@ -1256,7 +1266,6 @@ Language: ru
     <string name="notification_settings_item_other_account_emails_summary">Важные письма, касающиеся вашей учётной записи, мы отправляем всегда, но можно также включить и другие полезные уведомления.</string>
     <string name="stats_insights_latest_post_trend">С момента публикации %2$s прошло %1$s. Вот данные о популярности записи…</string>
     <string name="stats_insights_latest_post_summary">Данные о последней записи</string>
-    <string name="button_revert">Отменить</string>
     <string name="yesterday">Вчера</string>
     <string name="days_ago">%d дней назад</string>
     <string name="connectionbar_no_connection">Нет соединения</string>

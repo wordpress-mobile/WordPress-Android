@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 06:54:07+0000
+Translation-Revision-Date: 2018-07-24 06:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="reader_gallery_images_desc">圖片庫</string>
+    <string name="blavatar_desc">網站圖示</string>
+    <string name="theme_image_desc">主題圖片</string>
+    <string name="featured_image_desc">特色圖片</string>
+    <string name="support_push_notification_message_hint_snackbar">點選「說明與客戶服務」和「我的票證」，找出你與支援團隊的討論內容</string>
+    <string name="local_changes_discarding_error">捨棄本機變更時發生錯誤。請聯絡支援團隊，尋求進一步協助。</string>
+    <string name="local_changes_discarding">正在捨棄本機變更</string>
+    <string name="local_changes_discarded">已捨棄本機變更</string>
+    <string name="menu_discard_changes">捨棄本機變更</string>
+    <string name="button_discard_changes">捨棄變更</string>
+    <string name="button_discard">捨棄</string>
     <string name="reader_avatar_desc">個人檔案圖像</string>
     <string name="reader_blavatar_desc">網站圖示</string>
     <string name="notification_channel_transient_title">暫時性</string>
@@ -190,9 +201,7 @@ Language: zh_TW
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_undo_snackbar_action">復原</string>
-    <string name="menu_visual_mode_done_snackbar">已切換至「視覺化模式」。</string>
     <string name="menu_visual_mode">視覺化模式</string>
-    <string name="menu_html_mode_done_snackbar">切換至「HTML 模式」。</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">預覽</string>
     <string name="menu_publish_now">立即發表</string>
@@ -960,7 +969,6 @@ Language: zh_TW
     <string name="delete_site_hint">刪除網站</string>
     <string name="export_site_hint">將網站匯出為 XML 檔案</string>
     <string name="primary_domain">主要網域</string>
-    <string name="error_deleting_site_summary">刪除網站時發生錯誤。請聯絡支援團隊，尋求進一步協助</string>
     <string name="error_deleting_site">刪除網站時發生錯誤</string>
     <string name="confirm_delete_site_prompt">請在下方欄位中輸入 %1$s 以確認。系統將永久刪除你的網站。</string>
     <string name="site_settings_export_content_title">匯出內容</string>
@@ -1230,7 +1238,6 @@ Language: zh_TW
     <string name="email">電子郵件</string>
     <string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
     <string name="stats_insights_latest_post_summary">最新文章摘要</string>
-    <string name="button_revert">還原</string>
     <string name="days_ago">%d 天前</string>
     <string name="yesterday">昨天</string>
     <string name="connectionbar_no_connection">沒有連線</string>

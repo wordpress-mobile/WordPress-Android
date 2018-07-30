@@ -148,7 +148,6 @@ Language: es_VE
     <string name="delete_site_hint">Eliminar el sitio</string>
     <string name="export_site_hint">Exportar tu sitio a un archivo XML</string>
     <string name="primary_domain">Dominio principal</string>
-    <string name="error_deleting_site_summary">Hubo un error eliminando tu sitio. Por favor, contacta con el soporte para más asistencia</string>
     <string name="error_deleting_site">Error borrando sitio</string>
     <string name="confirm_delete_site_prompt">Por favor, escribe en %1$s en el campo arriba para confirmar. Tu sitio desaparecerá para siempre.</string>
     <string name="site_settings_export_content_title">Exportar contenido</string>
@@ -418,7 +417,6 @@ Language: es_VE
     <string name="app_notifications">Avisos de la aplicación</string>
     <string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
     <string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
-    <string name="button_revert">Volver</string>
     <string name="days_ago">Hace %d días</string>
     <string name="yesterday">Ayer</string>
     <string name="connectionbar_no_connection">Sin conexión</string>
