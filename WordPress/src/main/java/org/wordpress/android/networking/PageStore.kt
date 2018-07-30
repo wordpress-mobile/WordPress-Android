@@ -26,7 +26,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
 
     suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val pages = postStore.getPagesForSite(site).filter { it != null }
-        pages.map { PageModel.fromPost(it)!! }
+        pages.map { PageModel(it) }
     }
 
     suspend fun requestPagesFromServer(site: SiteModel, loadMore: Boolean): OnPostChanged = suspendCoroutine { cont ->
