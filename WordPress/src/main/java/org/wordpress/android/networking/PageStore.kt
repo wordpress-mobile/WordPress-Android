@@ -24,11 +24,6 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         dispatcher.register(this)
     }
 
-    fun getPageById(pageId: Int): PageModel? {
-        val post = postStore.getPostByLocalPostId(pageId)
-        return post?.let { PageModel.fromPost(it) }
-    }
-
     suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val pages = postStore.getPagesForSite(site).filter { it != null }
         pages.map { PageModel.fromPost(it)!! }
