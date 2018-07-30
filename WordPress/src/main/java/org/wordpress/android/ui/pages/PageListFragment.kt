@@ -30,7 +30,6 @@ class PageListFragment : Fragment() {
     private val listStateKey = "list_state"
 
     companion object {
-        const val fragmentKey = "fragment_key"
         private const val typeKey = "type_key"
 
         enum class Type(val text: Int) {
@@ -49,10 +48,9 @@ class PageListFragment : Fragment() {
             }
         }
 
-        fun newInstance(key: String, type: Type): PageListFragment {
+        fun newInstance(type: Type): PageListFragment {
             val fragment = PageListFragment()
             val bundle = Bundle()
-            bundle.putString(fragmentKey, key)
             bundle.putSerializable(typeKey, type)
             fragment.arguments = bundle
             return fragment
@@ -74,12 +72,12 @@ class PageListFragment : Fragment() {
 
         val nonNullActivity = checkNotNull(activity)
         val nonNullSite = checkNotNull(site)
-        val key = checkNotNull(arguments?.getString(fragmentKey))
+        val type = checkNotNull(arguments?.getSerializable(typeKey) as Type?)
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity, nonNullSite, key)
+        initializeViewModels(nonNullActivity, nonNullSite, type)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -87,14 +85,14 @@ class PageListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel, key: String) {
+    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel, type: Type) {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PageListViewModel>(key, PageListViewModel::class.java)
+                .get<PageListViewModel>(type.name, PageListViewModel::class.java)
 
         setupObservers()
 
         val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        viewModel.start(site, getPageType(key), pagesViewModel)
+        viewModel.start(site, getPageType(type), pagesViewModel)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -114,11 +112,11 @@ class PageListFragment : Fragment() {
         })
     }
 
-    private fun getPageType(key: String): PageStatus {
-        return when (key) {
-            "key0" -> PageStatus.PUBLISHED
-            "key1" -> PageStatus.DRAFT
-            "key2" -> PageStatus.SCHEDULED
+    private fun getPageType(type: Type): PageStatus {
+        return when (type) {
+            Type.PUBLISHED -> PageStatus.PUBLISHED
+            Type.DRAFTS -> PageStatus.DRAFT
+            Type.SCHEDULED -> PageStatus.SCHEDULED
             else -> PageStatus.TRASHED
         }
     }

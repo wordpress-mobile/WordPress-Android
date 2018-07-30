@@ -212,7 +212,7 @@ class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPag
     override fun getCount(): Int = PAGE_TABS
 
     override fun getItem(position: Int): Fragment {
-        return PageListFragment.newInstance("key$position", Type.getType(position))
+        return PageListFragment.newInstance(Type.getType(position))
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

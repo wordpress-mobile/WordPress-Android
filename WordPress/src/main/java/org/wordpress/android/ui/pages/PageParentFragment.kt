@@ -74,14 +74,13 @@ class PageParentFragment : Fragment() {
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        val key = arguments!!.getString(PageListFragment.fragmentKey)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<PageParentViewModel>(checkNotNull(key), PageParentViewModel::class.java)
+                .get<PageParentViewModel>(PageParentViewModel::class.java)
 
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
                 ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
 
-        viewModel.start(site, key)
+        viewModel.start(site)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
