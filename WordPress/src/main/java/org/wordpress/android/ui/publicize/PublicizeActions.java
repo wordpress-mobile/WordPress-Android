@@ -93,7 +93,7 @@ public class PublicizeActions {
                             .post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
                     long keyringConnectionId = parseServiceKeyringId(serviceId, currentUserId, jsonObject);
-                    connectStepTwo(siteId, keyringConnectionId, serviceId);
+                    connectStepTwo(siteId, keyringConnectionId, serviceId, "");
                 }
             }
         };
@@ -113,7 +113,7 @@ public class PublicizeActions {
      * step two in creating a publicize connection: now that we have the keyring connection id,
      * create the actual connection
      */
-    public static void connectStepTwo(final long siteId, long keyringConnectionId, final String serviceId) {
+    public static void connectStepTwo(final long siteId, long keyringConnectionId, final String serviceId, final String externalUserId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -133,6 +133,7 @@ public class PublicizeActions {
 
         Map<String, String> params = new HashMap<>();
         params.put("keyring_connection_ID", Long.toString(keyringConnectionId));
+        params.put("external_user_ID", externalUserId);
         String path = String.format(Locale.ROOT, "/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
