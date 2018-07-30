@@ -21,7 +21,7 @@ public class CrashlyticsUtils {
 
     public static boolean shouldEnableCrashlytics(@NonNull Context context) {
         if (PackageUtils.isDebugBuild()) {
-            //return false; // TODO: uncomment
+            return false;
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
