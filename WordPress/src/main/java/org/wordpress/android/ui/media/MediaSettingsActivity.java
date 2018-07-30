@@ -14,9 +14,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,16 +43,15 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.EditorImageMetaData;
@@ -65,11 +63,11 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -84,6 +82,9 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
+import org.wordpress.android.util.image.ImageType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -141,8 +142,8 @@ public class MediaSettingsActivity extends AppCompatActivity
     private MediaType mMediaType;
 
     @Inject MediaStore mMediaStore;
-    @Inject FluxCImageLoader mImageLoader;
     @Inject Dispatcher mDispatcher;
+    @Inject ImageManager mImageManager;
 
     /**
      * @param activity calling activity
@@ -366,8 +367,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                 imageRes = R.drawable.ic_gridicons_page;
             }
             mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            mImageView.setImageResource(imageRes);
+            mImageManager.load(mImageView, getResources().getDrawable(imageRes), ScaleType.FIT_CENTER);
         } else {
             loadImage();
         }
@@ -745,36 +745,33 @@ public class MediaSettingsActivity extends AppCompatActivity
             return;
         }
 
-        if (mediaUri.startsWith("http")) {
-            showProgress(true);
-            String imageUrl = mediaUri;
-            if (SiteUtils.isPhotonCapable(mSite)) {
-                imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
-            }
-            mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (!isFinishing() && response.getBitmap() != null) {
-                        showProgress(false);
-                        mImageView.setImageBitmap(response.getBitmap());
-                        if (isMediaFromEditor()) {
-                            showImageDimensions(response.getBitmap().getWidth(), response.getBitmap().getHeight());
+        showProgress(true);
+        String imageUrl = mediaUri;
+        if (SiteUtils.isPhotonCapable(mSite)) {
+            imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+        }
+        showProgress(true);
+        mImageManager.load(mImageView, ImageType.FULLSCREEN_PHOTO, imageUrl, ScaleType.CENTER,
+                new RequestListener() {
+                    @Override
+                    public void onResourceReady(@NotNull Drawable resource) {
+                        if (!isFinishing()) {
+                            showProgress(false);
+                            if (isMediaFromEditor()) {
+                                showImageDimensions(resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    AppLog.e(AppLog.T.MEDIA, error);
-                    if (!isFinishing()) {
-                        showProgress(false);
-                        delayedFinishWithError();
+                    @Override
+                    public void onLoadFailed(@Nullable Exception e) {
+                        if (!isFinishing()) {
+                            AppLog.e(T.MEDIA, e);
+                            showProgress(false);
+                            delayedFinishWithError();
+                        }
                     }
-                }
-            }, size, 0);
-        } else {
-            new LocalImageTask(mediaUri, size).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+                });
     }
 
     /*
@@ -800,39 +797,6 @@ public class MediaSettingsActivity extends AppCompatActivity
                 }
             }
         }.start();
-    }
-
-    private class LocalImageTask extends AsyncTask<Void, Void, Bitmap> {
-        private final String mMediaUri;
-        private final int mSize;
-
-        LocalImageTask(@NonNull String mediaUri, int size) {
-            mMediaUri = mediaUri;
-            mSize = size;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            int orientation = ImageUtils.getImageOrientation(MediaSettingsActivity.this, mMediaUri);
-            byte[] bytes = ImageUtils.createThumbnailFromUri(
-                    MediaSettingsActivity.this, Uri.parse(mMediaUri), mSize, null, orientation);
-            if (bytes != null) {
-                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isFinishing()) {
-                return;
-            }
-            if (bitmap != null) {
-                mImageView.setImageBitmap(bitmap);
-            } else {
-                delayedFinishWithError();
-            }
-        }
     }
 
     private void showFullScreen() {

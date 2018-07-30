@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -54,7 +56,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,6 +103,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     @SuppressWarnings("unused")
     @Inject StockMediaStore mStockMediaStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ImageManager mImageManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -582,7 +586,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         public void onBindViewHolder(StockViewHolder holder, int position) {
             StockMediaModel media = mItems.get(position);
             String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnail(), mThumbWidth, mThumbHeight);
-            holder.mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+            mImageManager.load(holder.mImageView, ImageType.PHOTO, imageUrl, ScaleType.CENTER_CROP);
 
             holder.mImageView.setContentDescription(media.getTitle());
 
@@ -713,7 +717,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder {
-        private final WPNetworkImageView mImageView;
+        private final ImageView mImageView;
         private final TextView mSelectionCountTextView;
 
         StockViewHolder(View view) {

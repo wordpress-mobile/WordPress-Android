@@ -159,7 +159,9 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
         SiteModel site = getSelectedSite();
         if (site != null) {
-            if (site.getHasFreePlan() && !site.isJetpackConnected()) {
+            boolean isNotAdmin = !site.getHasCapabilityManageOptions();
+            boolean isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(site) && !site.isJetpackConnected();
+            if (isNotAdmin || isSelfHostedWithoutJetpack) {
                 mActivityLogContainer.setVisibility(View.GONE);
             } else {
                 mActivityLogContainer.setVisibility(View.VISIBLE);

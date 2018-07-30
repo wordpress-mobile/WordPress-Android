@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.notifications.services;
 
+import android.text.TextUtils;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -29,8 +31,10 @@ public class NotificationsUpdateLogic {
     private boolean mRunning = false;
     private String mNoteId;
     private boolean mIsStartedByTappingOnNotification = false;
+    private String mLocale;
 
-    public NotificationsUpdateLogic(ServiceCompletionListener listener) {
+    public NotificationsUpdateLogic(String locale, ServiceCompletionListener listener) {
+        mLocale = locale;
         mCompletionListener = listener;
     }
 
@@ -46,6 +50,9 @@ public class NotificationsUpdateLogic {
         params.put("number", "200");
         params.put("num_note_items", "20");
         params.put("fields", RestClientUtils.NOTIFICATION_FIELDS);
+        if (!TextUtils.isEmpty(mLocale)) {
+            params.put("locale", mLocale);
+        }
         RestListener listener = new RestListener();
         WordPress.getRestClientUtilsV1_1().getNotifications(params, listener, listener);
     }

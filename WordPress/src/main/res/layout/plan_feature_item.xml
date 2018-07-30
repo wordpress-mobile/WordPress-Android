@@ -7,14 +7,15 @@
     android:layout_marginBottom="@dimen/margin_medium"
     android:layout_marginTop="@dimen/margin_medium">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/image_icon"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_extra_large"
         tools:background="@drawable/ic_reader_blue_wordpress_18dp"
-        android:layout_marginEnd="@dimen/margin_extra_large"/>
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:contentDescription="@null"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_feature_title"
