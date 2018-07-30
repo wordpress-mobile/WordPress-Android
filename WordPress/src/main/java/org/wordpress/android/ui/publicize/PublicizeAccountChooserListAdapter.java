@@ -84,10 +84,10 @@ public class PublicizeAccountChooserListAdapter
     }
 
     private String getName(PublicizeConnection connection) {
-        String name = connection.getExternalDisplayName();
+        String name = connection.getExternalName();
 
         if (name.isEmpty()) {
-            name = connection.getExternalName();
+            name = connection.getExternalDisplayName();
         }
 
         return name;
