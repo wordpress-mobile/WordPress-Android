@@ -17,6 +17,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val isButtonVisible: Boolean
     }
 
+    open fun longId(): Long = hashCode().toLong()
+
     data class Event(
         val activityId: String,
         val title: String,
@@ -45,6 +47,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 model.rewindID,
                 model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false)
+
+        override fun longId(): Long = activityId.hashCode().toLong()
     }
 
     data class Progress(
