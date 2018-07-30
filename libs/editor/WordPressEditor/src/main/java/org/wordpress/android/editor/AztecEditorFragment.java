@@ -742,6 +742,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         if (mSource.getVisibility() == View.VISIBLE) {
             updateFailedMediaList();
+        } else {
+            addOverlayToGifs();
         }
     }
 
