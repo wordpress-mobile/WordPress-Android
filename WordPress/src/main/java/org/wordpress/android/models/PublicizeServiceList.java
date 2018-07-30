@@ -80,7 +80,7 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
             service.setDescription(jsonService.optString("description"));
             service.setIconUrl(jsonService.optString("icon"));
             service.setConnectUrl(jsonService.optString("connect_URL"));
-            
+
             service.setIsJetpackSupported(jsonService.optBoolean("jetpack_support"));
             service.setIsMultiExternalUserIdSupported(jsonService.optBoolean("multiple_external_user_ID_support"));
             service.setIsExternalUsersOnly(jsonService.optBoolean("external_users_only"));
