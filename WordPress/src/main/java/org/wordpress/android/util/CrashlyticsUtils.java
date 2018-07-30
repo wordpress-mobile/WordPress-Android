@@ -1,12 +1,37 @@
 package org.wordpress.android.util;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+
+import org.wordpress.android.WordPress;
+
+import java.lang.reflect.Field;
 
 import io.fabric.sdk.android.Fabric;
 
 public class CrashlyticsUtils {
     private static final String TAG_KEY = "tag";
     private static final String MESSAGE_KEY = "message";
+
+    public static void disableCrashlytics() {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
+
+        Field field = null;
+        try {
+            Class<?> clazz = Class.forName(Fabric.class.getName());
+            field = clazz.getDeclaredField("singleton");
+            field.setAccessible(true);
+            field.set(null, null);
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.MAIN, e.getMessage());
+            return;
+        }
+
+        CrashlyticsCore crashlytics = new CrashlyticsCore.Builder().disabled(true).build();
+        Fabric.with(WordPress.getContext(), crashlytics);
+    }
 
     public static void logException(Throwable tr, AppLog.T tag, String message) {
         if (!Fabric.isInitialized()) {

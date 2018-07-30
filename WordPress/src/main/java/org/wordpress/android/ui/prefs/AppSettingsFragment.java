@@ -15,6 +15,8 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -31,8 +33,10 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -44,6 +48,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import io.fabric.sdk.android.Fabric;
 
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
@@ -83,15 +89,23 @@ public class AppSettingsFragment extends PreferenceFragment
                         if (newValue == null) {
                             return false;
                         }
+                        boolean hasUserOptedOut = !(boolean) newValue;
                         AnalyticsUtils.updateAnalyticsPreference(
                                 getActivity(),
                                 mDispatcher,
                                 mAccountStore,
-                                !(boolean) newValue);
+                                hasUserOptedOut);
+                        //if (!PackageUtils.isDebugBuild()) {
+                            if (hasUserOptedOut) {
+                                CrashlyticsUtils.disableCrashlytics();
+                            } else {
+                                Fabric.with(WordPress.getContext(), new Crashlytics());
+                            }
+                        //}
                         return true;
                     }
                 }
-                                                                                             );
+        );
         updateAnalyticsSyncUI();
 
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
