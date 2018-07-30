@@ -13,15 +13,21 @@ public class CrashlyticsUtils {
     private static final String TAG_KEY = "tag";
     private static final String MESSAGE_KEY = "message";
 
+    /**
+     * Disables Crashlytics if it's already enabled
+     */
     public static void disableCrashlytics() {
         if (!Fabric.isInitialized()) {
             return;
         }
 
-        Field field = null;
+        /*
+         * first we use reflection to set the Fabric singleton to null because otherwise the call
+         * to Fabric.with() below will do nothing)
+         */
         try {
             Class<?> clazz = Class.forName(Fabric.class.getName());
-            field = clazz.getDeclaredField("singleton");
+            Field field = clazz.getDeclaredField("singleton");
             field.setAccessible(true);
             field.set(null, null);
         } catch (Exception e) {
@@ -29,6 +35,11 @@ public class CrashlyticsUtils {
             return;
         }
 
+        /*
+         * then we create a new instance that disables logging - ideally this wouldn't be necessary
+         * since we just nulled the existing instance above, but it seems more future-proof to
+         * explicitly disable Crashlytics
+         */
         CrashlyticsCore crashlytics = new CrashlyticsCore.Builder().disabled(true).build();
         Fabric.with(WordPress.getContext(), crashlytics);
     }
