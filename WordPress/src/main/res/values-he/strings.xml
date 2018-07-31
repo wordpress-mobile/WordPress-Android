@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-09 18:54:07+0000
+Translation-Revision-Date: 2018-07-24 08:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="reader_gallery_images_desc">גלריית תמונות</string>
+    <string name="blavatar_desc">סמל אתר</string>
+    <string name="theme_image_desc">תמונה של ערכת העיצוב</string>
+    <string name="featured_image_desc">תמונה מרכזית</string>
+    <string name="support_push_notification_message_hint_snackbar">ניתן לאתר את השיחה שלך עם התמיכה על ידי הקשה על \'עזרה ותמיכה\' ולאחר מכן, הקשה על \'הפנייה שלי\'</string>
+    <string name="local_changes_discarding_error">אירעה שגיאה במחיקת השינויים המקומיים שביצעת. יש לפנות לתמיכה לסיוע.</string>
+    <string name="local_changes_discarding">מבטל את השינויים המקומיים</string>
+    <string name="local_changes_discarded">השינויים המקומיים בוטלו</string>
+    <string name="menu_discard_changes">ביטול השינויים המקומיים</string>
+    <string name="button_discard_changes">ביטול שינויים</string>
+    <string name="button_discard">ביטול</string>
     <string name="reader_avatar_desc">תמונת פרופיל</string>
     <string name="reader_blavatar_desc">סמל אתר</string>
     <string name="notification_channel_transient_title">זמני</string>
@@ -188,13 +199,10 @@ Language: he_IL
     <string name="profile_picture">תמונת הפרופיל של %s</string>
     <string name="comment_checkmark_desc">סימן ביקורת</string>
     <string name="signup_with_google_progress">מתחבר ל–Google…</string>
-    <string name="post_cardview_featured_desc">תמונה ראשית</string>
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל–Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב–Jetpack כבר מחובר</string>
     <string name="menu_undo_snackbar_action">ביטול פעולה אחרונה</string>
-    <string name="menu_visual_mode_done_snackbar">הוחלף לעורך החזותי.</string>
     <string name="menu_visual_mode">עורך חזותי</string>
-    <string name="menu_html_mode_done_snackbar">הוחלף לעורך HTML.</string>
     <string name="menu_html_mode">עורך HTML</string>
     <string name="menu_preview">תצוגה מקדימה</string>
     <string name="menu_publish_now">לפרסם כעת</string>
@@ -980,7 +988,6 @@ Language: he_IL
     <string name="delete_site_hint">מחיקת אתר</string>
     <string name="export_site_hint">יצוא האתר שלך לקובץ XML</string>
     <string name="primary_domain">דומיין ראשי</string>
-    <string name="error_deleting_site_summary">אירעה שגיאה בעת מחיקת האתר שלך. כדאי לפנות לתמיכה לקבלת סיוע נוסף</string>
     <string name="error_deleting_site">שגיאה בעת מחיקת האתר</string>
     <string name="confirm_delete_site_prompt">יש להקליד את הכתובת %1$s בשדה להלן כדי לאשר. לאחר מכן, האתר שלך ייעלם לעד.</string>
     <string name="site_settings_export_content_title">יצוא תוכן</string>
@@ -1256,7 +1263,6 @@ Language: he_IL
     <string name="notification_settings_item_other_account_emails_summary">תמיד נשלח אימיילים חשובים הקשורים לאתר, אבל לפעמים תקבלו גם תוספות מועילות.</string>
     <string name="stats_insights_latest_post_trend">עברו %1$s מאז פרסום %2$s. קצת מידע על תפקוד הפוסט עד כה…</string>
     <string name="stats_insights_latest_post_summary">סיכום פוסטים אחרונים</string>
-    <string name="button_revert">שיחזור</string>
     <string name="days_ago">לפני %d ימים</string>
     <string name="yesterday">אתמול</string>
     <string name="connectionbar_no_connection">אין חיבור</string>
