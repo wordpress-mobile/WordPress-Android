@@ -134,7 +134,9 @@ public class PublicizeActions {
 
         Map<String, String> params = new HashMap<>();
         params.put("keyring_connection_ID", Long.toString(keyringConnectionId));
-        params.put("external_user_ID", externalUserId);
+        if (!externalUserId.isEmpty()) {
+            params.put("external_user_ID", externalUserId);
+        }
         String path = String.format(Locale.ROOT, "/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
