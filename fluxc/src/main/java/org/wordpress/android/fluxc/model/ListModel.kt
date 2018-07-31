@@ -7,7 +7,10 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints
 import com.yarolegovich.wellsql.core.annotation.Table
 
 @Table
-@RawConstraints("UNIQUE(LOCAL_SITE_ID, TYPE)")
+@RawConstraints(
+        "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE",
+        "UNIQUE(LOCAL_SITE_ID, TYPE)"
+)
 class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     enum class ListType(val value: String) {
         POSTS_ALL("posts_all"),
