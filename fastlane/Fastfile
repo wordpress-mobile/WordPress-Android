@@ -16,55 +16,59 @@
 default_platform(:android)
 
 platform :android do
+
+  #####################################################################################
+  # screenshots
+  # -----------------------------------------------------------------------------------
+  # This lane takes screenshots for the WordPress app across the three device types:
+  # phone, sevenInch and tenInch. If device serials are not provided these avds will be
+  # used: fastlane_screenshots_phone, fastlane_screenshots_seven_inch,
+  # fastlane_screenshots_ten_inch
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane screenshots phone_serial:<serial> sevenInch_serial:<serial> tenInch_serial:<serial>
+  #
+  # Example:
+  # fastlane screenshots
+  # fastlane screenshots phone_serial:emulator-5444 sevenInch_serial:emulator-5446 tenInch_serial:emulator-5448
+  #####################################################################################
   desc "Build and capture screenshots"
-  lane :screenshots do
+  lane :screenshots do |options|
     gradle(task: "assembleVanillaDebug assembleVanillaDebugAndroidTest")
-    take_screenshots
+    take_screenshots(options)
   end
 
   desc "Capture screenshots"
   lane :take_screenshots do |options|
-    devs = adb_devices()
-    check_devices(devs: devs)
-    
-    device = devs[0]
-    demo_mode_enter(device_serial: device.serial)
+    screenshot_devices = [
+      {
+        screenshot_type: 'phone',
+        device_name: 'fastlane_screenshots_phone',
+        device_serial: options[:phone_serial],
+      },
+      {
+        screenshot_type: 'sevenInch',
+        device_name: 'fastlane_screenshots_seven_inch',
+        device_serial: options[:sevenInch_serial],
+      },
+      {
+        screenshot_type: 'tenInch',
+        device_name: 'fastlane_screenshots_ten_inch',
+        device_serial: options[:tenInch_serial],
+      }
+    ]
 
-    capture_android_screenshots(app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
-        tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk", 
-        use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest", 
-        reinstall_app: true,
-        device_type: options[:device],
-        locales: ["ar", "de-DE", "en-US", "es-ES", "fr-CA", "fr-FR", "id", "it-IT", "iw-IL", "ja-JP", "ko-KR", "nl-NL", "pl-PL", "pt-BR", "ru-RU", "sr", "sv-SE", "th", "tr-TR", "vi", "zh-CN", "zh-TW"]
-        )
-        
-    demo_mode_exit(device_serial: device.serial)
-  end
+    screenshot_options = {
+      output_directory: "fastlane/metadata/android",
+      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
+      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk",
+      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
+      reinstall_app: false,
+      clear_previous_screenshots: true,
+      locales: ["ar", "de-DE", "en-US", "es-ES", "fr-CA", "fr-FR", "id", "it-IT", "iw-IL", "ja-JP", "ko-KR", "nl-NL", "pl-PL", "pt-BR", "ru-RU", "sr", "sv-SE", "th", "tr-TR", "vi", "zh-CN", "zh-TW"]
+    }
 
-  # Screenshot helpers
-  private_lane :check_devices do |options|
-    devs = options[:devs]
-    if devs.count == 0 then
-      UI.user_error!("No devices detected. Please, connect one device")
-    end
-    
-    if devs.count > 1 then
-      UI.user_error!("Too many devices detected. Please, connect one device")
-    end
-  end
-
-  private_lane :demo_mode_enter do |options|
-    # Setup device for demo
-    adb(command: "shell settings put global sysui_demo_allowed 1", serial: options[:device_serial])
-    # Disable system notifications
-    adb(command: "shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false", serial: options[:device_serial])
-    # Enjoy lunch while browsing the Play Store
-    adb(command: "shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 1337", serial: options[:device_serial])
-  end
-
-  private_lane :demo_mode_exit do |options|
-    # Exit demo mode
-    adb(command: "shell am broadcast -a com.android.systemui.demo -e command exit", serial: options[:device_serial])
+    take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
   end
 end
 #####################################################################################
