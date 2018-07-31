@@ -34,21 +34,20 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
+        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
             android:id="@+id/domainSuggestionsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/emptyView"
-            style="@style/WordPress.EmptyList.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:animateLayoutChanges="true"
-            android:text="@string/suggestions_empty_list"
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/actionableEmptyView"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:visibility="gone"
-            app:fixWidowWords="true"/>
+            app:aevButton="@string/suggestions_empty_list"
+            app:aevImage="@drawable/img_illustration_media"
+            app:aevTitle="@string/media_empty_list"
+            tools:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/suggestionsListProgress"

@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
@@ -98,5 +97,9 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
         suggestions = ListState.Success(event.suggestions, false) // Disable load more
+    }
+
+    fun onDomainSuggestionsSelected(domainSuggestion: DomainSuggestionResponse) {
+
     }
 }
