@@ -113,8 +113,9 @@ public class PostStore extends Store {
             this.canLoadMore = canLoadMore;
         }
 
-        public FetchPostsResponsePayload(PostError error) {
+        public FetchPostsResponsePayload(PostError error, boolean isPages) {
             this.error = error;
+            this.isPages = isPages;
         }
     }
 
