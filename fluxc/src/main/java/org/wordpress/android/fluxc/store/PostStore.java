@@ -183,6 +183,16 @@ public class PostStore extends Store {
         }
     }
 
+    public static class OnSinglePostFetched extends OnChanged<PostError> {
+        public int localSiteId;
+        public Long remotePostId;
+
+        public OnSinglePostFetched(int localSiteId, Long remotePostId) {
+            this.localSiteId = localSiteId;
+            this.remotePostId = remotePostId;
+        }
+    }
+
     public static class OnPostListChanged extends OnChanged<PostError> {
         public SiteModel site;
         public ListType listType;
@@ -499,6 +509,14 @@ public class PostStore extends Store {
         emitChange(event);
     }
 
+    public List<PostListModel> getPostList(SiteModel site, ListType listType) {
+        ListModel listModel = mListSqlUtils.getList(site.getId(), listType);
+        if (listModel != null) {
+            return mPostListSqlUtils.getPostList(listModel.getId());
+        }
+        return Collections.emptyList();
+    }
+
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
         OnPostListChanged onPostListChanged = new OnPostListChanged(payload.site, payload.listType, payload.error);
         if (!payload.isError()) {
@@ -595,6 +613,9 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.UPDATE_POST;
         emitChange(onPostChanged);
+        OnSinglePostFetched onSinglePostFetched =
+                new OnSinglePostFetched(post.getLocalSiteId(), post.getRemotePostId());
+        emitChange(onSinglePostFetched);
     }
 
     private void removePost(PostModel post) {
