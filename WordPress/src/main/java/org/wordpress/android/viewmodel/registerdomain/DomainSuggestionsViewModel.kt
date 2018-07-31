@@ -13,8 +13,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.ArrayList
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -36,6 +38,10 @@ class DomainSuggestionsViewModel @Inject constructor(
             by Delegates.observable(ListState.Init()) { _, _, new ->
                 _suggestions.postValue(new)
             }
+
+    private val _selectSuggestion = SingleLiveEvent<DomainSuggestionResponse>()
+    val selectedSuggestion : LiveData<DomainSuggestionResponse>
+        get() = _selectSuggestion
 
     var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {

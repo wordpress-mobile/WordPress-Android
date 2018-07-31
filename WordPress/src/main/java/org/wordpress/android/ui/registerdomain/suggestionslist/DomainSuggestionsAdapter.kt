@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.registerdomain.suggestionslist
 
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
-import org.wordpress.android.ui.activitylog.list.ActivityLogDiffCallback
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 
 class DomainSuggestionsAdapter(
     private val itemSelectionListener: (DomainSuggestionResponse) -> Unit
