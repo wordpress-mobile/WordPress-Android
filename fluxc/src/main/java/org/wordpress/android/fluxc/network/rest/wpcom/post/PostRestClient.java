@@ -129,7 +129,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post_type (invalid post type, shouldn't happen)
                         PostError postError = new PostError(error.apiError, error.message);
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError, getPages);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
