@@ -171,7 +171,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class DomainContactPayload extends Payload<DomainContactError> {
         @Nullable public DomainContactModel contactModel;
 
-        public DomainContactPayload(@Nullable DomainContactModel contactModel) {
+        public DomainContactPayload(@NonNull DomainContactModel contactModel) {
             this.contactModel = contactModel;
         }
 
