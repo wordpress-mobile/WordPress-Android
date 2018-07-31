@@ -11,12 +11,10 @@ import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IToolbarAction;
 
 public class MediaToolbarMoreButton implements IMediaToolbarButton {
-
     private IMediaToolbarClickListener mClickListener;
     private Context mContext;
     private IToolbarAction mAction = MediaToolbarAction.MORE;
     private AztecToolbar mToolbar;
-
 
     public MediaToolbarMoreButton(AztecToolbar aztecToolbar) {
         mToolbar = aztecToolbar;
@@ -61,5 +59,4 @@ public class MediaToolbarMoreButton implements IMediaToolbarButton {
     public void toolbarStateAboutToChange(AztecToolbar aztecToolbar, boolean enable) {
         aztecToolbar.findViewById(mAction.getButtonId()).setEnabled(enable);
     }
-
 }

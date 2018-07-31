@@ -12,7 +12,6 @@ import android.view.DragEvent;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 

@@ -17,7 +17,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 
 public class EditorMediaUtils {
-
     private static final String MIME_TYPE_IMAGE_PREFIX = "image/";
     private static final String MIME_TYPE_VIDEO_PREFIX = "video/";
     private static final String MIME_TYPE_AUDIO_PREFIX = "audio/";

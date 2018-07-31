@@ -36,7 +36,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -1457,7 +1456,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onAudioSettingsRequested(String mediaModelId) {
         MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Integer.parseInt(mediaModelId));
-        //TODO pass media model to MediaSettingsActivity
+        // TODO: pass media model to MediaSettingsActivity
     }
 
     @Override

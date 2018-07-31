@@ -12,8 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum MediaToolbarAction implements IToolbarAction {
-
-
     GALLERY(R.id.media_bar_button_gallery, ToolbarActionType.OTHER,
             new HashSet<ITextFormat>(Collections.singletonList(AztecTextFormat.FORMAT_NONE))),
 

@@ -917,8 +917,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(mediaFile.getMediaId());
                 mContent.clearOverlays(localMediaIdPredicate);
                 return;
-            }
-            else {
+            } else {
                 if (mediaType == MediaType.VIDEO) {
                     // VideoPress special case here
                     if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
@@ -932,8 +931,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     addVideoUploadingClassIfMissing(attributes);
                     mContent.insertVideo(getLoadingVideoPlaceholder(), attributes);
                     overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
-                }
-                else if (mediaType == MediaType.IMAGE) {
+                } else if (mediaType == MediaType.IMAGE) {
                     setDefaultAttributes(attributes, mediaFile);
                     mContent.insertImage(getLoadingImagePlaceholder(), attributes);
                 }
@@ -1007,9 +1005,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            if (mediaType == MediaType.IMAGE ||
-                mediaType == MediaType.VIDEO) {
-
+            if (mediaType == MediaType.IMAGE
+                || mediaType == MediaType.VIDEO) {
                 final String safeMediaPreviewUrl = mediaType == MediaType.VIDEO
                     ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()))
                     : Utils.escapeQuotes(mediaUrl);
@@ -1032,8 +1029,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     Drawable drawable = getLoadingMediaErrorPlaceholder(null);
                     mContent.insertImage(drawable, attrs);
                 }
-            }
-            else if (mediaType == MediaType.AUDIO) {
+            } else if (mediaType == MediaType.AUDIO) {
                 mContent.insertAudio(getAudioPlaceholder(), attrs);
             }
 
@@ -1149,7 +1145,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
             MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
-            if (mediaType.equals(MediaType.IMAGE) || mediaType.equals(MediaType.VIDEO) || mediaType.equals(MediaType.AUDIO)) {
+            if (mediaType.equals(MediaType.IMAGE)
+                || mediaType.equals(MediaType.VIDEO)
+                || mediaType.equals(MediaType.AUDIO)) {
                 // clear overlay
                 MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 

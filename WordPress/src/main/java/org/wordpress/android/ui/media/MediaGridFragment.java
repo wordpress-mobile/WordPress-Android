@@ -400,10 +400,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             mediaList = new ArrayList<>();
             for (MediaModel media : allMedia) {
                 String mime = media.getMimeType();
-                if (mime != null &&
-                    (MediaUtils.isImageMimeType(mime) ||
-                    MediaUtils.isVideoMimeType(mime) ||
-                    MediaUtils.isAudioMimeType(mime))) {
+                if (mime != null
+                    && (MediaUtils.isImageMimeType(mime)
+                    || MediaUtils.isVideoMimeType(mime)
+                    || MediaUtils.isAudioMimeType(mime))) {
                     mediaList.add(media);
                 }
             }
