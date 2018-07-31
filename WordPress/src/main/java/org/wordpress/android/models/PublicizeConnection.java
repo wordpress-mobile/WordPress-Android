@@ -20,6 +20,11 @@ public class PublicizeConnection {
             public String toString() {
                 return "broken";
             }
+        },
+        MUST_DISCONNECT {
+            public String toString() {
+                return "must-disconnect";
+            }
         }
     }
 
@@ -126,6 +131,8 @@ public class PublicizeConnection {
     public ConnectStatus getStatusEnum() {
         if (getStatus().equalsIgnoreCase(ConnectStatus.BROKEN.toString())) {
             return ConnectStatus.BROKEN;
+        } else if (getStatus().equalsIgnoreCase(ConnectStatus.MUST_DISCONNECT.toString())) {
+            return ConnectStatus.MUST_DISCONNECT;
         } else {
             return ConnectStatus.OK;
         }
@@ -229,6 +236,16 @@ public class PublicizeConnection {
         }
 
         return connection;
+    }
+
+    public static void updateConnectionfromExternalJson(PublicizeConnection connection, JSONObject json) {
+        if (connection == null) {
+            return;
+        }
+
+        connection.mExternalId = json.optString("external_ID");
+        connection.mExternalName = json.optString("external_name");
+        connection.mExternalProfilePictureUrl = json.optString("external_profile_picture");
     }
 
     private static long[] getSitesArrayFromJson(JSONArray jsonArray) throws JSONException {
