@@ -138,6 +138,11 @@ public class PublicizeTable {
         }
     }
 
+    private static boolean getBooleanFromCursor(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
+    }
+
     private static PublicizeService getServiceFromCursor(Cursor c) {
         PublicizeService service = new PublicizeService();
 
@@ -147,9 +152,9 @@ public class PublicizeTable {
         service.setGenericon(c.getString(c.getColumnIndex("genericon")));
         service.setIconUrl(c.getString(c.getColumnIndex("icon_url")));
         service.setConnectUrl(c.getString(c.getColumnIndex("connect_url")));
-        service.setIsJetpackSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_jetpack_supported")));
-        service.setIsMultiExternalUserIdSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_multi_user_id_supported")));
-        service.setIsExternalUsersOnly(SqlUtils.sqlToBool(c.getColumnIndex("is_external_users_only")));
+        service.setIsJetpackSupported(getBooleanFromCursor(c, "is_jetpack_supported"));
+        service.setIsMultiExternalUserIdSupported(getBooleanFromCursor(c, "is_multi_user_id_supported"));
+        service.setIsExternalUsersOnly(getBooleanFromCursor(c, "is_external_users_only"));
 
         return service;
     }
