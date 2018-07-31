@@ -106,8 +106,9 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
                 dialogInterface.dismiss();
                 int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
                 String service = mNotConnectedAccounts.get(mSelectedIndex).getService();
+                String externalUserId = mNotConnectedAccounts.get(mSelectedIndex).getExternalId();
                 EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId,
-                        service));
+                        service, externalUserId));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -162,11 +163,11 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
                     JSONArray externalJsonArray = currentConnectionJson.getJSONArray("additional_external_users");
                     for (int j = 0; j < externalJsonArray.length(); j++) {
                         JSONObject currentExternalConnectionJson = externalJsonArray.getJSONObject(j);
-                        PublicizeConnection externalConnection = PublicizeConnection.fromJson(currentExternalConnectionJson);
+                        PublicizeConnection.updateConnectionfromExternalJson(connection, currentExternalConnectionJson);
                         if (connection.isInSite(mSite.getSiteId())) {
-                            mConnectedAccounts.add(externalConnection);
+                            mConnectedAccounts.add(connection);
                         } else {
-                            mNotConnectedAccounts.add(externalConnection);
+                            mNotConnectedAccounts.add(connection);
                         }
                     }
                 }
@@ -177,6 +178,10 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
     }
 
     private void configureConnectionName() {
+        if (mNotConnectedAccounts.isEmpty()) {
+            return;
+        }
+
         PublicizeConnection connection = mNotConnectedAccounts.get(0);
         if (connection != null) {
             mConnectionName = connection.getLabel();

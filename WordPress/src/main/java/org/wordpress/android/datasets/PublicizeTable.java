@@ -16,10 +16,6 @@ import org.wordpress.android.util.SqlUtils;
 public class PublicizeTable {
     private static final String SERVICES_TABLE = "tbl_publicize_services";
     private static final String CONNECTIONS_TABLE = "tbl_publicize_connections";
-    private static final String IS_EXTERNAL_USERS_ONLY_COLUMN_NAME = "is_external_users_only";
-
-    public static final String ADD_EXTERNAL_USERS_ONLY = "alter table " + SERVICES_TABLE
-                                                 + " add " + IS_EXTERNAL_USERS_ONLY_COLUMN_NAME + " BOOLEAN;";
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + SERVICES_TABLE + " ("
@@ -31,6 +27,7 @@ public class PublicizeTable {
                    + " connect_url TEXT NOT NULL,"
                    + " is_jetpack_supported INTEGER DEFAULT 0,"
                    + " is_multi_user_id_supported INTEGER DEFAULT 0,"
+                   + " is_external_users_only INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (id))");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + CONNECTIONS_TABLE + " ("
@@ -59,13 +56,8 @@ public class PublicizeTable {
         return WordPress.wpDB.getDatabase();
     }
 
-    /*
-     * for testing purposes - clears then recreates tables
-     */
-    public static void reset() {
-        getWritableDb().execSQL("DROP TABLE IF EXISTS " + SERVICES_TABLE);
-        getWritableDb().execSQL("DROP TABLE IF EXISTS " + CONNECTIONS_TABLE);
-        createTables(getWritableDb());
+    public static void resetServicesTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + SERVICES_TABLE);
     }
 
     public static PublicizeService getService(String serviceId) {

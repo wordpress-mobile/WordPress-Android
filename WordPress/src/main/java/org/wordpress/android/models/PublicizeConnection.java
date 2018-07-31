@@ -238,6 +238,16 @@ public class PublicizeConnection {
         return connection;
     }
 
+    public static void updateConnectionfromExternalJson(PublicizeConnection connection, JSONObject json) {
+        if (connection == null) {
+            return;
+        }
+
+        connection.mExternalId = json.optString("external_ID");
+        connection.mExternalName = json.optString("external_name");
+        connection.mExternalProfilePictureUrl = json.optString("external_profile_picture");
+    }
+
     private static long[] getSitesArrayFromJson(JSONArray jsonArray) throws JSONException {
         long[] sitesArray = new long[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) {

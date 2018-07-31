@@ -173,7 +173,7 @@ public class WordPressDB {
                 mDb.execSQL(SiteSettingsModel.ADD_SITE_ICON);
             case 65:
                 // add external users only to publicize services table
-                mDb.execSQL(PublicizeTable.ADD_EXTERNAL_USERS_ONLY);
+                PublicizeTable.resetServicesTable(mDb);
         }
         mDb.setVersion(DATABASE_VERSION);
     }
