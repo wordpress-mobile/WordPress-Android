@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.PostListModelTable
+import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.PostListModel
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class PostListSqlUtils @Inject constructor() {
                     .where()
                     .equals(PostListModelTable.LIST_ID, listId)
                     .endWhere()
+                    .orderBy(PostListModelTable.ID, SelectQuery.ORDER_ASCENDING)
                     .asModel
 
     /**
