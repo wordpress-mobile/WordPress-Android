@@ -71,6 +71,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 
     private static final String KEY_SEARCH_QUERY = "search_query";
+    private static final String KEY_IS_SHOWING_EMPTY_VIEW = "is_showing_empty_view";
     private static final String KEY_IS_UPLOADING = "is_uploading";
     public static final String KEY_REQUEST_CODE = "request_code";
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
@@ -94,6 +95,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private int mThumbHeight;
 
     private boolean mIsFetching;
+    private boolean mIsShowingEmptyView;
     private boolean mIsUploading;
     private boolean mCanLoadMore;
 
@@ -157,10 +159,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         } else {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
             mIsUploading = savedInstanceState.getBoolean(KEY_IS_UPLOADING);
+            mIsShowingEmptyView = savedInstanceState.getBoolean(KEY_IS_SHOWING_EMPTY_VIEW);
             mRequestCode = savedInstanceState.getInt(KEY_REQUEST_CODE);
+
+            if (mIsShowingEmptyView) {
+                showEmptyView(true);
+            }
+
             if (mIsUploading) {
                 showUploadProgressDialog(true);
             }
+
             if (!TextUtils.isEmpty(mSearchQuery)) {
                 StockMediaRetainedData data = mRetainedFragment.getData();
                 if (data != null) {
@@ -213,6 +222,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putBoolean(KEY_IS_SHOWING_EMPTY_VIEW, mIsShowingEmptyView);
         outState.putBoolean(KEY_IS_UPLOADING, mIsUploading);
         outState.putInt(KEY_REQUEST_CODE, mRequestCode);
 
@@ -296,6 +306,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private void showEmptyView(boolean show) {
         if (!isFinishing()) {
+            mIsShowingEmptyView = show;
             ActionableEmptyView actionableEmptyView = findViewById(R.id.actionable_empty_view);
             actionableEmptyView.setVisibility(show ? View.VISIBLE : View.GONE);
             actionableEmptyView.updateLayoutForSearch(true, 0);
