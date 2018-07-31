@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -40,7 +39,7 @@ class DomainSuggestionsViewModel @Inject constructor(
             }
 
     private val _selectSuggestion = SingleLiveEvent<DomainSuggestionResponse>()
-    val selectedSuggestion : LiveData<DomainSuggestionResponse>
+    val selectedSuggestion: LiveData<DomainSuggestionResponse>
         get() = _selectSuggestion
 
     var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
@@ -66,6 +65,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
         this.site = site
         isStarted = true
+        fetchSuggestions()
     }
 
     private fun submitSearch(query: String, delayed: Boolean) {
@@ -106,6 +106,6 @@ class DomainSuggestionsViewModel @Inject constructor(
     }
 
     fun onDomainSuggestionsSelected(domainSuggestion: DomainSuggestionResponse) {
-
+        _selectSuggestion.postValue(domainSuggestion)
     }
 }

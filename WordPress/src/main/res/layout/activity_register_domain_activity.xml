@@ -9,4 +9,9 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
+    <fragment
+        android:id="@+id/fragment_container"
+        android:name="org.wordpress.android.ui.registerdomain.suggestionslist.DomainSuggestionsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

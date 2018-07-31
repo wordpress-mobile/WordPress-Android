@@ -23,6 +23,7 @@
             app:srcCompat="@drawable/ic_search_grey_24dp"/>
 
         <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/domainSearchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -41,13 +42,11 @@
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/actionableEmptyView"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone"
-            app:aevButton="@string/suggestions_empty_list"
-            app:aevImage="@drawable/img_illustration_media"
-            app:aevTitle="@string/media_empty_list"
-            tools:visibility="visible" />
+            app:aevTitle="@string/suggestions_empty_list"
+            tools:visibility="visible"/>
 
         <ProgressBar
             android:id="@+id/suggestionsListProgress"

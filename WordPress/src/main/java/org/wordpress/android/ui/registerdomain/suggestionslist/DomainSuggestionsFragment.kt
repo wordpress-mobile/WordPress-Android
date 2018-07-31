@@ -9,8 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.activity_log_list_fragment.*
-import kotlinx.android.synthetic.main.domain_suggestions_list.*
+import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -24,7 +23,7 @@ class DomainSuggestionsFragment : Fragment() {
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.domain_suggestions_list, container, false)
+        return inflater.inflate(R.layout.domain_suggestions_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,11 +67,11 @@ class DomainSuggestionsFragment : Fragment() {
 
     private fun reloadSuggestions(domainSuggestions: List<DomainSuggestionResponse>) {
         val adapter: DomainSuggestionsAdapter
-        if (activityLogList.adapter == null) {
+        if (domainSuggestionsList.adapter == null) {
             adapter = DomainSuggestionsAdapter(this::onDomainSuggestionSelected)
-            activityLogList.adapter = adapter
+            domainSuggestionsList.adapter = adapter
         } else {
-            adapter = activityLogList.adapter as DomainSuggestionsAdapter
+            adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
         }
         adapter.updateSuggestionsList(domainSuggestions)
     }

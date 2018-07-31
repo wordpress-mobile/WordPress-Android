@@ -8,6 +8,7 @@ import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
+import org.wordpress.android.viewmodel.registerdomain.DomainSuggestionsViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -29,6 +30,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ActivityLogDetailViewModel.class)
     abstract ViewModel activityLogDetailViewModel(ActivityLogDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainSuggestionsViewModel.class)
+    abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
