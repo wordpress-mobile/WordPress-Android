@@ -12,6 +12,7 @@
 /jetpack-blogs/$site/rest-api/
 
 /me/
+/me/domain-contact-information/
 /me/settings/
 /me/sites/
 /me/send-verification-email/
