@@ -19,14 +19,13 @@ class PageParentViewModel
     private var isStarted: Boolean = false
     private var site: SiteModel? = null
 
-    fun start(site: SiteModel, key: String) {
+    fun start(site: SiteModel) {
         this.site = site
         if (!isStarted) {
             mutableData.postValue(listOf(Empty(string.empty_list_default)))
             isStarted = true
         }
-        val listOf = mockResult(key)
-        mutableData.postValue(listOf)
+        mutableData.postValue(listOf(Empty(string.empty_list_default)))
     }
 
     fun stop() {

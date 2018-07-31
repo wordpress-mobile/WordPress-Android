@@ -1,22 +1,22 @@
 package org.wordpress.android.ui.pages
 
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
+import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 
-class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean) :
-        RecyclerView.Adapter<PageItemViewHolder>() {
+class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
-        val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            PageItem.Type.PAGE.viewType -> PageViewHolder(layoutInflater, parent, onAction)
-            PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(layoutInflater, parent)
-            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(layoutInflater, parent)
+            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onAction)
+            PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
+            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -31,8 +31,8 @@ class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean)
         holder.onBind(items[position])
     }
 
-    fun onNext(result: List<PageItem>) {
-        val diffResult = DiffUtil.calculateDiff(PageItemDiffUtil(items, result))
+    fun update(result: List<PageItem>) {
+        val diffResult = DiffUtil.calculateDiff(PageItemDiffUtil(items.toList(), result))
         items.clear()
         items.addAll(result)
         diffResult.dispatchUpdatesTo(this)
@@ -42,7 +42,11 @@ class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean)
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = items[oldItemPosition]
             val newItem = result[newItemPosition]
-            return oldItem.id == newItem.id && oldItem.type == newItem.type
+            return oldItem.type == newItem.type && when (oldItem) {
+                is Page -> oldItem.id == (newItem as Page).id
+                is Divider -> oldItem.id == (newItem as Divider).id
+                else -> false
+            }
         }
 
         override fun getOldListSize(): Int = items.size
