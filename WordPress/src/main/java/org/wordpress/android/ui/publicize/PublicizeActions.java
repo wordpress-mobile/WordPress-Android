@@ -113,7 +113,8 @@ public class PublicizeActions {
      * step two in creating a publicize connection: now that we have the keyring connection id,
      * create the actual connection
      */
-    public static void connectStepTwo(final long siteId, long keyringConnectionId, final String serviceId, final String externalUserId) {
+    public static void connectStepTwo(final long siteId, long keyringConnectionId,
+                                      final String serviceId, final String externalUserId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
