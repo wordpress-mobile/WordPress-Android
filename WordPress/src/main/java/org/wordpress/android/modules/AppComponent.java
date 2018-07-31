@@ -69,6 +69,7 @@ import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.plans.PlanFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -107,6 +108,7 @@ import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
@@ -352,6 +354,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderPostAdapter object);
 
+    void inject(PlanFragment object);
+
     void inject(ReaderSiteHeaderView object);
 
     void inject(ReaderTagHeaderView object);
@@ -361,6 +365,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderWebView object);
 
     void inject(ReaderPostPagerActivity object);
+
+    void inject(ReaderBlogAdapter object);
 
     void inject(ReleaseNotesActivity object);
 

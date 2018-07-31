@@ -226,6 +226,7 @@
     <!-- page view -->
     <string name="title">Title</string>
     <string name="pages_empty_list">No pages yet. Why not create one?</string>
+    <string name="pages_empty_list_button">Create a page</string>
     <string name="page_settings">Page settings</string>
 
     <!-- posts tab -->
@@ -235,6 +236,7 @@
     <string name="post_uploading">Uploading post</string>
     <string name="post_queued">Queued post</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
+    <string name="posts_empty_list_button">Create a post</string>
     <string name="empty_list_default">This list is empty</string>
 
     <!-- buttons on post cards -->
@@ -321,11 +323,11 @@
     <string name="comment_status_trash">Trashed</string>
     <string name="comment_status_all">All</string>
     <string name="edit_comment">Edit comment</string>
-    <string name="comments_empty_list">No comments</string>
-    <string name="comments_empty_list_filtered_approved">No Approved comments</string>
-    <string name="comments_empty_list_filtered_pending">No Pending comments</string>
-    <string name="comments_empty_list_filtered_spam">No Spam comments</string>
-    <string name="comments_empty_list_filtered_trashed">No Trashed comments</string>
+    <string name="comments_empty_list">No comments yet</string>
+    <string name="comments_empty_list_filtered_approved">No approved comments</string>
+    <string name="comments_empty_list_filtered_pending">No pending comments</string>
+    <string name="comments_empty_list_filtered_spam">No spam comments</string>
+    <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
@@ -764,7 +766,8 @@
     <string name="rewind">Rewind</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
-    <string name="activity_log_empty_list">No events recorded yet</string>
+    <string name="activity_log_empty_title">No activity yet</string>
+    <string name="activity_log_empty_subtitle">When you make changes to your site you\'ll be able to see your activity history here</string>
     <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
@@ -773,6 +776,7 @@
     <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
     <string name="activity_log_rewind_site">Rewind Site</string>
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
+    <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -953,16 +957,16 @@
     <string name="more_notifications">and %d more.</string>
     <string name="notifications_empty_list">No notifications</string>
     <string name="notifications_empty_all">No notifications&#8230;yet.</string>
-    <string name="notifications_empty_unread">You\'re all caught up!</string>
-    <string name="notifications_empty_comments">No new comments&#8230;yet.</string>
-    <string name="notifications_empty_followers">No new followers to report&#8230;yet.</string>
-    <string name="notifications_empty_likes">No new likes to show&#8230;yet.</string>
+    <string name="notifications_empty_unread">You\'re all up to date!</string>
+    <string name="notifications_empty_comments">No comments yet</string>
+    <string name="notifications_empty_followers">No followers yet</string>
+    <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
-    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
-    <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
-    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
+    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
+    <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow</string>
+    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
-    <string name="notifications_empty_view_reader">View Reader</string>
+    <string name="notifications_empty_view_reader">Go to Reader</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
@@ -1495,12 +1499,15 @@
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
+    <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
-    <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+    <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
+    <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
+    <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
+    <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
@@ -1738,10 +1745,10 @@
     <string name="people_dropdown_item_followers">Followers</string>
     <string name="people_dropdown_item_email_followers">Email Followers</string>
     <string name="people_dropdown_item_viewers">Viewers</string>
-    <string name="people_empty_list_filtered_users">You don\'t have any users yet.</string>
-    <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
-    <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
-    <string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
+    <string name="people_empty_list_filtered_users">No users yet</string>
+    <string name="people_empty_list_filtered_followers">No followers yet</string>
+    <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
+    <string name="people_empty_list_filtered_viewers">No viewers yet</string>
     <string name="people_fetching">Fetching users…</string>
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>

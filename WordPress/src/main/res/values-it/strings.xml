@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 09:54:08+0000
+Translation-Revision-Date: 2018-07-27 07:16:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="reader_gallery_images_desc">Immagini della galleria</string>
+    <string name="blavatar_desc">icona del sito</string>
+    <string name="theme_image_desc">Immagine del tema</string>
+    <string name="featured_image_desc">Immagine in evidenza</string>
+    <string name="support_push_notification_message_hint_snackbar">Per accedere ai messaggi del supporto utenti clicca su \'Aiuto &amp; Supporto\' e poi su I miei ticket</string>
+    <string name="local_changes_discarding_error">Si è verificato un errore scartando le modifiche locali. Si prega di contattare il supporto utenti per assistenza.</string>
+    <string name="local_changes_discarding">Scartando le modifiche locali</string>
+    <string name="local_changes_discarded">Modifiche locali scartate</string>
+    <string name="menu_discard_changes">Scarta le modifiche locali</string>
+    <string name="button_discard_changes">Scarta le modifiche</string>
+    <string name="button_discard">Scarta</string>
+    <string name="reader_avatar_desc">immagine del profilo</string>
+    <string name="reader_blavatar_desc">icona del sito</string>
+    <string name="notification_channel_transient_title">Transient</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_enter_email">Per favore inserisci il tuo indirizzo email</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Per continuare inserisci il tuo nome e il tuo indirizzo email</string>
+    <string name="support_push_notification_message">Nuovo messaggio da \'Aiuto &amp; Supporto\'</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Non impostato</string>
     <string name="support_contact_email">E–mail di contatto</string>
     <string name="application_log_button">Registro applicazione</string>
-    <string name="my_tickets">I miei biglietti</string>
+    <string name="my_tickets">I miei ticket</string>
+    <string name="activity_log_rewind_dialog_message">Sei sicuro di voler riportare il tuo sito da %s a %s? Questo rimuoverà tutti i contenuti e le opzioni create o modificate da allora.</string>
     <string name="activity_log_rewind_site">Ripristina sito</string>
     <string name="activity_log_currently_restoring_message_no_dates">Ripristino in corso</string>
     <string name="activity_log_currently_restoring_message">Ripristino al giorno %s %s</string>
@@ -35,6 +56,7 @@ Language: it
     <string name="email_address_login_title">Accesso tramite indirizzo e–mail</string>
     <string name="alternatively">In alternativa:</string>
     <string name="reader_empty_saved_posts_description">Tocca %s per salvare un articolo nel tuo elenco.</string>
+    <string name="reader_empty_saved_posts_title">Non è stato ancora salvato nessun articolo.</string>
     <string name="reader_bookmark_snack_title">Articolo salvato</string>
     <string name="reader_bookmark_snack_btn">Visualizza tutto</string>
     <string name="reader_btn_bookmarked">Salvataggio completato</string>
@@ -159,7 +181,6 @@ Language: it
     <string name="reader_list_item_suggestion_remove_desc">elimina</string>
     <string name="photo_picker_thumbnail_desc">Riproduci video</string>
     <string name="reader_cardview_post_play_video_desc">riproduci video in primo piano</string>
-    <string name="post_cardview_featured_desc">immagine in evidenza</string>
     <string name="plugin_detail_logo_desc">logo plugin</string>
     <string name="plugin_detail_banner_desc">banner plugin</string>
     <string name="photo_picker_wpmedia_desc">scegli tra i contenuti multimediali WordPress</string>
@@ -181,9 +202,7 @@ Language: it
     <string name="jetpack_connection_failed_with_reason">Connessione a Jetpack non riuscita: %s</string>
     <string name="jetpack_already_connected_toast">Sei già connesso a Jetpack</string>
     <string name="menu_undo_snackbar_action">ANNULLA</string>
-    <string name="menu_visual_mode_done_snackbar">Passato alla modalità visuale.</string>
     <string name="menu_visual_mode">Modalità visuale</string>
-    <string name="menu_html_mode_done_snackbar">Passato alla modalità HTML.</string>
     <string name="menu_html_mode">Modalità HTML</string>
     <string name="menu_preview">Visualizzare in anteprima</string>
     <string name="menu_publish_now">Pubblica ora</string>
@@ -217,7 +236,7 @@ Language: it
     <string name="publicize_buttons_screen_title">Pulsanti di condivisione</string>
     <string name="notifications_screen_title">Notifiche</string>
     <string name="reader_screen_title">Reader</string>
-    <string name="me_section_screen_title">Io</string>
+    <string name="me_section_screen_title">Profilo</string>
     <string name="my_site_section_screen_title">Il mio sito</string>
     <string name="notif_settings_screen_title">Impostazioni di notifica</string>
     <string name="passcode_screen_title">Passcode WordPress</string>
@@ -398,7 +417,7 @@ Language: it
     <string name="plugin_byline">di %s</string>
     <string name="change_photo">Cambia foto</string>
     <string name="plugin_fetch_error">Impossibile caricare i plugin</string>
-    <string name="my_site_btn_site_pages">Pagine del sito</string>
+    <string name="my_site_btn_site_pages">Pagine</string>
     <string name="site_settings_tags_hint">Gestisci i tag del tuo sito</string>
     <string name="dlg_saving_tag">Salvataggio</string>
     <string name="dlg_deleting_tag">Cancellazione</string>
@@ -965,7 +984,6 @@ Language: it
     <string name="delete_site_hint">Elimina il sito</string>
     <string name="export_site_hint">Esporta il sito in un file XML</string>
     <string name="primary_domain">Dominio principale</string>
-    <string name="error_deleting_site_summary">C\'è stato un errore durante la cancellazione del sito. Contatta il forum di supporto per ulteriore assistenza</string>
     <string name="error_deleting_site">Errore durante la cancellazione del sito</string>
     <string name="site_settings_export_content_title">Esporta il contenuto</string>
     <string name="confirm_delete_site_prompt">Digita %1$s nel campo sotto alla conferma. Dopo il sito sarà cancellato per sempre.</string>
@@ -975,7 +993,7 @@ Language: it
     <string name="let_us_help">Lascia che ti aiutiamo</string>
     <string name="site_settings_start_over_hint">Ricomincia da capo il tuo sito</string>
     <string name="start_over">Ricomincia</string>
-    <string name="me_btn_app_settings">Impostazioni dell\'applicazione</string>
+    <string name="me_btn_app_settings">Impostazioni applicazione</string>
     <string name="editor_remove_failed_uploads">Rimuovi i caricamenti falliti</string>
     <string name="editor_toast_failed_uploads">Il caricamento di qualche media è fallito. Tu puoi non salvare oppure pubblicare \n il tuo articolo così. Vuoi rimuovere i file dei media il cui caricamento è fallito?</string>
     <string name="site_settings_advanced_header">Avanzato</string>
@@ -1068,7 +1086,7 @@ Language: it
     <string name="public_display_name">Nome visualizzato (pubblico)</string>
     <string name="last_name">Cognome</string>
     <string name="first_name">Nome</string>
-    <string name="my_profile">Il mio profilo</string>
+    <string name="my_profile">Impostazioni profilo</string>
     <string name="cd_related_post_preview_image">Immagine di anteprima dell\'articolo correlato</string>
     <string name="error_post_remote_site_settings">Impossibile salvare le informazioni del sito</string>
     <string name="error_fetch_remote_site_settings">Impossibile recuperare le informazioni del sito</string>
@@ -1240,7 +1258,6 @@ Language: it
     <string name="notification_settings_item_other_account_emails_summary">Invieremo sempre email importanti riguardanti il tuo account, ma potresti ricevere anche altre utili informazioni.</string>
     <string name="stats_insights_latest_post_trend">Sono passati %1$s dalla pubblicazione di %2$s. Ecco com\'è andato finora l\'articolo…</string>
     <string name="stats_insights_latest_post_summary">Riassunto ultimo articolo</string>
-    <string name="button_revert">Riconverti</string>
     <string name="yesterday">Ieri</string>
     <string name="days_ago">%d giorni fa</string>
     <string name="connectionbar_no_connection">Nessuna connessione</string>
@@ -1287,7 +1304,7 @@ Language: it
     <string name="my_site_header_publish">Pubblica</string>
     <string name="my_site_header_look_and_feel">Aspetto</string>
     <string name="my_site_btn_site_settings">Impostazioni</string>
-    <string name="my_site_btn_blog_posts">Articoli blog</string>
+    <string name="my_site_btn_blog_posts">Articoli</string>
     <string name="reader_label_new_posts_subtitle">Tocca per visualizzarli</string>
     <string name="my_site_header_configuration">Configurazione</string>
     <string name="stats_unknown_author">Autore sconosciuto</string>

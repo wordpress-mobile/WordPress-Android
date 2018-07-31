@@ -6,10 +6,10 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.TextView
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.target.ViewTarget
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener {
         fun onLoadFailed(e: Exception?)
-        fun onResourceReady(resource: Drawable?)
+        fun onResourceReady(resource: Drawable)
     }
 
     @JvmOverloads
@@ -141,7 +141,13 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    requestListener.onResourceReady(resource)
+                    if (resource != null) {
+                        requestListener.onResourceReady(resource)
+                    } else {
+                        // according to the Glide's JavaDoc, this shouldn't happen
+                        AppLog.e(AppLog.T.UTILS, "Resource in ImageManager.onResourceReady is null.")
+                        requestListener.onLoadFailed(null)
+                    }
                     return false
                 }
             })

@@ -15,8 +15,9 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public static final String TAG_SLUG_BOOKMARKED = "bookmarked-posts";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
 
-    private static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
+    public static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
             ReaderConstants.DISCOVER_SITE_ID);
+    public static final String FOLLOWING_PATH = "/read/following";
 
     private String mTagSlug; // tag for API calls
     private String mTagDisplayName; // tag for display, usually the same as the slug
@@ -156,7 +157,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isFollowedSites() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FOLLOWING_PATH);
     }
 
     public boolean isBookmarked() {
