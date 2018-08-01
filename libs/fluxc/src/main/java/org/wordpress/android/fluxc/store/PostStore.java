@@ -38,7 +38,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PostStore extends Store {
-    public static final int NUM_POSTS_PER_FETCH = 20;
+    public static final int NUM_POSTS_PER_FETCH = 100;
 
     public static final List<PostStatus> DEFAULT_POST_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
             PostStatus.DRAFT,
