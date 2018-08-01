@@ -587,14 +587,15 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return getItemCount() == 0;
         }
 
+        @NonNull
         @Override
-        public StockViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public StockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.stock_media_picker_thumbnail, parent, false);
             return new StockViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(StockViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull StockViewHolder holder, int position) {
             StockMediaModel media = mItems.get(position);
             String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnail(), mThumbWidth, mThumbHeight);
             mImageManager.load(holder.mImageView, ImageType.PHOTO, imageUrl, ScaleType.CENTER_CROP);
