@@ -282,7 +282,7 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
-        mFilteredCommentsView = (FilteredRecyclerView) view.findViewById(R.id.filtered_recycler_view);
+        mFilteredCommentsView = view.findViewById(R.id.filtered_recycler_view);
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
