@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -231,20 +230,19 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        List<PostModel> postArray = new ArrayList<>();
+                        List<PostModel> postList = new ArrayList<>();
                         PostModel post;
                         for (PostWPComRestResponse postResponse : response.posts) {
                             post = postResponseToPostModel(postResponse);
                             post.setLocalSiteId(site.getId());
-                            postArray.add(post);
+                            postList.add(post);
                         }
 
                         boolean loadedMore = offset > 0;
-                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
-                        PostsModel postsModel = new PostsModel(postArray);
+                        boolean canLoadMore = postList.size() == PostStore.NUM_POSTS_PER_FETCH;
 
                         SearchPostsResponsePayload payload = new SearchPostsResponsePayload(
-                                postsModel, site, searchTerm, pages, loadedMore, canLoadMore);
+                                postList, site, searchTerm, pages, loadedMore, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
                     }
                 },
