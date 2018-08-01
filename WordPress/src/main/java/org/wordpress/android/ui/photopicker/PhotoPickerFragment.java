@@ -29,6 +29,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
+import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -68,7 +69,7 @@ public class PhotoPickerFragment extends Fragment {
         void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon);
     }
 
-    private RecyclerView mRecycler;
+    private EmptyViewRecyclerView mRecycler;
     private PhotoPickerAdapter mAdapter;
     private View mBottomBar;
     private ViewGroup mSoftAskContainer;
@@ -117,6 +118,7 @@ public class PhotoPickerFragment extends Fragment {
         View view = inflater.inflate(R.layout.photo_picker_fragment, container, false);
 
         mRecycler = view.findViewById(R.id.recycler);
+        mRecycler.setEmptyView(view.findViewById(R.id.text_empty));
         mRecycler.setHasFixedSize(true);
 
         // disable thumbnail loading during a fling to conserve memory
@@ -344,7 +346,6 @@ public class PhotoPickerFragment extends Fragment {
 
         @Override
         public void onAdapterLoaded(boolean isEmpty) {
-            showEmptyView(isEmpty);
             // restore previous selection
             if (mSelectedPositions != null) {
                 getAdapter().setSelectedPositions(mSelectedPositions);
@@ -357,12 +358,6 @@ public class PhotoPickerFragment extends Fragment {
             }
         }
     };
-
-    private void showEmptyView(boolean show) {
-        if (isAdded()) {
-            getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
-        }
-    }
 
     private boolean hasAdapter() {
         return mAdapter != null;
