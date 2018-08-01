@@ -49,8 +49,10 @@ class AztecImageLoader(
                 callbacks.onImageFailed()
             }
 
-            override fun onResourceReady(resource: Bitmap,
-                transition: Transition<in Bitmap>?) {
+            override fun onResourceReady(
+                resource: Bitmap,
+                transition: Transition<in Bitmap>?
+            ) {
                 val result: Drawable
                 // By default, BitmapFactory.decodeFile sets the bitmap's density
                 // to the device default so, we need to correctly set the input density to 160 ourselves.
@@ -68,7 +70,6 @@ class AztecImageLoader(
                 // since we don't store the callback, we don't need to do anything
             }
         }
-
 
         imageManager.loadAsBitmapIntoCustomTarget(context, target, url, FIT_CENTER)
         targets.add(WeakReference(target))
