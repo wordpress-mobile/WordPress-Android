@@ -42,6 +42,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .applyScaleType(scaleType)
                 .attachRequestListener(requestListener)
                 .into(imageView)
+                .clearOnDetach()
     }
 
     @JvmOverloads
@@ -50,6 +51,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .load(bitmap)
                 .applyScaleType(scaleType)
                 .into(imageView)
+                .clearOnDetach()
     }
 
     @JvmOverloads
@@ -58,6 +60,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .load(drawable)
                 .applyScaleType(scaleType)
                 .into(imageView)
+                .clearOnDetach()
     }
 
     @JvmOverloads
@@ -66,6 +69,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .load(resourceId)
                 .applyScaleType(scaleType)
                 .into(imageView)
+                .clearOnDetach()
     }
 
     fun load(viewTarget: ViewTarget<TextView, Drawable>, imageType: ImageType, imgUrl: String) {
@@ -74,6 +78,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .into(viewTarget)
+                .clearOnDetach()
     }
 
     fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
@@ -83,6 +88,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .addPlaceholder(imageType)
                 .circleCrop()
                 .into(imageView)
+                .clearOnDetach()
     }
 
     fun cancelRequestAndClearImageView(imageView: ImageView) {
