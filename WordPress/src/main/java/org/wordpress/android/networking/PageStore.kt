@@ -109,6 +109,11 @@ class PageStore @Inject constructor(
         dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))
     }
 
+    fun isPageUploading(pageId: Long, site: SiteModel): Boolean {
+        val post = postStore.getPostByRemotePostId(pageId, site)
+        return UploadService.isPostUploadingOrQueued(post)
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {

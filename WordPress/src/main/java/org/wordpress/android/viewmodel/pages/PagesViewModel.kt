@@ -5,8 +5,12 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
@@ -23,7 +27,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOA
 import javax.inject.Inject
 
 class PagesViewModel
-@Inject constructor(private val pageStore: PageStore) : ViewModel() {
+@Inject constructor(private val pageStore: PageStore, private val dispatcher: Dispatcher) : ViewModel() {
     private val _isSearchExpanded = SingleLiveEvent<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
@@ -52,11 +56,19 @@ class PagesViewModel
 
     private lateinit var site: SiteModel
 
+    init {
+        dispatcher.register(this)
+    }
+
     fun start(site: SiteModel) {
         this.site = site
 
         clearSearch()
         reloadPagesAsync()
+    }
+
+    override fun onCleared() {
+        dispatcher.unregister(this)
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
@@ -83,7 +95,7 @@ class PagesViewModel
 
     fun onPageEditFinished(pageId: Long) {
         launch {
-            pageStore.getPageByRemoteId(pageId, site)?.let {
+            if (!pageStore.isPageUploading(pageId, site)) {
                 refreshPages()
             }
         }
@@ -128,6 +140,13 @@ class PagesViewModel
     fun onPullToRefresh() {
         launch {
             refreshPages()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (!event.isError && event.post.isPage) {
+            reloadPagesAsync()
         }
     }
 }
