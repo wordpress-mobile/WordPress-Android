@@ -76,7 +76,7 @@ msgstr ""
 msgctxt "play_store_screenshot_1"
 msgid ""
 "Enjoy your\n"
-"favourite sites\n"
+"favorite sites\n"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
