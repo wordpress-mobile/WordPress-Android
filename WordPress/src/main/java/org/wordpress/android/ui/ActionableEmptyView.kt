@@ -34,6 +34,8 @@ class ActionableEmptyView : LinearLayout {
     }
 
     private fun initView(context: Context, attrs: AttributeSet) {
+        clipChildren = false
+        clipToPadding = false
         gravity = Gravity.CENTER
         orientation = VERTICAL
 
@@ -80,23 +82,26 @@ class ActionableEmptyView : LinearLayout {
     /**
      * Update actionable empty view layout when used while searching.  The following characteristics are for each case:
      *      Default - center in parent, use original top margin
-     *      Search  - center at top of parent, use original top margin plus 48dp, hide image, hide button
+     *      Search  - center at top of parent, use original top margin, add 48dp top padding, hide image, hide button
      *
      * @param isSearching true when searching; false otherwise
      * @param topMargin top margin in pixels to offset with other views (e.g. toolbar or tabs)
      */
     fun updateLayoutForSearch(isSearching: Boolean, topMargin: Int) {
+        val params: RelativeLayout.LayoutParams
+
         if (isSearching) {
-            val params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-            params.topMargin = topMargin + context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large)
-            layout.layoutParams = params
+            params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            layout.setPadding(0, context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large), 0, 0)
 
             image.visibility = View.GONE
             button.visibility = View.GONE
         } else {
-            val params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-            params.topMargin = topMargin
-            layout.layoutParams = params
+            params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            layout.setPadding(0, 0, 0, 0)
         }
+
+        params.topMargin = topMargin
+        layout.layoutParams = params
     }
 }
