@@ -74,8 +74,7 @@ class PageParentFragment : Fragment() {
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<PageParentViewModel>(PageParentViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PageParentViewModel::class.java)
 
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
                 ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
