@@ -158,6 +158,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.util.AztecLog;
@@ -230,6 +231,7 @@ public class EditPostActivity extends AppCompatActivity implements
             "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
     private static final int CHANGE_SAVE_DELAY = 500;
     public static final int MAX_UNSAVED_POSTS = 50;
+    private AztecImageLoader mAztecImageLoader;
 
     enum AddExistingdMediaSource {
         WP_MEDIA_LIBRARY,
@@ -299,6 +301,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject ImageManager mImageManager;
 
     private SiteModel mSite;
 
@@ -638,6 +641,14 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override protected void onStop() {
+        super.onStop();
+        if (mAztecImageLoader != null) {
+            mAztecImageLoader.clearTargets();
+            mAztecImageLoader = null;
+        }
     }
 
     @Override
@@ -1381,7 +1392,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     org.wordpress.android.editor.R.drawable.ic_gridicons_image,
                     aztecEditorFragment.getMaxMediaSize()
                                                                                                     );
-            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingImagePlaceholder));
+            mAztecImageLoader = new AztecImageLoader(getBaseContext(), mImageManager, loadingImagePlaceholder);
+            aztecEditorFragment.setAztecImageLoader(mAztecImageLoader);
             aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
 
             Drawable loadingVideoPlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(

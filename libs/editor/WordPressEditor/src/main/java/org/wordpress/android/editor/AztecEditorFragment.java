@@ -48,7 +48,6 @@ import android.view.inputmethod.BaseInputConnection;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 
@@ -75,6 +74,7 @@ import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecText.EditorHasChanges;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
+import org.wordpress.aztec.Html.ImageGetter.Callbacks;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.extensions.MediaLinkExtensionsKt;
@@ -929,7 +929,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            AztecAttributes attributes = new AztecAttributes();
+            final AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
 
             if (mediaFile.isVideo()) {
@@ -952,7 +952,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(
                     mediaFile.getThumbnailURL())) : mediaUrl;
-            imageLoader.get(posterURL, new ImageLoader.ImageListener() {
+            mAztecImageLoader.loadImage(posterURL, new Callbacks() {
                 private void replaceDrawable(Drawable newDrawable) {
                     AztecMediaSpan[] imageOrVideoSpans =
                             mContent.getText().getSpans(0, mContent.getText().length(), AztecMediaSpan.class);
@@ -971,8 +971,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     mContent.refreshText();
                 }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
+                @Override public void onImageFailed() {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
@@ -980,33 +979,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                 }
 
-                @Override
-                public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                @Override public void onImageLoaded(Drawable drawable) {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
                     }
-                    Bitmap downloadedBitmap = container.getBitmap();
-                    if (downloadedBitmap == null) {
-                        if (isImmediate) {
-                            // Bitmap is null but isImmediate is true (as soon as the request starts).
-                            return;
-                        }
+                    if (drawable == null) {
                         replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                         return;
                     }
 
-                    if (downloadedBitmap.getHeight() < minMediaSize || downloadedBitmap.getWidth() < minMediaSize) {
+                    if (drawable.getIntrinsicHeight() < minMediaSize || drawable.getIntrinsicWidth() < minMediaSize) {
                         // Bitmap is too small. Show image placeholder.
                         replaceDrawable(getLoadingMediaErrorPlaceholder(getString(R.string.error_media_small)));
                         return;
                     }
-
-                    downloadedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                    replaceDrawable(new BitmapDrawable(getResources(), downloadedBitmap));
+                    replaceDrawable(drawable);
                 }
-            }, maxMediaSize, 0);
 
+                @Override public void onImageLoading(Drawable drawable) {
+                }
+            }, maxMediaSize);
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
