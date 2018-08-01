@@ -176,8 +176,8 @@ public class PostsListFragment extends Fragment
         View view = inflater.inflate(R.layout.post_list_fragment, container, false);
 
         mSwipeRefreshLayout = view.findViewById(R.id.ptr_layout);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mProgressLoadMore = view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
 
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
