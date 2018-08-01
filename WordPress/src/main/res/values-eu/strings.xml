@@ -118,7 +118,6 @@ Language: eu_ES
     <string name="delete_site_hint">Ezabatu gunea</string>
     <string name="export_site_hint">Esportatu zure gunea XML fitxategi batera</string>
     <string name="primary_domain">Domeinu nagusia</string>
-    <string name="error_deleting_site_summary">Errore bat gertatu da zure gunea ezabatzean. Laguntza gehiagorako jarri harremanetan euskarri zerbitzuarekin, mesedez.</string>
     <string name="error_deleting_site">Errorea gunea ezabatzean</string>
     <string name="site_settings_export_content_title">Esportatu edukia</string>
     <string name="confirm_delete_site">Baieztatu gunearen ezabaketa</string>

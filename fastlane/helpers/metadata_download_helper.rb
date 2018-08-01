@@ -30,7 +30,7 @@ module Fastlane
         delete_existing_metadata(target_locale)
 
         if (loc_data == nil)
-          puts "No translation available for #{target_locale}"
+          UI.message "No translation available for #{target_locale}"
           return
         end
 
@@ -39,7 +39,12 @@ module Fastlane
 
           target_files.each do | file |
             if (file[0].to_s == key)
-              save_metadata(target_locale, file[1], d[1])
+              data=file[1]
+              if (data[:max_size] != 0) && ((d[1].to_s.length - 3) > data[:max_size]) then
+                UI.message("Rejecting #{target_locale} traslation for #{key}: translation length: #{d[1].to_s.length} - max allowed length: #{data[:max_size]}")
+              else
+                save_metadata(target_locale, file[1][:desc], d[1])
+              end 
             end
           end
         end
@@ -55,7 +60,7 @@ module Fastlane
       # Some small helpers
       def delete_existing_metadata(target_locale)
         @target_files.each do | file |
-          file_path = get_target_file_path(target_locale, file[1])
+          file_path = get_target_file_path(target_locale, file[1][:desc])
           File.delete(file_path) if File.exists? file_path
         end
       end

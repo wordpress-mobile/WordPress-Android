@@ -2,13 +2,13 @@ package org.wordpress.android.networking
 
 import android.content.Context
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -70,7 +70,7 @@ class PageStore @Inject constructor(
     suspend fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? = withContext(CommonPool) {
         val post = postStore.getPostByLocalPostId(pageId)
         return@withContext post?.let {
-            val page = PageModel.fromPost(it, site)
+            val page = PageModel(it, site)
             if (page.parentId != 0L) {
                 page.parent = getPageByRemoteId(page.parentId, site)
             }
@@ -81,7 +81,7 @@ class PageStore @Inject constructor(
     suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
         val post = postStore.getPostByRemotePostId(remoteId, site)
         return@withContext post?.let {
-            val page = PageModel.fromPost(it, site)
+            val page = PageModel(it, site)
             if (page.parentId != 0L) {
                 page.parent = getPageByRemoteId(page.parentId, site)
             }
@@ -91,7 +91,7 @@ class PageStore @Inject constructor(
 
     suspend fun getPages(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val posts = postStore.getPagesForSite(site).filter { it != null }
-        val pages = posts.map { PageModel.fromPost(it, site) }
+        val pages = posts.map { PageModel(it, site) }
         pages.forEach { page ->
             if (page.parentId != 0L) {
                 page.parent = pages.firstOrNull { it.remoteId == page.parentId }
@@ -112,8 +112,10 @@ class PageStore @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
-        postLoadContinuation?.resume(event)
-        postLoadContinuation = null
+        if (event.causeOfChange == PostAction.FETCH_PAGES) {
+            postLoadContinuation?.resume(event)
+            postLoadContinuation = null
+        }
     }
 
     enum class UploadRequestResult {

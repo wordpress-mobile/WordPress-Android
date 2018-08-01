@@ -61,10 +61,10 @@ class PagesViewModel
 
     private fun reloadPagesAsync() = launch(CommonPool) {
         _pages = pageStore.getPages(site)
-        refreshPagesAsync()
+        refreshPages()
     }
 
-    fun refreshPagesAsync(isLoadingMore: Boolean = false) = launch(CommonPool) {
+    suspend fun refreshPages(isLoadingMore: Boolean = false) {
         var newState = if (isLoadingMore) LOADING_MORE else FETCHING
         _listState.postValue(newState)
 
@@ -84,7 +84,7 @@ class PagesViewModel
     fun onPageEditFinished(pageId: Long) {
         launch {
             pageStore.getPageByRemoteId(pageId, site)?.let {
-                refreshPagesAsync()
+                refreshPages()
             }
         }
     }
@@ -123,6 +123,12 @@ class PagesViewModel
 
     fun onNewPageButtonTapped() {
         _createNewPage.asyncCall()
+    }
+
+    fun onPullToRefresh() {
+        launch {
+            refreshPages()
+        }
     }
 }
 

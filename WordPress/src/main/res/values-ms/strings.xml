@@ -520,7 +520,6 @@ Language: ms
     <string name="delete_site_hint">Hapuskan laman</string>
     <string name="export_site_hint">Eksport laman anda ke fail XML</string>
     <string name="primary_domain">Domain Utama</string>
-    <string name="error_deleting_site_summary">Terdapat ralat ketika menghapuskan laman anda. Sila hubungi sokongan untuk bantuan lanjut</string>
     <string name="error_deleting_site">Ralat untuk memadamkan laman</string>
     <string name="site_settings_export_content_title">Eksport isi kandungan</string>
     <string name="confirm_delete_site_prompt">Sila taipkan %1$s dalam medan di bawah untuk mengesahkan. Laman anda akan hilang selamanya.</string>
@@ -794,7 +793,6 @@ Language: ms
     <string name="notification_settings_item_other_account_emails_summary">Kami akan selalu menghantar emel penting berkenaan akaun anda, tetapi anda juga boleh mendapat beberapa tambahan yang membantu.</string>
     <string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Sini adalah prestasi kiriman ini setakat ini…</string>
     <string name="stats_insights_latest_post_summary">Ringkasan Kiriman Terkini</string>
-    <string name="button_revert">Berbalik</string>
     <string name="yesterday">Semalam</string>
     <string name="days_ago">%d hari yang lalu</string>
     <string name="connectionbar_no_connection">Tiada sambungan</string>

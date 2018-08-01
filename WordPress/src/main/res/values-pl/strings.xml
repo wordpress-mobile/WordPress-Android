@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 10:27:39+0000
+Translation-Revision-Date: 2018-07-25 05:33:13+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="reader_gallery_images_desc">Galeria zdjęć</string>
+    <string name="blavatar_desc">ikona witryny</string>
+    <string name="theme_image_desc">obrazek motywu</string>
+    <string name="featured_image_desc">obrazek wyróżniający</string>
+    <string name="support_push_notification_message_hint_snackbar">Znajdź swoją rozmowę z działem wsparcia stukając w \'Pomoc i Wsparcie\' a następnie \'Moje zgłoszenia\'</string>
+    <string name="local_changes_discarding_error">Błąd podczas odrzucania lokalnych zmian. Proszę skontaktować się ze wsparciem aby uzyskać pomoc. </string>
+    <string name="local_changes_discarding">Odrzucanie zmian lokalnych</string>
+    <string name="local_changes_discarded">Lokalne zmiany odrzucone</string>
+    <string name="menu_discard_changes">Odrzuć lokalne zmiany</string>
+    <string name="button_discard_changes">Odrzuć zmiany</string>
+    <string name="button_discard">Odrzuć</string>
     <string name="reader_avatar_desc">zdjęcie profilowe</string>
     <string name="reader_blavatar_desc">ikona witryny</string>
     <string name="notification_channel_transient_title">Krótkotrwały</string>
@@ -170,7 +181,6 @@ Language: pl
     <string name="reader_list_item_suggestion_remove_desc">usuń</string>
     <string name="photo_picker_thumbnail_desc">Odtwórz film</string>
     <string name="reader_cardview_post_play_video_desc">odtwórz film wyróżniający</string>
-    <string name="post_cardview_featured_desc">obrazek wyróżniający</string>
     <string name="plugin_detail_logo_desc">logo wtyczki</string>
     <string name="plugin_detail_banner_desc">baner wtyczki</string>
     <string name="photo_picker_wpmedia_desc">wybierz z mediów WordPressa</string>
@@ -192,9 +202,9 @@ Language: pl
     <string name="jetpack_connection_failed_with_reason"> Nie udało się połączenie z Jetpackiem: %s</string>
     <string name="jetpack_already_connected_toast">Jesteś już połączony z Jetpackiem</string>
     <string name="menu_undo_snackbar_action">COFNIJ</string>
-    <string name="menu_visual_mode_done_snackbar">Przełącz na tryb wizualny</string>
+    <string name="menu_visual_mode_done_snackbar">Przełączono na tryb wizualny</string>
     <string name="menu_visual_mode">Tryb wizualny</string>
-    <string name="menu_html_mode_done_snackbar">Przełącz na tryb HTML</string>
+    <string name="menu_html_mode_done_snackbar">Przełączono na tryb HTML</string>
     <string name="menu_html_mode">Tryb HTML</string>
     <string name="menu_preview">Podgląd</string>
     <string name="menu_publish_now">Opublikuj teraz</string>
@@ -980,7 +990,7 @@ Language: pl
     <string name="delete_site_hint">Usuń witrynę</string>
     <string name="export_site_hint">Wyeksportuj swoją witrynę do pliku XML</string>
     <string name="primary_domain">Domena główna</string>
-    <string name="error_deleting_site_summary">Wystąpił błąd podczas usuwania twojej witryny. Proszę skontaktować się ze wsparciem technicznym</string>
+    <string name="error_deleting_site_summary">Wystąpił błąd podczas usuwania twojej witryny. Proszę skontaktować się ze wsparciem technicznym aby uzyskać pomoc.</string>
     <string name="error_deleting_site">Błąd podczas usuwania witryny</string>
     <string name="site_settings_export_content_title">Eksportuj zawartość</string>
     <string name="confirm_delete_site_prompt">Proszę wpisać %1$s w polu poniżej w celu potwierdzenia. Twoja witryna zostanie trwale usunięta.</string>
@@ -1256,7 +1266,6 @@ Language: pl
     <string name="notification_settings_item_other_account_emails_summary">Wysyłamy zawsze istotne wiadomości dotyczące twojego konta, ale czasem wysyłamy również przydatne informacje.</string>
     <string name="stats_insights_latest_post_trend">Minęło %1$s od czasu kiedy wpis %2$s został opublikowany. Oto informacje o jego  popularności od tego czasu…</string>
     <string name="stats_insights_latest_post_summary">Podsumowanie ostatniego wpisu</string>
-    <string name="button_revert">Cofnij</string>
     <string name="yesterday">Wczoraj</string>
     <string name="days_ago">%d dni temu</string>
     <string name="connectionbar_no_connection">Brak połączenia</string>

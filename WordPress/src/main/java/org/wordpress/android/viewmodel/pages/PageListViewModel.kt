@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
@@ -112,7 +113,9 @@ class PageListViewModel
     }
 
     fun onScrolledToBottom() {
-        pagesViewModel.refreshPagesAsync(true)
+        launch(CommonPool) {
+            pagesViewModel.refreshPages(true)
+        }
     }
 
     fun onAction(action: Action, pageItem: Page): Boolean {

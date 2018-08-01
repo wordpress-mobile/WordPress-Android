@@ -32,7 +32,6 @@ import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.util.ifNotNull
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
@@ -64,18 +63,19 @@ class PagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val siteArgument = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+        val site = if (savedInstanceState == null) {
+            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
         } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
-        ifNotNull(activity, siteArgument) { activity, site ->
-            (activity.application as? WordPress)?.component()?.inject(this)
+        val nonNullActivity = checkNotNull(activity)
+        val nonNullSite = checkNotNull(site)
 
-            initializeViews(activity)
-            initializeViewModels(activity, site)
-        }
+        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
+
+        initializeViews(nonNullActivity)
+        initializeViewModels(nonNullActivity, nonNullSite)
     }
 
     fun onPageEditFinished(pageId: Long) {
@@ -87,7 +87,7 @@ class PagesFragment : Fragment() {
         tabLayout.setupWithViewPager(pagesPager)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
-            viewModel.refreshPagesAsync()
+            viewModel.onPullToRefresh()
         }
 
         newPageButton.setOnClickListener {
@@ -231,7 +231,7 @@ class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPag
     override fun getCount(): Int = PAGE_TABS
 
     override fun getItem(position: Int): Fragment {
-        return PageListFragment.newInstance("key$position", Type.getType(position))
+        return PageListFragment.newInstance(Type.getType(position))
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

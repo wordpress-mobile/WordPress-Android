@@ -12,12 +12,8 @@ data class PageModel(
     val parentId: Long,
     val remoteId: Long
 ) {
-    companion object {
-        fun fromPost(post: PostModel, site: SiteModel): PageModel {
-            return PageModel(site, post.id, post.title, PageStatus.fromPost(post), post.isLocallyChanged,
-                    post.parentId, post.remotePostId)
-        }
-    }
-
     var parent: PageModel? = null
+
+    constructor(post: PostModel, site: SiteModel) : this(site, post.id, post.title, PageStatus.fromPost(post),
+            post.isLocallyChanged, post.parentId, post.remotePostId)
 }

@@ -355,6 +355,7 @@ public class AppSettingsFragment extends PreferenceFragment
         }
 
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
+        WordPress.updateContextLocale();
         updateLanguagePreference(languageCode);
 
         // Track language change on Analytics because we have both the device language and app selected language

@@ -443,6 +443,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mContext;
     }
 
+    /**
+     * Update locale of the static context when language is changed.
+     */
+    public static void updateContextLocale() {
+        mContext = LocaleManager.setLocale(mContext);
+    }
+
     public static RestClientUtils getRestClientUtils() {
         if (sRestClientUtils == null) {
             sRestClientUtils = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator, null);

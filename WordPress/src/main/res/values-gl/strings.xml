@@ -154,7 +154,6 @@ Language: gl_ES
     <string name="delete_site_hint">Eliminar o sitio</string>
     <string name="export_site_hint">Exportar o sitio a un ficheiro XML</string>
     <string name="primary_domain">Dominio principal</string>
-    <string name="error_deleting_site_summary">Houbo un erro ao eliminar o sitio. Por favor, contacta co soporte para obter asistencia.</string>
     <string name="error_deleting_site">Erro na eliminación do sitio</string>
     <string name="confirm_delete_site_prompt">Escribe %1$s na caixa de embaixo para confirmar. Nese momento o teu sitio desaparecerá para sempre.</string>
     <string name="site_settings_export_content_title">Exportar os contidos</string>
@@ -430,7 +429,6 @@ Language: gl_ES
     <string name="notification_settings_item_other_account_emails_summary">Enviaremos sempre mensaxes importantes relativos á túa conta, e terás tamén algúns extras de utilidade.</string>
     <string name="stats_insights_latest_post_trend">Hai %1$s que %2$s foi publicado. Aquí tes como lle foi ao artigo até este momento…</string>
     <string name="stats_insights_latest_post_summary">Resumo do último artigo</string>
-    <string name="button_revert">Reverter</string>
     <string name="days_ago">Hai %d días</string>
     <string name="yesterday">Onte</string>
     <string name="connectionbar_no_connection">Sen conexión</string>

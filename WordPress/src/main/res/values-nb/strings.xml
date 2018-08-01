@@ -543,7 +543,6 @@ Language: nb_NO
     <string name="delete_site_hint">Slett siden</string>
     <string name="export_site_hint">Eksporter siden din til en XML–fil</string>
     <string name="primary_domain">Hoveddomene</string>
-    <string name="error_deleting_site_summary">Det oppstod en feil under slettingen av nettstedet ditt. Vennligst kontakt kundestøtte for å få mere assistanse</string>
     <string name="error_deleting_site">Feil under sletting av nettsted</string>
     <string name="site_settings_export_content_title">Eksporter innholdet</string>
     <string name="confirm_delete_site_prompt">Vennligst skriv inn %1$s i feltet nedenfor for å bekreft. Nettstedet ditt vil da bli borte for evig og alltid.</string>
@@ -817,7 +816,6 @@ Language: nb_NO
     <string name="notification_settings_item_other_account_emails_summary">Vi vil alltid sende viktige E–poster om kontoen din, men du kan få vite om noen nyttige bonusting også.</string>
     <string name="stats_insights_latest_post_trend">Det er %1$s siden %2$s ble publisert. Her ser du hvordan innlegget har klart seg så langt …</string>
     <string name="stats_insights_latest_post_summary">Oppsummering for nyeste innlegg</string>
-    <string name="button_revert">Tilbakestill</string>
     <string name="yesterday">I går</string>
     <string name="days_ago">%d dager siden</string>
     <string name="connectionbar_no_connection">Ingen tilkobling</string>

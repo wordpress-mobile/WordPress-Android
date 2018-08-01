@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,7 +20,8 @@ import org.wordpress.android.ui.reader.models.ReaderTagHeaderInfo;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.HashMap;
 
@@ -26,7 +29,7 @@ import java.util.HashMap;
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
 public class ReaderTagHeaderView extends RelativeLayout {
-    private WPNetworkImageView mImageView;
+    private ImageView mImageView;
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
 
@@ -49,8 +52,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_tag_header_view, this);
-        mImageView = (WPNetworkImageView) view.findViewById(R.id.image_tag_header);
-        mTxtAttribution = (TextView) view.findViewById(R.id.text_attribution);
+        mImageView = view.findViewById(R.id.image_tag_header);
+        mTxtAttribution = view.findViewById(R.id.text_attribution);
     }
 
     public void setCurrentTag(final ReaderTag tag) {
@@ -62,11 +65,11 @@ public class ReaderTagHeaderView extends RelativeLayout {
 
         if (isTagChanged) {
             mTxtAttribution.setText(null);
-            mImageView.resetImage();
+            ImageManager.getInstance().cancelRequestAndClearImageView(mImageView);
             mCurrentTag = tag;
         }
 
-        TextView txtTagName = (TextView) findViewById(R.id.text_tag);
+        TextView txtTagName = findViewById(R.id.text_tag);
         txtTagName.setText(tag.getLabel());
 
         // use cached info if it's available, otherwise request it if the tag has changed
@@ -81,7 +84,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
         int imageWidth = mImageView.getWidth();
         int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_tag_header_image_height);
         String photonUrl = PhotonUtils.getPhotonImageUrl(info.getImageUrl(), imageWidth, imageHeight);
-        mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+        ImageManager.getInstance().load(mImageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP);
 
         // show attribution line - author name when available, otherwise blog name or nothing
         if (info.hasAuthorName()) {

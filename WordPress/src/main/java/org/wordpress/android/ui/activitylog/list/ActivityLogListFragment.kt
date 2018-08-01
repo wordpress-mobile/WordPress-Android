@@ -38,9 +38,9 @@ class ActivityLogListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activityLogList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        log_list_view.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(activityLogPullToRefresh) {
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipe_refresh_layout) {
             if (NetworkUtils.checkConnection(activity)) {
                 viewModel.onPullToRefresh()
             } else {
@@ -58,7 +58,8 @@ class ActivityLogListFragment : Fragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        activityLogList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        log_list_view.setEmptyView(actionable_empty_view)
+        log_list_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 if (!recyclerView!!.canScrollVertically(1) && dy != 0) {
                     viewModel.onScrolledToBottom()
@@ -109,7 +110,7 @@ class ActivityLogListFragment : Fragment() {
         })
 
         viewModel.moveToTop.observe(this, Observer {
-            activityLogList.scrollToPosition(0)
+            log_list_view.scrollToPosition(0)
         })
     }
 
@@ -133,11 +134,7 @@ class ActivityLogListFragment : Fragment() {
         swipeToRefreshHelper.isRefreshing = eventListStatus == FETCHING
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
         val showLoadMore = eventListStatus == LOADING_MORE
-        activityLogListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
-
-        emptyView.visibility = if (viewModel.events.value?.isNotEmpty() == false &&
-                eventListStatus !== LOADING_MORE &&
-                eventListStatus !== FETCHING) View.VISIBLE else View.GONE
+        log_list_progress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
     }
 
     private fun reloadEvents(data: List<ActivityLogListItem>) {
@@ -154,11 +151,11 @@ class ActivityLogListFragment : Fragment() {
 
     private fun setEvents(events: List<ActivityLogListItem>) {
         val adapter: ActivityLogAdapter
-        if (activityLogList.adapter == null) {
+        if (log_list_view.adapter == null) {
             adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
-            activityLogList.adapter = adapter
+            log_list_view.adapter = adapter
         } else {
-            adapter = activityLogList.adapter as ActivityLogAdapter
+            adapter = log_list_view.adapter as ActivityLogAdapter
         }
         adapter.updateList(events)
     }

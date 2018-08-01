@@ -24,7 +24,6 @@ public class HeaderNoteBlock extends NoteBlock {
     private final JSONArray mHeaderArray;
 
     private final UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
-    private final ImageManager mImageManager;
     private Boolean mIsComment;
     private int mAvatarSize;
 
@@ -34,9 +33,8 @@ public class HeaderNoteBlock extends NoteBlock {
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                            UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener,
                            ImageManager imageManager) {
-        super(new JSONObject(), onNoteBlockTextClickListener);
+        super(new JSONObject(), imageManager, onNoteBlockTextClickListener);
 
-        mImageManager = imageManager;
         mHeaderArray = headerArray;
         mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;

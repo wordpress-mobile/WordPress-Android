@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.ifNotNull
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -34,7 +33,6 @@ class PageListFragment : Fragment() {
     private val listStateKey = "list_state"
 
     companion object {
-        const val fragmentKey = "fragment_key"
         private const val typeKey = "type_key"
 
         enum class Type(val text: Int) {
@@ -53,10 +51,9 @@ class PageListFragment : Fragment() {
             }
         }
 
-        fun newInstance(key: String, type: Type): PageListFragment {
+        fun newInstance(type: Type): PageListFragment {
             val fragment = PageListFragment()
             val bundle = Bundle()
-            bundle.putString(fragmentKey, key)
             bundle.putSerializable(typeKey, type)
             fragment.arguments = bundle
             return fragment
@@ -70,20 +67,20 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val siteArgument = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+        val site = if (savedInstanceState == null) {
+            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
         } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
-        val key = checkNotNull(arguments?.getString(fragmentKey))
+        val nonNullActivity = checkNotNull(activity)
+        val nonNullSite = checkNotNull(site)
+        val type = checkNotNull(arguments?.getSerializable(typeKey) as Type?)
 
-        ifNotNull(activity, siteArgument) { activity, site ->
-            (activity.application as? WordPress)?.component()?.inject(this)
+        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
-            initializeViews(savedInstanceState)
-            initializeViewModels(activity, site, key)
-        }
+        initializeViews(savedInstanceState)
+        initializeViewModels(nonNullActivity, nonNullSite, type)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -91,14 +88,14 @@ class PageListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel, key: String) {
+    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel, type: Type) {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PageListViewModel>(key, PageListViewModel::class.java)
+                .get<PageListViewModel>(type.name, PageListViewModel::class.java)
 
         setupObservers()
 
         val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        viewModel.start(site, getPageType(key), pagesViewModel)
+        viewModel.start(site, getPageType(type), pagesViewModel)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -130,11 +127,11 @@ class PageListFragment : Fragment() {
         })
     }
 
-    private fun getPageType(key: String): PageStatus {
-        return when (key) {
-            "key0" -> PageStatus.PUBLISHED
-            "key1" -> PageStatus.DRAFT
-            "key2" -> PageStatus.SCHEDULED
+    private fun getPageType(type: Type): PageStatus {
+        return when (type) {
+            Type.PUBLISHED -> PageStatus.PUBLISHED
+            Type.DRAFTS -> PageStatus.DRAFT
+            Type.SCHEDULED -> PageStatus.SCHEDULED
             else -> PageStatus.TRASHED
         }
     }
