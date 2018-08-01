@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -146,7 +145,7 @@ public class ReaderBlogFragment extends Fragment
         SearchView searchView = (SearchView) searchMenu.getActionView();
         searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
-        MenuItemCompat.setOnActionExpandListener(searchMenu, new MenuItemCompat.OnActionExpandListener() {
+        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
