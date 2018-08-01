@@ -82,9 +82,15 @@ class PagesViewModel
     }
 
     fun onSearchTextChange(query: String?): Boolean {
-        if (!query.isNullOrEmpty()) {
-            val listOf = mockResult(query)
-            _searchResult.postValue(listOf)
+        if (query != null && query.isNotEmpty()) {
+            launch {
+                val result = pageStore.search(site, query).map { Page(it.pageId.toLong(), it.title, null) }
+                if (result.isNotEmpty()) {
+                    _searchResult.postValue(result)
+                } else {
+                    _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                }
+            }
         } else {
             clearSearch()
         }
