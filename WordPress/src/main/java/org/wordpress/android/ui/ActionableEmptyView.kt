@@ -3,6 +3,7 @@ package org.wordpress.android.ui
 import android.content.Context
 import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -33,6 +34,9 @@ class ActionableEmptyView : LinearLayout {
     }
 
     private fun initView(context: Context, attrs: AttributeSet) {
+        gravity = Gravity.CENTER
+        orientation = VERTICAL
+
         layout = View.inflate(context, R.layout.actionable_empty_view, this)
 
         image = layout.findViewById(R.id.image)
