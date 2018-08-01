@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.ListModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostListModel;
@@ -33,7 +32,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -42,7 +40,6 @@ import javax.inject.Singleton;
 @Singleton
 public class PostStore extends Store {
     public static final int NUM_POSTS_PER_FETCH = 20;
-    private static final int POST_LIST_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 
     public static final List<PostStatus> DEFAULT_POST_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
             PostStatus.DRAFT,
@@ -515,17 +512,6 @@ public class PostStore extends Store {
     public List<PostListModel> getPostList(SiteModel site, ListType listType) {
         ListModel listModel = mListSqlUtils.getList(site.getId(), listType);
         if (listModel != null) {
-            /**
-             * We'd like to refresh the list periodically. We can do that by checking the `dateCreated` of a list
-             * which will indicate when the first page of a list is fetched. If enough time has passed since then
-             * we can simply fetch the first page of the list again.
-             */
-            Date dateCreated = DateTimeUtils.dateFromIso8601(listModel.getDateCreated());
-            Date now = new Date();
-            if (now.getTime() - dateCreated.getTime() > POST_LIST_TIMEOUT) {
-                mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(new FetchPostsPayload(site, listType)));
-            }
-
             return mPostListSqlUtils.getPostList(listModel.getId());
         }
         return Collections.emptyList();
