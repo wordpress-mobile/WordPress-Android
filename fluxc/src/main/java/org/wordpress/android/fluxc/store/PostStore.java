@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.ListModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostListModel;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -82,16 +81,16 @@ public class PostStore extends Store {
     }
 
     public static class SearchPostsResponsePayload extends Payload<PostError> {
-        public PostsModel posts;
+        public List<PostModel> postList;
         public SiteModel site;
         public String searchTerm;
         public boolean isPages;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, String searchTerm, boolean isPages,
+        public SearchPostsResponsePayload(List<PostModel> postList, SiteModel site, String searchTerm, boolean isPages,
                                           boolean loadedMore, boolean canLoadMore) {
-            this.posts = posts;
+            this.postList = postList;
             this.site = site;
             this.searchTerm = searchTerm;
             this.isPages = isPages;
@@ -214,10 +213,10 @@ public class PostStore extends Store {
 
     public static class OnPostsSearched extends OnChanged<PostError> {
         public String searchTerm;
-        public PostsModel searchResults;
+        public List<PostModel> searchResults;
         public boolean canLoadMore;
 
-        public OnPostsSearched(String searchTerm, PostsModel searchResults, boolean canLoadMore) {
+        public OnPostsSearched(String searchTerm, List<PostModel> searchResults, boolean canLoadMore) {
             this.searchTerm = searchTerm;
             this.searchResults = searchResults;
             this.canLoadMore = canLoadMore;
@@ -540,12 +539,13 @@ public class PostStore extends Store {
     }
 
     private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
-        OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, payload.posts, payload.canLoadMore);
+        OnPostsSearched onPostsSearched =
+                new OnPostsSearched(payload.searchTerm, payload.postList, payload.canLoadMore);
 
         if (payload.isError()) {
             onPostsSearched.error = payload.error;
-        } else if (payload.posts.getPosts() != null && payload.posts.getPosts().size() > 0) {
-            for (PostModel post : payload.posts.getPosts()) {
+        } else if (payload.postList != null && payload.postList.size() > 0) {
+            for (PostModel post : payload.postList) {
                 PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
             }
         }
