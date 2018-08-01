@@ -60,11 +60,11 @@ class PageListViewModel
                 .map {
                     when (it.status) {
                         PUBLISHED -> {
-                            val label = if (it.hasLocalChanges) string.local_draft else null
+                            val label = if (it.hasLocalChanges) string.local_changes else null
                             PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it))
                         }
                         PENDING, DRAFT -> {
-                            val label = if (it.hasLocalChanges) string.local_changes else null
+                            val label = if (it.hasLocalChanges) string.local_draft else null
                             DraftPage(it.remoteId, it.title, label)
                         }
                         SCHEDULED -> ScheduledPage(it.remoteId, it.title)
