@@ -15,6 +15,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
     companion object {
@@ -140,6 +143,14 @@ class QuickStartUtils {
                     directParent.removeView(focusPointView)
                 }
             }
+        }
+
+        @JvmStatic
+        fun isQuickStartAvailableForTheSite(siteModel: SiteModel): Boolean {
+            return (siteModel.hasCapabilityManageOptions
+                    && ThemeBrowserActivity.isAccessible(siteModel)
+                    && SiteUtils.isAccessedViaWPComRest(siteModel)
+                    && AppPrefs.isQuickStartActive())
         }
     }
 }
