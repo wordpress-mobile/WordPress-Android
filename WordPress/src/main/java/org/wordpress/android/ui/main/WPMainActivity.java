@@ -668,9 +668,10 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
-                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    //TODO for test purposes show Quick Start dialog when switching sites
+//                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
-                    }
+//                    }
 
                     setSite(data);
                     jumpNewPost(data);
@@ -707,6 +708,10 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     private void showQuickStartDialog() {
+        if (getSelectedSite() == null || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())) {
+            return;
+        }
+
         String tag = MySiteFragment.TAG_QUICK_START_DIALOG;
         PromoDialog promoDialog = new PromoDialog();
         promoDialog.initialize(
