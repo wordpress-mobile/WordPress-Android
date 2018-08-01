@@ -3480,7 +3480,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(R.string.async_promo_title),
                 getString(R.string.async_promo_description),
                 getString(R.string.async_promo_publish_now),
-                R.drawable.img_promo_async,
+                R.drawable.img_publish_button_124dp,
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));
 

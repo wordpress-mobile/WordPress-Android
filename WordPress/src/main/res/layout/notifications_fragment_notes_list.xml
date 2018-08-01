@@ -174,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:visibility="gone"
                 app:aevButton="@string/posts_empty_list_button"
-                app:aevImage="@drawable/jetpack_connection_notifications"
+                app:aevImage="@drawable/img_illustration_notifications_152dp"
                 app:aevSubtitle="@string/notifications_empty_action_unread"
                 app:aevTitle="@string/notifications_empty_unread"
                 tools:visibility="visible" >
@@ -204,7 +204,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_extra_large"
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/jetpack_connection_notifications"/>
+                            app:srcCompat="@drawable/img_illustration_notifications_152dp"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             style="@style/JetpackConnectionText"
