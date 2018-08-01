@@ -118,7 +118,7 @@ public class PhotoPickerFragment extends Fragment {
         View view = inflater.inflate(R.layout.photo_picker_fragment, container, false);
 
         mRecycler = view.findViewById(R.id.recycler);
-        mRecycler.setEmptyView(view.findViewById(R.id.text_empty));
+        mRecycler.setEmptyView(view.findViewById(R.id.actionable_empty_view));
         mRecycler.setHasFixedSize(true);
 
         // disable thumbnail loading during a fling to conserve memory
