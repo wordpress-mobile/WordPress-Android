@@ -475,7 +475,7 @@ public class PostStore extends Store {
     private void fetchPosts(FetchPostsPayload payload, boolean pages) {
         int offset = 0;
         if (payload.loadMore) {
-            offset = PostSqlUtils.getUploadedPostsForSite(payload.site, pages).size();
+            offset = getPostList(payload.site, payload.listType).size();
         }
 
         if (payload.site.isUsingWpComRestApi()) {
