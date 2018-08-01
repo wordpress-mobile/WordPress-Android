@@ -128,10 +128,7 @@ class PagesFragment : Fragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, site: SiteModel) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PagesViewModel>(PagesViewModel::class.java)
-
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get<PagesViewModel>(PagesViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
         setupObservers(site)
 
