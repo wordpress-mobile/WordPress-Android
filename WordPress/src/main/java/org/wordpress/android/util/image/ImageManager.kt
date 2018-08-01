@@ -1,5 +1,6 @@
 package org.wordpress.android.util.image
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
@@ -8,6 +9,7 @@ import android.widget.ImageView.ScaleType.CENTER
 import android.widget.TextView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import org.wordpress.android.WordPress
@@ -22,9 +24,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderManager) {
-    interface RequestListener {
+    interface RequestListener<T> {
         fun onLoadFailed(e: Exception?)
-        fun onResourceReady(resource: Drawable)
+        fun onResourceReady(resource: T)
     }
 
     @JvmOverloads
@@ -33,7 +35,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         imageType: ImageType,
         imgUrl: String,
         scaleType: ImageView.ScaleType = CENTER,
-        requestListener: RequestListener? = null
+        requestListener: RequestListener<Drawable>? = null
     ) {
         GlideApp.with(imageView.context)
                 .load(imgUrl)
@@ -76,6 +78,19 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .into(viewTarget)
     }
 
+    fun loadAsBitmapIntoCustomTarget(
+        context: Context,
+        target: BaseTarget<Bitmap>,
+        imgUrl: String,
+        scaleType: ImageView.ScaleType = CENTER
+    ) {
+        GlideApp.with(context)
+                .asBitmap()
+                .load(imgUrl)
+                .applyScaleType(scaleType)
+                .into(target)
+    }
+
     fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
         GlideApp.with(imageView.context)
                 .load(imgUrl)
@@ -89,9 +104,13 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         GlideApp.with(imageView.context).clear(imageView)
     }
 
-    private fun GlideRequest<Drawable>.applyScaleType(
+    fun <T : Any> cancelRequest(context: Context, target: BaseTarget<T>?) {
+        GlideApp.with(context).clear(target)
+    }
+
+    private fun <T : Any> GlideRequest<T>.applyScaleType(
         scaleType: ScaleType
-    ): GlideRequest<Drawable> {
+    ): GlideRequest<T> {
         return when (scaleType) {
             ImageView.ScaleType.CENTER_CROP -> this.centerCrop()
             ImageView.ScaleType.CENTER_INSIDE -> this.centerInside()
@@ -107,27 +126,27 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         }
     }
 
-    private fun GlideRequest<Drawable>.addPlaceholder(imageType: ImageType): GlideRequest<Drawable> {
+    private fun <T : Any> GlideRequest<T>.addPlaceholder(imageType: ImageType): GlideRequest<T> {
         val placeholderImageRes = placeholderManager.getPlaceholderResource(imageType)
         return if (placeholderImageRes == null) this else this.placeholder(placeholderImageRes)
     }
 
-    private fun GlideRequest<Drawable>.addFallback(imageType: ImageType): GlideRequest<Drawable> {
+    private fun <T : Any> GlideRequest<T>.addFallback(imageType: ImageType): GlideRequest<T> {
         val errorImageRes = placeholderManager.getErrorResource(imageType)
         return if (errorImageRes == null) this else this.error(errorImageRes)
     }
 
-    private fun GlideRequest<Drawable>.attachRequestListener(
-        requestListener: RequestListener?
-    ): GlideRequest<Drawable> {
+    private fun <T : Any> GlideRequest<T>.attachRequestListener(
+        requestListener: RequestListener<T>?
+    ): GlideRequest<T> {
         return if (requestListener == null) {
             this
         } else {
-            this.listener(object : com.bumptech.glide.request.RequestListener<Drawable> {
+            this.listener(object : com.bumptech.glide.request.RequestListener<T> {
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
-                    target: Target<Drawable>?,
+                    target: Target<T>?,
                     isFirstResource: Boolean
                 ): Boolean {
                     requestListener.onLoadFailed(e)
@@ -135,9 +154,9 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 }
 
                 override fun onResourceReady(
-                    resource: Drawable?,
+                    resource: T?,
                     model: Any?,
-                    target: Target<Drawable>?,
+                    target: Target<T>?,
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
