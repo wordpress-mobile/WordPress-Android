@@ -81,9 +81,9 @@ class PagesViewModel
         _listState.postValue(newState)
     }
 
-    fun onPageEditFinished(pageId: Int) {
+    fun onPageEditFinished(pageId: Long) {
         launch {
-            pageStore.getPageByLocalId(pageId, site)?.let {
+            pageStore.getPageByRemoteId(pageId, site)?.let {
                 refreshPagesAsync()
             }
         }

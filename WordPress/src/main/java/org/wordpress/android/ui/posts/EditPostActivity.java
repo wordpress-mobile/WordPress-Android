@@ -198,6 +198,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
+    public static final String EXTRA_POST_REMOTE_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -1637,6 +1638,7 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
+        i.putExtra(EXTRA_POST_REMOTE_ID, mPost.getRemotePostId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         setResult(RESULT_OK, i);
     }

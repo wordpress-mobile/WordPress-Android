@@ -13,7 +13,7 @@ import org.wordpress.android.ui.pages.PageItem.Type.PAGE
 
 sealed class PageItem(val type: Type) {
     abstract class Page(
-        open val id: Int,
+        open val id: Long,
         open val title: String,
         open val labelRes: Int? = null,
         open var indent: Int = 0,
@@ -22,7 +22,7 @@ sealed class PageItem(val type: Type) {
     ) : PageItem(PAGE)
 
     data class PublishedPage(
-        override val id: Int,
+        override val id: Long,
         override val title: String,
         override val labelRes: Int? = null,
         override var indent: Int = 0,
@@ -30,7 +30,7 @@ sealed class PageItem(val type: Type) {
     ) : Page(id, title, labelRes, indent, actions)
 
     data class DraftPage(
-        override val id: Int,
+        override val id: Long,
         override val title: String,
         override val labelRes: Int? = null,
         override var indent: Int = 0,
@@ -38,7 +38,7 @@ sealed class PageItem(val type: Type) {
     ) : Page(id, title, labelRes, indent, actions)
 
     data class ScheduledPage(
-        override val id: Int,
+        override val id: Long,
         override val title: String,
         override val labelRes: Int? = null,
         override var indent: Int = 0,
@@ -46,14 +46,14 @@ sealed class PageItem(val type: Type) {
     ) : Page(id, title, labelRes, indent, actions)
 
     data class TrashedPage(
-        override val id: Int,
+        override val id: Long,
         override val title: String,
         override val labelRes: Int? = null,
         override var indent: Int = 0,
         override val actions: Set<Action> = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY)
     ) : Page(id, title, labelRes, indent, actions)
 
-    data class Divider(val id: Int, val title: String) : PageItem(DIVIDER)
+    data class Divider(val id: Long, val title: String) : PageItem(DIVIDER)
 
     data class Empty(val textResource: Int? = null) : PageItem(EMPTY)
 

@@ -78,7 +78,7 @@ class PagesFragment : Fragment() {
         }
     }
 
-    fun onPageEditFinished(pageId: Int) {
+    fun onPageEditFinished(pageId: Long) {
         viewModel.onPageEditFinished(pageId)
     }
 

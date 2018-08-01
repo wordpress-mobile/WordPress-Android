@@ -33,12 +33,12 @@ class PagesActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-            val pageId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, 0)
             onPageEditFinished(pageId)
         }
     }
 
-    private fun onPageEditFinished(pageId: Int) {
+    private fun onPageEditFinished(pageId: Long) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
             fragment.onPageEditFinished(pageId)

@@ -49,20 +49,26 @@ class PageListViewModel
         val newPages = pagesViewModel.pages
                 .filter { it.status == pageType }
                 .let {
-                    topologicalSort(it, it.map { it.parentId }.min() ?: 0)
+                    var list = it
+                    if (pageType == PUBLISHED) {
+                        val mutableList = it.toMutableList()
+                        list = topologicalSort(mutableList, it.map { it.parentId }.min() ?: 0)
+                        list += mutableList
+                    }
+                    return@let list
                 }
                 .map {
                     when (it.status) {
                         PUBLISHED -> {
                             val label = if (it.hasLocalChanges) string.local_draft else null
-                            PublishedPage(it.pageId, it.title, label, getPageItemIndent(it))
+                            PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it))
                         }
                         PENDING, DRAFT -> {
                             val label = if (it.hasLocalChanges) string.local_changes else null
-                            DraftPage(it.pageId, it.title, label)
+                            DraftPage(it.remoteId, it.title, label)
                         }
-                        SCHEDULED -> ScheduledPage(it.pageId, it.title)
-                        TRASHED -> TrashedPage(it.pageId, it.title)
+                        SCHEDULED -> ScheduledPage(it.remoteId, it.title)
+                        TRASHED -> TrashedPage(it.remoteId, it.title)
                     }
                 }
 
@@ -73,10 +79,11 @@ class PageListViewModel
         }
     }
 
-    private fun topologicalSort(pages: List<PageModel>, parentId: Long): List<PageModel> {
+    private fun topologicalSort(pages: MutableList<PageModel>, parentId: Long): List<PageModel> {
         val sortedList = mutableListOf<PageModel>()
         pages.filter { it.parentId == parentId }.forEach {
             sortedList += it
+            pages -= it
             sortedList += topologicalSort(pages, it.remoteId)
         }
         return sortedList
@@ -110,7 +117,7 @@ class PageListViewModel
 
     fun onAction(action: Action, pageItem: Page): Boolean {
         when (action) {
-            else -> _editPage.postValue(pagesViewModel.pages.first { it.pageId == pageItem.id })
+            else -> _editPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
         }
         return true
     }
