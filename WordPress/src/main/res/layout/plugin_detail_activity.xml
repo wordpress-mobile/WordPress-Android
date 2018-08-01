@@ -251,7 +251,9 @@
 
                     <View style="@style/PostSettingsDivider" />
 
-                    <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
+                    <RelativeLayout
+                        android:id="@+id/plugin_state_autoupdates_container"
+                        style="@style/PluginCardViewHorizontalContainer">
 
                         <TextView
                             style="@style/PluginCardViewPrimaryText"

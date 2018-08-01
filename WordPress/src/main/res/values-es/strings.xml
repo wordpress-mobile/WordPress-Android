@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 20:42:34+0000
+Translation-Revision-Date: 2018-07-20 08:28:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="reader_gallery_images_desc">galería de imágenes</string>
+    <string name="blavatar_desc">icono del sitio</string>
+    <string name="theme_image_desc">imagen del tema</string>
+    <string name="featured_image_desc">imagen destacada</string>
+    <string name="support_push_notification_message_hint_snackbar">Localiza tu conversación con soporte pulsando \'Ayuda y Soporte\' y depués \'Mis tickets\'</string>
+    <string name="local_changes_discarding_error">Hubo un error al descartar tus cambios en local. Por favor contacta con soporte para más asistencia.</string>
+    <string name="local_changes_discarding">Descartando cambios en local</string>
+    <string name="local_changes_discarded">Cambios en local descartados</string>
+    <string name="menu_discard_changes">Descartar cambios en local</string>
+    <string name="button_discard_changes">Descartar cambios</string>
+    <string name="button_discard">Descartar</string>
     <string name="reader_avatar_desc">foto de perfil</string>
     <string name="reader_blavatar_desc">Icono del sitio</string>
     <string name="notification_channel_transient_title">Dato transitorio</string>
@@ -170,7 +181,6 @@ Language: es
     <string name="reader_list_item_suggestion_remove_desc">borrar</string>
     <string name="photo_picker_thumbnail_desc">Reproducir video</string>
     <string name="reader_cardview_post_play_video_desc">reproducir video destacado</string>
-    <string name="post_cardview_featured_desc">imagen destacada</string>
     <string name="plugin_detail_logo_desc">logo del plugin</string>
     <string name="plugin_detail_banner_desc">banner del plugin</string>
     <string name="photo_picker_wpmedia_desc">elige desde medios de WordPress</string>
@@ -192,9 +202,9 @@ Language: es
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>
     <string name="menu_undo_snackbar_action">DESHACER</string>
-    <string name="menu_visual_mode_done_snackbar">Cambiar al modo visual.</string>
+    <string name="menu_visual_mode_done_snackbar">Cambiado a modo visual</string>
     <string name="menu_visual_mode">Modo visual</string>
-    <string name="menu_html_mode_done_snackbar">Cambiar al modo HTML.</string>
+    <string name="menu_html_mode_done_snackbar">Cambiado a modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
     <string name="menu_publish_now">Publicar ahora</string>
@@ -980,7 +990,7 @@ Language: es
     <string name="delete_site_hint">Eliminar el sitio</string>
     <string name="export_site_hint">Exportar tu sitio a un archivo XML</string>
     <string name="primary_domain">Dominio principal</string>
-    <string name="error_deleting_site_summary">Hubo un error eliminando tu sitio. Por favor, contacta con el soporte para más asistencia</string>
+    <string name="error_deleting_site_summary">Hubo un error al eliminar tu sitio. Por favor, contacta con el soporte para más asistencia.</string>
     <string name="error_deleting_site">Error borrando sitio</string>
     <string name="site_settings_export_content_title">Exportar contenido</string>
     <string name="confirm_delete_site_prompt">Por favor, escribe: %1$s en el campo de abajo para confirmar. Tu sitio desaparecerá para siempre.</string>
@@ -1256,7 +1266,6 @@ Language: es
     <string name="notification_settings_item_other_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
     <string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
     <string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
-    <string name="button_revert">Volver</string>
     <string name="yesterday">Ayer</string>
     <string name="days_ago">Hace %d días</string>
     <string name="connectionbar_no_connection">Sin conexión</string>

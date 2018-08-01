@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-01 09:15:02+0000
+Translation-Revision-Date: 2018-07-20 14:06:30+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="reader_gallery_images_desc">galéria obrázkov</string>
+    <string name="blavatar_desc">ikona webovej stránky</string>
+    <string name="theme_image_desc">obrázok témy</string>
+    <string name="featured_image_desc">hlavný obrázok</string>
+    <string name="local_changes_discarding">Prebieha odstránenie lokálnych zmien</string>
+    <string name="local_changes_discarded">Lokálne zmeny boli odstránené</string>
+    <string name="menu_discard_changes">Odstrániť lokálne zmeny</string>
+    <string name="button_discard_changes">Odstrániť zmeny</string>
+    <string name="button_discard">Odstrániť</string>
+    <string name="reader_avatar_desc">profilová fotka</string>
+    <string name="reader_blavatar_desc">ikona stránky</string>
+    <string name="notification_channel_transient_title">Prechodný</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="tabbar_accessibility_label_write">Nový článok. Napíšte nový článok.</string>
+    <string name="my_site_icon_content_description">Zmeniť ikonu webovej stránky</string>
+    <string name="my_site_icon_dialog_cancel_button">Zrušiť</string>
+    <string name="my_site_icon_dialog_remove_button">Odstrániť</string>
+    <string name="my_site_icon_dialog_change_button">Zmeniť</string>
+    <string name="my_site_icon_dialog_change_requires_permission_message">Nemáte povolenie na zmenu ikony webovej stránky.</string>
+    <string name="my_site_icon_dialog_add_requires_permission_message">Nemáte povolenie pridať ikonu k webovej stránke.</string>
+    <string name="my_site_icon_dialog_change_message">Chceli by ste zmeniť ikonu?</string>
+    <string name="my_site_icon_dialog_add_message">Chceli by ste pridať ikonu webovej stránky?</string>
+    <string name="my_site_icon_dialog_title">Ikona webovej stránky</string>
+    <string name="reader_followed_blog_notifications">Umožniť upozornenia pre %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Zapnúť upozornenia webovej stránky</string>
+    <string name="reader_btn_notifications_off">Vypnúť upozornenia webovej stránky</string>
+    <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
     <string name="plugin_external_link_icon_content_description">Externý odkaz</string>
     <string name="plugin_icon_content_description">Ikona pluginu</string>
     <string name="plugin_home_page">Domovská stránka pluginu</string>
@@ -56,8 +83,17 @@ Language: sk
     <string name="confirm_remove_media_image">Odstrániť tento obrázok z príspevku?</string>
     <string name="media_edit_customize_card_caption">Prispôsobiť</string>
     <string name="media_edit_file_details_card_caption">Podrobnosti súboru</string>
+    <string name="login_error_suffix">\nMožno skúste iný účet?</string>
+    <string name="login_error_generic">Počas pripájania na Google účet došlo k nejakým chybám.</string>
     <string name="login_error_button">Zavrieť</string>
     <string name="login_google_button_suffix">Prihláste sa pomocou Google.</string>
+    <string name="login_log_in_for_share_intent">Prihláste sa do WordPress.com pre zdieľanie obsahu.</string>
+    <string name="jetpack_require_two_factor_title">Vyžaduje sa dvojkrokové overenie.</string>
+    <string name="jetpack_wpcom_sign_in_category_title">WordPress.com prihlásenie</string>
+    <string name="jetpack_brute_force_whitelist_title">Zoznam povolených IP adries</string>
+    <string name="jetpack_security_setting_title">Bezpečnosť</string>
+    <string name="jetpack_site_settings_category_title">Nastavenia Jetpack</string>
+    <string name="share_action_media">Pridajte do knižnice médií</string>
     <string name="reader_label_global_related_posts">Viac na WordPress.com</string>
     <string name="reader_label_local_related_posts">Viac na %s</string>
     <string name="preference_open_device_settings">Otvoriť nastavenia zariadenia</string>
@@ -306,7 +342,6 @@ Language: sk
     <string name="app_notifications">Upozornenia aplikácie</string>
     <string name="stats_insights_latest_post_trend">Prešlo %1$s od zverejnenia %2$s. Môžete vidieť ako doteraz príspevok obstál…</string>
     <string name="stats_insights_latest_post_summary">Súhrn najnovších príspevkov</string>
-    <string name="button_revert">Vrátiť</string>
     <string name="yesterday">Včera</string>
     <string name="days_ago">pred %d dňami</string>
     <string name="connectionbar_no_connection">Žiadne pripojenie</string>

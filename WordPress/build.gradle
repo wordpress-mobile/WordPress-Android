@@ -127,7 +127,7 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$arch_components_version"
 
-    testCompile("android.arch.core:core-testing:$arch_components_version", {
+    testImplementation("android.arch.core:core-testing:$arch_components_version", {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'

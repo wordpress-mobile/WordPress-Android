@@ -52,6 +52,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
+import org.wordpress.android.ui.media.MediaGridAdapter;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaPreviewFragment;
@@ -71,6 +72,7 @@ import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.plans.PlanFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -109,8 +111,10 @@ import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -124,6 +128,7 @@ import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
@@ -353,6 +358,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderPostAdapter object);
 
+    void inject(PlanFragment object);
+
     void inject(ReaderSiteHeaderView object);
 
     void inject(ReaderTagHeaderView object);
@@ -362,6 +369,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderWebView object);
 
     void inject(ReaderPostPagerActivity object);
+
+    void inject(ReaderBlogAdapter object);
 
     void inject(ReleaseNotesActivity object);
 
@@ -376,6 +385,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
+
+    void inject(ReaderUserAdapter object);
 
     void inject(AddCategoryFragment object);
 
@@ -393,7 +404,11 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PluginDetailActivity object);
 
+    void inject(SuggestionAdapter object);
+
     void inject(WordPressGlideModule object);
+
+    void inject(MediaGridAdapter object);
 
     void inject(PagesFragment object);
 
