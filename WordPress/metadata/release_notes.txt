@@ -1,3 +1,4 @@
-* New: Users can now easily discard local changes to a post in the editor.
-* Some small UI improvements and refinements.
-* A bunch of small bug-fixes
+* Activity Log now available for free WordPress.com sites.
+* Improvements in support for some locales.
+* General improvements in Gif support.
+* A bunch of other bug fixes.
