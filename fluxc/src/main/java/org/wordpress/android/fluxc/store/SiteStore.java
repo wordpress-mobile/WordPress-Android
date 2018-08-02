@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.DomainAvailabilityModel;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -219,6 +220,17 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DomainAvailabilityPayload extends Payload<DomainAvailabilityError> {
+        @Nullable public DomainAvailabilityModel domainAvailabilityModel;
+        public DomainAvailabilityPayload(@NonNull DomainAvailabilityModel domainAvailabilityModel) {
+            this.domainAvailabilityModel = domainAvailabilityModel;
+        }
+
+        public DomainAvailabilityPayload(@NonNull DomainAvailabilityError error) {
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
@@ -298,6 +310,19 @@ public class SiteStore extends Store {
         public AutomatedTransferError(@Nullable String type, @Nullable String message) {
             this.type = AutomatedTransferErrorType.fromString(type);
             this.message = message;
+        }
+    }
+
+    public static class DomainAvailabilityError implements OnChangedError {
+        @NonNull public DomainAvailabilityErrorType type;
+        @Nullable public String message;
+        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type) {
+            this.type = type;
         }
     }
 
@@ -410,6 +435,19 @@ public class SiteStore extends Store {
         public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
+        }
+    }
+
+    public static class OnDomainAvailabilityChecked extends OnChanged<DomainAvailabilityError> {
+        public @Nullable DomainAvailabilityModel model;
+        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityModel model,
+                                           @Nullable DomainAvailabilityError error) {
+            this.model = model;
+            this.error = error;
+        }
+        public OnDomainAvailabilityChecked(@NonNull DomainAvailabilityError error) {
+            this.model = model;
+            this.error = error;
         }
     }
 
@@ -607,6 +645,11 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum DomainAvailabilityErrorType {
+        INVALID_DOMAIN_NAME,
+        GENERIC_ERROR;
     }
 
     public enum SiteVisibility {
