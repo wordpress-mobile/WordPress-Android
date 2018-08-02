@@ -163,6 +163,8 @@
     <dimen name="notifications_text_indent_sz">22dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
+    <dimen name="activity_progress_bar_height">5dp</dimen>
+    <dimen name="activity_progress_bar_margin_vertical">-8dp</dimen>
 
     <!-- DetailListPreference -->
     <dimen name="dlp_padding_start">20dp</dimen>
