@@ -14,8 +14,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.DomainAvailabilityModel;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -38,6 +40,9 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -519,6 +524,40 @@ public class SiteRestClient extends BaseWPComRestClient {
         addUnauthedRequest(request);
     }
 
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint.  Upon receiving a response
+     * (success or error) a {@link SiteAction#CHECK_AUTOMATED_TRANSFER_ELIGIBILITY} action is dispatched with a
+     * payload of type {@link DomainAvailabilityPayload}.
+     *
+     * {@link DomainAvailabilityPayload#isError()} can be used to check the request result.
+     */
+    public void checkDomainAvailability(@NonNull final String domainName) {
+        String url = WPCOMREST.domains.domainName(domainName).is_available.getUrlV1_3();
+        final WPComGsonRequest<DomainAvailabilityResponse> request =
+                WPComGsonRequest.buildGetRequest(url, null, DomainAvailabilityResponse.class,
+                        new Listener<DomainAvailabilityResponse>() {
+                            @Override
+                            public void onResponse(DomainAvailabilityResponse response) {
+                                DomainAvailabilityPayload payload =
+                                        new DomainAvailabilityPayload(responseToDomainAvailability(response));
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                // Domain availability API should always return a response for a valid,
+                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
+                                DomainAvailabilityError domainAvailabilityError = new DomainAvailabilityError(
+                                        DomainAvailabilityErrorType.GENERIC_ERROR, error.message);
+                                DomainAvailabilityPayload payload =
+                                        new DomainAvailabilityPayload(domainAvailabilityError);
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
     // Automated Transfers
 
     public void checkAutomatedTransferEligibility(@NonNull final SiteModel site) {
@@ -729,5 +768,16 @@ public class SiteRestClient extends BaseWPComRestClient {
         info.isWPCom = response.isWordPressDotCom; // CHECKSTYLE IGNORE
         info.urlAfterRedirects = response.urlAfterRedirects;
         return info;
+    }
+
+    private DomainAvailabilityModel responseToDomainAvailability(DomainAvailabilityResponse response) {
+        Integer productId = response.getProduct_id();
+        String productSlug = response.getProduct_slug();
+        String domainName = response.getDomain_name();
+        String status = response.getStatus();
+        String mappable = response.getMappable();
+        String cost = response.getCost();
+        Boolean supportsPrivacy = response.getSupports_privacy();
+        return new DomainAvailabilityModel(productId, productSlug, domainName, status, mappable, cost, supportsPrivacy);
     }
 }
