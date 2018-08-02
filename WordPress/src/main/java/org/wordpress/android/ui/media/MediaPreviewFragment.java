@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -283,7 +282,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0);
         }
         showProgress(true);
-        mImageManager.load(mImageView, ImageType.FULLSCREEN_PHOTO, mediaUri, ScaleType.CENTER,
+        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mediaUri, null,
                 new RequestListener<Drawable>() {
                     @Override
                     public void onResourceReady(@NotNull Drawable resource) {
@@ -306,7 +305,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     @Override
                     public void onLoadFailed(@Nullable Exception e) {
                         if (isAdded()) {
-                            AppLog.e(T.MEDIA, e);
+                            if (e != null) {
+                                AppLog.e(T.MEDIA, e);
+                            }
                             showProgress(false);
                             showLoadingError();
                         }
