@@ -338,23 +338,23 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             mRecyclerView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
-            mActionableEmptyView.setTitleText(getString(titleResId));
+            mActionableEmptyView.title.setText(titleResId);
 
             if (descriptionResId != 0) {
-                mActionableEmptyView.setSubtitleText(getString(descriptionResId));
-                mActionableEmptyView.setSubtitleVisibility(true);
+                mActionableEmptyView.subtitle.setText(descriptionResId);
+                mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
             } else {
-                mActionableEmptyView.setSubtitleVisibility(false);
+                mActionableEmptyView.subtitle.setVisibility(View.GONE);
             }
 
             if (buttonResId != 0) {
-                mActionableEmptyView.setButtonText(getString(buttonResId));
-                mActionableEmptyView.setButtonVisibility(true);
+                mActionableEmptyView.button.setText(buttonResId);
+                mActionableEmptyView.button.setVisibility(View.VISIBLE);
             } else {
-                mActionableEmptyView.setButtonVisibility(false);
+                mActionableEmptyView.button.setVisibility(View.GONE);
             }
 
-            mActionableEmptyView.setButtonClickListener(new View.OnClickListener() {
+            mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     performActionForActiveFilter();

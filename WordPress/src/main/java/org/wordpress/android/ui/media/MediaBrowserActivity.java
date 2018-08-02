@@ -63,7 +63,6 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -216,9 +215,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (!shouldShowTabs()) return;
 
         if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mTabLayout, AniUtils.Duration.MEDIUM);
+            mTabLayout.setVisibility(View.VISIBLE);
         } else if (!enable && mTabLayout.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(mTabLayout, AniUtils.Duration.MEDIUM, View.INVISIBLE);
+            mTabLayout.setVisibility(View.GONE);
         }
     }
 
@@ -478,6 +477,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mBrowserType.canMultiselect()
                 || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
+            mMediaGridFragment.showActionableEmptyViewButton(false);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -514,6 +514,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
+        mMediaGridFragment.showActionableEmptyViewButton(false);
 
         enableTabs(false);
 
@@ -528,6 +529,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
+        mMediaGridFragment.showActionableEmptyViewButton(true);
         invalidateOptionsMenu();
 
         enableTabs(true);

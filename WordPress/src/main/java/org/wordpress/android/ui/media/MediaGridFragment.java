@@ -147,7 +147,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
-    private ActionableEmptyView mEmptyView;
+    private ActionableEmptyView mActionableEmptyView;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
     private SiteModel mSite;
@@ -242,15 +242,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         });
 
-        mEmptyView = (ActionableEmptyView) view.findViewById(R.id.actionable_empty_view);
-        mEmptyView.setButtonClickListener(new OnClickListener() {
+        mActionableEmptyView = (ActionableEmptyView) view.findViewById(R.id.actionable_empty_view);
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
                     ((MediaBrowserActivity) getActivity()).showAddMediaPopup();
                 }
             }
         });
-        mRecycler.setEmptyView(mEmptyView);
+        mRecycler.setEmptyView(mActionableEmptyView);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
@@ -496,6 +496,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         handleFetchAllMediaSuccess(event);
     }
 
+    public void showActionableEmptyViewButton(boolean show) {
+        mActionableEmptyView.button.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
     /*
      * load the adapter from the local store
      */
@@ -567,7 +571,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         mEmptyViewMessageType = emptyViewMessageType;
 
-        if (!isAdded() || mEmptyView == null) {
+        if (!isAdded() || mActionableEmptyView == null) {
             return;
         }
 
@@ -578,23 +582,32 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     stringId = R.string.media_fetching;
                     break;
                 case NO_CONTENT:
-                    switch (mFilter) {
-                        case FILTER_IMAGES:
-                            stringId = R.string.media_empty_image_list;
-                            break;
-                        case FILTER_VIDEOS:
-                            stringId = R.string.media_empty_videos_list;
-                            break;
-                        case FILTER_DOCUMENTS:
-                            stringId = R.string.media_empty_documents_list;
-                            break;
-                        case FILTER_AUDIO:
-                            stringId = R.string.media_empty_audio_list;
-                            break;
-                        default:
-                            stringId = R.string.media_empty_list;
-                            break;
+                    if (!TextUtils.isEmpty(mSearchTerm)) {
+                        mActionableEmptyView.updateLayoutForSearch(true, 0);
+                        stringId = R.string.media_empty_search_list;
+                    } else {
+                        mActionableEmptyView.updateLayoutForSearch(false, 0);
+                        mActionableEmptyView.image.setVisibility(View.VISIBLE);
+
+                        switch (mFilter) {
+                            case FILTER_IMAGES:
+                                stringId = R.string.media_empty_image_list;
+                                break;
+                            case FILTER_VIDEOS:
+                                stringId = R.string.media_empty_videos_list;
+                                break;
+                            case FILTER_DOCUMENTS:
+                                stringId = R.string.media_empty_documents_list;
+                                break;
+                            case FILTER_AUDIO:
+                                stringId = R.string.media_empty_audio_list;
+                                break;
+                            default:
+                                stringId = R.string.media_empty_list;
+                                break;
+                        }
                     }
+
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;
@@ -607,16 +620,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     break;
             }
 
-            mEmptyView.setTitleText(getText(stringId));
-            mEmptyView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.title.setText(stringId);
+            mActionableEmptyView.setVisibility(View.VISIBLE);
         } else {
-            mEmptyView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(View.GONE);
         }
     }
 
     private void hideEmptyView() {
-        if (isAdded() && mEmptyView != null) {
-            mEmptyView.setVisibility(View.GONE);
+        if (isAdded() && mActionableEmptyView != null) {
+            mActionableEmptyView.setVisibility(View.GONE);
         }
     }
 

@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore.FetchStockMediaListPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -69,6 +71,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 
     private static final String KEY_SEARCH_QUERY = "search_query";
+    private static final String KEY_IS_SHOWING_EMPTY_VIEW = "is_showing_empty_view";
     private static final String KEY_IS_UPLOADING = "is_uploading";
     public static final String KEY_REQUEST_CODE = "request_code";
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
@@ -92,6 +95,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private int mThumbHeight;
 
     private boolean mIsFetching;
+    private boolean mIsShowingEmptyView;
     private boolean mIsUploading;
     private boolean mCanLoadMore;
 
@@ -155,10 +159,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         } else {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
             mIsUploading = savedInstanceState.getBoolean(KEY_IS_UPLOADING);
+            mIsShowingEmptyView = savedInstanceState.getBoolean(KEY_IS_SHOWING_EMPTY_VIEW);
             mRequestCode = savedInstanceState.getInt(KEY_REQUEST_CODE);
+
+            if (mIsShowingEmptyView) {
+                showEmptyView(true);
+            }
+
             if (mIsUploading) {
                 showUploadProgressDialog(true);
             }
+
             if (!TextUtils.isEmpty(mSearchQuery)) {
                 StockMediaRetainedData data = mRetainedFragment.getData();
                 if (data != null) {
@@ -211,6 +222,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putBoolean(KEY_IS_SHOWING_EMPTY_VIEW, mIsShowingEmptyView);
         outState.putBoolean(KEY_IS_UPLOADING, mIsUploading);
         outState.putInt(KEY_REQUEST_CODE, mRequestCode);
 
@@ -294,28 +306,26 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private void showEmptyView(boolean show) {
         if (!isFinishing()) {
-            ViewGroup emptyView = findViewById(R.id.empty_view);
-            emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mIsShowingEmptyView = show;
+            ActionableEmptyView actionableEmptyView = findViewById(R.id.actionable_empty_view);
+            actionableEmptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+            actionableEmptyView.updateLayoutForSearch(true, 0);
+
             if (show) {
-                TextView txtEmpty = emptyView.findViewById(R.id.text_empty);
                 boolean isEmpty = mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE;
+
                 if (isEmpty) {
-                    String message = getString(R.string.stock_media_picker_initial_empty_text);
-                    String subMessage = getString(R.string.stock_media_picker_initial_empty_subtext);
-                    String link = "<a href='https://pexels.com/'>Pexels</a>";
-                    String html = message
-                                  + "<br /><br />"
-                                  + "<small>" + String.format(subMessage, link) + "</small>";
-                    txtEmpty.setMovementMethod(WPLinkMovementMethod.getInstance());
-                    txtEmpty.setText(Html.fromHtml(html));
+                    actionableEmptyView.title.setText(R.string.stock_media_picker_initial_empty_text);
+                    // Leave span with hard-coded #0087be to override jazzy orange until accent color is blue_wordpress.
+                    String link = "<span style=\"color:#0087be\"><a href='https://pexels.com/'>Pexels</a></span>";
+                    Spanned html = Html.fromHtml(getString(R.string.stock_media_picker_initial_empty_subtext, link));
+                    actionableEmptyView.subtitle.setText(html);
+                    actionableEmptyView.getSubtitle().setMovementMethod(WPLinkMovementMethod.getInstance());
+                    actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
                 } else {
-                    txtEmpty.setText(R.string.stock_media_picker_empty_results);
+                    actionableEmptyView.title.setText(R.string.media_empty_search_list);
+                    actionableEmptyView.subtitle.setVisibility(View.GONE);
                 }
-                // only show empty image if there's enough room for it
-                boolean showEmptyImage = isEmpty
-                                         && !DisplayUtils.isLandscape(this)
-                                         && DisplayUtils.getDisplayPixelHeight(this) >= 1080;
-                emptyView.findViewById(R.id.image_empty).setVisibility(showEmptyImage ? View.VISIBLE : View.GONE);
             }
         }
     }

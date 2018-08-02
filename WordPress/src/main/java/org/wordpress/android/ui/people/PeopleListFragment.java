@@ -188,7 +188,7 @@ public class PeopleListFragment extends Fragment {
                                 break;
                         }
 
-                        mActionableEmptyView.setTitleText(title);
+                        mActionableEmptyView.title.setText(title);
                         mActionableEmptyView.setVisibility(View.VISIBLE);
                         mFilteredRecyclerView.setToolbarScrollFlags(0);
                         return "";

@@ -5,6 +5,7 @@
     <dimen name="category_row_height">48dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
+    <dimen name="tab_height">48dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_subtitle_height">48dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
@@ -65,6 +66,7 @@
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
+    <dimen name="margin_theme_browser_top">160dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
