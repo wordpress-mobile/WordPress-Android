@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "10.5"
-        versionCode 591
+        versionName "10.6-rc-1"
+        versionCode 595
         minSdkVersion 16
         targetSdkVersion 26
 
@@ -123,7 +123,7 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$arch_components_version"
 
-    testCompile("android.arch.core:core-testing:$arch_components_version", {
+    testImplementation("android.arch.core:core-testing:$arch_components_version", {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'

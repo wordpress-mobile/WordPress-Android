@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeConnectionList;
@@ -19,37 +21,39 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.inject.Inject;
+
 public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServiceAdapter.SharingViewHolder> {
-    public interface OnAdapterLoadedListener {
-        void onAdapterLoaded(boolean isEmpty);
-    }
-
-    public interface OnServiceClickListener {
-        void onServiceClicked(PublicizeService service);
-    }
-
     private final PublicizeServiceList mServices = new PublicizeServiceList();
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
-
     private final long mSiteId;
     private final int mBlavatarSz;
     private final ColorFilter mGrayScaleFilter;
     private final long mCurrentUserId;
-
     private OnAdapterLoadedListener mAdapterLoadedListener;
     private OnServiceClickListener mServiceClickListener;
+    private boolean mShouldHideGPlus;
+
+    /*
+     * AsyncTask to load services
+     */
+    private boolean mIsTaskRunning = false;
+
+    @Inject ImageManager mImageManager;
 
     public PublicizeServiceAdapter(Context context, long siteId, long currentUserId) {
         super();
-
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mSiteId = siteId;
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mCurrentUserId = currentUserId;
+        mShouldHideGPlus = true;
 
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
@@ -112,7 +116,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
         holder.mTxtService.setText(service.getLabel());
         String iconUrl = PhotonUtils.getPhotonImageUrl(service.getIconUrl(), mBlavatarSz, mBlavatarSz);
-        holder.mImgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        mImageManager.load(holder.mImgIcon, ImageType.BLAVATAR, iconUrl);
 
         if (connections.size() > 0) {
             holder.mTxtUser.setText(connections.getUserDisplayNames());
@@ -138,25 +142,34 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         });
     }
 
+    private boolean isHiddenService(PublicizeService service) {
+        boolean shouldHideGooglePlus = service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) && mShouldHideGPlus;
+
+        return shouldHideGooglePlus;
+    }
+
+    public interface OnAdapterLoadedListener {
+        void onAdapterLoaded(boolean isEmpty);
+    }
+
+    public interface OnServiceClickListener {
+        void onServiceClicked(PublicizeService service);
+    }
+
     class SharingViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTxtService;
         private final TextView mTxtUser;
         private final View mDivider;
-        private final WPNetworkImageView mImgIcon;
+        private final ImageView mImgIcon;
 
         SharingViewHolder(View view) {
             super(view);
-            mTxtService = (TextView) view.findViewById(R.id.text_service);
-            mTxtUser = (TextView) view.findViewById(R.id.text_user);
-            mImgIcon = (WPNetworkImageView) view.findViewById(R.id.image_icon);
+            mTxtService = view.findViewById(R.id.text_service);
+            mTxtUser = view.findViewById(R.id.text_user);
+            mImgIcon = view.findViewById(R.id.image_icon);
             mDivider = view.findViewById(R.id.divider);
         }
     }
-
-    /*
-     * AsyncTask to load services
-     */
-    private boolean mIsTaskRunning = false;
 
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
         private final PublicizeServiceList mTmpServices = new PublicizeServiceList();
@@ -174,21 +187,17 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // G+ no longers supports authentication via a WebView, so we hide it here unless the
-            // user already has a connection
-            boolean hideGPlus = true;
-
             PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);
             for (PublicizeConnection connection : connections) {
                 if (connection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
-                    hideGPlus = false;
+                    mShouldHideGPlus = false;
                 }
                 mTmpConnections.add(connection);
             }
 
             PublicizeServiceList services = PublicizeTable.getServiceList();
             for (PublicizeService service : services) {
-                if (!service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) || !hideGPlus) {
+                if (!isHiddenService(service)) {
                     mTmpServices.add(service);
                 }
             }

@@ -5,6 +5,12 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
+import android.widget.TextView
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.target.ViewTarget
+import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
@@ -16,19 +22,27 @@ import javax.inject.Singleton
  */
 @Singleton
 class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderManager) {
+    interface RequestListener {
+        fun onLoadFailed(e: Exception?)
+        fun onResourceReady(resource: Drawable)
+    }
+
     @JvmOverloads
     fun load(
         imageView: ImageView,
         imageType: ImageType,
         imgUrl: String,
-        scaleType: ImageView.ScaleType = CENTER
+        scaleType: ImageView.ScaleType = CENTER,
+        requestListener: RequestListener? = null
     ) {
         GlideApp.with(imageView.context)
                 .load(imgUrl)
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .applyScaleType(scaleType)
+                .attachRequestListener(requestListener)
                 .into(imageView)
+                .clearOnDetach()
     }
 
     @JvmOverloads
@@ -37,6 +51,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .load(bitmap)
                 .applyScaleType(scaleType)
                 .into(imageView)
+                .clearOnDetach()
     }
 
     @JvmOverloads
@@ -45,6 +60,25 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .load(drawable)
                 .applyScaleType(scaleType)
                 .into(imageView)
+                .clearOnDetach()
+    }
+
+    @JvmOverloads
+    fun load(imageView: ImageView, resourceId: Int, scaleType: ImageView.ScaleType = CENTER) {
+        GlideApp.with(imageView.context)
+                .load(resourceId)
+                .applyScaleType(scaleType)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    fun load(viewTarget: ViewTarget<TextView, Drawable>, imageType: ImageType, imgUrl: String) {
+        GlideApp.with(WordPress.getContext())
+                .load(imgUrl)
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .into(viewTarget)
+                .clearOnDetach()
     }
 
     fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
@@ -54,6 +88,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .addPlaceholder(imageType)
                 .circleCrop()
                 .into(imageView)
+                .clearOnDetach()
     }
 
     fun cancelRequestAndClearImageView(imageView: ImageView) {
@@ -88,53 +123,47 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         return if (errorImageRes == null) this else this.error(errorImageRes)
     }
 
+    private fun GlideRequest<Drawable>.attachRequestListener(
+        requestListener: RequestListener?
+    ): GlideRequest<Drawable> {
+        return if (requestListener == null) {
+            this
+        } else {
+            this.listener(object : com.bumptech.glide.request.RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    requestListener.onLoadFailed(e)
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    if (resource != null) {
+                        requestListener.onResourceReady(resource)
+                    } else {
+                        // according to the Glide's JavaDoc, this shouldn't happen
+                        AppLog.e(AppLog.T.UTILS, "Resource in ImageManager.onResourceReady is null.")
+                        requestListener.onLoadFailed(null)
+                    }
+                    return false
+                }
+            })
+        }
+    }
+
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
     companion object {
         @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, imgUrl, placeholder, scaleType)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        fun loadImage(
-            imageView: ImageView,
-            imageType: ImageType,
-            imgUrl: String,
-            scaleType: ImageView.ScaleType
-        ) {
-            ImageManager(ImagePlaceholderManager()).load(imageView, imageType, imgUrl, scaleType)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, bitmap, scaleType)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        @JvmOverloads
-        fun loadImage(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
-            ImageManager(ImagePlaceholderManager()).load(imageView, bitmap, scaleType)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.load(imageView, drawable, scaleType)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        @JvmOverloads
-        fun loadImage(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
-            ImageManager(ImagePlaceholderManager()).load(imageView, drawable, scaleType)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.loadIntoCircle(imageView, imgType, imgUrl)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        fun loadImageIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
-            ImageManager(ImagePlaceholderManager()).loadIntoCircle(imageView, imageType, imgUrl)
-        }
-
-        @JvmStatic
-        @Deprecated("Use injected ImageManager",
-                ReplaceWith("imageManager.clear(imageView)",
-                        "org.wordpress.android.util.image.ImageManager"))
-        fun clear(imageView: ImageView) {
-            ImageManager(ImagePlaceholderManager()).cancelRequestAndClearImageView(imageView)
-        }
+        @Deprecated("Use injected ImageManager")
+        val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager()) }
     }
 }

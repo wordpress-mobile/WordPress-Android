@@ -140,11 +140,8 @@
     <dimen name="reader_comment_max_image_size">160dp</dimen>
 
     <dimen name="empty_list_title_text_size">24sp</dimen>
-    <dimen name="empty_list_description_text_size">18sp</dimen>
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
-    <dimen name="empty_list_description_bottom_margin">8dp</dimen>
-    <dimen name="empty_list_description_side_margin">48dp</dimen>
 
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
@@ -314,6 +311,10 @@
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <!-- actionable empty view -->
+    <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
+    <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
 
     <dimen name="snackbar_message_margin_bottom">18dp</dimen>
 </resources>

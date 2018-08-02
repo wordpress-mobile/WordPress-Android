@@ -135,7 +135,7 @@ class ActivityLogListFragment : Fragment() {
         val showLoadMore = eventListStatus == LOADING_MORE
         activityLogListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
 
-        emptyView.visibility = if (viewModel.events.value?.isNotEmpty() == false &&
+        actionable_empty_view.visibility = if (viewModel.events.value?.isNotEmpty() == false &&
                 eventListStatus !== LOADING_MORE &&
                 eventListStatus !== FETCHING) View.VISIBLE else View.GONE
     }

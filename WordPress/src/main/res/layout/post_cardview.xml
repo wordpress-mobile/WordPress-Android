@@ -17,11 +17,10 @@
         android:background="?android:selectableItemBackground"
         android:orientation="vertical">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/image_featured"
             android:layout_width="match_parent"
             android:layout_height="@dimen/postlist_featured_image_height"
-            android:scaleType="centerCrop"
             android:visibility="gone"
             android:contentDescription="@string/featured_image_desc"
             tools:visibility="visible" />

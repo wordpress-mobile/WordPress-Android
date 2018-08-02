@@ -64,8 +64,8 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.io.File;
@@ -91,7 +91,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
 
-    private WPNetworkImageView mBlavatarImageView;
+    private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
@@ -122,6 +122,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject ImageManager mImageManager;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -158,7 +159,9 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
         SiteModel site = getSelectedSite();
         if (site != null) {
-            if (site.getHasFreePlan() && !site.isJetpackConnected()) {
+            boolean isNotAdmin = !site.getHasCapabilityManageOptions();
+            boolean isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(site) && !site.isJetpackConnected();
+            if (isNotAdmin || isSelfHostedWithoutJetpack) {
                 mActivityLogContainer.setVisibility(View.GONE);
             } else {
                 mActivityLogContainer.setVisibility(View.VISIBLE);
@@ -591,8 +594,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView
-                .ImageType.BLAVATAR);
+        mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, SiteUtils.getSiteIconUrl(site, mBlavatarSz));
         String homeUrl = SiteUtils.getHomeURLOrHostName(site);
         String blogTitle = SiteUtils.getSiteNameOrHomeURL(site);
 
@@ -715,8 +717,8 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             if (isMediaUploadInProgress()) {
                 if (event.mediaModelList.size() > 0) {
                     MediaModel media = event.mediaModelList.get(0);
-                    mBlavatarImageView.setImageUrl(PhotonUtils.getPhotonImageUrl(
-                            media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH), ImageType.BLAVATAR);
+                    mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, PhotonUtils
+                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH));
                     mSiteSettings.setSiteIconMediaId((int) media.getMediaId());
                     mSiteSettings.saveSettings();
                 } else {

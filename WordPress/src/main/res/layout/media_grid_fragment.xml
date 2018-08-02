@@ -33,21 +33,15 @@
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
     </LinearLayout>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/empty_view"
-        style="@style/WordPress.EmptyList.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
-        android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-        android:layout_marginRight="@dimen/empty_list_title_side_margin"
-        android:gravity="center"
-        android:text="@string/media_empty_list"
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:visibility="gone"
-        app:fixWidowWords="true"
-        tools:visibility="visible"
-        android:layout_marginStart="@dimen/empty_list_title_side_margin"
-        android:layout_marginEnd="@dimen/empty_list_title_side_margin"/>
+        app:aevButton="@string/media_empty_upload_media"
+        app:aevImage="@drawable/img_illustration_media"
+        app:aevTitle="@string/media_empty_list"
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
 
 </FrameLayout>

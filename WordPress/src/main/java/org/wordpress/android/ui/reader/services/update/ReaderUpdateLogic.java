@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.services.update;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.volley.VolleyError;
@@ -23,8 +24,10 @@ import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.LocaleManager;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.inject.Inject;
@@ -48,12 +51,16 @@ public class ReaderUpdateLogic {
     private EnumSet<UpdateTask> mCurrentTasks;
     private ServiceCompletionListener mCompletionListener;
     private Object mListenerCompanion;
+    private String mLanguage;
+    private Context mContext;
 
     @Inject AccountStore mAccountStore;
 
-    public ReaderUpdateLogic(WordPress app, ServiceCompletionListener listener) {
+    public ReaderUpdateLogic(Context context, WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
         app.component().inject(this);
+        mLanguage = LocaleManager.getLanguage(app);
+        mContext = context;
     }
 
     public void performTasks(EnumSet<UpdateTask> tasks, Object companion) {
@@ -105,7 +112,9 @@ public class ReaderUpdateLogic {
             }
         };
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
-        WordPress.getRestClientUtilsV1_2().get("read/menu", null, null, listener, errorListener);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("locale", mLanguage);
+        WordPress.getRestClientUtilsV1_2().get("read/menu", params, null, listener, errorListener);
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -124,7 +133,7 @@ public class ReaderUpdateLogic {
 
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
                 serverTopics.add(new ReaderTag("", "",
-                        WordPress.getContext().getString(R.string.reader_save_for_later_title), "",
+                        mContext.getString(R.string.reader_save_for_later_title), "",
                         ReaderTagType.BOOKMARKED));
 
                 // parse topics from the response, detect whether they're different from local
