@@ -65,7 +65,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
     private int mThumbHeight;
 
     private boolean mIsListTaskRunning;
-    private boolean mDisableImageReset;
     private boolean mLoadThumbnails = true;
 
     private final PhotoPickerAdapterListener mListener;
@@ -150,7 +149,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             mLoadThumbnails = loadThumbnails;
             AppLog.d(AppLog.T.MEDIA, "PhotoPickerAdapter > loadThumbnails = " + loadThumbnails);
             if (mLoadThumbnails) {
-                notifyDataSetChangedInternal();
+                notifyDataSetChanged();
             }
         }
     }
@@ -192,12 +191,10 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
 
         holder.mVideoOverlay.setVisibility(item.mIsVideo ? View.VISIBLE : View.GONE);
 
-        if (!mDisableImageReset) {
-            mImageManager.cancelRequestAndClearImageView(holder.mImgThumbnail);
-        }
-
         if (mLoadThumbnails) {
             mImageManager.load(holder.mImgThumbnail, ImageType.PHOTO, item.mUri.toString(), ScaleType.FIT_CENTER);
+        } else {
+            mImageManager.cancelRequestAndClearImageView(holder.mImgThumbnail);
         }
     }
 
@@ -272,7 +269,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    notifyDataSetChangedInternal();
+                    notifyDataSetChanged();
                 }
             }, delayMs);
         }
@@ -311,7 +308,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
     void clearSelection() {
         if (mSelectedPositions.size() > 0) {
             mSelectedPositions.clear();
-            notifyDataSetChangedInternal();
+            notifyDataSetChanged();
         }
     }
 
@@ -321,21 +318,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
 
     int getNumSelected() {
         return mSelectedPositions.size();
-    }
-
-    /*
-     * wrapper for notifyDataSetChanged() that prevents/reduces flicker
-     */
-    private void notifyDataSetChangedInternal() {
-        mDisableImageReset = true;
-        notifyDataSetChanged();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mDisableImageReset = false;
-            }
-        }, 500);
     }
 
     private void notifySelectionCountChanged() {
