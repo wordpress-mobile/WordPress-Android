@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import junit.framework.AssertionFailedError;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -27,11 +29,15 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
+import static junit.framework.Assert.fail;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
@@ -149,12 +155,32 @@ public class WPScreenshotTest {
                         withId(R.id.toolbar_with_spinner), 0)));
         waitForElementUntilDisplayed(spinner).perform(click());
 
+        // Tag order in the Reader spinner can vary, so we need to find the index of Discover
+        int discoverTagIndex = getDiscoverTagIndex();
+
+        // Toggle away from and then back to Discover to ensure it reloads
+        // Selecting without forcing reload can cause locale issues
+        int otherTagIndex = discoverTagIndex == 0 ? 1 : 0;
         ViewInteraction spinnerItem = onView(
                 allOf(withId(R.id.text), childAtPosition(
-                        withClassName(is("android.widget.DropDownListView")), 1)));
+                        withClassName(is("android.widget.DropDownListView")), otherTagIndex)));
+        waitForElementUntilDisplayed(spinnerItem).perform(click());
+
+        waitForElementUntilDisplayed(spinner).perform(click());
+        spinnerItem = onView(
+                allOf(withId(R.id.text), childAtPosition(
+                        withClassName(is("android.widget.DropDownListView")), discoverTagIndex)));
         waitForElementUntilDisplayed(spinnerItem).perform(click());
 
         // Waiting for the blog articles to load
+        ViewInteraction postCard = onView(
+                allOf(withId(R.id.card_view), childAtPosition(
+                        withId(R.id.recycler_view), 1)));
+        if (waitForElementUntilDisplayed(postCard) == null) {
+            fail("Failed to load discover blog articles");
+        }
+
+        // Waiting for the blog images to load
         try {
             Thread.sleep(6000);
         } catch (InterruptedException e) {
@@ -178,14 +204,7 @@ public class WPScreenshotTest {
                         childAtPosition(withClassName(is("android.widget.LinearLayout")), 6), 0)));
         waitForElementUntilDisplayed(blogPostsButton).perform(scrollTo(), click());
 
-        // Waiting for the blog articles to load
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Edit the first post
+        // Waiting for the blog articles to load and edit the first post
         ViewInteraction postCard = onView(
                 allOf(withId(R.id.card_view), childAtPosition(
                         withId(R.id.recycler_view), 0)));
@@ -201,9 +220,9 @@ public class WPScreenshotTest {
                         withClassName(is("android.widget.RelativeLayout")), 0)));
         postTitle.perform(scrollTo(), click());
 
-        // Wait a bit
+        // Wait for images in post to load
         try {
-            Thread.sleep(3000);
+            Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -300,7 +319,7 @@ public class WPScreenshotTest {
             try {
                 element.check(matches(isDisplayed()));
                 return element;
-            } catch (Exception e) {
+            } catch (Exception | AssertionFailedError e) {
                 e.printStackTrace();
                 try {
                     Thread.sleep(WAITING_TIME);
@@ -310,5 +329,16 @@ public class WPScreenshotTest {
             }
         }
         return null;
+    }
+
+    private static int getDiscoverTagIndex() {
+        ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+        for (int i = 0; i < tagList.size(); i++) {
+            ReaderTag tag = tagList.get(i);
+            if (tag.isDiscover()) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
