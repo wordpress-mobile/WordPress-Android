@@ -201,12 +201,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         }
     }
 
-    @Override
-    public void onViewRecycled(ThumbnailViewHolder holder) {
-        super.onViewRecycled(holder);
-        mImageManager.cancelRequestAndClearImageView(holder.mImgThumbnail);
-    }
-
     private PhotoPickerItem getItemAtPosition(int position) {
         if (!isValidPosition(position)) {
             AppLog.w(AppLog.T.POSTS, "photo picker > invalid position in getItemAtPosition");
