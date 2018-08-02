@@ -284,7 +284,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
         showProgress(true);
         mImageManager.load(mImageView, ImageType.FULLSCREEN_PHOTO, mediaUri, ScaleType.CENTER,
-                new RequestListener() {
+                new RequestListener<Drawable>() {
                     @Override
                     public void onResourceReady(@NotNull Drawable resource) {
                         if (isAdded()) {
