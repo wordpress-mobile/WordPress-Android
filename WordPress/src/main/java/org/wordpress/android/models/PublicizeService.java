@@ -9,6 +9,7 @@ public class PublicizeService {
     private String mGenericon;
     private String mIconUrl;
     private String mConnectUrl;
+    private boolean mIsExternalUsersOnly;
 
     private boolean mIsJetpackSupported;
     private boolean mIsMultiExternalUserIdSupported;
@@ -77,6 +78,14 @@ public class PublicizeService {
         mIsMultiExternalUserIdSupported = supported;
     }
 
+    public boolean isExternalUsersOnly() {
+        return mIsExternalUsersOnly;
+    }
+
+    public void setIsExternalUsersOnly(boolean isExternalUsersOnly) {
+        mIsExternalUsersOnly = isExternalUsersOnly;
+    }
+
     public boolean isSameAs(PublicizeService other) {
         return other != null
                && other.getId().equals(this.getId())
@@ -85,6 +94,7 @@ public class PublicizeService {
                && other.getGenericon().equals(this.getGenericon())
                && other.getIconUrl().equals(this.getIconUrl())
                && other.getConnectUrl().equals(this.getConnectUrl())
+               && other.isExternalUsersOnly() == this.isExternalUsersOnly()
                && other.isJetpackSupported() == this.isJetpackSupported();
     }
 }

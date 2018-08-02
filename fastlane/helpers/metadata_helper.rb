@@ -49,7 +49,7 @@ module Fastlane
       def generate_block(fw)
         # init
         fw.puts("msgctxt \"#{@block_key}\"")
-        line_count = `wc -l "#{@content_file_path}"`.strip.split(' ')[0].to_i
+        line_count = File.foreach(@content_file_path).inject(0) {|c, line| c+1}
 
         if (line_count <= 1)
           # Single line output
