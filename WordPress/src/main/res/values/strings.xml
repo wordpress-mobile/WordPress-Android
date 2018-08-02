@@ -1434,7 +1434,6 @@
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
-    <string name="reader_label_post_search_running">Searching…</string>
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit</string>

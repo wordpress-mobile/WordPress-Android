@@ -1175,7 +1175,7 @@ public class ReaderPostListFragment extends Fragment
                         title = getString(R.string.reader_label_post_search_explainer);
                         mActionableEmptyView.updateLayoutForSearch(true, heightToolbar);
                     } else if (isUpdating()) {
-                        title = getString(R.string.reader_label_post_search_running);
+                        title = "";
                         mActionableEmptyView.updateLayoutForSearch(true, heightToolbar);
                     } else {
                         title = getString(R.string.reader_empty_search_title);
