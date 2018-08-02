@@ -79,7 +79,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
                 .load(imgUrl)
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
-                .addThumbnail(imageView.context, thumbnailUrl)
+                .addThumbnail(imageView.context, thumbnailUrl, requestListener)
                 .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()
@@ -200,13 +200,18 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         return if (errorImageRes == null) this else this.error(errorImageRes)
     }
 
-    private fun GlideRequest<Drawable>.addThumbnail(context: Context, thumbnailUrl: String?): GlideRequest<Drawable> {
+    private fun GlideRequest<Drawable>.addThumbnail(
+        context: Context,
+        thumbnailUrl: String?,
+        listener: RequestListener<Drawable>
+    ): GlideRequest<Drawable> {
         return if (TextUtils.isEmpty(thumbnailUrl)) {
             this
         } else {
             val thumbnailRequest = GlideApp
                     .with(context)
                     .load(thumbnailUrl)
+                    .attachRequestListener(listener)
             return this.thumbnail(thumbnailRequest)
         }
     }
