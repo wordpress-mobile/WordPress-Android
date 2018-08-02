@@ -1067,6 +1067,12 @@ public class SiteStore extends Store {
             case FETCHED_PLANS:
                 handleFetchedPlans((FetchedPlansPayload) action.getPayload());
                 break;
+            case CHECK_DOMAIN_AVAILABILITY:
+                checkDomainAvailability((String) action.getPayload());
+                break;
+            case CHECKED_DOMAIN_AVAILABILITY:
+                handleCheckedDomainAvialability((DomainAvailabilityPayload) action.getPayload());
+                break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
@@ -1358,6 +1364,20 @@ public class SiteStore extends Store {
 
     private void handleFetchedPlans(FetchedPlansPayload payload) {
         emitChange(new OnPlansFetched(payload.site, payload.plans, payload.error));
+    }
+
+    private void checkDomainAvailability(String domainName) {
+        if (domainName == null || domainName.isEmpty()) {
+            DomainAvailabilityError error =
+                    new DomainAvailabilityError(DomainAvailabilityErrorType.INVALID_DOMAIN_NAME);
+            handleCheckedDomainAvialability(new DomainAvailabilityPayload(error));
+        } else {
+            mSiteRestClient.checkDomainAvailability(domainName);
+        }
+    }
+
+    private void handleCheckedDomainAvialability(DomainAvailabilityPayload payload) {
+        emitChange(new OnDomainAvailabilityChecked(payload.domainAvailabilityModel, payload.error));
     }
 
     // Automated Transfers
