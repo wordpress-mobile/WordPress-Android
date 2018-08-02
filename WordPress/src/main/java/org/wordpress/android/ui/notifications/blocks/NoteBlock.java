@@ -164,7 +164,7 @@ public class NoteBlock {
             // Request image, and animate it when loaded
             mImageManager
                     .load(noteBlockHolder.getImageView(), ImageType.IMAGE, getNoteMediaItem().optString("url", ""),
-                            ScaleType.CENTER, new ImageManager.RequestListener() {
+                            ScaleType.CENTER, new ImageManager.RequestListener<Drawable>() {
                                 @Override
                                 public void onLoadFailed(@Nullable Exception e) {
                                     noteBlockHolder.hideImageView();
