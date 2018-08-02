@@ -189,6 +189,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mFileTypeView.setText(fileExtension.toUpperCase(Locale.ROOT));
             int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
             holder.mFileTypeImageView.setImageResource(placeholderResId);
+            mImageManager.cancelRequestAndClearImageView(holder.mImageView);
         }
         holder.mImageView.setContentDescription(mContext.getString(R.string.media_grid_item_image_desc,
                 StringUtils.notNullStr(media.getFileName())));
@@ -252,7 +253,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public void onViewRecycled(GridViewHolder holder) {
         super.onViewRecycled(holder);
         holder.mImageView.setTag(R.id.media_grid_file_path_id, null);
-        mImageManager.cancelRequestAndClearImageView(holder.mImageView);
     }
 
     public ArrayList<Integer> getSelectedItems() {
