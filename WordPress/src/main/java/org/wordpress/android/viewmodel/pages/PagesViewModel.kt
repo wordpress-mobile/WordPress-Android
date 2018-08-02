@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
@@ -11,9 +12,6 @@ import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
-import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.AppLog
@@ -25,6 +23,9 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import javax.inject.Inject
+import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.coroutineContext
+import kotlin.coroutines.experimental.suspendCoroutine
 
 class PagesViewModel
 @Inject constructor(private val pageStore: PageStore) : ViewModel() {
@@ -47,12 +48,39 @@ class PagesViewModel
         get() = _pages
 
     private lateinit var site: SiteModel
+    private var searchContinuation: Continuation<String>? = null
 
     fun start(site: SiteModel) {
         this.site = site
 
         clearSearch()
         reloadPagesAsync()
+        handleThrottledSearchAsync()
+    }
+
+    private fun handleThrottledSearchAsync() = launch(CommonPool) {
+        var query: String
+        while (true) {
+            val searchQuery = suspendCoroutine<String> { continuation ->
+                searchContinuation = continuation
+            }
+            if (searchQuery.isNotEmpty()) {
+                launch(coroutineContext) {
+                    query = searchQuery
+                    delay(200)
+                    if (query == searchQuery) {
+                        val result = pageStore.search(site, searchQuery).map { Page(it.pageId.toLong(), it.title, null) }
+                        if (result.isNotEmpty()) {
+                            _searchResult.postValue(result)
+                        } else {
+                            _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                        }
+                    }
+                }
+            } else {
+                clearSearch()
+            }
+        }
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
@@ -77,24 +105,8 @@ class PagesViewModel
         _listState.postValue(newState)
     }
 
-    fun onSearchTextSubmit(query: String?): Boolean {
-        return onSearchTextChange(query)
-    }
-
-    fun onSearchTextChange(query: String?): Boolean {
-        if (query != null && query.isNotEmpty()) {
-            launch {
-                val result = pageStore.search(site, query).map { Page(it.pageId.toLong(), it.title, null) }
-                if (result.isNotEmpty()) {
-                    _searchResult.postValue(result)
-                } else {
-                    _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
-                }
-            }
-        } else {
-            clearSearch()
-        }
-        return true
+    fun onSearch(query: String) {
+        searchContinuation?.resume(query)
     }
 
     fun onSearchExpanded(): Boolean {
@@ -120,16 +132,4 @@ class PagesViewModel
     private fun clearSearch() {
         _searchResult.postValue(listOf(Empty(string.empty_list_default)))
     }
-}
-
-fun mockResult(query: String?): List<PageItem> {
-    // TODO remove with real data
-    return listOf(
-            Divider(1, "Data for $query"),
-            Page(1, "item 1", null, 0, setOf(VIEW_PAGE)),
-            Page(2, "item 2", null, 1),
-            Page(3, "item 3", null, 2, setOf(VIEW_PAGE, PUBLISH_NOW)),
-            Divider(2, "Divider 2"),
-            Page(4, "item 4", null, 0)
-    )
 }
