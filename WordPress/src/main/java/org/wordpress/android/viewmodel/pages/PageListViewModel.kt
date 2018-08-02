@@ -119,7 +119,7 @@ class PageListViewModel
 
     fun onScrolledToBottom() {
         launch(CommonPool) {
-            pagesViewModel.refreshPages(true)
+            pagesViewModel.refreshPages(LOADING_MORE)
         }
     }
 
@@ -138,6 +138,7 @@ class PageListViewModel
         CAN_LOAD_MORE,
         DONE,
         ERROR,
+        REFRESHING,
         FETCHING,
         LOADING_MORE
     }

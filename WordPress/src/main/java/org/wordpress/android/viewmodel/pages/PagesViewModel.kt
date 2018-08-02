@@ -16,6 +16,7 @@ import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Empty
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
@@ -24,6 +25,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DON
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
 
 class PagesViewModel
@@ -73,14 +75,16 @@ class PagesViewModel
 
     private fun reloadPagesAsync() = launch(CommonPool) {
         _pages = pageStore.getPages(site)
-        refreshPages()
+
+        val loadState = if (_pages.isEmpty()) FETCHING else REFRESHING
+        refreshPages(loadState)
     }
 
-    suspend fun refreshPages(isLoadingMore: Boolean = false) {
-        var newState = if (isLoadingMore) LOADING_MORE else FETCHING
+    suspend fun refreshPages(state: PageListState = REFRESHING) {
+        var newState = state
         _listState.postValue(newState)
 
-        val result = pageStore.requestPagesFromServer(site, isLoadingMore)
+        val result = pageStore.requestPagesFromServer(site, state == LOADING_MORE)
         if (result.isError) {
             _listState.postValue(ERROR)
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
@@ -107,7 +111,7 @@ class PagesViewModel
 
     fun onSearchTextChange(query: String?): Boolean {
         if (!query.isNullOrEmpty()) {
-            val listOf = mockResult(query)
+            val listOf = emptyList<PageItem>()
             _searchResult.postValue(listOf)
         } else {
             clearSearch()
@@ -143,26 +147,16 @@ class PagesViewModel
 
     fun onPullToRefresh() {
         launch {
-            refreshPages()
+            refreshPages(FETCHING)
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        if (!event.isError && event.post.isPage) {
-            reloadPagesAsync()
+        if (event.post.isPage) {
+            launch {
+                refreshPages()
+            }
         }
     }
-}
-
-fun mockResult(query: String?): List<PageItem> {
-    // TODO remove with real data
-    return listOf(
-//            Divider(1, "Data for $query"),
-//            Page(1, "item 1", setOf(VIEW_PAGE), 0, null),
-//            Page(2, "item 2", indent = 1, icon = null),
-//            Page(3, "item 3", setOf(VIEW_PAGE, PUBLISH_NOW), 2, null),
-//            Divider(2, "Divider 2"),
-//            Page(4, "item 4", indent = 0, icon = null)
-    )
 }
