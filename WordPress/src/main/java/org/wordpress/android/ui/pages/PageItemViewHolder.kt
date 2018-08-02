@@ -22,7 +22,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageViewHolder(
         parentView: ViewGroup,
-        private val onAction: (PageItem.Action, Page) -> Boolean
+        private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+        private val onItemTapped: (Page) -> Unit
     ) : PageItemViewHolder(parentView, layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
@@ -48,6 +49,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     pageLabel.visibility = View.VISIBLE
                 }
 
+                itemView.setOnClickListener { onItemTapped(pageItem) }
+
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
                 pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
             }
@@ -57,7 +60,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             val popup = PopupMenu(v.context, v)
             popup.setOnMenuItemClickListener { item ->
                 val action = PageItem.Action.fromItemId(item.itemId)
-                onAction(action, pageItem)
+                onMenuAction(action, pageItem)
             }
             popup.menuInflater.inflate(R.menu.page_more, popup.menu)
             PageItem.Action.values().forEach {

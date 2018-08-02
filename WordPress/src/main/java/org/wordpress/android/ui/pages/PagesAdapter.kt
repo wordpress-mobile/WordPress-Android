@@ -9,12 +9,15 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 
-class PagesAdapter(private val onAction: (PageItem.Action, Page) -> Boolean) : Adapter<PageItemViewHolder>() {
+class PagesAdapter(
+    private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+    private val onItemTapped: (Page) -> Unit
+) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
-            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onAction)
+            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")

@@ -125,8 +125,12 @@ class PagesViewModel
         return true
     }
 
-    fun onAction(action: Action, pageItem: PageItem): Boolean {
+    fun onMenuAction(action: Action, pageItem: PageItem): Boolean {
         TODO("not implemented")
+    }
+
+    fun onItemTapped(pageItem: Page) {
+
     }
 
     private fun clearSearch() {

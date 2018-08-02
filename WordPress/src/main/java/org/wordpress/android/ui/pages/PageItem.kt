@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import android.support.annotation.IdRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
@@ -61,7 +62,7 @@ sealed class PageItem(val type: Type) {
         PAGE(1), DIVIDER(2), EMPTY(3)
     }
 
-    enum class Action(val itemId: Int) {
+    enum class Action(@IdRes val itemId: Int) {
         VIEW_PAGE(R.id.view_page),
         SET_PARENT(R.id.set_parent),
         PUBLISH_NOW(R.id.publish_now),

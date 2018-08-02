@@ -211,7 +211,10 @@ class PagesFragment : Fragment() {
     private fun setSearchResult(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (searchRecyclerView.adapter == null) {
-            adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+            adapter = PagesAdapter(
+                    { action, page -> viewModel.onMenuAction(action, page) },
+                    { page -> viewModel.onItemTapped(page) }
+            )
             searchRecyclerView.adapter = adapter
         } else {
             adapter = searchRecyclerView.adapter as PagesAdapter

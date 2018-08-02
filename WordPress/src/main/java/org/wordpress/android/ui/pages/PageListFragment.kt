@@ -12,13 +12,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
@@ -125,6 +126,10 @@ class PageListFragment : Fragment() {
         viewModel.editPage.observe(this, Observer { page ->
             page?.let { ActivityLauncher.editPageForResult(activity, page) }
         })
+
+        viewModel.previewPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.editPageForResult(activity, page) }
+        })
     }
 
     private fun getPageType(type: Type): PageStatus {
@@ -139,7 +144,10 @@ class PageListFragment : Fragment() {
     private fun setPages(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (recyclerView.adapter == null) {
-            adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+            adapter = PagesAdapter(
+                    { action, page -> viewModel.onMenuAction(action, page) },
+                    { page -> viewModel.onItemTapped(page) }
+            )
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PagesAdapter

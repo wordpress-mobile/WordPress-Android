@@ -25,6 +25,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import javax.inject.Inject
 
 class PageListViewModel
@@ -35,6 +36,10 @@ class PageListViewModel
     private val _editPage = SingleLiveEvent<PageModel>()
     val editPage: LiveData<PageModel>
         get() = _editPage
+
+    private val _previewPage = SingleLiveEvent<PageModel>()
+    val previewPage: LiveData<PageModel>
+        get() = _previewPage
 
     private var isStarted: Boolean = false
     private var site: SiteModel? = null
@@ -118,11 +123,15 @@ class PageListViewModel
         }
     }
 
-    fun onAction(action: Action, pageItem: Page): Boolean {
+    fun onMenuAction(action: Action, pageItem: Page): Boolean {
         when (action) {
-            else -> _editPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            else -> _previewPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
         }
         return true
+    }
+
+    fun onItemTapped(pageItem: Page) {
+        _editPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
     }
 
     enum class PageListState {
