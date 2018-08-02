@@ -19,8 +19,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeConnection;
+import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -104,8 +106,9 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
                 dialogInterface.dismiss();
                 int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
                 String service = mNotConnectedAccounts.get(mSelectedIndex).getService();
+                String externalUserId = mNotConnectedAccounts.get(mSelectedIndex).getExternalId();
                 EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId,
-                        service));
+                        service, externalUserId));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -145,12 +148,27 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("connections");
             for (int i = 0; i < jsonArray.length(); i++) {
-                PublicizeConnection connection = PublicizeConnection.fromJson(jsonArray.getJSONObject(i));
+                JSONObject currentConnectionJson = jsonArray.getJSONObject(i);
+                PublicizeConnection connection = PublicizeConnection.fromJson(currentConnectionJson);
                 if (connection.getService().equals(mServiceId)) {
-                    if (connection.isInSite(mSite.getSiteId())) {
-                        mConnectedAccounts.add(connection);
-                    } else {
-                        mNotConnectedAccounts.add(connection);
+                    PublicizeService service = PublicizeTable.getService(mServiceId);
+                    if (service != null && !service.isExternalUsersOnly()) {
+                        if (connection.isInSite(mSite.getSiteId())) {
+                            mConnectedAccounts.add(connection);
+                        } else {
+                            mNotConnectedAccounts.add(connection);
+                        }
+                    }
+
+                    JSONArray externalJsonArray = currentConnectionJson.getJSONArray("additional_external_users");
+                    for (int j = 0; j < externalJsonArray.length(); j++) {
+                        JSONObject currentExternalConnectionJson = externalJsonArray.getJSONObject(j);
+                        PublicizeConnection.updateConnectionfromExternalJson(connection, currentExternalConnectionJson);
+                        if (connection.isInSite(mSite.getSiteId())) {
+                            mConnectedAccounts.add(connection);
+                        } else {
+                            mNotConnectedAccounts.add(connection);
+                        }
                     }
                 }
             }
@@ -160,6 +178,10 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
     }
 
     private void configureConnectionName() {
+        if (mNotConnectedAccounts.isEmpty()) {
+            return;
+        }
+
         PublicizeConnection connection = mNotConnectedAccounts.get(0);
         if (connection != null) {
             mConnectionName = connection.getLabel();

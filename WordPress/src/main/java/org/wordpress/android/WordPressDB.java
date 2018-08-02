@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.SiteSettingsModel;
@@ -21,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 65;
+    private static final int DATABASE_VERSION = 66;
 
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
@@ -170,6 +171,9 @@ public class WordPressDB {
             case 64:
                 // add site icon
                 mDb.execSQL(SiteSettingsModel.ADD_SITE_ICON);
+            case 65:
+                // add external users only to publicize services table
+                PublicizeTable.resetServicesTable(mDb);
         }
         mDb.setVersion(DATABASE_VERSION);
     }
