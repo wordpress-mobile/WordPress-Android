@@ -87,7 +87,6 @@ Language: vi_VN
     <string name="delete_site_hint">Xóa site</string>
     <string name="export_site_hint">Xuất site của bạn sang tập tin XML</string>
     <string name="primary_domain">Tên miền chính</string>
-    <string name="error_deleting_site_summary">Có lỗi trong việc xóa trang web của bạn. Vui lòng liên hệ hỗ trợ để được giúp đỡ nhiều hơn nữa</string>
     <string name="error_deleting_site">Lỗi xóa site</string>
     <string name="site_settings_export_content_title">Xuất nội dung</string>
     <string name="confirm_delete_site_prompt">Xin vui lòng nhập %1$s vào trường bên dưới để xác nhận. Trang web của bạn sau đó sẽ biến mất mãi mãi.</string>
@@ -357,7 +356,6 @@ Language: vi_VN
     <string name="email">Email</string>
     <string name="stats_insights_latest_post_trend">Đó là %1$s kể từ %2$s đã được xuất bản. Đây là cách các bài đã thực hiện cho đến nay …</string>
     <string name="stats_insights_latest_post_summary">Tóm tắt bài viết mới nhất</string>
-    <string name="button_revert">Hoàn nguyên</string>
     <string name="days_ago">%d ngày trước</string>
     <string name="yesterday">Hôm qua</string>
     <string name="connectionbar_no_connection">Không có kết nối</string>

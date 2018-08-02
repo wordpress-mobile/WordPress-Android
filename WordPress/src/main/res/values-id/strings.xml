@@ -190,9 +190,7 @@ Language: id
     <string name="jetpack_connection_failed_with_reason">Koneksi ke Jetpack gagal: %s</string>
     <string name="jetpack_already_connected_toast">Anda sudah terhubung dengan Jetpack!</string>
     <string name="menu_undo_snackbar_action">URUNGKAN</string>
-    <string name="menu_visual_mode_done_snackbar">Beralih ke mode Visual.</string>
     <string name="menu_visual_mode">Mode Visual</string>
-    <string name="menu_html_mode_done_snackbar">Beralih ke mode HTML.</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Pratinjau</string>
     <string name="menu_publish_now">Publikasikan Sekarang</string>
@@ -938,7 +936,6 @@ Language: id
     <string name="delete_site_hint">Hapus situs</string>
     <string name="export_site_hint">Ekspor situs Anda ke file XML</string>
     <string name="primary_domain">Domain Primer</string>
-    <string name="error_deleting_site_summary">Ada kesalahan saat menghapus situs Anda. Hubungi dukungan untuk bantuan selengkapnya</string>
     <string name="error_deleting_site">Kesalahan saat menghapus situs</string>
     <string name="site_settings_export_content_title">Ekspor konten</string>
     <string name="confirm_delete_site_prompt">Harap ketikkan %1$s di bidang di bawah untuk mengonfirmasi. Situs Anda akan dihapus selamanya.</string>
@@ -1208,7 +1205,6 @@ Language: id
     <string name="app_notifications">Pemberitahuan aplikasi</string>
     <string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Berikut ini gambaran kinerja pos sejauh ini…</string>
     <string name="stats_insights_latest_post_summary">Ringkasan Pos Terbaru</string>
-    <string name="button_revert">Kembalikan</string>
     <string name="yesterday">Kemarin</string>
     <string name="days_ago">%d hari yang lalu</string>
     <string name="connectionbar_no_connection">Tak ada koneksi</string>

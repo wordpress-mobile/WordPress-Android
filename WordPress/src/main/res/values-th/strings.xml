@@ -169,7 +169,6 @@ Language: th
     <string name="email">อีเมล</string>
     <string name="stats_insights_latest_post_trend">มันเป็นเวลา %1$s ตั้งแต่ %2$s ได้เผยแพร่  นี่เป็นวิธีที่เรื่องจะถูกแสดงจนถึงตอนนี้…</string>
     <string name="stats_insights_latest_post_summary">สรุปเรื่องล่าสุด</string>
-    <string name="button_revert">คืนกลับ</string>
     <string name="days_ago">%d วันที่แล้ว</string>
     <string name="yesterday">เมื่อวานนี้</string>
     <string name="connectionbar_no_connection">ไม่มีการเชื่อมต่อ</string>

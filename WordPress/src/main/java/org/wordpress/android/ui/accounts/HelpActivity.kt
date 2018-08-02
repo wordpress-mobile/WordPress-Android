@@ -77,6 +77,16 @@ class HelpActivity : AppCompatActivity() {
             }
             AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
         }
+
+        /**
+        * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
+        * should only be triggered when the activity is first created, otherwise if the user comes back from
+        * `My Tickets` and rotates the screen (or triggers the activity re-creation in any other way) it'll navigate
+        * them to `My Tickets` again since the `originFromExtras` will still be [Origin.ZENDESK_NOTIFICATION].
+         */
+        if (savedInstanceState == null && originFromExtras == Origin.ZENDESK_NOTIFICATION) {
+            showZendeskTickets()
+        }
     }
 
     override fun onResume() {
@@ -117,6 +127,7 @@ class HelpActivity : AppCompatActivity() {
 
     enum class Origin(private val stringValue: String) {
         UNKNOWN("origin:unknown"),
+        ZENDESK_NOTIFICATION("origin:zendesk-notification"),
         LOGIN_SCREEN_WPCOM("origin:wpcom-login-screen"),
         LOGIN_SCREEN_SELF_HOSTED("origin:wporg-login-screen"),
         LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),
