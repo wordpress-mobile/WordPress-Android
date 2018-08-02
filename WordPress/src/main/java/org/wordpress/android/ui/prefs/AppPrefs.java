@@ -735,11 +735,11 @@ public class AppPrefs {
         setInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, value);
     }
 
-    public static String getActiveQuickStartTask() {
+    public static String getPromptedQuickStartTask() {
         return getString(DeletablePrefKey.ACTIVE_QUICK_START_TASK);
     }
 
-    public static void setActiveQuickStartTask(String task) {
+    public static void setPromptedQuickStartTask(String task) {
         setString(DeletablePrefKey.ACTIVE_QUICK_START_TASK, task);
     }
 }
