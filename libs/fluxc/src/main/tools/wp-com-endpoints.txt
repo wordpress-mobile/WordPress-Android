@@ -4,6 +4,7 @@
 /connect/site-info/
 
 /devices/new/
+/devices/$deviceId#String/delete/
 
 /is-available/blog/
 /is-available/domain/
