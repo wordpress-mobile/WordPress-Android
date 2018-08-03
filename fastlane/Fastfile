@@ -13,6 +13,31 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+SUPPORTED_LOCALES = [
+  { glotpress: "ar", google_play: "ar" },
+  { glotpress: "de", google_play: "de-DE" },
+  { glotpress: "en-gb", google_play: "en-US" },
+  { glotpress: "es", google_play: "es-ES" },
+  { glotpress: "fr", google_play: "fr-CA" },
+  { glotpress: "fr", google_play: "fr-FR" },
+  { glotpress: "he", google_play: "iw-IL" },
+  { glotpress: "id", google_play: "id" },
+  { glotpress: "it", google_play: "it-IT" },
+  { glotpress: "ja", google_play: "ja-JP" },
+  { glotpress: "ko", google_play: "ko-KR" },
+  { glotpress: "nl", google_play: "nl-NL" },
+  { glotpress: "pl", google_play: "pl-PL" },
+  { glotpress: "pt-br", google_play: "pt-BR" },
+  { glotpress: "ru", google_play: "ru-RU" },
+  { glotpress: "sr", google_play:  "sr" },
+  { glotpress: "sv", google_play: "sv-SE" },
+  { glotpress: "th", google_play: "th" },
+  { glotpress: "tr", google_play: "tr-TR" },
+  { glotpress: "vi", google_play: "vi" },
+  { glotpress: "zh-cn", google_play: "zh-CN" },
+  { glotpress: "zh-tw", google_play: "zh-TW" },
+].freeze
+
 default_platform(:android)
 
 platform :android do
@@ -65,7 +90,7 @@ platform :android do
       use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
       reinstall_app: false,
       clear_previous_screenshots: true,
-      locales: ["ar", "de-DE", "en-US", "es-ES", "fr-CA", "fr-FR", "id", "it-IT", "iw-IL", "ja-JP", "ko-KR", "nl-NL", "pl-PL", "pt-BR", "ru-RU", "sr", "sv-SE", "th", "tr-TR", "vi", "zh-CN", "zh-TW"]
+      locales: SUPPORTED_LOCALES.map { |hsh| hsh[:google_play] }
     }
 
     take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
@@ -126,35 +151,10 @@ lane :download_metadata_strings do |options|
     play_store_app_title: "title.txt"
   }
 
-  metadata_locales = [
-    ["en-gb", "en-US"],
-    ["pl", "pl-PL"],
-    ["id", "id"],
-    ["ja", "ja-JP"],
-    ["fr", "fr-FR"],
-    ["fr", "fr-CA"],
-    ["ko", "ko-KR"],
-    ["zh-cn", "zh-CN"],
-    ["sv", "sv-SE"],
-    ["it", "it-IT"],
-    ["ru", "ru-RU"],
-    ["tr", "tr-TR"],
-    ["de", "de-DE"],
-    ["nl", "nl-NL"],
-    ["es", "es-ES"],
-    ["pt-br", "pt-BR"],
-    ["zh-tw", "zh-TW"],
-    ["he", "iw-IL"],
-    ["ar", "ar"],
-    ["sr",  "sr"],
-    ["th", "th"],
-    ["vi", "vi"]
-  ]
-
   delete_old_changelogs(build: options[:build_number])
   download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
     target_files: files, 
-    locales: metadata_locales)
+    locales: SUPPORTED_LOCALES)
 end 
 
 #####################################################################################
