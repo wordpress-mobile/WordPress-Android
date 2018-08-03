@@ -69,7 +69,8 @@ class PagesViewModel
                     query = searchQuery
                     delay(200)
                     if (query == searchQuery) {
-                        val result = pageStore.search(site, searchQuery).map { Page(it.pageId.toLong(), it.title, null) }
+                        val result = pageStore.search(site, searchQuery)
+                                .map { Page(it.pageId.toLong(), it.title, null) }
                         if (result.isNotEmpty()) {
                             _searchResult.postValue(result)
                         } else {

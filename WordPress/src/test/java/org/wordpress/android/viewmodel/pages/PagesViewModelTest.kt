@@ -60,7 +60,7 @@ class PagesViewModelTest {
         initSearch()
         val query = "query"
         val expectedResult = listOf(PageModel(1, "title", DRAFT, -1))
-        val pageItems = expectedResult.map { PageItem.Page(it.pageId.toLong(),  it.title, null) }
+        val pageItems = expectedResult.map { PageItem.Page(it.pageId.toLong(), it.title, null) }
         whenever(pageStore.search(site, query)).thenReturn(expectedResult)
 
         val observer = viewModel.searchResult.test()

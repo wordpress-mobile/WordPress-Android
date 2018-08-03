@@ -60,7 +60,6 @@ class PageStoreTest {
         assertEquals(result[0].title, pageWithQuery.title)
     }
 
-
     @Test
     fun emptySearchResultWhenNothingContainsQuery() {
         val result = runBlocking { store.search(site, "foo") }
