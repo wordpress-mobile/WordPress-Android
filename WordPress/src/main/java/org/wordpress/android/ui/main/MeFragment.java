@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -339,8 +340,15 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
     }
 
     private void signOutWordPressComWithConfirmation() {
-        String message = String.format(getString(R.string.sign_out_wpcom_confirm),
-                                       mAccountStore.getAccount().getUserName());
+        // if there are local changes we need to let the user know they'll be lost if they logout, otherwise
+        // we use a simpler (less scary!) confirmation
+        int numChanges = PostStore.getNumLocalChanges();
+        String message;
+        if (numChanges > 0) {
+            message = String.format(getString(R.string.sign_out_wpcom_confirm_with_changes), numChanges);
+        } else {
+            message = getString(R.string.sign_out_wpcom_confirm_with_no_changes);
+        }
 
         new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert))
                 .setMessage(message)
