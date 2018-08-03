@@ -220,13 +220,13 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class DomainAvailabilityPayload extends Payload<DomainAvailabilityError> {
-        @Nullable public DomainAvailabilityModel domainAvailabilityModel;
-        public DomainAvailabilityPayload(@NonNull DomainAvailabilityModel domainAvailabilityModel) {
-            this.domainAvailabilityModel = domainAvailabilityModel;
+    public static class DomainAvailabilityResponsePayload extends Payload<DomainAvailabilityError> {
+        @Nullable public DomainAvailabilityModel domainAvailability;
+        public DomainAvailabilityResponsePayload(@NonNull DomainAvailabilityModel domainAvailability) {
+            this.domainAvailability = domainAvailability;
         }
 
-        public DomainAvailabilityPayload(@NonNull DomainAvailabilityError error) {
+        public DomainAvailabilityResponsePayload(@NonNull DomainAvailabilityError error) {
             this.error = error;
         }
     }
@@ -439,14 +439,10 @@ public class SiteStore extends Store {
     }
 
     public static class OnDomainAvailabilityChecked extends OnChanged<DomainAvailabilityError> {
-        public @Nullable DomainAvailabilityModel model;
-        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityModel model,
+        public @Nullable DomainAvailabilityModel domainAvailability;
+        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityModel domainAvailability,
                                            @Nullable DomainAvailabilityError error) {
-            this.model = model;
-            this.error = error;
-        }
-        public OnDomainAvailabilityChecked(@NonNull DomainAvailabilityError error) {
-            this.model = model;
+            this.domainAvailability = domainAvailability;
             this.error = error;
         }
     }
@@ -649,7 +645,7 @@ public class SiteStore extends Store {
 
     public enum DomainAvailabilityErrorType {
         INVALID_DOMAIN_NAME,
-        GENERIC_ERROR;
+        GENERIC_ERROR
     }
 
     public enum SiteVisibility {
@@ -1071,7 +1067,7 @@ public class SiteStore extends Store {
                 checkDomainAvailability((String) action.getPayload());
                 break;
             case CHECKED_DOMAIN_AVAILABILITY:
-                handleCheckedDomainAvialability((DomainAvailabilityPayload) action.getPayload());
+                handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
                 break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
@@ -1367,17 +1363,17 @@ public class SiteStore extends Store {
     }
 
     private void checkDomainAvailability(String domainName) {
-        if (domainName == null || domainName.isEmpty()) {
+        if (TextUtils.isEmpty(domainName)) {
             DomainAvailabilityError error =
                     new DomainAvailabilityError(DomainAvailabilityErrorType.INVALID_DOMAIN_NAME);
-            handleCheckedDomainAvialability(new DomainAvailabilityPayload(error));
+            handleCheckedDomainAvailability(new DomainAvailabilityResponsePayload(error));
         } else {
             mSiteRestClient.checkDomainAvailability(domainName);
         }
     }
 
-    private void handleCheckedDomainAvialability(DomainAvailabilityPayload payload) {
-        emitChange(new OnDomainAvailabilityChecked(payload.domainAvailabilityModel, payload.error));
+    private void handleCheckedDomainAvailability(DomainAvailabilityResponsePayload payload) {
+        emitChange(new OnDomainAvailabilityChecked(payload.domainAvailability, payload.error));
     }
 
     // Automated Transfers

@@ -44,7 +44,7 @@ import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -529,9 +529,9 @@ public class SiteRestClient extends BaseWPComRestClient {
     /**
      * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint. Upon receiving a response
      * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
-     * payload of type {@link DomainAvailabilityPayload}.
+     * payload of type {@link DomainAvailabilityResponsePayload}.
      *
-     * {@link DomainAvailabilityPayload#isError()} can be used to check the request result.
+     * {@link DomainAvailabilityResponsePayload#isError()} can be used to check the request result.
      */
     public void checkDomainAvailability(@NonNull final String domainName) {
         String url = WPCOMREST.domains.domainName(domainName).is_available.getUrlV1_3();
@@ -540,8 +540,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new Listener<DomainAvailabilityResponse>() {
                             @Override
                             public void onResponse(DomainAvailabilityResponse response) {
-                                DomainAvailabilityPayload payload =
-                                        new DomainAvailabilityPayload(responseToDomainAvailability(response));
+                                DomainAvailabilityResponsePayload payload =
+                                        new DomainAvailabilityResponsePayload(responseToDomainAvailability(response));
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
                             }
                         },
@@ -552,8 +552,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 // authenticated user. Therefore, only GENERIC_ERROR is identified here.
                                 DomainAvailabilityError domainAvailabilityError = new DomainAvailabilityError(
                                         DomainAvailabilityErrorType.GENERIC_ERROR, error.message);
-                                DomainAvailabilityPayload payload =
-                                        new DomainAvailabilityPayload(domainAvailabilityError);
+                                DomainAvailabilityResponsePayload payload =
+                                        new DomainAvailabilityResponsePayload(domainAvailabilityError);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
                             }
                         });
