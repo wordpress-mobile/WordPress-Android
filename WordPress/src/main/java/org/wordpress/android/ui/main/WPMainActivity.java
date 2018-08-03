@@ -504,12 +504,15 @@ public class WPMainActivity extends AppCompatActivity implements
     public void onPageChanged(int position) {
         updateTitle(position);
         trackLastVisiblePage(position, true);
-        if (position == PAGE_READER && getMySiteFragment() != null
-            && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
-            // MySite fragment might not be attached to activity, so we need to remove focus point from here
+        if (getMySiteFragment() != null) {
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
-            getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+
+            if (position == PAGE_READER && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+                // MySite fragment might not be attached to activity, so we need to remove focus point from here
+                getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+            }
         }
+
     }
 
     // user tapped the new post button in the bottom navbar
@@ -670,7 +673,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
                     //TODO for test purposes show Quick Start dialog when switching sites
 //                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                        showQuickStartDialog();
+                    showQuickStartDialog();
 //                    }
 
                     setSite(data);
@@ -1046,5 +1049,6 @@ public class WPMainActivity extends AppCompatActivity implements
     @Override protected void onPause() {
         super.onPause();
         hideQuickStartSnackBar();
+        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
     }
 }
