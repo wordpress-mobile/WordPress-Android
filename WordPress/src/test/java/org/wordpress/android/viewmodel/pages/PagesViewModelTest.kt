@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.experimental.runBlocking
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -50,13 +51,12 @@ class PagesViewModelTest {
 
         val listStates = listStateObserver.awaitValues(2)
 
-        assertEquals(FETCHING, listStates[0])
-        assertEquals(DONE, listStates[1])
+        assertThat(listStates).containsExactly(FETCHING, DONE)
         refreshPagesObserver.awaitNullableValues(2)
     }
 
     @Test
-    fun onSearchReturnsResultsFromStore() = runBlocking {
+    fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
         initSearch()
         val query = "query"
         val expectedResult = listOf(PageModel(1, "title", DRAFT, -1))
@@ -67,13 +67,13 @@ class PagesViewModelTest {
 
         viewModel.onSearch(query)
 
-        val searchResult = observer.await()
+        val result = observer.await()
 
-        assertEquals(pageItems, searchResult)
+        assertThat(result).isEqualTo(pageItems)
     }
 
     @Test
-    fun onEmptySearchResultEmitsEmptyItem() = runBlocking {
+    fun onEmptySearchResultEmitsEmptyItem() = runBlocking<Unit> {
         initSearch()
         val query = "query"
         val pageItems = listOf(Empty(string.pages_empty_search_result))
@@ -85,11 +85,11 @@ class PagesViewModelTest {
 
         val result = data.await()
 
-        assertEquals(pageItems, result)
+        assertThat(result).isEqualTo(pageItems)
     }
 
     @Test
-    fun onEmptyQueryClearsSearch() = runBlocking {
+    fun onEmptyQueryClearsSearch() = runBlocking<Unit> {
         initSearch()
         val query = ""
         val pageItems = listOf(Empty(string.empty_list_default))
@@ -100,7 +100,7 @@ class PagesViewModelTest {
 
         val result = data.await()
 
-        assertEquals(pageItems, result)
+        assertThat(result).isEqualTo(pageItems)
     }
 
     private suspend fun initSearch() {
