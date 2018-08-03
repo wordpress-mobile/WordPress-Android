@@ -342,11 +342,9 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
     private void signOutWordPressComWithConfirmation() {
         // if there are local changes we need to let the user know they'll be lost if they logout, otherwise
         // we use a simpler (less scary!) confirmation
-        int numChanges = PostStore.getNumLocalChanges();
         String message;
-        if (numChanges > 0) {
-            message = getResources().getQuantityString(R.plurals.sign_out_wpcom_confirm_with_changes,
-                    numChanges, numChanges);
+        if (PostStore.getNumLocalChanges() > 0) {
+            message = getString(R.string.sign_out_wpcom_confirm_with_changes);
         } else {
             message = getString(R.string.sign_out_wpcom_confirm_with_no_changes);
         }
