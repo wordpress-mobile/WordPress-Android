@@ -21,55 +21,19 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         app:aevImage="@drawable/img_illustration_media"
-        app:aevTitle="@string/media_empty_list"
-        tools:visibility="visible" >
+        app:aevTitle="@string/media_empty_list" >
     </org.wordpress.android.ui.ActionableEmptyView>
 
-    <LinearLayout
-        android:id="@+id/container_soft_ask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/soft_ask_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:visibility="gone"
-        tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/image_soft_ask"
-            android:layout_width="175dp"
-            android:layout_height="140dp"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_soft_ask_media"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_soft_ask_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="@dimen/margin_extra_extra_large"
-            android:layout_marginLeft="@dimen/margin_extra_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_extra_large"
-            android:layout_marginTop="@dimen/margin_large"
-            android:gravity="center"
-            android:text="@string/photo_picker_soft_ask_label"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_soft_ask_allow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_large"
-            android:text="@string/photo_picker_soft_ask_allow"
-            android:textAllCaps="true"
-            android:textColor="@color/blue_wordpress"
-            android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"/>
-    </LinearLayout>
+        app:aevButton="@string/photo_picker_soft_ask_allow"
+        app:aevImage="@drawable/img_illustration_add_media_175dp"
+        app:aevTitle="@string/photo_picker_soft_ask_label"
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
 
     <LinearLayout
         android:id="@+id/bottom_bar"
