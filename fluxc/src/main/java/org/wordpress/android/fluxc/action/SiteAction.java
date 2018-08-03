@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSit
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -93,7 +93,7 @@ public enum SiteAction implements IAction {
     CHECKED_AUTOMATED_TRANSFER_STATUS,
     @Action(payloadType = FetchedPlansPayload.class)
     FETCHED_PLANS,
-    @Action(payloadType = DomainAvailabilityPayload.class)
+    @Action(payloadType = DomainAvailabilityResponsePayload.class)
     CHECKED_DOMAIN_AVAILABILITY,
 
     // Local actions
