@@ -12,18 +12,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
-import org.wordpress.android.R.id.activityJetpackActorIcon
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
-import org.wordpress.android.widgets.WPNetworkImageView
 import javax.inject.Inject
 
 class ActivityLogDetailFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var imageManager: ImageManager
+
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     companion object {
@@ -103,7 +105,7 @@ class ActivityLogDetailFragment : Fragment() {
     private fun setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
         when {
             actorIcon != null && actorIcon != "" -> {
-                activityActorIcon.setImageUrl(actorIcon, WPNetworkImageView.ImageType.AVATAR)
+                imageManager.loadIntoCircle(activityActorIcon, AVATAR, actorIcon)
                 activityActorIcon.visibility = View.VISIBLE
                 activityJetpackActorIcon.visibility = View.GONE
             }
@@ -112,7 +114,7 @@ class ActivityLogDetailFragment : Fragment() {
                 activityActorIcon.visibility = View.GONE
             }
             else -> {
-                activityActorIcon.resetImage()
+                imageManager.cancelRequestAndClearImageView(activityActorIcon)
                 activityActorIcon.visibility = View.GONE
                 activityJetpackActorIcon.visibility = View.GONE
             }

@@ -6,14 +6,15 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/image_icon"
         android:layout_width="@dimen/blavatar_sz_small"
         android:layout_height="@dimen/blavatar_sz_small"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"
-        android:layout_marginEnd="@dimen/margin_large"/>
+        android:layout_marginEnd="@dimen/margin_large"
+        android:contentDescription="@null"/>
 
     <View
         android:id="@+id/divider"

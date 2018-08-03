@@ -336,6 +336,17 @@ public class ReaderBlogActions {
     }
 
     public static void updateFeedInfo(long feedId, String feedUrl, final UpdateBlogInfoListener infoListener) {
+        // must pass either a valid id or url
+        final boolean hasFeedId = (feedId != 0);
+        final boolean hasFeedUrl = !TextUtils.isEmpty(feedUrl);
+        if (!hasFeedId && !hasFeedUrl) {
+            AppLog.w(T.READER, "cannot update Feed info without either id or url");
+            if (infoListener != null) {
+                infoListener.onResult(null);
+            }
+            return;
+        }
+
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {

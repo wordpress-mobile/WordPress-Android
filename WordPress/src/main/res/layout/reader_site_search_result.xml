@@ -15,11 +15,12 @@
         android:orientation="horizontal"
         android:padding="@dimen/margin_large">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/image_blavatar"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
-            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"/>
+            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"
+            android:contentDescription="@null"/>
 
         <RelativeLayout
             android:layout_width="0dp"

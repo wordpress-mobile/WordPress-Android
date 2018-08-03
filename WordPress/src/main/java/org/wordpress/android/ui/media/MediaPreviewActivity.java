@@ -32,7 +32,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
@@ -81,7 +80,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     private final Handler mFadeHandler = new Handler();
 
     @Inject MediaStore mMediaStore;
-    @Inject FluxCImageLoader mImageLoader;
 
     static class MediaPreviewSwiped {
         final int mediaId;

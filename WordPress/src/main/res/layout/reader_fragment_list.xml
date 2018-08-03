@@ -16,14 +16,13 @@
         android:scrollbars="vertical"
         tools:listitem="@layout/reader_listitem_tag" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_empty"
-        style="@style/ReaderTextView.EmptyList"
-        android:layout_centerInParent="true"
-        android:text="@string/reader_empty_recommended_blogs"
-        android:textColor="@color/grey_darken_10"
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:visibility="gone"
-        app:fixWidowWords="true"
-        tools:visibility="visible" />
+        app:aevTitle="@string/reader_empty_recommended_blogs"
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
 
 </RelativeLayout>

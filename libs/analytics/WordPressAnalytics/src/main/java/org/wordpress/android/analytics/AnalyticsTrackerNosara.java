@@ -492,6 +492,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_draft_saved";
             case EDITOR_DISCARDED_CHANGES:
                 return "editor_discarded_changes";
+            case EDITOR_DISCARDED_CHANGES_UNDO:
+                return "editor_discarded_changes_undo";
             case EDITOR_EDITED_IMAGE:
                 return "editor_image_edited";
             case EDITOR_HYBRID_ENABLED:

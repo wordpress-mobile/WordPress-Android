@@ -13,10 +13,11 @@
         android:layout_height="match_parent"
         android:clickable="false" />
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/profile_pic"
         android:layout_width="@dimen/publicize_pic_width"
-        android:layout_height="@dimen/publicize_pic_width" />
+        android:layout_height="@dimen/publicize_pic_width"
+        android:contentDescription="@null"/>
 
     <TextView
         android:id="@+id/name"

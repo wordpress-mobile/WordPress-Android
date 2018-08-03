@@ -23,13 +23,14 @@
         android:paddingEnd="@dimen/reader_card_content_padding"
         android:paddingStart="@dimen/reader_card_content_padding">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/image_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_large"
             app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
-            android:layout_marginEnd="@dimen/margin_large"/>
+            android:layout_marginEnd="@dimen/margin_large"
+            android:contentDescription="@null"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:textAlignment="viewStart"

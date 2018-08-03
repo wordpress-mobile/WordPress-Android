@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.List;
 
@@ -254,8 +254,9 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
             // icon
             // holder.showNetworkImage(icon);
-            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
-                                                WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR,
+                    GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx));
+
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = group.getFollowData();

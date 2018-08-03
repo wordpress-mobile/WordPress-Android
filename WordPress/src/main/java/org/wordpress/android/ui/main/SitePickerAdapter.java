@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -24,7 +25,8 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,12 +99,13 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ImageManager mImageManager;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mLayoutContainer;
         private final TextView mTxtTitle;
         private final TextView mTxtDomain;
-        private final WPNetworkImageView mImgBlavatar;
+        private final ImageView mImgBlavatar;
         private final View mDivider;
         private Boolean mIsSiteHidden;
         private final RadioButton mSelectedRadioButton;
@@ -233,7 +236,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final SiteViewHolder holder = (SiteViewHolder) viewHolder;
         holder.mTxtTitle.setText(site.getBlogNameOrHomeURL());
         holder.mTxtDomain.setText(site.mHomeURL);
-        holder.mImgBlavatar.setImageUrl(site.mBlavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR, site.mBlavatarUrl);
 
         if (site.mLocalId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
             holder.mLayoutContainer.setBackgroundDrawable(mSelectedItemBackground);

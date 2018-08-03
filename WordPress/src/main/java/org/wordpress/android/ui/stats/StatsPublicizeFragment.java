@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.List;
 
@@ -120,8 +120,6 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
                 rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 holder = new StatsViewHolder(rowView);
-                holder.networkImageView.setErrorImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_32dp);
-                holder.networkImageView.setDefaultImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_32dp);
                 rowView.setTag(holder);
             } else {
                 holder = (StatsViewHolder) rowView.getTag();
@@ -145,9 +143,8 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
                             currentRowData.getTotals()));
 
             // image
-            holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(getServiceImage(serviceName), mResourceVars.mHeaderAvatarSizePx),
-                    WPNetworkImageView.ImageType.BLAVATAR);
+            mImageManager.load(holder.networkImageView, ImageType.BLAVATAR,
+                    GravatarUtils.fixGravatarUrl(getServiceImage(serviceName), mResourceVars.mHeaderAvatarSizePx));
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             return rowView;

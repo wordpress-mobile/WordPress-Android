@@ -139,4 +139,18 @@
         <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
     </declare-styleable>
 
+    <!--
+        Actionable Empty View
+    -->
+    <declare-styleable name="ActionableEmptyView">
+        <!-- Optional: string text of button -->
+        <attr name="aevButton" format="string"/>
+        <!-- Optional: resource id of image -->
+        <attr name="aevImage" format="reference"/>
+        <!-- Optional: string text of subtitle -->
+        <attr name="aevSubtitle" format="string"/>
+        <!-- Required: string text of title -->
+        <attr name="aevTitle" format="string"/>
+    </declare-styleable>
+
 </resources>

@@ -1,3 +1,0 @@
-10.2 :
-* Nouvelle fonctionnalité : Quelque chose a attiré votre attention ? Utilisez la fonction Enregistrer pour plus tard pour le lire à tête reposée ! Même hors ligne !
-* Résolution de divers bugs.

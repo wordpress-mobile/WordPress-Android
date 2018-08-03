@@ -3,9 +3,12 @@
 <!--
     single avatar image inserted into post detail when showing liking users
 -->
-<org.wordpress.android.widgets.WPNetworkImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/image_like_avatar"
     android:layout_width="@dimen/avatar_sz_small"
     android:layout_height="@dimen/avatar_sz_small"
     android:layout_marginRight="@dimen/margin_small"
-    android:layout_marginEnd="@dimen/margin_small"/>
+    android:layout_marginEnd="@dimen/margin_small"
+    tools:ignore="ContentDescription"/>

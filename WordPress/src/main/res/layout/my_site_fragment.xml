@@ -55,7 +55,7 @@
                             android:visibility="gone"
                             android:gravity="center_vertical" />
 
-                        <org.wordpress.android.widgets.WPNetworkImageView
+                        <ImageView
                             android:id="@+id/my_site_blavatar"
                             android:layout_width="@dimen/blavatar_sz"
                             android:layout_height="@dimen/blavatar_sz"

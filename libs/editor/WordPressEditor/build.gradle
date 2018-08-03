@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation 'org.wordpress:utils:1.18.1'
+    implementation 'org.wordpress:utils:1.22'
 
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v1.3.7')
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:v1.3.7')

@@ -62,6 +62,7 @@
 
     <!-- Alerts -->
     <color name="alert_yellow">#f0b849</color>
+    <color name="alert_yellow_dark">#d89511</color>
     <color name="alert_red">#d94f4f</color>
     <color name="alert_green">#4ab866</color>
 

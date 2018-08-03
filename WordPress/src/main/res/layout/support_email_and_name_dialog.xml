@@ -35,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
+        android:maxLength="@integer/max_length_support_name"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"/>
 </LinearLayout>

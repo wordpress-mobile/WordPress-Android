@@ -30,13 +30,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.TextView.BufferType;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -66,10 +62,10 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
-import org.wordpress.android.ui.ImageManager;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -101,6 +97,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
@@ -136,8 +133,7 @@ public class ReaderPostListFragment extends Fragment
     private boolean mFirstLoad = true;
 
     private View mNewPostsBar;
-    private View mEmptyView;
-    private View mEmptyViewBoxImages;
+    private ActionableEmptyView mActionableEmptyView;
     private ProgressBar mProgress;
     private TabLayout mSearchTabs;
 
@@ -176,6 +172,11 @@ public class ReaderPostListFragment extends Fragment
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+
+    private enum ActionableEmptyViewButtonType {
+        DISCOVER,
+        FOLLOWED
+    }
 
     private static class HistoryStack extends Stack<String> {
         private final String mKeyName;
@@ -527,13 +528,10 @@ public class ReaderPostListFragment extends Fragment
 
         Context context = container.getContext();
 
-        // view that appears when current tag/blog has no posts - box images in this view are
-        // displayed and animated for tags only
-        mEmptyView = rootView.findViewById(R.id.empty_custom_view);
-        mEmptyViewBoxImages = mEmptyView.findViewById(R.id.layout_box_images);
+        mActionableEmptyView = rootView.findViewById(R.id.empty_custom_view);
 
         mRecyclerView.setLogT(AppLog.T.READER);
-        mRecyclerView.setCustomEmptyView(mEmptyView);
+        mRecyclerView.setCustomEmptyView(mActionableEmptyView);
         mRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
@@ -565,6 +563,7 @@ public class ReaderPostListFragment extends Fragment
                 } else {
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
+                            // fall through to TAG_PREVIEW
                         case TAG_PREVIEW:
                             updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
                             break;
@@ -602,7 +601,7 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-                setEmptyTitleAndDescription(
+                setEmptyTitleDescriptionAndButton(
                         EmptyViewMessageType.NETWORK_ERROR.equals(emptyViewMsgType)
                         || EmptyViewMessageType.PERMISSION_ERROR.equals(emptyViewMsgType)
                         || EmptyViewMessageType.GENERIC_ERROR.equals(emptyViewMsgType));
@@ -836,7 +835,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         if (getSearchTabsPosition() == TAB_SITES && adapter.isEmpty()) {
-            setEmptyTitleAndDescription(event.isError());
+            setEmptyTitleDescriptionAndButton(event.isError());
             showEmptyView();
         }
 
@@ -855,7 +854,7 @@ public class ReaderPostListFragment extends Fragment
         getPostAdapter().clear();
         getSiteSearchAdapter().clear();
 
-        setEmptyTitleAndDescription(false);
+        setEmptyTitleDescriptionAndButton(false);
         showEmptyView();
     }
 
@@ -1008,7 +1007,7 @@ public class ReaderPostListFragment extends Fragment
 
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(true, updateAction);
-        setEmptyTitleAndDescription(false);
+        setEmptyTitleDescriptionAndButton(false);
     }
 
     @SuppressWarnings("unused")
@@ -1117,34 +1116,18 @@ public class ReaderPostListFragment extends Fragment
         return getView();
     }
 
-    /*
-     * box/pages animation that appears when loading an empty list
-     */
-    private boolean shouldShowBoxAndPagesAnimation() {
-        return getPostListType().isTagType();
-    }
-
-    private void startBoxAndPagesAnimation() {
+    private void setEmptyTitleDescriptionAndButton(boolean requestFailed) {
         if (!isAdded()) {
             return;
         }
 
-        ImageView page1 = mEmptyView.findViewById(R.id.empty_tags_box_page1);
-        ImageView page2 = mEmptyView.findViewById(R.id.empty_tags_box_page2);
-        ImageView page3 = mEmptyView.findViewById(R.id.empty_tags_box_page3);
-
-        page1.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page1));
-        page2.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page2));
-        page3.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page3));
-    }
-
-    private void setEmptyTitleAndDescription(boolean requestFailed) {
-        if (!isAdded()) {
-            return;
-        }
-
+        int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
+        mActionableEmptyView.updateLayoutForSearch(false, heightToolbar);
+        boolean isSearching = false;
         String title;
         String description = null;
+        ActionableEmptyViewButtonType button = null;
 
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
             setEmptyTitleAndDescriptionForBookmarksList();
@@ -1170,106 +1153,159 @@ public class ReaderPostListFragment extends Fragment
                             title = getString(R.string.reader_empty_followed_blogs_title);
                             description = getString(R.string.reader_empty_followed_blogs_description);
                         }
+
+                        button = ActionableEmptyViewButtonType.DISCOVER;
                     } else if (getCurrentTag().isPostsILike()) {
-                        title = getString(R.string.reader_empty_posts_liked);
+                        title = getString(R.string.reader_empty_posts_liked_title);
+                        description = getString(R.string.reader_empty_posts_liked_description);
+                        button = ActionableEmptyViewButtonType.FOLLOWED;
                     } else if (getCurrentTag().isListTopic()) {
                         title = getString(R.string.reader_empty_posts_in_custom_list);
                     } else {
                         title = getString(R.string.reader_empty_posts_in_tag);
                     }
                     break;
-
                 case BLOG_PREVIEW:
                     title = getString(R.string.reader_empty_posts_in_blog);
                     break;
-
                 case SEARCH_RESULTS:
+                    isSearching = true;
+
                     if (isSearchViewEmpty() || TextUtils.isEmpty(mCurrentSearchQuery)) {
                         title = getString(R.string.reader_label_post_search_explainer);
+                        mActionableEmptyView.updateLayoutForSearch(true, heightToolbar);
                     } else if (isUpdating()) {
-                        title = getString(R.string.reader_label_post_search_running);
+                        title = "";
+                        mActionableEmptyView.updateLayoutForSearch(true, heightToolbar);
                     } else {
                         title = getString(R.string.reader_empty_search_title);
                         String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
                         description = String.format(getString(R.string.reader_empty_search_description),
                                 formattedQuery);
+                        mActionableEmptyView.updateLayoutForSearch(true, heightToolbar + heightTabs);
                     }
                     break;
                 case TAG_PREVIEW:
+                    // fall through to the default case
                 default:
                     title = getString(R.string.reader_empty_posts_in_tag);
                     break;
             }
         }
 
-        setEmptyTitleAndDescription(title, description);
+        setEmptyTitleDescriptionAndButton(title, description, button, isSearching);
     }
 
+    /*
+     * Currently, only local bookmarks are supported.  Show an empty view if the local database has no data.
+     */
     private void setEmptyTitleAndDescriptionForBookmarksList() {
-        // only local bookmarks are currently supported, so if there are no data in the local database we can
-        // show an empty view
-        TextView titleView = mEmptyView.findViewById(R.id.title_empty);
-        TextView descriptionView = mEmptyView.findViewById(R.id.description_empty);
-
         // replace %s placeholder with bookmark outline icon
         String description = getString(R.string.reader_empty_saved_posts_description);
         SpannableStringBuilder ssb = new SpannableStringBuilder(description);
         int imagePlaceholderPosition = description.indexOf("%s");
         addBookmarkImageSpan(ssb, imagePlaceholderPosition);
 
-        titleView.setText(getString(R.string.reader_empty_saved_posts_title));
-        descriptionView.setText(ssb, BufferType.SPANNABLE);
-        descriptionView.setContentDescription(String.format(description, getString(R.string.reader_add_bookmark)));
-
-        titleView.setVisibility(View.VISIBLE);
-        descriptionView.setVisibility(View.VISIBLE);
-        mEmptyViewBoxImages.setVisibility(View.GONE);
+        mActionableEmptyView.image.setVisibility(View.VISIBLE);
+        mActionableEmptyView.title.setText(R.string.reader_empty_saved_posts_title);
+        mActionableEmptyView.subtitle.setText(ssb);
+        mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
+        mActionableEmptyView.button.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType.FOLLOWED);
+            }
+        });
     }
 
     private void addBookmarkImageSpan(SpannableStringBuilder ssb, int imagePlaceholderPosition) {
-        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_grey_min_18dp);
+        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_grey_dark_18dp);
         d.setBounds(0, 0, (int) (d.getIntrinsicWidth() * 1.2), (int) (d.getIntrinsicHeight() * 1.2));
         ssb.setSpan(new ImageSpan(d), imagePlaceholderPosition, imagePlaceholderPosition + 2,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    private void setEmptyTitleAndDescription(@NonNull String title, String description) {
+    private void setEmptyTitleDescriptionAndButton(@NonNull String title, String description,
+                                                   final ActionableEmptyViewButtonType button, boolean isSearching) {
         if (!isAdded()) {
             return;
         }
 
-        TextView titleView = mEmptyView.findViewById(R.id.title_empty);
-        titleView.setText(title);
+        mActionableEmptyView.image.setVisibility(!isUpdating() && !isSearching ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.title.setText(title);
 
-        TextView descriptionView = mEmptyView.findViewById(R.id.description_empty);
         if (description == null) {
-            descriptionView.setVisibility(View.INVISIBLE);
+            mActionableEmptyView.subtitle.setVisibility(View.GONE);
         } else {
+            mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+
             if (description.contains("<") && description.contains(">")) {
-                descriptionView.setText(Html.fromHtml(description));
+                mActionableEmptyView.subtitle.setText(Html.fromHtml(description));
             } else {
-                descriptionView.setText(description);
+                mActionableEmptyView.subtitle.setText(description);
             }
-            descriptionView.setVisibility(View.VISIBLE);
         }
 
-        mEmptyViewBoxImages.setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
+        if (button == null) {
+            mActionableEmptyView.button.setVisibility(View.GONE);
+        } else {
+            mActionableEmptyView.button.setVisibility(View.VISIBLE);
+
+            switch (button) {
+                case DISCOVER:
+                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
+                    break;
+                case FOLLOWED:
+                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
+                    break;
+            }
+
+            mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                    setCurrentTagFromEmptyViewButton(button);
+                }
+            });
+        }
     }
 
     private void showEmptyView() {
         if (isAdded()) {
-            mEmptyView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideEmptyView() {
         if (isAdded()) {
-            mEmptyView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(View.GONE);
         }
     }
 
     private boolean isEmptyViewShowing() {
-        return isAdded() && mEmptyView.getVisibility() == View.VISIBLE;
+        return isAdded() && mActionableEmptyView.getVisibility() == View.VISIBLE;
+    }
+
+    private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
+        ReaderTag tag;
+
+        switch (button) {
+            case DISCOVER:
+                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+                break;
+            case FOLLOWED:
+                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
+                break;
+            default:
+                tag = ReaderUtils.getDefaultTag();
+        }
+
+        mRecyclerView.refreshFilterCriteriaOptions();
+
+        if (!ReaderTagTable.tagExists(tag)) {
+            tag = ReaderTagTable.getFirstTag();
+        }
+
+        setCurrentTag(tag);
     }
 
     /*
@@ -1282,11 +1318,8 @@ public class ReaderPostListFragment extends Fragment
                 return;
             }
             if (isEmpty) {
-                setEmptyTitleAndDescription(false);
+                setEmptyTitleDescriptionAndButton(false);
                 showEmptyView();
-                if (shouldShowBoxAndPagesAnimation()) {
-                    startBoxAndPagesAnimation();
-                }
             } else {
                 hideEmptyView();
                 if (mRestorePosition > 0) {
@@ -1385,6 +1418,7 @@ public class ReaderPostListFragment extends Fragment
                     // request older posts unless we already have the max # to show
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
+                            // fall through to TAG_PREVIEW
                         case TAG_PREVIEW:
                             if (ReaderPostTable.getNumPostsWithTag(mCurrentTag)
                                 < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
@@ -1515,8 +1549,10 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.push(tag.getTagSlug());
                 break;
             case BLOG_PREVIEW:
+                // noop
+                break;
             case SEARCH_RESULTS:
-                // no-op
+                // noop
                 break;
         }
 
@@ -1623,7 +1659,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setIsUpdating(true, event.getAction());
-        setEmptyTitleAndDescription(false);
+        setEmptyTitleDescriptionAndButton(false);
     }
 
     @SuppressWarnings("unused")
@@ -1658,7 +1694,7 @@ public class ReaderPostListFragment extends Fragment
             refreshPosts();
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
-            setEmptyTitleAndDescription(requestFailed);
+            setEmptyTitleDescriptionAndButton(requestFailed);
             // if we requested posts in order to fill a gap but the request failed or didn't
             // return any posts, reload the adapter so the gap marker is reset (hiding its
             // progress bar)
@@ -1895,6 +1931,7 @@ public class ReaderPostListFragment extends Fragment
 
         switch (type) {
             case TAG_FOLLOWED:
+                // fall through to the TAG_PREVIEW
             case TAG_PREVIEW:
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),

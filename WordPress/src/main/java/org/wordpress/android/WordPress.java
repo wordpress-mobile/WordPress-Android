@@ -408,8 +408,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
-            GCMRegistrationIntentService.enqueueWork(this,
-                    new Intent(this, GCMRegistrationIntentService.class));
+            GCMRegistrationIntentService.enqueueWork(activity,
+                    new Intent(activity, GCMRegistrationIntentService.class));
         }
 
         // Refresh account informations
@@ -441,6 +441,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     public static Context getContext() {
         return mContext;
+    }
+
+    /**
+     * Update locale of the static context when language is changed.
+     */
+    public static void updateContextLocale() {
+        mContext = LocaleManager.setLocale(mContext);
     }
 
     public static RestClientUtils getRestClientUtils() {

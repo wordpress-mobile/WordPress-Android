@@ -20,17 +20,8 @@ class EventItemViewHolder(
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
     private val actionButton: ImageButton = itemView.findViewById(R.id.action_button)
-    val header: TextView = itemView.findViewById(R.id.activity_header_text)
 
     override fun updateChanges(bundle: Bundle) {
-        if (bundle.containsKey(ActivityLogDiffCallback.LIST_ITEM_HEADER_VISIBILITY_KEY)) {
-            header.visibility =
-                    if (bundle.getBoolean(ActivityLogDiffCallback.LIST_ITEM_HEADER_VISIBILITY_KEY))
-                        View.VISIBLE
-                    else
-                        View.GONE
-        }
-
         if (bundle.containsKey(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY)) {
             actionButton.visibility =
                     if (bundle.getBoolean(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY))
@@ -43,9 +34,6 @@ class EventItemViewHolder(
     fun bind(activity: ActivityLogListItem.Event) {
         summary.text = activity.title
         text.text = activity.description
-        header.text = activity.header
-
-        header.visibility = if (activity.isHeaderVisible) View.VISIBLE else View.GONE
 
         if (activity.isButtonVisible) {
             ContextCompat.getDrawable(container.context, activity.buttonIcon.drawable)?.let { buttonIcon ->

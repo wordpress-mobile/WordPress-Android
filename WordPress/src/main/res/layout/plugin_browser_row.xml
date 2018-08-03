@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/margin_medium"
     android:paddingStart="@dimen/margin_medium" >
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/plugin_icon"
         android:layout_width="@dimen/plugin_row_width"
         android:layout_height="@dimen/plugin_row_width"

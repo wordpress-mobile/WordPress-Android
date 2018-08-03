@@ -27,6 +27,7 @@ public class PublicizeTable {
                    + " connect_url TEXT NOT NULL,"
                    + " is_jetpack_supported INTEGER DEFAULT 0,"
                    + " is_multi_user_id_supported INTEGER DEFAULT 0,"
+                   + " is_external_users_only INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (id))");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + CONNECTIONS_TABLE + " ("
@@ -55,13 +56,8 @@ public class PublicizeTable {
         return WordPress.wpDB.getDatabase();
     }
 
-    /*
-     * for testing purposes - clears then recreates tables
-     */
-    public static void reset() {
-        getWritableDb().execSQL("DROP TABLE IF EXISTS " + SERVICES_TABLE);
-        getWritableDb().execSQL("DROP TABLE IF EXISTS " + CONNECTIONS_TABLE);
-        createTables(getWritableDb());
+    public static void resetServicesTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + SERVICES_TABLE);
     }
 
     public static PublicizeService getService(String serviceId) {
@@ -111,8 +107,9 @@ public class PublicizeTable {
                     + " icon_url," // 5
                     + " connect_url," // 6
                     + " is_jetpack_supported," // 7
-                    + " is_multi_user_id_supported)" // 8
-                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)");
+                    + " is_multi_user_id_supported," // 8
+                    + " is_external_users_only)" // 9
+                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)");
             for (PublicizeService service : serviceList) {
                 stmt.bindString(1, service.getId());
                 stmt.bindString(2, service.getLabel());
@@ -122,6 +119,7 @@ public class PublicizeTable {
                 stmt.bindString(6, service.getConnectUrl());
                 stmt.bindLong(7, SqlUtils.boolToSql(service.isJetpackSupported()));
                 stmt.bindLong(8, SqlUtils.boolToSql(service.isMultiExternalUserIdSupported()));
+                stmt.bindLong(9, SqlUtils.boolToSql(service.isExternalUsersOnly()));
                 stmt.executeInsert();
             }
 
@@ -130,6 +128,11 @@ public class PublicizeTable {
             db.endTransaction();
             SqlUtils.closeStatement(stmt);
         }
+    }
+
+    private static boolean getBooleanFromCursor(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
 
     private static PublicizeService getServiceFromCursor(Cursor c) {
@@ -141,10 +144,21 @@ public class PublicizeTable {
         service.setGenericon(c.getString(c.getColumnIndex("genericon")));
         service.setIconUrl(c.getString(c.getColumnIndex("icon_url")));
         service.setConnectUrl(c.getString(c.getColumnIndex("connect_url")));
-        service.setIsJetpackSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_jetpack_supported")));
-        service.setIsMultiExternalUserIdSupported(SqlUtils.sqlToBool(c.getColumnIndex("is_multi_user_id_supported")));
+        service.setIsJetpackSupported(getBooleanFromCursor(c, "is_jetpack_supported"));
+        service.setIsMultiExternalUserIdSupported(getBooleanFromCursor(c, "is_multi_user_id_supported"));
+        service.setIsExternalUsersOnly(getBooleanFromCursor(c, "is_external_users_only"));
 
         return service;
+    }
+
+    public static boolean onlyExternalConnections(String serviceId) {
+        if (serviceId == null && serviceId.isEmpty()) {
+            return false;
+        }
+
+        String sql = "SELECT is_external_users_only FROM " + SERVICES_TABLE + " WHERE id=?";
+        String[] args = {serviceId};
+        return SqlUtils.boolForQuery(getReadableDb(), sql, args);
     }
 
     public static String getConnectUrlForService(String serviceId) {

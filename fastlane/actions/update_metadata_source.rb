@@ -97,11 +97,19 @@ module Fastlane
           end
         end
 
+        if (is_comment(line))
+          @current_block = @blocks.first
+        end
+
         @current_block.handle_line(fw, line)
       end
 
       def self.is_block_id(line)
         line.start_with?('msgctxt')
+      end
+
+      def self.is_comment(line)
+        line.start_with?('#')
       end
 
 

@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -13,263 +12,226 @@
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
-        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-            android:id="@+id/swipe_refresh_notifications"
-            android:layout_width="match_parent"
+        <RelativeLayout
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_width="match_parent" >
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_notes"
-                android:layout_width="match_parent"
+            <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+                android:id="@+id/swipe_refresh_notifications"
+                android:layout_below="@+id/notifications_filter_container"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/notifications_content_margin"
-                android:paddingRight="@dimen/notifications_content_margin"
-                android:scrollbarStyle="outsideOverlay"
-                android:scrollbars="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:paddingStart="@dimen/notifications_content_margin"
-                android:paddingEnd="@dimen/notifications_content_margin"/>
+                android:layout_width="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_notes"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:paddingLeft="@dimen/notifications_content_margin"
+                    android:paddingRight="@dimen/notifications_content_margin"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:paddingStart="@dimen/notifications_content_margin"
+                    android:paddingEnd="@dimen/notifications_content_margin"/>
 
-        <LinearLayout
-            android:id="@+id/layout_new_notificatons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/notifications_new_notification_bar_background"
-            android:elevation="@dimen/message_bar_elevation"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_large"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:paddingTop="@dimen/margin_large"
-            android:visibility="gone"
-            tools:targetApi="LOLLIPOP"
-            tools:visibility="visible"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notifications_label_new_notifications"
-                android:textColor="@color/grey_lighten_30"
-                android:textSize="@dimen/text_sz_large" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notifications_label_new_notifications_subtitle"
-                android:textColor="@color/grey_lighten_30"
-                android:textSize="@dimen/text_sz_small" />
-
-        </LinearLayout>
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/notifications_filter_container"
-            android:background="@color/white"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/notifications_content_margin"
-            android:layout_marginLeft="@dimen/notifications_content_margin"
-            android:layout_marginRight="@dimen/notifications_content_margin"
-            android:layout_marginStart="@dimen/notifications_content_margin"
-            android:layout_width="match_parent"
-            app:elevation="0dp">
+            </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
             <LinearLayout
-                android:id="@+id/notifications_filter"
-                android:layout_width="match_parent"
+                android:id="@+id/layout_new_notificatons"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_width="wrap_content"
+                android:background="@drawable/notifications_new_notification_bar_background"
+                android:elevation="@dimen/message_bar_elevation"
                 android:orientation="vertical"
-                app:layout_scrollFlags="scroll|enterAlways">
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="@dimen/margin_large"
+                android:visibility="gone"
+                tools:targetApi="LOLLIPOP"
+                tools:visibility="visible"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:layout_marginLeft="@dimen/margin_extra_large"
-                    android:layout_marginRight="@dimen/margin_extra_large"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:fillViewport="true"
-                    android:layout_marginStart="@dimen/margin_extra_large"
-                    android:layout_marginEnd="@dimen/margin_extra_large">
+                    android:text="@string/notifications_label_new_notifications"
+                    android:textColor="@color/grey_lighten_30"
+                    android:textSize="@dimen/text_sz_large" />
 
-                    <RadioGroup
-                        android:id="@+id/notifications_radio_group"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/calypso_segmented_control_background"
-                        android:checkedButton="@+id/notifications_filter_all"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/notifications_filter_all"
-                            style="@style/Calypso.SegmentedControl"
-                            android:background="@drawable/calypso_segmented_control_button_start"
-                            android:text="@string/notifications_tab_title_all" />
-
-                        <RadioButton
-                            android:id="@+id/notifications_filter_unread"
-                            style="@style/Calypso.SegmentedControl"
-                            android:layout_marginLeft="-1dp"
-                            android:layout_marginStart="-1dp"
-                            android:background="@drawable/calypso_segmented_control_button"
-                            android:text="@string/notifications_tab_title_unread" />
-
-                        <RadioButton
-                            android:id="@+id/notifications_filter_comments"
-                            style="@style/Calypso.SegmentedControl"
-                            android:layout_marginLeft="-1dp"
-                            android:layout_marginStart="-1dp"
-                            android:background="@drawable/calypso_segmented_control_button"
-                            android:text="@string/notifications_tab_title_comments" />
-
-                        <RadioButton
-                            android:id="@+id/notifications_filter_follows"
-                            style="@style/Calypso.SegmentedControl"
-                            android:layout_marginLeft="-1dp"
-                            android:layout_marginStart="-1dp"
-                            android:background="@drawable/calypso_segmented_control_button"
-                            android:text="@string/notifications_tab_title_follows" />
-
-                        <RadioButton
-                            android:id="@+id/notifications_filter_likes"
-                            style="@style/Calypso.SegmentedControl"
-                            android:layout_marginLeft="-1dp"
-                            android:layout_marginStart="-1dp"
-                            android:background="@drawable/calypso_segmented_control_button_end"
-                            android:text="@string/notifications_tab_title_likes" />
-                    </RadioGroup>
-
-                </HorizontalScrollView>
-
-                <View
-                    android:background="@drawable/notifications_list_divider"
-                    android:layout_height="1dp"
-                    android:layout_width="match_parent"/>
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notifications_label_new_notifications_subtitle"
+                    android:textColor="@color/grey_lighten_30"
+                    android:textSize="@dimen/text_sz_small" />
 
             </LinearLayout>
 
-        </android.support.design.widget.AppBarLayout>
-
-        <LinearLayout
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-            android:layout_marginRight="@dimen/empty_list_title_side_margin"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:layout_marginStart="@dimen/empty_list_title_side_margin"
-            android:layout_marginEnd="@dimen/empty_list_title_side_margin">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_empty"
-                android:layout_width="wrap_content"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/notifications_filter_container"
+                android:background="@color/white"
+                android:layout_alignParentTop="true"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:text="@string/notifications_empty_list"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_double_extra_large" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_empty_description"
+                android:layout_marginEnd="@dimen/notifications_content_margin"
+                android:layout_marginLeft="@dimen/notifications_content_margin"
+                android:layout_marginRight="@dimen/notifications_content_margin"
+                android:layout_marginStart="@dimen/notifications_content_margin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:gravity="center"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_medium" />
-
-            <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/empty_list_button_top_margin"
-                card_view:cardBackgroundColor="@color/blue_medium"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                card_view:cardElevation="@dimen/card_elevation">
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/button_empty_action"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:paddingBottom="@dimen/margin_medium"
-                    android:paddingLeft="@dimen/margin_large"
-                    android:paddingRight="@dimen/margin_large"
-                    android:paddingTop="@dimen/margin_medium"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:paddingEnd="@dimen/margin_large"
-                    android:paddingStart="@dimen/margin_large"/>
-
-            </android.support.v7.widget.CardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/connect_jetpack"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            tools:visibility="visible" >
-
-            <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="UselessParent">
+                app:elevation="0dp">
 
                 <LinearLayout
+                    android:id="@+id/notifications_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_scrollFlags="scroll|enterAlways">
 
-                    <ImageView
-                        android:contentDescription="@string/content_description_person_reading_device_notification"
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_extra_large"
-                        android:layout_width="wrap_content"
-                        app:srcCompat="@drawable/jetpack_connection_notifications"/>
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/margin_medium"
+                        android:layout_marginLeft="@dimen/margin_extra_large"
+                        android:layout_marginRight="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:fillViewport="true"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_marginEnd="@dimen/margin_extra_large">
 
-                    <org.wordpress.android.widgets.WPTextView
-                        style="@style/JetpackConnectionText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxWidth="290dp"
-                        android:text="@string/notifications_jetpack_connection_setup_info"
-                        android:textAlignment="center"
-                        app:fixWidowWords="true"/>
+                        <RadioGroup
+                            android:id="@+id/notifications_radio_group"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/calypso_segmented_control_background"
+                            android:checkedButton="@+id/notifications_filter_all"
+                            android:orientation="horizontal">
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/jetpack_setup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_extra_large"
-                        android:text="@string/stats_jetpack_connection_setup"
-                        android:theme="@style/JetpackConnectionButton"/>
+                            <RadioButton
+                                android:id="@+id/notifications_filter_all"
+                                style="@style/Calypso.SegmentedControl"
+                                android:background="@drawable/calypso_segmented_control_button_start"
+                                android:text="@string/notifications_tab_title_all" />
+
+                            <RadioButton
+                                android:id="@+id/notifications_filter_unread"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
+                                android:layout_marginStart="-1dp"
+                                android:background="@drawable/calypso_segmented_control_button"
+                                android:text="@string/notifications_tab_title_unread" />
+
+                            <RadioButton
+                                android:id="@+id/notifications_filter_comments"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
+                                android:layout_marginStart="-1dp"
+                                android:background="@drawable/calypso_segmented_control_button"
+                                android:text="@string/notifications_tab_title_comments" />
+
+                            <RadioButton
+                                android:id="@+id/notifications_filter_follows"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
+                                android:layout_marginStart="-1dp"
+                                android:background="@drawable/calypso_segmented_control_button"
+                                android:text="@string/notifications_tab_title_follows" />
+
+                            <RadioButton
+                                android:id="@+id/notifications_filter_likes"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
+                                android:layout_marginStart="-1dp"
+                                android:background="@drawable/calypso_segmented_control_button_end"
+                                android:text="@string/notifications_tab_title_likes" />
+
+                        </RadioGroup>
+
+                    </HorizontalScrollView>
+
+                    <View
+                        android:background="@drawable/notifications_list_divider"
+                        android:layout_height="1dp"
+                        android:layout_width="match_parent"/>
 
                 </LinearLayout>
 
-            </android.support.v4.widget.NestedScrollView>
+            </android.support.design.widget.AppBarLayout>
 
-        </LinearLayout>
+            <org.wordpress.android.ui.ActionableEmptyView
+                android:id="@+id/actionable_empty_view"
+                android:layout_below="@+id/notifications_filter_container"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                app:aevButton="@string/posts_empty_list_button"
+                app:aevImage="@drawable/jetpack_connection_notifications"
+                app:aevSubtitle="@string/notifications_empty_action_unread"
+                app:aevTitle="@string/notifications_empty_unread"
+                tools:visibility="visible" >
+            </org.wordpress.android.ui.ActionableEmptyView>
+
+            <LinearLayout
+                android:id="@+id/connect_jetpack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="invisible" >
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:contentDescription="@string/content_description_person_reading_device_notification"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_extra_large"
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/jetpack_connection_notifications"/>
+
+                        <org.wordpress.android.widgets.WPTextView
+                            style="@style/JetpackConnectionText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="290dp"
+                            android:text="@string/notifications_jetpack_connection_setup_info"
+                            android:textAlignment="center"
+                            app:fixWidowWords="true"/>
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/jetpack_setup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_extra_large"
+                            android:text="@string/stats_jetpack_connection_setup"
+                            android:theme="@style/JetpackConnectionButton"/>
+
+                    </LinearLayout>
+
+                </android.support.v4.widget.NestedScrollView>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
+
 </LinearLayout>
 

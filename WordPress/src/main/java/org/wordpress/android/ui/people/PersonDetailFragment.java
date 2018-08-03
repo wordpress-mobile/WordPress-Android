@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +23,8 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -42,7 +44,7 @@ public class PersonDetailFragment extends Fragment {
 
     private List<RoleModel> mUserRoles;
 
-    private WPNetworkImageView mAvatarImageView;
+    private ImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
     private LinearLayout mRoleContainer;
@@ -52,6 +54,7 @@ public class PersonDetailFragment extends Fragment {
     private TextView mSubscribedDateTextView;
 
     @Inject SiteStore mSiteStore;
+    @Inject ImageManager mImageManager;
 
     public static PersonDetailFragment newInstance(long currentUserId, long personId, int localTableBlogId,
                                                    Person.PersonType personType) {
@@ -105,14 +108,14 @@ public class PersonDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
 
-        mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
-        mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
-        mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
-        mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
-        mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
-        mSubscribedDateContainer = (LinearLayout) rootView.findViewById(R.id.subscribed_date_container);
-        mSubscribedDateTitleView = (TextView) rootView.findViewById(R.id.subscribed_date_title);
-        mSubscribedDateTextView = (TextView) rootView.findViewById(R.id.subscribed_date_text);
+        mAvatarImageView = rootView.findViewById(R.id.person_avatar);
+        mDisplayNameTextView = rootView.findViewById(R.id.person_display_name);
+        mUsernameTextView = rootView.findViewById(R.id.person_username);
+        mRoleContainer = rootView.findViewById(R.id.person_role_container);
+        mRoleTextView = rootView.findViewById(R.id.person_role);
+        mSubscribedDateContainer = rootView.findViewById(R.id.subscribed_date_container);
+        mSubscribedDateTitleView = rootView.findViewById(R.id.subscribed_date_title);
+        mSubscribedDateTextView = rootView.findViewById(R.id.subscribed_date_text);
 
         boolean isCurrentUser = mCurrentUserId == mPersonId;
         SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
@@ -140,7 +143,7 @@ public class PersonDetailFragment extends Fragment {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
-            mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR, avatarUrl);
             mDisplayNameTextView.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
             if (person.getRole() != null) {
                 mRoleTextView.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
