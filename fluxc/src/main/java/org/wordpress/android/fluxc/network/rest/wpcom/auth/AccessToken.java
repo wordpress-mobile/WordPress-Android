@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.wordpress.android.fluxc.utils.PreferenceUtils;
+
 import javax.inject.Singleton;
 
 @Singleton
@@ -37,6 +39,6 @@ public class AccessToken {
     }
 
     private SharedPreferences getFluxCPreferences() {
-        return mContext.getSharedPreferences(mContext.getPackageName() + "_fluxc-preferences", Context.MODE_PRIVATE);
+        return PreferenceUtils.getFluxCPreferences(mContext);
     }
 }
