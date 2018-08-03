@@ -12,7 +12,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationError
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErrorType
+import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationError
+import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDeviceResponsePayload
+import org.wordpress.android.fluxc.store.NotificationStore.UnregisterDeviceResponsePayload
 import javax.inject.Singleton
 
 @Singleton
@@ -41,6 +44,22 @@ class NotificationRestClient constructor(
                     val registrationError = networkErrorToRegistrationError(wpComError)
                     val payload = RegisterDeviceResponsePayload(registrationError)
                     dispatcher.dispatch(NotificationActionBuilder.newRegisteredDeviceAction(payload))
+                })
+        add(request)
+    }
+
+    fun unregisterDeviceForPushNotifications(deviceId: String) {
+        val url = WPCOMREST.devices.deviceId(deviceId).delete.urlV1
+        val request = WPComGsonRequest.buildPostRequest(
+                url, null, Any::class.java,
+                {
+                    val payload = UnregisterDeviceResponsePayload()
+                    dispatcher.dispatch(NotificationActionBuilder.newUnregisteredDeviceAction(payload))
+                },
+                { wpComError ->
+                    val payload = UnregisterDeviceResponsePayload(DeviceUnregistrationError(
+                            DeviceUnregistrationErrorType.GENERIC_ERROR, wpComError.message))
+                    dispatcher.dispatch(NotificationActionBuilder.newUnregisteredDeviceAction(payload))
                 })
         add(request)
     }
