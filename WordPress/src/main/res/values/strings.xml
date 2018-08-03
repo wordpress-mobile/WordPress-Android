@@ -12,7 +12,10 @@
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_wpcom_confirm_with_changes">You have changes to %d posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</string>
+    <plurals name="sign_out_wpcom_confirm_with_changes">
+        <item quantity="one">You have changes to one post that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</item>
+        <item quantity="other">You have changes to %d posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</item>
+    </plurals>
     <string name="sign_out_wpcom_confirm_with_no_changes">Log out of WordPress?</string>
 
     <!-- form labels -->

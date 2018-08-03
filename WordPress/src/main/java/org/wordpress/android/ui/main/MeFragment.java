@@ -345,7 +345,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
         int numChanges = PostStore.getNumLocalChanges();
         String message;
         if (numChanges > 0) {
-            message = String.format(getString(R.string.sign_out_wpcom_confirm_with_changes), numChanges);
+            message = getResources().getQuantityString(R.plurals.sign_out_wpcom_confirm_with_changes, numChanges, numChanges);
         } else {
             message = getString(R.string.sign_out_wpcom_confirm_with_no_changes);
         }
