@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.DomainAvailabilityModel;
+import org.wordpress.android.fluxc.model.DomainAvailabilityModel.AvailabilityStatus;
+import org.wordpress.android.fluxc.model.DomainAvailabilityModel.Mappability;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -525,8 +527,8 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint.  Upon receiving a response
-     * (success or error) a {@link SiteAction#CHECK_AUTOMATED_TRANSFER_ELIGIBILITY} action is dispatched with a
+     * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
      * payload of type {@link DomainAvailabilityPayload}.
      *
      * {@link DomainAvailabilityPayload#isError()} can be used to check the request result.
@@ -774,8 +776,8 @@ public class SiteRestClient extends BaseWPComRestClient {
         Integer productId = response.getProduct_id();
         String productSlug = response.getProduct_slug();
         String domainName = response.getDomain_name();
-        String status = response.getStatus();
-        String mappable = response.getMappable();
+        AvailabilityStatus status = AvailabilityStatus.valueOf(response.getStatus().toUpperCase());
+        Mappability mappable = Mappability.valueOf(response.getMappable().toUpperCase());
         String cost = response.getCost();
         Boolean supportsPrivacy = response.getSupports_privacy();
         return new DomainAvailabilityModel(productId, productSlug, domainName, status, mappable, cost, supportsPrivacy);
