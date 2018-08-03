@@ -37,13 +37,16 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun loadsDataOnStart() = runBlocking<Unit> {
+    fun clearsResultAndLoadsDataOnStart() = runBlocking<Unit> {
         whenever(pageStore.loadPagesFromDb(site)).thenReturn(listOf(PageModel(1, "title", DRAFT, -1)))
         whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(OnPostChanged(1, false))
         val listStateObserver = viewModel.listState.test()
         val refreshPagesObserver = viewModel.refreshPages.test()
+        val searchResultObserver = viewModel.searchResult.test()
 
         viewModel.start(site)
+
+        assertEquals(searchResultObserver.await(), listOf(Empty(string.empty_list_default)))
 
         val listStates = listStateObserver.awaitValues(2)
 
