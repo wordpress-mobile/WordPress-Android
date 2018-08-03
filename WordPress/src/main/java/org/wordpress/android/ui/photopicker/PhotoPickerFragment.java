@@ -114,7 +114,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_picker_fragment, container, false);
 
         mRecycler = view.findViewById(R.id.recycler);
@@ -199,7 +199,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_LAST_TAPPED_ICON, mLastTappedIcon == null ? null : mLastTappedIcon.name());
