@@ -777,9 +777,8 @@ public class SiteRestClient extends BaseWPComRestClient {
         Integer productId = response.getProduct_id();
         String productSlug = response.getProduct_slug();
         String domainName = response.getDomain_name();
-        // Utilize Locale.ROOT to fix ktlint
-        AvailabilityStatus status = AvailabilityStatus.valueOf(response.getStatus().toUpperCase(Locale.ROOT));
-        Mappability mappable = Mappability.valueOf(response.getMappable().toUpperCase(Locale.ROOT));
+        AvailabilityStatus status = AvailabilityStatus.Companion.fromString(response.getStatus());
+        Mappability mappable = Mappability.Companion.fromString(response.getMappable());
         String cost = response.getCost();
         Boolean supportsPrivacy = response.getSupports_privacy();
         return new DomainAvailabilityModel(productId, productSlug, domainName, status, mappable, cost, supportsPrivacy);
