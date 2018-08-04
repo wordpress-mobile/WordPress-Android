@@ -18,6 +18,12 @@ import org.wordpress.android.models.pages.PageStatus.SCHEDULED
 import org.wordpress.android.models.pages.PageStatus.TRASHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
+import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -40,6 +46,26 @@ class PageListViewModel
     private val _previewPage = SingleLiveEvent<PageModel>()
     val previewPage: LiveData<PageModel>
         get() = _previewPage
+
+    private val _setPageParent = SingleLiveEvent<PageModel>()
+    val setPageParent: LiveData<PageModel>
+        get() = _setPageParent
+
+    private val _movePageToDraft = SingleLiveEvent<PageModel>()
+    val movePageToDraft: LiveData<PageModel>
+        get() = _movePageToDraft
+
+    private val _movePageToTrash = SingleLiveEvent<PageModel>()
+    val movePageToTrash: LiveData<PageModel>
+        get() = _movePageToTrash
+
+    private val _publishPage = SingleLiveEvent<PageModel>()
+    val publishPage: LiveData<PageModel>
+        get() = _publishPage
+
+    private val _deletePage = SingleLiveEvent<PageModel>()
+    val deletePage: LiveData<PageModel>
+        get() = _deletePage
 
     private var isStarted: Boolean = false
     private var site: SiteModel? = null
@@ -125,7 +151,13 @@ class PageListViewModel
 
     fun onMenuAction(action: Action, pageItem: Page): Boolean {
         when (action) {
-            else -> _previewPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            VIEW_PAGE -> _previewPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            SET_PARENT -> _setPageParent.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            MOVE_TO_DRAFT -> _movePageToDraft.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            MOVE_TO_TRASH -> _movePageToTrash.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            PUBLISH_NOW -> _publishPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            DELETE_PERMANENTLY -> _deletePage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            else -> throw IllegalArgumentException("Unexpected action type")
         }
         return true
     }

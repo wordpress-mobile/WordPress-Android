@@ -128,6 +128,21 @@ class PageListFragment : Fragment() {
         viewModel.previewPage.observe(this, Observer { page ->
             page?.let { ActivityLauncher.viewPagePreview(activity, page) }
         })
+
+        viewModel.setPageParent.observe(this, Observer { page ->
+        })
+
+        viewModel.movePageToDraft.observe(this, Observer { page ->
+        })
+
+        viewModel.movePageToTrash.observe(this, Observer { page ->
+        })
+
+        viewModel.publishPage.observe(this, Observer { page ->
+        })
+
+        viewModel.deletePage.observe(this, Observer { page ->
+        })
     }
 
     private fun getPageType(type: Type): PageStatus {
