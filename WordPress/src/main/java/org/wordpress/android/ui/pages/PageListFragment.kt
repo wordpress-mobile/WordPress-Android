@@ -43,7 +43,7 @@ class PageListFragment : Fragment() {
             companion object {
                 fun getType(position: Int): Type {
                     if (position >= values().size) {
-                        throw IllegalArgumentException("Selected position $position is out of range of page list types")
+                        throw Throwable("Selected position $position is out of range of page list types")
                     }
                     return values()[position]
                 }
