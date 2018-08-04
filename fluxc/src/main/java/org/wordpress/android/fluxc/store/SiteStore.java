@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.DomainAvailabilityModel;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -221,9 +220,16 @@ public class SiteStore extends Store {
     }
 
     public static class DomainAvailabilityResponsePayload extends Payload<DomainAvailabilityError> {
-        @Nullable public DomainAvailabilityModel domainAvailability;
-        public DomainAvailabilityResponsePayload(@NonNull DomainAvailabilityModel domainAvailability) {
-            this.domainAvailability = domainAvailability;
+        public @Nullable AvailabilityStatus status;
+        public @Nullable Mappability mappable;
+        public boolean supportsPrivacy;
+
+        public DomainAvailabilityResponsePayload(@Nullable AvailabilityStatus status,
+                                                 @Nullable Mappability mappable,
+                                                 @Nullable boolean supportsPrivacy) {
+            this.status = status;
+            this.mappable = mappable;
+            this.supportsPrivacy = supportsPrivacy;
         }
 
         public DomainAvailabilityResponsePayload(@NonNull DomainAvailabilityError error) {
@@ -439,11 +445,58 @@ public class SiteStore extends Store {
     }
 
     public static class OnDomainAvailabilityChecked extends OnChanged<DomainAvailabilityError> {
-        public @Nullable DomainAvailabilityModel domainAvailability;
-        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityModel domainAvailability,
+        public @Nullable AvailabilityStatus status;
+        public @Nullable Mappability mappable;
+        public boolean supportsPrivacy;
+
+        public OnDomainAvailabilityChecked(@Nullable AvailabilityStatus status,
+                                           @Nullable Mappability mappable,
+                                           boolean supportsPrivacy,
                                            @Nullable DomainAvailabilityError error) {
-            this.domainAvailability = domainAvailability;
+            this.status = status;
+            this.mappable = mappable;
+            this.supportsPrivacy = supportsPrivacy;
             this.error = error;
+        }
+    }
+
+    public enum AvailabilityStatus {
+        BLACKLISTED_DOMAIN,
+        INVALID_TLD,
+        INVALID_DOMAIN,
+        TLD_NOT_SUPPORTED,
+        TRANSFERRABLE_DOMAIN,
+        AVAILABLE,
+        UNKNOWN_STATUS;
+
+        public static AvailabilityStatus fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (AvailabilityStatus v : AvailabilityStatus.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return UNKNOWN_STATUS;
+        }
+    }
+
+    public enum Mappability {
+        BLACKLISTED_DOMAIN,
+        INVALID_TLD,
+        INVALID_DOMAIN,
+        MAPPABLE_DOMAIN,
+        UNKNOWN_STATUS;
+
+        public static Mappability fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (Mappability v : Mappability.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return UNKNOWN_STATUS;
         }
     }
 
@@ -1373,7 +1426,12 @@ public class SiteStore extends Store {
     }
 
     private void handleCheckedDomainAvailability(DomainAvailabilityResponsePayload payload) {
-        emitChange(new OnDomainAvailabilityChecked(payload.domainAvailability, payload.error));
+        emitChange(
+                new OnDomainAvailabilityChecked(
+                        payload.status,
+                        payload.mappable,
+                        payload.supportsPrivacy,
+                        payload.error));
     }
 
     // Automated Transfers
