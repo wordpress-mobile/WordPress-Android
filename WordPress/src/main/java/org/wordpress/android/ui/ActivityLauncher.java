@@ -345,6 +345,17 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
+    public static void viewPagePreview(Activity activity, PageModel page) {
+        if (page == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, PostPreviewActivity.class);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
+        intent.putExtra(WordPress.SITE, page.getSite());
+        activity.startActivity(intent);
+    }
+
     public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
         if (site == null) {
             return;

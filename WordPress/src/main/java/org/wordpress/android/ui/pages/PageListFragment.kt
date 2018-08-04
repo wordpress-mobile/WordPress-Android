@@ -18,8 +18,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
@@ -128,7 +126,7 @@ class PageListFragment : Fragment() {
         })
 
         viewModel.previewPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.editPageForResult(activity, page) }
+            page?.let { ActivityLauncher.viewPagePreview(activity, page) }
         })
     }
 
