@@ -17,6 +17,7 @@
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
+        android:layout_above="@+id/bottom_bar"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:visibility="gone"
