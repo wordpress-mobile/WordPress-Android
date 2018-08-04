@@ -17,9 +17,6 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.model.DomainAvailabilityModel;
-import org.wordpress.android.fluxc.model.DomainAvailabilityModel.AvailabilityStatus;
-import org.wordpress.android.fluxc.model.DomainAvailabilityModel.Mappability;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -51,6 +48,8 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.AvailabilityStatus;
+import org.wordpress.android.fluxc.store.SiteStore.Mappability;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
@@ -73,7 +72,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -542,7 +540,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                             @Override
                             public void onResponse(DomainAvailabilityResponse response) {
                                 DomainAvailabilityResponsePayload payload =
-                                        new DomainAvailabilityResponsePayload(responseToDomainAvailability(response));
+                                        responseToDomainAvailabilityPayload(response);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
                             }
                         },
@@ -773,14 +771,10 @@ public class SiteRestClient extends BaseWPComRestClient {
         return info;
     }
 
-    private DomainAvailabilityModel responseToDomainAvailability(DomainAvailabilityResponse response) {
-        Integer productId = response.getProduct_id();
-        String productSlug = response.getProduct_slug();
-        String domainName = response.getDomain_name();
-        AvailabilityStatus status = AvailabilityStatus.Companion.fromString(response.getStatus());
-        Mappability mappable = Mappability.Companion.fromString(response.getMappable());
-        String cost = response.getCost();
-        Boolean supportsPrivacy = response.getSupports_privacy();
-        return new DomainAvailabilityModel(productId, productSlug, domainName, status, mappable, cost, supportsPrivacy);
+    private DomainAvailabilityResponsePayload responseToDomainAvailabilityPayload(DomainAvailabilityResponse response) {
+        AvailabilityStatus status = AvailabilityStatus.fromString(response.getStatus());
+        Mappability mappable = Mappability.fromString(response.getMappable());
+        boolean supportsPrivacy = response.getSupports_privacy();
+        return new DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy);
     }
 }
