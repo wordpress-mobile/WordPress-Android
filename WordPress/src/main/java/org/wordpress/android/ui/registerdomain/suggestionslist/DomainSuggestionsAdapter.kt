@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 
 class DomainSuggestionsAdapter(
-    private val itemSelectionListener: (DomainSuggestionResponse) -> Unit
+    private val itemSelectionListener: (DomainSuggestionResponse?) -> Unit
 ) : Adapter<DomainSuggestionsViewHolder>() {
     private val list = mutableListOf<DomainSuggestionResponse>()
+    private val selectedPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainSuggestionsViewHolder {
         return DomainSuggestionsViewHolder(parent, itemSelectionListener)

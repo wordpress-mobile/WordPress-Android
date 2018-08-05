@@ -25,28 +25,17 @@
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/domainSearchEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/domain_suggestions_list_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
-
-        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-            android:id="@+id/domainSuggestionsList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <org.wordpress.android.ui.ActionableEmptyView
-            android:id="@+id/actionableEmptyView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:aevTitle="@string/suggestions_empty_list"
-            tools:visibility="visible"/>
 
         <ProgressBar
             android:id="@+id/suggestionsListProgress"
@@ -54,8 +43,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/domainSuggestionsListContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+                android:id="@+id/domainSuggestionsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <org.wordpress.android.ui.ActionableEmptyView
+                android:id="@+id/actionableEmptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:aevTitle="@string/suggestions_empty_list"
+                tools:visibility="visible"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -72,6 +81,7 @@
             style="@style/WordPress.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/choose_domain"/>
     </LinearLayout>
 </LinearLayout>

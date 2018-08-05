@@ -38,8 +38,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                 _suggestions.postValue(new)
             }
 
-    private val _selectSuggestion = SingleLiveEvent<DomainSuggestionResponse>()
-    val selectedSuggestion: LiveData<DomainSuggestionResponse>
+    private val _selectSuggestion = SingleLiveEvent<DomainSuggestionResponse?>()
+    val selectedSuggestion: LiveData<DomainSuggestionResponse?>
         get() = _selectSuggestion
 
     var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
@@ -105,7 +105,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         suggestions = ListState.Success(event.suggestions, false) // Disable load more
     }
 
-    fun onDomainSuggestionsSelected(domainSuggestion: DomainSuggestionResponse) {
+    fun onDomainSuggestionsSelected(domainSuggestion: DomainSuggestionResponse?) {
         _selectSuggestion.postValue(domainSuggestion)
     }
 }

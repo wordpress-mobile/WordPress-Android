@@ -6,9 +6,15 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import android.widget.TextView.OnEditorActionListener
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -19,7 +25,8 @@ import org.wordpress.android.viewmodel.registerdomain.DomainSuggestionsViewModel
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,10 +60,19 @@ class DomainSuggestionsFragment : Fragment() {
         chooseDomainButton.setOnClickListener {
             ToastUtils.showToast(activity, "Still under development.")
         }
+        domainSearchEditText.setOnEditorActionListener { view, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                viewModel.searchQuery = view.text.toString()
+            }
+            false
+        }
     }
 
     private fun setupObservers() {
         viewModel.suggestionsLiveData.observe(this, Observer {
+            val isLoadingData = it?.isFetchingFirstPage() == true
+            domainSuggestionsListContainer.visibility = if (isLoadingData) View.GONE else View.VISIBLE
+            suggestionsListProgress.visibility = if (isLoadingData) View.VISIBLE else View.GONE
             reloadSuggestions(it?.data ?: emptyList())
         })
 
@@ -76,7 +92,7 @@ class DomainSuggestionsFragment : Fragment() {
         adapter.updateSuggestionsList(domainSuggestions)
     }
 
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse) {
+    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion)
     }
 }
