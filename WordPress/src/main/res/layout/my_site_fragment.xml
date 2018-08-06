@@ -202,30 +202,6 @@
 
             </LinearLayout>
 
-            <!--Register Domain-->
-            <LinearLayout
-                android:id="@+id/row_register_domain"
-                style="@style/MySiteListRowLayout">
-
-                <ImageView
-                    style="@style/MySiteListRowIcon"
-                    android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_jetpack_icon_24dp"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListRowTextView"
-                    android:text="@string/register_domain"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListRowSecondaryTextView"
-                    android:gravity="end"
-                    android:paddingLeft="0dp"
-                    android:paddingStart="0dp"
-                    android:text="@string/register_domain"
-                    android:textAlignment="viewEnd"/>
-
-            </LinearLayout>
-
             <!--Publish-->
             <org.wordpress.android.widgets.WPTextView
                 android:text="@string/my_site_header_publish"
