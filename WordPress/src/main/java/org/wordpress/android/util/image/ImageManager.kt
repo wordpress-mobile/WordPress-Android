@@ -1,7 +1,9 @@
 package org.wordpress.android.util.image
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.support.v7.content.res.AppCompatResources
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
@@ -25,8 +27,8 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     ) {
         GlideApp.with(imageView.context)
                 .load(imgUrl)
-                .addFallback(imageType)
-                .addPlaceholder(imageType)
+                .addFallback(imageView.context, imageType)
+                .addPlaceholder(imageView.context, imageType)
                 .applyScaleType(scaleType)
                 .into(imageView)
     }
@@ -50,8 +52,8 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
         GlideApp.with(imageView.context)
                 .load(imgUrl)
-                .addFallback(imageType)
-                .addPlaceholder(imageType)
+                .addFallback(imageView.context, imageType)
+                .addPlaceholder(imageView.context, imageType)
                 .circleCrop()
                 .into(imageView)
     }
@@ -78,15 +80,29 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         }
     }
 
-    private fun GlideRequest<Drawable>.addPlaceholder(imageType: ImageType): GlideRequest<Drawable> {
+    private fun GlideRequest<Drawable>.addPlaceholder(context: Context, imageType: ImageType): GlideRequest<Drawable> {
         val placeholderImageRes = placeholderManager.getPlaceholderResource(imageType)
-        return if (placeholderImageRes == null) this else this.placeholder(placeholderImageRes)
+        return if (placeholderImageRes == null) {
+            this
+        } else {
+            this.placeholder(loadDrawable(context, placeholderImageRes))
+        }
     }
 
-    private fun GlideRequest<Drawable>.addFallback(imageType: ImageType): GlideRequest<Drawable> {
+    private fun GlideRequest<Drawable>.addFallback(context: Context, imageType: ImageType): GlideRequest<Drawable> {
         val errorImageRes = placeholderManager.getErrorResource(imageType)
-        return if (errorImageRes == null) this else this.error(errorImageRes)
+        return if (errorImageRes == null) {
+            this
+        } else {
+            this.error(loadDrawable(context, errorImageRes))
+        }
     }
+
+    /**
+     * Load drawable using AppCompatResource to prevent the app from crashing when loading vector drawables on api < 21.
+     * May be removed when https://github.com/bumptech/glide/issues/3086 is fixed.
+     */
+    fun loadDrawable(context: Context, errorImageRes: Int) = AppCompatResources.getDrawable(context, errorImageRes)
 
     @Deprecated("Object for backward compatibility with code which doesn't support DI")
     companion object {
