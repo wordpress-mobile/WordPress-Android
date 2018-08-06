@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
@@ -23,9 +24,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import javax.inject.Inject
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.coroutineContext
-import kotlin.coroutines.experimental.suspendCoroutine
 
 class PagesViewModel
 @Inject constructor(private val pageStore: PageStore) : ViewModel() {
@@ -48,40 +46,13 @@ class PagesViewModel
         get() = _pages
 
     private lateinit var site: SiteModel
-    private var searchContinuation: Continuation<String>? = null
+    private var searchJob: Job? = null
 
     fun start(site: SiteModel) {
         this.site = site
 
         clearSearch()
         reloadPagesAsync()
-        handleThrottledSearchAsync()
-    }
-
-    private fun handleThrottledSearchAsync() = launch(CommonPool) {
-        var query: String
-        while (true) {
-            val searchQuery = suspendCoroutine<String> { continuation ->
-                searchContinuation = continuation
-            }
-            if (searchQuery.isNotEmpty()) {
-                launch(coroutineContext) {
-                    query = searchQuery
-                    delay(200)
-                    if (query == searchQuery) {
-                        val result = pageStore.search(site, searchQuery)
-                                .map { Page(it.pageId.toLong(), it.title, null) }
-                        if (result.isNotEmpty()) {
-                            _searchResult.postValue(result)
-                        } else {
-                            _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
-                        }
-                    }
-                }
-            } else {
-                clearSearch()
-            }
-        }
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
@@ -106,8 +77,25 @@ class PagesViewModel
         _listState.postValue(newState)
     }
 
-    fun onSearch(query: String) {
-        searchContinuation?.resume(query)
+    fun onSearch(searchQuery: String) {
+        searchJob?.cancel()
+        if (searchQuery.isNotEmpty()) {
+            searchJob = launch {
+                delay(200)
+                searchJob = null
+                if (isActive) {
+                    val result = pageStore.search(site, searchQuery)
+                            .map { Page(it.pageId.toLong(), it.title, null) }
+                    if (result.isNotEmpty()) {
+                        _searchResult.postValue(result)
+                    } else {
+                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                    }
+                }
+            }
+        } else {
+            clearSearch()
+        }
     }
 
     fun onSearchExpanded(): Boolean {
