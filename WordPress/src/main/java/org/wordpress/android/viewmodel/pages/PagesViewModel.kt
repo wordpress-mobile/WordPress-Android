@@ -10,9 +10,11 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageModel
+import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.AppLog
@@ -84,8 +86,15 @@ class PagesViewModel
                 delay(200)
                 searchJob = null
                 if (isActive) {
-                    val result = pageStore.search(site, searchQuery)
-                            .map { Page(it.pageId.toLong(), it.title, null) }
+                    val result = pageStore.groupedSearch(site, searchQuery)
+                            .map { (status, results) ->
+                                listOf(Divider(1, status.toResource())) +
+                                        results.map { Page(it.pageId.toLong(), it.title, null) }
+                            }
+                            .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
+                                acc.addAll(list)
+                                acc
+                            }
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
@@ -95,6 +104,16 @@ class PagesViewModel
             }
         } else {
             clearSearch()
+        }
+    }
+
+    private fun PageStatus.toResource(): Int {
+        return when (this) {
+            PageStatus.PUBLISHED -> string.pages_published
+            PageStatus.DRAFT -> string.pages_drafts
+            PageStatus.TRASHED -> string.pages_trashed
+            PageStatus.SCHEDULED -> string.pages_scheduled
+            PageStatus.UNKNOWN -> throw IllegalArgumentException("Unknown page type")
         }
     }
 

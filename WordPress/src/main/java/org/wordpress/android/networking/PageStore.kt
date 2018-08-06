@@ -12,6 +12,12 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.models.pages.PageModel
+import org.wordpress.android.models.pages.PageStatus
+import org.wordpress.android.models.pages.PageStatus.DRAFT
+import org.wordpress.android.models.pages.PageStatus.PUBLISHED
+import org.wordpress.android.models.pages.PageStatus.SCHEDULED
+import org.wordpress.android.models.pages.PageStatus.UNKNOWN
+import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
@@ -27,8 +33,32 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
 
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(CommonPool) {
         postStore.getPagesForSite(site)
-                .filter { it != null && it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
+                .filterNotNull()
                 .map { PageModel(it) }
+                .filter { it.status != UNKNOWN && it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
+    }
+
+    suspend fun groupedSearch(
+        site: SiteModel,
+        searchQuery: String
+    ): SortedMap<PageStatus, List<PageModel>> = withContext(CommonPool) {
+        val list = search(site, searchQuery)
+                .groupBy { it.status }
+        list
+                .toSortedMap(Comparator { previous, next ->
+                    when {
+                        previous == next -> 0
+                        previous == PUBLISHED -> -1
+                        next == PUBLISHED -> 1
+                        previous == DRAFT -> -1
+                        next == DRAFT -> 1
+                        previous == SCHEDULED -> -1
+                        next == SCHEDULED -> 1
+                        else -> {
+                            throw IllegalArgumentException("Unexpected page type")
+                        }
+                    }
+                })
     }
 
     suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {

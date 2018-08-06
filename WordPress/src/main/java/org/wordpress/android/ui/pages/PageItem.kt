@@ -14,7 +14,7 @@ sealed class PageItem(val type: Type) {
         val enabledActions: Set<Action> = setOf()
     ) : PageItem(PAGE)
 
-    data class Divider(val id: Long, val title: String) : PageItem(DIVIDER)
+    data class Divider(val id: Long, val title: Int) : PageItem(DIVIDER)
 
     data class Empty(val textResource: Int? = null) : PageItem(EMPTY)
 

@@ -66,7 +66,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val dividerTitle = itemView.findViewById<TextView>(id.divider_text)
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
-                dividerTitle.text = pageItem.title
+                dividerTitle.text = dividerTitle.resources.getText(pageItem.title)
             }
         }
     }
