@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.os.Handler
+import android.text.TextUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -47,7 +48,11 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
-            submitSearch(newValue, true)
+            if (!TextUtils.isEmpty(newValue)) {
+                submitSearch(newValue, true)
+            } else {
+                initializeDefaultSuggestions()
+            }
         }
     }
 
@@ -68,7 +73,11 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
         this.site = site
         isStarted = true
-        fetchSuggestions()
+        initializeDefaultSuggestions()
+    }
+
+    private fun initializeDefaultSuggestions() {
+        searchQuery = site.name
     }
 
     private fun submitSearch(query: String, delayed: Boolean) {
@@ -87,9 +96,14 @@ class DomainSuggestionsViewModel @Inject constructor(
     // Network Request
 
     private fun fetchSuggestions() {
-        suggestions = ListState.Loading(suggestions, false) // Disable Load more
+        // Disable Load more
+        suggestions = ListState.Loading(suggestions, false)
+
         val suggestDomainsPayload = SuggestDomainsPayload(searchQuery, true, true, true, 20)
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
+
+        // Reset the selected suggestion, if list is updated
+        onDomainSuggestionsSelected(null, -1)
     }
 
     // Network Callback

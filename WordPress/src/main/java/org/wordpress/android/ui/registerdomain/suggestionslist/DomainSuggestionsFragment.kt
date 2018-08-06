@@ -52,6 +52,7 @@ class DomainSuggestionsFragment : Fragment() {
         domainSuggestionsList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         domainSuggestionsList.setEmptyView(actionableEmptyView)
         chooseDomainButton.setOnClickListener {
+            // TODO Implement Activity navigation
             ToastUtils.showToast(activity, "Still under development.")
         }
         domainSearchEditText.setOnEditorActionListener { view, actionId, _ ->
