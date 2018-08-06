@@ -27,21 +27,23 @@ Once installed, you can now build, install and test the project from the command
     $ ./gradlew cAT                  # assemble, install and run unit tests
 
 
-## Directory structure ##
-
-    |-- libs                    # dependencies used to build debug variants
-    |-- tools                   # script collection
-    |-- gradle.properties       # properties imported by the build script
-    `-- WordPress
-        |-- build.gradle        # main build script
-        `-- src                 # android specific Java code
-            |-- androidTest     # test assets, resources and code
-            |-- main            #
-            |   |-- assets      # main project assets
-            |   |-- java        # main project java code
-            |   `-- res         # main project resources
-            |-- vanilla         # vanilla variant specific manifest
-            `-- wasabi          # wasabi variant specific resources and manifest
+## Directory structure ##                
+    .
+    ├── libs                    # dependencies used to build debug variants
+    ├── tools                   # script collection
+    ├── gradle.properties       # properties imported by the build script
+    ├── WordPress
+    │   |-- build.gradle        # main build script
+    │   └── src
+    │       ├── androidTest     # Android test assets, resources and code
+    │       ├── test            # Unit tests
+    │       ├── main
+    │       │   ├── assets      # main project assets
+    │       │   ├── java        # main project java code
+    │       │   └── res         # main project resources
+    │       ├── debug           # debug variant
+    │       ├── future          # unpackaged resources
+    │       └── wasabi          # wasabi variant specific resources and manifest
 
 ## OAuth2 Authentication ##
 
