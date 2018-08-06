@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.models.pages.PageStatus
+import org.wordpress.android.models.pages.updatePageData
 import org.wordpress.android.networking.PageStore.UploadRequestResult.ERROR_EMPTY_PAGE
 import org.wordpress.android.networking.PageStore.UploadRequestResult.ERROR_NO_NETWORK
 import org.wordpress.android.networking.PageStore.UploadRequestResult.SUCCESS
@@ -37,8 +39,9 @@ class PageStore @Inject constructor(
         dispatcher.register(this)
     }
 
-    suspend fun uploadPage(page: PageModel): UploadRequestResult = withContext(CommonPool) {
-        val post = postStore.getPostByLocalPostId(page.pageId)
+    suspend fun savePage(page: PageModel): UploadRequestResult = withContext(CommonPool) {
+        val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
+        post.updatePageData(page)
 
         if (!NetworkUtils.isNetworkAvailable(context)) {
             return@withContext ERROR_NO_NETWORK
@@ -51,7 +54,6 @@ class PageStore @Inject constructor(
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post)
         val isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT ||
                 PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft
-        post.status = PostStatus.PUBLISHED.toString()
 
         // save the post in the DB so the UploadService will get the latest change
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
