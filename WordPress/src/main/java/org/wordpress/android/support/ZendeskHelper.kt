@@ -35,6 +35,7 @@ import zendesk.support.UiConfig
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
+import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -367,7 +368,9 @@ private fun buildZendeskCustomFields(
             CustomField(TicketFieldIds.currentSite, currentSiteInformation),
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
-            CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context))
+            CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
+            CustomField(TicketFieldIds.appLanguage, Locale.getDefault().getLanguage()),
+            CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
     )
 }
 
@@ -475,6 +478,7 @@ private object ZendeskConstants {
     const val noneValue = "none"
     // We rely on this platform tag to filter tickets in Zendesk, so should be kept separate from the `articleLabel`
     const val platformTag = "Android"
+    const val sourcePlatform = "Mobile - Android"
     const val ticketSubject = "WordPress for Android Support"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
@@ -488,6 +492,8 @@ private object TicketFieldIds {
     const val logs = 22871957L
     const val networkInformation = 360000086966L
     const val currentSite = 360000103103L
+    const val appLanguage = 360008583691L
+    const val sourcePlatform = 25176023L
 }
 
 object ZendeskExtraTags {
