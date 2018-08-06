@@ -5,12 +5,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/grey_lighten_30"
+              android:focusable="true"
               android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/searchFieldContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
+        android:layout_marginTop="2dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="8dp">
@@ -26,15 +29,23 @@
             android:id="@+id/domainSearchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:clickable="false"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_a_40"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical">
 
         <ProgressBar
@@ -42,7 +53,6 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             tools:visibility="gone"/>
 
         <LinearLayout
@@ -67,14 +77,19 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_a_40"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey_lighten_30"
-        android:paddingBottom="7dp"
+        android:paddingBottom="8dp"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
-        android:paddingTop="7dp">
+        android:paddingTop="8dp">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/chooseDomainButton"

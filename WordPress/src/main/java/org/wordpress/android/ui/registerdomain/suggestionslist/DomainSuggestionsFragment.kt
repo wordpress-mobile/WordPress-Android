@@ -3,18 +3,15 @@ package org.wordpress.android.ui.registerdomain.suggestionslist
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -25,8 +22,7 @@ import org.wordpress.android.viewmodel.registerdomain.DomainSuggestionsViewModel
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -89,10 +85,11 @@ class DomainSuggestionsFragment : Fragment() {
         } else {
             adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
         }
+        adapter.selectedPosition = viewModel.selectedPosition.value ?: -1
         adapter.updateSuggestionsList(domainSuggestions)
     }
 
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?) {
-        viewModel.onDomainSuggestionsSelected(domainSuggestion)
+    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
+        viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
 }

@@ -38,9 +38,13 @@ class DomainSuggestionsViewModel @Inject constructor(
                 _suggestions.postValue(new)
             }
 
-    private val _selectSuggestion = SingleLiveEvent<DomainSuggestionResponse?>()
+    private val _selectSuggestion = MutableLiveData<DomainSuggestionResponse?>()
     val selectedSuggestion: LiveData<DomainSuggestionResponse?>
         get() = _selectSuggestion
+
+    private val _selectedPosition = MutableLiveData<Int>()
+    val selectedPosition: LiveData<Int>
+        get() = _selectedPosition
 
     var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
@@ -105,7 +109,12 @@ class DomainSuggestionsViewModel @Inject constructor(
         suggestions = ListState.Success(event.suggestions, false) // Disable load more
     }
 
-    fun onDomainSuggestionsSelected(domainSuggestion: DomainSuggestionResponse?) {
-        _selectSuggestion.postValue(domainSuggestion)
+    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
+        _selectedPosition.postValue(selectedPosition)
+        if (selectedPosition != -1) {
+            _selectSuggestion.postValue(selectedSuggestion)
+        } else {
+            _selectSuggestion.postValue(null)
+        }
     }
 }
