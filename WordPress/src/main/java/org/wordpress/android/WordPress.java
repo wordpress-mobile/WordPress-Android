@@ -230,7 +230,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        if (!PackageUtils.isDebugBuild()) {
+        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
             Fabric.with(this, new Crashlytics());
         }
 
