@@ -38,6 +38,7 @@ import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
 import static junit.framework.Assert.fail;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
@@ -46,7 +47,7 @@ import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class WPScreenshotTest {
-    private static final int ATTEMPTS = 20;
+    private static final int ATTEMPTS = 50;
     private static final int WAITING_TIME = 300;
 
     @ClassRule
@@ -109,15 +110,14 @@ public class WPScreenshotTest {
 
         // Next Button
         nextButton = onView(
-                allOf(withId(R.id.primary_button), childAtPosition(
+                allOf(withId(R.id.primary_button), withText(R.string.next), childAtPosition(
                         allOf(withId(R.id.bottom_buttons), childAtPosition(
                                 withClassName(is("android.widget.RelativeLayout")), 2)), 1)));
         waitForElementUntilDisplayed(nextButton).perform(click());
 
-
         // Continue with this log button
         ViewInteraction continueButton = onView(
-                allOf(withId(R.id.primary_button), childAtPosition(
+                allOf(withId(R.id.primary_button), withText(R.string.login_continue), childAtPosition(
                         allOf(withId(R.id.bottom_buttons), childAtPosition(
                                 withClassName(is("android.widget.RelativeLayout")), 3)), 1)));
         waitForElementUntilDisplayed(continueButton).perform(click());
