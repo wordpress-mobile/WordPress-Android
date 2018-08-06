@@ -194,7 +194,10 @@ public class MySiteFragment extends Fragment implements
         }
 
         updateQuickStartCounter();
+        showQuickStartTaskPromptIfNecessary();
+    }
 
+    private void showQuickStartTaskPromptIfNecessary() {
         if (AppPrefs.isQuickStartActive()) {
             QuickStartTask promptedTask = getPromptedQuickStartTask();
 
@@ -206,6 +209,7 @@ public class MySiteFragment extends Fragment implements
                 if (nextPrompt != null) {
                     setPromptedQuickStartTask(nextPrompt.getTask());
                 } else {
+                    // looks like we completed all the tasks!
                     setPromptedQuickStartTask(null);
                 }
             }
@@ -1130,8 +1134,8 @@ public class MySiteFragment extends Fragment implements
 
         mQuickStartTaskPromptSnackBar.setTitle(title);
 
-        mQuickStartTaskPromptSnackBar
-                .setPositiveButton(getString(R.string.quick_start_button_positive), new OnClickListener() {
+        mQuickStartTaskPromptSnackBar.setPositiveButton(
+                getString(R.string.quick_start_button_positive), new OnClickListener() {
                     @Override public void onClick(View v) {
                         if (showContinueQuickStartDialog) {
                             ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -1159,7 +1163,7 @@ public class MySiteFragment extends Fragment implements
 
     private boolean shouldShowQuickStartTaskPrompt() {
         return AppPrefs.getNumberOfTimesQuickStartDialogShown() <= MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG
-               && !mQuickStartSnackBarWasShown && getNextQuickStartPrompt() != null;
+               && !mQuickStartSnackBarWasShown && getPromptedQuickStartTask() != null;
     }
 
     private QuickStartMySitePrompts getNextQuickStartPrompt() {
@@ -1187,7 +1191,6 @@ public class MySiteFragment extends Fragment implements
         } else {
             AppPrefs.setPromptedQuickStartTask(task.toString());
         }
-
     }
 
     private void markQuickStartPromptAsShownOnce() {
