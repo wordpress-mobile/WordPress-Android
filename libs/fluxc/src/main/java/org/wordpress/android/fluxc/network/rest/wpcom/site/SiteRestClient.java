@@ -48,8 +48,8 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.AvailabilityStatus;
-import org.wordpress.android.fluxc.store.SiteStore.Mappability;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus;
+import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
@@ -772,8 +772,8 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     private DomainAvailabilityResponsePayload responseToDomainAvailabilityPayload(DomainAvailabilityResponse response) {
-        AvailabilityStatus status = AvailabilityStatus.fromString(response.getStatus());
-        Mappability mappable = Mappability.fromString(response.getMappable());
+        DomainAvailabilityStatus status = DomainAvailabilityStatus.fromString(response.getStatus());
+        DomainMappabilityStatus mappable = DomainMappabilityStatus.fromString(response.getMappable());
         boolean supportsPrivacy = response.getSupports_privacy();
         return new DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy);
     }

@@ -220,12 +220,12 @@ public class SiteStore extends Store {
     }
 
     public static class DomainAvailabilityResponsePayload extends Payload<DomainAvailabilityError> {
-        public @Nullable AvailabilityStatus status;
-        public @Nullable Mappability mappable;
+        public @Nullable DomainAvailabilityStatus status;
+        public @Nullable DomainMappabilityStatus mappable;
         public boolean supportsPrivacy;
 
-        public DomainAvailabilityResponsePayload(@Nullable AvailabilityStatus status,
-                                                 @Nullable Mappability mappable,
+        public DomainAvailabilityResponsePayload(@Nullable DomainAvailabilityStatus status,
+                                                 @Nullable DomainMappabilityStatus mappable,
                                                  @Nullable boolean supportsPrivacy) {
             this.status = status;
             this.mappable = mappable;
@@ -445,12 +445,12 @@ public class SiteStore extends Store {
     }
 
     public static class OnDomainAvailabilityChecked extends OnChanged<DomainAvailabilityError> {
-        public @Nullable AvailabilityStatus status;
-        public @Nullable Mappability mappable;
+        public @Nullable DomainAvailabilityStatus status;
+        public @Nullable DomainMappabilityStatus mappable;
         public boolean supportsPrivacy;
 
-        public OnDomainAvailabilityChecked(@Nullable AvailabilityStatus status,
-                                           @Nullable Mappability mappable,
+        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityStatus status,
+                                           @Nullable DomainMappabilityStatus mappable,
                                            boolean supportsPrivacy,
                                            @Nullable DomainAvailabilityError error) {
             this.status = status;
@@ -460,7 +460,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public enum AvailabilityStatus {
+    public enum DomainAvailabilityStatus {
         BLACKLISTED_DOMAIN,
         INVALID_TLD,
         INVALID_DOMAIN,
@@ -469,9 +469,9 @@ public class SiteStore extends Store {
         AVAILABLE,
         UNKNOWN_STATUS;
 
-        public static AvailabilityStatus fromString(final String string) {
+        public static DomainAvailabilityStatus fromString(final String string) {
             if (!TextUtils.isEmpty(string)) {
-                for (AvailabilityStatus v : AvailabilityStatus.values()) {
+                for (DomainAvailabilityStatus v : DomainAvailabilityStatus.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -481,16 +481,16 @@ public class SiteStore extends Store {
         }
     }
 
-    public enum Mappability {
+    public enum DomainMappabilityStatus {
         BLACKLISTED_DOMAIN,
         INVALID_TLD,
         INVALID_DOMAIN,
         MAPPABLE_DOMAIN,
         UNKNOWN_STATUS;
 
-        public static Mappability fromString(final String string) {
+        public static DomainMappabilityStatus fromString(final String string) {
             if (!TextUtils.isEmpty(string)) {
-                for (Mappability v : Mappability.values()) {
+                for (DomainMappabilityStatus v : DomainMappabilityStatus.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
