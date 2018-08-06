@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PlanModel;
@@ -38,12 +39,17 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus;
+import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
@@ -519,6 +525,40 @@ public class SiteRestClient extends BaseWPComRestClient {
         addUnauthedRequest(request);
     }
 
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
+     * payload of type {@link DomainAvailabilityResponsePayload}.
+     *
+     * {@link DomainAvailabilityResponsePayload#isError()} can be used to check the request result.
+     */
+    public void checkDomainAvailability(@NonNull final String domainName) {
+        String url = WPCOMREST.domains.domainName(domainName).is_available.getUrlV1_3();
+        final WPComGsonRequest<DomainAvailabilityResponse> request =
+                WPComGsonRequest.buildGetRequest(url, null, DomainAvailabilityResponse.class,
+                        new Listener<DomainAvailabilityResponse>() {
+                            @Override
+                            public void onResponse(DomainAvailabilityResponse response) {
+                                DomainAvailabilityResponsePayload payload =
+                                        responseToDomainAvailabilityPayload(response);
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                // Domain availability API should always return a response for a valid,
+                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
+                                DomainAvailabilityError domainAvailabilityError = new DomainAvailabilityError(
+                                        DomainAvailabilityErrorType.GENERIC_ERROR, error.message);
+                                DomainAvailabilityResponsePayload payload =
+                                        new DomainAvailabilityResponsePayload(domainAvailabilityError);
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
     // Automated Transfers
 
     public void checkAutomatedTransferEligibility(@NonNull final SiteModel site) {
@@ -729,5 +769,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         info.isWPCom = response.isWordPressDotCom; // CHECKSTYLE IGNORE
         info.urlAfterRedirects = response.urlAfterRedirects;
         return info;
+    }
+
+    private DomainAvailabilityResponsePayload responseToDomainAvailabilityPayload(DomainAvailabilityResponse response) {
+        DomainAvailabilityStatus status = DomainAvailabilityStatus.fromString(response.getStatus());
+        DomainMappabilityStatus mappable = DomainMappabilityStatus.fromString(response.getMappable());
+        boolean supportsPrivacy = response.getSupports_privacy();
+        return new DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy);
     }
 }

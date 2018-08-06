@@ -219,6 +219,24 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DomainAvailabilityResponsePayload extends Payload<DomainAvailabilityError> {
+        public @Nullable DomainAvailabilityStatus status;
+        public @Nullable DomainMappabilityStatus mappable;
+        public boolean supportsPrivacy;
+
+        public DomainAvailabilityResponsePayload(@Nullable DomainAvailabilityStatus status,
+                                                 @Nullable DomainMappabilityStatus mappable,
+                                                 @Nullable boolean supportsPrivacy) {
+            this.status = status;
+            this.mappable = mappable;
+            this.supportsPrivacy = supportsPrivacy;
+        }
+
+        public DomainAvailabilityResponsePayload(@NonNull DomainAvailabilityError error) {
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
@@ -298,6 +316,19 @@ public class SiteStore extends Store {
         public AutomatedTransferError(@Nullable String type, @Nullable String message) {
             this.type = AutomatedTransferErrorType.fromString(type);
             this.message = message;
+        }
+    }
+
+    public static class DomainAvailabilityError implements OnChangedError {
+        @NonNull public DomainAvailabilityErrorType type;
+        @Nullable public String message;
+        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type) {
+            this.type = type;
         }
     }
 
@@ -410,6 +441,62 @@ public class SiteStore extends Store {
         public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
+        }
+    }
+
+    public static class OnDomainAvailabilityChecked extends OnChanged<DomainAvailabilityError> {
+        public @Nullable DomainAvailabilityStatus status;
+        public @Nullable DomainMappabilityStatus mappable;
+        public boolean supportsPrivacy;
+
+        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityStatus status,
+                                           @Nullable DomainMappabilityStatus mappable,
+                                           boolean supportsPrivacy,
+                                           @Nullable DomainAvailabilityError error) {
+            this.status = status;
+            this.mappable = mappable;
+            this.supportsPrivacy = supportsPrivacy;
+            this.error = error;
+        }
+    }
+
+    public enum DomainAvailabilityStatus {
+        BLACKLISTED_DOMAIN,
+        INVALID_TLD,
+        INVALID_DOMAIN,
+        TLD_NOT_SUPPORTED,
+        TRANSFERRABLE_DOMAIN,
+        AVAILABLE,
+        UNKNOWN_STATUS;
+
+        public static DomainAvailabilityStatus fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (DomainAvailabilityStatus v : DomainAvailabilityStatus.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return UNKNOWN_STATUS;
+        }
+    }
+
+    public enum DomainMappabilityStatus {
+        BLACKLISTED_DOMAIN,
+        INVALID_TLD,
+        INVALID_DOMAIN,
+        MAPPABLE_DOMAIN,
+        UNKNOWN_STATUS;
+
+        public static DomainMappabilityStatus fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (DomainMappabilityStatus v : DomainMappabilityStatus.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return UNKNOWN_STATUS;
         }
     }
 
@@ -607,6 +694,11 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum DomainAvailabilityErrorType {
+        INVALID_DOMAIN_NAME,
+        GENERIC_ERROR
     }
 
     public enum SiteVisibility {
@@ -1024,6 +1116,12 @@ public class SiteStore extends Store {
             case FETCHED_PLANS:
                 handleFetchedPlans((FetchedPlansPayload) action.getPayload());
                 break;
+            case CHECK_DOMAIN_AVAILABILITY:
+                checkDomainAvailability((String) action.getPayload());
+                break;
+            case CHECKED_DOMAIN_AVAILABILITY:
+                handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
+                break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
@@ -1315,6 +1413,25 @@ public class SiteStore extends Store {
 
     private void handleFetchedPlans(FetchedPlansPayload payload) {
         emitChange(new OnPlansFetched(payload.site, payload.plans, payload.error));
+    }
+
+    private void checkDomainAvailability(String domainName) {
+        if (TextUtils.isEmpty(domainName)) {
+            DomainAvailabilityError error =
+                    new DomainAvailabilityError(DomainAvailabilityErrorType.INVALID_DOMAIN_NAME);
+            handleCheckedDomainAvailability(new DomainAvailabilityResponsePayload(error));
+        } else {
+            mSiteRestClient.checkDomainAvailability(domainName);
+        }
+    }
+
+    private void handleCheckedDomainAvailability(DomainAvailabilityResponsePayload payload) {
+        emitChange(
+                new OnDomainAvailabilityChecked(
+                        payload.status,
+                        payload.mappable,
+                        payload.supportsPrivacy,
+                        payload.error));
     }
 
     // Automated Transfers
