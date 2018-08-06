@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -26,6 +25,8 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -163,10 +164,14 @@ public class NoteBlock {
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
             // Request image, and animate it when loaded
             mImageManager
-                    .load(noteBlockHolder.getImageView(), ImageType.IMAGE, getNoteMediaItem().optString("url", ""),
-                            ScaleType.CENTER, new ImageManager.RequestListener<Drawable>() {
+                    .loadWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
+                            getNoteMediaItem().optString("url", ""), null,
+                            new ImageManager.RequestListener<Drawable>() {
                                 @Override
                                 public void onLoadFailed(@Nullable Exception e) {
+                                    if (e != null) {
+                                        AppLog.e(T.NOTIFS, e);
+                                    }
                                     noteBlockHolder.hideImageView();
                                 }
 
