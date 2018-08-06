@@ -563,7 +563,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     }
 
     @Override
-    public void setTitle(String title) {
+    public void setTitle(@NonNull String title) {
         mToolbarTitle = title;
         if (mToolbar != null) {
             mToolbar.setTitle(title);

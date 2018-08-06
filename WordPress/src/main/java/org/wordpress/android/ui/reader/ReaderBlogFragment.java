@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -60,7 +61,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
@@ -108,7 +109,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         if (getBlogAdapter().hasSearchFilter()) {
             outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
