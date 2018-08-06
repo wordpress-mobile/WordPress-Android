@@ -16,6 +16,7 @@ import org.wordpress.android.models.pages.PageStatus.PENDING
 import org.wordpress.android.models.pages.PageStatus.PUBLISHED
 import org.wordpress.android.models.pages.PageStatus.SCHEDULED
 import org.wordpress.android.models.pages.PageStatus.TRASHED
+import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
@@ -35,7 +36,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOA
 import javax.inject.Inject
 
 class PageListViewModel
-@Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
+@Inject constructor(val dispatcher: Dispatcher, val pageStore: PageStore) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
@@ -153,13 +154,23 @@ class PageListViewModel
         when (action) {
             VIEW_PAGE -> _previewPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
             SET_PARENT -> _setPageParent.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
-            MOVE_TO_DRAFT -> _movePageToDraft.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
-            MOVE_TO_TRASH -> _movePageToTrash.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
-            PUBLISH_NOW -> _publishPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+            MOVE_TO_DRAFT -> changePageStatus(pageItem, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(pageItem, TRASHED)
+            PUBLISH_NOW -> changePageStatus(pageItem, PUBLISHED)
             DELETE_PERMANENTLY -> _deletePage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
-            else -> throw IllegalArgumentException("Unexpected action type")
         }
         return true
+    }
+
+    private fun changePageStatus(pageItem: Page, status: PageStatus) {
+        pagesViewModel.pages
+                .firstOrNull { it.remoteId == pageItem.id }
+                ?.let { page ->
+                    launch {
+                        page.status = status
+                        pageStore.savePage(page)
+                    }
+                }
     }
 
     fun onItemTapped(pageItem: Page) {

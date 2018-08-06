@@ -22,8 +22,18 @@ enum class PageStatus {
                 PostStatus.TRASHED -> TRASHED
                 PostStatus.PENDING -> PENDING
                 PostStatus.SCHEDULED -> SCHEDULED
-                else -> throw IllegalArgumentException("Unexpected Page status: ${status.name}")
+                else -> throw IllegalArgumentException("Unexpected page status: ${status.name}")
             }
+        }
+    }
+
+    fun toPostStatus(): PostStatus {
+        return when (this) {
+            PUBLISHED -> PostStatus.PUBLISHED
+            DRAFT -> PostStatus.DRAFT
+            TRASHED -> PostStatus.TRASHED
+            PENDING -> PostStatus.PENDING
+            SCHEDULED -> PostStatus.SCHEDULED
         }
     }
 }

@@ -17,3 +17,11 @@ data class PageModel(
     constructor(post: PostModel, site: SiteModel) : this(site, post.id, post.title, PageStatus.fromPost(post),
             post.isLocallyChanged, post.parentId, post.remotePostId)
 }
+
+fun PostModel.updatePageData(page: PageModel) {
+    this.id = page.pageId
+    this.title = page.title
+    this.status = page.status.toPostStatus().toString()
+    this.parentId = page.parentId
+    this.remotePostId = page.remoteId
+}
