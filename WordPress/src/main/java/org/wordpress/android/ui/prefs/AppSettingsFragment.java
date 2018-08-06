@@ -94,10 +94,14 @@ public class AppSettingsFragment extends PreferenceFragment
                                 mDispatcher,
                                 mAccountStore,
                                 hasUserOptedOut);
+                        /*
+                         * Note that if tracking was just disabled, the only way to get Crashlytics to stop sending
+                         * crash reports is to alert the user that the app needs to be restarted and then we either
+                         * restart the app or expect the user to do it. This seemed user-unfriendly, especially
+                         * since the app would need to restart after the very next crash.
+                         */
                         if (CrashlyticsUtils.shouldEnableCrashlytics(getActivity())) {
                             Fabric.with(WordPress.getContext(), new Crashlytics());
-                        } else {
-                            CrashlyticsUtils.disableCrashlytics();
                         }
                         return true;
                     }

@@ -6,12 +6,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-
-import java.lang.reflect.Field;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -27,37 +23,6 @@ public class CrashlyticsUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean hasUserOptedOut = !prefs.getBoolean(context.getString(R.string.pref_key_send_usage), true);
         return !hasUserOptedOut;
-    }
-
-    /**
-     * Disables Crashlytics if it's already enabled
-     */
-    public static void disableCrashlytics() {
-        if (!Fabric.isInitialized()) {
-            return;
-        }
-
-        /*
-         * first we use reflection to set the Fabric singleton to null because otherwise the call
-         * to Fabric.with() below will do nothing)
-         */
-        try {
-            Class<?> clazz = Class.forName(Fabric.class.getName());
-            Field field = clazz.getDeclaredField("singleton");
-            field.setAccessible(true);
-            field.set(null, null);
-        } catch (Exception e) {
-            AppLog.e(AppLog.T.MAIN, e.getMessage());
-            return;
-        }
-
-        /*
-         * then we create a new instance that disables logging - ideally this wouldn't be necessary
-         * since we just nulled the existing instance above, but it seems more future-proof to
-         * explicitly disable Crashlytics
-         */
-        CrashlyticsCore crashlytics = new CrashlyticsCore.Builder().disabled(true).build();
-        Fabric.with(WordPress.getContext(), crashlytics);
     }
 
     public static void logException(Throwable tr, AppLog.T tag, String message) {
