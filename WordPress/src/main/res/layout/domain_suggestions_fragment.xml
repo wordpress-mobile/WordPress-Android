@@ -4,7 +4,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/grey_lighten_30"
               android:focusable="true"
               android:orientation="vertical">
 
@@ -12,17 +11,16 @@
         android:id="@+id/searchFieldContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="@dimen/margin_medium">
 
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="@dimen/margin_medium_large"
+            android:layout_marginRight="@dimen/margin_large"
             app:srcCompat="@drawable/ic_search_grey_24dp"/>
 
         <android.support.v7.widget.AppCompatEditText
@@ -31,14 +29,16 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:clickable="false"
-            android:imeOptions="actionDone"
+            android:hint="@string/suggestions_search_hint"
+            android:imeOptions="actionDone|flagNoExtractUi"
             android:inputType="text"
+            android:textSize="@dimen/text_sz_medium"
             android:maxLines="1"/>
     </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/list_divider_height"
         android:background="@color/grey_a_40"/>
 
     <LinearLayout
@@ -79,21 +79,21 @@
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/list_divider_height"
         android:background="@color/grey_a_40"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey_lighten_30"
-        android:paddingBottom="8dp"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
-        android:paddingTop="8dp">
+        android:background="@color/background_grey"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingStart="@dimen/margin_medium_large"
+        android:paddingTop="@dimen/margin_medium">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/chooseDomainButton"
-            style="@style/WordPress.Button.Primary"
+            style="@style/DomainRegistrationButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"

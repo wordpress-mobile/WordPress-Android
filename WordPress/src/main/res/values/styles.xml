@@ -726,4 +726,8 @@
         <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
     </style>
 
+    <style name="DomainRegistrationButtonStyle" parent="WordPress.Button.Primary">
+        <item name="colorButtonNormal">@color/domain_reg_disable_btn_color</item>
+        <item name="android:colorAccent">@color/blue_medium</item>
+    </style>
 </resources>

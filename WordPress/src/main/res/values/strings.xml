@@ -778,6 +778,7 @@
     <string name="register_domain">Register Domain</string>
     <string name="choose_domain">Choose Domain</string>
     <string name="suggestions_empty_list">No suggestions found</string>
+    <string name="suggestions_search_hint">Type a keyword for more ideas</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>

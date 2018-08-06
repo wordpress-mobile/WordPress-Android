@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.ArrayList
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -111,10 +110,6 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         _selectedPosition.postValue(selectedPosition)
-        if (selectedPosition != -1) {
-            _selectSuggestion.postValue(selectedSuggestion)
-        } else {
-            _selectSuggestion.postValue(null)
-        }
+        _selectSuggestion.postValue(selectedSuggestion)
     }
 }
