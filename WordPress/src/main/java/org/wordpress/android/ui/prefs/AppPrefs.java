@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -734,11 +735,12 @@ public class AppPrefs {
         setInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, value);
     }
 
+    @Nullable
     public static String getPromptedQuickStartTask() {
-        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK);
+        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, null);
     }
 
-    public static void setPromptedQuickStartTask(String task) {
+    public static void setPromptedQuickStartTask(@Nullable String task) {
         setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
     }
 }

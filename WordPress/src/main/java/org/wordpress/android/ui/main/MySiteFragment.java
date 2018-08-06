@@ -103,7 +103,7 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
-    public static final String ARG_QUICK_START_SNACKBAR_WAS_SHOWN = "TAG_QUICK_START_DIALOG";
+    public static final String KEY_QUICK_START_SNACKBAR_WAS_SHOWN = "TAG_QUICK_START_DIALOG";
     public static final int MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG = 2;
 
     private WPNetworkImageView mBlavatarImageView;
@@ -165,7 +165,7 @@ public class MySiteFragment extends Fragment implements
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
-            mQuickStartSnackBarWasShown = savedInstanceState.getBoolean(ARG_QUICK_START_SNACKBAR_WAS_SHOWN, false);
+            mQuickStartSnackBarWasShown = savedInstanceState.getBoolean(KEY_QUICK_START_SNACKBAR_WAS_SHOWN, false);
         }
     }
 
@@ -224,7 +224,7 @@ public class MySiteFragment extends Fragment implements
     @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
-        outState.putBoolean(ARG_QUICK_START_SNACKBAR_WAS_SHOWN, mQuickStartSnackBarWasShown);
+        outState.putBoolean(KEY_QUICK_START_SNACKBAR_WAS_SHOWN, mQuickStartSnackBarWasShown);
     }
 
     private void initSiteSettings() {
@@ -236,7 +236,7 @@ public class MySiteFragment extends Fragment implements
 
     @Override public void onPause() {
         super.onPause();
-        if (!getActivity().isChangingConfigurations()) {
+        if (getActivity() != null && !getActivity().isChangingConfigurations()) {
             mQuickStartSnackBarWasShown = false;
             clearActiveQuickStartTask();
             removeQuickStartFocusPoint();
@@ -919,6 +919,7 @@ public class MySiteFragment extends Fragment implements
                 // no-op
                 break;
             case TAG_QUICK_START_DIALOG:
+                // TODO we are resetting all quick start tasks for test purposes. Remove this in prod.
                 for (QuickStartTask quickStartTask : QuickStartTask.values()) {
                     mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), quickStartTask, false);
                 }

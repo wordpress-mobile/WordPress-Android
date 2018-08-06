@@ -670,13 +670,13 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
+                    setSite(data);
+                    jumpNewPost(data);
+
                     // TODO for test purposes show Quick Start dialog when switching sites
 //                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     showQuickStartDialog();
 //                    }
-
-                    setSite(data);
-                    jumpNewPost(data);
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
