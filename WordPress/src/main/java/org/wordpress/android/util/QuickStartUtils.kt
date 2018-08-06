@@ -146,9 +146,9 @@ class QuickStartUtils {
 
         @JvmStatic
         fun isQuickStartAvailableForTheSite(siteModel: SiteModel): Boolean {
-            return (siteModel.hasCapabilityManageOptions
-                    && ThemeBrowserActivity.isAccessible(siteModel)
-                    && SiteUtils.isAccessedViaWPComRest(siteModel))
+            return (siteModel.hasCapabilityManageOptions &&
+                    ThemeBrowserActivity.isAccessible(siteModel) &&
+                    SiteUtils.isAccessedViaWPComRest(siteModel))
         }
     }
 }

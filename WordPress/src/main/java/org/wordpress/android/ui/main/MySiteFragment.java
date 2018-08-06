@@ -211,7 +211,6 @@ public class MySiteFragment extends Fragment implements
                     showActiveQuickStartTaskPrompt();
                 }
             }
-
         }
     }
 
@@ -239,7 +238,6 @@ public class MySiteFragment extends Fragment implements
         if (mQuickStartTaskPromptSnackBar != null && mQuickStartTaskPromptSnackBar.isShowing()) {
             mQuickStartTaskPromptSnackBar.dismiss();
         }
-
     }
 
     @Override
@@ -1197,11 +1195,11 @@ public class MySiteFragment extends Fragment implements
         AppPrefs.setPromptedQuickStartTask(task.toString());
     }
 
-    private void markQuickStartPromptAsShownOnce(){
+    private void markQuickStartPromptAsShownOnce() {
         mQuickStartSnackBarWasShown = true;
     }
 
-    private void resetQuickStartPromptCounter(){
+    private void resetQuickStartPromptCounter() {
         AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
     }
 }

@@ -512,7 +512,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 getMySiteFragment().requestNextStepOfActiveQuickStartTask();
             }
         }
-
     }
 
     // user tapped the new post button in the bottom navbar
@@ -671,7 +670,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
-                    //TODO for test purposes show Quick Start dialog when switching sites
+                    // TODO for test purposes show Quick Start dialog when switching sites
 //                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     showQuickStartDialog();
 //                    }
