@@ -104,8 +104,8 @@ public class AppPrefs {
         // indicates how many times quick start dialog for a single task wash shown
         NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
 
-        // keeps track of currently active quick start task
-        ACTIVE_QUICK_START_TASK
+        // keeps track of quick start tasks that is prompted to user
+        PROMPTED_QUICK_START_TASK
     }
 
     /**
@@ -726,7 +726,6 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, true);
     }
 
-
     public static int getNumberOfTimesQuickStartDialogShown() {
         return getInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, 0);
     }
@@ -736,10 +735,10 @@ public class AppPrefs {
     }
 
     public static String getPromptedQuickStartTask() {
-        return getString(DeletablePrefKey.ACTIVE_QUICK_START_TASK);
+        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK);
     }
 
     public static void setPromptedQuickStartTask(String task) {
-        setString(DeletablePrefKey.ACTIVE_QUICK_START_TASK, task);
+        setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
     }
 }
