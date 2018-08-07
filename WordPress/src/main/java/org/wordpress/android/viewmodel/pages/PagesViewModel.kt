@@ -4,15 +4,16 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageModel
+import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -47,6 +48,7 @@ class PagesViewModel
         get() = _pages
 
     private lateinit var site: SiteModel
+    private var searchJob: Job? = null
 
     fun start(site: SiteModel) {
         this.site = site
@@ -77,18 +79,42 @@ class PagesViewModel
         _listState.postValue(newState)
     }
 
-    fun onSearchTextSubmit(query: String?): Boolean {
-        return onSearchTextChange(query)
-    }
-
-    fun onSearchTextChange(query: String?): Boolean {
-        if (!query.isNullOrEmpty()) {
-            val listOf = mockResult(query)
-            _searchResult.postValue(listOf)
+    fun onSearch(searchQuery: String) {
+        searchJob?.cancel()
+        if (searchQuery.isNotEmpty()) {
+            searchJob = launch {
+                delay(200)
+                searchJob = null
+                if (isActive) {
+                    val result = pageStore.groupedSearch(site, searchQuery)
+                            .map { (status, results) ->
+                                listOf(Divider(status.toResource())) +
+                                        results.map { Page(it.pageId.toLong(), it.title, null) }
+                            }
+                            .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
+                                acc.addAll(list)
+                                acc
+                            }
+                    if (result.isNotEmpty()) {
+                        _searchResult.postValue(result)
+                    } else {
+                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                    }
+                }
+            }
         } else {
             clearSearch()
         }
-        return true
+    }
+
+    private fun PageStatus.toResource(): Int {
+        return when (this) {
+            PageStatus.PUBLISHED -> string.pages_published
+            PageStatus.DRAFT -> string.pages_drafts
+            PageStatus.TRASHED -> string.pages_trashed
+            PageStatus.SCHEDULED -> string.pages_scheduled
+            PageStatus.UNKNOWN -> throw IllegalArgumentException("Unknown page type")
+        }
     }
 
     fun onSearchExpanded(): Boolean {
@@ -114,16 +140,4 @@ class PagesViewModel
     private fun clearSearch() {
         _searchResult.postValue(listOf(Empty(string.empty_list_default)))
     }
-}
-
-fun mockResult(query: String?): List<PageItem> {
-    // TODO remove with real data
-    return listOf(
-            Divider(1, "Data for $query"),
-            Page(1, "item 1", null, 0, setOf(VIEW_PAGE)),
-            Page(2, "item 2", null, 1),
-            Page(3, "item 3", null, 2, setOf(VIEW_PAGE, PUBLISH_NOW)),
-            Divider(2, "Divider 2"),
-            Page(4, "item 4", null, 0)
-    )
 }

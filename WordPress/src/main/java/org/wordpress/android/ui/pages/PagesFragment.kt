@@ -103,12 +103,14 @@ class PagesFragment : Fragment() {
 
         val searchView = actionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return viewModel.onSearchTextSubmit(query)
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return viewModel.onSearchTextChange(newText)
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.onSearch(newText)
+                return true
             }
         })
 

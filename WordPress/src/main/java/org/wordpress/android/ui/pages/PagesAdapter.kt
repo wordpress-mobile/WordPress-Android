@@ -44,7 +44,7 @@ class PagesAdapter(private val onAction: (PageItem.Action, PageItem) -> Boolean)
             val newItem = result[newItemPosition]
             return oldItem.type == newItem.type && when (oldItem) {
                 is Page -> oldItem.id == (newItem as Page).id
-                is Divider -> oldItem.id == (newItem as Divider).id
+                is Divider -> oldItem == (newItem as Divider)
                 else -> false
             }
         }
