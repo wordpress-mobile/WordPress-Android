@@ -506,7 +506,7 @@ public class WPMainActivity extends AppCompatActivity implements
         trackLastVisiblePage(position, true);
         if (getMySiteFragment() != null) {
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
-
+            hideQuickStartSnackBar();
             if (position == PAGE_READER && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
                 getMySiteFragment().requestNextStepOfActiveQuickStartTask();
