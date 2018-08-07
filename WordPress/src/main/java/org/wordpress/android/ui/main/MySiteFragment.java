@@ -221,8 +221,7 @@ public class MySiteFragment extends Fragment implements
                 mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
                 mQuickStartSnackBarHandler.postDelayed(new Runnable() {
                     @Override public void run() {
-                        showQuickStartDialogTaskPrompt(AppPrefs.getNumberOfTimesQuickStartDialogShown()
-                                                       == MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG);
+                        showQuickStartDialogTaskPrompt();
                     }
                 }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
             }
@@ -947,7 +946,7 @@ public class MySiteFragment extends Fragment implements
         AppPrefs.setQuickStartActive(true);
         AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
         setPromptedQuickStartTask(QuickStartTask.VIEW_SITE);
-        showQuickStartDialogTaskPrompt(false);
+        showQuickStartDialogTaskPrompt();
         mQuickStartContainer.setVisibility(View.VISIBLE);
         updateQuickStartCounter();
     }
@@ -1122,18 +1121,22 @@ public class MySiteFragment extends Fragment implements
         ((WPMainActivity) getActivity()).showQuickStartSnackBar(shortQuickStartMessage);
     }
 
-    private void showQuickStartDialogTaskPrompt(final boolean showContinueQuickStartDialog) {
+    private void showQuickStartDialogTaskPrompt() {
         if (!isAdded() || getView() == null) {
             return;
         }
 
+        // if whe shown regular quick start task Snackbar maximum number of times we should show the final one
+        // with different content
+        final boolean shouldDirectUserToContinueQuickStart = AppPrefs.getNumberOfTimesQuickStartDialogShown()
+                                                                 == MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG;
         final QuickStartMySitePrompts mySitePrompt =
                 QuickStartMySitePrompts.getPromptDetailsForTask(getPromptedQuickStartTask());
 
         String title;
         String message;
 
-        if (showContinueQuickStartDialog) {
+        if (shouldDirectUserToContinueQuickStart) {
             title = getString(R.string.quick_start_dialog_continue_setup_title);
             message = getString(R.string.quick_start_dialog_continue_setup_message);
         } else if (mySitePrompt != null) {
@@ -1154,7 +1157,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartTaskPromptSnackBar.setPositiveButton(
                 getString(R.string.quick_start_button_positive), new OnClickListener() {
                     @Override public void onClick(View v) {
-                        if (showContinueQuickStartDialog) {
+                        if (shouldDirectUserToContinueQuickStart) {
                             ActivityLauncher.viewQuickStartForResult(getActivity());
                         } else {
                             mActiveTutorialPrompt = mySitePrompt;
