@@ -225,8 +225,6 @@ public class MySiteFragment extends Fragment implements
                                                        == MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG);
                     }
                 }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
-
-
             }
         }
     }
