@@ -647,7 +647,7 @@ public class MySiteFragment extends Fragment implements
 
                     resetQuickStartPromptCounter();
                     setPromptedQuickStartTask(mActiveTutorialPrompt.getTask());
-                    markQuickStartPromptAsShownOnce();
+                    mQuickStartSnackBarWasShown = true;
 
                     showActiveQuickStartTutorial();
                 }
@@ -1184,7 +1184,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     /**
-     * Cycles through Quick Start tasks and picks returns a prompt information for the next unfinished one
+     * Cycles through Quick Start tasks and returns a prompt information for the next unfinished one
      */
     private QuickStartMySitePrompts getNextQuickStartPrompt() {
         for (QuickStartMySitePrompts quickStartMySitePrompt : QuickStartMySitePrompts.values()) {
@@ -1209,7 +1209,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     /**
-     * Records Quick Start task that is currently being prompted to the use with a Snackbar
+     * Records Quick Start task that is currently being prompted to the user with a Snackbar
      */
     private void setPromptedQuickStartTask(QuickStartTask task) {
         if (task == null) {
@@ -1217,14 +1217,6 @@ public class MySiteFragment extends Fragment implements
         } else {
             AppPrefs.setPromptedQuickStartTask(task.toString());
         }
-    }
-
-    /**
-     * In order to show Quick Start snackbar in onResume but not during orientation change we maintain a flag that
-     * indicates that Snackbar was shown once.
-     */
-    private void markQuickStartPromptAsShownOnce() {
-        mQuickStartSnackBarWasShown = true;
     }
 
     private void resetQuickStartPromptCounter() {
