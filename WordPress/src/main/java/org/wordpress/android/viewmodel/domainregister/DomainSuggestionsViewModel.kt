@@ -99,7 +99,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         // Disable Load more
         suggestions = ListState.Loading(suggestions, false)
 
-        val suggestDomainsPayload = SuggestDomainsPayload(searchQuery, false, false, true, 20)
+        val suggestDomainsPayload = SuggestDomainsPayload(searchQuery, false, false, true, 30)
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated
