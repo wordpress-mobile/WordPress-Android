@@ -88,7 +88,7 @@ class PagesViewModel
                 if (isActive) {
                     val result = pageStore.groupedSearch(site, searchQuery)
                             .map { (status, results) ->
-                                listOf(Divider(1, status.toResource())) +
+                                listOf(Divider(status.toResource())) +
                                         results.map { Page(it.pageId.toLong(), it.title, null) }
                             }
                             .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->

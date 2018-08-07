@@ -19,6 +19,7 @@ import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.models.pages.PageStatus.DRAFT
 import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
+import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -59,9 +60,10 @@ class PagesViewModelTest {
     fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
         initSearch()
         val query = "query"
-        val expectedResult = listOf(PageModel(1, "title", DRAFT, -1))
-        val pageItems = expectedResult.map { PageItem.Page(it.pageId.toLong(), it.title, null) }
-        whenever(pageStore.search(site, query)).thenReturn(expectedResult)
+        val title = "title"
+        val drafts = listOf(PageModel(1, title, DRAFT, -1))
+        val expectedResult = listOf(Divider(string.pages_drafts), PageItem.Page(1, title, null))
+        whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf(DRAFT to drafts))
 
         val observer = viewModel.searchResult.test()
 
@@ -69,7 +71,7 @@ class PagesViewModelTest {
 
         val result = observer.await()
 
-        assertThat(result).isEqualTo(pageItems)
+        assertThat(result).isEqualTo(expectedResult)
     }
 
     @Test
@@ -77,7 +79,7 @@ class PagesViewModelTest {
         initSearch()
         val query = "query"
         val pageItems = listOf(Empty(string.pages_empty_search_result))
-        whenever(pageStore.search(site, query)).thenReturn(listOf())
+        whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
 
         val data = viewModel.searchResult.test()
 

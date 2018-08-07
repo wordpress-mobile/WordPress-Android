@@ -19,6 +19,13 @@ fun <T> LiveData<T>.test(): TestObserver<T> {
     return observer
 }
 
+fun <T> LiveData<T>.start(): LiveData<T> {
+    val mutableLiveData = MutableLiveData<T>()
+    this.observeForever { mutableLiveData.postValue(it) }
+    mutableLiveData.value = null
+    return mutableLiveData
+}
+
 class TestObserver<T> : Observer<T> {
     private val values = mutableListOf<T?>()
     private var requiredItemCount: Int = -1
