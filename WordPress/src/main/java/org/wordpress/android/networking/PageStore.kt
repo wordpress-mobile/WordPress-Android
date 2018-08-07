@@ -26,6 +26,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
     private var postLoadContinuation: Continuation<OnPostChanged>? = null
+    private var site: SiteModel? = null
 
     init {
         dispatcher.register(this)
@@ -66,9 +67,14 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         pages.map { PageModel(it) }
     }
 
-    suspend fun requestPagesFromServer(site: SiteModel, loadMore: Boolean): OnPostChanged = suspendCoroutine { cont ->
-        val payload = FetchPostsPayload(site, loadMore)
+    suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
+        this.site = site
         postLoadContinuation = cont
+        requestMore(site, false)
+    }
+
+    private fun requestMore(site: SiteModel, loadMore: Boolean) {
+        val payload = FetchPostsPayload(site, loadMore)
         dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))
     }
 
@@ -76,8 +82,12 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
         if (event.causeOfChange == PostAction.FETCH_PAGES) {
-            postLoadContinuation?.resume(event)
-            postLoadContinuation = null
+            if (event.canLoadMore && site != null) {
+                requestMore(site!!, true)
+            } else {
+                postLoadContinuation?.resume(event)
+                postLoadContinuation = null
+            }
         }
     }
 }

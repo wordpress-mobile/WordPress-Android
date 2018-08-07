@@ -20,11 +20,9 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.CAN_LOAD_MORE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import javax.inject.Inject
 
 class PagesViewModel
@@ -62,20 +60,20 @@ class PagesViewModel
         refreshPages()
     }
 
-    private suspend fun refreshPages(isLoadingMore: Boolean = false) {
-        var newState = if (isLoadingMore) LOADING_MORE else FETCHING
+    private suspend fun refreshPages() {
+        var newState = FETCHING
         _listState.postValue(newState)
 
-        val result = pageStore.requestPagesFromServer(site, isLoadingMore)
+        val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
-            _listState.postValue(ERROR)
+            newState = ERROR
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
             _pages = pageStore.loadPagesFromDb(site)
             _refreshPages.asyncCall()
+            newState = DONE
         }
 
-        newState = if (result.canLoadMore) CAN_LOAD_MORE else DONE
         _listState.postValue(newState)
     }
 
