@@ -1,4 +1,4 @@
-package org.wordpress.android.models.pages
+package org.wordpress.android.fluxc.model.page
 
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
