@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.UNKNOWN
+import org.wordpress.android.fluxc.model.post.PostStatus
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -73,7 +74,8 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     private fun fetchPages(site: SiteModel, loadMore: Boolean) {
-        val payload = FetchPostsPayload(site, loadMore)
+        val payload = FetchPostsPayload(site, loadMore,
+                listOf(PostStatus.DRAFT, PostStatus.PUBLISHED, PostStatus.SCHEDULED, PostStatus.TRASHED))
         dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))
     }
 
