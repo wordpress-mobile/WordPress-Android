@@ -724,7 +724,7 @@ public class AppPrefs {
     }
 
     public static boolean isQuickStartDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, true);
+        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
     }
 
     public static int getNumberOfTimesQuickStartDialogShown() {

@@ -710,7 +710,9 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     private void showQuickStartDialog() {
-        if (getSelectedSite() == null || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())) {
+        if (AppPrefs.isQuickStartDisabled()
+            || getSelectedSite() == null
+            || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())) {
             return;
         }
 
