@@ -24,12 +24,12 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.models.pages.PageModel
-import org.wordpress.android.models.pages.PageStatus
-import org.wordpress.android.models.pages.PageStatus.DRAFT
-import org.wordpress.android.models.pages.PageStatus.PUBLISHED
-import org.wordpress.android.models.pages.PageStatus.SCHEDULED
-import org.wordpress.android.models.pages.PageStatus.TRASHED
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 
 @RunWith(MockitoJUnitRunner::class)
 class PageStoreTest {
