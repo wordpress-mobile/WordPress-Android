@@ -1,0 +1,203 @@
+package org.wordpress.android.fluxc.page
+
+import com.nhaarman.mockito_kotlin.KArgumentCaptor
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.PostAction.FETCH_PAGES
+import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.models.pages.PageModel
+import org.wordpress.android.models.pages.PageStatus
+import org.wordpress.android.models.pages.PageStatus.DRAFT
+import org.wordpress.android.models.pages.PageStatus.PUBLISHED
+import org.wordpress.android.models.pages.PageStatus.SCHEDULED
+import org.wordpress.android.models.pages.PageStatus.TRASHED
+
+@RunWith(MockitoJUnitRunner::class)
+class PageStoreTest {
+    @Mock lateinit var postStore: PostStore
+    @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var site: SiteModel
+    private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
+
+    private val query = "que"
+    private val pageWithoutQuery = initPage(1, 10, "page 1")
+    private val pageWithQuery = initPage(2, title = "page2 start $query end ")
+    private val pageWithoutTitle = initPage(3, 10)
+
+    private lateinit var store: PageStore
+
+    @Before
+    fun setUp() {
+        actionCaptor = argumentCaptor()
+        val pages = listOf(pageWithoutQuery, pageWithQuery, pageWithoutTitle)
+        whenever(postStore.getPagesForSite(site)).thenReturn(pages)
+        store = PageStore(postStore, dispatcher)
+    }
+
+    @Test
+    fun searchFindsAllResultsContainingText() {
+        val result = runBlocking { store.search(site, query) }
+
+        assertThat(result).hasSize(1)
+        assertThat(result[0].title).isEqualTo(pageWithQuery.title)
+    }
+
+    @Test
+    fun searchFilitersOutUnknownStatus() {
+        whenever(postStore.getPagesForSite(site)).thenReturn(listOf(initPage(1, title = query, status = "foo")))
+
+        val result = runBlocking { store.search(site, query) }
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun searchOrdersResultsByStatus() {
+        val trashStatus = "trash"
+        val draftStatus = "draft"
+        val publishStatus = "publish"
+        val futureStatus = "future"
+        val title = "title"
+        val trashedSite1 = initPage(1, title = title, status = trashStatus)
+        val draftSite1 = initPage(2, title = title, status = draftStatus)
+        val publishedSite1 = initPage(3, title = title, status = publishStatus)
+        val scheduledSite1 = initPage(4, title = title, status = futureStatus)
+        val scheduledSite2 = initPage(5, title = title, status = futureStatus)
+        val publishedSite2 = initPage(6, title = title, status = publishStatus)
+        val draftSite2 = initPage(7, title = title, status = draftStatus)
+        val trashedSite2 = initPage(8, title = title, status = trashStatus)
+        val pages = listOf(
+                trashedSite1,
+                draftSite1,
+                publishedSite1,
+                scheduledSite1,
+                scheduledSite2,
+                publishedSite2,
+                draftSite2,
+                trashedSite2
+        )
+        whenever(postStore.getPagesForSite(site)).thenReturn(pages)
+
+        val result = runBlocking { store.groupedSearch(site, title) }
+
+        assertThat(result.keys).contains(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
+        assertPage(result, 0, 3, PageStatus.PUBLISHED)
+        assertPage(result, 1, 6, PageStatus.PUBLISHED)
+        assertPage(result, 0, 2, PageStatus.DRAFT)
+        assertPage(result, 1, 7, PageStatus.DRAFT)
+        assertPage(result, 0, 4, PageStatus.SCHEDULED)
+        assertPage(result, 1, 5, PageStatus.SCHEDULED)
+        assertPage(result, 0, 1, PageStatus.TRASHED)
+        assertPage(result, 1, 8, PageStatus.TRASHED)
+    }
+
+    private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, id: Int, status: PageStatus) {
+        val page = map[status]?.get(position)
+        assertThat(page).isNotNull()
+        assertThat(page!!.pageId).isEqualTo(id)
+        assertThat(page.status).isEqualTo(status)
+    }
+
+    @Test
+    fun emptySearchResultWhenNothingContainsQuery() {
+        val result = runBlocking { store.search(site, "foo") }
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun loadsPagesFromDb() {
+        val pages = runBlocking { store.loadPagesFromDb(site) }
+
+        assertThat(pages).hasSize(3)
+        assertThat(pages[0].pageId).isEqualTo(pageWithoutQuery.id)
+        assertThat(pages[0].parentId).isEqualTo(pageWithoutQuery.parentId)
+        assertThat(pages[1].pageId).isEqualTo(pageWithQuery.id)
+        assertThat(pages[1].parentId).isEqualTo(pageWithQuery.parentId)
+        assertThat(pages[2].pageId).isEqualTo(pageWithoutTitle.id)
+        assertThat(pages[2].parentId).isEqualTo(pageWithoutTitle.parentId)
+    }
+
+    @Test
+    fun requestPagesFetchesFromServerAndReturnsEvent() = runBlocking {
+        val expected = OnPostChanged(5, false)
+        expected.causeOfChange = FETCH_PAGES
+        var event: OnPostChanged? = null
+        val job = launch {
+            event = store.requestPagesFromServer(site)
+        }
+        delay(10)
+        store.onPostChanged(expected)
+        delay(10)
+        job.join()
+
+        assertThat(expected).isEqualTo(event)
+        verify(dispatcher).dispatch(any())
+    }
+
+    @Test
+    fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = runBlocking<Unit> {
+        val firstEvent = OnPostChanged(5, true)
+        val lastEvent = OnPostChanged(5, false)
+        firstEvent.causeOfChange = FETCH_PAGES
+        lastEvent.causeOfChange = FETCH_PAGES
+        var event: OnPostChanged? = null
+        val job = launch {
+            event = store.requestPagesFromServer(site)
+        }
+        delay(10)
+        store.onPostChanged(firstEvent)
+        delay(10)
+        store.onPostChanged(lastEvent)
+        delay(10)
+        job.join()
+
+        assertThat(lastEvent).isEqualTo(event)
+        verify(dispatcher, times(2)).dispatch(actionCaptor.capture())
+        val firstPayload = actionCaptor.firstValue.payload as FetchPostsPayload
+        assertThat(firstPayload.site).isEqualTo(site)
+        assertThat(firstPayload.loadMore).isEqualTo(false)
+        val lastPayload = actionCaptor.lastValue.payload as FetchPostsPayload
+        assertThat(lastPayload.site).isEqualTo(site)
+        assertThat(lastPayload.loadMore).isEqualTo(true)
+    }
+
+    private fun initPage(
+        id: Int,
+        parentId: Long? = null,
+        title: String? = null,
+        status: String? = "draft"
+    ): PostModel {
+        val page = PostModel()
+        page.id = id
+        parentId?.let {
+            page.parentId = parentId
+        }
+        title?.let {
+            page.title = it
+        }
+        status?.let {
+            page.status = status
+        }
+        return page
+    }
+}
