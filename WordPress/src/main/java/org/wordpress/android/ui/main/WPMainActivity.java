@@ -504,11 +504,13 @@ public class WPMainActivity extends AppCompatActivity implements
     public void onPageChanged(int position) {
         updateTitle(position);
         trackLastVisiblePage(position, true);
-        if (position == PAGE_READER && getMySiteFragment() != null
-            && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
-            // MySite fragment might not be attached to activity, so we need to remove focus point from here
+        if (getMySiteFragment() != null) {
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
-            getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+            hideQuickStartSnackBar();
+            if (position == PAGE_READER && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+                // MySite fragment might not be attached to activity, so we need to remove focus point from here
+                getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+            }
         }
     }
 
@@ -668,12 +670,13 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
-                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                        showQuickStartDialog();
-                    }
-
                     setSite(data);
                     jumpNewPost(data);
+
+                    // TODO for test purposes show Quick Start dialog when switching sites
+//                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    showQuickStartDialog();
+//                    }
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
@@ -707,6 +710,12 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     private void showQuickStartDialog() {
+        if (AppPrefs.isQuickStartDisabled()
+            || getSelectedSite() == null
+            || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())) {
+            return;
+        }
+
         String tag = MySiteFragment.TAG_QUICK_START_DIALOG;
         PromoDialog promoDialog = new PromoDialog();
         promoDialog.initialize(
@@ -1041,5 +1050,6 @@ public class WPMainActivity extends AppCompatActivity implements
     @Override protected void onPause() {
         super.onPause();
         hideQuickStartSnackBar();
+        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
     }
 }

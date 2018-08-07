@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -100,6 +101,12 @@ public class AppPrefs {
 
         // used to indicate that user is performing Quick Start tutorial
         IS_QUICK_START_ACTIVE,
+
+        // indicates how many times quick start dialog for a single task wash shown
+        NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
+
+        // keeps track of quick start tasks that is prompted to user
+        PROMPTED_QUICK_START_TASK
     }
 
     /**
@@ -160,7 +167,10 @@ public class AppPrefs {
         LAST_WP_COM_THEMES_SYNC,
 
         // user id last used to login with
-        LAST_USED_USER_ID
+        LAST_USED_USER_ID,
+
+        // used to indicate that user opted out of quick start
+        IS_QUICK_START_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -458,7 +468,7 @@ public class AppPrefs {
 
     public static boolean isVisualEditorEnabled() {
         return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED,
-                                                       !isAztecEditorEnabled());
+                !isAztecEditorEnabled());
     }
 
     public static boolean isAsyncPromoRequired() {
@@ -705,8 +715,32 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, isActive);
     }
 
-    // TODO quick start is set to true by default for testing purposes. Remove in prod.
     public static boolean isQuickStartActive() {
-        return getBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, true);
+        return getBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, false);
+    }
+
+    public static void setQuickStartDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
+    }
+
+    public static boolean isQuickStartDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
+    }
+
+    public static int getNumberOfTimesQuickStartDialogShown() {
+        return getInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, 0);
+    }
+
+    public static void setNumberOfTimesQuickStartDialogShown(int value) {
+        setInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, value);
+    }
+
+    @Nullable
+    public static String getPromptedQuickStartTask() {
+        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, null);
+    }
+
+    public static void setPromptedQuickStartTask(@Nullable String task) {
+        setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
     }
 }
