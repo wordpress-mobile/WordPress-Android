@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.registerdomain.suggestionslist
+package org.wordpress.android.ui.domainregister.suggestionslist
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +10,7 @@ class DomainSuggestionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_register_domain_activity)
+        setContentView(R.layout.activity_domain_suggestions_activity)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {

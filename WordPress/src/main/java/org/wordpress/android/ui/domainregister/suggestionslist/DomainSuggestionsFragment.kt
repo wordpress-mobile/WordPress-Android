@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.registerdomain.suggestionslist
+package org.wordpress.android.ui.domainregister.suggestionslist
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -16,7 +16,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.viewmodel.registerdomain.DomainSuggestionsViewModel
+import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {

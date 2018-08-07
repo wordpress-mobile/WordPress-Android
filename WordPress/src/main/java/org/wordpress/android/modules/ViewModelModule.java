@@ -8,7 +8,7 @@ import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
-import org.wordpress.android.viewmodel.registerdomain.DomainSuggestionsViewModel;
+import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel;
 
 import dagger.Binds;
 import dagger.Module;

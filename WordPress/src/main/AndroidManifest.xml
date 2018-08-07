@@ -513,9 +513,9 @@
             android:label="@string/activity_log_event"
             android:theme="@style/Calypso.NoActionBar"/>
 
-        <!--Register Domain-->
+        <!--Domain Registration-->
         <activity
-            android:name=".ui.registerdomain.suggestionslist.DomainSuggestionsActivity"
+            android:name=".ui.domainregister.suggestionslist.DomainSuggestionsActivity"
             android:label="@string/register_domain"
             android:theme="@style/Calypso.NoActionBar"/>
 

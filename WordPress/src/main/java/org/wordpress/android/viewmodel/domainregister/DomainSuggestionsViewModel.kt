@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.registerdomain
+package org.wordpress.android.viewmodel.domainregister
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
