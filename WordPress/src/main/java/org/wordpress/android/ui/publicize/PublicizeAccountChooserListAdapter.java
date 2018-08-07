@@ -49,7 +49,7 @@ public class PublicizeAccountChooserListAdapter
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PublicizeConnection connection = mConnectionItems.get(position);
         mImageManager.load(holder.mProfileImageView, ImageType.PHOTO, connection.getExternalProfilePictureUrl());
-        holder.mNameTextView.setText(connection.getExternalDisplayName());
+        holder.mNameTextView.setText(getName(connection));
         holder.mRadioButton.setChecked(position == mSelectedPosition);
 
         if (!mAreAccountsConnected) {
@@ -89,5 +89,15 @@ public class PublicizeAccountChooserListAdapter
 
     public interface OnPublicizeAccountChooserListener {
         void onAccountSelected(int selectedIndex);
+    }
+
+    private String getName(PublicizeConnection connection) {
+        String name = connection.getExternalName();
+
+        if (name.isEmpty()) {
+            name = connection.getExternalDisplayName();
+        }
+
+        return name;
     }
 }

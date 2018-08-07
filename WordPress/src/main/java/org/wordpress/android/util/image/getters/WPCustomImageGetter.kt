@@ -76,7 +76,7 @@ class WPCustomImageGetter(
 
         return textView.get()?.let {
             val target = WPRemoteResourceViewTarget(it, maxWidth)
-            imageManager.load(target, ImageType.UNKNOWN, source)
+            imageManager.loadIntoCustomTarget(target, ImageType.UNKNOWN, source)
             targets.add(target)
 
             target.drawable

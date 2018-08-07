@@ -22,7 +22,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +32,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -63,7 +63,6 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -216,9 +215,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (!shouldShowTabs()) return;
 
         if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mTabLayout, AniUtils.Duration.MEDIUM);
+            mTabLayout.setVisibility(View.VISIBLE);
         } else if (!enable && mTabLayout.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(mTabLayout, AniUtils.Duration.MEDIUM, View.INVISIBLE);
+            mTabLayout.setVisibility(View.GONE);
         }
     }
 
@@ -461,7 +460,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         getMenuInflater().inflate(R.menu.media_browser, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
-        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+        mSearchMenuItem.setOnActionExpandListener(this);
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
@@ -478,6 +477,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mBrowserType.canMultiselect()
                 || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
+            mMediaGridFragment.showActionableEmptyViewButton(false);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -494,8 +494,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 return true;
             case R.id.menu_search:
                 mSearchMenuItem = item;
-                MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-                MenuItemCompat.expandActionView(mSearchMenuItem);
+                mSearchMenuItem.setOnActionExpandListener(this);
+                mSearchMenuItem.expandActionView();
 
                 mSearchView = (SearchView) item.getActionView();
                 mSearchView.setOnQueryTextListener(this);
@@ -514,6 +514,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
+        mMediaGridFragment.showActionableEmptyViewButton(false);
 
         enableTabs(false);
 
@@ -528,6 +529,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
+        mMediaGridFragment.showActionableEmptyViewButton(true);
         invalidateOptionsMenu();
 
         enableTabs(true);

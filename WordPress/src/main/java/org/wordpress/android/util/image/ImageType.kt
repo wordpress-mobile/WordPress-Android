@@ -8,7 +8,6 @@ enum class ImageType {
     BLAVATAR,
     PLAN,
     THEME,
-    FULLSCREEN_PHOTO,
     UNKNOWN,
     PLUGIN
 }

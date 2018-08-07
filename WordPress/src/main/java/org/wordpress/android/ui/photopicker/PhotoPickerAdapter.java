@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -24,6 +25,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +37,7 @@ import java.util.Map;
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
 
-class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
+public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .8f;
 
@@ -62,25 +65,25 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private int mThumbHeight;
 
     private boolean mIsListTaskRunning;
-    private boolean mDisableImageReset;
     private boolean mLoadThumbnails = true;
 
-    private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
     private final LayoutInflater mInflater;
     private final MediaBrowserType mBrowserType;
 
     private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
 
+    protected final ImageManager mImageManager;
+
     PhotoPickerAdapter(Context context,
-                              MediaBrowserType browserType,
-                              PhotoPickerAdapterListener listener) {
+                       MediaBrowserType browserType,
+                       PhotoPickerAdapterListener listener) {
         super();
         mContext = context;
         mListener = listener;
         mInflater = LayoutInflater.from(context);
         mBrowserType = browserType;
-        mThumbnailLoader = new ThumbnailLoader(context);
+        mImageManager = ImageManager.getInstance();
 
         setHasStableIds(true);
     }
@@ -146,7 +149,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             mLoadThumbnails = loadThumbnails;
             AppLog.d(AppLog.T.MEDIA, "PhotoPickerAdapter > loadThumbnails = " + loadThumbnails);
             if (mLoadThumbnails) {
-                notifyDataSetChangedInternal();
+                notifyDataSetChanged();
             }
         }
     }
@@ -188,26 +191,11 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         holder.mVideoOverlay.setVisibility(item.mIsVideo ? View.VISIBLE : View.GONE);
 
-        if (!mDisableImageReset) {
-            holder.mImgThumbnail.setImageDrawable(null);
-        }
-
         if (mLoadThumbnails) {
-            boolean animate = !mDisableImageReset;
-            mThumbnailLoader.loadThumbnail(
-                    holder.mImgThumbnail,
-                    item.mId,
-                    item.mIsVideo,
-                    animate,
-                    mThumbWidth);
+            mImageManager.load(holder.mImgThumbnail, ImageType.PHOTO, item.mUri.toString(), ScaleType.FIT_CENTER);
+        } else {
+            mImageManager.cancelRequestAndClearImageView(holder.mImgThumbnail);
         }
-    }
-
-    @Override
-    public void onViewRecycled(ThumbnailViewHolder holder) {
-        super.onViewRecycled(holder);
-        holder.mImgThumbnail.setImageDrawable(null);
-        holder.mImgThumbnail.setTag(null);
     }
 
     private PhotoPickerItem getItemAtPosition(int position) {
@@ -281,7 +269,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    notifyDataSetChangedInternal();
+                    notifyDataSetChanged();
                 }
             }, delayMs);
         }
@@ -320,7 +308,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     void clearSelection() {
         if (mSelectedPositions.size() > 0) {
             mSelectedPositions.clear();
-            notifyDataSetChangedInternal();
+            notifyDataSetChanged();
         }
     }
 
@@ -330,21 +318,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
     int getNumSelected() {
         return mSelectedPositions.size();
-    }
-
-    /*
-     * wrapper for notifyDataSetChanged() that prevents/reduces flicker
-     */
-    private void notifyDataSetChangedInternal() {
-        mDisableImageReset = true;
-        notifyDataSetChanged();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mDisableImageReset = false;
-            }
-        }, 500);
     }
 
     private void notifySelectionCountChanged() {

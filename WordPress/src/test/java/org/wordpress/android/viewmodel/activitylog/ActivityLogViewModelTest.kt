@@ -19,10 +19,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCHED_ACTIVITIES
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
@@ -35,6 +38,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -47,11 +51,48 @@ class ActivityLogViewModelTest {
     private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
+    private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
+    private var rewindDialogs: MutableList<ActivityLogListItem?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
+    private var snackbarMessages: MutableList<String?> = mutableListOf()
+    private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
-    private var rewindState = MutableLiveData<RewindProgress>()
+    private var rewindProgress = MutableLiveData<RewindProgress>()
     private var rewindAvailable = MutableLiveData<Boolean>()
+
+    private val rewindStatusModel = RewindStatusModel(
+            ACTIVE,
+            null,
+            Date(),
+            true,
+            null,
+            null)
+
+    val event = ActivityLogListItem.Event(
+            "activityId",
+            "",
+            ",",
+            null,
+            null,
+            true,
+            null,
+            Date(),
+            true
+    )
+    val activity = ActivityLogModel(
+            "activityId",
+            "",
+            "",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Date(),
+            null
+            )
 
     @Before
     fun setUp() {
@@ -59,11 +100,16 @@ class ActivityLogViewModelTest {
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
+        viewModel.showItemDetail.observeForever { itemDetails.add(it) }
+        viewModel.showRewindDialog.observeForever { rewindDialogs.add(it) }
+        viewModel.showSnackbarMessage.observeForever { snackbarMessages.add(it) }
+        viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
         actionCaptor = argumentCaptor()
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
-        whenever(rewindStatusService.rewindProgress).thenReturn(rewindState)
+        whenever(store.getRewindStatusForSite(site)).thenReturn(rewindStatusModel)
+        whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
     }
 
@@ -179,6 +225,15 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun onDataFetchedGoesToTopWhenSomeRowsAffected() {
+        assertTrue(moveToTopEvents.isEmpty())
+
+        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+
+        assertTrue(moveToTopEvents.isNotEmpty())
+    }
+
+    @Test
     fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() {
         val canLoadMore = true
         viewModel.onEventsUpdated(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
@@ -193,6 +248,55 @@ class ActivityLogViewModelTest {
 
         assertTrue(events.last()?.get(0) is Header)
         assertTrue(events.last()?.get(3) is Header)
+    }
+
+    @Test
+    fun onItemClickShowsItemDetail() {
+        assertTrue(itemDetails.isEmpty())
+
+        viewModel.onItemClicked(event)
+
+        assertEquals(itemDetails.firstOrNull(), event)
+    }
+
+    @Test
+    fun onActionButtonClickShowsRewindDialog() {
+        assertTrue(rewindDialogs.isEmpty())
+
+        viewModel.onActionButtonClicked(event)
+
+        assertEquals(rewindDialogs.firstOrNull(), event)
+    }
+
+    @Test
+    fun onRewindConfirmedTriggersRewindOperation() {
+        viewModel.start(site)
+        val rewindId = "rewindId"
+
+        viewModel.onRewindConfirmed(rewindId)
+
+        verify(rewindStatusService).rewind(rewindId, site)
+    }
+
+    @Test
+    fun onRewindConfirmedShowsRewindStartedMessage() {
+        assertTrue(snackbarMessages.isEmpty())
+        whenever(rewindStatusService.rewindingActivity).thenReturn(activity)
+        val snackBarMessage = "snackBar message"
+        whenever(resourceProvider.getString(any(), any(), any())).thenReturn(snackBarMessage)
+
+        viewModel.onRewindConfirmed("rewindId")
+
+        assertEquals(snackbarMessages.firstOrNull(), snackBarMessage)
+    }
+
+    @Test
+    fun loadsNextPageOnScrollToBottom() {
+        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCHED_ACTIVITIES))
+
+        viewModel.onScrolledToBottom()
+
+        assertFetchEvents(true)
     }
 
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
