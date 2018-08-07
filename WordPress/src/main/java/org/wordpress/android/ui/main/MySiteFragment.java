@@ -217,7 +217,7 @@ public class MySiteFragment extends Fragment implements
                 }
             }
 
-            if (shouldShowQuickStartTaskPrompt() && getView() != null) {
+            if (shouldShowQuickStartTaskPrompt()) {
                 mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
                 mQuickStartSnackBarHandler.postDelayed(new Runnable() {
                     @Override public void run() {
@@ -1126,10 +1126,10 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        // if whe shown regular quick start task Snackbar maximum number of times we should show the final one
-        // with different content
+        // if regular Quick Start Snackbar was displayed maximum number of times we should show the final one
+        // with a different content
         final boolean shouldDirectUserToContinueQuickStart = AppPrefs.getNumberOfTimesQuickStartDialogShown()
-                                                                 == MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG;
+                                                             == MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG;
         final QuickStartMySitePrompts mySitePrompt =
                 QuickStartMySitePrompts.getPromptDetailsForTask(getPromptedQuickStartTask());
 
