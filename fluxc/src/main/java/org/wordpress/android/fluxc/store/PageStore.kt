@@ -69,10 +69,10 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
         this.site = site
         postLoadContinuation = cont
-        requestMore(site, false)
+        fetchPages(site, false)
     }
 
-    private fun requestMore(site: SiteModel, loadMore: Boolean) {
+    private fun fetchPages(site: SiteModel, loadMore: Boolean) {
         val payload = FetchPostsPayload(site, loadMore)
         dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))
     }
@@ -82,7 +82,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     fun onPostChanged(event: OnPostChanged) {
         if (event.causeOfChange == PostAction.FETCH_PAGES) {
             if (event.canLoadMore && site != null) {
-                requestMore(site!!, true)
+                fetchPages(site!!, true)
             } else {
                 postLoadContinuation?.resume(event)
                 postLoadContinuation = null
