@@ -104,7 +104,7 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
-    public static final String KEY_QUICK_START_SNACKBAR_WAS_SHOWN = "TAG_QUICK_START_DIALOG";
+    public static final String KEY_QUICK_START_SNACKBAR_WAS_SHOWN = "KEY_QUICK_START_SNACKBAR_WAS_SHOWN";
     public static final int MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG = 1;
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
 
