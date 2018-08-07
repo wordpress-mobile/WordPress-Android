@@ -41,7 +41,7 @@ class PagesViewModelTest {
     @Test
     fun clearsResultAndLoadsDataOnStart() = runBlocking<Unit> {
         whenever(pageStore.loadPagesFromDb(site)).thenReturn(listOf(PageModel(1, "title", DRAFT, -1)))
-        whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(OnPostChanged(1, false))
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
         val listStateObserver = viewModel.listState.test()
         val refreshPagesObserver = viewModel.refreshPages.test()
         val searchResultObserver = viewModel.searchResult.test()
@@ -107,7 +107,7 @@ class PagesViewModelTest {
 
     private suspend fun initSearch() {
         whenever(pageStore.loadPagesFromDb(site)).thenReturn(listOf())
-        whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(OnPostChanged(0, false))
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
         viewModel.start(site)
     }
 }

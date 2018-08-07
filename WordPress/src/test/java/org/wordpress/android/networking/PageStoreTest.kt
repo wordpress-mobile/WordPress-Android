@@ -1,6 +1,9 @@
 package org.wordpress.android.networking
 
+import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.delay
@@ -14,9 +17,11 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction.FETCH_PAGES
+import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.models.pages.PageStatus
@@ -30,6 +35,7 @@ class PageStoreTest {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var site: SiteModel
+    private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
 
     private val query = "que"
     private val pageWithoutQuery = initPage(1, 10, "page 1")
@@ -40,6 +46,7 @@ class PageStoreTest {
 
     @Before
     fun setUp() {
+        actionCaptor = argumentCaptor()
         val pages = listOf(pageWithoutQuery, pageWithQuery, pageWithoutTitle)
         whenever(postStore.getPagesForSite(site)).thenReturn(pages)
         store = PageStore(postStore, dispatcher)
@@ -131,18 +138,46 @@ class PageStoreTest {
 
     @Test
     fun requestPagesFetchesFromServerAndReturnsEvent() = runBlocking {
-        val expected = OnPostChanged(5, true)
+        val expected = OnPostChanged(5, false)
         expected.causeOfChange = FETCH_PAGES
         var event: OnPostChanged? = null
-        val job = launch(kotlin.coroutines.experimental.coroutineContext) {
-            event = store.requestPagesFromServer(site, true)
+        val job = launch {
+            event = store.requestPagesFromServer(site)
         }
         delay(10)
         store.onPostChanged(expected)
+        delay(10)
         job.join()
 
         assertThat(expected).isEqualTo(event)
         verify(dispatcher).dispatch(any())
+    }
+
+    @Test
+    fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = runBlocking<Unit> {
+        val firstEvent = OnPostChanged(5, true)
+        val lastEvent = OnPostChanged(5, false)
+        firstEvent.causeOfChange = FETCH_PAGES
+        lastEvent.causeOfChange = FETCH_PAGES
+        var event: OnPostChanged? = null
+        val job = launch {
+            event = store.requestPagesFromServer(site)
+        }
+        delay(10)
+        store.onPostChanged(firstEvent)
+        delay(10)
+        store.onPostChanged(lastEvent)
+        delay(10)
+        job.join()
+
+        assertThat(lastEvent).isEqualTo(event)
+        verify(dispatcher, times(2)).dispatch(actionCaptor.capture())
+        val firstPayload = actionCaptor.firstValue.payload as FetchPostsPayload
+        assertThat(firstPayload.site).isEqualTo(site)
+        assertThat(firstPayload.loadMore).isEqualTo(false)
+        val lastPayload = actionCaptor.lastValue.payload as FetchPostsPayload
+        assertThat(lastPayload.site).isEqualTo(site)
+        assertThat(lastPayload.loadMore).isEqualTo(true)
     }
 
     private fun initPage(
