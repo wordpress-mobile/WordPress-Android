@@ -25,12 +25,14 @@ import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
+import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import javax.inject.Inject
@@ -74,58 +76,6 @@ class PageListViewModel
 
     private lateinit var pagesViewModel: PagesViewModel
 
-    private val refreshPagesObserver = Observer<Unit> {
-        loadPagesAsync()
-    }
-
-    private fun loadPagesAsync() = launch {
-        val newPages = pagesViewModel.pages
-                .filter { it.status == pageType }
-                .let {
-                    var list = it
-                    if (pageType == PUBLISHED) {
-                        val mutableList = it.toMutableList()
-                        list = topologicalSort(mutableList, it.map { it.parentId }.min() ?: 0)
-                        list += mutableList
-                    }
-                    return@let list
-                }
-                .map {
-                    when (it.status) {
-                        PUBLISHED -> {
-                            val label = if (it.hasLocalChanges) string.local_changes else null
-                            PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it))
-                        }
-                        PENDING, DRAFT -> {
-                            val label = if (it.hasLocalChanges) string.local_draft else null
-                            DraftPage(it.remoteId, it.title, label)
-                        }
-                        SCHEDULED -> ScheduledPage(it.remoteId, it.title)
-                        TRASHED -> TrashedPage(it.remoteId, it.title)
-                    }
-                }
-
-        if (newPages.isEmpty()) {
-            _pages.postValue(listOf(Empty(string.empty_list_default)))
-        } else {
-            _pages.postValue(newPages)
-        }
-    }
-
-    private fun topologicalSort(pages: MutableList<PageModel>, parentId: Long): List<PageModel> {
-        val sortedList = mutableListOf<PageModel>()
-        pages.filter { it.parentId == parentId }.forEach {
-            sortedList += it
-            pages -= it
-            sortedList += topologicalSort(pages, it.remoteId)
-        }
-        return sortedList
-    }
-
-    private fun getPageItemIndent(page: PageModel?): Int {
-        return if (page == null) -1 else getPageItemIndent(page.parent) + 1
-    }
-
     fun start(site: SiteModel, pageType: PageStatus, pagesViewModel: PagesViewModel) {
         this.site = site
         this.pageType = pageType
@@ -162,6 +112,79 @@ class PageListViewModel
         return true
     }
 
+    fun onItemTapped(pageItem: Page) {
+        _editPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
+    }
+
+    private val refreshPagesObserver = Observer<Unit> {
+        loadPagesAsync()
+    }
+
+    private fun loadPagesAsync() = launch {
+        val newPages = pagesViewModel.pages
+                .filter { it.status == pageType }
+                .let {
+                    when (pageType) {
+                        PUBLISHED -> preparePublishedPages(it)
+                        SCHEDULED -> prepareScheduledPages(it)
+                        PENDING, DRAFT -> prepareDraftPages(it)
+                        TRASHED -> prepareTrashedPages(it)
+                    }
+                }
+
+        if (newPages.isEmpty()) {
+            _pages.postValue(listOf(Empty(string.empty_list_default)))
+        } else {
+            _pages.postValue(newPages)
+        }
+    }
+
+    private fun preparePublishedPages(pages: List<PageModel>): List<PageItem> {
+        return topologicalSort(pages.toMutableList(), pages.map { it.parentId }.min() ?: 0)
+                .map {
+                    val label = if (it.hasLocalChanges) string.local_changes else null
+                    PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it))
+                }
+    }
+
+    private fun prepareScheduledPages(pages: List<PageModel>): List<PageItem> {
+        return pages.groupBy { it.date.toFormattedDateString() }
+                .map { (date, results) -> listOf(Divider(1, date)) +
+                        results.map { ScheduledPage(it.pageId.toLong(), it.title) }
+                }
+                .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
+                    acc.addAll(list)
+                    acc
+                }
+    }
+
+    private fun prepareDraftPages(pages: List<PageModel>): List<PageItem> {
+        return pages.map {
+            val label = if (it.hasLocalChanges) string.local_draft else null
+            DraftPage(it.remoteId, it.title, label)
+        }
+    }
+
+    private fun prepareTrashedPages(pages: List<PageModel>): List<PageItem> {
+        return pages.map {
+            TrashedPage(it.remoteId, it.title)
+        }
+    }
+
+    private fun topologicalSort(pages: MutableList<PageModel>, parentId: Long): List<PageModel> {
+        val sortedList = mutableListOf<PageModel>()
+        pages.filter { it.parentId == parentId }.forEach {
+            sortedList += it
+            pages -= it
+            sortedList += topologicalSort(pages, it.remoteId)
+        }
+        return sortedList
+    }
+
+    private fun getPageItemIndent(page: PageModel?): Int {
+        return if (page == null) -1 else getPageItemIndent(page.parent) + 1
+    }
+
     private fun changePageStatus(pageItem: Page, status: PageStatus) {
         pagesViewModel.pages
                 .firstOrNull { it.remoteId == pageItem.id }
@@ -171,10 +194,6 @@ class PageListViewModel
                         pageStore.savePage(page)
                     }
                 }
-    }
-
-    fun onItemTapped(pageItem: Page) {
-        _editPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
     }
 
     enum class PageListState {
