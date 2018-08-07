@@ -115,7 +115,8 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
         if (event.isError) {
-            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching the domain suggestions with type: " + event.error.type)
+            AppLog.e(T.DOMAIN_REGISTRATION,
+                    "An error occurred while fetching the domain suggestions with type: " + event.error.type)
             suggestions = ListState.Error(suggestions, event.error.message)
             return
         }
