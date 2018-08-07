@@ -434,7 +434,6 @@ public class PeopleListFragment extends Fragment {
         @Override public void onViewRecycled(@NonNull ViewHolder holder) {
             super.onViewRecycled(holder);
             PeopleViewHolder peopleViewHolder = (PeopleViewHolder) holder;
-            mImageManager.cancelRequestAndClearImageView(peopleViewHolder.mImgAvatar);
         }
 
         public class PeopleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
