@@ -72,15 +72,6 @@ class PageStoreTest {
     }
 
     @Test
-    fun searchFilitersOutUnknownStatus() {
-        whenever(postStore.getPagesForSite(site)).thenReturn(listOf(initPage(1, title = query, status = "foo")))
-
-        val result = runBlocking { store.search(site, query) }
-
-        assertThat(result).isEmpty()
-    }
-
-    @Test
     fun searchOrdersResultsByStatus() {
         val trashStatus = "trash"
         val draftStatus = "draft"
