@@ -259,6 +259,24 @@ class PageStoreTest {
         assertThat(page.parent!!.parent!!.parent).isNull()
     }
 
+    @Test
+    fun getPages() = runBlocking<Unit> {
+        whenever(postStore.getPagesForSite(site)).thenReturn(pageHierarchy)
+        whenever(postStore.getPostByRemotePostId(8, site)).thenReturn(
+                initPage(4, 0, "page 8", "publish", 8))
+
+        val pages = store.getPages(site)
+
+        assertThat(pages.size).isEqualTo(7)
+        assertThat(pages).doesNotContainNull()
+
+        assertThat(pages.filter { it.pageId < 10 }.all { it.parent == null }).isTrue()
+        assertThat(pages.filter { it.parentId == 1L }.all { it.parent!!.remoteId == 1L }).isTrue()
+
+        assertThat(pages.first { it.remoteId == 6L }.parent).isNotNull()
+        assertThat(pages.first { it.pageId == 41 }.parent!!.pageId).isEqualTo(4)
+    }
+
     private fun initPage(
         id: Int,
         parentId: Long? = null,
