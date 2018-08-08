@@ -42,6 +42,12 @@ class PageStoreTest {
     private val pageWithoutQuery = initPage(1, 10, "page 1")
     private val pageWithQuery = initPage(2, title = "page2 start $query end ")
     private val pageWithoutTitle = initPage(3, 10)
+    private val differentPageTypes = listOf(
+            initPage(1, 0, "page 1", "publish"),
+            initPage(2, 0, "page 2", "draft"),
+            initPage(3, 0, "page 3", "future"),
+            initPage(4, 0, "page 4", "trash")
+    )
 
     private lateinit var store: PageStore
 
@@ -179,6 +185,27 @@ class PageStoreTest {
         val lastPayload = actionCaptor.lastValue.payload as FetchPostsPayload
         assertThat(lastPayload.site).isEqualTo(site)
         assertThat(lastPayload.loadMore).isEqualTo(true)
+    }
+
+    @Test
+    fun requestPagesAndVerifyAllPageTypesPresent() = runBlocking<Unit> {
+        whenever(postStore.getPagesForSite(site)).thenReturn(differentPageTypes)
+        val event = OnPostChanged(4, false)
+        event.causeOfChange = FETCH_PAGES
+        launch {
+            store.requestPagesFromServer(site)
+        }
+        delay(10)
+        store.onPostChanged(event)
+        delay(10)
+
+        val pages = store.loadPagesFromDb(site)
+
+        assertThat(pages.size).isEqualTo(4)
+        assertThat(pages.filter { it.status == PUBLISHED }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == DRAFT }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == TRASHED }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == SCHEDULED }.size).isEqualTo(1)
     }
 
     private fun initPage(
