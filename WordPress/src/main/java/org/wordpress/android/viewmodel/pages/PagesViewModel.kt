@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -12,24 +14,30 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.models.pages.PageModel
+import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.CAN_LOAD_MORE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
 
 class PagesViewModel
-@Inject constructor(private val pageStore: PageStore, private val dispatcher: Dispatcher) : ViewModel() {
+@Inject constructor(
+    private val pageStore: PageStore,
+    private val dispatcher: Dispatcher,
+    private val resourceProvider: ResourceProvider
+) : ViewModel() {
     private val _isSearchExpanded = SingleLiveEvent<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
@@ -57,6 +65,7 @@ class PagesViewModel
         get() = _showSnackbarMessage
 
     private lateinit var site: SiteModel
+    private var searchJob: Job? = null
 
     init {
         dispatcher.register(this)
@@ -84,16 +93,16 @@ class PagesViewModel
         var newState = state
         _listState.postValue(newState)
 
-        val result = pageStore.requestPagesFromServer(site, state == LOADING_MORE)
+        val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
-            _listState.postValue(ERROR)
+            newState = ERROR
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
             _pages = pageStore.getPages(site)
             _refreshPages.asyncCall()
+            newState = DONE
         }
 
-        newState = if (result.canLoadMore) CAN_LOAD_MORE else DONE
         _listState.postValue(newState)
     }
 
@@ -105,18 +114,41 @@ class PagesViewModel
         }
     }
 
-    fun onSearchTextSubmit(query: String?): Boolean {
-        return onSearchTextChange(query)
-    }
-
-    fun onSearchTextChange(query: String?): Boolean {
-        if (!query.isNullOrEmpty()) {
-            val listOf = emptyList<PageItem>()
-            _searchResult.postValue(listOf)
+    fun onSearch(searchQuery: String) {
+        searchJob?.cancel()
+        if (searchQuery.isNotEmpty()) {
+            searchJob = launch {
+                delay(200)
+                searchJob = null
+                if (isActive) {
+                    val result = pageStore.groupedSearch(site, searchQuery)
+                            .map { (status, results) ->
+                                listOf(Divider(resourceProvider.getString(status.toResource()))) +
+                                        results.map { PublishedPage(it.pageId.toLong(), it.title) }
+                            }
+                            .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
+                                acc.addAll(list)
+                                acc
+                            }
+                    if (result.isNotEmpty()) {
+                        _searchResult.postValue(result)
+                    } else {
+                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                    }
+                }
+            }
         } else {
             clearSearch()
         }
-        return true
+    }
+
+    private fun PageStatus.toResource(): Int {
+        return when (this) {
+            PageStatus.PUBLISHED -> string.pages_published
+            PageStatus.DRAFT -> string.pages_drafts
+            PageStatus.TRASHED -> string.pages_trashed
+            PageStatus.SCHEDULED -> string.pages_scheduled
+        }
     }
 
     fun onSearchExpanded(): Boolean {

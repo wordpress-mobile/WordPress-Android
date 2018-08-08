@@ -54,7 +54,7 @@ sealed class PageItem(val type: Type) {
         override val actions: Set<Action> = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY)
     ) : Page(id, title, labelRes, indent, actions)
 
-    data class Divider(val id: Long, val title: String) : PageItem(DIVIDER)
+    data class Divider(val title: String) : PageItem(DIVIDER)
 
     data class Empty(val textResource: Int? = null) : PageItem(EMPTY)
 

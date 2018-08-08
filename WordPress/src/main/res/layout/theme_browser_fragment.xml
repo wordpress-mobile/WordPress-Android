@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/theme_no_search_result_text"
-        android:layout_width="wrap_content"
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_extra_large"
-        android:text="@string/theme_no_search_result_found"
-        android:visibility="gone" />
+        android:layout_marginTop="@dimen/margin_theme_browser_top"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:aevTitle="@string/themes_empty_list"
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
@@ -22,13 +24,13 @@
             android:id="@+id/theme_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/theme_no_search_result_text"
             android:columnWidth="@dimen/theme_browser_default_column_width"
             android:divider="@android:color/transparent"
             android:horizontalSpacing="@dimen/margin_none"
             android:numColumns="auto_fit"
             android:scrollbarStyle="outsideOverlay"
-            android:stretchMode="columnWidth"></org.wordpress.android.widgets.HeaderGridView>
+            android:stretchMode="columnWidth">
+        </org.wordpress.android.widgets.HeaderGridView>
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <RelativeLayout

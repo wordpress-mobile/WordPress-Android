@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/jetpack_connection_stats" />
+                    app:srcCompat="@drawable/img_illustration_stats_226dp" />
 
                 <TextView
                     style="@style/JetpackConnectionText"

@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
@@ -12,7 +11,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.pages.PageModel
 import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.models.pages.PageStatus.DRAFT
-import org.wordpress.android.models.pages.PageStatus.PENDING
 import org.wordpress.android.models.pages.PageStatus.PUBLISHED
 import org.wordpress.android.models.pages.PageStatus.SCHEDULED
 import org.wordpress.android.models.pages.PageStatus.TRASHED
@@ -34,7 +32,6 @@ import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import javax.inject.Inject
 
 class PageListViewModel
@@ -94,12 +91,6 @@ class PageListViewModel
         pagesViewModel.refreshPages.removeObserver(refreshPagesObserver)
     }
 
-    fun onScrolledToBottom() {
-        launch(CommonPool) {
-            pagesViewModel.refreshPages(LOADING_MORE)
-        }
-    }
-
     fun onMenuAction(action: Action, pageItem: Page): Boolean {
         when (action) {
             VIEW_PAGE -> _previewPage.postValue(pagesViewModel.pages.first { it.remoteId == pageItem.id })
@@ -127,7 +118,7 @@ class PageListViewModel
                     when (pageType) {
                         PUBLISHED -> preparePublishedPages(it)
                         SCHEDULED -> prepareScheduledPages(it)
-                        PENDING, DRAFT -> prepareDraftPages(it)
+                        DRAFT -> prepareDraftPages(it)
                         TRASHED -> prepareTrashedPages(it)
                     }
                 }
@@ -149,7 +140,7 @@ class PageListViewModel
 
     private fun prepareScheduledPages(pages: List<PageModel>): List<PageItem> {
         return pages.groupBy { it.date.toFormattedDateString() }
-                .map { (date, results) -> listOf(Divider(1, date)) +
+                .map { (date, results) -> listOf(Divider(date)) +
                         results.map { ScheduledPage(it.pageId.toLong(), it.title) }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
@@ -197,11 +188,9 @@ class PageListViewModel
     }
 
     enum class PageListState {
-        CAN_LOAD_MORE,
         DONE,
         ERROR,
         REFRESHING,
-        FETCHING,
-        LOADING_MORE
+        FETCHING
     }
 }

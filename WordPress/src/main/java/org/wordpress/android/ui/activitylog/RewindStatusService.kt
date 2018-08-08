@@ -29,8 +29,7 @@ import javax.inject.Singleton
 
 @Singleton
 class RewindStatusService
-@Inject
-constructor(
+@Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val rewindProgressChecker: RewindProgressChecker,
     private val dispatcher: Dispatcher

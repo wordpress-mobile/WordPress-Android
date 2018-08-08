@@ -34,7 +34,6 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -111,12 +110,14 @@ class PagesFragment : Fragment() {
 
         val searchView = actionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return viewModel.onSearchTextSubmit(query)
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return viewModel.onSearchTextChange(newText)
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.onSearch(newText)
+                return true
             }
         })
 
@@ -180,9 +181,6 @@ class PagesFragment : Fragment() {
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
         swipeToRefreshHelper.isRefreshing = listState == FETCHING
-        // We want to show the progress bar at the bottom while loading more but not for initial fetch
-        val showLoadMore = listState == LOADING_MORE
-        pagesListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
     }
 
     private fun hideSearchList(myActionMenuItem: MenuItem) {

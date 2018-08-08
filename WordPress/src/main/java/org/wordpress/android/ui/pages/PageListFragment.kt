@@ -106,14 +106,6 @@ class PageListFragment : Fragment() {
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
-
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                if (!recyclerView!!.canScrollVertically(1) && dy != 0) {
-                    viewModel.onScrolledToBottom()
-                }
-            }
-        })
     }
 
     private fun setupObservers() {

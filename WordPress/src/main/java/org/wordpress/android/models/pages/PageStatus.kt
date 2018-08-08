@@ -7,7 +7,6 @@ enum class PageStatus {
     PUBLISHED,
     DRAFT,
     TRASHED,
-    PENDING,
     SCHEDULED;
 
     companion object {
@@ -18,9 +17,8 @@ enum class PageStatus {
         fun fromPostStatus(status: PostStatus): PageStatus {
             return when (status) {
                 PostStatus.PUBLISHED -> PUBLISHED
-                PostStatus.DRAFT -> DRAFT
+                PostStatus.DRAFT, PostStatus.PENDING -> DRAFT
                 PostStatus.TRASHED -> TRASHED
-                PostStatus.PENDING -> PENDING
                 PostStatus.SCHEDULED -> SCHEDULED
                 else -> throw IllegalArgumentException("Unexpected page status: ${status.name}")
             }
@@ -32,7 +30,6 @@ enum class PageStatus {
             PUBLISHED -> PostStatus.PUBLISHED
             DRAFT -> PostStatus.DRAFT
             TRASHED -> PostStatus.TRASHED
-            PENDING -> PostStatus.PENDING
             SCHEDULED -> PostStatus.SCHEDULED
         }
     }
