@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.UNKNOWN
 import org.wordpress.android.fluxc.model.post.PostStatus
 import java.util.SortedMap
 import javax.inject.Inject
@@ -32,11 +31,47 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         dispatcher.register(this)
     }
 
+    suspend fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? = withContext(CommonPool) {
+        val post = postStore.getPostByLocalPostId(pageId)
+        return@withContext post?.let {
+            val page = PageModel(it, site)
+            if (page.parentId != 0L) {
+                page.parent = getPageByRemoteId(page.parentId, site)
+            }
+            page
+        }
+    }
+
+    suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
+        val post = postStore.getPostByRemotePostId(remoteId, site)
+        return@withContext post?.let {
+            val page = PageModel(it, site)
+            if (page.parentId != 0L) {
+                page.parent = getPageByRemoteId(page.parentId, site)
+            }
+            page
+        }
+    }
+
+    suspend fun getPages(site: SiteModel): List<PageModel> = withContext(CommonPool) {
+        val posts = postStore.getPagesForSite(site).filter { it != null }
+        val pages = posts.map { PageModel(it, site) }
+        pages.forEach { page ->
+            if (page.parentId != 0L) {
+                page.parent = pages.firstOrNull { it.remoteId == page.parentId }
+                if (page.parent == null) {
+                    page.parent = getPageByRemoteId(page.parentId, site)
+                }
+            }
+        }
+        pages.sortedBy { it.remoteId }
+    }
+
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(CommonPool) {
         postStore.getPagesForSite(site)
                 .filterNotNull()
-                .map { PageModel(it) }
-                .filter { it.status != UNKNOWN && it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
+                .map { PageModel(it, site) }
+                .filter { it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
     }
 
     suspend fun groupedSearch(
@@ -64,7 +99,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
 
     suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val pages = postStore.getPagesForSite(site).filter { it != null }
-        pages.map { PageModel(it) }
+        pages.map { PageModel(it, site) }
     }
 
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
