@@ -64,7 +64,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     private static final String KEY_PROGRESS_RES_ID = "PROGRESS_RESOURCE_ID";
 
     private SiteModel mSite;
-    private RecyclerView mRecycler;
+    private EmptyViewRecyclerView mRecycler;
     private View mFabView;
     private View mEmptyView;
 
