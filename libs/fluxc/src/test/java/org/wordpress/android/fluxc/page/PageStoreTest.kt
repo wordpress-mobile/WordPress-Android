@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
+import org.wordpress.android.fluxc.model.post.PostStatus
 
 @RunWith(MockitoJUnitRunner::class)
 class PageStoreTest {
@@ -46,7 +47,10 @@ class PageStoreTest {
             initPage(1, 0, "page 1", "publish"),
             initPage(2, 0, "page 2", "draft"),
             initPage(3, 0, "page 3", "future"),
-            initPage(4, 0, "page 4", "trash")
+            initPage(4, 0, "page 4", "trash"),
+            initPage(5, 0, "page 5", "private"),
+            initPage(6, 0, "page 6", "pending"),
+            initPage(7, 0, "page 7", "draft")
     )
 
     private lateinit var store: PageStore
@@ -189,7 +193,6 @@ class PageStoreTest {
 
     @Test
     fun requestPagesAndVerifyAllPageTypesPresent() = runBlocking<Unit> {
-        whenever(postStore.getPagesForSite(site)).thenReturn(differentPageTypes)
         val event = OnPostChanged(4, false)
         event.causeOfChange = FETCH_PAGES
         launch {
@@ -199,11 +202,25 @@ class PageStoreTest {
         store.onPostChanged(event)
         delay(10)
 
+        verify(dispatcher, times(1)).dispatch(actionCaptor.capture())
+        val payload = actionCaptor.firstValue.payload as FetchPostsPayload
+        assertThat(payload.site).isEqualTo(site)
+
+        val pageTypes = payload.statusTypes
+        assertThat(pageTypes.size).isEqualTo(4)
+        assertThat(pageTypes.filter { it == PostStatus.PUBLISHED }.size).isEqualTo(1)
+        assertThat(pageTypes.filter { it == PostStatus.DRAFT }.size).isEqualTo(1)
+        assertThat(pageTypes.filter { it == PostStatus.TRASHED }.size).isEqualTo(1)
+        assertThat(pageTypes.filter { it == PostStatus.SCHEDULED }.size).isEqualTo(1)
+
+        whenever(postStore.getPagesForSite(site))
+                .thenReturn(differentPageTypes.filter { payload.statusTypes.contains(PostStatus.fromPost(it)) })
+
         val pages = store.loadPagesFromDb(site)
 
-        assertThat(pages.size).isEqualTo(4)
+        assertThat(pages.size).isEqualTo(5)
         assertThat(pages.filter { it.status == PUBLISHED }.size).isEqualTo(1)
-        assertThat(pages.filter { it.status == DRAFT }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == DRAFT }.size).isEqualTo(2)
         assertThat(pages.filter { it.status == TRASHED }.size).isEqualTo(1)
         assertThat(pages.filter { it.status == SCHEDULED }.size).isEqualTo(1)
     }
