@@ -176,7 +176,6 @@ Language: hi_IN
     <string name="notifications_tab">अधिसूचना सूचि</string>
     <string name="email">ईमेल</string>
     <string name="app_notifications">एप्लिकेशन अधिसूची</string>
-    <string name="button_revert">उलट दें</string>
     <string name="days_ago">%d दिन पहले</string>
     <string name="yesterday">कल</string>
     <string name="button_back">पीछे</string>

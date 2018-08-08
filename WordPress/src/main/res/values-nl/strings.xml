@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 07:54:06+0000
+Translation-Revision-Date: 2018-07-26 09:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="reader_gallery_images_desc">afbeeldinggalerij</string>
+    <string name="blavatar_desc">favicon</string>
+    <string name="theme_image_desc">thema–afbeelding</string>
+    <string name="featured_image_desc">aanbevolen afbeelding</string>
+    <string name="support_push_notification_message_hint_snackbar">Vind je ondersteuningsgesprek door op \'Help en ondersteuning\' te tikken en vervolgens op \'Mijn tickets\'</string>
+    <string name="local_changes_discarding_error">Er is een fout opgetreden bij het verwijderen van je lokale wijzigingen. Neem contact op met de ondersteuning voor meer hulp.</string>
+    <string name="local_changes_discarding">Lokale wijzigingen verwijderen</string>
+    <string name="local_changes_discarded">Lokale wijzigingen verwijderd</string>
+    <string name="menu_discard_changes">Lokale wijzigingen verwijderen</string>
+    <string name="button_discard_changes">Wijzigingen verwijderen</string>
+    <string name="button_discard">Verwijderen</string>
     <string name="reader_avatar_desc">profielafbeelding</string>
     <string name="reader_blavatar_desc">favicon</string>
     <string name="notification_channel_transient_title">Transient</string>
@@ -160,7 +171,6 @@ Language: nl
     <string name="reader_list_item_suggestion_remove_desc">verwijderen</string>
     <string name="photo_picker_thumbnail_desc">Video afspelen</string>
     <string name="reader_cardview_post_play_video_desc">aanbevolen video afspelen</string>
-    <string name="post_cardview_featured_desc">uitgelichte afbeelding</string>
     <string name="plugin_detail_logo_desc">plugin–logo</string>
     <string name="plugin_detail_banner_desc">plugin–banner</string>
     <string name="photo_picker_wpmedia_desc">kiezen uit media op WordPress</string>
@@ -182,9 +192,7 @@ Language: nl
     <string name="jetpack_connection_failed_with_reason">Verbinden met Jetpack mislukt: %s</string>
     <string name="jetpack_already_connected_toast">Je bent al verbonden met Jetpack</string>
     <string name="menu_undo_snackbar_action">ONGEDAAN MAKEN</string>
-    <string name="menu_visual_mode_done_snackbar">Overgeschakeld op de visuele modus.</string>
     <string name="menu_visual_mode">Visuele modus</string>
-    <string name="menu_html_mode_done_snackbar">Overgeschakeld op de HTML–modus.</string>
     <string name="menu_html_mode">HTML–modus</string>
     <string name="menu_preview">Voorbeeld bekijken</string>
     <string name="menu_publish_now">Nu publiceren</string>
@@ -917,7 +925,6 @@ Language: nl
     <string name="delete_site_hint">Site verwijderen</string>
     <string name="export_site_hint">Exporteer je site naar een XML–bestand</string>
     <string name="primary_domain">Primair domein</string>
-    <string name="error_deleting_site_summary">Er is een fout opgetreden bij het verwijderen van je site. Neem contact op met ondersteuning voor meer hulp</string>
     <string name="error_deleting_site">Fout bij verwijderen site</string>
     <string name="site_settings_export_content_title">Content exporteren</string>
     <string name="confirm_delete_site_prompt">Voer %1$s in het onderstaande veld in om dit te bevestigen. Je site wordt dan voorgoed verwijderd.</string>
@@ -1192,7 +1199,6 @@ Language: nl
     <string name="notification_settings_item_other_account_emails_summary">We sturen altijd belangrijke e–mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
     <string name="stats_insights_latest_post_trend">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan …</string>
     <string name="stats_insights_latest_post_summary">Samenvatting laatste bericht</string>
-    <string name="button_revert">Terugzetten</string>
     <string name="yesterday">Gisteren</string>
     <string name="days_ago">%d dagen geleden</string>
     <string name="connectionbar_no_connection">Geen verbinding</string>

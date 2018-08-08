@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 08:54:06+0000
+Translation-Revision-Date: 2018-07-24 06:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="reader_gallery_images_desc">이미지 갤러리</string>
+    <string name="blavatar_desc">사이트 아이콘</string>
+    <string name="theme_image_desc">테마 이미지</string>
+    <string name="featured_image_desc">특성 이미지</string>
+    <string name="support_push_notification_message_hint_snackbar">\'도움 &amp; 지원\'을 누른 다음 \'내 티켓\'을 눌러 지원 대화를 찾으세요.</string>
+    <string name="local_changes_discarding_error">로컬 변경 사항을 취소하는 중 오류가 발생했습니다. 추가 지원이 필요한 경우 지원팀에 문의하세요.</string>
+    <string name="local_changes_discarding">로컬 변경 사항을 취소하는 중</string>
+    <string name="local_changes_discarded">로컬 변경 사항이 취소됨</string>
+    <string name="menu_discard_changes">로컬 변경 사항 취소</string>
+    <string name="button_discard_changes">변경 사항 취소</string>
+    <string name="button_discard">취소</string>
     <string name="reader_avatar_desc">프로필 사진</string>
     <string name="reader_blavatar_desc">사이트 아이콘</string>
     <string name="notification_channel_transient_title">임시</string>
@@ -190,9 +201,7 @@ Language: ko_KR
     <string name="jetpack_connection_failed_with_reason">젯팩에 연결 실패: %s</string>
     <string name="jetpack_already_connected_toast">이미 젯팩에 연결되어 있습니다.</string>
     <string name="menu_undo_snackbar_action">실행 취소</string>
-    <string name="menu_visual_mode_done_snackbar">비주얼 모드로 전환했습니다.</string>
     <string name="menu_visual_mode">비주얼 모드</string>
-    <string name="menu_html_mode_done_snackbar">HTML 모드로 전환했습니다.</string>
     <string name="menu_html_mode">HTML 모드</string>
     <string name="menu_preview">미리보기</string>
     <string name="menu_publish_now">지금 공개</string>
@@ -962,7 +971,6 @@ Language: ko_KR
     <string name="delete_site_hint">사이트 삭제</string>
     <string name="export_site_hint">사이트를 XML 파일로 내보내기</string>
     <string name="primary_domain">주 도메인</string>
-    <string name="error_deleting_site_summary">사이트를 삭제하는 동안 오류가 발생했습니다. 도움이 필요하면 사용자지원에 요청하세요.</string>
     <string name="error_deleting_site">사이트 삭제 오류</string>
     <string name="site_settings_export_content_title">내용 내보내기</string>
     <string name="confirm_delete_site_prompt">확인을 위해 아래 칸에 %1$s를 입력하세요. 사이트가 영원히 사라질 것입니다.</string>
@@ -1232,7 +1240,6 @@ Language: ko_KR
     <string name="app_notifications">앱 알림</string>
     <string name="stats_insights_latest_post_trend">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 지금까지 글의 성과입니다.</string>
     <string name="stats_insights_latest_post_summary">최신 글 요약</string>
-    <string name="button_revert">되돌리기</string>
     <string name="yesterday">어제</string>
     <string name="days_ago">%d일 전</string>
     <string name="connectionbar_no_connection">연결 없음</string>

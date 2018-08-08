@@ -42,11 +42,13 @@ public class PublicizeEvents {
         private long mSiteId;
         private int mKeychainId;
         private String mService;
+        private String mExternalUserId;
 
-        public ActionAccountChosen(long siteId, int keychainId, String service) {
+        public ActionAccountChosen(long siteId, int keychainId, String service, String externalUserId) {
             mSiteId = siteId;
             mKeychainId = keychainId;
             mService = service;
+            mExternalUserId = externalUserId;
         }
 
         public long getSiteId() {
@@ -59,6 +61,10 @@ public class PublicizeEvents {
 
         public String getService() {
             return mService;
+        }
+
+        public String getExternalUserId() {
+            return mExternalUserId;
         }
     }
 

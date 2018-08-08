@@ -48,7 +48,6 @@ import android.view.inputmethod.BaseInputConnection;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 
@@ -59,6 +58,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
@@ -74,6 +74,7 @@ import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecText.EditorHasChanges;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
+import org.wordpress.aztec.Html.ImageGetter.Callbacks;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.extensions.MediaLinkExtensionsKt;
@@ -136,6 +137,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_IMAGE_WP_DASH = "wp-image-";
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
+    private static final String ANIMATED_MEDIA = "animated-media";
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
@@ -385,6 +387,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             hideActionBarIfNeeded();
         }
 
+        addOverlayToGifs();
         updateFailedAndUploadingMedia();
     }
 
@@ -556,6 +559,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mAztecReady = true;
     }
 
+
+    private void addOverlayToGifs() {
+        AztecMediaSpan[] imageOrVideoSpans =
+                mContent.getText().getSpans(0, mContent.getText().length(), AztecMediaSpan.class);
+
+        // scans through all the MediaSpans and adds ANIMATED_MEDIA attribute to GIF images
+        for (AztecMediaSpan currentClass : imageOrVideoSpans) {
+            AttributesWithClass classes = getAttributesWithClass(currentClass.getAttributes());
+            AztecAttributes attributes = currentClass.getAttributes();
+
+            if (attributes.hasAttribute(ATTR_SRC)
+                && !attributes.hasAttribute(ANIMATED_MEDIA)
+                && !classes.hasClass(ATTR_STATUS_FAILED)
+                && !classes.hasClass(ATTR_STATUS_UPLOADING)
+                && MediaUtils.isGif(attributes.getValue(ATTR_SRC))) {
+                attributes.setValue(ANIMATED_MEDIA, ANIMATED_MEDIA);
+            }
+        }
+        overlayGifImages();
+    }
+
     /*
         Note the way we detect we're in presence of Gutenberg blocks logic is taken from
         https://github.com/WordPress/gutenberg/blob/5a6693589285363341bebad15bd56d9371cf8ecc/lib/register.php#L331-L345
@@ -718,6 +742,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         if (mSource.getVisibility() == View.VISIBLE) {
             updateFailedMediaList();
+        } else {
+            addOverlayToGifs();
         }
     }
 
@@ -791,6 +817,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             String localMediaId = attrs.getValue(ATTR_ID_WP);
             safeAddMediaIdToSet(mFailedMediaIds, localMediaId);
         }
+    }
+
+    private void overlayGifImages() {
+        if (mContent == null) {
+            // discard any events if Aztec hasn't been initialized
+            return;
+        }
+
+        MediaPredicate predicate = MediaPredicate.getAnimatedMediaPredicate();
+
+        Drawable gifOverlay = getResources().getDrawable(R.drawable.gif_overlay_vector);
+        mContent.setOverlay(predicate, 0, gifOverlay, Gravity.TOP | Gravity.START);
     }
 
     private void overlayProgressingMedia() {
@@ -891,7 +929,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            AztecAttributes attributes = new AztecAttributes();
+            final AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
 
             if (mediaFile.isVideo()) {
@@ -914,7 +952,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(
                     mediaFile.getThumbnailURL())) : mediaUrl;
-            imageLoader.get(posterURL, new ImageLoader.ImageListener() {
+            mAztecImageLoader.loadImage(posterURL, new Callbacks() {
                 private void replaceDrawable(Drawable newDrawable) {
                     AztecMediaSpan[] imageOrVideoSpans =
                             mContent.getText().getSpans(0, mContent.getText().length(), AztecMediaSpan.class);
@@ -929,11 +967,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             currentClass.setDrawable(newDrawable);
                         }
                     }
+                    addOverlayToGifs();
                     mContent.refreshText();
                 }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
+                @Override public void onImageFailed() {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
@@ -941,33 +979,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                 }
 
-                @Override
-                public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                @Override public void onImageLoaded(Drawable drawable) {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
                     }
-                    Bitmap downloadedBitmap = container.getBitmap();
-                    if (downloadedBitmap == null) {
-                        if (isImmediate) {
-                            // Bitmap is null but isImmediate is true (as soon as the request starts).
-                            return;
-                        }
+                    if (drawable == null) {
                         replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                         return;
                     }
 
-                    if (downloadedBitmap.getHeight() < minMediaSize || downloadedBitmap.getWidth() < minMediaSize) {
+                    if (drawable.getIntrinsicHeight() < minMediaSize || drawable.getIntrinsicWidth() < minMediaSize) {
                         // Bitmap is too small. Show image placeholder.
                         replaceDrawable(getLoadingMediaErrorPlaceholder(getString(R.string.error_media_small)));
                         return;
                     }
-
-                    downloadedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                    replaceDrawable(new BitmapDrawable(getResources(), downloadedBitmap));
+                    replaceDrawable(drawable);
                 }
-            }, maxMediaSize, 0);
 
+                @Override public void onImageLoading(Drawable drawable) {
+                }
+            }, maxMediaSize);
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
@@ -1149,6 +1181,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 mContent.clearOverlays(predicate);
                 if (mediaType.equals(MediaType.VIDEO)) {
                     overlayVideoIcon(0, predicate);
+                } else {
+                    addOverlayToGifs();
                 }
                 mContent.resetAttributedMediaSpan(predicate);
                 // finally remove the local id as it won't be necessary anynmore
@@ -1180,6 +1214,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         static MediaPredicate getTempMediaIdPredicate(String id) {
             return new MediaPredicate(id, TEMP_IMAGE_ID);
+        }
+
+        static MediaPredicate getAnimatedMediaPredicate() {
+            return new MediaPredicate(ANIMATED_MEDIA, ANIMATED_MEDIA);
         }
 
         MediaPredicate(String id, String attributeName) {

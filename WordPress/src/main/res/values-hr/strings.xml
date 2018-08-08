@@ -205,7 +205,6 @@ Language: hr
     <string name="notification_settings_item_other_account_emails_summary">Uvijek ćemo slati važne poruke e–pošte o vašem računu, ali također možete dobiti i dodatnu pomoć.</string>
     <string name="stats_insights_latest_post_trend">Prošlo je %1$s od kad je %2$s objavljen. Ovo su informacije kako je primljen kod čitatelja…</string>
     <string name="stats_insights_latest_post_summary">Najnoviji sažetak objava</string>
-    <string name="button_revert">Vrati</string>
     <string name="yesterday">Jučer</string>
     <string name="days_ago">prije %d dana</string>
     <string name="connectionbar_no_connection">Nema konekcije</string>

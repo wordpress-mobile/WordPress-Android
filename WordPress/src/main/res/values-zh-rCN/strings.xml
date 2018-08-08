@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 10:54:07+0000
+Translation-Revision-Date: 2018-07-24 03:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="reader_gallery_images_desc">图库</string>
+    <string name="blavatar_desc">站点图标</string>
+    <string name="theme_image_desc">主题图片</string>
+    <string name="featured_image_desc">推荐图片</string>
+    <string name="support_push_notification_message_hint_snackbar">依次轻点“帮助与支持”和“我的申请单”，找到您的支持会话</string>
+    <string name="local_changes_discarding_error">放弃您的本地更改时出现错误。请联系支持人员，获取更多帮助。</string>
+    <string name="local_changes_discarding">正在放弃本地更改</string>
+    <string name="local_changes_discarded">本地更改已放弃</string>
+    <string name="menu_discard_changes">放弃本地更改</string>
+    <string name="button_discard_changes">放弃更改</string>
+    <string name="button_discard">放弃</string>
     <string name="reader_avatar_desc">个人资料照片</string>
     <string name="reader_blavatar_desc">站点图标</string>
     <string name="notification_channel_transient_title">暂时</string>
@@ -190,9 +201,7 @@ Language: zh_CN
     <string name="jetpack_connection_failed_with_reason">Jetpack 连接中断：%s</string>
     <string name="jetpack_already_connected_toast">您已连接至 Jetpack</string>
     <string name="menu_undo_snackbar_action">撤消</string>
-    <string name="menu_visual_mode_done_snackbar">已切换至可视模式。</string>
     <string name="menu_visual_mode">可视模式</string>
-    <string name="menu_html_mode_done_snackbar">已切换至 HTML 模式。</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">预览</string>
     <string name="menu_publish_now">立即发布</string>
@@ -964,7 +973,6 @@ Language: zh_CN
     <string name="delete_site_hint">删除站点</string>
     <string name="export_site_hint">将站点导出到 XML 文件中</string>
     <string name="primary_domain">主域</string>
-    <string name="error_deleting_site_summary">删除您的站点时出现错误。请联系支持人员，获取更多帮助</string>
     <string name="error_deleting_site">删除站点时出错</string>
     <string name="site_settings_export_content_title">导出内容</string>
     <string name="confirm_delete_site_prompt">请在下列字段中输入 %1$s，进行确认。之后，您的站点将不复存在。</string>
@@ -1238,7 +1246,6 @@ Language: zh_CN
     <string name="notification_settings_item_other_account_emails_summary">关于您账号的重要情况，我们总会通过邮件发送，但您也可以选择获取其他信息。</string>
     <string name="stats_insights_latest_post_trend">距 %2$s 发布已有 %1$s。以下是该文章到目前为止的效果…</string>
     <string name="stats_insights_latest_post_summary">最新的文章摘要</string>
-    <string name="button_revert">恢复</string>
     <string name="yesterday">昨天</string>
     <string name="days_ago">%d 天前</string>
     <string name="connectionbar_no_connection">无连接</string>

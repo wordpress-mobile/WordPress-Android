@@ -176,7 +176,6 @@ Language: cy_GB
     <string name="delete_site_hint">Dileu\'r wefan</string>
     <string name="export_site_hint">Allforio eich gwefan i ffeil XML</string>
     <string name="primary_domain">Prif Barth</string>
-    <string name="error_deleting_site_summary">Bu gwall wrth ddileu\'r wefan. Cysylltwch a\'n gwasanaeth cymorth am gymorth pellach</string>
     <string name="error_deleting_site">Gwall wrth ddileu\'r wefan</string>
     <string name="confirm_delete_site_prompt">Teipiwch %1$s yn y maes isod i gadarnhau. Wedyn, bydd eich  gwefan wedi mynd am byth.</string>
     <string name="site_settings_export_content_title">Allforio cynnwys</string>
@@ -446,7 +445,6 @@ Language: cy_GB
     <string name="app_notifications">Hysbysiadau apiau</string>
     <string name="stats_insights_latest_post_trend">Mae wedi bod yn %1$s ers cyhoeddi %2$s. Dyma sut mae\'r cofnod wedi performio hyd yma…</string>
     <string name="stats_insights_latest_post_summary">Crynodeb o\'r Cofnod Diweddaraf</string>
-    <string name="button_revert">Dychwelyd</string>
     <string name="days_ago">%d diwrnod yn ôl</string>
     <string name="yesterday">Ddoe</string>
     <string name="connectionbar_no_connection">Dim cysylltiad</string>

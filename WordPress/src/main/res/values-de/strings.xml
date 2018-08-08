@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-11 08:54:08+0000
+Translation-Revision-Date: 2018-07-30 12:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="reader_gallery_images_desc">Bildetgalerie</string>
+    <string name="blavatar_desc">Website–Icon</string>
+    <string name="theme_image_desc">Theme–Bild</string>
+    <string name="featured_image_desc">Beitragsbild</string>
+    <string name="support_push_notification_message_hint_snackbar">Deine Support–Unterhaltung findest du, indem du auf „Hilfe &amp; Support“ und anschließend auf „Meine Tickets“ klickst</string>
+    <string name="local_changes_discarding_error">Beim Verwerfen der lokalen Änderungen ist ein Fehler aufgetreten. Bitte wende dich für Unterstützung an den Support.</string>
+    <string name="local_changes_discarding">Lokale Änderungen werden verworfen</string>
+    <string name="local_changes_discarded">Lokale Änderungen verworfen</string>
+    <string name="menu_discard_changes">Lokale Änderungen verwerfen</string>
+    <string name="button_discard_changes">Änderungen verwerfen</string>
+    <string name="button_discard">Verwerfen</string>
     <string name="reader_avatar_desc">Profilbild</string>
     <string name="reader_blavatar_desc">Website–Icon</string>
     <string name="notification_channel_transient_title">Transient</string>
@@ -45,6 +56,7 @@ Language: de
     <string name="email_address_login_title">E-Mail–Adresse – Login</string>
     <string name="alternatively">Alternativ:</string>
     <string name="reader_empty_saved_posts_description">Tippe auf %s, um einen Beitrag in deiner Liste zu speichern.</string>
+    <string name="reader_empty_saved_posts_title">Keine Beiträge gespeichert – noch!</string>
     <string name="reader_bookmark_snack_title">Beitrag gespeichert</string>
     <string name="reader_bookmark_snack_btn">Alles anzeigen</string>
     <string name="reader_btn_bookmarked">Gespeichert</string>
@@ -180,6 +192,7 @@ Language: de
     <string name="media_preview_desc">Vorschau</string>
     <string name="media_preview_audio_desc">Audio</string>
     <string name="media_grid_item_play_video_desc">Video abspielen</string>
+    <string name="media_grid_item_trash_desc">Papierkorb</string>
     <string name="media_grid_item_retry_desc">erneut versuchen</string>
     <string name="media_grid_item_image_desc">Medienvorschau, Dateiname %s</string>
     <string name="invite_user_delete_desc">%s entfernen</string>
@@ -189,9 +202,7 @@ Language: de
     <string name="jetpack_connection_failed_with_reason">Verbindung zu Jetpack fehlgeschlagen: %s</string>
     <string name="jetpack_already_connected_toast">Du bist bereits mit Jetpack verbunden</string>
     <string name="menu_undo_snackbar_action">RÜCKGÄNGIG MACHEN</string>
-    <string name="menu_visual_mode_done_snackbar">Zu Visual–Modus gewechselt.</string>
     <string name="menu_visual_mode">Visual–Modus</string>
-    <string name="menu_html_mode_done_snackbar">Zu HTML–Modus gewechselt.</string>
     <string name="menu_html_mode">HTML–Modus</string>
     <string name="menu_preview">Vorschau</string>
     <string name="menu_publish_now">Jetzt veröffentlichen</string>
@@ -241,6 +252,7 @@ Language: de
     <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen zugreifen, da dein Sharing Jetpack–Modul deaktiviert ist.</string>
     <string name="sharing_disabled">Sharing–Modul deaktiviert</string>
     <string name="version_with_name_param">Version %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Herausgeber: %s</string>
     <string name="async_promo_publish_now">Jetzt veröffentlichen</string>
     <string name="notification_sound_has_invalid_path">Der Pfad für den ausgewählten Ton ist ungültig. Bitte wähle einen anderen.</string>
@@ -283,6 +295,8 @@ Language: de
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 Beitrag mit 1 Datei nicht hochgeladen</string>
     <string name="untitled_in_parentheses">(Ohne Titel)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_epilogue_write">Ersten Beitrag verfassen</string>
     <string name="site_creation_epilogue_configure">Konfigurieren </string>
     <string name="site_creation_epilogue_congrats">Glückwunsch!\nDeine Website ist startklar.</string>
@@ -970,7 +984,6 @@ Language: de
     <string name="delete_site_hint">Website löschen</string>
     <string name="export_site_hint">Exportiere deine Website in eine XML–Datei</string>
     <string name="primary_domain">Primäre Domain</string>
-    <string name="error_deleting_site_summary">Beim Löschen deiner Website ist ein Fehler aufgetreten. Bitte kontaktiere den Support für weiterführende Hilfe.</string>
     <string name="error_deleting_site">Fehler beim Löschen der Website</string>
     <string name="site_settings_export_content_title">Inhalte exportieren</string>
     <string name="confirm_delete_site_prompt">Bitte gib %1$s zur Bestätigung unten in das Feld ein. Dann ist deine Website für immer entfernt.</string>
@@ -1245,7 +1258,6 @@ Language: de
     <string name="notification_settings_item_other_account_emails_summary">Wichtige E–Mails bezüglich deines Kontos werden immer versandt, aber du kannst auch zusätzliche Benachrichtigungen erhalten.</string>
     <string name="stats_insights_latest_post_trend">Die Veröffentlichung von %2$s ist %1$s her. Hier siehst du, wie es dem Beitrag bisher ergangen ist …</string>
     <string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
-    <string name="button_revert">Rückgängig</string>
     <string name="yesterday">Gestern</string>
     <string name="days_ago">vor %d Tagen</string>
     <string name="connectionbar_no_connection">Keine Verbindung</string>
@@ -1327,6 +1339,7 @@ Language: de
     <string name="error_copy_to_clipboard">Beim Kopieren von Text in die Zwischenablage ist ein Fehler aufgetreten</string>
     <string name="stats_recent_weeks">Letzte Wochen</string>
     <string name="stats_average_per_day">Durchschnitt pro Tag</string>
+    <string name="reader_empty_posts_in_blog">Diese Website ist leer</string>
     <string name="reader_label_new_posts">Neue Beiträge</string>
     <string name="logs_copied_to_clipboard">Anwendungsprotokolle wurden in die Zwischenablage kopiert</string>
     <string name="stats_period">Zeitraum</string>

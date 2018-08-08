@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 14:18:41+0000
+Translation-Revision-Date: 2018-07-27 07:56:57+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="reader_gallery_images_desc">galerie d’images</string>
+    <string name="blavatar_desc">icône du site</string>
+    <string name="theme_image_desc">image du thème</string>
     <string name="reader_avatar_desc">photo de profil</string>
     <string name="reader_blavatar_desc">icône du site</string>
     <string name="notification_channel_transient_title">Transient</string>
@@ -170,7 +173,6 @@ Language: fr
     <string name="reader_list_item_suggestion_remove_desc">supprimer</string>
     <string name="photo_picker_thumbnail_desc">Lire la vidéo</string>
     <string name="reader_cardview_post_play_video_desc">lire la vidéo à la une</string>
-    <string name="post_cardview_featured_desc">image mise en avant</string>
     <string name="plugin_detail_logo_desc">logo de l\'extension</string>
     <string name="plugin_detail_banner_desc">bannière de l\'extension</string>
     <string name="photo_picker_wpmedia_desc">sélectionner à partir du média WordPress</string>
@@ -192,9 +194,9 @@ Language: fr
     <string name="jetpack_connection_failed_with_reason">Échec de la connexion à Jetpack : %s</string>
     <string name="jetpack_already_connected_toast">Vous êtes déjà abonné à Jetpack</string>
     <string name="menu_undo_snackbar_action">ANNULER</string>
-    <string name="menu_visual_mode_done_snackbar">Basculé en mode visuel.</string>
+    <string name="menu_visual_mode_done_snackbar">Basculé en mode visuel</string>
     <string name="menu_visual_mode">Mode visuel</string>
-    <string name="menu_html_mode_done_snackbar">Basculé en mode HTML.</string>
+    <string name="menu_html_mode_done_snackbar">Basculé en mode HTML</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Prévisualiser</string>
     <string name="menu_publish_now">Publier maintenant</string>
@@ -980,7 +982,6 @@ Language: fr
     <string name="delete_site_hint">Supprimer le site</string>
     <string name="export_site_hint">Exportez votre site vers un fichier XML</string>
     <string name="primary_domain">Domaine principal</string>
-    <string name="error_deleting_site_summary">Il y a eu une erreur durant la suppression de votre site. Veuillez contacter le support pour de l\'assistance.</string>
     <string name="error_deleting_site">Erreur de suppression de site</string>
     <string name="site_settings_export_content_title">Export du contenu</string>
     <string name="confirm_delete_site_prompt">Veuillez saisir %1$s dans le champ ci–dessous pour confirmer. Votre site partira à tout jamais.</string>
@@ -1256,7 +1257,6 @@ Language: fr
     <string name="notification_settings_item_other_account_emails_summary">Nous vous enverrons des e–mails importants concernant votre compte, mais vous pouvez aussi recevoir des informations complémentaires très utiles.</string>
     <string name="stats_insights_latest_post_trend">Cela fait %1$s que %2$s a été publié. Comment l\'article a évolué jusqu\'à maintenant…</string>
     <string name="stats_insights_latest_post_summary">Résumé du dernier article</string>
-    <string name="button_revert">Annuler modifications</string>
     <string name="yesterday">Hier</string>
     <string name="days_ago">il y a %d jours</string>
     <string name="connectionbar_no_connection">Pas de connexion</string>

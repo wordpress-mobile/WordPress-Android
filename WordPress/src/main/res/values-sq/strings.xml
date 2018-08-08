@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-06 10:30:58+0000
+Translation-Revision-Date: 2018-07-23 09:07:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="reader_gallery_images_desc">galeri figurash</string>
+    <string name="blavatar_desc">ikonë sajti</string>
+    <string name="theme_image_desc">figurë teme</string>
+    <string name="featured_image_desc">figurë e zgjedhur</string>
+    <string name="support_push_notification_message_hint_snackbar">Gjeni bisedën tuaj për asistencë duke prekur \'Ndihmë &amp; Asistencë\' dhe mandej \'Çështjet e Mia\'</string>
+    <string name="local_changes_discarding_error">Pati një gabim në hedhjen tej të ndryshimeve tuaja lokale. Për më tepër ndihmë lidhuni me ata të asistencës.</string>
+    <string name="local_changes_discarding">Po hidhen tej ndryshimet vendore</string>
+    <string name="local_changes_discarded">Ndryshimet vendore u hodhën tej</string>
+    <string name="menu_discard_changes">Hidhi Tej Ndryshimet Vendore</string>
+    <string name="button_discard_changes">Hidhi Tej Ndryshimet</string>
+    <string name="button_discard">Hidhe Tej</string>
     <string name="reader_avatar_desc">foto profili</string>
     <string name="reader_blavatar_desc">ikonë sajti</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
@@ -168,7 +179,6 @@ Language: sq_AL
     <string name="reader_list_item_suggestion_remove_desc">fshije</string>
     <string name="photo_picker_thumbnail_desc">Luaje videon</string>
     <string name="reader_cardview_post_play_video_desc">luaje videon e zgjedhur</string>
-    <string name="post_cardview_featured_desc">figurë e zgjedhur</string>
     <string name="plugin_detail_logo_desc">stemë shtojce</string>
     <string name="plugin_detail_banner_desc">banderolë shtojce</string>
     <string name="photo_picker_wpmedia_desc">zgjidhni nga media WordPress</string>
@@ -190,9 +200,9 @@ Language: sq_AL
     <string name="jetpack_connection_failed_with_reason">Dështoi lidhja me Jetpack–un: %s</string>
     <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur teJetpack–u</string>
     <string name="menu_undo_snackbar_action">ZHBËJE</string>
-    <string name="menu_visual_mode_done_snackbar">U kalua nën mënyrën Pamore.</string>
+    <string name="menu_visual_mode_done_snackbar">U kalua nën mënyrën Pamore</string>
     <string name="menu_visual_mode">Mënya Pamore</string>
-    <string name="menu_html_mode_done_snackbar">U kalua nën mënyrën HTML.</string>
+    <string name="menu_html_mode_done_snackbar">U kalua nën mënyrën HTML</string>
     <string name="menu_html_mode">Mënyra HTML</string>
     <string name="menu_preview">Paraparje</string>
     <string name="menu_publish_now">Botoje Që Tani</string>
@@ -978,7 +988,7 @@ Language: sq_AL
     <string name="delete_site_hint">Fshije sajtin</string>
     <string name="export_site_hint">Eksportojeni sajtin tuaj si një kartelë XML</string>
     <string name="primary_domain">Përkatësi Parësore</string>
-    <string name="error_deleting_site_summary">Pati një gabim në fshirjen e sajtit tuaj. Ju lutemi, lidhuni me ata të asistencës për më tepër</string>
+    <string name="error_deleting_site_summary">Pati një gabim në fshirjen e sajtit tuaj. Për më tepër, ju lutemi, lidhuni me ata të asistencës</string>
     <string name="error_deleting_site">Gabim në fshirjen e sajtit</string>
     <string name="site_settings_export_content_title">Eksportim lënde</string>
     <string name="confirm_delete_site_prompt">Ju lutemi, shtypni %1$s në fushën më poshtë, që ta ripohoni. Sajti juaj mandej do të zhduket përgjithmonë.</string>
@@ -1254,7 +1264,6 @@ Language: sq_AL
     <string name="notification_settings_item_other_account_emails_summary">Do të dërgojmë përherë email–e të rëndësishëm lidhur me llogarinë tuaj, por mundeni gjithashtu të merrni ca ekstra të dobishme.</string>
     <string name="stats_insights_latest_post_trend">U bënë %1$s qëkur qe botuar %2$s. Ja se si ka ecur postimi deri tani…</string>
     <string name="stats_insights_latest_post_summary">Përmbledhje Postimesh Më të Reja</string>
-    <string name="button_revert">Anuloji ndryshimet</string>
     <string name="yesterday">Dje</string>
     <string name="days_ago">%d ditë më parë</string>
     <string name="connectionbar_no_connection">Pa lidhje</string>

@@ -33,7 +33,6 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -70,6 +69,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -858,7 +858,7 @@ public class EditPostSettingsFragment extends Fragment {
         int height = DisplayUtils.getDisplayPixelHeight(getActivity());
         int size = Math.max(width, height);
 
-        String mediaUri = media.getThumbnailUrl();
+        String mediaUri = StringUtils.notNullStr(media.getThumbnailUrl());
         if (SiteUtils.isPhotonCapable(siteModel)) {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }

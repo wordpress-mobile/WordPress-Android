@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 13:34:18+0000
+Translation-Revision-Date: 2018-07-20 07:30:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="reader_gallery_images_desc">bildgalleri</string>
+    <string name="blavatar_desc">webbplats–ikon</string>
+    <string name="theme_image_desc">tema–bild</string>
+    <string name="featured_image_desc">utvald bild</string>
+    <string name="support_push_notification_message_hint_snackbar">Du hittar dina support–meddelanden genom att knacka på ”Hjälp och support” och därefter ”Mina ärenden”</string>
+    <string name="local_changes_discarding_error">Ett fel inträffade när dina lokala ändringar skulle kastas. Kontakta supporten för vidare hjälp.</string>
+    <string name="local_changes_discarding">Kastar lokala ändringar</string>
+    <string name="local_changes_discarded">De lokala ändringarna har kastats</string>
+    <string name="menu_discard_changes">Kasta lokala ändringar</string>
+    <string name="button_discard_changes">Kasta ändringar</string>
+    <string name="button_discard">Kasta</string>
     <string name="reader_avatar_desc">Profilbild</string>
     <string name="reader_blavatar_desc">webblatsikon</string>
     <string name="notification_channel_transient_title">Tillfälligt</string>
@@ -170,7 +181,6 @@ Language: sv_SE
     <string name="reader_list_item_suggestion_remove_desc">ta bort</string>
     <string name="photo_picker_thumbnail_desc">Spela video</string>
     <string name="reader_cardview_post_play_video_desc">spela utvald video</string>
-    <string name="post_cardview_featured_desc">utvald bild</string>
     <string name="plugin_detail_logo_desc">tilläggets logga</string>
     <string name="plugin_detail_banner_desc">tilläggets banner–bild</string>
     <string name="photo_picker_wpmedia_desc">välj från WordPress mediakatalog</string>
@@ -192,9 +202,9 @@ Language: sv_SE
     <string name="jetpack_connection_failed_with_reason">Anslutningen till Jetpack fungerade inte: %s</string>
     <string name="jetpack_already_connected_toast">DU är redan ansluten till Jetpack</string>
     <string name="menu_undo_snackbar_action">ÅNGRA</string>
-    <string name="menu_visual_mode_done_snackbar">Växlat till visuellt läge.</string>
+    <string name="menu_visual_mode_done_snackbar">Växlat till visuellt läge</string>
     <string name="menu_visual_mode">Visuellt läge</string>
-    <string name="menu_html_mode_done_snackbar">Växlat till HTML–läge.</string>
+    <string name="menu_html_mode_done_snackbar">Växlat till HTML–läge</string>
     <string name="menu_html_mode">HTML–läge</string>
     <string name="menu_preview">Förhandsgranskning</string>
     <string name="menu_publish_now">Publicera nu</string>
@@ -980,7 +990,7 @@ Language: sv_SE
     <string name="delete_site_hint">Radera webbplats</string>
     <string name="export_site_hint">Exportera din webbplats till XML–fil</string>
     <string name="primary_domain">Primärdomän</string>
-    <string name="error_deleting_site_summary">Det uppstod ett fel när din webbplats skulle tas bort. Vänligen kontakta supporten för mer hjälp.</string>
+    <string name="error_deleting_site_summary">Ett fel uppstod när din webbplats skulle tas bort. Kontakta supporten för mer hjälp.</string>
     <string name="error_deleting_site">Kunde inte ta bort webbplats</string>
     <string name="site_settings_export_content_title">Exportera innehåll</string>
     <string name="confirm_delete_site_prompt">Vänligen skriv %1$s i fältet nedan för att godkänna. Din webbplats kommer sedan vara borta för alltid.</string>
@@ -1256,7 +1266,6 @@ Language: sv_SE
     <string name="notification_settings_item_other_account_emails_summary">Viktiga e–postmeddelanden om ditt konto kommer vi alltid att sända, men du vill kan du dessutom få en del hjälpsamma ytterligare saker.</string>
     <string name="stats_insights_latest_post_trend">Det har gått %1$s sedan %2$s publicerades. Så här har det gått för inlägget hittills…</string>
     <string name="stats_insights_latest_post_summary">Sammanfattning av senaste inlägg</string>
-    <string name="button_revert">Återställ</string>
     <string name="yesterday">I går</string>
     <string name="days_ago">%d dagar sedan</string>
     <string name="connectionbar_no_connection">Ingen anslutning</string>
@@ -1292,7 +1301,7 @@ Language: sv_SE
     <string name="me_btn_login_logout">Logga in/Logga ut</string>
     <string name="me_connect_to_wordpress_com">Logga in på WordPress.com</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
-    <string name="me_btn_support">Hjälp &amp; support</string>
+    <string name="me_btn_support">Hjälp och support</string>
     <string name="account_settings">Kontoinställningar</string>
     <string name="site_picker_create_wpcom">Skapa en webbplats på WordPress.com</string>
     <string name="site_picker_edit_visibility">Visa/dölj webbplatser</string>

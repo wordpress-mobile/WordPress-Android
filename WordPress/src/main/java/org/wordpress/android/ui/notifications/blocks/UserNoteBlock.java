@@ -21,7 +21,6 @@ import org.wordpress.android.util.image.ImageType;
  */
 public class UserNoteBlock extends NoteBlock {
     private final OnGravatarClickedListener mGravatarClickedListener;
-    protected final ImageManager mImageManager;
 
     private int mAvatarSz;
 
@@ -36,8 +35,8 @@ public class UserNoteBlock extends NoteBlock {
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             OnGravatarClickedListener onGravatarClickedListener,
             ImageManager imageManager) {
-        super(noteObject, onNoteBlockTextClickListener);
-        mImageManager = imageManager;
+        super(noteObject, imageManager, onNoteBlockTextClickListener);
+
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));
         }

@@ -212,7 +212,6 @@ Language: is
     <string name="delete_site_hint">Eyða vef</string>
     <string name="export_site_hint">Flytja vefinn þinn út sem XML skrá</string>
     <string name="primary_domain">Aðallén</string>
-    <string name="error_deleting_site_summary">Það kom upp villa við eyðingu á vefnum þínum. Vinsamlegast hafðu samband við notendaþjónustu fyrir frekari aðstoð</string>
     <string name="error_deleting_site">Villa kom upp við að eyða vef</string>
     <string name="confirm_delete_site_prompt">Vinsamlegast ritaðu %1$s í reitinn hér að neðan til staðfestingar. Vefurinn þinn hverfur að eilífu.</string>
     <string name="site_settings_export_content_title">Flytja út efni</string>
@@ -482,7 +481,6 @@ Language: is
     <string name="notifications_tab">Tilkynningar</string>
     <string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til…</string>
     <string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
-    <string name="button_revert">Afturkalla</string>
     <string name="yesterday">Í gær</string>
     <string name="days_ago">%d dögum síðan</string>
     <string name="connectionbar_no_connection">Ekkert samband</string>

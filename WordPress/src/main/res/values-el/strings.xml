@@ -354,7 +354,6 @@ Language: el_GR
     <string name="delete_site_hint">Διαγραφή ιστότοπου</string>
     <string name="export_site_hint">Εξαγωγή του ιστοτόπου σας σε αρχείο XML</string>
     <string name="primary_domain">Πρωτεύων Τομέας</string>
-    <string name="error_deleting_site_summary">Παρουσιάστηκε σφάλμα κατά τη διαγραφή του ιστοτόπου σας. Παρακαλούμε επικοινωνήστε με την υποστήριξη για περισσότερη βοήθεια.</string>
     <string name="error_deleting_site">Σφάλμα διαγραφής ιστοτόπου</string>
     <string name="confirm_delete_site_prompt">Παρακαλούμε πληκτρολογήστε %1$s στο παρακάτω πεδίο για επιβεβαίωση. Ο ιστότοπός σας μετά θα εξαφανιστεί για πάντα.</string>
     <string name="site_settings_export_content_title">Εξαγωγή περιεχομένου</string>
@@ -630,7 +629,6 @@ Language: el_GR
     <string name="notification_settings_item_other_account_emails_summary">Θα σας στέλνουμε πάντα σημαντικά email σχετικά με το λογαριασμό σας αλλά μπορείτε να λαμβάνετε και μερικά χρήσιμα επιπλέον.</string>
     <string name="stats_insights_latest_post_trend">Πέρασαν %1$s από τη δημοσίευση του %2$s. Να πως πήγε το άρθρο μέχρι στιγμής…</string>
     <string name="stats_insights_latest_post_summary">Πιο πρόσφατη σύνοψη άρθρων</string>
-    <string name="button_revert">Επαναφορά</string>
     <string name="days_ago">%d μέρες πριν</string>
     <string name="yesterday">Χθες</string>
     <string name="connectionbar_no_connection">Δεν υπάρχει σύνδεση</string>

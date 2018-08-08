@@ -1,11 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-20 08:33:51+0000
+Translation-Revision-Date: 2018-07-27 09:04:26+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="reader_gallery_images_desc">galerie obrázků</string>
+    <string name="blavatar_desc">ikona stránky</string>
+    <string name="theme_image_desc">obrázek šablony</string>
+    <string name="featured_image_desc">náhledový obrázek</string>
+    <string name="support_push_notification_message_hint_snackbar">Otevřete komunikaci s podporou klikem na \"Pomoc a podpora\" následně na \"Moje konverzace\"</string>
+    <string name="local_changes_discarding_error">Při zahazování změn došlo k chybě. Kontaktujte zákaznickou podporu.</string>
+    <string name="local_changes_discarding">Zahazuji lokální změny</string>
+    <string name="local_changes_discarded">Zahazování lokálních změn dokončeno</string>
+    <string name="menu_discard_changes">Zahodit lokální změny</string>
+    <string name="button_discard_changes">Zahodit změny</string>
+    <string name="button_discard">Zahodit</string>
+    <string name="reader_avatar_desc">profilový obrázek</string>
+    <string name="reader_blavatar_desc">ikona stránky</string>
+    <string name="notification_channel_transient_title">Přechodný</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_enter_email">Zadejte emailovou adresu</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Pro pokračování je třeba nejprve zadat emailovou adresu a jméno</string>
+    <string name="support_push_notification_message">Nová zpráva od \"Pomoc a Podpora\"</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Nezadán</string>
+    <string name="support_contact_email">Kontaktní email</string>
+    <string name="application_log_button">Aplikační log</string>
+    <string name="my_tickets">Moje konverzace</string>
+    <string name="activity_log_rewind_dialog_message">Opravdu chcete obnovit stav stránky z %s na %s. Akce nenávratně odstraní vše, včetně obsahu a změn nastavení, co jste od té doby udělali.</string>
+    <string name="activity_log_rewind_site">Obnovit</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Obnovuji</string>
+    <string name="activity_log_currently_restoring_message">Obnovuji k %s %s</string>
+    <string name="activity_log_currently_restoring_title">Obnovuji stránku</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Stránka úspěšně obnovena</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Vaše stránka byla úspěšně obnovena\nObnovit na %s %s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Vaše stránky jsou obnovovány.\nObnovuji stránku k %s %s</string>
+    <string name="activity_log_button">Tlačítko akce s protokolem aktivit</string>
+    <string name="plugin_auto_managed">Spravován automaticky</string>
+    <string name="reader_save_posts_locally_dialog_message">Uložte si příspěvek a kdykoli se k němu vraťe. Příspěvek bude dostupný pouze na tomto zařízení  — na synchronizaci mezi zařízeními pracujeme.</string>
+    <string name="reader_save_posts_locally_dialog_title">Uložit příspěvek na později</string>
+    <string name="reader_empty_search_request_failed">Vyhledávání se nezdařilo</string>
+    <string name="reader_empty_search_title">Nebyly nalezeny žádné výsledky</string>
+    <string name="reader_label_post_search_explainer">Vyhledat stránku nebo příspěvek\nve WordPressu</string>
+    <string name="comment_read_source_post">Přečtěte si zdrojový příspěvek</string>
+    <string name="sites">Stránky</string>
+    <string name="signup_magic_link_title">Magický odkaz odeslán</string>
+    <string name="signup_email_screen_title">Registrace emailem</string>
+    <string name="verification_2fa_screen_title">Ověřovací kód</string>
+    <string name="selfhosted_site_login_title">Přihlašovací údaje</string>
+    <string name="magic_link_sent_login_title">Magický odkaz odeslán</string>
+    <string name="magic_link_login_title">Přihlašení magickým odkazem</string>
+    <string name="site_address_login_title">Přihlášení k webu</string>
+    <string name="email_address_login_title">Emailová adresa přihlášení</string>
+    <string name="alternatively">Alternativní způsoby přihlášení:</string>
+    <string name="reader_empty_saved_posts_description">Kliknutím na %s přispěvek uložíte.</string>
+    <string name="reader_empty_saved_posts_title">Zatím jste neuložili žádné příspěvky.</string>
+    <string name="reader_bookmark_snack_title">Příspěvek uložen</string>
+    <string name="reader_bookmark_snack_btn">Zobrazit všechny</string>
+    <string name="reader_btn_bookmarked">Uložen</string>
+    <string name="reader_btn_bookmark">Uložit</string>
+    <string name="reader_remove_bookmark">Odstranit z uložených</string>
+    <string name="reader_add_bookmark">Přidat do uložených příspěvků</string>
+    <string name="reader_save_for_later_title">Uložené příspěvky</string>
+    <string name="activity_log_empty_list">Žádné události zatím nebyly zaznamenány</string>
+    <string name="removed">Odstraněno</string>
     <string name="tabbar_accessibility_label_write">Nový příspěvek. Napište nový příspěvek.</string>
     <string name="my_site_icon_content_description">Změnit ikonu webu</string>
     <string name="my_site_icon_dialog_cancel_button">Zrušit</string>
@@ -121,7 +181,6 @@ Language: cs_CZ
     <string name="reader_list_item_suggestion_remove_desc">smazat</string>
     <string name="photo_picker_thumbnail_desc">Přehrát video</string>
     <string name="reader_cardview_post_play_video_desc">přehrát doporučené video</string>
-    <string name="post_cardview_featured_desc">náhledový obrázek</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">Vybrat z WordPress media</string>
@@ -178,7 +237,7 @@ Language: cs_CZ
     <string name="media_settings_screen_title">Detail souboru</string>
     <string name="publicize_buttons_screen_title">Sdílející tlačítka</string>
     <string name="notifications_screen_title">Upozornění</string>
-    <string name="reader_screen_title">Čtenář</string>
+    <string name="reader_screen_title">Čtečka</string>
     <string name="me_section_screen_title">Já</string>
     <string name="my_site_section_screen_title">Mé stránky</string>
     <string name="notif_settings_screen_title">Nastavení upozornění</string>
@@ -618,7 +677,7 @@ Language: cs_CZ
     <string name="post_settings_more_options">Více nastavení</string>
     <string name="post_settings_categories_and_tags">Rubriky a štítky</string>
     <string name="post_settings_status">Stav</string>
-    <string name="notifications_tab_title_unread">Nepřečtený</string>
+    <string name="notifications_tab_title_unread">Nepřečtené</string>
     <string name="notifications_tab_title_all">Vše</string>
     <string name="top_level_category_name">Nejvyšší úroveň</string>
     <string name="category_parent">Nadřazená rubrika (volitelné):</string>
@@ -1164,7 +1223,7 @@ Language: cs_CZ
     <string name="notifications_empty_action_comments">Připojte se ke konverzaci: komentujte příspěvky z webů, které sledujete.</string>
     <string name="notifications_empty_action_unread">Začněte konverzaci: napište nový příspěvek.</string>
     <string name="notifications_empty_action_all">Buďte aktivní! Komentujte příspěvky z webů, které sledujete.</string>
-    <string name="notifications_empty_likes">Žádné nové !to se mi líbí\"…zatím.</string>
+    <string name="notifications_empty_likes">Žádné nové \"to se mi líbí\"…zatím.</string>
     <string name="notifications_empty_followers">Žádný nový sledující…zatím.</string>
     <string name="notifications_empty_comments">Žádné nové komentáře…zatím.</string>
     <string name="notifications_empty_unread">Všechny jsou přečtené.</string>
@@ -1207,7 +1266,6 @@ Language: cs_CZ
     <string name="notification_settings_item_other_account_emails_summary">Budeme vždy odesílat důležité emaily týkající se vašeho účtu, ale můžete také získat některé zajímavé bonusy.</string>
     <string name="stats_insights_latest_post_trend">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován…</string>
     <string name="stats_insights_latest_post_summary">Přehled posledních příspěvků</string>
-    <string name="button_revert">Vrátit</string>
     <string name="yesterday">Včera</string>
     <string name="days_ago">před %d dny</string>
     <string name="connectionbar_no_connection">Bez připojení</string>

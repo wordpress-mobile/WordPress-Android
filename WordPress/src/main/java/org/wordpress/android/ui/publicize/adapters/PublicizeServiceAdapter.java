@@ -30,24 +30,20 @@ import java.util.Comparator;
 import javax.inject.Inject;
 
 public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServiceAdapter.SharingViewHolder> {
-    public interface OnAdapterLoadedListener {
-        void onAdapterLoaded(boolean isEmpty);
-    }
-
-    public interface OnServiceClickListener {
-        void onServiceClicked(PublicizeService service);
-    }
-
     private final PublicizeServiceList mServices = new PublicizeServiceList();
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
-
     private final long mSiteId;
     private final int mBlavatarSz;
     private final ColorFilter mGrayScaleFilter;
     private final long mCurrentUserId;
-
     private OnAdapterLoadedListener mAdapterLoadedListener;
     private OnServiceClickListener mServiceClickListener;
+    private boolean mShouldHideGPlus;
+
+    /*
+     * AsyncTask to load services
+     */
+    private boolean mIsTaskRunning = false;
 
     @Inject ImageManager mImageManager;
 
@@ -57,6 +53,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         mSiteId = siteId;
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mCurrentUserId = currentUserId;
+        mShouldHideGPlus = true;
 
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
@@ -145,6 +142,20 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         });
     }
 
+    private boolean isHiddenService(PublicizeService service) {
+        boolean shouldHideGooglePlus = service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) && mShouldHideGPlus;
+
+        return shouldHideGooglePlus;
+    }
+
+    public interface OnAdapterLoadedListener {
+        void onAdapterLoaded(boolean isEmpty);
+    }
+
+    public interface OnServiceClickListener {
+        void onServiceClicked(PublicizeService service);
+    }
+
     class SharingViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTxtService;
         private final TextView mTxtUser;
@@ -159,11 +170,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             mDivider = view.findViewById(R.id.divider);
         }
     }
-
-    /*
-     * AsyncTask to load services
-     */
-    private boolean mIsTaskRunning = false;
 
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
         private final PublicizeServiceList mTmpServices = new PublicizeServiceList();
@@ -181,21 +187,17 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // G+ no longers supports authentication via a WebView, so we hide it here unless the
-            // user already has a connection
-            boolean hideGPlus = true;
-
             PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);
             for (PublicizeConnection connection : connections) {
                 if (connection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
-                    hideGPlus = false;
+                    mShouldHideGPlus = false;
                 }
                 mTmpConnections.add(connection);
             }
 
             PublicizeServiceList services = PublicizeTable.getServiceList();
             for (PublicizeService service : services) {
-                if (!service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) || !hideGPlus) {
+                if (!isHiddenService(service)) {
                     mTmpServices.add(service);
                 }
             }

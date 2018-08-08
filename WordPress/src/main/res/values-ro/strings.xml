@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 14:03:15+0000
+Translation-Revision-Date: 2018-07-25 09:34:29+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="reader_gallery_images_desc">galerie de imagini</string>
+    <string name="blavatar_desc">icon sit</string>
+    <string name="theme_image_desc">imagine temă</string>
+    <string name="featured_image_desc">imagine reprezentativă</string>
+    <string name="support_push_notification_message_hint_snackbar">Găsește–ți conversația cu suportul atingând „Ajutor și suport” și apoi „Tichetele mele”</string>
+    <string name="local_changes_discarding_error">A fost o eroare la renunțarea la modificările tale locale. Te rog contactează suportul pentru asistență suplimentară.</string>
+    <string name="local_changes_discarding">Renunț la modificările locale</string>
+    <string name="local_changes_discarded">Modificările locale au fost aruncate la gunoi</string>
+    <string name="menu_discard_changes">Renunță la modificările locale</string>
+    <string name="button_discard_changes">Renunță la modificări</string>
+    <string name="button_discard">Renunță</string>
     <string name="reader_avatar_desc">poză de profil</string>
     <string name="reader_blavatar_desc">icon sit</string>
     <string name="notification_channel_transient_title">Tranzitoriu</string>
@@ -170,7 +181,6 @@ Language: ro
     <string name="reader_list_item_suggestion_remove_desc">șterge</string>
     <string name="photo_picker_thumbnail_desc">Rulează videoul</string>
     <string name="reader_cardview_post_play_video_desc">rulează videoul reprezentativ</string>
-    <string name="post_cardview_featured_desc">imagine reprezentativă</string>
     <string name="plugin_detail_logo_desc">logo modul</string>
     <string name="plugin_detail_banner_desc">banner modul</string>
     <string name="photo_picker_wpmedia_desc">alege din media WordPress</string>
@@ -192,9 +202,9 @@ Language: ro
     <string name="jetpack_connection_failed_with_reason">Conectarea la Jetpack a eșuat: %s</string>
     <string name="jetpack_already_connected_toast">Ești deja conectat la Jetpack</string>
     <string name="menu_undo_snackbar_action">REVENIRE</string>
-    <string name="menu_visual_mode_done_snackbar">Comutat la modul vizual.</string>
+    <string name="menu_visual_mode_done_snackbar">Comutat la modul vizual</string>
     <string name="menu_visual_mode">Modul vizual</string>
-    <string name="menu_html_mode_done_snackbar">Comutat la modul HTML.</string>
+    <string name="menu_html_mode_done_snackbar">Comutat la modul HTML</string>
     <string name="menu_html_mode">Modul HTML</string>
     <string name="menu_preview">Previzualizează</string>
     <string name="menu_publish_now">Publică acum</string>
@@ -980,7 +990,7 @@ Language: ro
     <string name="delete_site_hint">Ștergere sit</string>
     <string name="export_site_hint">Exportă situl tău într–un fișier XML</string>
     <string name="primary_domain">Domeniul primar</string>
-    <string name="error_deleting_site_summary">A apărut o eroare la ștergerea sitului tău. Te rog contactează suportul pentru mai multă asistență</string>
+    <string name="error_deleting_site_summary">A fost o eroare la ștergerea sitului tău. Te rog contactează suportul pentru asistență suplimentară.</string>
     <string name="error_deleting_site">Eroare la ștergere sit</string>
     <string name="site_settings_export_content_title">Exportă conținutul</string>
     <string name="confirm_delete_site_prompt">Te rog scrie %1$s în câmpul de mai jos pentru confirmare. Situl tău va fi dus apoi pentru totdeauna.</string>
@@ -1256,7 +1266,6 @@ Language: ro
     <string name="notification_settings_item_other_account_emails_summary">Vom trimite întotdeauna emailuri importante cu privire la contul tău, dar poți primi și altele utile, în plus.</string>
     <string name="stats_insights_latest_post_trend">A trecut %1$s de când %2$s a fost publicat. Iată performanțele articolului  până în prezent …</string>
     <string name="stats_insights_latest_post_summary">Rezumatul ultimului articol</string>
-    <string name="button_revert">Revenire</string>
     <string name="yesterday">Ieri</string>
     <string name="days_ago">%d zile în urmă</string>
     <string name="connectionbar_no_connection">Nicio conexiune</string>
@@ -1509,8 +1518,8 @@ Language: ro
     <string name="category_name">Nume categorie</string>
     <string name="add_new_category">Adaugă categorie nouă</string>
     <string name="view_in_browser">Vezi în browser</string>
-    <string name="preview_post">Previzualizare articol</string>
-    <string name="preview_page">Previzualizare pagină</string>
+    <string name="preview_post">Previzualizează articolul</string>
+    <string name="preview_page">Previzualizează pagina</string>
     <string name="remove_account">Înlătură situl</string>
     <string name="toast_comment_unedited">Comentariul nu s–a schimbat</string>
     <string name="content_required">Comentariul e necesar</string>
