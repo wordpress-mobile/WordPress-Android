@@ -13,7 +13,9 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
+import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class PageParentFragment : Fragment() {
@@ -25,8 +27,8 @@ class PageParentFragment : Fragment() {
     private var linearLayoutManager: LinearLayoutManager? = null
 
     companion object {
-        fun newInstance(): PagesFragment {
-            return PagesFragment()
+        fun newInstance(): PageParentFragment {
+            return PageParentFragment()
         }
     }
 
@@ -34,45 +36,37 @@ class PageParentFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (activity?.application as WordPress).component()?.inject(this)
         setHasOptionsMenu(true)
+
+        val site = if (savedInstanceState == null) {
+            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViewModel(savedInstanceState)
-        initRecyclerView(savedInstanceState)
+        initializeView(savedInstanceState)
+        initializeViewModel(savedInstanceState)
+    }
+
+    private fun initializeView(savedInstanceState: Bundle?) {
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+            layoutManager.onRestoreInstanceState(it)
+        }
+
+        linearLayoutManager = layoutManager
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.pages_list_fragment, container, false)
     }
 
-    override fun onDestroyView() {
-        viewModel.stop()
-        super.onDestroyView()
-    }
-
-    private fun initRecyclerView(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
-            layoutManager.onRestoreInstanceState(it)
-        }
-        recyclerView.layoutManager = linearLayoutManager
-        linearLayoutManager = layoutManager
-
-//        val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
-//        recyclerView.adapter = adapter
-
-//        viewModel.data.observe(this, Observer { data ->
-//            if (data != null) {
-//                adapter.update(data)
-//            }
-//        })
-
-        (activity!!.application as WordPress).component()?.inject(this)
-    }
-
-    private fun initViewModel(savedInstanceState: Bundle?) {
+    private fun initializeViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PageParentViewModel::class.java)
 
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
@@ -84,5 +78,16 @@ class PageParentFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         linearLayoutManager?.let { outState.putParcelable(listStateKey, it.onSaveInstanceState()) }
         super.onSaveInstanceState(outState)
+    }
+
+    private fun setPages(pages: List<PageItem>) {
+        val adapter: PagesAdapter
+        if (recyclerView.adapter == null) {
+            adapter = PagesAdapter(onParentSelected = { page -> viewModel.onParentSelected(page) })
+            recyclerView.adapter = adapter
+        } else {
+            adapter = recyclerView.adapter as PagesAdapter
+        }
+        adapter.update(pages)
     }
 }

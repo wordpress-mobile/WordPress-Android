@@ -14,6 +14,7 @@ import org.wordpress.android.R.layout
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.util.DisplayUtils
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
@@ -75,6 +76,23 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
                 dividerTitle.text = pageItem.title
+            }
+        }
+    }
+
+    class PageParentViewHolder(
+        parentView: ViewGroup,
+        private val onParentSelected: (ParentPage) -> Unit
+    ) : PageItemViewHolder(parentView, layout.page_parent_list_item) {
+        private val pageTitle = itemView.findViewById<TextView>(id.page_title)
+        private val radioButton = itemView.findViewById<TextView>(id.radio_button)
+        override fun onBind(pageItem: PageItem) {
+            (pageItem as ParentPage).apply {
+                pageTitle.text = pageItem.title
+                radioButton.isSelected = pageItem.isSelected
+                radioButton.setOnClickListener {
+                    onParentSelected(pageItem)
+                }
             }
         }
     }

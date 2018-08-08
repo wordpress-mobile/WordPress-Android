@@ -11,6 +11,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
+import org.wordpress.android.ui.pages.PageItem.Type.PARENT
 
 sealed class PageItem(val type: Type) {
     abstract class Page(
@@ -54,12 +55,18 @@ sealed class PageItem(val type: Type) {
         override val actions: Set<Action> = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY)
     ) : Page(id, title, labelRes, indent, actions)
 
+    abstract class ParentPage(
+        val id: Long,
+        val title: String,
+        val isSelected: Boolean
+    ) : PageItem(PARENT)
+
     data class Divider(val title: String) : PageItem(DIVIDER)
 
     data class Empty(val textResource: Int? = null) : PageItem(EMPTY)
 
     enum class Type(val viewType: Int) {
-        PAGE(1), DIVIDER(2), EMPTY(3)
+        PAGE(1), DIVIDER(2), EMPTY(3), PARENT(4)
     }
 
     enum class Action(@IdRes val itemId: Int) {
