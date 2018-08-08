@@ -53,20 +53,6 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         }
     }
 
-    suspend fun getPages(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        val posts = postStore.getPagesForSite(site).filterNotNull()
-        val pages = posts.map { PageModel(it, site) }
-        pages.forEach { page ->
-            if (page.parentId != 0L) {
-                page.parent = pages.firstOrNull { it.remoteId == page.parentId }
-                if (page.parent == null) {
-                    page.parent = getPageByRemoteId(page.parentId, site)
-                }
-            }
-        }
-        pages.sortedBy { it.remoteId }
-    }
-
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(CommonPool) {
         postStore.getPagesForSite(site)
                 .filterNotNull()
@@ -97,10 +83,18 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                 })
     }
 
-    suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        postStore.getPagesForSite(site)
-                .filterNotNull()
-                .map { PageModel(it, site) }
+    suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
+        val posts = postStore.getPagesForSite(site).filterNotNull()
+        val pages = posts.map { PageModel(it, site) }
+        pages.forEach { page ->
+            if (page.parentId != 0L) {
+                page.parent = pages.firstOrNull { it.remoteId == page.parentId }
+                if (page.parent == null) {
+                    page.parent = getPageByRemoteId(page.parentId, site)
+                }
+            }
+        }
+        pages.sortedBy { it.remoteId }
     }
 
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
