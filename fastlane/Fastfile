@@ -95,6 +95,19 @@ platform :android do
 
     take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
   end
+
+  #####################################################################################
+  desc "Rebuild screenshot devices"
+  lane :rebuild_screenshot_devices do |options|
+    sh("helpers/create-device.sh fastlane_screenshots_phone 17")
+    sh("helpers/fixup-android-emulator.sh fastlane_screenshots_phone")
+
+    sh("helpers/create-device.sh fastlane_screenshots_seven_inch 33")
+    sh("helpers/fixup-android-emulator.sh fastlane_screenshots_seven_inch")
+
+    sh("helpers/create-device.sh fastlane_screenshots_ten_inch 34")
+    sh("helpers/fixup-android-emulator.sh fastlane_screenshots_ten_inch")
+  end
 end
 #####################################################################################
 # update_ps_strings 
