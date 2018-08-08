@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.page
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -51,6 +52,16 @@ class PageStoreTest {
             initPage(5, 0, "page 5", "private"),
             initPage(6, 0, "page 6", "pending"),
             initPage(7, 0, "page 7", "draft")
+    )
+
+    private val pageHierarchy = listOf(
+            initPage(1, 0, "page 1", "publish", 1),
+            initPage(11, 1, "page 2", "publish", 2),
+            initPage(111, 2, "page 3", "publish", 3),
+            initPage(12, 1, "page 4", "publish", 4),
+            initPage(2, 0, "page 5", "publish", 5),
+            initPage(41, 8, "page 6", "publish", 6),
+            initPage(3, 0, "page 7", "publish", 7)
     )
 
     private lateinit var store: PageStore
@@ -216,11 +227,44 @@ class PageStoreTest {
         assertThat(pages.filter { it.status == SCHEDULED }.size).isEqualTo(1)
     }
 
+    @Test
+    fun getTopLevelPageByLocalId() = runBlocking {
+        doAnswer { invocation -> pageHierarchy.first { it.id == invocation.arguments.first() } }
+                .`when`(postStore).getPostByLocalPostId(any())
+
+        val page = store.getPageByLocalId(1, site)
+
+        assertThat(page).isNotNull()
+        assertThat(page!!.pageId).isEqualTo(1)
+        assertThat(page.remoteId).isEqualTo(1)
+        assertThat(page.parent).isNull()
+    }
+
+    @Test
+    fun getChildPageByRemoteId() = runBlocking {
+        doAnswer { invocation -> pageHierarchy.first { it.remotePostId == invocation.arguments.first() } }
+                .`when`(postStore).getPostByRemotePostId(any(), any())
+
+        val page = store.getPageByRemoteId(3, site)
+
+        assertThat(page).isNotNull()
+        assertThat(page!!.pageId).isEqualTo(111)
+        assertThat(page.remoteId).isEqualTo(3)
+
+        assertThat(page.parent).isNotNull()
+        assertThat(page.parent!!.remoteId).isEqualTo(2)
+
+        assertThat(page.parent!!.parent).isNotNull()
+        assertThat(page.parent!!.parent!!.remoteId).isEqualTo(1)
+        assertThat(page.parent!!.parent!!.parent).isNull()
+    }
+
     private fun initPage(
         id: Int,
         parentId: Long? = null,
         title: String? = null,
-        status: String? = "draft"
+        status: String? = "draft",
+        remoteId: Long = 0
     ): PostModel {
         val page = PostModel()
         page.id = id
@@ -233,6 +277,7 @@ class PageStoreTest {
         status?.let {
             page.status = status
         }
+        page.remotePostId = remoteId
         return page
     }
 }
