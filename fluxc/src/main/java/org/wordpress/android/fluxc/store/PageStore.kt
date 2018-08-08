@@ -54,7 +54,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     suspend fun getPages(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        val posts = postStore.getPagesForSite(site).filter { it != null }
+        val posts = postStore.getPagesForSite(site).filterNotNull()
         val pages = posts.map { PageModel(it, site) }
         pages.forEach { page ->
             if (page.parentId != 0L) {
@@ -98,8 +98,9 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     suspend fun loadPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        val pages = postStore.getPagesForSite(site).filter { it != null }
-        pages.map { PageModel(it, site) }
+        postStore.getPagesForSite(site)
+                .filterNotNull()
+                .map { PageModel(it, site) }
     }
 
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
