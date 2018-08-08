@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Empty
+import org.wordpress.android.ui.pages.PageItem.ParentPage
 import javax.inject.Inject
 
 class PageParentViewModel
@@ -28,11 +29,7 @@ class PageParentViewModel
         mutableData.postValue(listOf(Empty(string.empty_list_default)))
     }
 
-    fun stop() {
-        this.site = null
-    }
-
-    fun onAction(action: Action, pageItem: PageItem): Boolean {
+    fun onParentSelected(page: ParentPage) {
         TODO("not implemented")
     }
 }

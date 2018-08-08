@@ -122,6 +122,7 @@ class PageListFragment : Fragment() {
         })
 
         viewModel.setPageParent.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.viewPageParentForResult(activity, page) }
         })
 
         viewModel.movePageToDraft.observe(this, Observer { page ->
