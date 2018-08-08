@@ -138,7 +138,7 @@ class PageStoreTest {
 
     @Test
     fun loadsPagesFromDb() {
-        val pages = runBlocking { store.loadPagesFromDb(site) }
+        val pages = runBlocking { store.getPagesFromDb(site) }
 
         assertThat(pages).hasSize(3)
         assertThat(pages[0].pageId).isEqualTo(pageWithoutQuery.id)
@@ -218,7 +218,7 @@ class PageStoreTest {
         whenever(postStore.getPagesForSite(site))
                 .thenReturn(differentPageTypes.filter { payload.statusTypes.contains(PostStatus.fromPost(it)) })
 
-        val pages = store.loadPagesFromDb(site)
+        val pages = store.getPagesFromDb(site)
 
         assertThat(pages.size).isEqualTo(5)
         assertThat(pages.filter { it.status == PUBLISHED }.size).isEqualTo(1)
@@ -265,7 +265,7 @@ class PageStoreTest {
         whenever(postStore.getPostByRemotePostId(8, site)).thenReturn(
                 initPage(4, 0, "page 8", "publish", 8))
 
-        val pages = store.getPages(site)
+        val pages = store.getPagesFromDb(site)
 
         assertThat(pages.size).isEqualTo(7)
         assertThat(pages).doesNotContainNull()
