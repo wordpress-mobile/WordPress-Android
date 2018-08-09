@@ -23,8 +23,12 @@ class DomainSuggestionsAdapter(
     }
 
     private fun onDomainSuggestionSelected(suggestion: DomainSuggestionResponse?, position: Int) {
+        val previousSelectedPosition = selectedPosition
         selectedPosition = position
-        notifyDataSetChanged()
+        notifyItemChanged(previousSelectedPosition)
+        if (previousSelectedPosition != selectedPosition) {
+            notifyItemChanged(selectedPosition)
+        }
         itemSelectionListener(suggestion, position)
     }
 
