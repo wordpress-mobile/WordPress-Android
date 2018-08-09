@@ -18,12 +18,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
@@ -110,8 +113,18 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         mFabView = findViewById(R.id.fab_button);
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showDetailFragment(null);
+            }
+        });
+        mFabView.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(SiteSettingsTagListActivity.this, R.string.fab_add_tag_desc, Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
