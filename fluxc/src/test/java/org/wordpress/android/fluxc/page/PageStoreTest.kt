@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus
-import java.util.Random
 
 @RunWith(MockitoJUnitRunner::class)
 class PageStoreTest {
