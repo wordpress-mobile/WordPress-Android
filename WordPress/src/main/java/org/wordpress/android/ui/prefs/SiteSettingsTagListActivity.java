@@ -67,6 +67,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     private static final String KEY_SAVED_QUERY = "SAVED_QUERY";
     private static final String KEY_PROGRESS_RES_ID = "PROGRESS_RESOURCE_ID";
+    private static final String KEY_IS_SEARCHING = "IS_SEARCHING";
 
     private SiteModel mSite;
     private EmptyViewRecyclerView mRecycler;
@@ -80,6 +81,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
+
+    private boolean mIsSearching;
 
     public static void showTagList(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, SiteSettingsTagListActivity.class);
@@ -104,6 +107,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mSavedQuery = savedInstanceState.getString(KEY_SAVED_QUERY);
+            mIsSearching = savedInstanceState.getBoolean(KEY_IS_SEARCHING);
         }
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -165,7 +169,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        showFabIfNotShowingDetailAndNotEmpty();
+        showFabWithConditions();
     }
 
     @Override
@@ -184,9 +188,12 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(KEY_IS_SEARCHING, mIsSearching);
+
         if (mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_SAVED_QUERY, mSearchView.getQuery().toString());
         }
+
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             outState.putInt(KEY_PROGRESS_RES_ID, mLastProgressResId);
         }
@@ -197,13 +204,14 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.tag_list, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchMenuItem.setOnActionExpandListener(this);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
 
         // open search bar if we were searching for something before
-        if (!TextUtils.isEmpty(mSavedQuery)) {
+        if (mIsSearching) {
             mSearchMenuItem.expandActionView();
-            onQueryTextSubmit(mSavedQuery);
+            mSearchView.clearFocus();
             mSearchView.setQuery(mSavedQuery, true);
         }
 
@@ -215,23 +223,9 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (item.getItemId() == R.id.menu_search) {
-            mSearchMenuItem = item;
-            mSearchMenuItem.setOnActionExpandListener(this);
-
-            mSearchView = (SearchView) item.getActionView();
-            mSearchView.setOnQueryTextListener(this);
-
-            if (!TextUtils.isEmpty(mSavedQuery)) {
-                onQueryTextSubmit(mSavedQuery);
-                mSearchView.setQuery(mSavedQuery, true);
-            }
-
-            mSearchMenuItem.expandActionView();
-
-            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -262,14 +256,15 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         }, delayMs);
     }
 
-    private void showFabIfNotShowingDetailAndNotEmpty() {
+    private void showFabWithConditions() {
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
             long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (!isDetailFragmentShowing() && mActionableEmptyView.getVisibility() != View.VISIBLE) {
+                    if (!mIsSearching && !isDetailFragmentShowing()
+                        && mActionableEmptyView.getVisibility() != View.VISIBLE) {
                         showFabIfHidden();
                     }
                 }
@@ -348,7 +343,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         if (fragment != null) {
             getFragmentManager().popBackStack();
             ActivityUtils.hideKeyboard(this);
-            showFabIfNotShowingDetailAndNotEmpty();
+            showFabWithConditions();
             setTitle(R.string.site_settings_tags_title);
             invalidateOptionsMenu();
         }
@@ -373,18 +368,18 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextSubmit(String query) {
         mAdapter.filter(query);
-        mSearchView.clearFocus();
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
         mAdapter.filter(query);
-        return true;
+        return false;
     }
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
+        mIsSearching = true;
         showActionableEmptyViewForSearch(true);
         hideFabIfShowing();
         return true;
@@ -392,8 +387,9 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+        mIsSearching = false;
         showActionableEmptyViewForSearch(false);
-        showFabIfNotShowingDetailAndNotEmpty();
+        showFabWithConditions();
         return true;
     }
 
@@ -508,7 +504,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             }
             notifyDataSetChanged();
 
-            showActionableEmptyViewForSearch(mSearchMenuItem.isActionViewExpanded() && mFilteredTags.isEmpty());
+            showActionableEmptyViewForSearch(mIsSearching && mFilteredTags.isEmpty());
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
