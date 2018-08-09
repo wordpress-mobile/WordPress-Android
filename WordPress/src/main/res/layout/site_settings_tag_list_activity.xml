@@ -24,9 +24,11 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_width="wrap_content"
+        android:visibility="invisible"
         app:borderWidth="0dp"
         app:rippleColor="@color/fab_pressed"
-        app:srcCompat="@drawable/ic_plus_white_24dp" >
+        app:srcCompat="@drawable/ic_plus_white_24dp"
+        tools:visibility="visible" >
     </android.support.design.widget.FloatingActionButton>
 
     <org.wordpress.android.ui.ActionableEmptyView

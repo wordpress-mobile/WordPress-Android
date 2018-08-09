@@ -146,7 +146,10 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        showFabIfHidden();
+
+        if (!isDetailFragmentShowing()) {
+            showFabIfHidden();
+        }
     }
 
     @Override
