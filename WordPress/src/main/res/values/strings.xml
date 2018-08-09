@@ -103,7 +103,6 @@
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
-    <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
@@ -570,7 +569,7 @@
     <string name="tag_description_hint">Description</string>
     <string name="add_new_tag">Add New Tag</string>
     <string name="error_tag_exists">A tag with this name already exists</string>
-    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\' tag?</string>
     <string name="dlg_deleting_tag">Deleting</string>
     <string name="dlg_saving_tag">Saving</string>
 

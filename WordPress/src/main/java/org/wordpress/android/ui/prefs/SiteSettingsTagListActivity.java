@@ -394,16 +394,17 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                 new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
         dialogBuilder.setMessage(message);
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.delete_yes),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                                showProgressDialog(R.string.dlg_deleting_tag);
-                                                Action action = TaxonomyActionBuilder.newDeleteTermAction(
-                                                        new TaxonomyStore.RemoteTermPayload(term, mSite));
-                                                mDispatcher.dispatch(action);
-                                            }
-                                        });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.delete_no), null);
+        dialogBuilder.setPositiveButton(
+                getResources().getText(R.string.delete_yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        showProgressDialog(R.string.dlg_deleting_tag);
+                        Action action = TaxonomyActionBuilder.newDeleteTermAction(
+                                new TaxonomyStore.RemoteTermPayload(term, mSite));
+                        mDispatcher.dispatch(action);
+                    }
+                });
+        dialogBuilder.setNegativeButton(R.string.cancel, null);
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
     }
