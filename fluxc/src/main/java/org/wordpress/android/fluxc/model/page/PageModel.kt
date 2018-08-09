@@ -12,12 +12,10 @@ data class PageModel(
     var status: PageStatus,
     var date: Date,
     var hasLocalChanges: Boolean,
-    val parentId: Long,
-    val remoteId: Long
+    val remoteId: Long,
+    val parent: PageModel?
 ) {
-    var parent: PageModel? = null
-
-    constructor(post: PostModel, site: SiteModel) : this(site, post.id, post.title, PageStatus.fromPost(post),
-            Date(DateTimeUtils.timestampFromIso8601Millis(post.dateCreated)), post.isLocallyChanged, post.parentId,
-            post.remotePostId)
+    constructor(post: PostModel, site: SiteModel, parent: PageModel?) : this(site, post.id, post.title,
+            PageStatus.fromPost(post), Date(DateTimeUtils.timestampFromIso8601Millis(post.dateCreated)),
+            post.isLocallyChanged, post.remotePostId, parent)
 }
