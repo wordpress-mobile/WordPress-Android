@@ -2227,4 +2227,15 @@
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
+
+    <!-- News Card -->
+    <!-- When announcing a new feature, add new strings and make sure to update NewsItemType.kt -->
+    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
+    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
+    the out-of-date announcement might redirect the user to the new feature. -->
+    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
+    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
+    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
+    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
+    <!-- END (News Card) -->
 </resources>
