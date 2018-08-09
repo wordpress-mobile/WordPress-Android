@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -123,7 +124,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
                     view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 }
 
-                Toast.makeText(SiteSettingsTagListActivity.this, R.string.fab_add_tag_desc, Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), R.string.site_settings_tags_empty_button, Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -134,6 +135,11 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         }
 
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                showDetailFragment(null);
+            }
+        });
 
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
@@ -336,6 +342,22 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         }
     }
 
+    private void showActionableEmptyViewForSearch(boolean isSearch) {
+        mActionableEmptyView.updateLayoutForSearch(isSearch, 0);
+
+        if (isSearch) {
+            mActionableEmptyView.button.setVisibility(View.GONE);
+            mActionableEmptyView.image.setVisibility(View.GONE);
+            mActionableEmptyView.subtitle.setVisibility(View.GONE);
+            mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title_search);
+        } else {
+            mActionableEmptyView.button.setVisibility(View.VISIBLE);
+            mActionableEmptyView.image.setVisibility(View.VISIBLE);
+            mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+            mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title);
+        }
+    }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         mAdapter.filter(query);
@@ -351,18 +373,14 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        mActionableEmptyView.updateLayoutForSearch(true, 0);
-        mActionableEmptyView.image.setVisibility(View.GONE);
-        mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title_search);
+        showActionableEmptyViewForSearch(true);
         hideFabIfShowing();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        mActionableEmptyView.updateLayoutForSearch(false, 0);
-        mActionableEmptyView.image.setVisibility(View.VISIBLE);
-        mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title);
+        showActionableEmptyViewForSearch(false);
         showFabIfHidden();
         return true;
     }
@@ -477,6 +495,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
                 }
             }
             notifyDataSetChanged();
+
+            showActionableEmptyViewForSearch(mFilteredTags.isEmpty());
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
