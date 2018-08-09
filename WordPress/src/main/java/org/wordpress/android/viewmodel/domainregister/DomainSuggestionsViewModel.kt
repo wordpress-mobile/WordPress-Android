@@ -38,9 +38,9 @@ class DomainSuggestionsViewModel @Inject constructor(
                 _suggestions.postValue(new)
             }
 
-    private val _selectSuggestion = MutableLiveData<DomainSuggestionResponse?>()
+    private val _selectedSuggestion = MutableLiveData<DomainSuggestionResponse?>()
     val selectedSuggestion: LiveData<DomainSuggestionResponse?>
-        get() = _selectSuggestion
+        get() = _selectedSuggestion
 
     private val _selectedPosition = MutableLiveData<Int>()
     val selectedPosition: LiveData<Int>
@@ -97,9 +97,10 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun fetchSuggestions() {
         // Disable Load more
-        suggestions = ListState.Loading(suggestions, false)
+        suggestions = ListState.Loading(suggestions)
 
-        val suggestDomainsPayload = SuggestDomainsPayload(searchQuery, false, false, true, 30)
+        val suggestDomainsPayload =
+                SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT)
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated
@@ -125,6 +126,10 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         _selectedPosition.postValue(selectedPosition)
-        _selectSuggestion.postValue(selectedSuggestion)
+        _selectedSuggestion.postValue(selectedSuggestion)
+    }
+
+    companion object {
+        private const val SUGGESTIONS_REQUEST_COUNT = 30
     }
 }
