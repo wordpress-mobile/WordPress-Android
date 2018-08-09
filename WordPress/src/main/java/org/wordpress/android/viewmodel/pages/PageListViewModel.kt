@@ -35,7 +35,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class PageListViewModel
-@Inject constructor(val dispatcher: Dispatcher, val pageStore: PageStore) : ViewModel() {
+@Inject constructor(val dispatcher: Dispatcher, private val pageStore: PageStore) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
