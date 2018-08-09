@@ -483,7 +483,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             }
             notifyDataSetChanged();
 
-            showActionableEmptyViewForSearch(mFilteredTags.isEmpty());
+            showActionableEmptyViewForSearch(mSearchMenuItem.isActionViewExpanded() && mFilteredTags.isEmpty());
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
