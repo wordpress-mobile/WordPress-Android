@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import java.util.Random
 
 @RunWith(MockitoJUnitRunner::class)
 class PageStoreTest {
@@ -60,7 +61,7 @@ class PageStoreTest {
             initPage(111, 2, "page 3", "publish", 3),
             initPage(12, 1, "page 4", "publish", 4),
             initPage(2, 0, "page 5", "publish", 5),
-            initPage(41, 8, "page 6", "publish", 6),
+            initPage(4, 0, "page 6", "publish", 6),
             initPage(3, 0, "page 7", "publish", 7)
     )
 
@@ -134,19 +135,6 @@ class PageStoreTest {
         val result = runBlocking { store.search(site, "foo") }
 
         assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun loadsPagesFromDb() {
-        val pages = runBlocking { store.getPagesFromDb(site) }
-
-        assertThat(pages).hasSize(3)
-        assertThat(pages[0].pageId).isEqualTo(pageWithoutQuery.id)
-        assertThat(pages[0].parentId).isEqualTo(pageWithoutQuery.parentId)
-        assertThat(pages[1].pageId).isEqualTo(pageWithQuery.id)
-        assertThat(pages[1].parentId).isEqualTo(pageWithQuery.parentId)
-        assertThat(pages[2].pageId).isEqualTo(pageWithoutTitle.id)
-        assertThat(pages[2].parentId).isEqualTo(pageWithoutTitle.parentId)
     }
 
     @Test
@@ -229,7 +217,7 @@ class PageStoreTest {
 
     @Test
     fun getTopLevelPageByLocalId() = runBlocking {
-        doAnswer { invocation -> pageHierarchy.first { it.id == invocation.arguments.first() } }
+        doAnswer { invocation -> pageHierarchy.firstOrNull { it.id == invocation.arguments.first() } }
                 .`when`(postStore).getPostByLocalPostId(any())
 
         val page = store.getPageByLocalId(1, site)
@@ -242,7 +230,7 @@ class PageStoreTest {
 
     @Test
     fun getChildPageByRemoteId() = runBlocking {
-        doAnswer { invocation -> pageHierarchy.first { it.remotePostId == invocation.arguments.first() } }
+        doAnswer { invocation -> pageHierarchy.firstOrNull { it.remotePostId == invocation.arguments.first() } }
                 .`when`(postStore).getPostByRemotePostId(any(), any())
 
         val page = store.getPageByRemoteId(3, site)
@@ -262,8 +250,6 @@ class PageStoreTest {
     @Test
     fun getPages() = runBlocking<Unit> {
         whenever(postStore.getPagesForSite(site)).thenReturn(pageHierarchy)
-        whenever(postStore.getPostByRemotePostId(8, site)).thenReturn(
-                initPage(4, 0, "page 8", "publish", 8))
 
         val pages = store.getPagesFromDb(site)
 
@@ -271,10 +257,7 @@ class PageStoreTest {
         assertThat(pages).doesNotContainNull()
 
         assertThat(pages.filter { it.pageId < 10 }.all { it.parent == null }).isTrue()
-        assertThat(pages.filter { it.parentId == 1L }.all { it.parent!!.remoteId == 1L }).isTrue()
-
-        assertThat(pages.first { it.remoteId == 6L }.parent).isNotNull()
-        assertThat(pages.first { it.pageId == 41 }.parent!!.pageId).isEqualTo(4)
+        assertThat(pages.filter { it.pageId > 10 }.all { it.parent != null }).isTrue()
     }
 
     private fun initPage(
@@ -282,7 +265,7 @@ class PageStoreTest {
         parentId: Long? = null,
         title: String? = null,
         status: String? = "draft",
-        remoteId: Long = 0
+        remoteId: Long = Math.abs(Random().nextLong()) % 100 + 1
     ): PostModel {
         val page = PostModel()
         page.id = id
