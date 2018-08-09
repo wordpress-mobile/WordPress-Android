@@ -264,7 +264,7 @@ class PageStoreTest {
         parentId: Long? = null,
         title: String? = null,
         status: String? = "draft",
-        remoteId: Long = Math.abs(Random().nextLong()) % 100 + 1
+        remoteId: Long = id.toLong()
     ): PostModel {
         val page = PostModel()
         page.id = id
