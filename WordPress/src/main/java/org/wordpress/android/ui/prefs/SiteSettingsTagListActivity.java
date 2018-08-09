@@ -165,10 +165,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-
-        if (!isDetailFragmentShowing()) {
-            showFabIfHidden();
-        }
+        showFabIfNotShowingDetailAndNotEmpty();
     }
 
     @Override
@@ -265,6 +262,21 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         }, delayMs);
     }
 
+    private void showFabIfNotShowingDetailAndNotEmpty() {
+        // scale in the fab after a brief delay if it's not already showing
+        if (mFabView.getVisibility() != View.VISIBLE) {
+            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isDetailFragmentShowing() && mActionableEmptyView.getVisibility() != View.VISIBLE) {
+                        showFabIfHidden();
+                    }
+                }
+            }, delayMs);
+        }
+    }
+
     private void hideFabIfShowing() {
         if (!isFinishing() && mFabView.getVisibility() == View.VISIBLE) {
             AniUtils.showFab(mFabView, false);
@@ -336,7 +348,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         if (fragment != null) {
             getFragmentManager().popBackStack();
             ActivityUtils.hideKeyboard(this);
-            showFabIfHidden();
+            showFabIfNotShowingDetailAndNotEmpty();
             setTitle(R.string.site_settings_tags_title);
             invalidateOptionsMenu();
         }
@@ -381,7 +393,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         showActionableEmptyViewForSearch(false);
-        showFabIfHidden();
+        showFabIfNotShowingDetailAndNotEmpty();
         return true;
     }
 
