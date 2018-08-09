@@ -20,8 +20,7 @@ import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
