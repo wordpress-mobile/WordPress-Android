@@ -12,10 +12,11 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.models.pages.PageModel
-import org.wordpress.android.models.pages.PageStatus
-import org.wordpress.android.networking.PageStore
+import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -36,7 +37,8 @@ class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val uploadUtil: PageUploadUtil
 ) : ViewModel() {
     private val _isSearchExpanded = SingleLiveEvent<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -83,7 +85,7 @@ class PagesViewModel
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
-        _pages = pageStore.getPages(site)
+        _pages = pageStore.getPagesFromDb(site)
 
         val loadState = if (_pages.isEmpty()) FETCHING else REFRESHING
         refreshPages(loadState)
@@ -98,7 +100,7 @@ class PagesViewModel
             newState = ERROR
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
-            _pages = pageStore.getPages(site)
+            _pages = pageStore.getPagesFromDb(site)
             _refreshPages.asyncCall()
             newState = DONE
         }
@@ -108,7 +110,7 @@ class PagesViewModel
 
     fun onPageEditFinished(pageId: Long) {
         launch {
-            if (!pageStore.isPageUploading(pageId, site)) {
+            if (!uploadUtil.isPageUploading(pageId, site)) {
                 refreshPages()
             }
         }

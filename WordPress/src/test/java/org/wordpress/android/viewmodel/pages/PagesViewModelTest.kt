@@ -14,10 +14,10 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.models.pages.PageModel
-import org.wordpress.android.models.pages.PageStatus.DRAFT
-import org.wordpress.android.networking.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty

@@ -8,7 +8,6 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,8 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.models.pages.PageStatus
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
