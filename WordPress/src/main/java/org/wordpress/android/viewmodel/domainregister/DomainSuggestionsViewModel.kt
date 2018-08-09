@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.domainregister
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.os.Handler
 import android.text.TextUtils
@@ -30,8 +31,10 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val handler = Handler()
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
-    val suggestionsLiveData: LiveData<DomainSuggestionsListState>
-        get() = _suggestions
+    val suggestionsLiveData: LiveData<List<DomainSuggestionResponse>>
+        get() = Transformations.map(_suggestions) { it?.data ?: emptyList() }
+    val isLoadingInProgress: LiveData<Boolean>
+        get() = Transformations.map(_suggestions) { it?.isFetchingFirstPage() == true }
 
     private var suggestions: ListState<DomainSuggestionResponse>
             by Delegates.observable(ListState.Init()) { _, _, new ->
@@ -41,6 +44,8 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionResponse?>()
     val selectedSuggestion: LiveData<DomainSuggestionResponse?>
         get() = _selectedSuggestion
+    val shouldEnableChooseDomain: LiveData<Boolean>
+        get() = Transformations.map(_selectedSuggestion) { it is DomainSuggestionResponse }
 
     private val _selectedPosition = MutableLiveData<Int>()
     val selectedPosition: LiveData<Int>

@@ -59,15 +59,17 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.suggestionsLiveData.observe(this, Observer {
-            val isLoadingData = it?.isFetchingFirstPage() == true
-            domainSuggestionsListContainer.visibility = if (isLoadingData) View.GONE else View.VISIBLE
-            suggestionsListProgress.visibility = if (isLoadingData) View.VISIBLE else View.GONE
-            reloadSuggestions(it?.data ?: emptyList())
+        viewModel.isLoadingInProgress.observe(this, Observer {
+            domainSuggestionsListContainer.visibility = if (it == true) View.GONE else View.VISIBLE
+            suggestionsListProgress.visibility = if (it == true) View.VISIBLE else View.GONE
         })
-
-        viewModel.selectedSuggestion.observe(this, Observer {
-            chooseDomainButton.isEnabled = it is DomainSuggestionResponse
+        viewModel.suggestionsLiveData.observe(this, Observer {
+            if (it != null) {
+                reloadSuggestions(it)
+            }
+        })
+        viewModel.shouldEnableChooseDomain.observe(this, Observer {
+            chooseDomainButton.isEnabled = it ?: false
         })
     }
 
