@@ -438,15 +438,16 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             mFilteredTags.addAll(allTags);
         }
 
+        @NonNull
         @Override
-        public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public TagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                                       .inflate(R.layout.site_settings_tag_list_row, parent, false);
             return new TagListAdapter.TagViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final TagListAdapter.TagViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final TagListAdapter.TagViewHolder holder, int position) {
             TermModel term = mFilteredTags.get(position);
             holder.mTxtTag.setText(StringEscapeUtils.unescapeHtml4(term.getName()));
             if (term.getPostCount() > 0) {
