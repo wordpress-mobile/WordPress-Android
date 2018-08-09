@@ -147,6 +147,7 @@
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
+            android:launchMode="singleTop"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.ReleaseNotesActivity"
@@ -187,6 +188,7 @@
         <activity
             android:name=".ui.comments.CommentsActivity"
             android:theme="@style/Calypso.NoActionBar"
+            android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
             android:name=".ui.comments.EditCommentActivity"
@@ -227,6 +229,7 @@
 
         <activity
             android:name=".ui.posts.PostsListActivity"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"
             android:label="" />
         <activity
@@ -244,11 +247,13 @@
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
+                  android:launchMode="singleTop"
                   android:label="@string/plans"/>
 
         <!-- Stats Activities -->
         <activity
             android:name=".ui.stats.StatsActivity"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.stats.StatsViewAllActivity"
@@ -304,6 +309,7 @@
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
             android:theme="@style/Calypso.NoActionBar"
+            android:launchMode="singleTop"
             android:label="@string/themes"/>
         <activity
             android:name=".ui.themes.ThemeWebActivity"
@@ -427,6 +433,7 @@
         <activity
             android:name=".ui.publicize.PublicizeListActivity"
             android:label="@string/sharing"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <activity
@@ -492,6 +499,7 @@
         <activity
             android:name=".ui.people.PeopleManagementActivity"
             android:label="@string/people"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!--Plugins-->
@@ -501,9 +509,10 @@
         <activity
             android:name=".ui.plugins.PluginBrowserActivity"
             android:label="@string/plugins"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"/>
 
-        <!--Plugins-->
+        <!--Activity log-->
         <activity
             android:name=".ui.activitylog.list.ActivityLogListActivity"
             android:label="@string/activity_log"
