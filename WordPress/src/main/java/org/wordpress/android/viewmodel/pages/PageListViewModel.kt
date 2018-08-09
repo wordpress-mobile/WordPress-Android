@@ -134,7 +134,7 @@ class PageListViewModel
     }
 
     private fun preparePublishedPages(pages: List<PageModel>): List<PageItem> {
-        return topologicalSort(pages.toMutableList(), pages.map { it.parent?.remoteId ?: 0 }.min() ?: 0)
+        return topologicalSort(pages.toMutableList())
                 .map {
                     val label = if (it.hasLocalChanges) string.local_changes else null
                     PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it))
@@ -165,12 +165,12 @@ class PageListViewModel
         }
     }
 
-    private fun topologicalSort(pages: MutableList<PageModel>, parentId: Long): List<PageModel> {
+    private fun topologicalSort(pages: MutableList<PageModel>, parent: PageModel? = null): List<PageModel> {
         val sortedList = mutableListOf<PageModel>()
-        pages.filter { it.parent?.remoteId == parentId }.forEach {
+        pages.filter { it.parent == parent }.forEach {
             sortedList += it
             pages -= it
-            sortedList += topologicalSort(pages, it.remoteId)
+            sortedList += topologicalSort(pages, it)
         }
         return sortedList
     }
