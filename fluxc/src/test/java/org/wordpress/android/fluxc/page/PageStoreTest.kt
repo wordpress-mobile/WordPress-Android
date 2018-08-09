@@ -113,21 +113,20 @@ class PageStoreTest {
         val result = runBlocking { store.groupedSearch(site, title) }
 
         assertThat(result.keys).contains(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
-        assertPage(result, 0, 3, PageStatus.PUBLISHED)
-        assertPage(result, 1, 6, PageStatus.PUBLISHED)
-        assertPage(result, 0, 2, PageStatus.DRAFT)
-        assertPage(result, 1, 7, PageStatus.DRAFT)
-        assertPage(result, 0, 4, PageStatus.SCHEDULED)
-        assertPage(result, 1, 5, PageStatus.SCHEDULED)
-        assertPage(result, 0, 1, PageStatus.TRASHED)
-        assertPage(result, 1, 8, PageStatus.TRASHED)
+        assertPage(result, 0, PageStatus.PUBLISHED)
+        assertPage(result, 1, PageStatus.PUBLISHED)
+        assertPage(result, 0, PageStatus.DRAFT)
+        assertPage(result, 1, PageStatus.DRAFT)
+        assertPage(result, 0, PageStatus.SCHEDULED)
+        assertPage(result, 1, PageStatus.SCHEDULED)
+        assertPage(result, 0, PageStatus.TRASHED)
+        assertPage(result, 1, PageStatus.TRASHED)
     }
 
-    private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, id: Int, status: PageStatus) {
+    private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, status: PageStatus) {
         val page = map[status]?.get(position)
         assertThat(page).isNotNull()
-        assertThat(page!!.pageId).isEqualTo(id)
-        assertThat(page.status).isEqualTo(status)
+        assertThat(page!!.status).isEqualTo(status)
     }
 
     @Test
