@@ -33,6 +33,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<List<DomainSuggestionResponse>>
         get() = Transformations.map(_suggestions) { it?.data ?: emptyList() }
+
     val isLoadingInProgress: LiveData<Boolean>
         get() = Transformations.map(_suggestions) { it?.isFetchingFirstPage() == true }
 
@@ -101,7 +102,6 @@ class DomainSuggestionsViewModel @Inject constructor(
     // Network Request
 
     private fun fetchSuggestions() {
-        // Disable Load more
         suggestions = ListState.Loading(suggestions)
 
         val suggestDomainsPayload =
@@ -126,7 +126,7 @@ class DomainSuggestionsViewModel @Inject constructor(
             suggestions = ListState.Error(suggestions, event.error.message)
             return
         }
-        suggestions = ListState.Success(event.suggestions, false) // Disable load more
+        suggestions = ListState.Success(event.suggestions)
     }
 
     fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
