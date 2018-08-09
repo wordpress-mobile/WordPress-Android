@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
@@ -34,40 +35,28 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     suspend fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? = withContext(CommonPool) {
         val post = postStore.getPostByLocalPostId(pageId)
         return@withContext post?.let {
-            val page = PageModel(it, site)
-            if (page.parentId != 0L) {
-                page.parent = getPageByRemoteId(page.parentId, site)
-            }
-            page
+            PageModel(it, site, getPageByRemoteId(it.parentId, site))
         }
     }
 
     suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
         val post = postStore.getPostByRemotePostId(remoteId, site)
         return@withContext post?.let {
-            val page = PageModel(it, site)
-            if (page.parentId != 0L) {
-                page.parent = getPageByRemoteId(page.parentId, site)
-            }
-            page
+            PageModel(it, site, getPageByRemoteId(it.parentId, site))
         }
     }
 
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(CommonPool) {
-        postStore.getPagesForSite(site)
-                .filterNotNull()
-                .map { PageModel(it, site) }
-                .filter { it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
+        getPagesFromDb(site).filter { it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
     }
 
     suspend fun groupedSearch(
         site: SiteModel,
         searchQuery: String
     ): SortedMap<PageStatus, List<PageModel>> = withContext(CommonPool) {
-        val list = search(site, searchQuery)
-                .groupBy { it.status }
-        list
-                .toSortedMap(Comparator { previous, next ->
+        val list = search(site, searchQuery).groupBy { it.status }
+        return@withContext list.toSortedMap(
+                Comparator { previous, next ->
                     when {
                         previous == next -> 0
                         previous == PUBLISHED -> -1
@@ -76,25 +65,22 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                         next == DRAFT -> 1
                         previous == SCHEDULED -> -1
                         next == SCHEDULED -> 1
-                        else -> {
-                            throw IllegalArgumentException("Unexpected page type")
-                        }
+                        else -> throw IllegalArgumentException("Unexpected page type")
                     }
                 })
     }
 
     suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        val posts = postStore.getPagesForSite(site).filterNotNull()
-        val pages = posts.map { PageModel(it, site) }
-        pages.forEach { page ->
-            if (page.parentId != 0L) {
-                page.parent = pages.firstOrNull { it.remoteId == page.parentId }
-                if (page.parent == null) {
-                    page.parent = getPageByRemoteId(page.parentId, site)
-                }
-            }
+        val posts = postStore.getPagesForSite(site).filterNotNull().associateBy { it.remotePostId }
+        posts.map { getPageFromPost(it.key, site, posts) }.filterNotNull().sortedBy { it.pageId }
+    }
+
+    private fun getPageFromPost(postId: Long, site: SiteModel, posts: Map<Long, PostModel>): PageModel? {
+        if (postId == 0L || !posts.containsKey(postId)) {
+            return null
         }
-        pages.sortedBy { it.remoteId }
+        val post = posts[postId]!!
+        return PageModel(post, site, getPageFromPost(post.parentId, site, posts))
     }
 
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
