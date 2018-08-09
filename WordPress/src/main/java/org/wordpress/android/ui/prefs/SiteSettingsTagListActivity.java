@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -66,7 +67,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     private SiteModel mSite;
     private EmptyViewRecyclerView mRecycler;
     private View mFabView;
-    private View mEmptyView;
+    private ActionableEmptyView mActionableEmptyView;
 
     private TagListAdapter mAdapter;
     private String mSavedQuery;
@@ -119,11 +120,12 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             mFabView.setVisibility(View.INVISIBLE);
         }
 
+        mActionableEmptyView = findViewById(R.id.actionable_empty_view);
+
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
-
-        mEmptyView = findViewById(R.id.empty_view);
+        mRecycler.setEmptyView(mActionableEmptyView);
 
         loadTags();
 
@@ -331,18 +333,20 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         return true;
     }
 
-    private void showEmptyView(boolean show) {
-        mEmptyView.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
+        mActionableEmptyView.updateLayoutForSearch(true, 0);
+        mActionableEmptyView.image.setVisibility(View.GONE);
+        mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title_search);
         hideFabIfShowing();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+        mActionableEmptyView.updateLayoutForSearch(false, 0);
+        mActionableEmptyView.image.setVisibility(View.VISIBLE);
+        mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title);
         showFabIfHidden();
         return true;
     }
@@ -455,7 +459,6 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
                 }
             }
             notifyDataSetChanged();
-            showEmptyView(mFilteredTags.isEmpty());
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
