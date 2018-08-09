@@ -25,10 +25,6 @@ class PageUploadUtil @Inject constructor(
     private val dispatcher: Dispatcher,
     private val context: Context
 ) {
-    init {
-        dispatcher.register(this)
-    }
-
     suspend fun uploadPage(page: PageModel): UploadRequestResult = withContext(CommonPool) {
         val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
         post.updatePageData(page)
