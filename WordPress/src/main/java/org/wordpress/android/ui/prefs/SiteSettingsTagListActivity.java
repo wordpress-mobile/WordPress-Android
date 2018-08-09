@@ -231,7 +231,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (!isFinishing() && mFabView.getVisibility() != View.VISIBLE) {
-                    AniUtils.showFab(mFabView, true);
+                    AniUtils.scaleIn(mFabView, AniUtils.Duration.MEDIUM);
                 }
             }
         }, delayMs);
@@ -254,7 +254,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     private void hideFabIfShowing() {
         if (!isFinishing() && mFabView.getVisibility() == View.VISIBLE) {
-            AniUtils.showFab(mFabView, false);
+            AniUtils.scaleOut(mFabView, AniUtils.Duration.SHORT);
         }
     }
 
