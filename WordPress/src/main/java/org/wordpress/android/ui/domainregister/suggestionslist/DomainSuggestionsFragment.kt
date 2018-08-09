@@ -20,7 +20,8 @@ import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -30,22 +31,14 @@ class DomainSuggestionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity?.application as WordPress).component()?.inject(this)
+        checkNotNull((activity?.application as WordPress).component())
+        (activity?.application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DomainSuggestionsViewModel::class.java)
-        val site = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val site = activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
 
         setupViews()
         setupObservers()
         viewModel.start(site)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(WordPress.SITE, viewModel.site)
-        super.onSaveInstanceState(outState)
     }
 
     private fun setupViews() {
@@ -61,6 +54,8 @@ class DomainSuggestionsFragment : Fragment() {
             }
             false
         }
+        val adapter = DomainSuggestionsAdapter(this::onDomainSuggestionSelected)
+        domainSuggestionsList.adapter = adapter
     }
 
     private fun setupObservers() {
@@ -77,13 +72,7 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun reloadSuggestions(domainSuggestions: List<DomainSuggestionResponse>) {
-        val adapter: DomainSuggestionsAdapter
-        if (domainSuggestionsList.adapter == null) {
-            adapter = DomainSuggestionsAdapter(this::onDomainSuggestionSelected)
-            domainSuggestionsList.adapter = adapter
-        } else {
-            adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
-        }
+        val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
         adapter.selectedPosition = viewModel.selectedPosition.value ?: -1
         adapter.updateSuggestionsList(domainSuggestions)
     }
