@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.ERROR_EMPTY_PAGE
+import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.ERROR_NON_EXISTING_PAGE
 import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.ERROR_NO_NETWORK
 import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.SUCCESS
 import org.wordpress.android.ui.posts.PostUtils
@@ -27,32 +28,36 @@ class PageUploadUtil @Inject constructor(
 ) {
     suspend fun uploadPage(page: PageModel): UploadRequestResult = withContext(CommonPool) {
         val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
-        post.updatePageData(page)
+        if (post != null) {
+            post.updatePageData(page)
 
-        if (!NetworkUtils.isNetworkAvailable(context)) {
-            return@withContext ERROR_NO_NETWORK
-        }
+            if (!NetworkUtils.isNetworkAvailable(context)) {
+                return@withContext ERROR_NO_NETWORK
+            }
 
-        if (!PostUtils.isPublishable(post)) {
-            return@withContext ERROR_EMPTY_PAGE
-        }
+            if (!PostUtils.isPublishable(post)) {
+                return@withContext ERROR_EMPTY_PAGE
+            }
 
-        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post)
-        val isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT ||
-                PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft
+            PostUtils.updatePublishDateIfShouldBePublishedImmediately(post)
+            val isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT ||
+                    PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft
 
-        // save the post in the DB so the UploadService will get the latest change
-        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
+            // save the post in the DB so the UploadService will get the latest change
+            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
 
-        if (isFirstTimePublish) {
-            UploadService.uploadPostAndTrackAnalytics(context, post)
+            if (isFirstTimePublish) {
+                UploadService.uploadPostAndTrackAnalytics(context, post)
+            } else {
+                UploadService.uploadPost(context, post)
+            }
+
+            PostUtils.trackSavePostAnalytics(post, page.site)
+
+            return@withContext SUCCESS
         } else {
-            UploadService.uploadPost(context, post)
+            return@withContext ERROR_NON_EXISTING_PAGE
         }
-
-        PostUtils.trackSavePostAnalytics(post, page.site)
-
-        return@withContext SUCCESS
     }
 
     fun isPageUploading(pageId: Long, site: SiteModel): Boolean {
@@ -63,7 +68,8 @@ class PageUploadUtil @Inject constructor(
     enum class UploadRequestResult {
         SUCCESS,
         ERROR_NO_NETWORK,
-        ERROR_EMPTY_PAGE
+        ERROR_EMPTY_PAGE,
+        ERROR_NON_EXISTING_PAGE
     }
 }
 
