@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.page
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -53,6 +54,16 @@ class PageStoreTest {
             initPage(7, 0, "page 7", "draft")
     )
 
+    private val pageHierarchy = listOf(
+            initPage(1, 0, "page 1", "publish", 1),
+            initPage(11, 1, "page 2", "publish", 2),
+            initPage(111, 2, "page 3", "publish", 3),
+            initPage(12, 1, "page 4", "publish", 4),
+            initPage(2, 0, "page 5", "publish", 5),
+            initPage(4, 0, "page 6", "publish", 6),
+            initPage(3, 0, "page 7", "publish", 7)
+    )
+
     private lateinit var store: PageStore
 
     @Before
@@ -69,15 +80,6 @@ class PageStoreTest {
 
         assertThat(result).hasSize(1)
         assertThat(result[0].title).isEqualTo(pageWithQuery.title)
-    }
-
-    @Test
-    fun searchFilitersOutUnknownStatus() {
-        whenever(postStore.getPagesForSite(site)).thenReturn(listOf(initPage(1, title = query, status = "foo")))
-
-        val result = runBlocking { store.search(site, query) }
-
-        assertThat(result).isEmpty()
     }
 
     @Test
@@ -110,21 +112,20 @@ class PageStoreTest {
         val result = runBlocking { store.groupedSearch(site, title) }
 
         assertThat(result.keys).contains(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
-        assertPage(result, 0, 3, PageStatus.PUBLISHED)
-        assertPage(result, 1, 6, PageStatus.PUBLISHED)
-        assertPage(result, 0, 2, PageStatus.DRAFT)
-        assertPage(result, 1, 7, PageStatus.DRAFT)
-        assertPage(result, 0, 4, PageStatus.SCHEDULED)
-        assertPage(result, 1, 5, PageStatus.SCHEDULED)
-        assertPage(result, 0, 1, PageStatus.TRASHED)
-        assertPage(result, 1, 8, PageStatus.TRASHED)
+        assertPage(result, 0, PageStatus.PUBLISHED)
+        assertPage(result, 1, PageStatus.PUBLISHED)
+        assertPage(result, 0, PageStatus.DRAFT)
+        assertPage(result, 1, PageStatus.DRAFT)
+        assertPage(result, 0, PageStatus.SCHEDULED)
+        assertPage(result, 1, PageStatus.SCHEDULED)
+        assertPage(result, 0, PageStatus.TRASHED)
+        assertPage(result, 1, PageStatus.TRASHED)
     }
 
-    private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, id: Int, status: PageStatus) {
+    private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, status: PageStatus) {
         val page = map[status]?.get(position)
         assertThat(page).isNotNull()
-        assertThat(page!!.pageId).isEqualTo(id)
-        assertThat(page.status).isEqualTo(status)
+        assertThat(page!!.status).isEqualTo(status)
     }
 
     @Test
@@ -132,19 +133,6 @@ class PageStoreTest {
         val result = runBlocking { store.search(site, "foo") }
 
         assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun loadsPagesFromDb() {
-        val pages = runBlocking { store.loadPagesFromDb(site) }
-
-        assertThat(pages).hasSize(3)
-        assertThat(pages[0].pageId).isEqualTo(pageWithoutQuery.id)
-        assertThat(pages[0].parentId).isEqualTo(pageWithoutQuery.parentId)
-        assertThat(pages[1].pageId).isEqualTo(pageWithQuery.id)
-        assertThat(pages[1].parentId).isEqualTo(pageWithQuery.parentId)
-        assertThat(pages[2].pageId).isEqualTo(pageWithoutTitle.id)
-        assertThat(pages[2].parentId).isEqualTo(pageWithoutTitle.parentId)
     }
 
     @Test
@@ -216,7 +204,7 @@ class PageStoreTest {
         whenever(postStore.getPagesForSite(site))
                 .thenReturn(differentPageTypes.filter { payload.statusTypes.contains(PostStatus.fromPost(it)) })
 
-        val pages = store.loadPagesFromDb(site)
+        val pages = store.getPagesFromDb(site)
 
         assertThat(pages.size).isEqualTo(5)
         assertThat(pages.filter { it.status == PUBLISHED }.size).isEqualTo(1)
@@ -225,11 +213,57 @@ class PageStoreTest {
         assertThat(pages.filter { it.status == SCHEDULED }.size).isEqualTo(1)
     }
 
+    @Test
+    fun getTopLevelPageByLocalId() = runBlocking {
+        doAnswer { invocation -> pageHierarchy.firstOrNull { it.id == invocation.arguments.first() } }
+                .`when`(postStore).getPostByLocalPostId(any())
+
+        val page = store.getPageByLocalId(1, site)
+
+        assertThat(page).isNotNull()
+        assertThat(page!!.pageId).isEqualTo(1)
+        assertThat(page.remoteId).isEqualTo(1)
+        assertThat(page.parent).isNull()
+    }
+
+    @Test
+    fun getChildPageByRemoteId() = runBlocking {
+        doAnswer { invocation -> pageHierarchy.firstOrNull { it.remotePostId == invocation.arguments.first() } }
+                .`when`(postStore).getPostByRemotePostId(any(), any())
+
+        val page = store.getPageByRemoteId(3, site)
+
+        assertThat(page).isNotNull()
+        assertThat(page!!.pageId).isEqualTo(111)
+        assertThat(page.remoteId).isEqualTo(3)
+
+        assertThat(page.parent).isNotNull()
+        assertThat(page.parent!!.remoteId).isEqualTo(2)
+
+        assertThat(page.parent!!.parent).isNotNull()
+        assertThat(page.parent!!.parent!!.remoteId).isEqualTo(1)
+        assertThat(page.parent!!.parent!!.parent).isNull()
+    }
+
+    @Test
+    fun getPages() = runBlocking<Unit> {
+        whenever(postStore.getPagesForSite(site)).thenReturn(pageHierarchy)
+
+        val pages = store.getPagesFromDb(site)
+
+        assertThat(pages.size).isEqualTo(7)
+        assertThat(pages).doesNotContainNull()
+
+        assertThat(pages.filter { it.pageId < 10 }.all { it.parent == null }).isTrue()
+        assertThat(pages.filter { it.pageId > 10 }.all { it.parent != null }).isTrue()
+    }
+
     private fun initPage(
         id: Int,
         parentId: Long? = null,
         title: String? = null,
-        status: String? = "draft"
+        status: String? = "draft",
+        remoteId: Long = id.toLong()
     ): PostModel {
         val page = PostModel()
         page.id = id
@@ -242,6 +276,7 @@ class PageStoreTest {
         status?.let {
             page.status = status
         }
+        page.remotePostId = remoteId
         return page
     }
 }
