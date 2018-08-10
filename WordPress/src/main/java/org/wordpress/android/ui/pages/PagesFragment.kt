@@ -191,8 +191,8 @@ class PagesFragment : Fragment() {
             myActionMenuItem.collapseActionView()
         }
         launch(UI) {
-            delay(500)
-            newPageButton?.show()
+            delay(300)
+            AniUtils.scaleIn(newPageButton, AniUtils.Duration.MEDIUM)
         }
     }
 
@@ -203,7 +203,7 @@ class PagesFragment : Fragment() {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-        newPageButton?.hide()
+        AniUtils.scaleOut(newPageButton, AniUtils.Duration.MEDIUM)
     }
 
     private fun setSearchResult(pages: List<PageItem>) {
