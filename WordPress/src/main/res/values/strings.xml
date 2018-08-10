@@ -232,6 +232,7 @@
     <string name="page_settings">Page settings</string>
     <string name="pages">Pages</string>
     <string name="set_parent">Set Parent</string>
+    <string name="page_delete_error">We were unable to delete the page.</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>

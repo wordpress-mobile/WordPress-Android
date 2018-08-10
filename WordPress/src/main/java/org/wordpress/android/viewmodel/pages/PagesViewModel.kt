@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
@@ -209,8 +210,21 @@ class PagesViewModel
             MOVE_TO_DRAFT -> changePageStatus(pageItem, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(pageItem, TRASHED)
             PUBLISH_NOW -> changePageStatus(pageItem, PUBLISHED)
+            DELETE_PERMANENTLY -> deletePage(pageItem)
         }
         return true
+    }
+
+    private fun deletePage(pageItem: Page) {
+        launch {
+            val page = pages[pageItem.id]
+            if (page != null) {
+                pageStore.deletePage(page)
+                refreshPages()
+            } else {
+                _showSnackbarMessage.postValue(resourceProvider.getString(string.page_delete_error))
+            }
+        }
     }
 
     private fun changePageStatus(pageItem: Page, status: PageStatus) {
