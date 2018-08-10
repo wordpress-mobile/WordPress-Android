@@ -37,6 +37,7 @@ import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
 import java.util.Locale
 import java.util.Timer
+import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"
@@ -478,7 +479,7 @@ private object ZendeskConstants {
     const val noneValue = "none"
     // We rely on this platform tag to filter tickets in Zendesk, so should be kept separate from the `articleLabel`
     const val platformTag = "Android"
-    const val sourcePlatform = "Mobile - Android"
+    const val sourcePlatform = "mobile_-_android"
     const val ticketSubject = "WordPress for Android Support"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
@@ -493,7 +494,7 @@ private object TicketFieldIds {
     const val networkInformation = 360000086966L
     const val currentSite = 360000103103L
     const val appLanguage = 360008583691L
-    const val sourcePlatform = 25176023L
+    const val sourcePlatform = 360009311651L
 }
 
 object ZendeskExtraTags {
