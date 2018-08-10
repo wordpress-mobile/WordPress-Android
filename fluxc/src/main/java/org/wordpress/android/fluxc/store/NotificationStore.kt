@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.NotificationAction
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient
 import org.wordpress.android.fluxc.utils.PreferenceUtils
@@ -28,7 +29,10 @@ constructor(
     }
 
     class RegisterDevicePayload(
-        val params: Map<String, String>
+        val gcmToken: String,
+        val appKey: String,
+        val uuid: String,
+        val site: SiteModel?
     ) : Payload<BaseNetworkError>()
 
     class RegisterDeviceResponsePayload(
@@ -86,7 +90,9 @@ constructor(
     }
 
     private fun registerDevice(payload: RegisterDevicePayload) {
-        notificationRestClient.registerDeviceForPushNotifications(payload.params)
+        with(payload) {
+            notificationRestClient.registerDeviceForPushNotifications(gcmToken, appKey, uuid, site)
+        }
     }
 
     private fun unregisterDevice() {
