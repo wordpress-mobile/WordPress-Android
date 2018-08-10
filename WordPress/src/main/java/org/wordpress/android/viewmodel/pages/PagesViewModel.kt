@@ -83,23 +83,6 @@ class PagesViewModel
     val setPageParent: LiveData<PageModel>
         get() = _setPageParent
 
-    private val _movePageToDraft = SingleLiveEvent<PageModel>()
-    val movePageToDraft: LiveData<PageModel>
-        get() = _movePageToDraft
-
-    private val _movePageToTrash = SingleLiveEvent<PageModel>()
-    val movePageToTrash: LiveData<PageModel>
-        get() = _movePageToTrash
-
-    private val _publishPage = SingleLiveEvent<PageModel>()
-    val publishPage: LiveData<PageModel>
-        get() = _publishPage
-
-    private val _deletePage = SingleLiveEvent<PageModel>()
-    val deletePage: LiveData<PageModel>
-        get() = _deletePage
-
-
     private var _pages: List<PageModel> = emptyList()
     val pages: List<PageModel>
         get() = _pages

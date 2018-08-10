@@ -175,18 +175,6 @@ class PagesFragment : Fragment() {
 
         viewModel.setPageParent.observe(this, Observer { page ->
         })
-
-        viewModel.movePageToDraft.observe(this, Observer { page ->
-        })
-
-        viewModel.movePageToTrash.observe(this, Observer { page ->
-        })
-
-        viewModel.publishPage.observe(this, Observer { page ->
-        })
-
-        viewModel.deletePage.observe(this, Observer { page ->
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
