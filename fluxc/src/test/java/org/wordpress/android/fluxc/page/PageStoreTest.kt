@@ -17,6 +17,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
 import org.wordpress.android.fluxc.action.PostAction.FETCH_PAGES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
@@ -32,6 +33,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 
 @RunWith(MockitoJUnitRunner::class)
 class PageStoreTest {
@@ -177,6 +179,29 @@ class PageStoreTest {
         val lastPayload = actionCaptor.lastValue.payload as FetchPostsPayload
         assertThat(lastPayload.site).isEqualTo(site)
         assertThat(lastPayload.loadMore).isEqualTo(true)
+    }
+
+    @Test
+    fun deletePageTest() = runBlocking<Unit> {
+        val post = pageHierarchy[0]
+        whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
+        val event = OnPostChanged(0)
+        event.causeOfChange = DELETE_POST
+        val page = PageModel(post, site, null)
+        var result: OnPostChanged? = null
+        launch {
+            result = store.deletePage(page)
+        }
+        delay(10)
+        store.onPostChanged(event)
+        delay(10)
+
+        assertThat(result).isEqualTo(event)
+
+        verify(dispatcher, times(1)).dispatch(actionCaptor.capture())
+        val payload = actionCaptor.firstValue.payload as RemotePostPayload
+        assertThat(payload.site).isEqualTo(site)
+        assertThat(payload.post).isEqualTo(post)
     }
 
     @Test
