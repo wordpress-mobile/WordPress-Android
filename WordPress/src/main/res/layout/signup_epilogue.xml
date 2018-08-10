@@ -151,6 +151,7 @@
                 android:id="@+id/signup_epilogue_input_password"
                 android:hint="@string/signup_epilogue_hint_password"
                 android:inputType="textPassword"
+                android:importantForAccessibility="no"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_width="match_parent"

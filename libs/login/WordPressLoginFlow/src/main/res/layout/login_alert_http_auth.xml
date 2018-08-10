@@ -32,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:importantForAccessibility="no"
             android:hint="@string/httppassword"/>
     </android.support.design.widget.TextInputLayout>
 </LinearLayout>
