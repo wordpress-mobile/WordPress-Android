@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
@@ -63,6 +62,10 @@ class PagesViewModel
     private val _listState = MutableLiveData<PageListState>()
     val listState: LiveData<PageListState>
         get() = _listState
+
+    private val _displayDeleteDialog = SingleLiveEvent<Page>()
+    val displayDeleteDialog: LiveData<Page>
+        get() = _displayDeleteDialog
 
     private val _refreshPages = SingleLiveEvent<Unit>()
     val refreshPages: LiveData<Unit>
@@ -203,21 +206,21 @@ class PagesViewModel
         return true
     }
 
-    fun onMenuAction(action: Action, pageItem: Page): Boolean {
+    fun onMenuAction(action: Action, page: Page): Boolean {
         when (action) {
-            VIEW_PAGE -> _previewPage.postValue(pages[pageItem.id])
-            SET_PARENT -> _setPageParent.postValue(pages[pageItem.id])
-            MOVE_TO_DRAFT -> changePageStatus(pageItem, DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(pageItem, TRASHED)
-            PUBLISH_NOW -> changePageStatus(pageItem, PUBLISHED)
-            DELETE_PERMANENTLY -> deletePage(pageItem)
+            VIEW_PAGE -> _previewPage.postValue(pages[page.id])
+            SET_PARENT -> _setPageParent.postValue(pages[page.id])
+            MOVE_TO_DRAFT -> changePageStatus(page, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page, TRASHED)
+            PUBLISH_NOW -> changePageStatus(page, PUBLISHED)
+            DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
         return true
     }
 
-    private fun deletePage(pageItem: Page) {
+    fun onDeleteConfirmed(remoteId: Long) {
         launch {
-            val page = pages[pageItem.id]
+            val page = pages[remoteId]
             if (page != null) {
                 pageStore.deletePage(page)
                 refreshPages()
