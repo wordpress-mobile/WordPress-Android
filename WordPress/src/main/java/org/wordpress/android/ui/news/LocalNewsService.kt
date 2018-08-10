@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.news
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import org.wordpress.android.models.news.LocalNewsItem
@@ -15,7 +16,7 @@ class LocalNewsService @Inject constructor(private val context: Context) : NewsS
     val data: MutableLiveData<NewsItem?> = MutableLiveData()
     var newsItem: NewsItem? = null
 
-    override fun getNewsItem(): MutableLiveData<NewsItem?> {
+    override fun newsItemSource(): LiveData<NewsItem?> {
         if (newsItem == null) {
             newsItem = loadCardFromResources()
             data.value = newsItem

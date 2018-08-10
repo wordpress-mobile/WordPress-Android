@@ -12,8 +12,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.models.news.LocalNewsItem
+import org.wordpress.android.models.news.NewsItem
 
 @RunWith(MockitoJUnitRunner::class)
 class LocalNewsServiceTest {
@@ -38,7 +38,7 @@ class LocalNewsServiceTest {
 
     @Test
     fun verifyItemEmittedOnGetNewsItem() {
-        val observable = localNewsService.getNewsItem()
+        val observable = localNewsService.newsItemSource()
         observable.observeForever(observer)
         Mockito.verify(observer).onChanged(newsItem)
     }
