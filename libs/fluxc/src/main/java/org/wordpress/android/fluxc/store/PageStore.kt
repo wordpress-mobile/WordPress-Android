@@ -17,6 +17,8 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.PostError
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import java.util.SortedMap
 import javax.inject.Inject
@@ -89,8 +91,14 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         deletePostContinuation = cont
 
         val post = postStore.getPostByLocalPostId(page.pageId)
-        val payload = RemotePostPayload(post, page.site)
-        dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
+        if (post != null) {
+            val payload = RemotePostPayload(post, page.site)
+            dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
+        } else {
+            val event = OnPostChanged(0)
+            event.error = PostError(PostErrorType.UNKNOWN_POST)
+            cont.resume(event)
+        }
     }
 
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
