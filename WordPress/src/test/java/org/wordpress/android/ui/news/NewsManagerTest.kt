@@ -32,7 +32,7 @@ class NewsManagerTest {
     @Before
     fun setUp() {
         newsManager = NewsManager(newsService, appPrefs)
-        whenever(newsService.getNewsItem()).thenReturn(liveData)
+        whenever(newsService.newsItemSource()).thenReturn(liveData)
 
         val observable = newsManager.getNewsItem()
         observable.observeForever(observer)

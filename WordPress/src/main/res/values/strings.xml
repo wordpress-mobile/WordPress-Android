@@ -2229,7 +2229,7 @@
     <string name="site_creation_epilogue_write">Write first post</string>
 
     <!-- News Card -->
-    <!-- When announcing a new feature, add new strings and make sure to update NewsItemType.kt -->
+    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
     <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
     which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
     the out-of-date announcement might redirect the user to the new feature. -->

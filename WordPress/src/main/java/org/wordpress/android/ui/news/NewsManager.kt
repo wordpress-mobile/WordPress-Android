@@ -17,7 +17,7 @@ class NewsManager @Inject constructor(val newsService: NewsService, val appPrefs
 
     fun getNewsItem(): LiveData<NewsItem?> {
         if (localServiceData == null) {
-            localServiceData = newsService.getNewsItem()
+            localServiceData = newsService.newsItemSource()
             dataMediator.addSource(localServiceData as LiveData<NewsItem?>) {
                 if (shouldPropagateToUI(it)) {
                     dataMediator.value = it

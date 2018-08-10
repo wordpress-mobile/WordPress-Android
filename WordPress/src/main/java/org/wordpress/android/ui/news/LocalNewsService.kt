@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.news
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import org.wordpress.android.models.news.LocalNewsItem
 import org.wordpress.android.models.news.NewsItem
-import org.wordpress.android.models.news.NewsItemType
 import javax.inject.Inject
 
 /**
@@ -15,7 +16,7 @@ class LocalNewsService @Inject constructor(private val context: Context) : NewsS
     val data: MutableLiveData<NewsItem?> = MutableLiveData()
     var newsItem: NewsItem? = null
 
-    override fun getNewsItem(): MutableLiveData<NewsItem?> {
+    override fun newsItemSource(): LiveData<NewsItem?> {
         if (newsItem == null) {
             newsItem = loadCardFromResources()
             data.value = newsItem
@@ -29,11 +30,11 @@ class LocalNewsService @Inject constructor(private val context: Context) : NewsS
 
     private fun loadCardFromResources(): NewsItem? {
         return NewsItem(
-                context.getString(NewsItemType.LOCAL.titleResId),
-                context.getString(NewsItemType.LOCAL.contentResId),
-                context.getString(NewsItemType.LOCAL.actionResId),
-                context.getString(NewsItemType.LOCAL.urlResId),
-                NewsItemType.LOCAL.version
+                context.getString(LocalNewsItem.titleResId),
+                context.getString(LocalNewsItem.contentResId),
+                context.getString(LocalNewsItem.actionResId),
+                context.getString(LocalNewsItem.urlResId),
+                LocalNewsItem.version
         )
     }
 }
