@@ -71,20 +71,20 @@ class PagesViewModel
     val createNewPage: LiveData<Unit>
         get() = _createNewPage
 
-    private val _editPage = SingleLiveEvent<PageModel>()
-    val editPage: LiveData<PageModel>
+    private val _editPage = SingleLiveEvent<PageModel?>()
+    val editPage: LiveData<PageModel?>
         get() = _editPage
 
-    private val _previewPage = SingleLiveEvent<PageModel>()
-    val previewPage: LiveData<PageModel>
+    private val _previewPage = SingleLiveEvent<PageModel?>()
+    val previewPage: LiveData<PageModel?>
         get() = _previewPage
 
-    private val _setPageParent = SingleLiveEvent<PageModel>()
-    val setPageParent: LiveData<PageModel>
+    private val _setPageParent = SingleLiveEvent<PageModel?>()
+    val setPageParent: LiveData<PageModel?>
         get() = _setPageParent
 
-    private var _pages: List<PageModel> = emptyList()
-    val pages: List<PageModel>
+    private var _pages: Map<Long, PageModel> = emptyMap()
+    val pages: Map<Long, PageModel>
         get() = _pages
 
     private val _showSnackbarMessage = SingleLiveEvent<String>()
@@ -111,7 +111,7 @@ class PagesViewModel
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
-        _pages = pageStore.getPagesFromDb(site)
+        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
 
         val loadState = if (_pages.isEmpty()) FETCHING else REFRESHING
         refreshPages(loadState)
@@ -126,7 +126,7 @@ class PagesViewModel
             newState = ERROR
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
-            _pages = pageStore.getPagesFromDb(site)
+            _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
             _refreshPages.asyncCall()
             newState = DONE
         }
@@ -204,18 +204,17 @@ class PagesViewModel
 
     fun onMenuAction(action: Action, pageItem: Page): Boolean {
         when (action) {
-            VIEW_PAGE -> _previewPage.postValue(pages.first { it.remoteId == pageItem.id })
-            SET_PARENT -> _setPageParent.postValue(pages.first { it.remoteId == pageItem.id })
+            VIEW_PAGE -> _previewPage.postValue(pages[pageItem.id])
+            SET_PARENT -> _setPageParent.postValue(pages[pageItem.id])
             MOVE_TO_DRAFT -> changePageStatus(pageItem, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(pageItem, TRASHED)
             PUBLISH_NOW -> changePageStatus(pageItem, PUBLISHED)
-            DELETE_PERMANENTLY -> _deletePage.postValue(pages.first { it.remoteId == pageItem.id })
         }
         return true
     }
 
     private fun changePageStatus(pageItem: Page, status: PageStatus) {
-        pages.firstOrNull { it.remoteId == pageItem.id }
+        pages[pageItem.id]
                 ?.let { page ->
                     launch {
                         page.status = status
@@ -225,7 +224,7 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
-        _editPage.postValue(pages.first { it.remoteId == pageItem.id })
+        _editPage.postValue(pages[pageItem.id])
     }
 
     private fun clearSearch() {

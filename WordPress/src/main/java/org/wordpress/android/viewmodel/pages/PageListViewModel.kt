@@ -35,10 +35,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class PageListViewModel
-@Inject constructor(
-    val dispatcher: Dispatcher,
-    private val uploadUtil: PageUploadUtil
-) : ViewModel() {
+@Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
@@ -76,7 +73,7 @@ class PageListViewModel
     }
 
     private fun loadPagesAsync() = launch {
-        val newPages = pagesViewModel.pages
+        val newPages = pagesViewModel.pages.values
                 .filter { it.status == pageType }
                 .let {
                     when (pageType) {
@@ -105,7 +102,7 @@ class PageListViewModel
     private fun prepareScheduledPages(pages: List<PageModel>): List<PageItem> {
         return pages.groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) -> listOf(Divider(date)) +
-                        results.map { ScheduledPage(it.pageId.toLong(), it.title) }
+                        results.map { ScheduledPage(it.remoteId, it.title) }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
                     acc.addAll(list)
