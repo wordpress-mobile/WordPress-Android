@@ -504,7 +504,7 @@
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_tags_empty_button">Create a tag</string>
-    <string name="site_settings_tags_empty_subtitle">Tags created here can be quickly added to new posts</string>
+    <string name="site_settings_tags_empty_subtitle">Add your frequently used tags here so they can be quickly selected when tagging your posts</string>
     <string name="site_settings_tags_empty_title">You don\'t have any tags</string>
     <string name="site_settings_tags_empty_title_search">No tags matching your search</string>
     <string name="site_settings_tags_title">Tags</string>
