@@ -125,7 +125,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                     postLoadContinuation = null
                 }
             }
-            PostAction.DELETED_POST -> {
+            PostAction.DELETE_POST -> {
                 deletePostContinuation?.resume(event)
             }
             else -> {}
