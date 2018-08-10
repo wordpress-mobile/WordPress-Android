@@ -29,6 +29,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
+import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -162,6 +163,29 @@ class PagesFragment : Fragment() {
             if (message != null && parent != null) {
                 Snackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
             }
+        })
+
+        viewModel.editPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.editPageForResult(activity, page) }
+        })
+
+        viewModel.previewPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.viewPagePreview(activity, page) }
+        })
+
+        viewModel.setPageParent.observe(this, Observer { page ->
+        })
+
+        viewModel.movePageToDraft.observe(this, Observer { page ->
+        })
+
+        viewModel.movePageToTrash.observe(this, Observer { page ->
+        })
+
+        viewModel.publishPage.observe(this, Observer { page ->
+        })
+
+        viewModel.deletePage.observe(this, Observer { page ->
         })
     }
 

@@ -14,15 +14,28 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
+import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
+import org.wordpress.android.ui.pages.PageItem.ScheduledPage
+import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -58,6 +71,35 @@ class PagesViewModel
     val createNewPage: LiveData<Unit>
         get() = _createNewPage
 
+    private val _editPage = SingleLiveEvent<PageModel>()
+    val editPage: LiveData<PageModel>
+        get() = _editPage
+
+    private val _previewPage = SingleLiveEvent<PageModel>()
+    val previewPage: LiveData<PageModel>
+        get() = _previewPage
+
+    private val _setPageParent = SingleLiveEvent<PageModel>()
+    val setPageParent: LiveData<PageModel>
+        get() = _setPageParent
+
+    private val _movePageToDraft = SingleLiveEvent<PageModel>()
+    val movePageToDraft: LiveData<PageModel>
+        get() = _movePageToDraft
+
+    private val _movePageToTrash = SingleLiveEvent<PageModel>()
+    val movePageToTrash: LiveData<PageModel>
+        get() = _movePageToTrash
+
+    private val _publishPage = SingleLiveEvent<PageModel>()
+    val publishPage: LiveData<PageModel>
+        get() = _publishPage
+
+    private val _deletePage = SingleLiveEvent<PageModel>()
+    val deletePage: LiveData<PageModel>
+        get() = _deletePage
+
+
     private var _pages: List<PageModel> = emptyList()
     val pages: List<PageModel>
         get() = _pages
@@ -68,6 +110,7 @@ class PagesViewModel
 
     private lateinit var site: SiteModel
     private var searchJob: Job? = null
+    private var lastSearchQuery = ""
 
     init {
         dispatcher.register(this)
@@ -148,6 +191,15 @@ class PagesViewModel
                 }
     }
 
+    private fun PageModel.toPageItem(): PageItem {
+        return when (status) {
+            PUBLISHED -> PublishedPage(remoteId, title)
+            DRAFT -> DraftPage(remoteId, title)
+            TRASHED -> TrashedPage(remoteId, title)
+            SCHEDULED -> ScheduledPage(remoteId, title)
+        }
+    }
+
     private fun PageStatus.toResource(): Int {
         return when (this) {
             PageStatus.PUBLISHED -> string.pages_published
@@ -167,12 +219,30 @@ class PagesViewModel
         return true
     }
 
-    fun onMenuAction(action: Action, pageItem: PageItem): Boolean {
-        TODO("not implemented")
+    fun onMenuAction(action: Action, pageItem: Page): Boolean {
+        when (action) {
+            VIEW_PAGE -> _previewPage.postValue(pages.first { it.remoteId == pageItem.id })
+            SET_PARENT -> _setPageParent.postValue(pages.first { it.remoteId == pageItem.id })
+            MOVE_TO_DRAFT -> changePageStatus(pageItem, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(pageItem, TRASHED)
+            PUBLISH_NOW -> changePageStatus(pageItem, PUBLISHED)
+            DELETE_PERMANENTLY -> _deletePage.postValue(pages.first { it.remoteId == pageItem.id })
+        }
+        return true
+    }
+
+    private fun changePageStatus(pageItem: Page, status: PageStatus) {
+        pages.firstOrNull { it.remoteId == pageItem.id }
+                ?.let { page ->
+                    launch {
+                        page.status = status
+                        uploadUtil.uploadPage(page)
+                    }
+                }
     }
 
     fun onItemTapped(pageItem: Page) {
-
+        _editPage.postValue(pages.first { it.remoteId == pageItem.id })
     }
 
     private fun clearSearch() {
@@ -194,6 +264,7 @@ class PagesViewModel
         if (event.post.isPage) {
             launch {
                 refreshPages()
+                onSearch(lastSearchQuery)
             }
         }
     }

@@ -93,7 +93,7 @@ class PageListFragment : Fragment() {
         setupObservers()
 
         val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        viewModel.start(site, getPageType(type), pagesViewModel)
+        viewModel.start(getPageType(type), pagesViewModel)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -110,29 +110,6 @@ class PageListFragment : Fragment() {
     private fun setupObservers() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
-        })
-
-        viewModel.editPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.editPageForResult(activity, page) }
-        })
-
-        viewModel.previewPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPagePreview(activity, page) }
-        })
-
-        viewModel.setPageParent.observe(this, Observer { page ->
-        })
-
-        viewModel.movePageToDraft.observe(this, Observer { page ->
-        })
-
-        viewModel.movePageToTrash.observe(this, Observer { page ->
-        })
-
-        viewModel.publishPage.observe(this, Observer { page ->
-        })
-
-        viewModel.deletePage.observe(this, Observer { page ->
         })
     }
 
