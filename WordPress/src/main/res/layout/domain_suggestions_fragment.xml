@@ -26,12 +26,13 @@
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_search_grey_24dp"/>
+                app:srcCompat="@drawable/ic_search_grey_24dp"
+                app:tint="@color/grey_text_min"/>
 
             <ProgressBar
                 android:id="@+id/suggestionsProgressBar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/progress_spinner_small"
+                android:layout_height="@dimen/progress_spinner_small"
                 android:background="@color/white"/>
         </FrameLayout>
 
@@ -42,44 +43,52 @@
             android:background="@android:color/transparent"
             android:clickable="false"
             android:hint="@string/suggestions_search_hint"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
+            android:textColorHint="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"/>
     </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:background="@color/grey_a_40"/>
+        android:background="@color/grey_lighten_30"/>
 
-    <LinearLayout
-        android:id="@+id/domainSuggestionsListContainer"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="invisible">
+        android:orientation="vertical">
 
-        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-            android:id="@+id/domainSuggestionsList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <org.wordpress.android.ui.ActionableEmptyView
-            android:id="@+id/actionableEmptyView"
+        <LinearLayout
+            android:id="@+id/domainSuggestionsListContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            app:aevTitle="@string/suggestions_empty_list"
-            tools:visibility="visible"/>
-    </LinearLayout>
+            android:orientation="vertical"
+            android:visibility="invisible">
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:background="@color/grey_a_40"/>
+            <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+                android:id="@+id/domainSuggestionsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <org.wordpress.android.ui.ActionableEmptyView
+                android:id="@+id/actionableEmptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:aevTitle="@string/suggestions_empty_list"
+                tools:visibility="visible"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_container_shadow_height"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/login_shadow"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
