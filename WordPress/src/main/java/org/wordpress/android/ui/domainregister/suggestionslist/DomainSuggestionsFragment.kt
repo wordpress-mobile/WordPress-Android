@@ -53,7 +53,7 @@ class DomainSuggestionsFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(view: Editable?) {
-                viewModel.searchQuery = view.toString()
+                viewModel.updateSearchQuery(view.toString())
             }
         })
         val adapter = DomainSuggestionsAdapter(this::onDomainSuggestionSelected)
@@ -62,8 +62,8 @@ class DomainSuggestionsFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.isLoadingInProgress.observe(this, Observer {
-            domainSuggestionsListContainer.visibility = if (it == true) View.GONE else View.VISIBLE
-            suggestionsListProgress.visibility = if (it == true) View.VISIBLE else View.GONE
+            domainSuggestionsListContainer.visibility = if (it == true) View.INVISIBLE else View.VISIBLE
+            suggestionsProgressBar.visibility = if (it == true) View.VISIBLE else View.GONE
         })
         viewModel.suggestionsLiveData.observe(this, Observer {
             if (it != null) {

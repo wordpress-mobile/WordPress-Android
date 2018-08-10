@@ -52,13 +52,9 @@ class DomainSuggestionsViewModel @Inject constructor(
     val selectedPosition: LiveData<Int>
         get() = _selectedPosition
 
-    var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
+    private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
-            if (!TextUtils.isEmpty(newValue)) {
-                submitSearch(newValue, true)
-            } else {
-                initializeDefaultSuggestions()
-            }
+            submitSearch(newValue, true)
         }
     }
 
@@ -132,6 +128,15 @@ class DomainSuggestionsViewModel @Inject constructor(
     fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         _selectedPosition.postValue(selectedPosition)
         _selectedSuggestion.postValue(selectedSuggestion)
+    }
+
+    fun updateSearchQuery(query: String) {
+        if (!TextUtils.isEmpty(query)) {
+            searchQuery = query
+        } else if (searchQuery != site.name) {
+            // Only reinitialize the search query, if the it has changed.
+            initializeDefaultSuggestions()
+        }
     }
 
     companion object {

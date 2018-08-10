@@ -517,7 +517,7 @@
         <activity
             android:name=".ui.domainregister.suggestionslist.DomainSuggestionsActivity"
             android:label="@string/register_domain"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/DomainRegistrationTheme"/>
 
         <!-- Me activities -->
         <activity

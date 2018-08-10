@@ -4,6 +4,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/white"
               android:focusable="true"
               android:orientation="vertical">
 
@@ -14,14 +15,25 @@
         android:layout_marginTop="@dimen/margin_extra_small"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_medium">
+        android:padding="@dimen/margin_extra_large">
 
-        <android.support.v7.widget.AppCompatImageView
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium_large"
-            android:layout_marginRight="@dimen/margin_large"
-            app:srcCompat="@drawable/ic_search_grey_24dp"/>
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_search_grey_24dp"/>
+
+            <ProgressBar
+                android:id="@+id/suggestionsProgressBar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/white"/>
+        </FrameLayout>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/domainSearchEditText"
@@ -30,10 +42,10 @@
             android:background="@android:color/transparent"
             android:clickable="false"
             android:hint="@string/suggestions_search_hint"
-            android:imeOptions="actionDone|flagNoExtractUi"
+            android:imeOptions="actionDone"
             android:inputType="text"
-            android:textSize="@dimen/text_sz_medium"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="@dimen/text_sz_medium"/>
     </LinearLayout>
 
     <View
@@ -42,39 +54,26 @@
         android:background="@color/grey_a_40"/>
 
     <LinearLayout
+        android:id="@+id/domainSuggestionsListContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible">
 
-        <ProgressBar
-            android:id="@+id/suggestionsListProgress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:visibility="gone"/>
+        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+            android:id="@+id/domainSuggestionsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-        <LinearLayout
-            android:id="@+id/domainSuggestionsListContainer"
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/actionableEmptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-                android:id="@+id/domainSuggestionsList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-            <org.wordpress.android.ui.ActionableEmptyView
-                android:id="@+id/actionableEmptyView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                app:aevTitle="@string/suggestions_empty_list"
-                tools:visibility="visible"/>
-        </LinearLayout>
+            android:visibility="gone"
+            app:aevTitle="@string/suggestions_empty_list"
+            tools:visibility="visible"/>
     </LinearLayout>
 
     <View
@@ -93,7 +92,7 @@
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/chooseDomainButton"
-            style="@style/DomainRegistrationButtonStyle"
+            style="@style/WordPress.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
