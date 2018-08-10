@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.store
 
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
