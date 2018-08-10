@@ -190,4 +190,8 @@
     <color name="login_background_color">@color/grey_light</color>
 
     <color name="switch_tint">@color/blue_medium</color>
+
+    <!-- Domain Registration -->
+    <color name="domain_reg_disable_btn_color">#E4E9EC</color>
+
 </resources>

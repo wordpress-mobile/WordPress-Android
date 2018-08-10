@@ -722,4 +722,6 @@
         <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
     </style>
 
+    <!-- Domain Registration styles -->
+    <style name="DomainRegistrationTheme" parent="LoginTheme"/>
 </resources>

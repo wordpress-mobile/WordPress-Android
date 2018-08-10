@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/domainSuggestionContainer"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:background="?android:selectableItemBackground"
+              android:orientation="horizontal"
+              android:padding="@dimen/margin_medium">
+
+    <android.support.v7.widget.AppCompatRadioButton
+        android:id="@+id/domainSelectionRadioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_large"
+        android:clickable="false"
+        app:buttonTint="@color/dialog_compound_button_thumb"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/domainSuggestionsName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_medium"/>
+
+</LinearLayout>

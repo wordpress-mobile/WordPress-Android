@@ -52,6 +52,7 @@ import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.domainregister.suggestionslist.DomainSuggestionsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -577,5 +578,11 @@ public class ActivityLauncher {
             // re-enable deeplinking
             WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
+    }
+
+    public static void viewDomainSuggestionsActivity(Activity activity, SiteModel site) {
+        Intent intent = new Intent(activity, DomainSuggestionsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 }
