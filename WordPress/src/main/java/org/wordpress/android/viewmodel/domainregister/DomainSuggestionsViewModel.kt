@@ -134,7 +134,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         if (!TextUtils.isEmpty(query)) {
             searchQuery = query
         } else if (searchQuery != site.name) {
-            // Only reinitialize the search query, if the it has changed.
+            // Only reinitialize the search query, if it has changed.
             initializeDefaultSuggestions()
         }
     }
