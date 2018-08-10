@@ -13,7 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.models.news.NewsItem
-import org.wordpress.android.models.news.NewsItemType
+import org.wordpress.android.models.news.LocalNewsItem
 
 @RunWith(MockitoJUnitRunner::class)
 class LocalNewsServiceTest {
@@ -33,7 +33,7 @@ class LocalNewsServiceTest {
     fun setUp() {
         localNewsService = LocalNewsService(context)
         whenever(context.getString(any())).thenReturn(dummyString)
-        newsItem = NewsItem(dummyString, dummyString, dummyString, dummyString, NewsItemType.LOCAL.version)
+        newsItem = NewsItem(dummyString, dummyString, dummyString, dummyString, LocalNewsItem.version)
     }
 
     @Test
