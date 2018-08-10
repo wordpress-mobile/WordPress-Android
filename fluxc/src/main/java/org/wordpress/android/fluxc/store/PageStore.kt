@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store
 
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,6 +28,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
     private var postLoadContinuation: Continuation<OnPostChanged>? = null
+    private var deletePostContinuation: Continuation<OnPostChanged>? = null
     private var site: SiteModel? = null
 
     init {
@@ -83,6 +86,14 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         return PageModel(post, site, getPageFromPost(post.parentId, site, posts))
     }
 
+    suspend fun deletePage(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
+        deletePostContinuation = cont
+
+        val post = postStore.getPostByLocalPostId(page.pageId)
+        val payload = RemotePostPayload(post, page.site)
+        dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
+    }
+
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
         this.site = site
         postLoadContinuation = cont
@@ -98,13 +109,19 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
-        if (event.causeOfChange == PostAction.FETCH_PAGES) {
-            if (event.canLoadMore && site != null) {
-                fetchPages(site!!, true)
-            } else {
-                postLoadContinuation?.resume(event)
-                postLoadContinuation = null
+        when (event.causeOfChange) {
+            PostAction.FETCH_PAGES -> {
+                if (event.canLoadMore && site != null) {
+                    fetchPages(site!!, true)
+                } else {
+                    postLoadContinuation?.resume(event)
+                    postLoadContinuation = null
+                }
             }
+            PostAction.DELETED_POST -> {
+                deletePostContinuation?.resume(event)
+            }
+            else -> {}
         }
     }
 }
