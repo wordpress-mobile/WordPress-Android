@@ -123,15 +123,7 @@ class PagesViewModel
                 delay(200)
                 searchJob = null
                 if (isActive) {
-                    val result = pageStore.groupedSearch(site, searchQuery)
-                            .map { (status, results) ->
-                                listOf(Divider(resourceProvider.getString(status.toResource()))) +
-                                        results.map { PublishedPage(it.pageId.toLong(), it.title) }
-                            }
-                            .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
-                                acc.addAll(list)
-                                acc
-                            }
+                    val result = search(searchQuery)
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
@@ -142,6 +134,18 @@ class PagesViewModel
         } else {
             clearSearch()
         }
+    }
+
+    suspend fun search(searchQuery: String): MutableList<PageItem> {
+        lastSearchQuery = searchQuery
+        return pageStore.groupedSearch(site, searchQuery)
+                .map { (status, results) ->
+                    listOf(Divider(resourceProvider.getString(status.toResource()))) + results.map { it.toPageItem() }
+                }
+                .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
+                    acc.addAll(list)
+                    return@fold acc
+                }
     }
 
     private fun PageStatus.toResource(): Int {
