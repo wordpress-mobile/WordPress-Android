@@ -34,7 +34,7 @@ class NewsManagerTest {
         newsManager = NewsManager(newsService, appPrefs)
         whenever(newsService.newsItemSource()).thenReturn(liveData)
 
-        val observable = newsManager.getNewsItem()
+        val observable = newsManager.newsItemSource()
         observable.observeForever(observer)
     }
 

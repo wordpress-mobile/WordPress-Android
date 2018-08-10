@@ -12,26 +12,26 @@ import javax.inject.Singleton
  */
 @Singleton
 class NewsManager @Inject constructor(val newsService: NewsService, val appPrefs: AppPrefsWrapper) {
-    private val dataMediator: MediatorLiveData<NewsItem?> = MediatorLiveData()
-    private var localServiceData: LiveData<NewsItem?>? = null
+    private val dataSourceMediator: MediatorLiveData<NewsItem?> = MediatorLiveData()
+    private var localServiceDataSource: LiveData<NewsItem?>? = null
 
-    fun getNewsItem(): LiveData<NewsItem?> {
-        if (localServiceData == null) {
-            localServiceData = newsService.newsItemSource()
-            dataMediator.addSource(localServiceData as LiveData<NewsItem?>) {
+    fun newsItemSource(): LiveData<NewsItem?> {
+        if (localServiceDataSource == null) {
+            localServiceDataSource = newsService.newsItemSource()
+            dataSourceMediator.addSource(localServiceDataSource as LiveData<NewsItem?>) {
                 if (shouldPropagateToUI(it)) {
-                    dataMediator.value = it
+                    dataSourceMediator.value = it
                 }
             }
         }
-        return dataMediator
+        return dataSourceMediator
     }
 
     fun dismiss() {
-        localServiceData?.value?.let { item ->
+        localServiceDataSource?.value?.let { item ->
             appPrefs.newsCardDismissedVersion = item.version
         }
-        dataMediator.value = null // results in hiding the UI
+        dataSourceMediator.value = null // results in hiding the UI
     }
 
     /**
