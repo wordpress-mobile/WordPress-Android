@@ -5,10 +5,12 @@ import android.arch.lifecycle.MediatorLiveData
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Business logic related to fetching/showing the News Card (a card used for announcing new features/updates).
  */
+@Singleton
 class NewsManager @Inject constructor(val newsService: NewsService, val appPrefs: AppPrefsWrapper) {
     private val dataMediator: MediatorLiveData<NewsItem?> = MediatorLiveData()
     private var localServiceData: LiveData<NewsItem?>? = null
@@ -26,12 +28,8 @@ class NewsManager @Inject constructor(val newsService: NewsService, val appPrefs
     }
 
     fun dismiss() {
-        localServiceData?.let {
-            it.value?.let { item ->
-                appPrefs.newsCardDismissedVersion = item.version
-            }
-            dataMediator.removeSource(it)
-            localServiceData = null
+        localServiceData?.value?.let { item ->
+            appPrefs.newsCardDismissedVersion = item.version
         }
         dataMediator.value = null // results in hiding the UI
     }

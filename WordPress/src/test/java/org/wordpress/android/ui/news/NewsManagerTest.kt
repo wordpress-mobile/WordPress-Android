@@ -77,13 +77,6 @@ class NewsManagerTest {
     }
 
     @Test
-    fun stopEmittingChangesWhenDismissInvoked() {
-        newsManager.dismiss()
-        liveData.postValue(item)
-        verify(observer, times(0)).onChanged(item)
-    }
-
-    @Test
     fun propagateStopToNewsServiceWhenStopInvoked() {
         newsManager.stop()
         verify(newsService, times(1)).stop()
