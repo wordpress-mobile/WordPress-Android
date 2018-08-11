@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.pages
 
 import android.support.annotation.LayoutRes
+import android.support.v4.widget.CompoundButtonCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
+import android.widget.RadioButton
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.id
@@ -82,17 +84,21 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageParentViewHolder(
         parentView: ViewGroup,
-        private val onParentSelected: (ParentPage) -> Unit
+        private val onParentSelected: (ParentPage) -> Unit,
+        private val adapter: PagesAdapter
     ) : PageItemViewHolder(parentView, layout.page_parent_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
-        private val radioButton = itemView.findViewById<TextView>(id.radio_button)
+        private val radioButton = itemView.findViewById<RadioButton>(id.radio_button)
         override fun onBind(pageItem: PageItem) {
             (pageItem as ParentPage).apply {
                 pageTitle.text = pageItem.title
                 radioButton.isSelected = pageItem.isSelected
                 radioButton.setOnClickListener {
                     onParentSelected(pageItem)
+                    adapter.notifyDataSetChanged()
                 }
+                CompoundButtonCompat.setButtonTintList(radioButton,
+                        radioButton.resources.getColorStateList(R.color.dialog_compound_button_thumb))
             }
         }
     }

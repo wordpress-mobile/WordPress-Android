@@ -234,6 +234,7 @@
     <string name="page_delete_error">We were unable to delete the page.</string>
     <string name="page_delete_dialog_title">Delete page permanently</string>
     <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="top_level">Top level</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>

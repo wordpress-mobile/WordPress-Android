@@ -58,7 +58,7 @@ sealed class PageItem(val type: Type) {
     data class ParentPage(
         val id: Long,
         val title: String,
-        val isSelected: Boolean
+        var isSelected: Boolean
     ) : PageItem(PARENT)
 
     data class Divider(val title: String) : PageItem(DIVIDER)

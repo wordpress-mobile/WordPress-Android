@@ -22,7 +22,7 @@ class PagesAdapter(
             PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
-            PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent, onParentSelected)
+            PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent, onParentSelected, this)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
