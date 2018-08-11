@@ -55,7 +55,7 @@ sealed class PageItem(val type: Type) {
         override val actions: Set<Action> = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY)
     ) : Page(id, title, labelRes, indent, actions)
 
-    abstract class ParentPage(
+    data class ParentPage(
         val id: Long,
         val title: String,
         val isSelected: Boolean

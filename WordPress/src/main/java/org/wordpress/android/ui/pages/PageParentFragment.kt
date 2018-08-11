@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -34,24 +35,32 @@ class PageParentFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as WordPress).component()?.inject(this)
         setHasOptionsMenu(true)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.pages_list_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val site = if (savedInstanceState == null) {
             activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
+
+        val nonNullActivity = checkNotNull(activity)
+        val nonNullSite = checkNotNull(site)
+
+        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
+
+        initializeViews(savedInstanceState)
+        initializeViewModels(nonNullSite, savedInstanceState)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initializeView(savedInstanceState)
-        initializeViewModel(savedInstanceState)
-    }
-
-    private fun initializeView(savedInstanceState: Bundle?) {
+    private fun initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -62,17 +71,18 @@ class PageParentFragment : Fragment() {
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.pages_list_fragment, container, false)
-    }
-
-    private fun initializeViewModel(savedInstanceState: Bundle?) {
+    private fun initializeViewModels(site: SiteModel, savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PageParentViewModel::class.java)
 
-        val site = (savedInstanceState?.getSerializable(WordPress.SITE)
-                ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel
+        setupObservers()
 
         viewModel.start(site)
+    }
+
+    private fun setupObservers() {
+        viewModel.pages.observe(this, Observer { pages ->
+            pages?.let { setPages(pages) }
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
