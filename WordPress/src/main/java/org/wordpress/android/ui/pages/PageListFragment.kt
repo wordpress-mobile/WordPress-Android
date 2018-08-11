@@ -8,7 +8,6 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,7 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.models.pages.PageStatus
-import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PagesViewModel
@@ -94,7 +92,7 @@ class PageListFragment : Fragment() {
         setupObservers()
 
         val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        viewModel.start(site, getPageType(type), pagesViewModel)
+        viewModel.start(getPageType(type), pagesViewModel)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -111,30 +109,6 @@ class PageListFragment : Fragment() {
     private fun setupObservers() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
-        })
-
-        viewModel.editPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.editPageForResult(activity, page) }
-        })
-
-        viewModel.previewPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPagePreview(activity, page) }
-        })
-
-        viewModel.setPageParent.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPageParentForResult(activity, page) }
-        })
-
-        viewModel.movePageToDraft.observe(this, Observer { page ->
-        })
-
-        viewModel.movePageToTrash.observe(this, Observer { page ->
-        })
-
-        viewModel.publishPage.observe(this, Observer { page ->
-        })
-
-        viewModel.deletePage.observe(this, Observer { page ->
         })
     }
 

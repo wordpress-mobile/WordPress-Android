@@ -25,10 +25,14 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
+import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -163,6 +167,22 @@ class PagesFragment : Fragment() {
                 Snackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
             }
         })
+
+        viewModel.editPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.editPageForResult(activity, page) }
+        })
+
+        viewModel.previewPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.viewPagePreview(activity, page) }
+        })
+
+        viewModel.setPageParent.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.viewPageParentForResult(activity, page) }
+        })
+
+        viewModel.displayDeleteDialog.observe(this, Observer { page ->
+            page?.let { displayDeleteDialog(page) }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -173,6 +193,10 @@ class PagesFragment : Fragment() {
         }
 
         initializeSearchView()
+    }
+
+    fun onPageDeleteConfirmed(remoteId: Long) {
+        viewModel.onDeleteConfirmed(remoteId)
     }
 
     private fun refreshProgressBars(listState: PageListState?) {
@@ -191,8 +215,8 @@ class PagesFragment : Fragment() {
             myActionMenuItem.collapseActionView()
         }
         launch(UI) {
-            delay(500)
-            newPageButton?.show()
+            delay(300)
+            AniUtils.scaleIn(newPageButton, AniUtils.Duration.MEDIUM)
         }
     }
 
@@ -203,7 +227,7 @@ class PagesFragment : Fragment() {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-        newPageButton?.hide()
+        AniUtils.scaleOut(newPageButton, AniUtils.Duration.MEDIUM)
     }
 
     private fun setSearchResult(pages: List<PageItem>) {
@@ -218,6 +242,16 @@ class PagesFragment : Fragment() {
             adapter = searchRecyclerView.adapter as PagesAdapter
         }
         adapter.update(pages)
+    }
+
+    private fun displayDeleteDialog(page: Page) {
+        val dialog = BasicFragmentDialog()
+        dialog.initialize(page.id.toString(),
+                getString(string.delete_page),
+                getString(string.page_delete_dialog_message, page.title),
+                getString(string.delete),
+                getString(string.cancel))
+        dialog.show(fragmentManager, page.id.toString())
     }
 }
 

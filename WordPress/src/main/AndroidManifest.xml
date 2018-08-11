@@ -232,6 +232,7 @@
         <activity
             android:name=".ui.pages.PagesActivity"
             android:theme="@style/Calypso.NoActionBar"
+            android:launchMode="singleTop"
             android:label="@string/pages" />
         <activity
             android:name=".ui.pages.PageParentActivity"

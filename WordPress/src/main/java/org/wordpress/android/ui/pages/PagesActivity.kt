@@ -7,10 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.id
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostActivity
 
-class PagesActivity : AppCompatActivity() {
+class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,6 +33,20 @@ class PagesActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPositiveClicked(instanceTag: String) {
+        passDeleteConfirmation(instanceTag.toLong())
+    }
+
+    override fun onNegativeClicked(instanceTag: String) {
+    }
+
+    private fun passDeleteConfirmation(remoteId: Long) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is PagesFragment) {
+            fragment.onPageDeleteConfirmed(remoteId)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
