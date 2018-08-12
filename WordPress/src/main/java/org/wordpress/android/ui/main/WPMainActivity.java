@@ -646,9 +646,9 @@ public class WPMainActivity extends AppCompatActivity implements
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
 
-                showQuickStartDialog();
                 setSite(data);
                 jumpNewPost(data);
+                showQuickStartDialog();
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -673,10 +673,9 @@ public class WPMainActivity extends AppCompatActivity implements
                     setSite(data);
                     jumpNewPost(data);
 
-                    // TODO for test purposes show Quick Start dialog when switching sites
-//                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    showQuickStartDialog();
-//                    }
+                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                        showQuickStartDialog();
+                    }
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
