@@ -13,7 +13,7 @@ data class PageModel(
     var date: Date,
     var hasLocalChanges: Boolean,
     val remoteId: Long,
-    val parent: PageModel?
+    var parent: PageModel?
 ) {
     constructor(post: PostModel, site: SiteModel, parent: PageModel?) : this(site, post.id, post.title,
             PageStatus.fromPost(post), Date(DateTimeUtils.timestampFromIso8601Millis(post.dateCreated)),
