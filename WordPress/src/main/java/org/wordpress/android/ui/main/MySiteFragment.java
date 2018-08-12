@@ -473,7 +473,10 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
-                    mQuickStartContainer.setVisibility(View.GONE);
+                    for (QuickStartTask quickStartTask : QuickStartTask.values()) {
+                        mQuickStartStore.setShownTask(AppPrefs.getSelectedSite(), quickStartTask, true);
+                    }
+                    updateQuickStartContainer();
                 }
 
                 ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -490,27 +493,23 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void updateQuickStartContainer() {
-        int numberOfTasksCompleted = 0;
-        int totalNumberOfTasks = QuickStartTask.values().length;
+        if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
+            int totalNumberOfTasks = QuickStartTask.values().length;
+            int numberOfTasksCompleted = mQuickStartStore.getDoneCount(AppPrefs.getSelectedSite());
 
-        for (QuickStartTask task : QuickStartTask.values()) {
-            if (mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), task)) {
-                numberOfTasksCompleted++;
+            mQuickStartCounter.setText(getString(R.string.quick_start_sites_progress,
+                    numberOfTasksCompleted,
+                    totalNumberOfTasks));
+
+            if (numberOfTasksCompleted == totalNumberOfTasks) {
+                mQuickStartDot.setVisibility(View.VISIBLE);
+            } else {
+                mQuickStartDot.setVisibility(View.GONE);
             }
-        }
-
-        mQuickStartCounter.setText(getString(R.string.quick_start_sites_progress,
-                numberOfTasksCompleted,
-                totalNumberOfTasks));
-
-        if (numberOfTasksCompleted == totalNumberOfTasks) {
-            mQuickStartDot.setVisibility(View.VISIBLE);
+            mQuickStartContainer.setVisibility(View.VISIBLE);
         } else {
-            mQuickStartDot.setVisibility(View.GONE);
+            mQuickStartContainer.setVisibility(View.GONE);
         }
-
-        mQuickStartContainer.setVisibility(QuickStartUtils.isQuickStartInProgress(mQuickStartStore)
-                ? View.VISIBLE : View.GONE);
     }
 
     private void showAddSiteIconDialog() {
@@ -654,16 +653,6 @@ public class MySiteFragment extends Fragment implements
                 }
                 break;
         }
-    }
-
-    /**
-     * Check how to prompt the user with Quick Start.  The logic is as follows:
-     * - For first site, show Quick Start on Sites and {@link org.wordpress.android.widgets.WPDialogSnackbar}.
-     * - After first site, show Quick Start on Sites only.
-     */
-    public void checkQuickStart() {
-        // TODO: Skip check if user opted out of Quick Start.
-        // TODO: Show prompt based on site number, checklist progress, and prompt number.
     }
 
     private void startSiteIconUpload(final String filePath) {
@@ -928,10 +917,6 @@ public class MySiteFragment extends Fragment implements
                 // no-op
                 break;
             case TAG_QUICK_START_DIALOG:
-                // TODO we are resetting all quick start tasks for test purposes. Remove this in prod.
-                for (QuickStartTask quickStartTask : QuickStartTask.values()) {
-                    mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), quickStartTask, false);
-                }
                 startQuickStart();
                 break;
             default:
@@ -945,7 +930,6 @@ public class MySiteFragment extends Fragment implements
         AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
         setPromptedQuickStartTask(QuickStartTask.VIEW_SITE);
         showQuickStartDialogTaskPrompt();
-        mQuickStartContainer.setVisibility(View.VISIBLE);
         updateQuickStartContainer();
     }
 

@@ -556,12 +556,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 }
-
-                MySiteFragment fragment = getMySiteFragment();
-                if (fragment != null) {
-                    fragment.checkQuickStart();
-                }
-
                 break;
             case PAGE_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
