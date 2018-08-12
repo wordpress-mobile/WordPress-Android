@@ -363,7 +363,7 @@
                     android:id="@+id/my_site_sharing_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_share_grey_dark_24dp"/>
+                    app:srcCompat="@drawable/ic_share_grey_dark_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_sharing_text_view"
