@@ -16,6 +16,9 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
@@ -149,6 +152,12 @@ class QuickStartUtils {
             return (siteModel.hasCapabilityManageOptions &&
                     ThemeBrowserActivity.isAccessible(siteModel) &&
                     SiteUtils.isAccessedViaWPComRest(siteModel))
+        }
+
+        @JvmStatic
+        fun isQuickStartInProgress(quickStartStore: QuickStartStore): Boolean {
+            return quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), QuickStartTask.CREATE_SITE)
+                    && quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) < QuickStartTask.values().size
         }
     }
 }
