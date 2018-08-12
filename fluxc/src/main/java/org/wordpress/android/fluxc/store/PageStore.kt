@@ -44,6 +44,10 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
+        if (remoteId == 0L) {
+            return@withContext null
+        }
+        
         val post = postStore.getPostByRemotePostId(remoteId, site)
         return@withContext post?.let {
             PageModel(it, site, getPageByRemoteId(it.parentId, site))
