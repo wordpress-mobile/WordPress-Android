@@ -146,6 +146,18 @@ class PagesViewModel
         }
     }
 
+    fun onPageParentSet(pageId: Long, parentId: Long) {
+        launch {
+            pages[pageId]?.let { page ->
+                if (page.parent?.remoteId != parentId) {
+                    page.parent = pages[parentId]
+                    uploadUtil.uploadPage(page)
+                    refreshPages()
+                }
+            }
+        }
+    }
+
     fun onSearch(searchQuery: String) {
         searchJob?.cancel()
         if (searchQuery.isNotEmpty()) {

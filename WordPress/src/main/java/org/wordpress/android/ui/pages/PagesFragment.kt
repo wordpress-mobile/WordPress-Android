@@ -85,6 +85,10 @@ class PagesFragment : Fragment() {
         viewModel.onPageEditFinished(pageId)
     }
 
+    fun onPageParentSet(pageId: Long, parentId: Long) {
+        viewModel.onPageParentSet(pageId, parentId)
+    }
+
     private fun initializeViews(activity: FragmentActivity) {
         pagesPager.adapter = PagesPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(pagesPager)

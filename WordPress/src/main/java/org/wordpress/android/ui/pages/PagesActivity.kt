@@ -53,8 +53,16 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, 0)
-            onPageEditFinished(pageId)
+            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+            if (pageId != -1L) {
+                onPageEditFinished(pageId)
+            }
+        } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
+            val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
+            val pageId = data.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, -1)
+            if (pageId != -1L && parentId != -1L) {
+                onPageParentSet(pageId, parentId)
+            }
         }
     }
 
@@ -62,6 +70,13 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
             fragment.onPageEditFinished(pageId)
+        }
+    }
+
+    private fun onPageParentSet(pageId: Long, parentId: Long) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment is PagesFragment) {
+            fragment.onPageParentSet(pageId, parentId)
         }
     }
 }
