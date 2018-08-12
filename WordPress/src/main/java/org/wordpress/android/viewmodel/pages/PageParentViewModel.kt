@@ -7,7 +7,6 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.ui.pages.PageItem
@@ -25,7 +24,7 @@ class PageParentViewModel
 
     private var isStarted: Boolean = false
     private lateinit var site: SiteModel
-    private lateinit var selectedPage: ParentPage
+    private lateinit var currentParent: ParentPage
 
     fun start(site: SiteModel) {
         this.site = site
@@ -36,14 +35,12 @@ class PageParentViewModel
 
             loadPages()
         }
-
-        _pages.postValue(listOf(Empty(string.empty_list_default)))
     }
 
     private fun loadPages() = launch(CommonPool) {
-        selectedPage = ParentPage(0, resourceProvider.getString(R.string.top_level), true)
+        currentParent = ParentPage(0, resourceProvider.getString(R.string.top_level), true)
         val parents = mutableListOf(
-                selectedPage,
+                currentParent,
                 Divider(resourceProvider.getString(R.string.pages))
         )
 
@@ -52,6 +49,8 @@ class PageParentViewModel
     }
 
     fun onParentSelected(page: ParentPage) {
-//        selectedPage.isSelected = false
+        currentParent.isSelected = false
+        currentParent = page
+        currentParent.isSelected = true
     }
 }

@@ -75,6 +75,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageDividerViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_divider_item) {
         private val dividerTitle = itemView.findViewById<TextView>(id.divider_text)
+
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
                 dividerTitle.text = pageItem.title
@@ -89,10 +90,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     ) : PageItemViewHolder(parentView, layout.page_parent_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val radioButton = itemView.findViewById<RadioButton>(id.radio_button)
+
         override fun onBind(pageItem: PageItem) {
             (pageItem as ParentPage).apply {
                 pageTitle.text = pageItem.title
-                radioButton.isSelected = pageItem.isSelected
+                radioButton.isChecked = pageItem.isSelected
                 radioButton.setOnClickListener {
                     onParentSelected(pageItem)
                     adapter.notifyDataSetChanged()
@@ -105,6 +107,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class EmptyViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_empty_item) {
         private val emptyView = itemView.findViewById<TextView>(id.empty_view)
+
         override fun onBind(pageItem: PageItem) {
             (pageItem as Empty).apply {
                 pageItem.textResource?.let {
