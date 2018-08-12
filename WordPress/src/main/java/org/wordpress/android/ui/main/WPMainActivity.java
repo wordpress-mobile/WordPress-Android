@@ -522,7 +522,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
                 QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             }
-            getMySiteFragment().completeQuickStarTask(getSelectedSite().getId(), QuickStartTask.PUBLISH_POST);
         }
 
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
