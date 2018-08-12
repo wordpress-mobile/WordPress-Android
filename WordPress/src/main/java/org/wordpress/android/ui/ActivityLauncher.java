@@ -77,8 +77,6 @@ import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_PAGE_LOCAL_ID;
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_PAGE_REMOTE_ID;
 import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
