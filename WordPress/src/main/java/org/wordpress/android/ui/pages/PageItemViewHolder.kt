@@ -99,6 +99,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     onParentSelected(pageItem)
                     adapter.notifyDataSetChanged()
                 }
+
+                @Suppress("DEPRECATION")
                 CompoundButtonCompat.setButtonTintList(radioButton,
                         radioButton.resources.getColorStateList(R.color.dialog_compound_button_thumb))
             }
