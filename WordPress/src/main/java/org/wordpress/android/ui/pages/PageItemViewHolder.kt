@@ -10,6 +10,9 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
@@ -95,14 +98,24 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             (pageItem as ParentPage).apply {
                 pageTitle.text = pageItem.title
                 radioButton.isChecked = pageItem.isSelected
+                itemView.setOnClickListener {
+                    selectItem(pageItem)
+                }
                 radioButton.setOnClickListener {
-                    onParentSelected(pageItem)
-                    adapter.notifyDataSetChanged()
+                    selectItem(pageItem)
                 }
 
                 @Suppress("DEPRECATION")
                 CompoundButtonCompat.setButtonTintList(radioButton,
                         radioButton.resources.getColorStateList(R.color.dialog_compound_button_thumb))
+            }
+        }
+
+        private fun selectItem(pageItem: ParentPage) {
+            onParentSelected(pageItem)
+            launch(UI) {
+                delay(200) // let the selection animation play out before refreshing the list
+                adapter.notifyDataSetChanged()
             }
         }
     }
