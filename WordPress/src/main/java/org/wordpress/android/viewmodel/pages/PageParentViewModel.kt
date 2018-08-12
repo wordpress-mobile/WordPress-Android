@@ -8,6 +8,7 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -22,35 +23,47 @@ class PageParentViewModel
     val pages: LiveData<List<PageItem>>
         get() = _pages
 
+    private lateinit var _currentParent: ParentPage
+    val currentParent: ParentPage
+        get() = _currentParent
+
     private var isStarted: Boolean = false
     private lateinit var site: SiteModel
-    private lateinit var currentParent: ParentPage
+    private var page: PageModel? = null
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, pageId: Long) {
         this.site = site
 
         if (!isStarted) {
             _pages.postValue(listOf(Empty(string.empty_list_default)))
             isStarted = true
 
-            loadPages()
+            loadPages(pageId)
         }
     }
 
-    private fun loadPages() = launch(CommonPool) {
-        currentParent = ParentPage(0, resourceProvider.getString(R.string.top_level), true)
+    private fun loadPages(pageId: Long) = launch(CommonPool) {
+        page = pageStore.getPageByRemoteId(pageId, site)
+
         val parents = mutableListOf(
-                currentParent,
+                ParentPage(0, resourceProvider.getString(R.string.top_level), page?.parent == null),
                 Divider(resourceProvider.getString(R.string.pages))
         )
 
-        parents.addAll(pageStore.getPagesFromDb(site).map { ParentPage(it.remoteId, it.title, false) })
+        parents.addAll(
+                pageStore.getPagesFromDb(site)
+                    .filter { it.remoteId != pageId }
+                    .map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId) }
+        )
+
+        _currentParent = parents.first { it is ParentPage && it.isSelected } as ParentPage
+
         _pages.postValue(parents)
     }
 
     fun onParentSelected(page: ParentPage) {
-        currentParent.isSelected = false
-        currentParent = page
-        currentParent.isSelected = true
+        _currentParent.isSelected = false
+        _currentParent = page
+        _currentParent.isSelected = true
     }
 }
