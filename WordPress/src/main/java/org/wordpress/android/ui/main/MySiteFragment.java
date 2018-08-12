@@ -196,12 +196,12 @@ public class MySiteFragment extends Fragment implements
             }
         }
 
-        updateQuickStartCounter();
+        updateQuickStartContainer();
         showQuickStartTaskPromptIfNecessary();
     }
 
     private void showQuickStartTaskPromptIfNecessary() {
-        if (AppPrefs.isQuickStartActive()) {
+        if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
             QuickStartTask promptedTask = getPromptedQuickStartTask();
 
             // if we finished prompted task - reset the dialog counter and pick the next task
@@ -473,7 +473,6 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
-                    AppPrefs.setQuickStartActive(false);
                     mQuickStartContainer.setVisibility(View.GONE);
                 }
 
@@ -490,12 +489,12 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-    private void updateQuickStartCounter() {
+    private void updateQuickStartContainer() {
         int numberOfTasksCompleted = 0;
         int totalNumberOfTasks = QuickStartTask.values().length;
 
         for (QuickStartTask task : QuickStartTask.values()) {
-            if (task == QuickStartTask.CREATE_SITE || mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), task)) {
+            if (mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), task)) {
                 numberOfTasksCompleted++;
             }
         }
@@ -509,6 +508,9 @@ public class MySiteFragment extends Fragment implements
         } else {
             mQuickStartDot.setVisibility(View.GONE);
         }
+
+        mQuickStartContainer.setVisibility(QuickStartUtils.isQuickStartInProgress(mQuickStartStore)
+                ? View.VISIBLE : View.GONE);
     }
 
     private void showAddSiteIconDialog() {
@@ -570,8 +572,8 @@ public class MySiteFragment extends Fragment implements
                 if (resultCode == Activity.RESULT_OK) {
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
-
-                    checkQuickStart();
+                    AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
+                    setPromptedQuickStartTask(null);
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
@@ -773,10 +775,6 @@ public class MySiteFragment extends Fragment implements
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
-        mQuickStartContainer.setVisibility(
-                AppPrefs.isQuickStartActive() && QuickStartUtils.isQuickStartAvailableForTheSite(site)
-                        ? View.VISIBLE : View.GONE);
-
         mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView
                 .ImageType.BLAVATAR);
         String homeUrl = SiteUtils.getHomeURLOrHostName(site);
@@ -943,12 +941,12 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void startQuickStart() {
-        AppPrefs.setQuickStartActive(true);
+        mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), QuickStartTask.CREATE_SITE, true);
         AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
         setPromptedQuickStartTask(QuickStartTask.VIEW_SITE);
         showQuickStartDialogTaskPrompt();
         mQuickStartContainer.setVisibility(View.VISIBLE);
-        updateQuickStartCounter();
+        updateQuickStartContainer();
     }
 
     @Override
