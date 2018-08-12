@@ -76,7 +76,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
+import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_PAGE_LOCAL_ID;
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_PAGE_REMOTE_ID;
 import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -234,7 +236,7 @@ public class ActivityLauncher {
     public static void viewPageParentForResult(Activity activity, PageModel page) {
         Intent intent = new Intent(activity, PageParentActivity.class);
         intent.putExtra(WordPress.SITE, page.getSite());
-        intent.putExtra(EXTRA_PAGE_LOCAL_ID, page.getSite());
+        intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
         activity.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
         AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_PAGE_PARENT, page.getSite());
     }

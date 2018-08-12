@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.pages
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
@@ -27,10 +30,28 @@ class PageParentFragment : Fragment() {
 
     private var linearLayoutManager: LinearLayoutManager? = null
 
+    private var pageId: Long? = null
+
     companion object {
         fun newInstance(): PageParentFragment {
             return PageParentFragment()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            setParentChoice()
+            activity?.onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setParentChoice() {
+        val result = Intent()
+        result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
+        result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
+        activity?.setResult(Activity.RESULT_OK, result)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,13 +72,16 @@ class PageParentFragment : Fragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
+        pageId = activity?.intent?.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, 0)
+
+        val nonNullPageId = checkNotNull(pageId)
         val nonNullActivity = checkNotNull(activity)
         val nonNullSite = checkNotNull(site)
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullSite, savedInstanceState)
+        initializeViewModels(nonNullSite, nonNullPageId)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -71,12 +95,12 @@ class PageParentFragment : Fragment() {
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
     }
 
-    private fun initializeViewModels(site: SiteModel, savedInstanceState: Bundle?) {
+    private fun initializeViewModels(site: SiteModel, pageId: Long) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PageParentViewModel::class.java)
 
         setupObservers()
 
-        viewModel.start(site)
+        viewModel.start(site, pageId)
     }
 
     private fun setupObservers() {
