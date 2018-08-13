@@ -19,10 +19,11 @@ import javax.inject.Singleton
 class JetpackStore
 @Inject constructor(private val jetpackRestClient: JetpackRestClient, dispatcher: Dispatcher) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
-    override fun onAction(action: Action<*>?) {
-        if (action is JetpackAction) {
-            when (action.type) {
-                JetpackAction.INSTALL_JETPACK -> asyncInstall(action.payload as SiteModel, action)
+    override fun onAction(action: Action<*>) {
+        val actionType = action.type as? JetpackAction ?: return
+        when (actionType) {
+            JetpackAction.INSTALL_JETPACK -> {
+                launch { install(action.payload as SiteModel, actionType) }
             }
         }
     }
@@ -41,12 +42,6 @@ class JetpackStore
             val errorPayload = OnJetpackInstalled(installedPayload.error, action)
             emitChange(errorPayload)
             errorPayload
-        }
-    }
-
-    private fun asyncInstall(site: SiteModel, action: JetpackAction) {
-        launch {
-            install(site, action)
         }
     }
 

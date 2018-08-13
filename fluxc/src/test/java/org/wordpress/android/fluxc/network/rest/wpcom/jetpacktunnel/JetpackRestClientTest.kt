@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstalledPayload
 
 @RunWith(MockitoJUnitRunner::class)
-class ActivityLogRestClientTest {
+class JetpackRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
