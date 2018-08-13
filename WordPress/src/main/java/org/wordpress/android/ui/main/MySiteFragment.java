@@ -665,7 +665,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     }
 
     @Override
-    public void setTitle(final String title) {
+    public void setTitle(@NonNull final String title) {
         mToolbarTitle = title;
         if (mToolbar != null) {
             mToolbar.setTitle(title);
