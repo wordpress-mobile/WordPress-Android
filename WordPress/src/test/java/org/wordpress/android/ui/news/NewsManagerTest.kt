@@ -65,14 +65,14 @@ class NewsManagerTest {
         whenever(item.version).thenReturn(123)
 
         liveData.postValue(item)
-        newsManager.dismiss()
+        newsManager.dismiss(item)
 
         verify(appPrefs, times(1)).newsCardDismissedVersion = 123
     }
 
     @Test
     fun emitNullWhenDismissInvoked() {
-        newsManager.dismiss()
+        newsManager.dismiss(item)
         verify(observer).onChanged(null)
     }
 
