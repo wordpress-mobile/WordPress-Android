@@ -473,9 +473,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
-                    for (QuickStartTask quickStartTask : QuickStartTask.values()) {
-                        mQuickStartStore.setShownTask(AppPrefs.getSelectedSite(), quickStartTask, true);
-                    }
+                    QuickStartUtils.markAllTasksAsShown(mQuickStartStore);
                     updateQuickStartContainer();
                 }
 

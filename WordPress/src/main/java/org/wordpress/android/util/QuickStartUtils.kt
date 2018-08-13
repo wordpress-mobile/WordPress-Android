@@ -160,5 +160,12 @@ class QuickStartUtils {
                     && quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) > 0
                     && quickStartStore.getShownCount(AppPrefs.getSelectedSite().toLong()) < QuickStartTask.values().size
         }
+
+        @JvmStatic
+        fun markAllTasksAsShown(quickStartStore: QuickStartStore) {
+            for (quickStartTask in QuickStartTask.values()) {
+                quickStartStore.setShownTask(AppPrefs.getSelectedSite().toLong(), quickStartTask, true)
+            }
+        }
     }
 }
