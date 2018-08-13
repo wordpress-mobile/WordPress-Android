@@ -295,7 +295,7 @@ class PagesViewModel
                     statusPageSnackbarMessage = null
                 } else {
                     _showSnackbarMessage.postValue(
-                            prepareStatusChangeSnackbar(PageModel(event.post, site, null).status))
+                            prepareStatusChangeSnackbar(PageModel(event.post, site).status))
                 }
             }
         }
