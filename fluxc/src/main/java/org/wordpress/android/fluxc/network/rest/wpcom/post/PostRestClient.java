@@ -337,7 +337,7 @@ public class PostRestClient extends BaseWPComRestClient {
             }
         } else {
             params.put("type", "page");
-            params.put("parent_id", post.getParentId());
+            params.put("parent", post.getParentId());
         }
 
         params.put("password", StringUtils.notNullStr(post.getPassword()));
