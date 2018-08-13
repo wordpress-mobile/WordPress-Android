@@ -493,6 +493,7 @@ public class SiteStore extends Store {
 
         public OnSupportedCountriesFetched(@Nullable List<SupportedCountriesResponse> supportedCountries,
                                            @Nullable SupportedCountriesError error) {
+            this.supportedCountries = supportedCountries;
             this.error = error;
         }
     }
