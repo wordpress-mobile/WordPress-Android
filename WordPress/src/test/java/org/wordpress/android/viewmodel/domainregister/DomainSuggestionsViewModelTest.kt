@@ -45,46 +45,59 @@ class DomainSuggestionsViewModelTest {
     }
 
     @Test
-    fun onStartFetchingSuggestions() {
+    fun fetchSuggestionOnViewModelStart() {
         Assert.assertNull(viewModel.selectedSuggestion.value)
         Assert.assertNull(viewModel.selectedPosition.value)
 
         viewModel.start(site)
-        assertFetchSuggestions(site.name)
+        assertFetchSuggestionsInvoked(site.name)
     }
 
     @Test
-    fun onSuggestionsSearchQueryChanged() {
+    fun fetchSuggestionOnSearchQueryChange() {
         val query = "sample site name"
         viewModel.updateSearchQuery(query)
-        assertFetchSuggestions(query)
+        assertFetchSuggestionsInvoked(query)
     }
 
     @Test
-    fun onSuggestionSelectionUpdated() {
+    fun selectPositionOnSuggestionSelection() {
+        val suggestions = getMockDomainSuggestions()
+
+        viewModel.onDomainSuggestionsFetched(OnSuggestedDomains("", suggestions))
+        // Select the second suggestion
+        viewModel.onDomainSuggestionsSelected(suggestions[1], 1)
+        validateSelection(suggestions[1], 1)
+
+        // Select the first suggestion
+        viewModel.onDomainSuggestionsSelected(suggestions[0], 0)
+        validateSelection(suggestions[0], 0)
+
+        // Deselect the first suggestion
+        viewModel.onDomainSuggestionsSelected(null, -1)
+        validateSelection(null, -1)
+    }
+
+    private fun validateSelection(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
+        Assert.assertEquals(viewModel.selectedSuggestion.value, selectedSuggestion)
+        Assert.assertEquals(viewModel.selectedPosition.value, selectedPosition)
+    }
+
+    @Test
+    fun enableChooseDomainOnSuggestionSelection() {
         val suggestions = getMockDomainSuggestions()
 
         viewModel.onDomainSuggestionsFetched(OnSuggestedDomains("", suggestions))
 
         val enableChooseDomainObserver = mock<Observer<Boolean>>()
         viewModel.shouldEnableChooseDomain.observeForever(enableChooseDomainObserver)
-
-        validateSuggestion(suggestions, 1)
-        validateSuggestion(suggestions, 0)
-        // Check Deselection
-        validateSuggestion(suggestions, -1)
+        viewModel.onDomainSuggestionsSelected(suggestions[1], 1)
+        viewModel.onDomainSuggestionsSelected(null, -1)
+        viewModel.onDomainSuggestionsSelected(suggestions[0], 0)
         verify(enableChooseDomainObserver, atLeast(3)).onChanged(any())
     }
 
-    private fun validateSuggestion(suggestions: List<DomainSuggestionResponse>, selectedPosition: Int) {
-        val selectedSuggestion = suggestions.getOrNull(selectedPosition)
-        viewModel.onDomainSuggestionsSelected(selectedSuggestion, selectedPosition)
-
-        Assert.assertEquals(viewModel.selectedSuggestion.value, selectedSuggestion)
-        Assert.assertEquals(viewModel.selectedPosition.value, selectedPosition)
-    }
-
-    private fun assertFetchSuggestions(query: String) {
+    private fun assertFetchSuggestionsInvoked(query: String) {
         verify(dispatcher).dispatch(actionCaptor.capture())
 
         val isLoadingObserver = mock<Observer<Boolean>>()
@@ -93,7 +106,7 @@ class DomainSuggestionsViewModelTest {
         val action = actionCaptor.firstValue
         Assert.assertEquals(action.type, SiteAction.SUGGEST_DOMAINS)
         Assert.assertTrue(action.payload is SuggestDomainsPayload)
-        (action.payload as? SuggestDomainsPayload)?.apply {
+        (action.payload as SuggestDomainsPayload).apply {
             Assert.assertEquals(this.includeWordpressCom, false)
             Assert.assertEquals(this.onlyWordpressCom, false)
             Assert.assertEquals(this.includeDotBlogSubdomain, true)
