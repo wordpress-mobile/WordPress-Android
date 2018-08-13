@@ -96,7 +96,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as ParentPage).apply {
-                pageTitle.text = pageItem.title
+                pageTitle.text = if (pageItem.title.isEmpty())
+                    parent.context.getString(R.string.untitled_in_parentheses)
+                else
+                    pageItem.title
                 radioButton.isChecked = pageItem.isSelected
                 itemView.setOnClickListener {
                     selectItem(pageItem)
