@@ -156,9 +156,9 @@ class QuickStartUtils {
 
         @JvmStatic
         fun isQuickStartInProgress(quickStartStore: QuickStartStore): Boolean {
-            return quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), QuickStartTask.CREATE_SITE)
-                    && quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) > 0
-                    && quickStartStore.getShownCount(AppPrefs.getSelectedSite().toLong()) < QuickStartTask.values().size
+            return quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), QuickStartTask.CREATE_SITE) &&
+                    quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) > 0 &&
+                    quickStartStore.getShownCount(AppPrefs.getSelectedSite().toLong()) < QuickStartTask.values().size
         }
 
         @JvmStatic
