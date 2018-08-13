@@ -9,6 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -50,10 +51,10 @@ class PageParentViewModel
                 Divider(resourceProvider.getString(R.string.pages))
         )
 
-        parents.addAll(
-                pageStore.getPagesFromDb(site)
-                    .filter { it.remoteId != pageId }
-                    .map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId) }
+        val parentChoices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
+        parents.addAll(parentChoices
+                .filter { !getChildren(page!!, parentChoices).contains(it) }
+                .map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId) }
         )
 
         _currentParent = parents.first { it is ParentPage && it.isSelected } as ParentPage
@@ -65,5 +66,14 @@ class PageParentViewModel
         _currentParent.isSelected = false
         _currentParent = page
         _currentParent.isSelected = true
+    }
+
+    private fun getChildren(page: PageModel, pages: List<PageModel>): List<PageModel> {
+        val children = pages.filter { it.parent?.remoteId == page.remoteId }
+        val grandchildren = mutableListOf<PageModel>()
+        children.forEach {
+            grandchildren += getChildren(it, pages)
+        }
+        return children + grandchildren
     }
 }
