@@ -25,6 +25,7 @@ import javax.inject.Inject
 class DomainSuggestionsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainSuggestionsViewModel
+    private val debouncer = Debouncer()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.domain_suggestions_fragment, container, false)
@@ -51,7 +52,6 @@ class DomainSuggestionsFragment : Fragment() {
             ToastUtils.showToast(activity, "Still under development.")
         }
         domainSearchEditText.addTextChangedListener(object : TextWatcher {
-            private val debouncer = Debouncer()
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -89,6 +89,11 @@ class DomainSuggestionsFragment : Fragment() {
 
     private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        debouncer.shutdown()
     }
 
     companion object {
