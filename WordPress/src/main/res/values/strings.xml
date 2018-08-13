@@ -232,9 +232,13 @@
     <string name="pages">Pages</string>
     <string name="set_parent">Set Parent</string>
     <string name="page_delete_error">We were unable to delete the page.</string>
-    <string name="page_delete_dialog_title">Delete page permanently</string>
     <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
     <string name="top_level">Top level</string>
+    <string name="page_moved_to_draft">Page has been moved to Drafts</string>
+    <string name="page_moved_to_trash">Page has been trashed</string>
+    <string name="page_moved_to_published">Page has been published</string>
+    <string name="page_moved_to_scheduled">Page has been scheduled</string>
+    <string name="page_permanently_deleted">Page has been permanently deleted</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
