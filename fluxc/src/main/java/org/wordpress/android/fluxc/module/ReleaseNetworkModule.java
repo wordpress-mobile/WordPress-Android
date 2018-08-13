@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
@@ -165,6 +166,16 @@ public class ReleaseNetworkModule {
                                                               AccessToken token, UserAgent userAgent,
                                                               WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new ActivityLogRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public JetpackRestClient provideJetpackRestClient(Context appContext, Dispatcher dispatcher,
+                                                      @Named("regular") RequestQueue requestQueue,
+                                                      AccessToken token, UserAgent userAgent,
+                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new JetpackRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent);
     }
 
