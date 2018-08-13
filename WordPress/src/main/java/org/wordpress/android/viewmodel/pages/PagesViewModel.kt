@@ -121,7 +121,7 @@ class PagesViewModel
         refreshPages(loadState)
     }
 
-    suspend fun refreshPages(state: PageListState = REFRESHING) {
+    private suspend fun refreshPages(state: PageListState = REFRESHING) {
         var newState = state
         _listState.postValue(newState)
 
