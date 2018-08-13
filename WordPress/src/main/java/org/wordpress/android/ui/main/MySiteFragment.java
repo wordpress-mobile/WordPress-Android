@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -105,9 +106,8 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
     private WPTextView mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
-    private LinearLayout mNoSiteView;
+    private ActionableEmptyView mActionableEmptyView;
     private ScrollView mScrollView;
-    private ImageView mNoSiteDrakeImageView;
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
@@ -198,8 +198,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
         mSharingView = rootView.findViewById(R.id.row_sharing);
         mAdminView = rootView.findViewById(R.id.row_admin);
         mScrollView = rootView.findViewById(R.id.scroll_view);
-        mNoSiteView = rootView.findViewById(R.id.no_site_view);
-        mNoSiteDrakeImageView = rootView.findViewById(R.id.my_site_no_site_view_drake);
+        mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
 
@@ -349,11 +348,11 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             }
         });
 
-        rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
+        mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
-                                           mAccountStore.getAccount().getUserName());
+                        mAccountStore.getAccount().getUserName());
             }
         });
 
@@ -556,22 +555,22 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
         if (site == null) {
             mScrollView.setVisibility(View.GONE);
-            mNoSiteView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.setVisibility(View.VISIBLE);
 
             // if the screen height is too short, we can just hide the drake illustration
             Activity activity = getActivity();
             boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
             if (drakeVisibility) {
-                mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+                mActionableEmptyView.image.setVisibility(View.VISIBLE);
             } else {
-                mNoSiteDrakeImageView.setVisibility(View.GONE);
+                mActionableEmptyView.image.setVisibility(View.GONE);
             }
 
             return;
         }
 
         mScrollView.setVisibility(View.VISIBLE);
-        mNoSiteView.setVisibility(View.GONE);
+        mActionableEmptyView.setVisibility(View.GONE);
 
         toggleAdminVisibility(site);
 
