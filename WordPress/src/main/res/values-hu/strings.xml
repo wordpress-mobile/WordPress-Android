@@ -31,7 +31,6 @@ Language: hu
     <string name="stats_followers_total_wpcom">WordPress.com követők összesen: %1$s</string>
     <string name="stats_followers_total_email">Email követők összesen: %1$s</string>
     <string name="cab_selected">%d kiválasztva</string>
-    <string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
     <string name="browse_our_faq_button">GYIK tallózása</string>
     <string name="create_new_blog_wpcom">WordPress.com honlap létrehozása</string>
     <string name="reader_empty_comments">Vélemény?</string>
@@ -49,11 +48,9 @@ Language: hu
     <string name="update_verb">Frissítést</string>
     <string name="schedule_verb">Időzítés</string>
     <string name="reader_page_followed_tags">Követett címkék</string>
-    <string name="media_empty_list">Nincs média</string>
     <string name="help">Segítség</string>
     <string name="forgot_password">Elfelejtett jelszó?</string>
     <string name="ssl_certificate_error">Érvénytelen SSL hitelesítés</string>
-    <string name="comments_empty_list">Nincsenek hozzászólások</string>
     <string name="mnu_comment_unspam">Nem spam</string>
     <string name="no_network_message">Nincs elérehtő hálózat</string>
     <string name="stats_empty_comments">Nincsenek még hozzászólások</string>

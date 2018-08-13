@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-24 08:54:07+0000
+Translation-Revision-Date: 2018-08-07 06:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">עדיין אין צופים</string>
+    <string name="people_empty_list_filtered_email_followers">עדיין אין עוקבי אימייל</string>
+    <string name="people_empty_list_filtered_followers">עדיין אין עוקבים</string>
+    <string name="people_empty_list_filtered_users">עדיין אין משתמשים</string>
+    <string name="connection_service_facebook_notice">החל מ–1 באוגוסט 2018, פלטפורמת פייסבוק לא תאפשר עוד שיתוף ישיר של פוסטים לפרופילים בפייסבוק. החשבונות המקושרים לעמודים בפייסבוק לא ישתנו.</string>
+    <string name="reader_empty_posts_liked_description">כאן יופיעו פוסטים שסימנת ב\'לייק\'</string>
+    <string name="reader_empty_posts_liked_title">עדיין אין לייקים</string>
+    <string name="reader_empty_followed_blogs_button_followed">מעבר לבא</string>
+    <string name="reader_empty_followed_blogs_button_discover">עיון באתרים</string>
+    <string name="reader_empty_followed_blogs_description">עדיין לא מתבצע מעקב אחר אתרים. למה לא לעקוב אחר אתר כבר עכשיו?</string>
+    <string name="reader_empty_followed_blogs_title">לא מתבצע מעקב אחר אתרים</string>
+    <string name="notifications_empty_likes">עדיין אין לייקים</string>
+    <string name="notifications_empty_followers">עדיין אין עוקבים</string>
+    <string name="activity_log_limited_content_on_free_plan">מאחר שנרשמת לתוכנית החינמית, מספר האירועים שיוצגו בפעילות שלך מוגבל.</string>
+    <string name="activity_log_empty_subtitle">בעת ביצוע שינויים באתר שלך, אפשר לראות את היסטוריית הפעילות כאן</string>
+    <string name="activity_log_empty_title">עדיין אין פעילות</string>
+    <string name="posts_empty_list_button">יצירת פוסט</string>
+    <string name="pages_empty_list_button">יצירת עמוד</string>
+    <string name="media_empty_upload_media">העלאת מדיה</string>
+    <string name="media_empty_list">אין לך פריטי מדיה</string>
     <string name="reader_gallery_images_desc">גלריית תמונות</string>
     <string name="blavatar_desc">סמל אתר</string>
     <string name="theme_image_desc">תמונה של ערכת העיצוב</string>
     <string name="featured_image_desc">תמונה מרכזית</string>
-    <string name="support_push_notification_message_hint_snackbar">ניתן לאתר את השיחה שלך עם התמיכה על ידי הקשה על \'עזרה ותמיכה\' ולאחר מכן, הקשה על \'הפנייה שלי\'</string>
     <string name="local_changes_discarding_error">אירעה שגיאה במחיקת השינויים המקומיים שביצעת. יש לפנות לתמיכה לסיוע.</string>
     <string name="local_changes_discarding">מבטל את השינויים המקומיים</string>
     <string name="local_changes_discarded">השינויים המקומיים בוטלו</string>
@@ -29,14 +48,10 @@ Language: he_IL
     <string name="support_contact_email">אימייל ליצירת קשר</string>
     <string name="application_log_button">יומן יישום</string>
     <string name="my_tickets">הפנייה שלי</string>
-    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד %s בשעה %s? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
     <string name="activity_log_rewind_site">שחזור גרסה קודמת של האתר</string>
     <string name="activity_log_currently_restoring_message_no_dates">השחזור בתהליך</string>
-    <string name="activity_log_currently_restoring_message">משחזר לתאריך %s %s</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
-    <string name="activity_log_rewind_finished_snackbar_message">האתר שלך שוחזר בהצלחה\nשוחזר לתאריך %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %s %s</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
     <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד – פוסטים שנשמרו לא מסתנכרנים בין מכשירים. (עדיין! אנחנו עובדים על זה).</string>
@@ -63,7 +78,6 @@ Language: he_IL
     <string name="reader_remove_bookmark">הסרה מהפוסטים שנשמרו</string>
     <string name="reader_add_bookmark">הוספה לפוסטים שנשמרו</string>
     <string name="reader_save_for_later_title">פוסטים שנשמרו</string>
-    <string name="activity_log_empty_list">עדיין לא נרשמו אירועים</string>
     <string name="removed">נמחק</string>
     <string name="reader_empty_saved_posts_title">עדיין לא נשמרו פוסטים! </string>
     <string name="tabbar_accessibility_label_write">פוסט חדש. כתיבת פוסט חדש.</string>
@@ -883,12 +897,8 @@ Language: he_IL
     <string name="error_fetch_users_list">משיכת נתונים על משתמשי האתר נכשלה</string>
     <string name="plans_manage">ניהול התוכנית שלך בכתובת\nWordPress.com/plans</string>
     <string name="title_follower">עוקב</string>
-    <string name="people_empty_list_filtered_viewers">אין לך צופים עדיין.</string>
     <string name="title_email_follower">עוקב אימייל</string>
     <string name="people_fetching">מאחזר משתמשים…</string>
-    <string name="people_empty_list_filtered_email_followers">אין לך עוקבים באימייל עדיין.</string>
-    <string name="people_empty_list_filtered_followers">אין לך עוקבים עדיין.</string>
-    <string name="people_empty_list_filtered_users">אין לך משתמשים עדיין.</string>
     <string name="people_dropdown_item_email_followers">עוקבי אימייל</string>
     <string name="people_dropdown_item_viewers">צופים</string>
     <string name="people_dropdown_item_followers">עוקבים</string>
@@ -1000,10 +1010,7 @@ Language: he_IL
     <string name="start_over">להתחיל מחדש</string>
     <string name="editor_remove_failed_uploads">הסרת העלאות שנכשלו</string>
     <string name="editor_toast_failed_uploads">מספר העלאות מדיה נכשלו. לא ניתן לשמור או לפרסם\n הפוסט שלך במצב זה. האם ברצונך להסיר את כל המדיה שלא הועלתה?</string>
-    <string name="comments_empty_list_filtered_trashed">אין תגובות שהועברו לפח</string>
     <string name="site_settings_advanced_header">אפשרויות מתקדמות</string>
-    <string name="comments_empty_list_filtered_pending">אין תגובות שממתינות לאישור</string>
-    <string name="comments_empty_list_filtered_approved">אין תגובות מאושרות</string>
     <string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML–RPC נדרשות חסרות בשרת.</string>
     <string name="post_format_video">וידאו</string>
     <string name="alignment_center">מרכז</string>
@@ -1062,7 +1069,6 @@ Language: he_IL
     <string name="mnu_comment_delete_permanently">מחיקה</string>
     <string name="comment_deleted_permanently">התגובה נמחקה</string>
     <string name="mnu_comment_untrash">שחזור</string>
-    <string name="comments_empty_list_filtered_spam">אין תגובות זבל</string>
     <string name="could_not_load_page">לא ניתן היה לטעון את העמוד</string>
     <string name="comment_status_all">הכול</string>
     <string name="interface_language">שפת ממשק</string>
@@ -1215,15 +1221,7 @@ Language: he_IL
     <string name="reader_label_gap_marker">פוסטים נוספים</string>
     <string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
     <string name="search_sites">חיפוש אתרים</string>
-    <string name="notifications_empty_view_reader">לקרוא פוסטים</string>
-    <string name="notifications_empty_action_followers_likes">קבל תשומת לב: תגובה לפוסטים שכבר קראת.</string>
-    <string name="notifications_empty_action_comments">הצטרף לדיון: תגובות לפוסטים באתרים אחריהם אתה עוקב.</string>
-    <string name="notifications_empty_action_unread">הצת מחדש את הדיון: כתוב פוסט חדש.</string>
     <string name="notifications_empty_action_all">תהיה פעיל! תגיב לפוסטים באתרים אחריהם אתה עוקב.</string>
-    <string name="notifications_empty_likes">אין לייקים חדשים… עדיין.</string>
-    <string name="notifications_empty_followers">אין עוקבים חדשים… עדיין.</string>
-    <string name="notifications_empty_comments">אין תגובות חדשות… עדיין.</string>
-    <string name="notifications_empty_unread">כולכם נתפסתם!</string>
     <string name="stats_widget_error_jetpack_no_blogid">נא לגשת לסטטיסטיקות באפליקציה ולהוסיף וידג\'ט</string>
     <string name="stats_widget_error_readd_widget">יש להסיר את הוידג\'ט ולהוסיף אותו שוב</string>
     <string name="stats_widget_error_no_visible_blog">לא ניתן לגשת לסטטיסטיקות ללא אתר גלוי</string>
@@ -1428,7 +1426,6 @@ Language: he_IL
     <string name="posts_empty_list">אין פוסטים עדיין. למה לא ליצור אחד?</string>
     <string name="comment_reply_to_user">להגיב ל–%s</string>
     <string name="pages_empty_list">אין עמודים עדיין. למה לא ליצור אחד?</string>
-    <string name="reader_empty_posts_liked">לא עשית לייק על אף פוסט</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
     <string name="reader_label_like">לייק</string>
     <string name="reader_label_liked_by">קיבל לייקים מאת</string>
@@ -1439,7 +1436,6 @@ Language: he_IL
     <string name="mnu_comment_liked">פרסם לייק</string>
     <string name="signing_out">יוצא מהמערכת…</string>
     <string name="create_new_blog_wpcom">יצירת אתר וורדפרס.קום</string>
-    <string name="reader_empty_followed_blogs_title">אינך עוקב אחרי שום אתר עדיין</string>
     <string name="reader_menu_block_blog">לחסום את האתר הזה</string>
     <string name="reader_toast_blog_blocked">הפוסטים מהאתר הזה לא יוצגו עוד</string>
     <string name="reader_toast_err_block_blog">לא ניתן לחסום אתר זה</string>
@@ -1459,7 +1455,6 @@ Language: he_IL
     <string name="reader_title_blog_preview">אתר</string>
     <string name="reader_page_followed_tags">תגיות במעקב</string>
     <string name="reader_page_followed_blogs">אתרים במעקב</string>
-    <string name="media_empty_list">אין מדיה</string>
     <string name="help">עזרה</string>
     <string name="forgot_password">איבדת את הסיסמה שלך?</string>
     <string name="ssl_certificate_error">אישור SSL לא תקף</string>
@@ -1468,7 +1463,6 @@ Language: he_IL
     <string name="no_network_message">אין רשת זמינה</string>
     <string name="gallery_error">לא ניתן היה לאחזר את פריט המדיה</string>
     <string name="theme_fetch_failed">הבאת ערכות העיצוב נכשלה</string>
-    <string name="comments_empty_list">אין תגובות</string>
     <string name="mnu_comment_unspam">לא תגובת זבל</string>
     <string name="adding_cat_failed">הוספת קטגוריה נכשלה</string>
     <string name="adding_cat_success">הקטגוריה הוספה בהצלחה</string>
@@ -1571,7 +1565,6 @@ Language: he_IL
     <string name="pick_photo">בחר תמונה</string>
     <string name="pick_video">בחר וידאו</string>
     <string name="reader_toast_err_get_post">לא ניתן לאחזר רשומה זו</string>
-    <string name="reader_empty_followed_blogs_description">אך אין צורך לדאוג, יש להקיש מימין כדי להתחיל לשוטט!</string>
     <string name="empty_list_default">רשימה זו ריקה</string>
     <string name="reader_untitled_post">(ללא כותרת)</string>
     <string name="reader_btn_share">שתף</string>
@@ -1589,6 +1582,7 @@ Language: he_IL
     <string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
     <string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
     <string name="reader_empty_followed_tags">אין מעקב אחר שום תגית</string>
+    <string name="comments_empty_list">עדיין אין תגובות</string>
     <string name="themes">ערכות עיצוב</string>
     <string name="stats_view_tags_and_categories">תגים וקטגוריות</string>
     <string name="media_gallery_type_squares">ריבועים</string>
