@@ -55,7 +55,7 @@ class QuickStartFragment : Fragment() {
         viewModel.quickStartTaskStateStates.observe(this, Observer { quickStartModel ->
             var allTasksCompleted = true
             quickStartModel?.forEach {
-                if (it.isTaskCompleted) {
+                if (it.isTaskCompleted || it.isTaskShown) {
                     crossOutTask(it.task)
                 } else {
                     allTasksCompleted = false
