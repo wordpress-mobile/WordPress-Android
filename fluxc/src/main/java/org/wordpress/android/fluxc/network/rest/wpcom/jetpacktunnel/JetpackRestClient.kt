@@ -35,7 +35,7 @@ constructor(
         val url = WPCOMREST.jetpack_install.site(URLEncoder.encode(site.url, "UTF-8")).urlV1
         val params = mapOf("user" to site.username, "password" to site.password)
         val request = wpComGsonRequestBuilder.buildPostRequest(
-                url, params, Response::class.java,
+                url, params, JetpackInstallResponse::class.java,
                 { response ->
                     cont.resume(JetpackInstalledPayload(site, response.status))
                 },
@@ -53,5 +53,5 @@ constructor(
         add(request)
     }
 
-    private data class Response(val status: Boolean)
+    data class JetpackInstallResponse(val status: Boolean)
 }
