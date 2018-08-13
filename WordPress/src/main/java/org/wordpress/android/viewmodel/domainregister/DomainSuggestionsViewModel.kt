@@ -28,7 +28,6 @@ class DomainSuggestionsViewModel @Inject constructor(
 ) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
-    private val handler = Handler()
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<List<DomainSuggestionResponse>>
@@ -54,7 +53,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
-            submitSearch(newValue, true)
+            fetchSuggestions()
         }
     }
 
@@ -80,19 +79,6 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun initializeDefaultSuggestions() {
         searchQuery = site.name
-    }
-
-    private fun submitSearch(query: String, delayed: Boolean) {
-        if (delayed) {
-            handler.postDelayed({
-                if (query == searchQuery) {
-                    submitSearch(query, false)
-                }
-            }, 250)
-        } else {
-            suggestions = ListState.Ready(ArrayList())
-            fetchSuggestions()
-        }
     }
 
     // Network Request

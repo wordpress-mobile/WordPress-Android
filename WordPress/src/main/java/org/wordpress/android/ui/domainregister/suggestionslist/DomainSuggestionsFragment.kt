@@ -17,7 +17,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
@@ -49,11 +51,15 @@ class DomainSuggestionsFragment : Fragment() {
             ToastUtils.showToast(activity, "Still under development.")
         }
         domainSearchEditText.addTextChangedListener(object : TextWatcher {
+            private val debouncer = Debouncer()
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(view: Editable?) {
-                viewModel.updateSearchQuery(view.toString())
+                debouncer.debounce(Void::class.java, {
+                    viewModel.updateSearchQuery(view.toString())
+                }, GET_SUGGESTIONS_INTERVAL_MS, TimeUnit.MILLISECONDS)
             }
         })
         val adapter = DomainSuggestionsAdapter(this::onDomainSuggestionSelected)
@@ -83,5 +89,9 @@ class DomainSuggestionsFragment : Fragment() {
 
     private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
+    }
+
+    companion object {
+        private const val GET_SUGGESTIONS_INTERVAL_MS = 250L
     }
 }
