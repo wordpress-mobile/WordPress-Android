@@ -161,10 +161,16 @@ class PagesFragment : Fragment() {
             ActivityLauncher.addNewPageForResult(activity, site)
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { message ->
-            val parent: View? = activity?.findViewById(android.R.id.content)
-            if (message != null && parent != null) {
-                Snackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
+        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
+            val parent = activity?.findViewById<View>(R.id.coordinatorLayout)
+            if (holder != null && parent != null) {
+                if (holder.buttonTitle.isNullOrEmpty()) {
+                    Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG).show()
+                } else {
+                    val snackbar = Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG)
+                    snackbar.setAction(holder.buttonTitle) { _ -> holder.buttonAction() }
+                    snackbar.show()
+                }
             }
         })
 

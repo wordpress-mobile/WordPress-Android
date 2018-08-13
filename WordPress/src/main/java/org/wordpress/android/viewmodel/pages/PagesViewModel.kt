@@ -36,6 +36,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -91,13 +92,14 @@ class PagesViewModel
     val pages: Map<Long, PageModel>
         get() = _pages
 
-    private val _showSnackbarMessage = SingleLiveEvent<String>()
-    val showSnackbarMessage: LiveData<String>
+    private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
+    val showSnackbarMessage: LiveData<SnackbarMessageHolder>
         get() = _showSnackbarMessage
 
     private lateinit var site: SiteModel
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
+    private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
 
     init {
         dispatcher.register(this)
@@ -210,9 +212,9 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> _previewPage.postValue(pages[page.id])
             SET_PARENT -> _setPageParent.postValue(pages[page.id])
-            MOVE_TO_DRAFT -> changePageStatus(page, DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page, TRASHED)
-            PUBLISH_NOW -> changePageStatus(page, PUBLISHED)
+            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
+            PUBLISH_NOW -> changePageStatus(page.id, PUBLISHED)
             DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
         return true
@@ -224,28 +226,18 @@ class PagesViewModel
             if (page != null) {
                 pageStore.deletePage(page)
                 refreshPages()
+
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(resourceProvider.getString(string.page_permanently_deleted)))
             } else {
-                _showSnackbarMessage.postValue(resourceProvider.getString(string.page_delete_error))
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(resourceProvider.getString(string.page_delete_error)))
             }
         }
     }
 
-    private fun changePageStatus(pageItem: Page, status: PageStatus) {
-        pages[pageItem.id]
-                ?.let { page ->
-                    launch {
-                        page.status = status
-                        uploadUtil.uploadPage(page)
-                    }
-                }
-    }
-
     fun onItemTapped(pageItem: Page) {
         _editPage.postValue(pages[pageItem.id])
-    }
-
-    private fun clearSearch() {
-        _searchResult.postValue(listOf(Empty(string.empty_list_default)))
     }
 
     fun onNewPageButtonTapped() {
@@ -258,12 +250,42 @@ class PagesViewModel
         }
     }
 
+    private fun changePageStatus(remoteId: Long, status: PageStatus) {
+        pages[remoteId]
+                ?.let { page ->
+                    launch {
+                        statusPageSnackbarMessage = prepareStatusChangeSnackbar(page, status)
+                        page.status = status
+                        uploadUtil.uploadPage(page)
+                    }
+                }
+    }
+
+    private fun prepareStatusChangeSnackbar(page: PageModel, newStatus: PageStatus): SnackbarMessageHolder {
+        val message = when (newStatus) {
+            DRAFT -> resourceProvider.getString(string.page_moved_to_draft)
+            PUBLISHED -> resourceProvider.getString(string.page_moved_to_published)
+            TRASHED -> resourceProvider.getString(string.page_moved_to_trash)
+            SCHEDULED -> resourceProvider.getString(string.page_moved_to_scheduled)
+        }
+        val previousStatus = page.status
+        return SnackbarMessageHolder(message, resourceProvider.getString(string.undo)) {
+            changePageStatus(page.remoteId, previousStatus)
+        }
+    }
+
+    private fun clearSearch() {
+        _searchResult.postValue(listOf(Empty(string.empty_list_default)))
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post.isPage) {
             launch {
                 refreshPages()
                 onSearch(lastSearchQuery)
+
+                statusPageSnackbarMessage?.let { _showSnackbarMessage.postValue(it) }
             }
         }
     }
