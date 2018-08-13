@@ -254,23 +254,28 @@ class PagesViewModel
         pages[remoteId]
                 ?.let { page ->
                     launch {
-                        statusPageSnackbarMessage = prepareStatusChangeSnackbar(page, status)
+                        statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
                         page.status = status
                         uploadUtil.uploadPage(page)
                     }
                 }
     }
 
-    private fun prepareStatusChangeSnackbar(page: PageModel, newStatus: PageStatus): SnackbarMessageHolder {
+    private fun prepareStatusChangeSnackbar(newStatus: PageStatus, page: PageModel? = null): SnackbarMessageHolder {
         val message = when (newStatus) {
             DRAFT -> resourceProvider.getString(string.page_moved_to_draft)
             PUBLISHED -> resourceProvider.getString(string.page_moved_to_published)
             TRASHED -> resourceProvider.getString(string.page_moved_to_trash)
             SCHEDULED -> resourceProvider.getString(string.page_moved_to_scheduled)
         }
-        val previousStatus = page.status
-        return SnackbarMessageHolder(message, resourceProvider.getString(string.undo)) {
-            changePageStatus(page.remoteId, previousStatus)
+
+        return if (page != null) {
+            val previousStatus = page.status
+            SnackbarMessageHolder(message, resourceProvider.getString(string.undo)) {
+                changePageStatus(page.remoteId, previousStatus)
+            }
+        } else {
+            SnackbarMessageHolder(message)
         }
     }
 
@@ -285,7 +290,13 @@ class PagesViewModel
                 refreshPages()
                 onSearch(lastSearchQuery)
 
-                statusPageSnackbarMessage?.let { _showSnackbarMessage.postValue(it) }
+                if (statusPageSnackbarMessage != null) {
+                    _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
+                    statusPageSnackbarMessage = null
+                } else {
+                    _showSnackbarMessage.postValue(
+                            prepareStatusChangeSnackbar(PageModel(event.post, site, null).status))
+                }
             }
         }
     }
