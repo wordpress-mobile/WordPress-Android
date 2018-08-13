@@ -406,6 +406,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             if (!TextUtils.isEmpty(post.getPostFormat())) {
                 contentStruct.put("post_format", post.getPostFormat());
             }
+        } else {
+            contentStruct.put("wp_page_parent_id", post.getParentId());
         }
 
         contentStruct.put("post_type", post.isPage() ? "page" : "post");
