@@ -86,3 +86,5 @@
 /users/social/new
 
 /activity-log/$site/rewind/to/$rewind_ID#String
+
+/jetpack-install/$site#String
