@@ -198,7 +198,8 @@
                     android:paddingLeft="0dp"
                     android:paddingStart="0dp"
                     android:text="@string/plan"
-                    android:textAlignment="viewEnd"/>
+                    android:textAlignment="viewEnd"
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
