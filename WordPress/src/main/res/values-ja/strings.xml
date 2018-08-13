@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-24 05:55:03+0000
+Translation-Revision-Date: 2018-08-07 08:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">閲覧者はまだいません</string>
+    <string name="people_empty_list_filtered_email_followers">メールフォロワーはまだいません</string>
+    <string name="people_empty_list_filtered_followers">フォロワーはまだいません</string>
+    <string name="people_empty_list_filtered_users">ユーザーはまだいません</string>
+    <string name="connection_service_facebook_notice">2018年8月1日以降、Facebook では Facebook プロフィールとの間で直接投稿を共有することを許可しなくなります。Facebook ページとの連携については変更ありません。</string>
+    <string name="reader_empty_posts_liked_description">お気に入りの投稿はここに表示されます</string>
+    <string name="reader_empty_posts_liked_title">「いいね」がつけられているものはまだありません</string>
+    <string name="reader_empty_followed_blogs_button_followed">次に移動</string>
+    <string name="reader_empty_followed_blogs_button_discover">サイトを見つける</string>
+    <string name="reader_empty_followed_blogs_description">フォローしているサイトはまだありません。すぐに1つのサイトをフォローしませんか ?</string>
+    <string name="reader_empty_followed_blogs_title">フォロー中のサイトはまだありません</string>
+    <string name="notifications_empty_likes">新しい「いいね」はまだついていません</string>
+    <string name="notifications_empty_followers">フォロワーはまだいません</string>
+    <string name="activity_log_limited_content_on_free_plan">無料プランをご利用のため、アクティビティで確認できるイベントは限られています。</string>
+    <string name="activity_log_empty_subtitle">サイトに変更を加えた後は、ここでそのアクティビティ履歴を確認できます。</string>
+    <string name="activity_log_empty_title">アクティビティはまだありません</string>
+    <string name="posts_empty_list_button">投稿を作成</string>
+    <string name="pages_empty_list_button">ページを作成</string>
+    <string name="media_empty_upload_media">メディアをアップロード</string>
+    <string name="media_empty_list">メディアファイルがありません</string>
     <string name="reader_gallery_images_desc">ギャラリー</string>
     <string name="blavatar_desc">サイトアイコン</string>
     <string name="theme_image_desc">テーマ画像</string>
     <string name="featured_image_desc">アイキャッチ画像</string>
-    <string name="support_push_notification_message_hint_snackbar">サポートとの会話履歴は「ヘルプ＆サポート > 自分のチケット」からご覧いただけます。</string>
     <string name="local_changes_discarding_error">ローカルでの変更を廃棄中にエラーが発生しました。サポートにご連絡ください。</string>
     <string name="local_changes_discarding">ローカルでの変更を廃棄しています</string>
     <string name="local_changes_discarded">ローカルでの変更を廃棄しました</string>
@@ -29,14 +48,10 @@ Language: ja_JP
     <string name="support_contact_email">連絡先メールアドレス</string>
     <string name="application_log_button">アプリケーションログ</string>
     <string name="my_tickets">自分のチケット</string>
-    <string name="activity_log_rewind_dialog_message">お使いのサイトを%sの%sに巻き戻してもよいですか ?この操作により、作成したすべてのコンテンツとオプション、および作成後に行ったすべての変更が削除されます。</string>
     <string name="activity_log_rewind_site">サイトの巻き戻し</string>
     <string name="activity_log_currently_restoring_message_no_dates">巻き戻し中</string>
-    <string name="activity_log_currently_restoring_message">%s %sまで巻き戻しています</string>
     <string name="activity_log_currently_restoring_title">現在サイトを復元中です</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">サイトが正常に復元されました</string>
-    <string name="activity_log_rewind_finished_snackbar_message">サイトが正常に復元されました\n%s %sまで巻き戻しました</string>
-    <string name="activity_log_rewind_started_snackbar_message">現在サイトを復元中です\n%s %sまで巻き戻しています</string>
     <string name="activity_log_button">「アクティビティログ」アクションボタン</string>
     <string name="plugin_auto_managed">自動管理中</string>
     <string name="reader_save_posts_locally_dialog_message">この投稿を保存し、いつでも戻ってきたときに読むことができます。この端末上のみで利用でき、保存した投稿は他の端末とは同期されません (ただし、現在開発中です)。</string>
@@ -64,7 +79,6 @@ Language: ja_JP
     <string name="reader_remove_bookmark">保存済み投稿から削除</string>
     <string name="reader_add_bookmark">保存済み投稿へ追加</string>
     <string name="reader_save_for_later_title">保存済みの投稿</string>
-    <string name="activity_log_empty_list">イベントがまだ記録されていません</string>
     <string name="removed">削除</string>
     <string name="tabbar_accessibility_label_write">新規投稿。新規投稿を作成します。</string>
     <string name="my_site_icon_content_description">サイトアイコンを変更</string>
@@ -884,10 +898,6 @@ Language: ja_JP
     <string name="title_email_follower">メールフォロワー</string>
     <string name="title_follower">フォロワー</string>
     <string name="people_fetching">ユーザーを取得中…</string>
-    <string name="people_empty_list_filtered_viewers">まだ読者がいません。</string>
-    <string name="people_empty_list_filtered_email_followers">まだメールフォロワーがいません。</string>
-    <string name="people_empty_list_filtered_followers">まだフォロワーがいません。</string>
-    <string name="people_empty_list_filtered_users">まだユーザーがいません。</string>
     <string name="people_dropdown_item_viewers">閲覧者</string>
     <string name="people_dropdown_item_email_followers">メールフォロワー</string>
     <string name="people_dropdown_item_followers">フォロワー</string>
@@ -1001,9 +1011,6 @@ Language: ja_JP
     <string name="editor_remove_failed_uploads">アップロードに失敗したメディアを削除</string>
     <string name="editor_toast_failed_uploads">一部のメディアのアップロードに失敗しました。この状態の投稿は\n保存や公開ができません。失敗したメディアをすべて削除しますか ?</string>
     <string name="site_settings_advanced_header">高度な設定</string>
-    <string name="comments_empty_list_filtered_trashed">ゴミ箱内のコメントはありません</string>
-    <string name="comments_empty_list_filtered_pending">保留中のコメントはありません</string>
-    <string name="comments_empty_list_filtered_approved">承認済みのコメントはありません</string>
     <string name="xmlrpc_missing_method_error">接続できませんでした。必要な XML–RPC メソッドがサーバーにありません。</string>
     <string name="alignment_center">中央</string>
     <string name="post_format_video">動画</string>
@@ -1062,7 +1069,6 @@ Language: ja_JP
     <string name="mnu_comment_delete_permanently">削除</string>
     <string name="mnu_comment_untrash">復元</string>
     <string name="comment_deleted_permanently">コメントを削除しました</string>
-    <string name="comments_empty_list_filtered_spam">スパムコメントはありません</string>
     <string name="comment_status_all">すべて</string>
     <string name="could_not_load_page">ページを読み込めません</string>
     <string name="off">オフ</string>
@@ -1215,15 +1221,7 @@ Language: ja_JP
     <string name="reader_label_gap_marker">さらに投稿を読み込む</string>
     <string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
     <string name="search_sites">サイトを検索</string>
-    <string name="notifications_empty_view_reader">Reader を表示</string>
-    <string name="notifications_empty_action_followers_likes">存在に気づいてもらうため、読んだ投稿にコメントしてみましょう。</string>
-    <string name="notifications_empty_action_comments">会話に参加しましょう。フォローしているブログの投稿にコメントしてみませんか。</string>
-    <string name="notifications_empty_action_unread">会話をまた活発にするため、新しい記事を書いてみましょう。</string>
     <string name="notifications_empty_action_all">フォローしているブログの投稿にコメントしてみましょう。</string>
-    <string name="notifications_empty_likes">新しい「いいね」はまだついていません。</string>
-    <string name="notifications_empty_followers">新しいフォロワーはまだいません。</string>
-    <string name="notifications_empty_comments">コメントはまだありません。</string>
-    <string name="notifications_empty_unread">すべて既読になっています !</string>
     <string name="stats_widget_error_jetpack_no_blogid">アプリ内で統計情報にアクセスし、後でウィジェットを追加してみてください</string>
     <string name="stats_widget_error_readd_widget">ウィジェットを削除し、もう一度追加してみてください</string>
     <string name="stats_widget_error_no_visible_blog">表示可能なブログを持っていない場合、統計情報にはアクセスできません</string>
@@ -1438,8 +1436,6 @@ Language: ja_JP
     <string name="reader_empty_comments">コメントはまだありません</string>
     <string name="create_new_blog_wpcom">WordPress.com ブログを作成</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
-    <string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
-    <string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
     <string name="reader_menu_block_blog">このサイトをブロック</string>
     <string name="reader_toast_blog_blocked">このサイトからの投稿は今後表示されません</string>
     <string name="reader_toast_err_block_blog">サイトをブロックできませんでした</string>
@@ -1459,7 +1455,6 @@ Language: ja_JP
     <string name="reader_title_subs">タグ・サイト</string>
     <string name="reader_title_tag_preview">Reader タグ</string>
     <string name="reader_title_blog_preview">Reader サイト</string>
-    <string name="media_empty_list">メディアなし</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>
     <string name="forgot_password">パスワードを忘れた場合</string>
@@ -1487,7 +1482,6 @@ Language: ja_JP
     <string name="adding_cat_success">カテゴリーを追加しました</string>
     <string name="adding_cat_failed">カテゴリーの追加に失敗しました</string>
     <string name="mnu_comment_unspam">スパムはありません</string>
-    <string name="comments_empty_list">コメントはありません</string>
     <string name="theme_fetch_failed">テーマの取得に失敗しました</string>
     <string name="blog_not_found">このブログにアクセスする際にエラーが発生しました</string>
     <string name="gallery_error">メディア項目を読み込めませんでした。</string>
@@ -1570,7 +1564,6 @@ Language: ja_JP
     <string name="reader_toast_err_get_post">この投稿を読み込みできません</string>
     <string name="pick_video">動画を選択</string>
     <string name="pick_photo">画像を選択</string>
-    <string name="reader_empty_followed_blogs_description">右上のタグアイコンをタップし、お気に入りを発見してみてください。</string>
     <string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
     <string name="reader_empty_followed_tags">現在何もタグをフォローしていません</string>
     <string name="reader_toast_err_url_intent">%sを開けませんでした</string>

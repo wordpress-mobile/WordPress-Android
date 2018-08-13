@@ -112,10 +112,6 @@ Language: sk
     <string name="alignment_none">Žiadne</string>
     <string name="title_email_follower">Email odberateľa</string>
     <string name="title_follower">Odberateľ</string>
-    <string name="people_empty_list_filtered_viewers">Zatiaľ nemáte žiadnych návštevníkov.</string>
-    <string name="people_empty_list_filtered_email_followers">Zatiaľ nemáte žiadnych odberateľov emailom.</string>
-    <string name="people_empty_list_filtered_followers">Zatiaľ nemáte žiadnych odberateľov.</string>
-    <string name="people_empty_list_filtered_users">Zatiaľ nemáte žiadnych používateľov.</string>
     <string name="people_dropdown_item_viewers">Návštevníci</string>
     <string name="people_dropdown_item_followers">Odberatelia</string>
     <string name="people_dropdown_item_team">Tím</string>
@@ -188,9 +184,6 @@ Language: sk
     <string name="editor_remove_failed_uploads">Odstrániť chybné súbory</string>
     <string name="editor_toast_failed_uploads">Niektoré súbory neboli správne nahrané. V tomto stave nemôžete uložiť ani publikovať váš článok. Chcete odstrániť všetky chybné súbory?</string>
     <string name="site_settings_advanced_header">Rozšírené</string>
-    <string name="comments_empty_list_filtered_trashed">Žiadne komentáre zahodené</string>
-    <string name="comments_empty_list_filtered_pending">Žiadne čakajúce komentáre</string>
-    <string name="comments_empty_list_filtered_approved">Žiadne komentáre schválené</string>
     <string name="alignment_center">Na stred</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -230,7 +223,6 @@ Language: sk
     <string name="mnu_comment_delete_permanently">Zmazať</string>
     <string name="mnu_comment_untrash">Obnoviť</string>
     <string name="comment_deleted_permanently">Komentár zmazaný</string>
-    <string name="comments_empty_list_filtered_spam">Žiadne spamové komentáre</string>
     <string name="comment_status_all">Všetky</string>
     <string name="could_not_load_page">Nebolo možné načítať stránku</string>
     <string name="off">Vypnúť</string>
@@ -296,15 +288,7 @@ Language: sk
     <string name="reader_label_gap_marker">Načítať ďalšie články</string>
     <string name="notifications_no_search_results">Žiadne stránky sa nezhodujú s \'%s\'</string>
     <string name="search_sites">Nájsť webové stránky</string>
-    <string name="notifications_empty_view_reader">Zobraziť čítačku</string>
-    <string name="notifications_empty_action_followers_likes">Všimnite si: komentujte príspevky, ktoré ste prečítali.</string>
-    <string name="notifications_empty_action_comments">Pridajte sa ku konverzácii: komentujte príspevky z blogov, ktoré sledujete.</string>
-    <string name="notifications_empty_action_unread">Začnite konverzáciu: napíšte nový príspevok.</string>
     <string name="notifications_empty_action_all">Tvorte! Komentujte príspevky z blogov, ktoré sledujete.</string>
-    <string name="notifications_empty_likes">Nemáte žiadne nové lajky… zatiaľ.</string>
-    <string name="notifications_empty_followers">Žiadny nový sledujúci… zatiaľ.</string>
-    <string name="notifications_empty_comments">Žiadne nové komentáre… zatiaľ.</string>
-    <string name="notifications_empty_unread">Všetky sú prečítané!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Prosím získajte štatistiku v aplikácii a pokúste sa pridať widgety neskôr</string>
     <string name="stats_widget_error_readd_widget">Prosím odstráňte widget a neskôr ho znovu pridajte</string>
     <string name="stats_widget_error_no_visible_blog">Žiaden prístup k štatistike bez viditeľného blogu</string>
@@ -502,8 +486,6 @@ Language: sk
     <string name="reader_empty_comments">Zatiaľ nie sú žiadne komentáre</string>
     <string name="create_new_blog_wpcom">Vytvoriť WordPress blog</string>
     <string name="browse_our_faq_button">Prehľadávať časté otázky</string>
-    <string name="reader_empty_posts_liked">Zatiaľ ste nelajkli žiaden príspevok</string>
-    <string name="reader_empty_followed_blogs_title">Nesledujete zatiaľ žiadne webové stránky</string>
     <string name="reader_toast_err_generic">Nie je možné vykonať túto akciu</string>
     <string name="contact_us">Kontaktujte nás</string>
     <string name="schedule_verb">Rozvrh</string>
@@ -512,7 +494,6 @@ Language: sk
     <string name="reader_page_followed_blogs">Sledované webové stránky</string>
     <string name="reader_page_followed_tags">Sledované značky</string>
     <string name="reader_title_tag_preview">Značka čítačky</string>
-    <string name="media_empty_list">Žiadne súbory</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="forgot_password">Stratili ste heslo?</string>
@@ -538,7 +519,6 @@ Language: sk
     <string name="adding_cat_success">Kategória bola úspešne pridaná</string>
     <string name="adding_cat_failed">Chyba pri pridávaní kategórie</string>
     <string name="mnu_comment_unspam">Žiadny spam</string>
-    <string name="comments_empty_list">Žiadne komentáre</string>
     <string name="theme_fetch_failed">Chyba pri načítavaní témy</string>
     <string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
     <string name="gallery_error">Súbor nebolo možné načítať</string>
@@ -616,7 +596,6 @@ Language: sk
     <string name="reader_toast_err_get_post">Nie je možné načítať príspevok</string>
     <string name="pick_video">Vyberte video</string>
     <string name="pick_photo">Vyberte forografiu</string>
-    <string name="reader_empty_followed_blogs_description">Neznepokojujte sa a ťuknite na ikonu vpravo hore a poznávajte!</string>
     <string name="reader_likes_you_and_one">Lajkli ste to vy a niekto ďalší</string>
     <string name="reader_empty_followed_tags">Nesledujete žiadne značky</string>
     <string name="reader_toast_err_url_intent">Nie je možné otvoriť %s</string>

@@ -377,10 +377,6 @@ Language: es_CO
     <string name="title_email_follower">Correo electrónico del seguidor</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Recuperando usuarios…</string>
-    <string name="people_empty_list_filtered_viewers">Todavía no tienes ningún espectador.</string>
-    <string name="people_empty_list_filtered_email_followers">Todavía no tienes el correno electrónico de ningún seguidor.</string>
-    <string name="people_empty_list_filtered_followers">Todavía no tienes ningún seguidor.</string>
-    <string name="people_empty_list_filtered_users">Todavía no tienes ningún usuario.</string>
     <string name="people_dropdown_item_viewers">Espectadores</string>
     <string name="people_dropdown_item_email_followers">Suscriptores por correo electrónico</string>
     <string name="people_dropdown_item_followers">Seguidores</string>
@@ -491,9 +487,6 @@ Language: es_CO
     <string name="editor_remove_failed_uploads">Eliminar subidas fallidas</string>
     <string name="editor_toast_failed_uploads">La subida de algunos archivos multimedia han fallado. No se puede guardar o publicar\n tu entrada tiene este estado. ¿Quieres eliminar todos los archivos multimedia fallidos?</string>
     <string name="site_settings_advanced_header">Avanzado</string>
-    <string name="comments_empty_list_filtered_trashed">No hay comentarios en la papelera</string>
-    <string name="comments_empty_list_filtered_pending">No hay comentarios pendientes</string>
-    <string name="comments_empty_list_filtered_approved">No hay comentarios aprobados</string>
     <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML–RPC faltan en el servidor.</string>
     <string name="alignment_center">Centrado</string>
     <string name="post_format_video">Video</string>
@@ -552,7 +545,6 @@ Language: es_CO
     <string name="mnu_comment_delete_permanently">Eliminar</string>
     <string name="mnu_comment_untrash">Restaurar</string>
     <string name="comment_deleted_permanently">Comentario eliminado</string>
-    <string name="comments_empty_list_filtered_spam">Sin comentarios de spam</string>
     <string name="comment_status_all">Todos</string>
     <string name="could_not_load_page">No se pudo cargar la página</string>
     <string name="off">Off</string>
@@ -704,15 +696,7 @@ Language: es_CO
     <string name="reader_label_gap_marker">Cargar más entradas</string>
     <string name="notifications_no_search_results">Ningún sitio coincide con \"%s\"</string>
     <string name="search_sites">Buscar sitios</string>
-    <string name="notifications_empty_view_reader">Ver Lector</string>
-    <string name="notifications_empty_action_followers_likes">Recibir avisos: comentar en entradas que has leído.</string>
-    <string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues.</string>
-    <string name="notifications_empty_action_unread">Reiniciar la conversación: escribir una entrada nueva.</string>
     <string name="notifications_empty_action_all">¡Actívate! Comentario en entradas de blogs que sigues.</string>
-    <string name="notifications_empty_likes">No hay nuevos Me gusta que mostrar… todavía.</string>
-    <string name="notifications_empty_followers">No hay nuevos seguidores de los que informar… todavía.</string>
-    <string name="notifications_empty_comments">No hay comentarios nuevos… todavía.</string>
-    <string name="notifications_empty_unread">¡Te has puesto al día!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Accede a las estadísticas de la aplicación e intenta agregar un widget más tarde</string>
     <string name="stats_widget_error_readd_widget">Elimina el widget y vuelve a agregarlo</string>
     <string name="stats_widget_error_no_visible_blog">No se pudo acceder a las estadísticas sin un blog visible</string>
@@ -921,8 +905,6 @@ Language: es_CO
     <string name="reader_empty_comments">Aún no hay comentarios</string>
     <string name="create_new_blog_wpcom">Crear un blog de WordPress.com</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
-    <string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
-    <string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="contact_us">Contacta con nosotros</string>
     <string name="schedule_verb">Programación</string>
@@ -931,7 +913,6 @@ Language: es_CO
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
     <string name="reader_page_followed_tags">Etiquetas que se siguen</string>
     <string name="reader_title_tag_preview">Etiqueta del lector</string>
-    <string name="media_empty_list">Sin elementos multimedia</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
     <string name="forgot_password">¿Has olvidado la contraseña?</string>
@@ -959,7 +940,6 @@ Language: es_CO
     <string name="adding_cat_success">Categoría agregada correctamente.</string>
     <string name="adding_cat_failed">No se pudo añadir la categoría</string>
     <string name="mnu_comment_unspam">No es spam</string>
-    <string name="comments_empty_list">No hay comentarios.</string>
     <string name="theme_fetch_failed">Ocurrió un error al obtener los temas.</string>
     <string name="blog_not_found">Ha ocurrido un error mientras se accedía a este blog</string>
     <string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
@@ -1038,7 +1018,6 @@ Language: es_CO
     <string name="reader_toast_err_get_post">No fue posible recuperar esta entrada</string>
     <string name="pick_video">Elige un vídeo</string>
     <string name="pick_photo">Elige una foto</string>
-    <string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
     <string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>

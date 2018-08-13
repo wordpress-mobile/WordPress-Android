@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-27 09:04:26+0000
+Translation-Revision-Date: 2018-08-02 14:54:56+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -10,7 +10,6 @@ Language: cs_CZ
     <string name="blavatar_desc">ikona stránky</string>
     <string name="theme_image_desc">obrázek šablony</string>
     <string name="featured_image_desc">náhledový obrázek</string>
-    <string name="support_push_notification_message_hint_snackbar">Otevřete komunikaci s podporou klikem na \"Pomoc a podpora\" následně na \"Moje konverzace\"</string>
     <string name="local_changes_discarding_error">Při zahazování změn došlo k chybě. Kontaktujte zákaznickou podporu.</string>
     <string name="local_changes_discarding">Zahazuji lokální změny</string>
     <string name="local_changes_discarded">Zahazování lokálních změn dokončeno</string>
@@ -29,14 +28,14 @@ Language: cs_CZ
     <string name="support_contact_email">Kontaktní email</string>
     <string name="application_log_button">Aplikační log</string>
     <string name="my_tickets">Moje konverzace</string>
-    <string name="activity_log_rewind_dialog_message">Opravdu chcete obnovit stav stránky z %s na %s. Akce nenávratně odstraní vše, včetně obsahu a změn nastavení, co jste od té doby udělali.</string>
+    <string name="activity_log_rewind_dialog_message">Opravdu chcete obnovit stav stránky z %1$s na %2$s? Akce nenávratně odstraní vše, včetně obsahu a změn nastavení, co jste od té doby udělali.</string>
     <string name="activity_log_rewind_site">Obnovit</string>
     <string name="activity_log_currently_restoring_message_no_dates">Obnovuji</string>
-    <string name="activity_log_currently_restoring_message">Obnovuji k %s %s</string>
+    <string name="activity_log_currently_restoring_message">Obnovuji k %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Obnovuji stránku</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Stránka úspěšně obnovena</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Vaše stránka byla úspěšně obnovena\nObnovit na %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Vaše stránky jsou obnovovány.\nObnovuji stránku k %s %s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Vaše stránka byla úspěšně obnovena\nObnovit na %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Vaše stránky jsou obnovovány.\nObnovuji stránku k %1$s %2$s</string>
     <string name="activity_log_button">Tlačítko akce s protokolem aktivit</string>
     <string name="plugin_auto_managed">Spravován automaticky</string>
     <string name="reader_save_posts_locally_dialog_message">Uložte si příspěvek a kdykoli se k němu vraťe. Příspěvek bude dostupný pouze na tomto zařízení  — na synchronizaci mezi zařízeními pracujeme.</string>
@@ -64,7 +63,6 @@ Language: cs_CZ
     <string name="reader_remove_bookmark">Odstranit z uložených</string>
     <string name="reader_add_bookmark">Přidat do uložených příspěvků</string>
     <string name="reader_save_for_later_title">Uložené příspěvky</string>
-    <string name="activity_log_empty_list">Žádné události zatím nebyly zaznamenány</string>
     <string name="removed">Odstraněno</string>
     <string name="tabbar_accessibility_label_write">Nový příspěvek. Napište nový příspěvek.</string>
     <string name="my_site_icon_content_description">Změnit ikonu webu</string>
@@ -887,10 +885,6 @@ Language: cs_CZ
     <string name="title_email_follower">Email fanouška</string>
     <string name="title_follower">Fanoušek</string>
     <string name="people_fetching">Načítání uživatelů…</string>
-    <string name="people_empty_list_filtered_viewers">Nemáte ještě nějaké otázky.</string>
-    <string name="people_empty_list_filtered_email_followers">Nemáte ještě žádné emaily od svých fanoušků.</string>
-    <string name="people_empty_list_filtered_followers">Nemáte ještě žádné fanoušky.</string>
-    <string name="people_empty_list_filtered_users">Nemáte ještě žádné uživatele.</string>
     <string name="people_dropdown_item_viewers">Zobrazení</string>
     <string name="people_dropdown_item_email_followers">Emaily fanoušků</string>
     <string name="people_dropdown_item_followers">Fanoušci</string>
@@ -1223,9 +1217,7 @@ Language: cs_CZ
     <string name="notifications_empty_action_comments">Připojte se ke konverzaci: komentujte příspěvky z webů, které sledujete.</string>
     <string name="notifications_empty_action_unread">Začněte konverzaci: napište nový příspěvek.</string>
     <string name="notifications_empty_action_all">Buďte aktivní! Komentujte příspěvky z webů, které sledujete.</string>
-    <string name="notifications_empty_likes">Žádné nové \"to se mi líbí\"…zatím.</string>
-    <string name="notifications_empty_followers">Žádný nový sledující…zatím.</string>
-    <string name="notifications_empty_comments">Žádné nové komentáře…zatím.</string>
+    <string name="notifications_empty_comments">Zatím žádné nové komentáře</string>
     <string name="notifications_empty_unread">Všechny jsou přečtené.</string>
     <string name="stats_widget_error_jetpack_no_blogid">Prosím získejte Statistiky v aplikaci, a zkuste později přidat widget</string>
     <string name="stats_widget_error_readd_widget">Prosím odstraňte widget a později jej znovu přidejte</string>
@@ -1441,8 +1433,6 @@ Language: cs_CZ
     <string name="reader_empty_comments">Žádné komentáře</string>
     <string name="create_new_blog_wpcom">Vytvořit web na WordPress.com</string>
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
-    <string name="reader_empty_posts_liked">Žádné příspěvky jste neoznačili jako \"to se mi líbí\"</string>
-    <string name="reader_empty_followed_blogs_title">Zatím nesledujete žádné weby</string>
     <string name="reader_menu_block_blog">Zablokovat tento web</string>
     <string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>
     <string name="reader_toast_err_block_blog">Nepodařilo se zablokovat tento web</string>
@@ -1462,7 +1452,6 @@ Language: cs_CZ
     <string name="reader_title_subs">Štítky a weby</string>
     <string name="reader_title_tag_preview">Štítek čtenáře</string>
     <string name="reader_title_blog_preview">Web čtenáře</string>
-    <string name="media_empty_list">Žádná média</string>
     <string name="ssl_certificate_ask_trust">Pokud se k tomuto webu obvykle připojujete bez problémů, pak tato chyba znamená, že se někdo snaží podvrhnout vaši identitu a neměli byste dále pokračovat. Chcete i přesto důvěřovat tomuto certifikátu?</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="forgot_password">Zapomněl jsi heslo?</string>
@@ -1490,7 +1479,6 @@ Language: cs_CZ
     <string name="adding_cat_success">Rubrubrika úspěšně přidána</string>
     <string name="adding_cat_failed">Chyba při přidávání rubriky</string>
     <string name="mnu_comment_unspam">Není spam</string>
-    <string name="comments_empty_list">Žádný komentář</string>
     <string name="theme_fetch_failed">Chyba při získávání motivů</string>
     <string name="blog_not_found">Nastala chyba při přístupu na tento web</string>
     <string name="gallery_error">Multimediální položka nemohla být stažena</string>
@@ -1573,7 +1561,6 @@ Language: cs_CZ
     <string name="reader_toast_err_get_post">Tento příspěvek se nedá načíst</string>
     <string name="pick_video">Vyberte video</string>
     <string name="pick_photo">Vyberte fotku</string>
-    <string name="reader_empty_followed_blogs_description">Ale nebojte se, klepněte jen na ikonu v pravém horním rohu, a začněte poznávat!</string>
     <string name="reader_likes_you_and_one">To se líbí vám a jedné další osobě</string>
     <string name="reader_empty_followed_tags">Nesledujete žádné štítky</string>
     <string name="reader_toast_err_url_intent">Nelze otevřít %s</string>
