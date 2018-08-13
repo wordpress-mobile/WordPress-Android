@@ -1164,6 +1164,7 @@ public class SiteStore extends Store {
                 handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
                 break;
             case FETCH_SUPPORTED_COUNTRIES:
+                mSiteRestClient.fetchSupportedCountries();
                 break;
             case FETCHED_SUPPORTED_COUNTRIES:
                 handleFetchedSupportedCountries((SupportedCountriesResponsePayload) action.getPayload());
