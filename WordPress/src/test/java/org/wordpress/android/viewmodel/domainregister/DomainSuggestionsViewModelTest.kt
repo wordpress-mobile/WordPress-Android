@@ -106,11 +106,11 @@ class DomainSuggestionsViewModelTest {
         val action = actionCaptor.firstValue
         Assert.assertEquals(action.type, SiteAction.SUGGEST_DOMAINS)
         Assert.assertTrue(action.payload is SuggestDomainsPayload)
-        (action.payload as SuggestDomainsPayload).apply {
-            Assert.assertEquals(this.includeWordpressCom, false)
-            Assert.assertEquals(this.onlyWordpressCom, false)
-            Assert.assertEquals(this.includeDotBlogSubdomain, true)
-            Assert.assertEquals(this.query, query)
+        (action.payload as SuggestDomainsPayload).let {
+            Assert.assertEquals(it.includeWordpressCom, false)
+            Assert.assertEquals(it.onlyWordpressCom, false)
+            Assert.assertEquals(it.includeDotBlogSubdomain, true)
+            Assert.assertEquals(it.query, query)
         }
         verify(isLoadingObserver, atLeast(1)).onChanged(any())
     }
