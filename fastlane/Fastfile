@@ -41,60 +41,12 @@ SUPPORTED_LOCALES = [
 default_platform(:android)
 
 platform :android do
+########################################################################
+# Includes
+########################################################################
+import "./ScreenshotFastfile"
 
-  #####################################################################################
-  # screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane takes screenshots for the WordPress app across the three device types:
-  # phone, sevenInch and tenInch. If device serials are not provided these avds will be
-  # used: fastlane_screenshots_phone, fastlane_screenshots_seven_inch,
-  # fastlane_screenshots_ten_inch
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane screenshots phone_serial:<serial> sevenInch_serial:<serial> tenInch_serial:<serial>
-  #
-  # Example:
-  # fastlane screenshots
-  # fastlane screenshots phone_serial:emulator-5444 sevenInch_serial:emulator-5446 tenInch_serial:emulator-5448
-  #####################################################################################
-  desc "Build and capture screenshots"
-  lane :screenshots do |options|
-    gradle(task: "assembleVanillaDebug assembleVanillaDebugAndroidTest")
-    take_screenshots(options)
-  end
 
-  desc "Capture screenshots"
-  lane :take_screenshots do |options|
-    screenshot_devices = [
-      {
-        screenshot_type: 'phone',
-        device_name: 'fastlane_screenshots_phone',
-        device_serial: options[:phone_serial],
-      },
-      {
-        screenshot_type: 'sevenInch',
-        device_name: 'fastlane_screenshots_seven_inch',
-        device_serial: options[:sevenInch_serial],
-      },
-      {
-        screenshot_type: 'tenInch',
-        device_name: 'fastlane_screenshots_ten_inch',
-        device_serial: options[:tenInch_serial],
-      }
-    ]
-
-    screenshot_options = {
-      output_directory: "fastlane/metadata/android",
-      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
-      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk",
-      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
-      reinstall_app: false,
-      clear_previous_screenshots: true,
-      locales: SUPPORTED_LOCALES.map { |hsh| hsh[:google_play] }
-    }
-
-    take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
-  end
 end
 #####################################################################################
 # update_ps_strings 
@@ -154,7 +106,8 @@ lane :download_metadata_strings do |options|
   delete_old_changelogs(build: options[:build_number])
   download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
     target_files: files, 
-    locales: SUPPORTED_LOCALES)
+    locales: SUPPORTED_LOCALES,
+    download_path: Dir.pwd + "/fastlane/metadata/android")
 end 
 
 #####################################################################################
