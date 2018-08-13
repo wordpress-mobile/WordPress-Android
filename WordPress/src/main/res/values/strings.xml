@@ -232,7 +232,6 @@
     <string name="pages">Pages</string>
     <string name="set_parent">Set Parent</string>
     <string name="page_delete_error">We were unable to delete the page.</string>
-    <string name="page_delete_dialog_title">Delete page permanently</string>
     <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
     <string name="page_moved_to_draft">Page has been moved to Drafts</string>
     <string name="page_moved_to_trash">Page has been trashed</string>
