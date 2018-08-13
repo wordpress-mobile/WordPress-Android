@@ -557,10 +557,8 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
             mScrollView.setVisibility(View.GONE);
             mActionableEmptyView.setVisibility(View.VISIBLE);
 
-            // if the screen height is too short, we can just hide the drake illustration
-            Activity activity = getActivity();
-            boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
-            if (drakeVisibility) {
+            // Hide actionable empty view image when screen height is under 600 pixels.
+            if (DisplayUtils.getDisplayPixelHeight(getActivity()) >= 600) {
                 mActionableEmptyView.image.setVisibility(View.VISIBLE);
             } else {
                 mActionableEmptyView.image.setVisibility(View.GONE);
