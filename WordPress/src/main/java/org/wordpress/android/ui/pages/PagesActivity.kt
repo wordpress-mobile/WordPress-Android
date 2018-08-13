@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostActivity
