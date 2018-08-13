@@ -74,7 +74,6 @@ Language: mk
     <string name="themes_fetching">Примање теми…</string>
     <string name="ssl_certificate_details">Детали</string>
     <string name="cab_selected">%d слекетирано</string>
-    <string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
     <string name="browse_our_faq_button">Разгледи наши ЧПП</string>
     <string name="create_new_blog_wpcom">Создади WordPress.com блог</string>
     <string name="reader_empty_comments">Нема коментари сеуште</string>
@@ -103,12 +102,10 @@ Language: mk
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Закажи</string>
     <string name="reader_page_followed_tags">Проследени ознаки</string>
-    <string name="media_empty_list">Нема медиа</string>
     <string name="help">Помош</string>
     <string name="forgot_password">Ја изгубивте Вашата лозинка?</string>
     <string name="ssl_certificate_error">Невалиден SSl сертификат</string>
     <string name="ssl_certificate_ask_trust">Доколку вообичаено се поврзувате на страницата без проблеми, оваа грешка може да значи дека некој се обидува да ја имитира вашата страница и не треба да продолжите. Дали му верувате на сертификатот и покрај тоа?</string>
-    <string name="comments_empty_list">Нема коментари</string>
     <string name="mnu_comment_unspam">Не е спам</string>
     <string name="adding_cat_success">Категоријата е успешно додадена</string>
     <string name="stats_empty_comments">Сеуште нема коментари</string>
