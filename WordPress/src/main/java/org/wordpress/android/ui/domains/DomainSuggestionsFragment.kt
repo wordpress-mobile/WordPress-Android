@@ -107,5 +107,3 @@ class DomainSuggestionsFragment : Fragment() {
         fun onDomainSelected(domainProductDetails: DomainProductDetails)
     }
 }
-
-

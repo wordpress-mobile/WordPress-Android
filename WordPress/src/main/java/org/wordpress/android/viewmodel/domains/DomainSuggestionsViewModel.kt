@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.helpers.Debouncer
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -24,7 +26,7 @@ typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
 class DomainSuggestionsViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
-    private val handler = Handler()
+    private val debouncer = Debouncer()
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<DomainSuggestionsListState>
@@ -47,7 +49,9 @@ class DomainSuggestionsViewModel @Inject constructor(private val dispatcher: Dis
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
-            submitSearch(newValue, true)
+            debouncer.debounce(Void::class.java, {
+                fetchSuggestions()
+            }, SEARCH_QUERY_DELAY_MS, TimeUnit.MILLISECONDS)
         }
     }
 
@@ -78,19 +82,6 @@ class DomainSuggestionsViewModel @Inject constructor(private val dispatcher: Dis
 
     private fun initializeDefaultSuggestions() {
         searchQuery = site.name
-    }
-
-    private fun submitSearch(query: String, delayed: Boolean) {
-        if (delayed) {
-            handler.postDelayed({
-                if (query == searchQuery) {
-                    submitSearch(query, false)
-                }
-            }, SEARCH_QUERY_DELAY_MS)
-        } else {
-            suggestions = ListState.Ready(ArrayList())
-            fetchSuggestions()
-        }
     }
 
     // Network Request
