@@ -31,8 +31,8 @@ class NewsManagerTest {
 
     @Before
     fun setUp() {
-        newsManager = NewsManager(newsService, appPrefs)
         whenever(newsService.newsItemSource()).thenReturn(liveData)
+        newsManager = NewsManager(newsService, appPrefs)
 
         val observable = newsManager.newsItemSource()
         observable.observeForever(observer)
@@ -74,6 +74,12 @@ class NewsManagerTest {
     fun emitNullWhenDismissInvoked() {
         newsManager.dismiss(item)
         verify(observer).onChanged(null)
+    }
+
+    @Test
+    fun propagatePullToNewsServiceWhenPullInvoked() {
+        newsManager.pull(true)
+        verify(newsService, times(1)).pull(true)
     }
 
     @Test

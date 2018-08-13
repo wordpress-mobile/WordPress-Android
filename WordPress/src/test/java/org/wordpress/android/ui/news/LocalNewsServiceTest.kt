@@ -4,13 +4,14 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import android.content.Context
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.models.news.LocalNewsItem
 import org.wordpress.android.models.news.NewsItem
@@ -37,9 +38,11 @@ class LocalNewsServiceTest {
     }
 
     @Test
-    fun verifyItemEmittedOnGetNewsItem() {
+    fun verifyItemEmittedOnPullInvoked() {
         val observable = localNewsService.newsItemSource()
         observable.observeForever(observer)
-        Mockito.verify(observer).onChanged(newsItem)
+        verify(observer, times(0)).onChanged(any())
+        localNewsService.pull(false)
+        verify(observer).onChanged(newsItem)
     }
 }
