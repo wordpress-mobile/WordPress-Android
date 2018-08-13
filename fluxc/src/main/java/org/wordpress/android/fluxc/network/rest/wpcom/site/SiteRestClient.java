@@ -58,6 +58,9 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.SupportedCountriesError;
+import org.wordpress.android.fluxc.store.SiteStore.SupportedCountriesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.SupportedCountryErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
 import org.wordpress.android.util.AppLog;
@@ -554,6 +557,40 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 DomainAvailabilityResponsePayload payload =
                                         new DomainAvailabilityResponsePayload(domainAvailabilityError);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/supported-countries/ endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#FETCHED_SUPPORTED_COUNTRIES} action is dispatched with a
+     * payload of type {@link SupportedCountriesResponsePayload}.
+     *
+     * {@link SupportedCountriesResponsePayload#isError()} can be used to check the request result.
+     */
+    public void fetchSupportedCountries() {
+        String url = WPCOMREST.domains.supported_countries.getUrlV1_1();
+        final WPComGsonRequest<ArrayList<SupportedCountriesResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, null,
+                        new TypeToken<ArrayList<SupportedCountriesResponse>>() {}.getType(),
+                        new Listener<ArrayList<SupportedCountriesResponse>>() {
+                            @Override
+                            public void onResponse(ArrayList<SupportedCountriesResponse> response) {
+                                SupportedCountriesResponsePayload payload =
+                                        new SupportedCountriesResponsePayload(response);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSupportedCountriesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                SupportedCountriesError supportedCountriesError = new SupportedCountriesError(
+                                        SupportedCountryErrorType.GENERIC_ERROR,
+                                        error.message);
+                                SupportedCountriesResponsePayload payload =
+                                        new SupportedCountriesResponsePayload(supportedCountriesError);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSupportedCountriesAction(payload));
                             }
                         });
         add(request);
