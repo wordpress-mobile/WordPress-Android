@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-30 12:54:06+0000
+Translation-Revision-Date: 2018-08-07 14:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">Noch keine Besucher</string>
+    <string name="people_empty_list_filtered_email_followers">Noch keine E-Mail–Follower</string>
+    <string name="people_empty_list_filtered_followers">Noch keine Follower</string>
+    <string name="people_empty_list_filtered_users">Noch keine Benutzer</string>
+    <string name="connection_service_facebook_notice">Ab 1. August 2018 lässt Facebook das direkte Teilen von Beiträgen auf Facebook-Profilen nicht mehr zu. Die Verknüpfungen zu Facebook–Seiten bleiben unverändert.</string>
+    <string name="reader_empty_posts_liked_description">Beiträge, die dir gefallen, werden hier angezeigt</string>
+    <string name="reader_empty_posts_liked_title">Noch nichts mit „Gefällt mir“ markiert</string>
+    <string name="reader_empty_followed_blogs_button_followed">Zu „Du folgst“ wechseln</string>
+    <string name="reader_empty_followed_blogs_button_discover">Websites entdecken</string>
+    <string name="reader_empty_followed_blogs_description">Du folgst noch keinen Websites. Warum nicht jetzt einer Website folgen?</string>
+    <string name="reader_empty_followed_blogs_title">Keine abonnierten Websites</string>
+    <string name="notifications_empty_likes">Noch keine Likes</string>
+    <string name="notifications_empty_followers">Noch keine Follower</string>
+    <string name="activity_log_limited_content_on_free_plan">Da du einen Free–Tarif hast, siehst du nur begrenzte Ereignisse in deiner Aktivität.</string>
+    <string name="activity_log_empty_subtitle">Wenn du Änderungen an deiner Website vornimmst, kann du hier deinen Aktivitätsverlauf sehen</string>
+    <string name="activity_log_empty_title">Noch keine Aktivität</string>
+    <string name="posts_empty_list_button">Einen Beitrag erstellen</string>
+    <string name="pages_empty_list_button">Eine Seite erstellen</string>
+    <string name="media_empty_upload_media">Medien hochladen</string>
+    <string name="media_empty_list">Du hast keine Medien</string>
     <string name="reader_gallery_images_desc">Bildetgalerie</string>
     <string name="blavatar_desc">Website–Icon</string>
     <string name="theme_image_desc">Theme–Bild</string>
     <string name="featured_image_desc">Beitragsbild</string>
-    <string name="support_push_notification_message_hint_snackbar">Deine Support–Unterhaltung findest du, indem du auf „Hilfe &amp; Support“ und anschließend auf „Meine Tickets“ klickst</string>
     <string name="local_changes_discarding_error">Beim Verwerfen der lokalen Änderungen ist ein Fehler aufgetreten. Bitte wende dich für Unterstützung an den Support.</string>
     <string name="local_changes_discarding">Lokale Änderungen werden verworfen</string>
     <string name="local_changes_discarded">Lokale Änderungen verworfen</string>
@@ -29,14 +48,10 @@ Language: de
     <string name="support_contact_email">Kontakt-E-Mail–Adresse</string>
     <string name="application_log_button">Anwendungsprotokoll</string>
     <string name="my_tickets">Meine Tickets</string>
-    <string name="activity_log_rewind_dialog_message">Bist du sicher, dass du deine Website auf %s um %s zurücksetzen willst? Damit werden alle Inhalte und Optionen, die seit diesem Zeitpunkt erstellt oder geändert wurden, entfernt.</string>
     <string name="activity_log_rewind_site">Website zurücksetzen</string>
     <string name="activity_log_currently_restoring_message_no_dates">Zurücksetzung in Bearbeitung</string>
-    <string name="activity_log_currently_restoring_message">Wird zurückgesetzt auf %s %s</string>
     <string name="activity_log_currently_restoring_title">Deine Website wird derzeit wiederhergestellt</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Deine Website wurde erfolgreich wiederhergestellt</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Deine Website wurde erfolgreich wiederhergestellt\nZurückgesetzt auf %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Deine Website wird wiederhergestellt\nWird zurückgesetzt auf %s %s</string>
     <string name="activity_log_button">Aktions–Button für Aktivitätsprotokoll</string>
     <string name="plugin_auto_managed">Automatisch verwaltet</string>
     <string name="reader_save_posts_locally_dialog_message">Speichere diesen Beitrag und lese ihn später. Er wird nur auf diesem Gerät zur Verfügung stehen – gespeicherte Beiträge werden (noch) nicht mit deinen anderen Geräten synchronisiert. (Aber wir arbeiten daran!).</string>
@@ -64,7 +79,6 @@ Language: de
     <string name="reader_remove_bookmark">Aus gespeicherten Beiträgen entfernen</string>
     <string name="reader_add_bookmark">Zu gespeicherten Beiträgen hinzufügen</string>
     <string name="reader_save_for_later_title">Gespeicherte Beiträge</string>
-    <string name="activity_log_empty_list">Noch keine Events verzeichnet</string>
     <string name="removed">Entfernt</string>
     <string name="tabbar_accessibility_label_write">Neuer Beitrag. Schreibe einen neuen Beitrag.</string>
     <string name="my_site_icon_content_description">Website–Symbol ändern</string>
@@ -883,10 +897,6 @@ Language: de
     <string name="title_email_follower">E-Mail–Follower</string>
     <string name="title_follower">Follower</string>
     <string name="people_fetching">Benutzer werden abgerufen …</string>
-    <string name="people_empty_list_filtered_viewers">Du hast noch keine Besucher.</string>
-    <string name="people_empty_list_filtered_email_followers">Du hast noch keine E-Mail–Follower.</string>
-    <string name="people_empty_list_filtered_followers">Du hast noch keine Follower.</string>
-    <string name="people_empty_list_filtered_users">Du hast bisher keine Benutzer.</string>
     <string name="people_dropdown_item_viewers">Besucher</string>
     <string name="people_dropdown_item_email_followers">E-Mail–Follower</string>
     <string name="people_dropdown_item_followers">Follower</string>
@@ -997,9 +1007,6 @@ Language: de
     <string name="editor_remove_failed_uploads">Fehlgeschlagene Uploads entfernen</string>
     <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. In diesem Zustand ist das Speichern oder Veröffentlichen deiner Beiträge nicht möglich. Willst du alle fehlgeschlagenen Medien–Uploads löschen?</string>
     <string name="site_settings_advanced_header">Erweitert</string>
-    <string name="comments_empty_list_filtered_trashed">Keine gelöschten Kommentare</string>
-    <string name="comments_empty_list_filtered_pending">Keine ausstehenden Kommentare</string>
-    <string name="comments_empty_list_filtered_approved">Keine genehmigten Kommentare</string>
     <string name="xmlrpc_missing_method_error">Konnte nicht verbinden. Die benötigte XML–RPC Methoden sind nicht auf dem Server vorhanden.</string>
     <string name="alignment_center">Zentriert</string>
     <string name="post_format_video">Video</string>
@@ -1058,7 +1065,6 @@ Language: de
     <string name="mnu_comment_delete_permanently">Löschen</string>
     <string name="mnu_comment_untrash">Wiederherstellen</string>
     <string name="comment_deleted_permanently">Kommentar gelöscht</string>
-    <string name="comments_empty_list_filtered_spam">Keine Spam–Kommentare</string>
     <string name="comment_status_all">Alle</string>
     <string name="could_not_load_page">Seite konnte nicht geladen werden.</string>
     <string name="off">Aus</string>
@@ -1211,15 +1217,7 @@ Language: de
     <string name="reader_label_gap_marker">Mehr Beiträge laden</string>
     <string name="notifications_no_search_results">Die Suche nach \'%s\' ergab keine Ergebnisse</string>
     <string name="search_sites">Websites durchsuchen</string>
-    <string name="notifications_empty_view_reader">Reader anzeigen</string>
-    <string name="notifications_empty_action_followers_likes">Mach auf dich aufmerksam: Kommentiere Beiträge, die du gelesen hast.</string>
-    <string name="notifications_empty_action_comments">Nimm an einer Diskussion teil: Kommentiere Beiträge von Blogs denen du folgst.</string>
-    <string name="notifications_empty_action_unread">Belebe eine Diskussion wieder: Schreibe einen neuen Beitrag.</string>
     <string name="notifications_empty_action_all">Werde aktiv! Kommentiere Beiträge von Blogs denen du folgst.</string>
-    <string name="notifications_empty_likes">Noch keine neuen Likes zum Anzeigen.</string>
-    <string name="notifications_empty_followers">Noch keine neuen Follower anzuzeigen.</string>
-    <string name="notifications_empty_comments">Noch keine neuen Kommentare.</string>
-    <string name="notifications_empty_unread">Keine ungelesenen Nachrichten!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Bitte greife über die App auf die Statistik zu, und versuche das Widget später hinzuzufügen.</string>
     <string name="stats_widget_error_readd_widget">Bitte entferne das Widget und füge es erneut hinzu</string>
     <string name="stats_widget_error_no_visible_blog">Ohne sichtbare Blogs kann nicht auf die Statistik zugegriffen werden</string>
@@ -1431,8 +1429,6 @@ Language: de
     <string name="reader_empty_comments">Keine Kommentare bisher</string>
     <string name="create_new_blog_wpcom">Erstelle ein WordPress.com Blog</string>
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
-    <string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
-    <string name="reader_empty_followed_blogs_title">Du folgst bisher noch keiner Website</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
     <string name="contact_us">Kontaktiere uns</string>
     <string name="schedule_verb">Zeitplan</string>
@@ -1441,7 +1437,6 @@ Language: de
     <string name="reader_page_followed_blogs">Abonnierte Websites</string>
     <string name="reader_page_followed_tags">Abonnierte Tags</string>
     <string name="reader_title_tag_preview">Reader–Schlagwort</string>
-    <string name="media_empty_list">Keine Medien</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
     <string name="forgot_password">Passwort vergessen?</string>
@@ -1469,7 +1464,6 @@ Language: de
     <string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
     <string name="adding_cat_failed">Hinzufügen der Kategorie fehlgeschlagen</string>
     <string name="mnu_comment_unspam">Kein Spam</string>
-    <string name="comments_empty_list">Keine Kommentare</string>
     <string name="theme_fetch_failed">Abrufen der Themes fehlgeschlagen</string>
     <string name="blog_not_found">Beim Aufrufen des Blogs ist ein Fehler aufgetreten</string>
     <string name="gallery_error">Das Medien–Objekt konnte nicht abgerufen werden</string>
@@ -1552,7 +1546,6 @@ Language: de
     <string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
     <string name="pick_video">Video auswählen</string>
     <string name="pick_photo">Foto auswählen</string>
-    <string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Icon rechts oben an um zu stöbern!</string>
     <string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
     <string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>
     <string name="reader_toast_err_url_intent">Konnte %s nicht öffnen</string>

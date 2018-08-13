@@ -123,15 +123,7 @@ Language: th
     <string name="reader_label_gap_marker">โหลดเรื่องเพิ่มเติม</string>
     <string name="notifications_no_search_results">ไม่มีเว็บใดตรงกับ \'%s\'</string>
     <string name="search_sites">ค้นหาเว็บ</string>
-    <string name="notifications_empty_view_reader">ดูการอ่าน</string>
-    <string name="notifications_empty_action_followers_likes">ได้การเตือน: ความเห็นบนเรื่องที่คุณอ่าน</string>
-    <string name="notifications_empty_action_comments">เข้าร่วมการสนทนา: ความเห็นบนเรื่องจากบล็อกที่คุณติดตาม</string>
-    <string name="notifications_empty_action_unread">จุดประกายให้การสนทนา: เขียนเรื่องใหม่</string>
     <string name="notifications_empty_action_all">ได้การเตือนเสมอ ความเห็นบนเรื่องจากบล็อกที่คุณติดตาม</string>
-    <string name="notifications_empty_likes">ยังไม่มีการชื่นชอบใหม่ให้แสดง</string>
-    <string name="notifications_empty_followers">ยังไม่มีผู้ติดตามใหม่ให้รายงาน</string>
-    <string name="notifications_empty_comments">ยังไม่มีความเห็นใหม่</string>
-    <string name="notifications_empty_unread">คุณตามทันทั้งหมดแล้ว</string>
     <string name="stats_widget_error_jetpack_no_blogid">โปรดเข้าดูสถิติในแอพ และลองเพิ่มวิดเจ็ตภายหลัง</string>
     <string name="stats_widget_error_readd_widget">โปรดลบวิดเจ๊ตออกและลองเพิ่มใหม่อีกครั้ง</string>
     <string name="stats_widget_error_no_visible_blog">สถิติไม่สามารถทำงานโดยไม่มีบล็อกที่มองเห็นได้</string>
@@ -329,14 +321,12 @@ Language: th
     <string name="error_refresh_unauthorized_comments">คุณไม่มีสิทธิ์ดูหรือแก้ไขความเห็น</string>
     <string name="older_month">เก่ากว่าหนึ่งเดือน</string>
     <string name="more">กว่า</string>
-    <string name="reader_empty_posts_liked">คุณยังไม่ได้ชื่นชอบเรื่องใด ๆ</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
     <string name="create_new_blog_wpcom">สร้างบล็อก WordPress.com</string>
     <string name="reader_empty_comments">ยังไม่มีความเห็น</string>
     <string name="reader_empty_posts_in_tag">ไม่มีเรื่องกับป้ายกำกับนี้</string>
     <string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
     <string name="reader_label_like">ชื่นชอบ</string>
-    <string name="reader_empty_followed_blogs_title">คุณยังไม่ได้ติดตามเว็บใด ๆ</string>
     <string name="signing_out">กำลังออกจากระบบ…</string>
     <string name="reader_label_liked_by">ชื่นชอบโดย</string>
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
@@ -347,7 +337,6 @@ Language: th
     <string name="reader_title_tag_preview">การอ่านป้ายกำกับ</string>
     <string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
     <string name="reader_hint_add_tag_or_url">ใส่ URL หรือ ป้ายกำกับเพื่อติดตาม</string>
-    <string name="media_empty_list">ไม่มีไฟล์สื่อ</string>
     <string name="help">ช่วยเหลือ</string>
     <string name="forgot_password">จำรหัสผ่านของคุณไม่ได้?</string>
     <string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
@@ -358,7 +347,6 @@ Language: th
     <string name="cat_name_required">ต้องใส่ชื่อหมวดหมู่</string>
     <string name="username_or_password_incorrect">คุณกรอกชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="passcode_wrong_passcode">PIN ไม่ถูกต้อง</string>
-    <string name="comments_empty_list">ไม่มีความเห็น</string>
     <string name="stats_empty_comments">ยังไม่มีความเห็น</string>
     <string name="stats_bar_graph_empty">สถิติยังไม่พร้อมให้ดู</string>
     <string name="notifications_empty_list">ไม่มีการเตือน</string>
@@ -451,7 +439,6 @@ Language: th
     <string name="pick_video">เลือกวีดีโอ</string>
     <string name="reader_toast_err_get_post">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
     <string name="reader_likes_you_and_one">คุณและอีกหนึ่งคนชอบสิ่งนี้</string>
-    <string name="reader_empty_followed_blogs_description">ไม่ต้องเป็นห่วง เพียงแตะที่ไอคอนที่ด้านบนขวาเพื่อเริ่มการค้นหา</string>
     <string name="reader_toast_err_view_image">ไม่สามารถดูรูปได้</string>
     <string name="reader_toast_err_url_intent">ไม่สามารถเปิด %s</string>
     <string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>
