@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStatesResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
@@ -237,6 +238,18 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class SupportedStatesResponsePayload extends Payload<SupportedStatesError> {
+        public @Nullable List<SupportedStatesResponse> supportedStates;
+
+        public SupportedStatesResponsePayload(@Nullable List<SupportedStatesResponse> supportedStates) {
+            this.supportedStates = supportedStates;
+        }
+
+        public SupportedStatesResponsePayload(@NonNull SupportedStatesError error) {
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
@@ -328,6 +341,20 @@ public class SiteStore extends Store {
         }
 
         public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class SupportedStatesError implements OnChangedError {
+        @NonNull public SupportedStatesErrorType type;
+        @Nullable public String message;
+
+        public SupportedStatesError(@NonNull SupportedStatesErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public SupportedStatesError(@NonNull SupportedStatesErrorType type) {
             this.type = type;
         }
     }
@@ -497,6 +524,16 @@ public class SiteStore extends Store {
                 }
             }
             return UNKNOWN_STATUS;
+        }
+    }
+
+    public static class OnSupportedStatesFetched extends OnChanged<SupportedStatesError> {
+        public @Nullable List<SupportedStatesResponse> supportedStates;
+
+        public OnSupportedStatesFetched(@Nullable List<SupportedStatesResponse> supportedStates,
+                                        @Nullable SupportedStatesError error) {
+            this.supportedStates = supportedStates;
+            this.error = error;
         }
     }
 
@@ -699,6 +736,23 @@ public class SiteStore extends Store {
     public enum DomainAvailabilityErrorType {
         INVALID_DOMAIN_NAME,
         GENERIC_ERROR
+    }
+
+    public enum SupportedStatesErrorType {
+        INVALID_COUNTRY_CODE,
+        INVALID_QUERY,
+        GENERIC_ERROR;
+
+        public static SupportedStatesErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (SupportedStatesErrorType v : SupportedStatesErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum SiteVisibility {
@@ -1122,6 +1176,12 @@ public class SiteStore extends Store {
             case CHECKED_DOMAIN_AVAILABILITY:
                 handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
                 break;
+            case FETCH_SUPPORTED_STATES:
+                fetchSupportedStates((String) action.getPayload());
+                break;
+            case FETCHED_SUPPORTED_STATES:
+                handleFetchedSupportedStates((SupportedStatesResponsePayload) action.getPayload());
+                break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
@@ -1432,6 +1492,18 @@ public class SiteStore extends Store {
                         payload.mappable,
                         payload.supportsPrivacy,
                         payload.error));
+    }
+
+    private void fetchSupportedStates(String countryCode) {
+        if (TextUtils.isEmpty(countryCode)) {
+            SupportedStatesError error = new SupportedStatesError(SupportedStatesErrorType.INVALID_COUNTRY_CODE);
+            handleFetchedSupportedStates(new SupportedStatesResponsePayload(error));
+        } else {
+        }
+    }
+
+    private void handleFetchedSupportedStates(SupportedStatesResponsePayload payload) {
+        emitChange(new OnSupportedStatesFetched(payload.supportedStates, payload.error));
     }
 
     // Automated Transfers
