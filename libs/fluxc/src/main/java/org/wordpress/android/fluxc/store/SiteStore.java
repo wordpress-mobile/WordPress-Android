@@ -1499,6 +1499,7 @@ public class SiteStore extends Store {
             SupportedStatesError error = new SupportedStatesError(SupportedStatesErrorType.INVALID_COUNTRY_CODE);
             handleFetchedSupportedStates(new SupportedStatesResponsePayload(error));
         } else {
+            mSiteRestClient.fetchSupportedStates(countryCode);
         }
     }
 
