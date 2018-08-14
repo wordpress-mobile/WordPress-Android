@@ -139,12 +139,12 @@ class PagesFragment : Fragment() {
     private fun initializeViewModels(activity: FragmentActivity, site: SiteModel) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
-        setupObservers(site)
+        setupObservers(activity, site)
 
         viewModel.start(site)
     }
 
-    private fun setupObservers(site: SiteModel) {
+    private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
         viewModel.searchResult.observe(this, Observer { result ->
             result?.let { setSearchResult(result) }
         })
@@ -166,7 +166,7 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
-            val parent = activity?.findViewById<View>(R.id.coordinatorLayout)
+            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitle.isNullOrEmpty()) {
                     Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG).show()

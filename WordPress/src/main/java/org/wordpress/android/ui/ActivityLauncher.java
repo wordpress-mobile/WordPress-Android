@@ -224,14 +224,14 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
-    public static void viewCurrentBlogPages(Context context, SiteModel site) {
+    public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, PagesActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    public static void viewPageParentForResult(Activity activity, PageModel page) {
+    public static void viewPageParentForResult(@NonNull Activity activity, @NonNull PageModel page) {
         Intent intent = new Intent(activity, PageParentActivity.class);
         intent.putExtra(WordPress.SITE, page.getSite());
         intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
@@ -347,11 +347,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void viewPagePreview(Activity activity, PageModel page) {
-        if (page == null) {
-            return;
-        }
-
+    public static void viewPagePreview(@NonNull Activity activity, @NonNull PageModel page) {
         Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         intent.putExtra(WordPress.SITE, page.getSite());
@@ -384,7 +380,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPageForResult(Activity activity, PageModel page) {
+    public static void editPageForResult(@NonNull Activity activity, @NonNull PageModel page) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, page.getSite());
         // PostModel objects can be quite large, since content field is not size restricted,
@@ -394,11 +390,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addNewPageForResult(Activity activity, SiteModel site) {
-        if (site == null) {
-            return;
-        }
-
+    public static void addNewPageForResult(@NonNull Activity activity, @NonNull SiteModel site) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
