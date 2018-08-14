@@ -349,7 +349,9 @@ public class SiteStore extends Store {
         @NonNull public DomainSupportedCountriesErrorType type;
         @Nullable public String message;
 
-        public DomainSupportedCountriesError(@NonNull DomainSupportedCountriesErrorType type, @Nullable String message) {
+        public DomainSupportedCountriesError(
+                @NonNull DomainSupportedCountriesErrorType type,
+                @Nullable String message) {
             this.type = type;
             this.message = message;
         }
