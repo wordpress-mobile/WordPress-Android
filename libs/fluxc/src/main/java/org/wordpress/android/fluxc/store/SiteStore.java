@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStatesResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
@@ -238,14 +238,14 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class SupportedStatesResponsePayload extends Payload<SupportedStatesError> {
-        public @Nullable List<SupportedStatesResponse> supportedStates;
+    public static class DomainSupportedStatesResponsePayload extends Payload<DomainSupportedStatesError> {
+        public @Nullable List<SupportedStateResponse> supportedStates;
 
-        public SupportedStatesResponsePayload(@Nullable List<SupportedStatesResponse> supportedStates) {
+        public DomainSupportedStatesResponsePayload(@Nullable List<SupportedStateResponse> supportedStates) {
             this.supportedStates = supportedStates;
         }
 
-        public SupportedStatesResponsePayload(@NonNull SupportedStatesError error) {
+        public DomainSupportedStatesResponsePayload(@NonNull DomainSupportedStatesError error) {
             this.error = error;
         }
     }
@@ -345,16 +345,16 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class SupportedStatesError implements OnChangedError {
-        @NonNull public SupportedStatesErrorType type;
+    public static class DomainSupportedStatesError implements OnChangedError {
+        @NonNull public DomainSupportedStatesErrorType type;
         @Nullable public String message;
 
-        public SupportedStatesError(@NonNull SupportedStatesErrorType type, @Nullable String message) {
+        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type, @Nullable String message) {
             this.type = type;
             this.message = message;
         }
 
-        public SupportedStatesError(@NonNull SupportedStatesErrorType type) {
+        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type) {
             this.type = type;
         }
     }
@@ -527,11 +527,11 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnSupportedStatesFetched extends OnChanged<SupportedStatesError> {
-        public @Nullable List<SupportedStatesResponse> supportedStates;
+    public static class OnDomainSupportedStatesFetched extends OnChanged<DomainSupportedStatesError> {
+        public @Nullable List<SupportedStateResponse> supportedStates;
 
-        public OnSupportedStatesFetched(@Nullable List<SupportedStatesResponse> supportedStates,
-                                        @Nullable SupportedStatesError error) {
+        public OnDomainSupportedStatesFetched(@Nullable List<SupportedStateResponse> supportedStates,
+                                              @Nullable DomainSupportedStatesError error) {
             this.supportedStates = supportedStates;
             this.error = error;
         }
@@ -738,14 +738,14 @@ public class SiteStore extends Store {
         GENERIC_ERROR
     }
 
-    public enum SupportedStatesErrorType {
+    public enum DomainSupportedStatesErrorType {
         INVALID_COUNTRY_CODE,
         INVALID_QUERY,
         GENERIC_ERROR;
 
-        public static SupportedStatesErrorType fromString(String type) {
+        public static DomainSupportedStatesErrorType fromString(String type) {
             if (!TextUtils.isEmpty(type)) {
-                for (SupportedStatesErrorType v : SupportedStatesErrorType.values()) {
+                for (DomainSupportedStatesErrorType v : DomainSupportedStatesErrorType.values()) {
                     if (type.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -1176,11 +1176,11 @@ public class SiteStore extends Store {
             case CHECKED_DOMAIN_AVAILABILITY:
                 handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
                 break;
-            case FETCH_SUPPORTED_STATES:
+            case FETCH_DOMAIN_SUPPORTED_STATES:
                 fetchSupportedStates((String) action.getPayload());
                 break;
-            case FETCHED_SUPPORTED_STATES:
-                handleFetchedSupportedStates((SupportedStatesResponsePayload) action.getPayload());
+            case FETCHED_DOMAIN_SUPPORTED_STATES:
+                handleFetchedSupportedStates((DomainSupportedStatesResponsePayload) action.getPayload());
                 break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
@@ -1496,15 +1496,15 @@ public class SiteStore extends Store {
 
     private void fetchSupportedStates(String countryCode) {
         if (TextUtils.isEmpty(countryCode)) {
-            SupportedStatesError error = new SupportedStatesError(SupportedStatesErrorType.INVALID_COUNTRY_CODE);
-            handleFetchedSupportedStates(new SupportedStatesResponsePayload(error));
+            DomainSupportedStatesError error = new DomainSupportedStatesError(DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE);
+            handleFetchedSupportedStates(new DomainSupportedStatesResponsePayload(error));
         } else {
             mSiteRestClient.fetchSupportedStates(countryCode);
         }
     }
 
-    private void handleFetchedSupportedStates(SupportedStatesResponsePayload payload) {
-        emitChange(new OnSupportedStatesFetched(payload.supportedStates, payload.error));
+    private void handleFetchedSupportedStates(DomainSupportedStatesResponsePayload payload) {
+        emitChange(new OnDomainSupportedStatesFetched(payload.supportedStates, payload.error));
     }
 
     // Automated Transfers
