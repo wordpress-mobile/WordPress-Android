@@ -7,26 +7,53 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
+import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.PublishedPage
+import org.wordpress.android.ui.pages.PageItem.ScheduledPage
+import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
 
 class PagesViewModel
-@Inject constructor(private val pageStore: PageStore) : ViewModel() {
+@Inject constructor(
+    private val pageStore: PageStore,
+    private val dispatcher: Dispatcher,
+    private val resourceProvider: ResourceProvider,
+    private val uploadUtil: PageUploadUtil
+) : ViewModel() {
     private val _isSearchExpanded = SingleLiveEvent<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
@@ -37,16 +64,46 @@ class PagesViewModel
     val listState: LiveData<PageListState>
         get() = _listState
 
+    private val _displayDeleteDialog = SingleLiveEvent<Page>()
+    val displayDeleteDialog: LiveData<Page>
+        get() = _displayDeleteDialog
+
     private val _refreshPages = SingleLiveEvent<Unit>()
     val refreshPages: LiveData<Unit>
         get() = _refreshPages
 
-    private var _pages: List<PageModel> = emptyList()
-    val pages: List<PageModel>
+    private val _createNewPage = SingleLiveEvent<Unit>()
+    val createNewPage: LiveData<Unit>
+        get() = _createNewPage
+
+    private val _editPage = SingleLiveEvent<PageModel?>()
+    val editPage: LiveData<PageModel?>
+        get() = _editPage
+
+    private val _previewPage = SingleLiveEvent<PageModel?>()
+    val previewPage: LiveData<PageModel?>
+        get() = _previewPage
+
+    private val _setPageParent = SingleLiveEvent<PageModel?>()
+    val setPageParent: LiveData<PageModel?>
+        get() = _setPageParent
+
+    private var _pages: Map<Long, PageModel> = emptyMap()
+    val pages: Map<Long, PageModel>
         get() = _pages
+
+    private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
+    val showSnackbarMessage: LiveData<SnackbarMessageHolder>
+        get() = _showSnackbarMessage
 
     private lateinit var site: SiteModel
     private var searchJob: Job? = null
+    private var lastSearchQuery = ""
+    private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
+
+    init {
+        dispatcher.register(this)
+    }
 
     fun start(site: SiteModel) {
         this.site = site
@@ -55,26 +112,42 @@ class PagesViewModel
         reloadPagesAsync()
     }
 
-    private fun reloadPagesAsync() = launch(CommonPool) {
-        _pages = pageStore.loadPagesFromDb(site)
-        refreshPages()
+    override fun onCleared() {
+        dispatcher.unregister(this)
     }
 
-    private suspend fun refreshPages() {
-        var newState = FETCHING
+    private fun reloadPagesAsync() = launch(CommonPool) {
+        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
+
+        val loadState = if (_pages.isEmpty()) FETCHING else REFRESHING
+        refreshPages(loadState)
+    }
+
+    suspend fun refreshPages(state: PageListState = REFRESHING) {
+        var newState = state
         _listState.postValue(newState)
 
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
             newState = ERROR
+            _showSnackbarMessage.postValue(
+                    SnackbarMessageHolder(resourceProvider.getString(string.error_refresh_pages)))
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
-            _pages = pageStore.loadPagesFromDb(site)
+            _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
             _refreshPages.asyncCall()
             newState = DONE
         }
 
         _listState.postValue(newState)
+    }
+
+    fun onPageEditFinished(pageId: Long) {
+        launch {
+            if (!uploadUtil.isPageUploading(pageId, site)) {
+                refreshPages()
+            }
+        }
     }
 
     fun onSearch(searchQuery: String) {
@@ -84,15 +157,7 @@ class PagesViewModel
                 delay(200)
                 searchJob = null
                 if (isActive) {
-                    val result = pageStore.groupedSearch(site, searchQuery)
-                            .map { (status, results) ->
-                                listOf(Divider(status.toResource())) +
-                                        results.map { Page(it.pageId.toLong(), it.title, null) }
-                            }
-                            .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
-                                acc.addAll(list)
-                                acc
-                            }
+                    val result = search(searchQuery)
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
@@ -105,13 +170,33 @@ class PagesViewModel
         }
     }
 
+    suspend fun search(searchQuery: String): MutableList<PageItem> {
+        lastSearchQuery = searchQuery
+        return pageStore.groupedSearch(site, searchQuery)
+                .map { (status, results) ->
+                    listOf(Divider(resourceProvider.getString(status.toResource()))) + results.map { it.toPageItem() }
+                }
+                .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
+                    acc.addAll(list)
+                    return@fold acc
+                }
+    }
+
+    private fun PageModel.toPageItem(): PageItem {
+        return when (status) {
+            PUBLISHED -> PublishedPage(remoteId, title)
+            DRAFT -> DraftPage(remoteId, title)
+            TRASHED -> TrashedPage(remoteId, title)
+            SCHEDULED -> ScheduledPage(remoteId, title)
+        }
+    }
+
     private fun PageStatus.toResource(): Int {
         return when (this) {
             PageStatus.PUBLISHED -> string.pages_published
             PageStatus.DRAFT -> string.pages_drafts
             PageStatus.TRASHED -> string.pages_trashed
             PageStatus.SCHEDULED -> string.pages_scheduled
-            PageStatus.UNKNOWN -> throw IllegalArgumentException("Unknown page type")
         }
     }
 
@@ -125,17 +210,96 @@ class PagesViewModel
         return true
     }
 
-    fun refresh() {
-        launch(CommonPool) {
-            refreshPages()
+    fun onMenuAction(action: Action, page: Page): Boolean {
+        when (action) {
+            VIEW_PAGE -> _previewPage.postValue(pages[page.id])
+            SET_PARENT -> _setPageParent.postValue(pages[page.id])
+            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
+            PUBLISH_NOW -> changePageStatus(page.id, PUBLISHED)
+            DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
+        }
+        return true
+    }
+
+    fun onDeleteConfirmed(remoteId: Long) {
+        launch {
+            val page = pages[remoteId]
+            if (page != null) {
+                pageStore.deletePage(page)
+                refreshPages()
+
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(resourceProvider.getString(string.page_permanently_deleted)))
+            } else {
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(resourceProvider.getString(string.page_delete_error)))
+            }
         }
     }
 
-    fun onAction(action: Action, pageItem: PageItem): Boolean {
-        TODO("not implemented")
+    fun onItemTapped(pageItem: Page) {
+        _editPage.postValue(pages[pageItem.id])
+    }
+
+    fun onNewPageButtonTapped() {
+        _createNewPage.asyncCall()
+    }
+
+    fun onPullToRefresh() {
+        launch {
+            refreshPages(FETCHING)
+        }
+    }
+
+    private fun changePageStatus(remoteId: Long, status: PageStatus) {
+        pages[remoteId]
+                ?.let { page ->
+                    launch {
+                        statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
+                        page.status = status
+                        uploadUtil.uploadPage(page)
+                    }
+                }
+    }
+
+    private fun prepareStatusChangeSnackbar(newStatus: PageStatus, page: PageModel? = null): SnackbarMessageHolder {
+        val message = when (newStatus) {
+            DRAFT -> resourceProvider.getString(string.page_moved_to_draft)
+            PUBLISHED -> resourceProvider.getString(string.page_moved_to_published)
+            TRASHED -> resourceProvider.getString(string.page_moved_to_trash)
+            SCHEDULED -> resourceProvider.getString(string.page_moved_to_scheduled)
+        }
+
+        return if (page != null) {
+            val previousStatus = page.status
+            SnackbarMessageHolder(message, resourceProvider.getString(string.undo)) {
+                changePageStatus(page.remoteId, previousStatus)
+            }
+        } else {
+            SnackbarMessageHolder(message)
+        }
     }
 
     private fun clearSearch() {
         _searchResult.postValue(listOf(Empty(string.empty_list_default)))
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (event.post.isPage) {
+            launch {
+                refreshPages()
+                onSearch(lastSearchQuery)
+
+                if (statusPageSnackbarMessage != null) {
+                    _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
+                    statusPageSnackbarMessage = null
+                } else {
+                    _showSnackbarMessage.postValue(
+                            prepareStatusChangeSnackbar(PageModel(event.post, site).status))
+                }
+            }
+        }
     }
 }

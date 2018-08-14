@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -23,28 +22,37 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageViewHolder(
         parentView: ViewGroup,
-        private val onAction: (PageItem.Action, PageItem) -> Boolean
+        private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+        private val onItemTapped: (Page) -> Unit
     ) : PageItemViewHolder(parentView, layout.page_list_item) {
-        private val indentContainer = itemView.findViewById<FrameLayout>(id.indent_container)
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
+        private val pageLabel = itemView.findViewById<TextView>(id.page_label)
+        private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).apply {
-                if (pageItem.indent > 0) {
-                    val sumIndent = 16 * pageItem.indent
-                    val indentWidth = DisplayUtils.dpToPx(indentContainer.context, sumIndent)
-                    val layoutParams = ViewGroup.LayoutParams(indentWidth, ViewGroup.LayoutParams.MATCH_PARENT)
-                    val indent = View(indentContainer.context)
-                    indentContainer.addView(indent, layoutParams)
-                }
+                val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
+                val marginLayoutParams = pageItemContainer.layoutParams as ViewGroup.MarginLayoutParams
+                marginLayoutParams.leftMargin = indentWidth
+                pageItemContainer.layoutParams = marginLayoutParams
+
                 pageTitle.text = if (pageItem.title.isEmpty())
                     parent.context.getString(R.string.untitled_in_parentheses)
                 else
                     pageItem.title
 
+                if (pageItem.labelRes == null) {
+                    pageLabel.visibility = View.GONE
+                } else {
+                    pageLabel.text = parent.context.getString(pageItem.labelRes!!)
+                    pageLabel.visibility = View.VISIBLE
+                }
+
+                itemView.setOnClickListener { onItemTapped(pageItem) }
+
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
-                pageMore.visibility = if (pageItem.enabledActions.isNotEmpty()) View.VISIBLE else View.GONE
+                pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
             }
         }
 
@@ -52,11 +60,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             val popup = PopupMenu(v.context, v)
             popup.setOnMenuItemClickListener { item ->
                 val action = PageItem.Action.fromItemId(item.itemId)
-                onAction(action, pageItem)
+                onMenuAction(action, pageItem)
             }
             popup.menuInflater.inflate(R.menu.page_more, popup.menu)
             PageItem.Action.values().forEach {
-                popup.menu.findItem(it.itemId).isVisible = pageItem.enabledActions.contains(it)
+                popup.menu.findItem(it.itemId).isVisible = pageItem.actions.contains(it)
             }
             popup.show()
         }
@@ -66,7 +74,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val dividerTitle = itemView.findViewById<TextView>(id.divider_text)
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
-                dividerTitle.text = dividerTitle.resources.getText(pageItem.title)
+                dividerTitle.text = pageItem.title
             }
         }
     }

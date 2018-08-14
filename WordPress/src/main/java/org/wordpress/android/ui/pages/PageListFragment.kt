@@ -41,7 +41,7 @@ class PageListFragment : Fragment() {
             companion object {
                 fun getType(position: Int): Type {
                     if (position >= values().size) {
-                        throw IllegalArgumentException("Selected position $position is out of range of page list types")
+                        throw Throwable("Selected position $position is out of range of page list types")
                     }
                     return values()[position]
                 }
@@ -92,7 +92,7 @@ class PageListFragment : Fragment() {
         setupObservers()
 
         val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        viewModel.start(site, getPageType(type), pagesViewModel)
+        viewModel.start(getPageType(type), pagesViewModel)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -124,7 +124,10 @@ class PageListFragment : Fragment() {
     private fun setPages(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (recyclerView.adapter == null) {
-            adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+            adapter = PagesAdapter(
+                    { action, page -> viewModel.onMenuAction(action, page) },
+                    { page -> viewModel.onItemTapped(page) }
+            )
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PagesAdapter

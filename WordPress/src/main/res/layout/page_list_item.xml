@@ -1,45 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="48dp"
-              android:orientation="horizontal">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/page_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/indent_container" />
-
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingStart="16dp">
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingTop="@dimen/page_item_padding"
+        android:paddingBottom="@dimen/page_item_padding"
+        android:background="?attr/selectableItemBackground">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/page_title"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/wp_grey_dark"
             android:textSize="16sp"
+            android:layout_marginLeft="@dimen/page_item_padding"
+            android:layout_marginStart="@dimen/page_item_padding"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="First page"/>
 
         <ImageButton
             android:id="@+id/page_more"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/show_more_desc"
-            android:background="@color/white"
-            app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
+            android:paddingEnd="@dimen/page_item_padding"
+            android:paddingLeft="@dimen/page_item_padding"
+            android:paddingRight="@dimen/page_item_padding"
+            android:paddingStart="@dimen/page_item_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"/>
 
-    </LinearLayout>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/page_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/page_item_padding"
+            android:layout_marginStart="@dimen/page_item_padding"
+            android:drawableLeft="@drawable/ic_gridicons_page_14dp"
+            android:drawableStart="@drawable/ic_gridicons_page_14dp"
+            android:drawablePadding="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Local Draft"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:textColor="@color/alert_yellow_dark"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/page_title"/>
 
-</LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.pages
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
@@ -24,15 +27,21 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
+import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.LOADING_MORE
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -76,15 +85,30 @@ class PagesFragment : Fragment() {
         initializeViewModels(nonNullActivity, nonNullSite)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
+            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+            if (pageId != -1L) {
+                onPageEditFinished(pageId)
+            }
+        }
+    }
+
+    private fun onPageEditFinished(pageId: Long) {
+        viewModel.onPageEditFinished(pageId)
+    }
+
     private fun initializeViews(activity: FragmentActivity) {
         pagesPager.adapter = PagesPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(pagesPager)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
-            viewModel.refresh()
+            viewModel.onPullToRefresh()
         }
 
-        newPageButton.setOnClickListener {}
+        newPageButton.setOnClickListener {
+            viewModel.onNewPageButtonTapped()
+        }
     }
 
     private fun initializeSearchView() {
@@ -122,17 +146,14 @@ class PagesFragment : Fragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, site: SiteModel) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PagesViewModel>(PagesViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get<PagesViewModel>(PagesViewModel::class.java)
-
-        setupObservers()
+        setupObservers(activity, site)
 
         viewModel.start(site)
     }
 
-    private fun setupObservers() {
+    private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
         viewModel.searchResult.observe(this, Observer { result ->
             result?.let { setSearchResult(result) }
         })
@@ -148,6 +169,38 @@ class PagesFragment : Fragment() {
         viewModel.listState.observe(this, Observer {
             refreshProgressBars(it)
         })
+
+        viewModel.createNewPage.observe(this, Observer {
+            ActivityLauncher.addNewPageForResult(this, site)
+        })
+
+        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
+            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+            if (holder != null && parent != null) {
+                if (holder.buttonTitle.isNullOrEmpty()) {
+                    Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG).show()
+                } else {
+                    val snackbar = Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG)
+                    snackbar.setAction(holder.buttonTitle) { _ -> holder.buttonAction() }
+                    snackbar.show()
+                }
+            }
+        })
+
+        viewModel.editPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.editPageForResult(this, page) }
+        })
+
+        viewModel.previewPage.observe(this, Observer { page ->
+            page?.let { ActivityLauncher.viewPagePreview(this, page) }
+        })
+
+        viewModel.setPageParent.observe(this, Observer { page ->
+        })
+
+        viewModel.displayDeleteDialog.observe(this, Observer { page ->
+            page?.let { displayDeleteDialog(page) }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -160,15 +213,16 @@ class PagesFragment : Fragment() {
         initializeSearchView()
     }
 
+    fun onPageDeleteConfirmed(remoteId: Long) {
+        viewModel.onDeleteConfirmed(remoteId)
+    }
+
     private fun refreshProgressBars(listState: PageListState?) {
         if (!isAdded || view == null) {
             return
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
         swipeToRefreshHelper.isRefreshing = listState == FETCHING
-        // We want to show the progress bar at the bottom while loading more but not for initial fetch
-        val showLoadMore = listState == LOADING_MORE
-        pagesListProgress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
     }
 
     private fun hideSearchList(myActionMenuItem: MenuItem) {
@@ -179,8 +233,8 @@ class PagesFragment : Fragment() {
             myActionMenuItem.collapseActionView()
         }
         launch(UI) {
-            delay(500)
-            newPageButton?.show()
+            delay(300)
+            AniUtils.scaleIn(newPageButton, AniUtils.Duration.MEDIUM)
         }
     }
 
@@ -191,18 +245,31 @@ class PagesFragment : Fragment() {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-        newPageButton?.hide()
+        AniUtils.scaleOut(newPageButton, AniUtils.Duration.MEDIUM)
     }
 
     private fun setSearchResult(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (searchRecyclerView.adapter == null) {
-            adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+            adapter = PagesAdapter(
+                    { action, page -> viewModel.onMenuAction(action, page) },
+                    { page -> viewModel.onItemTapped(page) }
+            )
             searchRecyclerView.adapter = adapter
         } else {
             adapter = searchRecyclerView.adapter as PagesAdapter
         }
         adapter.update(pages)
+    }
+
+    private fun displayDeleteDialog(page: Page) {
+        val dialog = BasicFragmentDialog()
+        dialog.initialize(page.id.toString(),
+                getString(string.delete_page),
+                getString(string.page_delete_dialog_message, page.title),
+                getString(string.delete),
+                getString(string.cancel))
+        dialog.show(fragmentManager, page.id.toString())
     }
 }
 

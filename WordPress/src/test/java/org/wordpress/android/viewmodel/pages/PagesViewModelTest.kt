@@ -13,17 +13,21 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.ui.pages.PageItem
+import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.test
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class PagesViewModelTest {
@@ -32,15 +36,20 @@ class PagesViewModelTest {
 
     @Mock lateinit var pageStore: PageStore
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var uploadUtil: PageUploadUtil
+    @Mock lateinit var dispatcher: Dispatcher
     private lateinit var viewModel: PagesViewModel
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore)
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil)
     }
 
     @Test
     fun clearsResultAndLoadsDataOnStart() = runBlocking<Unit> {
-        whenever(pageStore.loadPagesFromDb(site)).thenReturn(listOf(PageModel(1, "title", DRAFT, -1)))
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(
+                PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
+        )
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
         val listStateObserver = viewModel.listState.test()
         val refreshPagesObserver = viewModel.refreshPages.test()
@@ -52,17 +61,18 @@ class PagesViewModelTest {
 
         val listStates = listStateObserver.awaitValues(2)
 
-        assertThat(listStates).containsExactly(FETCHING, DONE)
+        assertThat(listStates).containsExactly(REFRESHING, DONE)
         refreshPagesObserver.awaitNullableValues(2)
     }
 
     @Test
     fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
         initSearch()
+        whenever(resourceProvider.getString(string.pages_drafts)).thenReturn("Drafts")
         val query = "query"
         val title = "title"
-        val drafts = listOf(PageModel(1, title, DRAFT, -1))
-        val expectedResult = listOf(Divider(string.pages_drafts), PageItem.Page(1, title, null))
+        val drafts = listOf( PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
+        val expectedResult = listOf(Divider("Drafts"), DraftPage(1, title))
         whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf(DRAFT to drafts))
 
         val observer = viewModel.searchResult.test()
@@ -106,7 +116,7 @@ class PagesViewModelTest {
     }
 
     private suspend fun initSearch() {
-        whenever(pageStore.loadPagesFromDb(site)).thenReturn(listOf())
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
         viewModel.start(site)
     }

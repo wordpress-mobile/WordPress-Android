@@ -231,6 +231,13 @@
     <string name="page_settings">Page settings</string>
     <string name="pages">Pages</string>
     <string name="set_parent">Set Parent</string>
+    <string name="page_delete_error">We were unable to delete the page.</string>
+    <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="page_moved_to_draft">Page has been moved to Drafts</string>
+    <string name="page_moved_to_trash">Page has been trashed</string>
+    <string name="page_moved_to_published">Page has been published</string>
+    <string name="page_moved_to_scheduled">Page has been scheduled</string>
+    <string name="page_permanently_deleted">Page has been permanently deleted</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
@@ -2242,5 +2249,6 @@
     <string name="pages_publish_now">Publish Now</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_move_to_trash">Move to Trash</string>
+    <string name="pages_delete_permanently">Delete Permanently</string>
     <string name="pages_empty_search_result">No pages matching search query</string>
 </resources>

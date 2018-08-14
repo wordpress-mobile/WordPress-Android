@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.pages
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -61,21 +60,20 @@ class PageParentFragment : Fragment() {
         recyclerView.layoutManager = linearLayoutManager
         linearLayoutManager = layoutManager
 
-        val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
-        recyclerView.adapter = adapter
+//        val adapter = PagesAdapter { action, pageItem -> viewModel.onAction(action, pageItem) }
+//        recyclerView.adapter = adapter
 
-        viewModel.data.observe(this, Observer { data ->
-            if (data != null) {
-                adapter.update(data)
-            }
-        })
+//        viewModel.data.observe(this, Observer { data ->
+//            if (data != null) {
+//                adapter.update(data)
+//            }
+//        })
 
         (activity!!.application as WordPress).component()?.inject(this)
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get<PageParentViewModel>(PageParentViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PageParentViewModel::class.java)
 
         val site = (savedInstanceState?.getSerializable(WordPress.SITE)
                 ?: activity!!.intent!!.getSerializableExtra(WordPress.SITE)) as SiteModel

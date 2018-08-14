@@ -321,4 +321,7 @@
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
 
     <dimen name="snackbar_message_margin_bottom">18dp</dimen>
+
+    <!-- pages -->
+    <dimen name="page_item_padding">16dp</dimen>
 </resources>
