@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-25 09:34:29+0000
+Translation-Revision-Date: 2018-08-02 16:47:35+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">Niciun vizitator până acum</string>
+    <string name="people_empty_list_filtered_email_followers">Niciun urmăritor prin email până acum</string>
+    <string name="people_empty_list_filtered_followers">Niciun urmăritor până acum</string>
+    <string name="people_empty_list_filtered_users">Niciun utilizator până acum</string>
+    <string name="connection_service_facebook_notice">Începând cu 1 august 2018, Facebook nu mai permite partajarea directă a articolelor în profilurile Facebook. Conexiunile la paginile Facebook rămân neschimbate.</string>
+    <string name="reader_empty_posts_liked_description">Articolele pe care le apreciezi vor apărea aici</string>
+    <string name="reader_empty_posts_liked_title">Nu ai apreciat nimic până acum</string>
+    <string name="reader_empty_followed_blogs_button_followed">Du–te la urmărire</string>
+    <string name="reader_empty_followed_blogs_button_discover">Descoperă situri</string>
+    <string name="reader_empty_followed_blogs_description">În prezent nu urmărești niciun sit. Nu vrei să urmărești unul acum?</string>
+    <string name="reader_empty_followed_blogs_title">Niciun sit urmărit</string>
+    <string name="notifications_empty_likes">Nicio apreciere până acum</string>
+    <string name="notifications_empty_followers">Niciun urmăritor până acum</string>
+    <string name="activity_log_limited_content_on_free_plan">Deoarece ai un plan gratuit, vei vedea numai anumite evenimente în activitatea ta.</string>
+    <string name="activity_log_empty_subtitle">Când faci modificări pe situl tău, vei putea vedea aici istoricul activităților tale.</string>
+    <string name="activity_log_empty_title">Nicio activitate până acum</string>
+    <string name="posts_empty_list_button">Creează un articol</string>
+    <string name="pages_empty_list_button">Creează o pagină</string>
+    <string name="media_empty_upload_media">Încarcă media</string>
+    <string name="media_empty_list">Nu ai niciun fișier media</string>
     <string name="reader_gallery_images_desc">galerie de imagini</string>
     <string name="blavatar_desc">icon sit</string>
     <string name="theme_image_desc">imagine temă</string>
     <string name="featured_image_desc">imagine reprezentativă</string>
-    <string name="support_push_notification_message_hint_snackbar">Găsește–ți conversația cu suportul atingând „Ajutor și suport” și apoi „Tichetele mele”</string>
     <string name="local_changes_discarding_error">A fost o eroare la renunțarea la modificările tale locale. Te rog contactează suportul pentru asistență suplimentară.</string>
     <string name="local_changes_discarding">Renunț la modificările locale</string>
     <string name="local_changes_discarded">Modificările locale au fost aruncate la gunoi</string>
@@ -29,14 +48,14 @@ Language: ro
     <string name="support_contact_email">Email de contact</string>
     <string name="application_log_button">Jurnal aplicații</string>
     <string name="my_tickets">Tichetele mele</string>
-    <string name="activity_log_rewind_dialog_message">Sigur vrei să–ți derulezi situl înapoi la %s pe %s? Derularea înapoi va înlătura tot conținutul și opțiunile create sau modificate de atunci.</string>
+    <string name="activity_log_rewind_dialog_message">Sigur vrei să–ți derulezi situl înapoi la %1$s pe %2$s? Derularea înapoi va înlătura tot conținutul și opțiunile create sau modificate de atunci.</string>
     <string name="activity_log_rewind_site">Derulează înapoi situl</string>
     <string name="activity_log_currently_restoring_message_no_dates">Derulare înapoi în curs de desfășurare</string>
-    <string name="activity_log_currently_restoring_message">Derulez înapoi la %s %s</string>
+    <string name="activity_log_currently_restoring_message">Derulez înapoi la %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Acum îți restaurăm situl</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Situl tău a fost restaurat cu succes</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Situl tău a fost restaurat cu succes\nDerulat înapoi la %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Situl tău este restaurat\nDerulez înapoi la %s %s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Situl tău a fost restaurat cu succes\nDerulat înapoi la %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Situl tău este restaurat acum\nDerulez înapoi la %1$s %2$s</string>
     <string name="activity_log_button">Buton acțiune jurnal de activități</string>
     <string name="plugin_auto_managed">Administrat automat</string>
     <string name="reader_save_posts_locally_dialog_message">Salvează acest articol și te poți întoarce să–l citești oricând vrei. El va fi disponibil numai pe acest dispozitiv — articolele salvate nu se sincronizează cu alte dispozitive (deocamdată, dar lucrăm la asta).</string>
@@ -64,7 +83,6 @@ Language: ro
     <string name="reader_remove_bookmark">Înlătură din articole salvate</string>
     <string name="reader_add_bookmark">Adaugă la articole salvate</string>
     <string name="reader_save_for_later_title">Articole salvate</string>
-    <string name="activity_log_empty_list">Niciun eveniment înregistrat până acum</string>
     <string name="removed">Înlăturat</string>
     <string name="tabbar_accessibility_label_write">Articol nou. Scrie un articol nou.</string>
     <string name="my_site_icon_content_description">Schimbă iconul sitului</string>
@@ -887,10 +905,6 @@ Language: ro
     <string name="title_email_follower">Urmăritor prin email</string>
     <string name="title_follower">Urmăritor</string>
     <string name="people_fetching">Se aduc utilizatori…</string>
-    <string name="people_empty_list_filtered_viewers">Nu ai încă niciun vizitator.</string>
-    <string name="people_empty_list_filtered_email_followers">Nu ai încă niciun urmăritor prin email.</string>
-    <string name="people_empty_list_filtered_followers">Nu ai încă niciun urmăritor.</string>
-    <string name="people_empty_list_filtered_users">Nu ai încă niciun utilizator.</string>
     <string name="people_dropdown_item_viewers">Vizitatori</string>
     <string name="people_dropdown_item_email_followers">Urmăritori prin email</string>
     <string name="people_dropdown_item_followers">Urmăritori</string>
@@ -1218,15 +1232,13 @@ Language: ro
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
     <string name="notifications_no_search_results">Niciun site nu s–a potrivit cu \'%s\'</string>
     <string name="search_sites">Căutare situri</string>
-    <string name="notifications_empty_view_reader">Vezi Cititorul</string>
-    <string name="notifications_empty_action_followers_likes">Remarcă-te: comentează articolele pe care le–ai citit.</string>
-    <string name="notifications_empty_action_comments">Alătură–te conversației: comentează articolele blogurilor pe care le urmărești.</string>
-    <string name="notifications_empty_action_unread">Reaprinde conversația: scrie un nou articol.</string>
+    <string name="notifications_empty_view_reader">Du–te la Cititor</string>
+    <string name="notifications_empty_action_followers_likes">Remarcă-te: comentează la articole pe care le–ai citit</string>
+    <string name="notifications_empty_action_comments">Alătură–te unei conversații: comentează la articolele din blogurile pe care le urmărești</string>
+    <string name="notifications_empty_action_unread">Continuă conversația: scrie un articol nou</string>
     <string name="notifications_empty_action_all">Fii activ! Comentează articolele de pe blogurile pe care le urmărești.</string>
-    <string name="notifications_empty_likes">Nicio nouă legătură de arătat… încă.</string>
-    <string name="notifications_empty_followers">Niciun nou urmăritor de raportat… încă.</string>
-    <string name="notifications_empty_comments">Niciun nou comentariu… încă.</string>
-    <string name="notifications_empty_unread">Le–ai prins pe toate!</string>
+    <string name="notifications_empty_comments">Niciun comentariu până acum</string>
+    <string name="notifications_empty_unread">Ești cu toate la zi!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Te rog accesează statisticile în aplicație și încearcă adăugarea piesei mai târziu</string>
     <string name="stats_widget_error_readd_widget">Te rog îndepărtează piesa și re-atașeaz–o.</string>
     <string name="stats_widget_error_no_visible_blog">Statisticile nu pot fi accesate fără un blog vizibil</string>
@@ -1441,8 +1453,6 @@ Language: ro
     <string name="reader_empty_comments">Niciun comentariu încă</string>
     <string name="create_new_blog_wpcom">Crează un blog la WordPress.com</string>
     <string name="browse_our_faq_button">Răsfoiește Î&amp;R noastre</string>
-    <string name="reader_empty_posts_liked">Nu ți–a plăcut niciun articol</string>
-    <string name="reader_empty_followed_blogs_title">Încă nu urmărești niciun sit</string>
     <string name="reader_menu_block_blog">Blochează acest sit</string>
     <string name="reader_toast_blog_blocked">Articolele din acest sit nu vor mai fi arătate</string>
     <string name="reader_toast_err_block_blog">Nu pot bloca acest sit</string>
@@ -1462,7 +1472,6 @@ Language: ro
     <string name="reader_title_subs">Etichete și situri</string>
     <string name="reader_title_tag_preview">Etichetă cititor</string>
     <string name="reader_title_blog_preview">Sit Cititor</string>
-    <string name="media_empty_list">Nicio media</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest sit, această eroare poate să însemne că cineva încearcă să se substituie sitului și n–ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
     <string name="ssl_certificate_error">Certificat SSL invalid</string>
     <string name="forgot_password">Ți–ai pierdut parola?</string>
@@ -1490,7 +1499,6 @@ Language: ro
     <string name="adding_cat_success">Categoria a fost adăugată cu succes</string>
     <string name="adding_cat_failed">Adăugarea categoriei a eșuat</string>
     <string name="mnu_comment_unspam">Nu e spam</string>
-    <string name="comments_empty_list">Fără comentarii</string>
     <string name="theme_fetch_failed">Aducerea temelor a eșuat</string>
     <string name="blog_not_found">A apărut o eroare la accesarea blogului</string>
     <string name="gallery_error">Elementul media nu a putut fi readus</string>
@@ -1573,7 +1581,6 @@ Language: ro
     <string name="reader_toast_err_get_post">Nu pot aduce acest articol</string>
     <string name="pick_video">Selectare video</string>
     <string name="pick_photo">Selectare fotografie</string>
-    <string name="reader_empty_followed_blogs_description">Dar nu–ți fă griji, trebuie doar să atingi iconul din dreapta sus pentru a începe explorarea!</string>
     <string name="reader_likes_you_and_one">Tu și încă unul apreciați asta</string>
     <string name="reader_empty_followed_tags">Nu urmărești nicio etichetă</string>
     <string name="reader_toast_err_url_intent">Nu pot deschide %s</string>
@@ -1591,6 +1598,7 @@ Language: ro
     <string name="reader_btn_follow">Urmărește</string>
     <string name="reader_btn_share">Partajare</string>
     <string name="reader_untitled_post">(Fără titlu)</string>
+    <string name="comments_empty_list">Niciun comentariu până acum</string>
     <string name="empty_list_default">Această listă e goală</string>
     <string name="passcode_turn_on">Pune blocarea PIN–ului</string>
     <string name="passcode_turn_off">Scoate blocarea PIN–ului</string>

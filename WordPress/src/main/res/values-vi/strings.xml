@@ -100,9 +100,6 @@ Language: vi_VN
     <string name="editor_remove_failed_uploads">Loại bỏ các tải lên bị lỗi</string>
     <string name="editor_toast_failed_uploads">Một số media tải lên bị lỗi. Bạn không thể lưu hoặc xuất bản\n        bài viết của bạn trong tình trạng này. Bạn có muốn loại bỏ tất cả media bị lỗi không?</string>
     <string name="site_settings_advanced_header">Nâng cao</string>
-    <string name="comments_empty_list_filtered_trashed">Không có bình luận được chuyển vào thùng rác</string>
-    <string name="comments_empty_list_filtered_pending">Không có bình luận Đang chờ</string>
-    <string name="comments_empty_list_filtered_approved">Không có bình luận Được duyệt</string>
     <string name="xmlrpc_missing_method_error">Không thể kết nối. Các phương thức XML–RPC cần thiết bị thiếu trên máy chủ</string>
     <string name="alignment_center">Ở giữa</string>
     <string name="post_format_status">Trạng thái</string>
@@ -159,7 +156,6 @@ Language: vi_VN
     <string name="mnu_comment_delete_permanently">Xóa</string>
     <string name="comment_deleted_permanently">Bình luận đã xóa</string>
     <string name="mnu_comment_untrash">Phục hồi</string>
-    <string name="comments_empty_list_filtered_spam">Không có bình luận Rác</string>
     <string name="could_not_load_page">Không thể tải trang</string>
     <string name="comment_status_all">Tất cả</string>
     <string name="interface_language">Ngôn ngữ giao diện</string>
@@ -310,15 +306,7 @@ Language: vi_VN
     <string name="reader_label_gap_marker">Tải nhiều bài viết hơn</string>
     <string name="notifications_no_search_results">Không có site nào khớp \'%s\'</string>
     <string name="search_sites">Tìm kiếm site</string>
-    <string name="notifications_empty_view_reader">Xem người đọc</string>
-    <string name="notifications_empty_action_followers_likes">Nhận thông báo: bình luận trên các bài viết bạn đã đọc</string>
-    <string name="notifications_empty_action_comments">Tham gia cuộc trò chuyện: bình luận trên bài viết từ các blog bạn theo dõi.</string>
-    <string name="notifications_empty_action_unread">Khuấy động cuộc trò chuyện: viết một bài mới.</string>
     <string name="notifications_empty_action_all">Lấy kích hoạt! Bình luận về bài viết từ các blog bạn theo dõi.</string>
-    <string name="notifications_empty_likes">Chưa có thích mới để hiện thị…</string>
-    <string name="notifications_empty_followers">Chưa có người theo dõi mới… để báo cáo.</string>
-    <string name="notifications_empty_comments">Chưa có bình luận mới…</string>
-    <string name="notifications_empty_unread">Bạn đã bắt kịp tất cả!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Hãy truy cập vào Thống kê trong ứng dụng, và thử thêm các widget sau</string>
     <string name="stats_widget_error_readd_widget">Vui lòng loại bỏ widget và thêm lại nó lần nữa</string>
     <string name="stats_widget_error_no_visible_blog">Thống kê không thể được truy cập mà không có một blog hiện hữu</string>
@@ -519,8 +507,6 @@ Language: vi_VN
     <string name="posts_empty_list">Chưa viết bài nào. Tại sao không tạo 1 bài?</string>
     <string name="comment_reply_to_user">Trả lời tới %s</string>
     <string name="pages_empty_list">Chưa có trang nào. Tại sao không tạo 1 trang?</string>
-    <string name="reader_empty_followed_blogs_title">Bạn chưa theo dõi bất kì site nào</string>
-    <string name="reader_empty_posts_liked">Bạn chưa thích bất kì bài viết nào</string>
     <string name="browse_our_faq_button">Duyệt FAQ của chúng tôi</string>
     <string name="stats_no_blog">Thống kê không thể được nạp cho các blog yêu cầu</string>
     <string name="comment_trashed">Bình luận cho vào thùng rác</string>
@@ -533,7 +519,6 @@ Language: vi_VN
     <string name="reader_page_followed_tags">Thẻ được theo dõi</string>
     <string name="reader_page_followed_blogs">Site được theo dõi</string>
     <string name="reader_hint_add_tag_or_url">Nhập một URL hoặc thẻ để theo dõi</string>
-    <string name="media_empty_list">Không có media</string>
     <string name="forgot_password">Quên mật khẩu?</string>
     <string name="help">Trợ giúp</string>
     <string name="ssl_certificate_error">Chứng nhận SSL không hợp lệ</string>
@@ -541,7 +526,6 @@ Language: vi_VN
     <string name="mnu_comment_unspam">Không phải spam</string>
     <string name="stats_empty_comments">Chưa có bình luận</string>
     <string name="error_generic">Một lỗi đã xảy ra</string>
-    <string name="comments_empty_list">Không có bình luận</string>
     <string name="no_network_message">Mạng không sẵn có</string>
     <string name="blog_not_found">Một lỗi đã xảy ra khi truy cập blog này</string>
     <string name="adding_cat_failed">Thêm danh mục bị lỗi</string>
@@ -637,7 +621,6 @@ Language: vi_VN
     <string name="pick_video">Chọn video</string>
     <string name="reader_likes_you_and_one">Bạn và 1 người khác thích điều này</string>
     <string name="pick_photo">Chọn ảnh</string>
-    <string name="reader_empty_followed_blogs_description">Nhưng đừng lo lắng, chỉ cần nhấp vào biểu tượng ở phía trên bên phải để bắt đầu khám phá!</string>
     <string name="reader_toast_err_get_post">Không thể lấy bài viết này</string>
     <string name="reader_label_removed_tag">Đã loại bỏ %s</string>
     <string name="reader_toast_err_view_image">Không thể xem ảnh</string>

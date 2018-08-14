@@ -28,7 +28,8 @@ import javax.inject.Inject
 class PageListViewModel
 @Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<List<PageItem>> = _pages
+    val pages: LiveData<List<PageItem>>
+        get() = _pages
 
     private var isStarted: Boolean = false
     private lateinit var pageType: PageStatus
@@ -41,7 +42,7 @@ class PageListViewModel
 
         if (!isStarted) {
             isStarted = true
-            loadPagesAsync()
+            loadPagesAsync(true)
 
             pagesViewModel.refreshPages.observeForever(refreshPagesObserver)
         }
@@ -63,7 +64,7 @@ class PageListViewModel
         loadPagesAsync()
     }
 
-    private fun loadPagesAsync() = launch {
+    private fun loadPagesAsync(isStarting: Boolean = false) = launch {
         val newPages = pagesViewModel.pages.values
                 .filter { it.status == pageType }
                 .let {
@@ -76,7 +77,11 @@ class PageListViewModel
                 }
 
         if (newPages.isEmpty()) {
-            _pages.postValue(listOf(Empty(string.empty_list_default)))
+            if (isStarting) {
+                _pages.postValue(listOf(Empty(string.pages_fetching)))
+            } else {
+                _pages.postValue(listOf(Empty(string.empty_list_default)))
+            }
         } else {
             _pages.postValue(newPages)
         }

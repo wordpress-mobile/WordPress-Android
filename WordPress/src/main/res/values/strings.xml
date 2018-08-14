@@ -1594,6 +1594,7 @@
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
+    <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>

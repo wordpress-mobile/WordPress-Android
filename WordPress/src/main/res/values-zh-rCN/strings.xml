@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-24 03:54:06+0000
+Translation-Revision-Date: 2018-08-07 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">尚无人查看</string>
+    <string name="people_empty_list_filtered_email_followers">尚无电子邮件粉丝</string>
+    <string name="people_empty_list_filtered_followers">尚无粉丝</string>
+    <string name="people_empty_list_filtered_users">尚无用户</string>
+    <string name="connection_service_facebook_notice">截至 2018 年 8 月 1 日，Facebook 不再允许直接将文章共享到 Facebook 个人资料。与 Facebook 页面的连接保持不变。</string>
+    <string name="reader_empty_posts_liked_description">您点赞的文章将在此处显示</string>
+    <string name="reader_empty_posts_liked_title">尚无点赞内容</string>
+    <string name="reader_empty_followed_blogs_button_followed">去关注</string>
+    <string name="reader_empty_followed_blogs_button_discover">发现站点</string>
+    <string name="reader_empty_followed_blogs_description">您尚未关注任何站点。现在要关注站点吗？</string>
+    <string name="reader_empty_followed_blogs_title">无关注的站点</string>
+    <string name="notifications_empty_likes">尚无人点赞</string>
+    <string name="notifications_empty_followers">尚无粉丝</string>
+    <string name="activity_log_limited_content_on_free_plan">由于您使用的是免费套餐，因此您的活动中显示有限的事件。</string>
+    <string name="activity_log_empty_subtitle">在对站点进行更改时，您可在此处查看您的活动历史记录</string>
+    <string name="activity_log_empty_title">尚无活动</string>
+    <string name="posts_empty_list_button">撰写文章</string>
+    <string name="pages_empty_list_button">创建网页</string>
+    <string name="media_empty_upload_media">上传媒体文件</string>
+    <string name="media_empty_list">您没有任何媒体文件</string>
     <string name="reader_gallery_images_desc">图库</string>
     <string name="blavatar_desc">站点图标</string>
     <string name="theme_image_desc">主题图片</string>
     <string name="featured_image_desc">推荐图片</string>
-    <string name="support_push_notification_message_hint_snackbar">依次轻点“帮助与支持”和“我的申请单”，找到您的支持会话</string>
     <string name="local_changes_discarding_error">放弃您的本地更改时出现错误。请联系支持人员，获取更多帮助。</string>
     <string name="local_changes_discarding">正在放弃本地更改</string>
     <string name="local_changes_discarded">本地更改已放弃</string>
@@ -29,14 +48,10 @@ Language: zh_CN
     <string name="support_contact_email">联系人电子邮件</string>
     <string name="application_log_button">应用程序日志</string>
     <string name="my_tickets">我的工单</string>
-    <string name="activity_log_rewind_dialog_message">是否确定要在 %s 将站点还原至 %s？此操作将删除在此时间之后创建或更改的所有内容和选项。</string>
     <string name="activity_log_rewind_site">还原站点</string>
     <string name="activity_log_currently_restoring_message_no_dates">正在还原</string>
-    <string name="activity_log_currently_restoring_message">正在还原至 %s %s</string>
     <string name="activity_log_currently_restoring_title">目前正在恢复您的站点</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功恢复您的站点</string>
-    <string name="activity_log_rewind_finished_snackbar_message">已成功恢复您的站点\n已还原至 %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">正在恢复您的站点\n正在还原至 %s %s</string>
     <string name="activity_log_button">活动日志操作按钮</string>
     <string name="plugin_auto_managed">已自动托管</string>
     <string name="reader_save_posts_locally_dialog_message">保存此文章，方便您随时回来阅读。但您只能在此设备上阅读该文章，也就是说已保存的文章不会同步到其他设备（但我们正在努力改进）。</string>
@@ -63,7 +78,6 @@ Language: zh_CN
     <string name="reader_remove_bookmark">从已保存的文章中删除</string>
     <string name="reader_add_bookmark">添加到已保存的文章</string>
     <string name="reader_save_for_later_title">已保存的文章</string>
-    <string name="activity_log_empty_list">尚未记录任何事件</string>
     <string name="removed">已删除</string>
     <string name="tabbar_accessibility_label_write">新文章。撰写新文章。</string>
     <string name="my_site_icon_content_description">更改站点图标</string>
@@ -872,10 +886,6 @@ Language: zh_CN
     <string name="title_email_follower">电子邮件粉丝</string>
     <string name="title_follower">粉丝</string>
     <string name="people_fetching">正在获取用户…</string>
-    <string name="people_empty_list_filtered_viewers">您目前没有任何查看者。</string>
-    <string name="people_empty_list_filtered_email_followers">您目前没有任何电子邮件粉丝。</string>
-    <string name="people_empty_list_filtered_followers">您目前没有任何粉丝。</string>
-    <string name="people_empty_list_filtered_users">您目前没有任何用户。</string>
     <string name="people_dropdown_item_viewers">查看者</string>
     <string name="people_dropdown_item_email_followers">电子邮件粉丝</string>
     <string name="people_dropdown_item_followers">粉丝</string>
@@ -986,9 +996,6 @@ Language: zh_CN
     <string name="editor_remove_failed_uploads">删除上传失败的内容</string>
     <string name="editor_toast_failed_uploads">部分媒体上传失败。您无法保存或发布\n此状态下的文章。是否删除所有上传失败的媒体？</string>
     <string name="site_settings_advanced_header">高级</string>
-    <string name="comments_empty_list_filtered_trashed">无已放入垃圾桶的评论</string>
-    <string name="comments_empty_list_filtered_pending">无待审评论</string>
-    <string name="comments_empty_list_filtered_approved">无已批准的评论</string>
     <string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML–RPC 方法。</string>
     <string name="alignment_center">居中</string>
     <string name="post_format_video">视频</string>
@@ -1047,7 +1054,6 @@ Language: zh_CN
     <string name="mnu_comment_delete_permanently">删除</string>
     <string name="mnu_comment_untrash">恢复</string>
     <string name="comment_deleted_permanently">已删除评论</string>
-    <string name="comments_empty_list_filtered_spam">无垃圾评论</string>
     <string name="comment_status_all">全部</string>
     <string name="could_not_load_page">无法加载页面</string>
     <string name="off">关闭</string>
@@ -1199,15 +1205,7 @@ Language: zh_CN
     <string name="reader_label_gap_marker">加载更多文章</string>
     <string name="notifications_no_search_results">没有符合「%s」条件的站点</string>
     <string name="search_sites">搜索站点</string>
-    <string name="notifications_empty_view_reader">查看阅读器</string>
-    <string name="notifications_empty_action_followers_likes">受到注意：评论您已读过的文章。</string>
-    <string name="notifications_empty_action_comments">加入会话：评论您关注的博客中的文章。</string>
-    <string name="notifications_empty_action_unread">重新发起会话：撰写新文章。</string>
     <string name="notifications_empty_action_all">活跃起来吧！评论您关注的博客中的文章。</string>
-    <string name="notifications_empty_likes">尚无新的赞可显示…。</string>
-    <string name="notifications_empty_followers">尚无新的关注者可报告…。</string>
-    <string name="notifications_empty_comments">尚无新评论…。</string>
-    <string name="notifications_empty_unread">您已看完所有通知！</string>
     <string name="stats_widget_error_jetpack_no_blogid">请访问应用程序中的「统计」，并于稍后尝试添加该小组件</string>
     <string name="stats_widget_error_readd_widget">请删除该小组件，然后重新添加</string>
     <string name="stats_widget_error_no_visible_blog">若没有可见的博客，则无法访问「统计」</string>
@@ -1416,8 +1414,6 @@ Language: zh_CN
     <string name="reader_empty_comments">尚无评论</string>
     <string name="create_new_blog_wpcom">创建 WordPress.com 博客</string>
     <string name="browse_our_faq_button">浏览我们的常见问题解答</string>
-    <string name="reader_empty_posts_liked">您尚未给任何文章点赞</string>
-    <string name="reader_empty_followed_blogs_title">您尚未关注任何博客。</string>
     <string name="reader_toast_err_generic">无法执行此操作</string>
     <string name="contact_us">联系我们</string>
     <string name="schedule_verb">计划</string>
@@ -1426,7 +1422,6 @@ Language: zh_CN
     <string name="reader_page_followed_blogs">已关注的博客</string>
     <string name="reader_page_followed_tags">关注的标签</string>
     <string name="reader_title_tag_preview">阅读器标签</string>
-    <string name="media_empty_list">没有媒体</string>
     <string name="ssl_certificate_ask_trust">如果你平时连接到这个网站没有任何问题，这个错误可能意味着有人试图冒充该网站，你不应该继续下去。你想仍然信任这个证书？</string>
     <string name="ssl_certificate_error">无效的SSL证书</string>
     <string name="forgot_password">忘记密码？</string>
@@ -1454,7 +1449,6 @@ Language: zh_CN
     <string name="adding_cat_success">分类添加成功</string>
     <string name="adding_cat_failed">添加分类失败</string>
     <string name="mnu_comment_unspam">不是垃圾评论</string>
-    <string name="comments_empty_list">没有评论</string>
     <string name="theme_fetch_failed">未能获取主题</string>
     <string name="blog_not_found">抱歉，尝试访问该博客时发生错误。</string>
     <string name="gallery_error">抱歉,无法从图库检索该媒体对象</string>
@@ -1535,7 +1529,6 @@ Language: zh_CN
     <string name="reader_toast_err_get_post">无法检索这篇文章</string>
     <string name="pick_video">选择视频</string>
     <string name="pick_photo">选择图片</string>
-    <string name="reader_empty_followed_blogs_description">别担心，点击右上角的图标即可开始浏览！</string>
     <string name="reader_likes_you_and_one">你和另一个人喜欢</string>
     <string name="reader_empty_followed_tags">您没有关注任何标签</string>
     <string name="reader_toast_err_url_intent">无法打开 %s</string>
