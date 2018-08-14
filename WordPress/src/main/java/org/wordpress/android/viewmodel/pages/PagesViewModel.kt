@@ -153,6 +153,10 @@ class PagesViewModel
             pages[pageId]?.let { page ->
                 if (page.parent?.remoteId != parentId) {
                     page.parent = pages[parentId]
+
+                    statusPageSnackbarMessage = SnackbarMessageHolder(
+                            resourceProvider.getString(string.page_parent_changed))
+
                     uploadUtil.uploadPage(page)
                     refreshPages()
                 }

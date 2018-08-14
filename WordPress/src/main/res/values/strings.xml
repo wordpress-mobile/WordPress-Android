@@ -239,6 +239,7 @@
     <string name="page_moved_to_published">Page has been published</string>
     <string name="page_moved_to_scheduled">Page has been scheduled</string>
     <string name="page_permanently_deleted">Page has been permanently deleted</string>
+    <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
