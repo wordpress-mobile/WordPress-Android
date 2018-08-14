@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -231,11 +232,12 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    public static void viewPageParentForResult(@NonNull Activity activity, @NonNull PageModel page) {
-        Intent intent = new Intent(activity, PageParentActivity.class);
+    public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
+        Intent intent = new Intent(fragment.getContext(), PageParentActivity.class);
         intent.putExtra(WordPress.SITE, page.getSite());
         intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
-        activity.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
+        fragment.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
+
         AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_PAGE_PARENT, page.getSite());
     }
 
@@ -347,11 +349,11 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void viewPagePreview(@NonNull Activity activity, @NonNull PageModel page) {
-        Intent intent = new Intent(activity, PostPreviewActivity.class);
+    public static void viewPagePreview(@NonNull Fragment fragment, @NonNull PageModel page) {
+        Intent intent = new Intent(fragment.getContext(), PostPreviewActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         intent.putExtra(WordPress.SITE, page.getSite());
-        activity.startActivity(intent);
+        fragment.startActivity(intent);
     }
 
     public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
@@ -380,19 +382,19 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPageForResult(@NonNull Activity activity, @NonNull PageModel page) {
-        Intent intent = new Intent(activity, EditPostActivity.class);
+    public static void editPageForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
+        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, page.getSite());
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
-        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addNewPageForResult(@NonNull Activity activity, @NonNull SiteModel site) {
-        Intent intent = new Intent(activity, EditPostActivity.class);
+    public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
+        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     /*

@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.pages
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -29,9 +31,11 @@ import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -81,11 +85,26 @@ class PagesFragment : Fragment() {
         initializeViewModels(nonNullActivity, nonNullSite)
     }
 
-    fun onPageEditFinished(pageId: Long) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
+            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+            if (pageId != -1L) {
+                onPageEditFinished(pageId)
+            }
+        } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
+            val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
+            val pageId = data.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, -1)
+            if (pageId != -1L && parentId != -1L) {
+                onPageParentSet(pageId, parentId)
+            }
+        }
+    }
+
+    private fun onPageEditFinished(pageId: Long) {
         viewModel.onPageEditFinished(pageId)
     }
 
-    fun onPageParentSet(pageId: Long, parentId: Long) {
+    private fun onPageParentSet(pageId: Long, parentId: Long) {
         viewModel.onPageParentSet(pageId, parentId)
     }
 
@@ -162,7 +181,7 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.createNewPage.observe(this, Observer {
-            ActivityLauncher.addNewPageForResult(activity, site)
+            ActivityLauncher.addNewPageForResult(this, site)
         })
 
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
@@ -179,15 +198,15 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.editPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.editPageForResult(activity, page) }
+            page?.let { ActivityLauncher.editPageForResult(this, page) }
         })
 
         viewModel.previewPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPagePreview(activity, page) }
+            page?.let { ActivityLauncher.viewPagePreview(this, page) }
         })
 
         viewModel.setPageParent.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPageParentForResult(activity, page) }
+            page?.let { ActivityLauncher.viewPageParentForResult(this, page) }
         })
 
         viewModel.displayDeleteDialog.observe(this, Observer { page ->
