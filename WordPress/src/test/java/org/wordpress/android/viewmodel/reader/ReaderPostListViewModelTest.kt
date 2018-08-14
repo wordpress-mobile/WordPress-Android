@@ -24,13 +24,13 @@ class ReaderPostListViewModelTest {
     val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var newsManager: NewsManager
-    @Mock private lateinit var observer: Observer<NewsItem?>
+    @Mock private lateinit var observer: Observer<NewsItem>
     @Mock private lateinit var item: NewsItem
     @Mock private lateinit var initialTag: ReaderTag
     @Mock private lateinit var otherTag: ReaderTag
 
     private lateinit var viewModel: ReaderPostListViewModel
-    private val liveData = MutableLiveData<NewsItem?>()
+    private val liveData = MutableLiveData<NewsItem>()
 
     @Before
     fun setUp() {

@@ -12,8 +12,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class NewsManager @Inject constructor(val newsService: NewsService, val appPrefs: AppPrefsWrapper) {
-    private val dataSourceMediator: MediatorLiveData<NewsItem?> = MediatorLiveData()
-    private var dataSource: LiveData<NewsItem?> = newsService.newsItemSource()
+    private val dataSourceMediator: MediatorLiveData<NewsItem> = MediatorLiveData()
+    private var dataSource: LiveData<NewsItem> = newsService.newsItemSource()
 
     init {
         dataSourceMediator.addSource(dataSource) {
@@ -23,7 +23,7 @@ class NewsManager @Inject constructor(val newsService: NewsService, val appPrefs
         }
     }
 
-    fun newsItemSource(): LiveData<NewsItem?> {
+    fun newsItemSource(): LiveData<NewsItem> {
         return dataSourceMediator
     }
 

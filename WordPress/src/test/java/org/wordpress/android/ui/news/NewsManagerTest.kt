@@ -22,12 +22,12 @@ class NewsManagerTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var newsService: NewsService
-    @Mock private lateinit var observer: Observer<NewsItem?>
+    @Mock private lateinit var observer: Observer<NewsItem>
     @Mock private lateinit var item: NewsItem
     @Mock private lateinit var appPrefs: AppPrefsWrapper
 
     private lateinit var newsManager: NewsManager
-    private val liveData = MutableLiveData<NewsItem?>()
+    private val liveData = MutableLiveData<NewsItem>()
 
     @Before
     fun setUp() {

@@ -12,8 +12,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsManager: NewsManager
 ) : ViewModel() {
     private val newsItemSource = newsManager.newsItemSource()
-    private val _newsItemSourceMediator = MediatorLiveData<NewsItem?>()
-    val newsItem: LiveData<NewsItem?>
+    private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
+    val newsItem: LiveData<NewsItem>
         get() = _newsItemSourceMediator
 
     private lateinit var initialTag: ReaderTag

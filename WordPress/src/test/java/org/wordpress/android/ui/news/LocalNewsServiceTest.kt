@@ -22,7 +22,7 @@ class LocalNewsServiceTest {
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var observer: Observer<NewsItem?>
+    @Mock private lateinit var observer: Observer<NewsItem>
     @Mock private lateinit var context: Context
 
     private lateinit var newsItem: NewsItem
