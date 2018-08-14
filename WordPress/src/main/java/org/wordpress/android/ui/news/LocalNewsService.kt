@@ -13,9 +13,9 @@ import javax.inject.Inject
  * This is just a temporary solution until News Cards are supported on the server.
  */
 class LocalNewsService @Inject constructor(private val context: Context) : NewsService {
-    val data: MutableLiveData<NewsItem?> = MutableLiveData()
+    val data: MutableLiveData<NewsItem> = MutableLiveData()
 
-    override fun newsItemSource(): LiveData<NewsItem?> {
+    override fun newsItemSource(): LiveData<NewsItem> {
         return data
     }
 
@@ -27,7 +27,7 @@ class LocalNewsService @Inject constructor(private val context: Context) : NewsS
         // clean not required
     }
 
-    private fun loadCardFromResources(): NewsItem? {
+    private fun loadCardFromResources(): NewsItem {
         return NewsItem(
                 context.getString(LocalNewsItem.titleResId),
                 context.getString(LocalNewsItem.contentResId),

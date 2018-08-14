@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import org.wordpress.android.models.news.NewsItem
 
 interface NewsService {
-    fun newsItemSource(): LiveData<NewsItem?>
+    fun newsItemSource(): LiveData<NewsItem>
 
     fun pull(skipCache: Boolean)
 
