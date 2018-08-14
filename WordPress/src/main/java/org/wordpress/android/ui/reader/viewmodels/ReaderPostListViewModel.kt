@@ -13,8 +13,6 @@ class ReaderPostListViewModel @Inject constructor(
 ) : ViewModel() {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
-    val newsItem: LiveData<NewsItem>
-        get() = _newsItemSourceMediator
 
     private lateinit var initialTag: ReaderTag
     private var isStarted = false
@@ -27,6 +25,10 @@ class ReaderPostListViewModel @Inject constructor(
         onTagChanged(tag)
         newsManager.pull()
         isStarted = true
+    }
+
+    fun getNewsDataSource(): LiveData<NewsItem> {
+        return _newsItemSourceMediator
     }
 
     fun onTagChanged(tag: ReaderTag) {
