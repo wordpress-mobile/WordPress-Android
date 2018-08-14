@@ -689,7 +689,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).mobile_quick_start.getUrlV1_1();
 
         final WPComGsonRequest<MobileQuickStartCompletedResponse> request = WPComGsonRequest
-                .buildGetRequest(url, null, MobileQuickStartCompletedResponse.class,
+                .buildPostRequest(url, null, MobileQuickStartCompletedResponse.class,
                         new Listener<MobileQuickStartCompletedResponse>() {
                             @Override
                             public void onResponse(MobileQuickStartCompletedResponse response) {
