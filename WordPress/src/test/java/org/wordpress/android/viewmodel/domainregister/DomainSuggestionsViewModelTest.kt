@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.atLeast
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
+import org.wordpress.android.util.helpers.Debouncer
 
 @RunWith(MockitoJUnitRunner::class)
 class DomainSuggestionsViewModelTest {
@@ -29,6 +31,8 @@ class DomainSuggestionsViewModelTest {
     val rule = InstantTaskExecutorRule()
     @Mock
     private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var debouncer: Debouncer
     private var site: SiteModel = SiteModel()
     private val actionCaptor = argumentCaptor<Action<Any>>()
 
@@ -40,8 +44,12 @@ class DomainSuggestionsViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = DomainSuggestionsViewModel(dispatcher)
+        viewModel = DomainSuggestionsViewModel(dispatcher, debouncer)
         viewModel.site = site
+        whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
+            val delayedRunnable = invocation.arguments[1] as Runnable
+            delayedRunnable.run()
+        }
     }
 
     @Test

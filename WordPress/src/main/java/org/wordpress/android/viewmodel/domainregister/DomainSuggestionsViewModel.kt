@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.VisibleForTesting
 import android.text.TextUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -16,6 +17,8 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.helpers.Debouncer
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -26,6 +29,12 @@ class DomainSuggestionsViewModel @Inject constructor(
 ) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
+    private var debouncer = Debouncer()
+
+    @VisibleForTesting
+    constructor(dispatcher: Dispatcher, debouncer: Debouncer) : this(dispatcher = dispatcher) {
+        this.debouncer = debouncer
+    }
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<List<DomainSuggestionResponse>>
@@ -51,7 +60,9 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
-            fetchSuggestions()
+            debouncer.debounce(Void::class.java, {
+                fetchSuggestions()
+            }, GET_SUGGESTIONS_INTERVAL_MS, TimeUnit.MILLISECONDS)
         }
     }
 
@@ -63,6 +74,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        debouncer.shutdown()
         super.onCleared()
     }
 
@@ -125,5 +137,6 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     companion object {
         private const val SUGGESTIONS_REQUEST_COUNT = 30
+        private const val GET_SUGGESTIONS_INTERVAL_MS = 250L
     }
 }

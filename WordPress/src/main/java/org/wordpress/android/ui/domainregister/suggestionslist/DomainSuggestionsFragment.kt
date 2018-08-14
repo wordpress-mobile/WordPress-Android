@@ -17,15 +17,12 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainSuggestionsViewModel
-    private val debouncer = Debouncer()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.domain_suggestions_fragment, container, false)
@@ -56,9 +53,7 @@ class DomainSuggestionsFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(view: Editable?) {
-                debouncer.debounce(Void::class.java, {
-                    viewModel.updateSearchQuery(view.toString())
-                }, GET_SUGGESTIONS_INTERVAL_MS, TimeUnit.MILLISECONDS)
+                viewModel.updateSearchQuery(view.toString())
             }
         })
         val adapter = DomainSuggestionsAdapter(this::onDomainSuggestionSelected)
@@ -88,14 +83,5 @@ class DomainSuggestionsFragment : Fragment() {
 
     private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        debouncer.shutdown()
-    }
-
-    companion object {
-        private const val GET_SUGGESTIONS_INTERVAL_MS = 250L
     }
 }
