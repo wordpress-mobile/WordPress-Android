@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.SupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
 
 @ActionEnum
 public enum SiteAction implements IAction {
@@ -65,7 +65,7 @@ public enum SiteAction implements IAction {
     @Action(payloadType = String.class)
     CHECK_DOMAIN_AVAILABILITY,
     @Action(payloadType = String.class)
-    FETCH_SUPPORTED_STATES,
+    FETCH_DOMAIN_SUPPORTED_STATES,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)
@@ -98,8 +98,8 @@ public enum SiteAction implements IAction {
     FETCHED_PLANS,
     @Action(payloadType = DomainAvailabilityResponsePayload.class)
     CHECKED_DOMAIN_AVAILABILITY,
-    @Action(payloadType = SupportedStatesResponsePayload.class)
-    FETCHED_SUPPORTED_STATES,
+    @Action(payloadType = DomainSupportedStatesResponsePayload.class)
+    FETCHED_DOMAIN_SUPPORTED_STATES,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
