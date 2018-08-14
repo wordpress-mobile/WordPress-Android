@@ -4,7 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import android.content.Context
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
@@ -41,7 +41,7 @@ class LocalNewsServiceTest {
     fun verifyItemEmittedOnPullInvoked() {
         val observable = localNewsService.newsItemSource()
         observable.observeForever(observer)
-        verify(observer, times(0)).onChanged(any())
+        verify(observer, never()).onChanged(any())
         localNewsService.pull(false)
         verify(observer).onChanged(newsItem)
     }

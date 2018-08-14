@@ -3,7 +3,7 @@ package org.wordpress.android.viewmodel.reader
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
@@ -36,14 +36,14 @@ class ReaderPostListViewModelTest {
     fun setUp() {
         whenever(newsManager.newsItemSource()).thenReturn(liveData)
         viewModel = ReaderPostListViewModel(newsManager)
-        val observable = viewModel.newsItem
+        val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
     }
 
     @Test
     fun verifyPullInvokedInOnStart() {
         viewModel.start(initialTag)
-        verify(newsManager, times(1)).pull(false)
+        verify(newsManager).pull(false)
     }
 
     @Test
@@ -53,14 +53,16 @@ class ReaderPostListViewModelTest {
         liveData.postValue(null)
         liveData.postValue(item)
 
-        verify(observer, times(2)).onChanged(item)
-        verify(observer, times(1)).onChanged(null)
+        val inOrder = inOrder(observer)
+        inOrder.verify(observer).onChanged(item)
+        inOrder.verify(observer).onChanged(null)
+        inOrder.verify(observer).onChanged(item)
     }
 
     @Test
     fun verifyViewModelPropagatesDismissToNewsManager() {
         viewModel.onDismissClicked(item)
-        verify(newsManager, times(1)).dismiss(item)
+        verify(newsManager).dismiss(item)
     }
 
     @Test
@@ -68,8 +70,9 @@ class ReaderPostListViewModelTest {
         viewModel.start(initialTag)
         liveData.postValue(item)
         viewModel.onTagChanged(otherTag)
-        verify(observer, times(1)).onChanged(item)
-        verify(observer, times(1)).onChanged(null)
+        val inOrder = inOrder(observer)
+        inOrder.verify(observer).onChanged(item)
+        inOrder.verify(observer).onChanged(null)
     }
 
     @Test
@@ -83,7 +86,9 @@ class ReaderPostListViewModelTest {
         liveData.postValue(item) // should not be propagated to the UI
         viewModel.onTagChanged(initialTag)
 
-        verify(observer, times(2)).onChanged(item)
-        verify(observer, times(1)).onChanged(null)
+        val inOrder = inOrder(observer)
+        inOrder.verify(observer).onChanged(item)
+        inOrder.verify(observer).onChanged(null)
+        inOrder.verify(observer).onChanged(item)
     }
 }
