@@ -585,9 +585,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new WPComErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                // Supported Countries API should always return a response for a valid,
+                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
                                 SupportedCountriesError supportedCountriesError = new SupportedCountriesError(
-                                        SupportedCountryErrorType.GENERIC_ERROR,
-                                        error.message);
+                                        SupportedCountryErrorType.GENERIC_ERROR, error.message);
                                 SupportedCountriesResponsePayload payload =
                                         new SupportedCountriesResponsePayload(supportedCountriesError);
                                 mDispatcher.dispatch(SiteActionBuilder.newFetchedSupportedCountriesAction(payload));
