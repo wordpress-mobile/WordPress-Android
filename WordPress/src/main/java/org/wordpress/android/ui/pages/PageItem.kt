@@ -25,33 +25,24 @@ sealed class PageItem(val type: Type) {
         override val id: Long,
         override val title: String,
         override val labelRes: Int? = null,
-        override var indent: Int = 0,
-        override val actions: Set<Action> = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH)
-    ) : Page(id, title, labelRes, indent, actions)
+        override var indent: Int = 0
+    ) : Page(id, title, labelRes, indent, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH))
 
     data class DraftPage(
         override val id: Long,
         override val title: String,
-        override val labelRes: Int? = null,
-        override var indent: Int = 0,
-        override val actions: Set<Action> = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH)
-    ) : Page(id, title, labelRes, indent, actions)
+        override val labelRes: Int? = null
+    ) : Page(id, title, labelRes, 0, setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH))
 
     data class ScheduledPage(
         override val id: Long,
-        override val title: String,
-        override val labelRes: Int? = null,
-        override var indent: Int = 0,
-        override val actions: Set<Action> = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH)
-    ) : Page(id, title, labelRes, indent, actions)
+        override val title: String
+    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH))
 
     data class TrashedPage(
         override val id: Long,
-        override val title: String,
-        override val labelRes: Int? = null,
-        override var indent: Int = 0,
-        override val actions: Set<Action> = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY)
-    ) : Page(id, title, labelRes, indent, actions)
+        override val title: String
+    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY))
 
     data class Divider(val title: String) : PageItem(DIVIDER)
 
