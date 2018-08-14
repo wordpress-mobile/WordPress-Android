@@ -302,16 +302,21 @@ class PagesViewModel
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post.isPage) {
-            launch {
-                refreshPages()
-                onSearch(lastSearchQuery)
+            if (event.isError) {
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(resourceProvider.getString(string.page_upload_error)))
+            } else {
+                launch {
+                    refreshPages()
+                    onSearch(lastSearchQuery)
 
-                if (statusPageSnackbarMessage != null) {
-                    _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
-                    statusPageSnackbarMessage = null
-                } else {
-                    _showSnackbarMessage.postValue(
-                            prepareStatusChangeSnackbar(PageModel(event.post, site).status))
+                    if (statusPageSnackbarMessage != null) {
+                        _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
+                        statusPageSnackbarMessage = null
+                    } else {
+                        _showSnackbarMessage.postValue(
+                                prepareStatusChangeSnackbar(PageModel(event.post, site).status))
+                    }
                 }
             }
         }
