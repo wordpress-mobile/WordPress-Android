@@ -30,8 +30,7 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
     private fun refreshTaskStatus() {
         val list = ArrayList<QuickStartTaskState>()
         QuickStartTask.values().forEach {
-            list.add(QuickStartTaskState(it, quickStartStore.hasDoneTask(siteId, it),
-                    quickStartStore.hasShownTask(siteId, it)))
+            list.add(QuickStartTaskState(it, quickStartStore.hasDoneTask(siteId, it)))
         }
         _quickStartTaskStateStates.postValue(list)
     }
