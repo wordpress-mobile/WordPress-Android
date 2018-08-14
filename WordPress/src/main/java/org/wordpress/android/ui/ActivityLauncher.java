@@ -383,9 +383,6 @@ public class ActivityLauncher {
     public static void editPageForResult(@NonNull Activity activity, @NonNull PageModel page) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, page.getSite());
-        // PostModel objects can be quite large, since content field is not size restricted,
-        // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
-        // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
