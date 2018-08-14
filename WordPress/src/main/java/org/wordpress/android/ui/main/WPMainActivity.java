@@ -522,7 +522,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
                 QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             }
-            getMySiteFragment().completeQuickStarTask(getSelectedSite().getId(), QuickStartTask.PUBLISH_POST);
         }
 
         ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
@@ -557,12 +556,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 }
-
-                MySiteFragment fragment = getMySiteFragment();
-                if (fragment != null) {
-                    fragment.checkQuickStart();
-                }
-
                 break;
             case PAGE_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
@@ -646,9 +639,9 @@ public class WPMainActivity extends AppCompatActivity implements
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
 
-                showQuickStartDialog();
                 setSite(data);
                 jumpNewPost(data);
+                showQuickStartDialog();
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -673,10 +666,9 @@ public class WPMainActivity extends AppCompatActivity implements
                     setSite(data);
                     jumpNewPost(data);
 
-                    // TODO for test purposes show Quick Start dialog when switching sites
-//                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    showQuickStartDialog();
-//                    }
+                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                        showQuickStartDialog();
+                    }
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:

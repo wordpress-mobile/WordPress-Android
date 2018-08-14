@@ -44,8 +44,7 @@ class QuickStartViewModelTest {
 
         Assert.assertNotNull(mQuickStartDetailStateList)
         assertEquals(QuickStartTask.values().size, mQuickStartDetailStateList?.size)
-        // CREATE_SITE task is always considered done, so there is allways 1 completed task in a list
-        assertEquals(1, mQuickStartDetailStateList?.filter { it.isTaskCompleted }?.size)
+        assertEquals(0, mQuickStartDetailStateList?.filter { it.isTaskCompleted }?.size)
     }
 
     @Test

@@ -30,9 +30,7 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
     private fun refreshTaskStatus() {
         val list = ArrayList<QuickStartTaskState>()
         QuickStartTask.values().forEach {
-            // CREATE_SITE task is completed by default
-            list.add(QuickStartTaskState(it,
-                    if (it == QuickStartTask.CREATE_SITE) true else quickStartStore.hasDoneTask(siteId, it)))
+            list.add(QuickStartTaskState(it, quickStartStore.hasDoneTask(siteId, it)))
         }
         _quickStartTaskStateStates.postValue(list)
     }
@@ -44,6 +42,7 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
 
     fun skipAllTasks() {
         QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteId, it, true) }
+        QuickStartTask.values().forEach { quickStartStore.setShownTask(siteId, it, true) }
         refreshTaskStatus()
     }
 }

@@ -99,9 +99,6 @@ public class AppPrefs {
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
 
-        // used to indicate that user is performing Quick Start tutorial
-        IS_QUICK_START_ACTIVE,
-
         // indicates how many times quick start dialog for a single task wash shown
         NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
 
@@ -709,14 +706,6 @@ public class AppPrefs {
 
     public static void removeShouldTrackMagicLinkSignup() {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
-    }
-
-    public static void setQuickStartActive(Boolean isActive) {
-        setBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, isActive);
-    }
-
-    public static boolean isQuickStartActive() {
-        return getBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, false);
     }
 
     public static void setQuickStartDisabled(Boolean isDisabled) {

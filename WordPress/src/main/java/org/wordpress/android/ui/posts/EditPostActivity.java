@@ -97,6 +97,8 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
@@ -282,6 +284,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject UploadStore mUploadStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject QuickStartStore mQuickStartStore;
 
     private SiteModel mSite;
 
@@ -408,6 +411,8 @@ public class EditPostActivity extends AppCompatActivity implements
             finish();
             return;
         }
+
+        mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), QuickStartTask.PUBLISH_POST, true);
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
