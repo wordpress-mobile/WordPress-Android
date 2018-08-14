@@ -322,13 +322,6 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        mQuickStartContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewQuickStartForResult(getActivity());
-            }
-        });
-
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -469,7 +462,7 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        mQuickStartContainer.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
+        mQuickStartContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
