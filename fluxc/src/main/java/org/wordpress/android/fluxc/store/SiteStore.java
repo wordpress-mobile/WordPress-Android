@@ -488,16 +488,6 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnSupportedCountriesFetched extends OnChanged<SupportedCountriesError> {
-        public @Nullable List<SupportedCountriesResponse> supportedCountries;
-
-        public OnSupportedCountriesFetched(@Nullable List<SupportedCountriesResponse> supportedCountries,
-                                           @Nullable SupportedCountriesError error) {
-            this.supportedCountries = supportedCountries;
-            this.error = error;
-        }
-    }
-
     public enum DomainAvailabilityStatus {
         BLACKLISTED_DOMAIN,
         INVALID_TLD,
@@ -535,6 +525,16 @@ public class SiteStore extends Store {
                 }
             }
             return UNKNOWN_STATUS;
+        }
+    }
+
+    public static class OnSupportedCountriesFetched extends OnChanged<SupportedCountriesError> {
+        public @Nullable List<SupportedCountriesResponse> supportedCountries;
+
+        public OnSupportedCountriesFetched(@Nullable List<SupportedCountriesResponse> supportedCountries,
+                                           @Nullable SupportedCountriesError error) {
+            this.supportedCountries = supportedCountries;
+            this.error = error;
         }
     }
 
