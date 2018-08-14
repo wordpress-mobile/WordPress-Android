@@ -1496,7 +1496,8 @@ public class SiteStore extends Store {
 
     private void fetchSupportedStates(String countryCode) {
         if (TextUtils.isEmpty(countryCode)) {
-            DomainSupportedStatesError error = new DomainSupportedStatesError(DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE);
+            DomainSupportedStatesError error =
+                    new DomainSupportedStatesError(DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE);
             handleFetchedSupportedStates(new DomainSupportedStatesResponsePayload(error));
         } else {
             mSiteRestClient.fetchSupportedStates(countryCode);
