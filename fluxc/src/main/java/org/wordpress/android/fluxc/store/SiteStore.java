@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
@@ -237,6 +238,18 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DomainSupportedCountriesResponsePayload extends Payload<DomainSupportedCountriesError> {
+        public List<SupportedCountryResponse> supportedCountries;
+
+        public DomainSupportedCountriesResponsePayload(@Nullable List<SupportedCountryResponse> supportedCountries) {
+            this.supportedCountries = supportedCountries;
+        }
+
+        public DomainSupportedCountriesResponsePayload(@NonNull DomainSupportedCountriesError error) {
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
@@ -329,6 +342,18 @@ public class SiteStore extends Store {
 
         public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type) {
             this.type = type;
+        }
+    }
+
+    public static class DomainSupportedCountriesError implements OnChangedError {
+        @NonNull public DomainSupportedCountriesErrorType type;
+        @Nullable public String message;
+
+        public DomainSupportedCountriesError(
+                @NonNull DomainSupportedCountriesErrorType type,
+                @Nullable String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -497,6 +522,16 @@ public class SiteStore extends Store {
                 }
             }
             return UNKNOWN_STATUS;
+        }
+    }
+
+    public static class OnDomainSupportedCountriesFetched extends OnChanged<DomainSupportedCountriesError> {
+        public @Nullable List<SupportedCountryResponse> supportedCountries;
+
+        public OnDomainSupportedCountriesFetched(@Nullable List<SupportedCountryResponse> supportedCountries,
+                                                 @Nullable DomainSupportedCountriesError error) {
+            this.supportedCountries = supportedCountries;
+            this.error = error;
         }
     }
 
@@ -698,6 +733,10 @@ public class SiteStore extends Store {
 
     public enum DomainAvailabilityErrorType {
         INVALID_DOMAIN_NAME,
+        GENERIC_ERROR
+    }
+
+    public enum DomainSupportedCountriesErrorType {
         GENERIC_ERROR
     }
 
@@ -1122,6 +1161,12 @@ public class SiteStore extends Store {
             case CHECKED_DOMAIN_AVAILABILITY:
                 handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
                 break;
+            case FETCH_DOMAIN_SUPPORTED_COUNTRIES:
+                mSiteRestClient.fetchSupportedCountries();
+                break;
+            case FETCHED_DOMAIN_SUPPORTED_COUNTRIES:
+                handleFetchedSupportedCountries((DomainSupportedCountriesResponsePayload) action.getPayload());
+                break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
@@ -1432,6 +1477,10 @@ public class SiteStore extends Store {
                         payload.mappable,
                         payload.supportsPrivacy,
                         payload.error));
+    }
+
+    private void handleFetchedSupportedCountries(DomainSupportedCountriesResponsePayload payload) {
+        emitChange(new OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error));
     }
 
     // Automated Transfers
