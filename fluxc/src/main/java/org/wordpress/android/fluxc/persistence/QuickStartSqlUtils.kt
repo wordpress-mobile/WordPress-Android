@@ -41,13 +41,10 @@ class QuickStartSqlUtils
 
     private fun getQuickStartStatus(siteId: Long): QuickStartStatusModel? {
         return WellSql.select(QuickStartStatusModel::class.java)
-                .where()
-                .beginGroup()
+                .where().beginGroup()
                 .equals(QuickStartStatusModelTable.SITE_ID, siteId)
-                .endGroup()
-                .endWhere()
-                .asModel
-                .firstOrNull()
+                .endGroup().endWhere()
+                .asModel.firstOrNull()
     }
 
     fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
@@ -58,7 +55,7 @@ class QuickStartSqlUtils
         return getTask(siteId, task)?.isShown ?: false
     }
 
-    private fun insertOrUpdateQuickStartModel(newTaskModel: QuickStartTaskModel) {
+    private fun insertOrUpdateQuickStartTaskModel(newTaskModel: QuickStartTaskModel) {
         val oldModel = getTask(newTaskModel.siteId, QuickStartTask.fromString(newTaskModel.taskName))
         oldModel?.let {
             WellSql.update(QuickStartTaskModel::class.java)
@@ -87,7 +84,7 @@ class QuickStartSqlUtils
         model.siteId = siteId
         model.taskName = task.toString()
         model.isDone = isDone
-        insertOrUpdateQuickStartModel(model)
+        insertOrUpdateQuickStartTaskModel(model)
     }
 
     fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
@@ -95,7 +92,7 @@ class QuickStartSqlUtils
         model.siteId = siteId
         model.taskName = task.toString()
         model.isShown = isShown
-        insertOrUpdateQuickStartModel(model)
+        insertOrUpdateQuickStartTaskModel(model)
     }
 
     fun setQuickStartCompleted(siteId: Long, isCompleted: Boolean) {
