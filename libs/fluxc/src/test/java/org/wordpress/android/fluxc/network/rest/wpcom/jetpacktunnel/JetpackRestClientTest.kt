@@ -70,7 +70,7 @@ class JetpackRestClientTest {
             delay(10)
         }
         successMethodCaptor.lastValue.invoke(JetpackInstallResponse(success))
-        delay(10)
+        delay(50)
 
         checkUrlAndLogin()
         assertThat(jetpackInstalledPayload).isNotNull()
@@ -93,7 +93,7 @@ class JetpackRestClientTest {
             delay(10)
         }
         errorMethodCaptor.lastValue.invoke(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
-        delay(10)
+        delay(50)
 
         checkUrlAndLogin()
         assertThat(jetpackErrorPayload).isNotNull()
