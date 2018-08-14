@@ -14,14 +14,13 @@ import javax.inject.Inject
  */
 class LocalNewsService @Inject constructor(private val context: Context) : NewsService {
     val data: MutableLiveData<NewsItem?> = MutableLiveData()
-    var newsItem: NewsItem? = null
 
     override fun newsItemSource(): LiveData<NewsItem?> {
-        if (newsItem == null) {
-            newsItem = loadCardFromResources()
-            data.value = newsItem
-        }
         return data
+    }
+
+    override fun pull(skipCache: Boolean) {
+        data.value = loadCardFromResources()
     }
 
     override fun stop() {

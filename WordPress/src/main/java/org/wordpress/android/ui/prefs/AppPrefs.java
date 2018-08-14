@@ -100,7 +100,10 @@ public class AppPrefs {
 
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
-        SUPPORT_NAME
+        SUPPORT_NAME,
+
+        // Store a version of the last dismissed News Card
+        NEWS_CARD_DISMISSED_VERSION
     }
 
     /**
@@ -724,5 +727,13 @@ public class AppPrefs {
 
     public static void removeShouldTrackMagicLinkSignup() {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
+    }
+
+    public static void setNewsCardDismissedVersion(int version) {
+        setInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, version);
+    }
+
+    public static int getNewsCardDismissedVersion() {
+        return getInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, -1);
     }
 }
