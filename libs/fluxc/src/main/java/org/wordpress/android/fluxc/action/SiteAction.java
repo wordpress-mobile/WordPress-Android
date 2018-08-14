@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.MobileQuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
@@ -100,6 +101,8 @@ public enum SiteAction implements IAction {
     CHECKED_DOMAIN_AVAILABILITY,
     @Action(payloadType = DomainSupportedCountriesResponsePayload.class)
     FETCHED_DOMAIN_SUPPORTED_COUNTRIES,
+    @Action(payloadType = MobileQuickStartCompletedResponsePayload.class)
+    COMPLETED_MOBILE_QUICK_START,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
