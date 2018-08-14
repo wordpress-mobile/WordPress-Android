@@ -17,10 +17,9 @@ sealed class PageItem(val type: Type) {
     abstract class Page(
         open val id: Long,
         open val title: String,
-        open val labelRes: Int? = null,
-        open var indent: Int = 0,
-        open val actions: Set<Action> = setOf(),
-        open val icon: String? = null
+        open val labelRes: Int?,
+        open var indent: Int,
+        open val actions: Set<Action>
     ) : PageItem(PAGE)
 
     data class PublishedPage(
