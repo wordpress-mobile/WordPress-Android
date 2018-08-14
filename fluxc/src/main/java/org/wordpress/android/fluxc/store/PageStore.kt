@@ -17,6 +17,9 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.PostError
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,6 +29,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
     private var postLoadContinuation: Continuation<OnPostChanged>? = null
+    private var deletePostContinuation: Continuation<OnPostChanged>? = null
     private var site: SiteModel? = null
 
     init {
@@ -40,6 +44,9 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
+        if (remoteId == 0L) {
+            return@withContext null
+        }
         val post = postStore.getPostByRemotePostId(remoteId, site)
         return@withContext post?.let {
             PageModel(it, site, getPageByRemoteId(it.parentId, site))
@@ -83,6 +90,20 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         return PageModel(post, site, getPageFromPost(post.parentId, site, posts))
     }
 
+    suspend fun deletePage(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
+        deletePostContinuation = cont
+
+        val post = postStore.getPostByLocalPostId(page.pageId)
+        if (post != null) {
+            val payload = RemotePostPayload(post, page.site)
+            dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
+        } else {
+            val event = OnPostChanged(0)
+            event.error = PostError(PostErrorType.UNKNOWN_POST)
+            cont.resume(event)
+        }
+    }
+
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
         this.site = site
         postLoadContinuation = cont
@@ -98,13 +119,19 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
-        if (event.causeOfChange == PostAction.FETCH_PAGES) {
-            if (event.canLoadMore && site != null) {
-                fetchPages(site!!, true)
-            } else {
-                postLoadContinuation?.resume(event)
-                postLoadContinuation = null
+        when (event.causeOfChange) {
+            PostAction.FETCH_PAGES -> {
+                if (event.canLoadMore && site != null) {
+                    fetchPages(site!!, true)
+                } else {
+                    postLoadContinuation?.resume(event)
+                    postLoadContinuation = null
+                }
             }
+            PostAction.DELETE_POST -> {
+                deletePostContinuation?.resume(event)
+            }
+            else -> {}
         }
     }
 }
