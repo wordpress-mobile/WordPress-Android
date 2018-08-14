@@ -72,4 +72,23 @@ class QuickStartSqlUtilsTest {
         quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE, false)
         assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
     }
+
+    @Test
+    fun testTaskMultipleStatuses() {
+        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+
+        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE, true)
+        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE, true)
+        assertTrue(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+
+        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE, false)
+        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+
+        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE, false)
+        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+    }
 }

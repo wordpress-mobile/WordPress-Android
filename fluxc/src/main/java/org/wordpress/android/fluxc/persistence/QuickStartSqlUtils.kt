@@ -58,7 +58,7 @@ class QuickStartSqlUtils
     }
 
     fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
-        val model = QuickStartModel()
+        val model = getTask(siteId, task) ?: QuickStartModel()
         model.siteId = siteId
         model.taskName = task.toString()
         model.isDone = isDone
@@ -66,7 +66,7 @@ class QuickStartSqlUtils
     }
 
     fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
-        val model = QuickStartModel()
+        val model = getTask(siteId, task) ?: QuickStartModel()
         model.siteId = siteId
         model.taskName = task.toString()
         model.isShown = isShown
