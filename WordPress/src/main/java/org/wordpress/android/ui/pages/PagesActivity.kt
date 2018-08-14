@@ -1,17 +1,13 @@
 package org.wordpress.android.ui.pages
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.id
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.EditPostActivity
 
 class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,20 +41,6 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is PagesFragment) {
             fragment.onPageDeleteConfirmed(remoteId)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, 0)
-            onPageEditFinished(pageId)
-        }
-    }
-
-    private fun onPageEditFinished(pageId: Long) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (fragment is PagesFragment) {
-            fragment.onPageEditFinished(pageId)
         }
     }
 }
