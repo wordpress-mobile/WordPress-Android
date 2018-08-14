@@ -571,12 +571,12 @@ public class SiteRestClient extends BaseWPComRestClient {
      */
     public void fetchSupportedCountries() {
         String url = WPCOMREST.domains.supported_countries.getUrlV1_1();
-        final WPComGsonRequest<ArrayList<SupportedCountriesResponse>> request =
+        final WPComGsonRequest<ArrayList<SupportedCountryResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, null,
-                        new TypeToken<ArrayList<SupportedCountriesResponse>>() {}.getType(),
-                        new Listener<ArrayList<SupportedCountriesResponse>>() {
+                        new TypeToken<ArrayList<SupportedCountryResponse>>() {}.getType(),
+                        new Listener<ArrayList<SupportedCountryResponse>>() {
                             @Override
-                            public void onResponse(ArrayList<SupportedCountriesResponse> response) {
+                            public void onResponse(ArrayList<SupportedCountryResponse> response) {
                                 SupportedCountriesResponsePayload payload =
                                         new SupportedCountriesResponsePayload(response);
                                 mDispatcher.dispatch(SiteActionBuilder.newFetchedSupportedCountriesAction(payload));
