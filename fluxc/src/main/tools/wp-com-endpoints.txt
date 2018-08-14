@@ -27,6 +27,7 @@
 /read/site/$site#String/post_email_subscriptions/update
 
 /domains/suggestions
+/domains/supported-states/$countryCode#String
 /domains/$domainName#String/is-available
 
 /meta/external-media/pexels
