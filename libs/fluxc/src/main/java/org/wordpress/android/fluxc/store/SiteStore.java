@@ -238,15 +238,14 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class SupportedCountriesResponsePayload extends Payload<SupportedCountriesError> {
+    public static class DomainSupportedCountriesResponsePayload extends Payload<DomainSupportedCountriesError> {
         public List<SupportedCountryResponse> supportedCountries;
 
-        public SupportedCountriesResponsePayload(
-                @Nullable List<SupportedCountryResponse> supportedCountryRespons) {
-            this.supportedCountries = supportedCountryRespons;
+        public DomainSupportedCountriesResponsePayload(@Nullable List<SupportedCountryResponse> supportedCountries) {
+            this.supportedCountries = supportedCountries;
         }
 
-        public SupportedCountriesResponsePayload(@NonNull SupportedCountriesError error) {
+        public DomainSupportedCountriesResponsePayload(@NonNull DomainSupportedCountriesError error) {
             this.error = error;
         }
     }
@@ -346,11 +345,11 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class SupportedCountriesError implements OnChangedError {
-        @NonNull public SupportedCountryErrorType type;
+    public static class DomainSupportedCountriesError implements OnChangedError {
+        @NonNull public DomainSupportedCountriesErrorType type;
         @Nullable public String message;
 
-        public SupportedCountriesError(@NonNull SupportedCountryErrorType type, @Nullable String message) {
+        public DomainSupportedCountriesError(@NonNull DomainSupportedCountriesErrorType type, @Nullable String message) {
             this.type = type;
             this.message = message;
         }
@@ -524,11 +523,11 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnSupportedCountriesFetched extends OnChanged<SupportedCountriesError> {
+    public static class OnDomainSupportedCountriesFetched extends OnChanged<DomainSupportedCountriesError> {
         public @Nullable List<SupportedCountryResponse> supportedCountries;
 
-        public OnSupportedCountriesFetched(@Nullable List<SupportedCountryResponse> supportedCountries,
-                                           @Nullable SupportedCountriesError error) {
+        public OnDomainSupportedCountriesFetched(@Nullable List<SupportedCountryResponse> supportedCountries,
+                                                 @Nullable DomainSupportedCountriesError error) {
             this.supportedCountries = supportedCountries;
             this.error = error;
         }
@@ -735,7 +734,7 @@ public class SiteStore extends Store {
         GENERIC_ERROR
     }
 
-    public enum SupportedCountryErrorType {
+    public enum DomainSupportedCountriesErrorType {
         GENERIC_ERROR
     }
 
@@ -1160,11 +1159,11 @@ public class SiteStore extends Store {
             case CHECKED_DOMAIN_AVAILABILITY:
                 handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
                 break;
-            case FETCH_SUPPORTED_COUNTRIES:
+            case FETCH_DOMAIN_SUPPORTED_COUNTRIES:
                 mSiteRestClient.fetchSupportedCountries();
                 break;
-            case FETCHED_SUPPORTED_COUNTRIES:
-                handleFetchedSupportedCountries((SupportedCountriesResponsePayload) action.getPayload());
+            case FETCHED_DOMAIN_SUPPORTED_COUNTRIES:
+                handleFetchedSupportedCountries((DomainSupportedCountriesResponsePayload) action.getPayload());
                 break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
@@ -1478,8 +1477,8 @@ public class SiteStore extends Store {
                         payload.error));
     }
 
-    private void handleFetchedSupportedCountries(SupportedCountriesResponsePayload payload) {
-        emitChange(new OnSupportedCountriesFetched(payload.supportedCountries, payload.error));
+    private void handleFetchedSupportedCountries(DomainSupportedCountriesResponsePayload payload) {
+        emitChange(new OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error));
     }
 
     // Automated Transfers
