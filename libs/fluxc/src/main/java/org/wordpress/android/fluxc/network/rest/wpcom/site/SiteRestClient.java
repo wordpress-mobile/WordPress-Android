@@ -694,7 +694,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                             @Override
                             public void onResponse(MobileQuickStartCompletedResponse response) {
                                 mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(
-                                        new MobileQuickStartCompletedResponsePayload(response.status)));
+                                         new MobileQuickStartCompletedResponsePayload(response.status)));
                             }
                         },
                         new WPComErrorListener() {

@@ -67,6 +67,8 @@ public enum SiteAction implements IAction {
     CHECK_DOMAIN_AVAILABILITY,
     @Action
     FETCH_DOMAIN_SUPPORTED_COUNTRIES,
+    @Action(payloadType = SiteModel.class)
+    COMPLETE_MOBILE_QUICK_START,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)
