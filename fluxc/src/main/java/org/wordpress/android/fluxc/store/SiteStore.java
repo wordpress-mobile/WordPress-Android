@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountriesResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
@@ -239,11 +239,11 @@ public class SiteStore extends Store {
     }
 
     public static class SupportedCountriesResponsePayload extends Payload<SupportedCountriesError> {
-        public List<SupportedCountriesResponse> supportedCountriesResponses;
+        public List<SupportedCountryResponse> supportedCountries;
 
         public SupportedCountriesResponsePayload(
-                @Nullable List<SupportedCountriesResponse> supportedCountriesResponses) {
-            this.supportedCountriesResponses = supportedCountriesResponses;
+                @Nullable List<SupportedCountryResponse> supportedCountryRespons) {
+            this.supportedCountries = supportedCountryRespons;
         }
 
         public SupportedCountriesResponsePayload(@NonNull SupportedCountriesError error) {
@@ -529,9 +529,9 @@ public class SiteStore extends Store {
     }
 
     public static class OnSupportedCountriesFetched extends OnChanged<SupportedCountriesError> {
-        public @Nullable List<SupportedCountriesResponse> supportedCountries;
+        public @Nullable List<SupportedCountryResponse> supportedCountries;
 
-        public OnSupportedCountriesFetched(@Nullable List<SupportedCountriesResponse> supportedCountries,
+        public OnSupportedCountriesFetched(@Nullable List<SupportedCountryResponse> supportedCountries,
                                            @Nullable SupportedCountriesError error) {
             this.supportedCountries = supportedCountries;
             this.error = error;
@@ -1483,7 +1483,7 @@ public class SiteStore extends Store {
     }
 
     private void handleFetchedSupportedCountries(SupportedCountriesResponsePayload payload) {
-        emitChange(new OnSupportedCountriesFetched(payload.supportedCountriesResponses, payload.error));
+        emitChange(new OnSupportedCountriesFetched(payload.supportedCountries, payload.error));
     }
 
     // Automated Transfers
