@@ -354,10 +354,6 @@ public class SiteStore extends Store {
             this.type = type;
             this.message = message;
         }
-
-        public SupportedCountriesError(@NonNull SupportedCountryErrorType type) {
-            this.type = type;
-        }
     }
 
     // OnChanged Events
