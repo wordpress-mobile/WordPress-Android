@@ -1203,6 +1203,9 @@ public class SiteStore extends Store {
             case CHECKED_AUTOMATED_TRANSFER_STATUS:
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
                 break;
+            case COMPLETE_MOBILE_QUICK_START:
+                completeMobileQuickStart((SiteModel) action.getPayload());
+                break;
             case COMPLETED_MOBILE_QUICK_START:
                 handleMobileQuickStartCompleted((MobileQuickStartCompletedResponsePayload) action.getPayload());
                 break;
