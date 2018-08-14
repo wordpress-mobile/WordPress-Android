@@ -678,7 +678,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setupObservables() {
-        mViewModel.getNewsItem().observe((FragmentActivity) getActivity(), new Observer<NewsItem>() {
+        mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), new Observer<NewsItem>() {
             @Override public void onChanged(@Nullable NewsItem newsItem) {
                 getPostAdapter().updateNewsCardItem(newsItem);
             }
