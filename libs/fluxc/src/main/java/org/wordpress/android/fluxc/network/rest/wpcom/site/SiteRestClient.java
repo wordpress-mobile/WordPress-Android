@@ -42,14 +42,17 @@ import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus;
+import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus;
-import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
@@ -554,6 +557,45 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 DomainAvailabilityResponsePayload payload =
                                         new DomainAvailabilityResponsePayload(domainAvailabilityError);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/supported-countries/ endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_COUNTRIES} action is dispatched with a
+     * payload of type {@link DomainSupportedCountriesResponsePayload}.
+     *
+     * {@link DomainSupportedCountriesResponsePayload#isError()} can be used to check the request result.
+     */
+    public void fetchSupportedCountries() {
+        String url = WPCOMREST.domains.supported_countries.getUrlV1_1();
+        final WPComGsonRequest<ArrayList<SupportedCountryResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, null,
+                        new TypeToken<ArrayList<SupportedCountryResponse>>() {}.getType(),
+                        new Listener<ArrayList<SupportedCountryResponse>>() {
+                            @Override
+                            public void onResponse(ArrayList<SupportedCountryResponse> response) {
+                                DomainSupportedCountriesResponsePayload payload =
+                                        new DomainSupportedCountriesResponsePayload(response);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                // Supported Countries API should always return a response for a valid,
+                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
+                                DomainSupportedCountriesError domainSupportedCountriesError =
+                                        new DomainSupportedCountriesError(
+                                                DomainSupportedCountriesErrorType.GENERIC_ERROR,
+                                                error.message);
+                                DomainSupportedCountriesResponsePayload payload =
+                                        new DomainSupportedCountriesResponsePayload(domainSupportedCountriesError);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload));
                             }
                         });
         add(request);
