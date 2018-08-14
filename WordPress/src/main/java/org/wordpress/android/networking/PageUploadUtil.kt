@@ -71,12 +71,12 @@ class PageUploadUtil @Inject constructor(
         ERROR_EMPTY_PAGE,
         ERROR_NON_EXISTING_PAGE
     }
-}
 
-fun PostModel.updatePageData(page: PageModel) {
-    this.id = page.pageId
-    this.title = page.title
-    this.status = page.status.toPostStatus().toString()
-    this.parentId = page.parent?.remoteId ?: 0
-    this.remotePostId = page.remoteId
+    private fun PostModel.updatePageData(page: PageModel) {
+        this.id = page.pageId
+        this.title = page.title
+        this.status = page.status.toPostStatus().toString()
+        this.parentId = page.parent?.remoteId ?: 0
+        this.remotePostId = page.remoteId
+    }
 }
