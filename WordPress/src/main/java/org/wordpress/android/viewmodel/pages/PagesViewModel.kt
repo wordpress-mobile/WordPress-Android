@@ -130,6 +130,8 @@ class PagesViewModel
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
             newState = ERROR
+            _showSnackbarMessage.postValue(
+                    SnackbarMessageHolder(resourceProvider.getString(string.error_refresh_pages)))
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
             _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
