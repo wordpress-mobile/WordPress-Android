@@ -595,6 +595,22 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class MobileQuickStartCompletedResponsePayload extends OnChanged<SiteError> {
+        public boolean status;
+
+        public MobileQuickStartCompletedResponsePayload(boolean status) {
+            this.status = status;
+        }
+    }
+
+    public static class OnMobileQuickStartCompleted extends OnChanged<SiteError> {
+        public boolean status;
+
+        public OnMobileQuickStartCompleted(boolean status) {
+            this.status = status;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -1187,6 +1203,9 @@ public class SiteStore extends Store {
             case CHECKED_AUTOMATED_TRANSFER_STATUS:
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
                 break;
+            case COMPLETED_MOBILE_QUICK_START:
+                handleMobileQuickStartCompleted((MobileQuickStartCompletedResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -1516,6 +1535,15 @@ public class SiteStore extends Store {
         } else {
             event = new OnAutomatedTransferStatusChecked(payload.site, payload.error);
         }
+        emitChange(event);
+    }
+
+    private void completeMobileQuickStart(@NonNull SiteModel site) {
+        mSiteRestClient.completeMobileQuickStart(site);
+    }
+
+    private void handleMobileQuickStartCompleted(MobileQuickStartCompletedResponsePayload payload) {
+        OnMobileQuickStartCompleted event = new OnMobileQuickStartCompleted(payload.status);
         emitChange(event);
     }
 }

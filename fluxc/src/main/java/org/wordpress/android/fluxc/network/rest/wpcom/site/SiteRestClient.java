@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.MobileQuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
@@ -679,6 +680,28 @@ public class SiteRestClient extends BaseWPComRestClient {
                                         networkError.apiError, networkError.message);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
                                         new AutomatedTransferStatusResponsePayload(site, error)));
+                            }
+                        });
+        add(request);
+    }
+
+    public void completeMobileQuickStart(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).mobile_quick_start.getUrlV1_1();
+
+        final WPComGsonRequest<MobileQuickStartCompletedResponse> request = WPComGsonRequest
+                .buildGetRequest(url, null, MobileQuickStartCompletedResponse.class,
+                        new Listener<MobileQuickStartCompletedResponse>() {
+                            @Override
+                            public void onResponse(MobileQuickStartCompletedResponse response) {
+                                mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(
+                                        new MobileQuickStartCompletedResponsePayload(response.status)));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                                mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(
+                                        new MobileQuickStartCompletedResponsePayload(false)));
                             }
                         });
         add(request);
