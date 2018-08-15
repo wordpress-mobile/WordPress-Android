@@ -72,55 +72,32 @@ public class WPScreenshotTest {
     }
 
     private void wPLogin() {
-        // Login
-        ViewInteraction loginButton = onView(
-                allOf(withId(R.id.login_button),
-                        childAtPosition(allOf(withId(R.id.bottom_buttons),
-                                childAtPosition(withClassName(is("android.widget.RelativeLayout")), 3)),
-                        0)));
-        waitForElementUntilDisplayed(loginButton).perform(click());
+        // If we're already logged in, log out before starting
+        if (!hasElement(R.id.login_button)) {
+            wPLogout();
+        }
 
-        // User name
-        ViewInteraction userNameEditText = onView(
-                allOf(withId(R.id.input),
-                        childAtPosition(childAtPosition(withId(R.id.input_layout), 0), 0)));
-        waitForElementUntilDisplayed(userNameEditText).perform(replaceText(SCREENSHOT_LOGINUSERNAME),
-                closeSoftKeyboard());
+        // Login Prologue – We want to log in, not sign up
+        // See LoginPrologueFragment
+        clickOn(R.id.login_button);
 
-        // Next Button
-        ViewInteraction nextButton = onView(
-                allOf(withId(R.id.primary_button),
-                        childAtPosition(allOf(withId(R.id.bottom_buttons), childAtPosition(
-                                withClassName(is("android.widget.RelativeLayout")), 2)), 1)));
-        waitForElementUntilDisplayed(nextButton).perform(click());
+        // Email Address Screen – Fill it in and click "Next"
+        // See LoginEmailFragment
+        populateTextField(R.id.input, SCREENSHOT_LOGINUSERNAME);
+        clickOn(R.id.primary_button);
 
-        // Enter password button
-        ViewInteraction enterPasswordButton = onView(
-                allOf(withId(R.id.login_enter_password),
-                        childAtPosition(childAtPosition(
-                                withClassName(is("android.widget.ScrollView")), 0), 3)));
-        waitForElementUntilDisplayed(enterPasswordButton).perform(scrollTo(), click());
+        // Receive Magic Link or Enter Password Screen – Choose "Enter Password"
+        // See LoginMagicLinkRequestFragment
+        clickOn(R.id.login_enter_password);
 
-        // Password
-        ViewInteraction passwordEditText = onView(
-                allOf(withId(R.id.input), childAtPosition(
-                        childAtPosition(withId(R.id.input_layout), 0), 0)));
-        waitForElementUntilDisplayed(passwordEditText).perform(replaceText(SCREENSHOT_LOGINPASSWORD),
-                closeSoftKeyboard());
+        // Password Screen – Fill it in and click "Next"
+        // See LoginEmailPasswordFragment
+        populateTextField(R.id.input, SCREENSHOT_LOGINPASSWORD);
+        clickOn(R.id.primary_button);
 
-        // Next Button
-        nextButton = onView(
-                allOf(withId(R.id.primary_button), withText(R.string.next), childAtPosition(
-                        allOf(withId(R.id.bottom_buttons), childAtPosition(
-                                withClassName(is("android.widget.RelativeLayout")), 2)), 1)));
-        waitForElementUntilDisplayed(nextButton).perform(click());
-
-        // Continue with this log button
-        ViewInteraction continueButton = onView(
-                allOf(withId(R.id.primary_button), withText(R.string.login_continue), childAtPosition(
-                        allOf(withId(R.id.bottom_buttons), childAtPosition(
-                                withClassName(is("android.widget.RelativeLayout")), 3)), 1)));
-        waitForElementUntilDisplayed(continueButton).perform(click());
+        // Login Confirmation Screen – Click "Continue"
+        // See LoginEpilogueFragment
+        clickOn(R.id.primary_button);
     }
 
     private void wPLogout() {
