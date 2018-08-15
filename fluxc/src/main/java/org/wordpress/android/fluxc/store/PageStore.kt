@@ -30,6 +30,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
     private var postLoadContinuation: Continuation<OnPostChanged>? = null
     private var deletePostContinuation: Continuation<OnPostChanged>? = null
+    private var updatePostContinuation: Continuation<OnPostChanged>? = null
     private var site: SiteModel? = null
 
     init {
@@ -55,6 +56,16 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
 
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(CommonPool) {
         getPagesFromDb(site).filter { it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
+    }
+
+    suspend fun updatePageInDb(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
+        updatePostContinuation = cont
+
+        val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
+        post.updatePageData(page)
+
+        val updateAction = PostActionBuilder.newUpdatePostAction(post)
+        dispatcher.dispatch(updateAction)
     }
 
     suspend fun groupedSearch(
@@ -130,8 +141,21 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
             }
             PostAction.DELETE_POST -> {
                 deletePostContinuation?.resume(event)
+                deletePostContinuation = null
+            }
+            PostAction.UPDATE_POST -> {
+                updatePostContinuation?.resume(event)
+                updatePostContinuation = null
             }
             else -> {}
         }
+    }
+
+    fun PostModel.updatePageData(page: PageModel) {
+        this.id = page.pageId
+        this.title = page.title
+        this.status = page.status.toPostStatus().toString()
+        this.parentId = page.parent?.remoteId ?: 0
+        this.remotePostId = page.remoteId
     }
 }
