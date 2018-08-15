@@ -7,16 +7,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private final LayoutInflater mInflater;
@@ -25,7 +30,10 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private List<Suggestion> mOrigSuggestionList;
     private int mAvatarSz;
 
+    @Inject protected ImageManager mImageManager;
+
     public SuggestionAdapter(Context context) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mInflater = LayoutInflater.from(context);
     }
@@ -71,7 +79,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
 
         if (suggestion != null) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getImageUrl(), mAvatarSz);
-            holder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR, avatarUrl);
             holder.mTxtUserLogin
                     .setText(convertView.getResources().getString(R.string.at_username, suggestion.getUserLogin()));
             holder.mTxtDisplayName.setText(suggestion.getDisplayName());
@@ -90,14 +98,14 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     }
 
     private class SuggestionViewHolder {
-        private final WPNetworkImageView mImgAvatar;
+        private final ImageView mImgAvatar;
         private final TextView mTxtUserLogin;
         private final TextView mTxtDisplayName;
 
         SuggestionViewHolder(View row) {
-            mImgAvatar = (WPNetworkImageView) row.findViewById(R.id.suggest_list_row_avatar);
-            mTxtUserLogin = (TextView) row.findViewById(R.id.suggestion_list_row_user_login_label);
-            mTxtDisplayName = (TextView) row.findViewById(R.id.suggestion_list_row_display_name_label);
+            mImgAvatar = row.findViewById(R.id.suggest_list_row_avatar);
+            mTxtUserLogin = row.findViewById(R.id.suggestion_list_row_user_login_label);
+            mTxtDisplayName = row.findViewById(R.id.suggestion_list_row_display_name_label);
         }
     }
 
@@ -113,7 +121,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
                 results.values = mOrigSuggestionList;
                 results.count = mOrigSuggestionList.size();
             } else {
-                List<Suggestion> nSuggestionList = new ArrayList<Suggestion>();
+                List<Suggestion> nSuggestionList = new ArrayList<>();
 
                 for (Suggestion suggestion : mOrigSuggestionList) {
                     String lowerCaseConstraint = constraint.toString().toLowerCase(Locale.getDefault());

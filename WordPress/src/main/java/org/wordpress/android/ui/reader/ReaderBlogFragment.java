@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -61,7 +61,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
@@ -76,29 +76,29 @@ public class ReaderBlogFragment extends Fragment
             return;
         }
 
-        ActionableEmptyView emptyView = getView().findViewById(R.id.actionable_empty_view);
+        ActionableEmptyView actionableEmptyView = getView().findViewById(R.id.actionable_empty_view);
 
-        if (emptyView == null) {
+        if (actionableEmptyView == null) {
             return;
         }
 
         if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
+            actionableEmptyView.setVisibility(View.VISIBLE);
 
             switch (getBlogType()) {
                 case RECOMMENDED:
-                    emptyView.setTitleText(getString(R.string.reader_empty_recommended_blogs));
+                    actionableEmptyView.title.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
-                        emptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_search_title));
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_search_title);
                     } else {
-                        emptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_title));
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_title);
                     }
                     break;
             }
         } else {
-            emptyView.setVisibility(View.GONE);
+            actionableEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -109,7 +109,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         if (getBlogAdapter().hasSearchFilter()) {
             outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
@@ -146,7 +146,7 @@ public class ReaderBlogFragment extends Fragment
         SearchView searchView = (SearchView) searchMenu.getActionView();
         searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
-        MenuItemCompat.setOnActionExpandListener(searchMenu, new MenuItemCompat.OnActionExpandListener() {
+        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;

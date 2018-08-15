@@ -188,7 +188,7 @@ public class PeopleListFragment extends Fragment {
                                 break;
                         }
 
-                        mActionableEmptyView.setTitleText(title);
+                        mActionableEmptyView.title.setText(title);
                         mActionableEmptyView.setVisibility(View.VISIBLE);
                         mFilteredRecyclerView.setToolbarScrollFlags(0);
                         return "";
@@ -385,15 +385,16 @@ public class PeopleListFragment extends Fragment {
             return person.getPersonID();
         }
 
+        @NonNull
         @Override
-        public PeopleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public PeopleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = mInflater.inflate(R.layout.people_list_row, parent, false);
 
             return new PeopleViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             PeopleViewHolder peopleViewHolder = (PeopleViewHolder) holder;
             final Person person = getPerson(position);
 

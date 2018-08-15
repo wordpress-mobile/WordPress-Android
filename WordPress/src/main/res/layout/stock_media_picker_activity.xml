@@ -37,36 +37,16 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/stock_media_picker_thumbnail"/>
 
-        <LinearLayout
-            android:id="@+id/empty_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/actionable_empty_view"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:visibility="gone"
-            tools:visibility="visible">
-
-            <ImageView
-                android:id="@+id/image_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_stock_media"/>
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/margin_large"
-                android:gravity="center"
-                android:textColor="@color/grey"
-                android:textColorLink="@color/link"
-                android:textSize="@dimen/text_sz_extra_large"
-                tools:text="@string/stock_media_picker_initial_empty_text"/>
-        </LinearLayout>
+            app:aevTitle="@string/media_empty_search_list"
+            tools:layout_height="wrap_content"
+            tools:layout_marginTop="@dimen/margin_extra_extra_large"
+            tools:visibility="visible" >
+        </org.wordpress.android.ui.ActionableEmptyView>
 
         <FrameLayout
             android:id="@+id/container_selection_bar"

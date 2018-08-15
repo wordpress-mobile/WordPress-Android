@@ -393,13 +393,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
-                            noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                            noteBlock = new FooterNoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
                             ((FooterNoteBlock) noteBlock).setClickableSpan(
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
                                     mNote.getType()
                                                                           );
                         } else {
-                            noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                            noteBlock = new NoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
                         }
 
                         // Badge notifications apply different colors and formatting
@@ -461,6 +461,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                                   String message) {
             return new GeneratedNoteBlock(
                     message,
+                    mImageManager,
                     onNoteBlockTextClickListener,
                     pingbackUrl);
         }

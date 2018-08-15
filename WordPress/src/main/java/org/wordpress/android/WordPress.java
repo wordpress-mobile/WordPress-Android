@@ -230,7 +230,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        if (!PackageUtils.isDebugBuild()) {
+        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
             Fabric.with(this, new Crashlytics());
         }
 
@@ -441,6 +441,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     public static Context getContext() {
         return mContext;
+    }
+
+    /**
+     * Update locale of the static context when language is changed.
+     */
+    public static void updateContextLocale() {
+        mContext = LocaleManager.setLocale(mContext);
     }
 
     public static RestClientUtils getRestClientUtils() {

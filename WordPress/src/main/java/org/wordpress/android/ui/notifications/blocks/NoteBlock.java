@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.Spannable;
@@ -17,18 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPTextView;
 
 /**
@@ -41,6 +43,7 @@ public class NoteBlock {
 
     private final JSONObject mNoteData;
     private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
+    protected final ImageManager mImageManager;
     private JSONObject mMediaItem;
     private boolean mIsBadge;
     private boolean mIsPingback;
@@ -57,9 +60,11 @@ public class NoteBlock {
         void showSitePreview(long siteId, String siteUrl);
     }
 
-    public NoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    public NoteBlock(JSONObject noteObject, ImageManager imageManager,
+                     OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         mNoteData = noteObject;
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
+        mImageManager = imageManager;
     }
 
     OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
@@ -156,29 +161,35 @@ public class NoteBlock {
 
         // Note image
         if (hasImageMediaItem()) {
-            // Request image, and animate it when loaded
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
-            WordPress.sImageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (!mHasAnimatedBadge && response.getBitmap() != null && view.getContext() != null) {
-                        mHasAnimatedBadge = true;
-                        noteBlockHolder.getImageView().setImageBitmap(response.getBitmap());
-                        Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
-                        noteBlockHolder.getImageView().startAnimation(pop);
-                        noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
-                    }
-                }
+            // Request image, and animate it when loaded
+            mImageManager
+                    .loadWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
+                            getNoteMediaItem().optString("url", ""), null,
+                            new ImageManager.RequestListener<Drawable>() {
+                                @Override
+                                public void onLoadFailed(@Nullable Exception e) {
+                                    if (e != null) {
+                                        AppLog.e(T.NOTIFS, e);
+                                    }
+                                    noteBlockHolder.hideImageView();
+                                }
 
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    noteBlockHolder.hideImageView();
-                }
-            });
+                                @Override
+                                public void onResourceReady(@Nullable Drawable resource) {
+                                    if (!mHasAnimatedBadge && view.getContext() != null && resource != null) {
+                                        mHasAnimatedBadge = true;
+                                        Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
+                                        noteBlockHolder.getImageView().startAnimation(pop);
+                                    }
+                                }
+                            });
+
             if (mIsBadge) {
                 noteBlockHolder.getImageView().setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
             }
         } else {
+            mImageManager.cancelRequestAndClearImageView(noteBlockHolder.getImageView());
             noteBlockHolder.hideImageView();
         }
 

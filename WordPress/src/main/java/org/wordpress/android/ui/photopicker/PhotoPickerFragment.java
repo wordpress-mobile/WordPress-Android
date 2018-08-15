@@ -21,14 +21,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
+import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -68,10 +69,10 @@ public class PhotoPickerFragment extends Fragment {
         void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon);
     }
 
-    private RecyclerView mRecycler;
+    private EmptyViewRecyclerView mRecycler;
     private PhotoPickerAdapter mAdapter;
     private View mBottomBar;
-    private ViewGroup mSoftAskContainer;
+    private ActionableEmptyView mSoftAskView;
     private ActionMode mActionMode;
     private GridLayoutManager mGridManager;
     private Parcelable mRestoreState;
@@ -113,10 +114,11 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_picker_fragment, container, false);
 
         mRecycler = view.findViewById(R.id.recycler);
+        mRecycler.setEmptyView(view.findViewById(R.id.actionable_empty_view));
         mRecycler.setHasFixedSize(true);
 
         // disable thumbnail loading during a fling to conserve memory
@@ -181,7 +183,7 @@ public class PhotoPickerFragment extends Fragment {
             }
         }
 
-        mSoftAskContainer = view.findViewById(R.id.container_soft_ask);
+        mSoftAskView = view.findViewById(R.id.soft_ask_view);
 
         return view;
     }
@@ -197,7 +199,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_LAST_TAPPED_ICON, mLastTappedIcon == null ? null : mLastTappedIcon.name());
@@ -344,7 +346,6 @@ public class PhotoPickerFragment extends Fragment {
 
         @Override
         public void onAdapterLoaded(boolean isEmpty) {
-            showEmptyView(isEmpty);
             // restore previous selection
             if (mSelectedPositions != null) {
                 getAdapter().setSelectedPositions(mSelectedPositions);
@@ -357,12 +358,6 @@ public class PhotoPickerFragment extends Fragment {
             }
         }
     };
-
-    private void showEmptyView(boolean show) {
-        if (isAdded()) {
-            getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
-        }
-    }
 
     private boolean hasAdapter() {
         return mAdapter != null;
@@ -548,28 +543,27 @@ public class PhotoPickerFragment extends Fragment {
 
         if (show) {
             String appName = "<strong>" + getString(R.string.app_name) + "</strong>";
-            TextView txtLabel = mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
             String label;
+
             if (isAlwaysDenied) {
                 String permissionName = "<strong>"
-                                        + WPPermissionUtils
-                                                .getPermissionName(getActivity(), permission.WRITE_EXTERNAL_STORAGE)
+                                        + WPPermissionUtils.getPermissionName(getActivity(),
+                                                permission.WRITE_EXTERNAL_STORAGE)
                                         + "</strong>";
-                label = String.format(
-                        getString(R.string.photo_picker_soft_ask_permissions_denied), appName, permissionName);
+                label = String.format(getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
+                        permissionName);
             } else {
                 label = String.format(getString(R.string.photo_picker_soft_ask_label), appName);
             }
-            txtLabel.setText(Html.fromHtml(label));
+
+            mSoftAskView.title.setText(Html.fromHtml(label));
 
             // when the user taps Allow, request the required permissions unless the user already
             // denied them permanently, in which case take them to the device settings for this
             // app so the user can change permissions there
-            TextView txtAllow = mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
-            int allowId = isAlwaysDenied
-                    ? R.string.button_edit_permissions : R.string.photo_picker_soft_ask_allow;
-            txtAllow.setText(allowId);
-            txtAllow.setOnClickListener(new View.OnClickListener() {
+            int allowId = isAlwaysDenied ? R.string.button_edit_permissions : R.string.photo_picker_soft_ask_allow;
+            mSoftAskView.button.setText(allowId);
+            mSoftAskView.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (isStoragePermissionAlwaysDenied()) {
@@ -580,10 +574,10 @@ public class PhotoPickerFragment extends Fragment {
                 }
             });
 
-            mSoftAskContainer.setVisibility(View.VISIBLE);
+            mSoftAskView.setVisibility(View.VISIBLE);
             hideBottomBar();
-        } else if (mSoftAskContainer.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
+        } else if (mSoftAskView.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mSoftAskView, AniUtils.Duration.MEDIUM);
             showBottomBar();
         }
     }

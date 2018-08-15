@@ -12,7 +12,8 @@
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
+    <string name="sign_out_wpcom_confirm_with_changes">You have changes to posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Log out of WordPress?</string>
 
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
@@ -102,7 +103,6 @@
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
-    <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
@@ -199,6 +199,7 @@
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
     <string name="media_empty_list">You don\'t have any media</string>
+    <string name="media_empty_search_list">No media matching your search</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
     <string name="media_empty_videos_list">You don\'t have any videos</string>
     <string name="media_empty_documents_list">You don\'t have any documents</string>
@@ -502,6 +503,10 @@
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
+    <string name="site_settings_tags_empty_button">Create a tag</string>
+    <string name="site_settings_tags_empty_subtitle">Add your frequently used tags here so they can be quickly selected when tagging your posts</string>
+    <string name="site_settings_tags_empty_title">You don\'t have any tags</string>
+    <string name="site_settings_tags_empty_title_search">No tags matching your search</string>
     <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_week_start_title">Week starts on</string>
@@ -566,7 +571,7 @@
     <string name="tag_description_hint">Description</string>
     <string name="add_new_tag">Add New Tag</string>
     <string name="error_tag_exists">A tag with this name already exists</string>
-    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\' tag?</string>
     <string name="dlg_deleting_tag">Deleting</string>
     <string name="dlg_saving_tag">Saving</string>
 
@@ -1432,8 +1437,7 @@
     <string name="reader_label_follow_count">%,d followers</string>
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
-    <string name="reader_label_post_search_explainer">Search WordPress\nfor a site or post</string>
-    <string name="reader_label_post_search_running">Searching…</string>
+    <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit</string>
@@ -1709,6 +1713,7 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
+    <string name="themes_empty_list">No themes matching your search</string>
 
     <!--People Management-->
     <string name="people">People</string>
@@ -1957,7 +1962,6 @@
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
-    <string name="stock_media_picker_empty_results">No matches</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -2162,7 +2166,6 @@
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
     <string name="stats_bar_date_value_desc">%s, %d views</string>
     <string name="stats_bar_week_desc">Week of %s</string>
-    <string name="fab_add_tag_desc">create tag</string>
     <string name="fab_create_desc">create</string>
     <string name="stats_legend">stats graph legend</string>
     <string name="stats_tab_tap_content_description">showing %s</string>
