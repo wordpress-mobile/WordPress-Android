@@ -466,7 +466,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
-                    QuickStartUtils.markAllTasksAsShown(mQuickStartStore);
+                    mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
                     updateQuickStartContainer();
                 }
 
@@ -1049,8 +1049,8 @@ public class MySiteFragment extends Fragment implements
     }
 
     // we might need to call this one when the fragment is not attached to WPMainActivity
-    public void completeQuickStarTask(int siteId, QuickStartTask quickStartTask) {
-        mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
+    private void completeQuickStarTask(SiteModel siteModel, QuickStartTask quickStartTask) {
+        QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, siteModel);
         if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
             removeQuickStartFocusPoint();
             clearActiveQuickStartTask();
@@ -1059,7 +1059,7 @@ public class MySiteFragment extends Fragment implements
 
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
-            completeQuickStarTask(getSelectedSite().getId(), quickStartTask);
+            completeQuickStarTask(getSelectedSite(), quickStartTask);
         }
     }
 

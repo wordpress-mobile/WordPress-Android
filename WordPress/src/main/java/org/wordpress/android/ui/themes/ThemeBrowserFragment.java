@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.QuickStartStore;
@@ -111,6 +112,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Inject ThemeStore mThemeStore;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -374,9 +376,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     public void completeQuickStartCustomizeTask() {
-        // TODO check if Quick Start completed
-        mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.CUSTOMIZE_SITE, true);
-
+        QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.CUSTOMIZE_SITE, mDispatcher, mSite);
         if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
             if (getView() != null) {
                 QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());

@@ -140,6 +140,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -412,7 +413,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), QuickStartTask.PUBLISH_POST, true);
+        QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.PUBLISH_POST, mDispatcher, mSite);
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
