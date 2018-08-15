@@ -120,10 +120,10 @@ class PagesViewModel
         _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
 
         val loadState = if (_pages.isEmpty()) FETCHING else REFRESHING
-        refreshPages(loadState)
+        reloadPages(loadState)
     }
 
-    private suspend fun refreshPages(state: PageListState = REFRESHING) {
+    private suspend fun reloadPages(state: PageListState = REFRESHING) {
         var newState = state
         _listState.postValue(newState)
 
@@ -134,18 +134,22 @@ class PagesViewModel
                     SnackbarMessageHolder(resourceProvider.getString(string.error_refresh_pages)))
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
-            _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
-            _refreshPages.asyncCall()
+            refreshPages()
             newState = DONE
         }
 
         _listState.postValue(newState)
     }
 
+    suspend fun refreshPages() {
+        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
+        _refreshPageLists.asyncCall()
+    }
+
     fun onPageEditFinished(pageId: Long) {
         launch {
             if (!uploadUtil.isPageUploading(pageId, site)) {
-                refreshPages()
+                reloadPages()
             }
         }
     }
@@ -160,7 +164,7 @@ class PagesViewModel
                             resourceProvider.getString(string.page_parent_changed))
 
                     uploadUtil.uploadPage(page)
-                    refreshPages()
+                    reloadPages()
                 }
             }
         }
@@ -243,7 +247,7 @@ class PagesViewModel
             val page = pages[remoteId]
             if (page != null) {
                 pageStore.deletePage(page)
-                refreshPages()
+                reloadPages()
 
                 _showSnackbarMessage.postValue(
                         SnackbarMessageHolder(resourceProvider.getString(string.page_permanently_deleted)))
@@ -264,19 +268,20 @@ class PagesViewModel
 
     fun onPullToRefresh() {
         launch {
-            refreshPages(FETCHING)
+            reloadPages(FETCHING)
         }
     }
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
-        pages[remoteId]
-                ?.let { page ->
-                    launch {
-                        statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
-                        page.status = status
-                        uploadUtil.uploadPage(page)
-                    }
-                }
+        pages[remoteId]?.let { page ->
+            launch(CommonPool) {
+                statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
+                page.status = status
+                launch(CommonPool) { uploadUtil.uploadPage(page) }
+                pageStore.updatePageInDb(page)
+                refreshPages()
+            }
+        }
     }
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, page: PageModel? = null): SnackbarMessageHolder {
@@ -307,9 +312,10 @@ class PagesViewModel
             if (event.isError) {
                 _showSnackbarMessage.postValue(
                         SnackbarMessageHolder(resourceProvider.getString(string.page_upload_error)))
+                statusPageSnackbarMessage = null
             } else {
                 launch {
-                    refreshPages()
+                    reloadPages()
                     onSearch(lastSearchQuery)
 
                     if (statusPageSnackbarMessage != null) {
