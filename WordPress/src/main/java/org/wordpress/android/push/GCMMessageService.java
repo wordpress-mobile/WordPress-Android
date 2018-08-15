@@ -27,6 +27,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -91,6 +92,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject QuickStartStore mQuickStartStore;
 
     private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
     private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
@@ -143,6 +145,10 @@ public class GCMMessageService extends FirebaseMessagingService {
 
         if (!mAccountStore.hasAccessToken()) {
             return;
+        }
+
+        if (TextUtils.equals((String) data.get("type"), "mobile_quick_start_success")) {
+            mQuickStartStore.setQuickStartNotificationReceived(AppPrefs.getSelectedSite(), true);
         }
 
         synchronizedHandleDefaultPush(data);
