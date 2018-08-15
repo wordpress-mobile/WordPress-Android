@@ -44,12 +44,12 @@ class PageListViewModel
             isStarted = true
             loadPagesAsync(true)
 
-            pagesViewModel.refreshPages.observeForever(refreshPagesObserver)
+            pagesViewModel.refreshPageLists.observeForever(refreshPagesObserver)
         }
     }
 
     override fun onCleared() {
-        pagesViewModel.refreshPages.removeObserver(refreshPagesObserver)
+        pagesViewModel.refreshPageLists.removeObserver(refreshPagesObserver)
     }
 
     fun onMenuAction(action: Action, pageItem: Page): Boolean {

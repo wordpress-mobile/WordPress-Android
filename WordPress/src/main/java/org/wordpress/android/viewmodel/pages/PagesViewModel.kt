@@ -68,9 +68,9 @@ class PagesViewModel
     val displayDeleteDialog: LiveData<Page>
         get() = _displayDeleteDialog
 
-    private val _refreshPages = SingleLiveEvent<Unit>()
-    val refreshPages: LiveData<Unit>
-        get() = _refreshPages
+    private val _refreshPageLists = SingleLiveEvent<Unit>()
+    val refreshPageLists: LiveData<Unit>
+        get() = _refreshPageLists
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit>
