@@ -1,0 +1,5 @@
+10.6:
+* Activity Log now available for free WordPress.com sites.
+* Improvements in support for some locales.
+* General improvements in GIF support.
+* A bunch of other bug fixes.
