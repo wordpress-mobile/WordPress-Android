@@ -47,6 +47,9 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -558,6 +561,39 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 DomainAvailabilityResponsePayload payload =
                                         new DomainAvailabilityResponsePayload(domainAvailabilityError);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/supported-states/$countryCode endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_STATES} action is dispatched with a
+     * payload of type {@link DomainSupportedStatesResponsePayload}.
+     *
+     * {@link DomainSupportedStatesResponsePayload#isError()} can be used to check the request result.
+     */
+    public void fetchSupportedStates(@NonNull final String countryCode) {
+        String url = WPCOMREST.domains.supported_states.countryCode(countryCode).getUrlV1_1();
+        final WPComGsonRequest<List<SupportedStateResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, null,
+                        new TypeToken<ArrayList<SupportedStateResponse>>() {}.getType(),
+                        new Listener<List<SupportedStateResponse>>() {
+                            @Override
+                            public void onResponse(List<SupportedStateResponse> response) {
+                                DomainSupportedStatesResponsePayload payload =
+                                        new DomainSupportedStatesResponsePayload(response);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                DomainSupportedStatesError domainSupportedStatesError = new DomainSupportedStatesError(
+                                        DomainSupportedStatesErrorType.fromString(error.apiError), error.message);
+                                DomainSupportedStatesResponsePayload payload =
+                                        new DomainSupportedStatesResponsePayload(domainSupportedStatesError);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload));
                             }
                         });
         add(request);
