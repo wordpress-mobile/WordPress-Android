@@ -1,0 +1,5 @@
+10.6:
+* Registro de actividad ahora disponible para los sitios gratuitos de WordPress.com.
+* Mejoras en la compatibilidad con algunos idiomas.
+* Mejoras generales en la compatibilidad con Gif.
+* Un montón de otras soluciones a fallos.

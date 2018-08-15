@@ -209,7 +209,6 @@ Language: da_DK
     <string name="comment_trashed">Kommentar slettet</string>
     <string name="comment">Kommentar</string>
     <string name="older_last_week">Ældre end en uge</string>
-    <string name="reader_empty_posts_liked">Du har ikke synes om nogen indlæg</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>
     <string name="create_new_blog_wpcom">Opret en WordPress.com–blog</string>
     <string name="reader_empty_comments">Endnu ingen kommentarer</string>
@@ -223,7 +222,6 @@ Language: da_DK
     <string name="error_refresh_unauthorized_posts">Du har ikke tilladelse til at vise eller redigere indlæg</string>
     <string name="error_refresh_unauthorized_pages">Du har ikke tilladelse til at vise eller redigere sider</string>
     <string name="error_refresh_unauthorized_comments">Du har ikke tilladelse til at vise eller redigere kommentarer</string>
-    <string name="reader_empty_followed_blogs_title">Du følger ikke nogen websteder endnu</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
     <string name="contact_us">Kontakt os</string>
     <string name="schedule_verb">Planlæg</string>
@@ -232,7 +230,6 @@ Language: da_DK
     <string name="reader_title_tag_preview">Forhåndsvis tag</string>
     <string name="reader_page_followed_blogs">Fulgte websteder</string>
     <string name="reader_hint_add_tag_or_url">Indtast en URL eller et tag for at følge</string>
-    <string name="media_empty_list">Ingen medier</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
     <string name="forgot_password">Mistet din adgangskode?</string>
@@ -258,7 +255,6 @@ Language: da_DK
     <string name="adding_cat_success">Kategori tilføjet</string>
     <string name="adding_cat_failed">Kategorien kunne ikke tilføjes</string>
     <string name="mnu_comment_unspam">Ikke spam</string>
-    <string name="comments_empty_list">Ingen kommentarer</string>
     <string name="notifications_empty_list">Ingen notifikationer</string>
     <string name="gallery_error">Mediet kunne ikke hentes</string>
     <string name="error_refresh_stats">Statistikker kan ikke genindlæses lige nu</string>

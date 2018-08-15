@@ -1,0 +1,5 @@
+10.6:
+* Activiteitenlogboek nu beschikbaar voor gratis WordPress.com-sites.
+* Verbeterde ondersteuning in sommige talen.
+* Algemene verbeteringen voor gif-ondersteuning.
+* Een paar andere bugfixes.
