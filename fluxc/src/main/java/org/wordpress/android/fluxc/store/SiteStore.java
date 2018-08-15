@@ -371,7 +371,7 @@ public class SiteStore extends Store {
             this.type = type;
         }
     }
-  
+
     public static class DomainSupportedCountriesError implements OnChangedError {
         @NonNull public DomainSupportedCountriesErrorType type;
         @Nullable public String message;
@@ -1220,6 +1220,7 @@ public class SiteStore extends Store {
                 break;
             case FETCHED_DOMAIN_SUPPORTED_STATES:
                 handleFetchedSupportedStates((DomainSupportedStatesResponsePayload) action.getPayload());
+                break;
             case FETCH_DOMAIN_SUPPORTED_COUNTRIES:
                 mSiteRestClient.fetchSupportedCountries();
                 break;
