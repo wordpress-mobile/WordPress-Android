@@ -28,6 +28,7 @@
 
 /domains/suggestions
 /domains/supported-countries/
+/domains/supported-states/$countryCode#String
 /domains/$domainName#String/is-available
 
 /meta/external-media/pexels
@@ -89,3 +90,5 @@
 /users/social/new
 
 /activity-log/$site/rewind/to/$rewind_ID#String
+
+/jetpack-install/$site#String
