@@ -69,4 +69,20 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
     fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
         quickStartSqlUtils.setShownTask(siteId, task, isShown)
     }
+
+    fun setQuickStartCompleted(siteId: Long, isCompleted: Boolean) {
+        quickStartSqlUtils.setQuickStartCompleted(siteId, isCompleted)
+    }
+
+    fun getQuickStartCompleted(siteId: Long): Boolean {
+        return quickStartSqlUtils.getQuickStartCompleted(siteId)
+    }
+
+    fun setQuickStartNotificationReceived(siteId: Long, isReceived: Boolean) {
+        quickStartSqlUtils.setQuickStartNotificationReceived(siteId, isReceived)
+    }
+
+    fun getQuickStartNotificationReceived(siteId: Long): Boolean {
+        return quickStartSqlUtils.getQuickStartNotificationReceived(siteId)
+    }
 }
