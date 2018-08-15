@@ -42,7 +42,7 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
 
     fun skipAllTasks() {
         QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteId, it, true) }
-        QuickStartTask.values().forEach { quickStartStore.setShownTask(siteId, it, true) }
+        quickStartStore.setQuickStartCompleted(siteId, true)
         refreshTaskStatus()
     }
 }
