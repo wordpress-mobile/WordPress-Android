@@ -763,6 +763,19 @@
     <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
 
+    <!-- Jetpack install -->
+    <string name="jetpack">Jetpack</string>
+    <string name="install_jetpack">Install Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="installing_jetpack">Installing Jetpack</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to few minutes to complete</string>
+    <string name="jetpack_installed">Jetpack installed</string>
+    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
+    <string name="jetpack_installation_problem">There was a problem</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
+    <string name="install_jetpack_continue">Continue</string>
+    <string name="install_jetpack_retry">Retry</string>
+
     <!-- activity log -->
     <string name="activity">Activity</string>
     <string name="activity_log">Activity Log</string>

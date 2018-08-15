@@ -58,4 +58,17 @@
         <item name="android:paddingLeft">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
     </style>
+
+    <style name="JetpackInstallTitleText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="JetpackInstallMessageText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
 </resources>

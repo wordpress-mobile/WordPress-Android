@@ -283,6 +283,10 @@
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.JetpackRemoteInstallActivity"
+            android:label="@string/activity_log_event"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Media Activities -->
         <activity
@@ -503,7 +507,7 @@
             android:label="@string/plugins"
             android:theme="@style/Calypso.NoActionBar"/>
 
-        <!--Plugins-->
+        <!--Activity Log-->
         <activity
             android:name=".ui.activitylog.list.ActivityLogListActivity"
             android:label="@string/activity_log"

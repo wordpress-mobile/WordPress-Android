@@ -15,6 +15,7 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.JetpackConnectionDeeplinkActivity;
+import org.wordpress.android.ui.JetpackRemoteInstallFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -414,6 +415,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeConnectionAdapter object);
 
     void inject(PublicizeServiceAdapter object);
+
+    void inject(JetpackRemoteInstallFragment jetpackRemoteInstallFragment);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
