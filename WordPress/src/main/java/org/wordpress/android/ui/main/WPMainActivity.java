@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -144,6 +145,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject QuickStartStore mQuickStartStore;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -452,6 +454,12 @@ public class WPMainActivity extends AppCompatActivity implements
         announceTitleForAccessibility(currentItem);
 
         checkConnection();
+
+        if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
+            && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
+            && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
+            mDispatcher.dispatch(SiteActionBuilder.newCompleteMobileQuickStartAction(getSelectedSite()));
+        }
 
         // Update account to update the notification unseen status
         if (mAccountStore.hasAccessToken()) {
