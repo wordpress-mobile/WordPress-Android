@@ -103,6 +103,20 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     }
 
     /**
+     * Loads the ImageType placeholder into the ImageView.
+     */
+    @JvmOverloads
+    fun load(imageView: ImageView, imageType: ImageType, scaleType: ImageView.ScaleType = CENTER) {
+
+        val resourceId = placeholderManager.getPlaceholderResource(imageType) ?: return
+
+        GlideApp.with(imageView.context)
+                .load(loadDrawable(imageView.context, resourceId))
+                .applyScaleType(scaleType)
+                .into(imageView)
+    }
+
+    /**
      * Loads the Drawable into the ImageView.
      */
     @JvmOverloads
