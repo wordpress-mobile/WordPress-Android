@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
 
 @ActionEnum
@@ -64,6 +65,8 @@ public enum SiteAction implements IAction {
     FETCH_PLANS,
     @Action(payloadType = String.class)
     CHECK_DOMAIN_AVAILABILITY,
+    @Action(payloadType = String.class)
+    FETCH_DOMAIN_SUPPORTED_STATES,
     @Action
     FETCH_DOMAIN_SUPPORTED_COUNTRIES,
 
@@ -98,6 +101,8 @@ public enum SiteAction implements IAction {
     FETCHED_PLANS,
     @Action(payloadType = DomainAvailabilityResponsePayload.class)
     CHECKED_DOMAIN_AVAILABILITY,
+    @Action(payloadType = DomainSupportedStatesResponsePayload.class)
+    FETCHED_DOMAIN_SUPPORTED_STATES,
     @Action(payloadType = DomainSupportedCountriesResponsePayload.class)
     FETCHED_DOMAIN_SUPPORTED_COUNTRIES,
 
