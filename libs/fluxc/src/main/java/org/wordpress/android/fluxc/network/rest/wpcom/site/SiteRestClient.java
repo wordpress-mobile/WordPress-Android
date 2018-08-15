@@ -47,6 +47,8 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
@@ -62,8 +64,6 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
 import org.wordpress.android.util.AppLog;
@@ -583,6 +583,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 DomainSupportedStatesResponsePayload payload =
                                         new DomainSupportedStatesResponsePayload(response);
                                 mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload));
+                            }
+                        },
                         new WPComErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
@@ -595,7 +597,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         });
         add(request);
     }
-                              
+
     /**
      * Performs an HTTP GET call to v1.1 /domains/supported-countries/ endpoint. Upon receiving a response
      * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_COUNTRIES} action is dispatched with a
