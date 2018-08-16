@@ -2147,7 +2147,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorFragment.setContent(text);
             }
 
-            //update PostModel
+            // update PostModel
             mPost.setContent(text);
             PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
