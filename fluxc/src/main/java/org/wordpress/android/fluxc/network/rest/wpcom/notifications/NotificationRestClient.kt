@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErr
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationError
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationErrorType
+import org.wordpress.android.fluxc.store.NotificationStore.NotificationAppKey
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDeviceResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.UnregisterDeviceResponsePayload
 import org.wordpress.android.util.DeviceUtils
@@ -30,12 +31,17 @@ class NotificationRestClient constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    fun registerDeviceForPushNotifications(gcmToken: String, appKey: String, uuid: String, site: SiteModel? = null) {
+    fun registerDeviceForPushNotifications(
+        gcmToken: String,
+        appKey: NotificationAppKey,
+        uuid: String,
+        site: SiteModel? = null
+    ) {
         val deviceName = DeviceUtils.getInstance().getDeviceName(appContext)
         val params = mapOf(
                 "device_token" to gcmToken,
                 "device_family" to "android",
-                "app_secret_key" to appKey,
+                "app_secret_key" to appKey.value,
                 "device_name" to deviceName,
                 "device_model" to "${Build.MANUFACTURER} ${Build.MODEL}",
                 "app_version" to PackageUtils.getVersionName(appContext),
