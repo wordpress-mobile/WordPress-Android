@@ -4,7 +4,8 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.inOrder
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Rule
@@ -22,12 +23,12 @@ class NewsManagerTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var newsService: NewsService
-    @Mock private lateinit var observer: Observer<NewsItem?>
+    @Mock private lateinit var observer: Observer<NewsItem>
     @Mock private lateinit var item: NewsItem
     @Mock private lateinit var appPrefs: AppPrefsWrapper
 
     private lateinit var newsManager: NewsManager
-    private val liveData = MutableLiveData<NewsItem?>()
+    private val liveData = MutableLiveData<NewsItem>()
 
     @Before
     fun setUp() {
@@ -47,8 +48,10 @@ class NewsManagerTest {
         liveData.postValue(null)
         liveData.postValue(item)
 
-        verify(observer, times(2)).onChanged(item)
-        verify(observer, times(1)).onChanged(null)
+        val inOrder = inOrder(observer)
+        inOrder.verify(observer).onChanged(item)
+        inOrder.verify(observer).onChanged(null)
+        inOrder.verify(observer).onChanged(item)
     }
 
     @Test
@@ -57,7 +60,7 @@ class NewsManagerTest {
         whenever(item.version).thenReturn(1)
 
         liveData.postValue(item)
-        verify(observer, times(0)).onChanged(any())
+        verify(observer, never()).onChanged(any())
     }
 
     @Test
@@ -67,7 +70,7 @@ class NewsManagerTest {
         liveData.postValue(item)
         newsManager.dismiss(item)
 
-        verify(appPrefs, times(1)).newsCardDismissedVersion = 123
+        verify(appPrefs).newsCardDismissedVersion = 123
     }
 
     @Test
@@ -79,12 +82,12 @@ class NewsManagerTest {
     @Test
     fun propagatePullToNewsServiceWhenPullInvoked() {
         newsManager.pull(true)
-        verify(newsService, times(1)).pull(true)
+        verify(newsService).pull(true)
     }
 
     @Test
     fun propagateStopToNewsServiceWhenStopInvoked() {
         newsManager.stop()
-        verify(newsService, times(1)).stop()
+        verify(newsService).stop()
     }
 }
