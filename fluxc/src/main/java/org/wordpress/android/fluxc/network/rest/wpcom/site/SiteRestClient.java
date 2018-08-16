@@ -732,7 +732,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                             @Override
                             public void onResponse(MobileQuickStartCompletedResponse response) {
                                 mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(
-                                         new MobileQuickStartCompletedResponsePayload(response.success)));
+                                         new MobileQuickStartCompletedResponsePayload(site, response.success)));
                             }
                         },
                         new WPComErrorListener() {
@@ -742,7 +742,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                                         MobileQuickStartErrorType.GENERIC_ERROR, networkError.message);
 
                                 MobileQuickStartCompletedResponsePayload payload =
-                                        new MobileQuickStartCompletedResponsePayload(false);
+                                        new MobileQuickStartCompletedResponsePayload(site, false);
                                 payload.error = error;
 
                                 mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(payload));
