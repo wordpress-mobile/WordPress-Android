@@ -400,7 +400,6 @@ public class MySiteFragment extends Fragment implements
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO check if Quick Start completed
                 completeQuickStarTask(QuickStartTask.CHOOSE_THEME);
                 if (isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
                     requestNextStepOfActiveQuickStartTask();

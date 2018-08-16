@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnMobileQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
@@ -806,6 +807,20 @@ public class WPMainActivity extends AppCompatActivity implements
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Because of the async nature of events, we are tracking quick start notification response at two places:
+     * Directly at notification receiver and here, as a backup, for cases when something went wrong - network error,
+     * no permission to request notification, etc.
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMobileQuickStartCompleted(OnMobileQuickStartCompleted event) {
+        if (getSelectedSite() != null && !event.isError()) {
+            // as long as we get any response that is not an error mark quick start notification as received
+            mQuickStartStore.setQuickStartNotificationReceived(getSelectedSite().getId(), true);
         }
     }
 
