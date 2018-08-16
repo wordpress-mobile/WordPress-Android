@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 case SELFHOSTED_ONLY:
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
                     break;
-                case JETPACK_STATS:
+                case JETPACK:
                 case WPCOM_LOGIN_DEEPLINK:
                 case WPCOM_REAUTHENTICATE:
                 case SHARE_INTENT:
@@ -238,7 +238,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
-            case JETPACK_STATS:
+            case JETPACK:
                 ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
@@ -324,7 +324,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
 
-            if (getLoginMode() == LoginMode.JETPACK_STATS) {
+            if (getLoginMode() == LoginMode.JETPACK) {
                 mIsJetpackConnect = true;
             }
         } else {
@@ -551,7 +551,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void viewHelpAndSupport(Origin origin) {
-        List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
+        List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
         ActivityLauncher.viewHelpAndSupport(this, origin, null, extraSupportTags);
     }

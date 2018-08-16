@@ -132,7 +132,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     @Override
     public void onRequiresJetpackLogin() {
         Intent loginIntent = new Intent(this, LoginActivity.class);
-        LoginMode.JETPACK_STATS.putInto(loginIntent);
+        LoginMode.JETPACK.putInto(loginIntent);
         loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, mSource);
         startActivityForResult(loginIntent, JETPACK_LOGIN);
     }

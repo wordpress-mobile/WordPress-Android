@@ -47,7 +47,7 @@ class JetpackRemoteInstallViewModel
                 launch { install(site) }
                 ViewState.Installing
             }
-            INSTALLED -> Installed { setup(siteStore.getSiteByLocalId(site.id)) }
+            INSTALLED -> Installed { setup(site.id) }
             ERROR -> Error { install(site) }
         }
     }
@@ -57,15 +57,17 @@ class JetpackRemoteInstallViewModel
             mutableViewState.postValue(ViewState.Installing)
             val installResult = jetpackStore.install(site)
             if (installResult.success) {
-                mutableViewState.value = Installed { setup(siteStore.getSiteByLocalId(site.id)) }
+                mutableViewState.value = Installed { setup(site.id) }
             } else {
                 mutableViewState.value = Error { install(site) }
             }
         }
     }
 
-    private fun setup(reloadedSite: SiteModel) {
-        mutableJetpackConnectionFlow.value = JetpackConnectionData(reloadedSite, accountStore.hasAccessToken())
+    fun setup(siteId: Int) {
+        val site = siteStore.getSiteByLocalId(siteId)
+        val hasAccessToken = accountStore.hasAccessToken()
+        mutableJetpackConnectionFlow.value = JetpackConnectionData(site, hasAccessToken)
     }
 
     data class JetpackConnectionData(val site: SiteModel, val hasAccessToken: Boolean)
