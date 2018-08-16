@@ -248,6 +248,84 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
                 predefinedEventProperties.put("source", "post_details_saved_post_notice");
                 break;
+            case QUICK_START_DIALOG_SEEN:
+                predefinedEventProperties.put("type", "seen");
+                break;
+            case QUICK_START_DIALOG_NEGATIVE_TAPPED:
+                predefinedEventProperties.put("type", "negative_tapped");
+                break;
+            case QUICK_START_DIALOG_POSITIVE_TAPPED:
+                predefinedEventProperties.put("type", "positive_tapped");
+                break;
+            case QUICK_START_LIST_ACCESSED:
+                predefinedEventProperties.put("type", "accessed");
+                break;
+            case QUICK_START_LIST_CREATE_SITE_TAPPED:
+                predefinedEventProperties.put("type", "create_site_tapped");
+                break;
+            case QUICK_START_LIST_VIEW_SITE_TAPPED:
+                predefinedEventProperties.put("type", "view_site_tapped");
+                break;
+            case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
+                predefinedEventProperties.put("type", "browse_themes_tapped");
+                break;
+            case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
+                predefinedEventProperties.put("type", "customize_site_tapped");
+                break;
+            case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
+                predefinedEventProperties.put("type", "share_site_tapped");
+                break;
+            case QUICK_START_LIST_PUBLISH_POST_TAPPED:
+                predefinedEventProperties.put("type", "publish_post_tapped");
+                break;
+            case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
+                predefinedEventProperties.put("type", "follow_site_tapped");
+                break;
+            case QUICK_START_LIST_SKIP_ALL_TAPPED:
+                predefinedEventProperties.put("type", "skip_all_tapped");
+                break;
+            case QUICK_START_LIST_COMPLETE_SEEN:
+                predefinedEventProperties.put("type", "complete_seen");
+                break;
+            case QUICK_START_COMPLETE_CREATE_SITE:
+                predefinedEventProperties.put("type", "create_site");
+                break;
+            case QUICK_START_COMPLETE_VIEW_SITE:
+                predefinedEventProperties.put("type", "view_site");
+                break;
+            case QUICK_START_COMPLETE_BROWSE_THEMES:
+                predefinedEventProperties.put("type", "browse_themes");
+                break;
+            case QUICK_START_COMPLETE_CUSTOMIZE_SITE:
+                predefinedEventProperties.put("type", "customize_site");
+                break;
+            case QUICK_START_COMPLETE_SHARE_SITE:
+                predefinedEventProperties.put("type", "share_site");
+                break;
+            case QUICK_START_COMPLETE_PUBLISH_POST:
+                predefinedEventProperties.put("type", "publish_post");
+                break;
+            case QUICK_START_COMPLETE_ALL_TASKS:
+                predefinedEventProperties.put("type", "all_tasks");
+                break;
+            case QUICK_START_NOTIFICATION_RECEIVED:
+                predefinedEventProperties.put("type", "received");
+                break;
+            case QUICK_START_NOTIFICATION_OPENED:
+                predefinedEventProperties.put("type", "opened");
+                break;
+            case QUICK_START_REQUEST_SEEN:
+                predefinedEventProperties.put("type", "seen");
+                break;
+            case QUICK_START_REQUEST_NEGATIVE_TAPPED:
+                predefinedEventProperties.put("type", "negative_tapped");
+                break;
+            case QUICK_START_REQUEST_POSITIVE_TAPPED:
+                predefinedEventProperties.put("type", "positive_tapped");
+                break;
+            case QUICK_START_REQUEST_NEUTRAL_TAPPED:
+                predefinedEventProperties.put("type", "neutral_tapped");
+                break;
         }
 
         final String user;
@@ -287,19 +365,19 @@ public class AnalyticsTrackerNosara extends Tracker {
                     try {
                         if (propertiesToJSON.has(key)) {
                             AppLog.w(AppLog.T.STATS,
-                                     "The user has defined a property named: '" + key + "' that will override"
-                                     + "the same property pre-defined at event level. This may generate unexpected "
-                                     + "behavior!!");
+                                    "The user has defined a property named: '" + key + "' that will override"
+                                    + "the same property pre-defined at event level. This may generate unexpected "
+                                    + "behavior!!");
                             AppLog.w(AppLog.T.STATS,
-                                     "User value: " + propertiesToJSON.get(key).toString()
-                                     + " - pre-defined value: "
-                                     + predefinedEventProperties.get(key).toString());
+                                    "User value: " + propertiesToJSON.get(key).toString()
+                                    + " - pre-defined value: "
+                                    + predefinedEventProperties.get(key).toString());
                         } else {
                             propertiesToJSON.put(key, predefinedEventProperties.get(key));
                         }
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.STATS,
-                                 "Error while merging user-defined properties with pre-defined properties", e);
+                                "Error while merging user-defined properties with pre-defined properties", e);
                     }
                 }
             } catch (NullPointerException e) {
@@ -1107,7 +1185,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_updated";
             case STOCK_MEDIA_ACCESSED:
                 return "stock_media_accessed";
-            case STOCK_MEDIA_SEARCHED :
+            case STOCK_MEDIA_SEARCHED:
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
@@ -1141,6 +1219,38 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "publicize_service_connected";
             case PUBLICIZE_SERVICE_DISCONNECTED:
                 return "publicize_service_disconnected";
+            case QUICK_START_DIALOG_SEEN:
+            case QUICK_START_DIALOG_NEGATIVE_TAPPED:
+            case QUICK_START_DIALOG_POSITIVE_TAPPED:
+                return "quick_start_dialog";
+            case QUICK_START_LIST_ACCESSED:
+            case QUICK_START_LIST_CREATE_SITE_TAPPED:
+            case QUICK_START_LIST_VIEW_SITE_TAPPED:
+            case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
+            case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
+            case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
+            case QUICK_START_LIST_PUBLISH_POST_TAPPED:
+            case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
+            case QUICK_START_LIST_SKIP_ALL_TAPPED:
+            case QUICK_START_LIST_COMPLETE_SEEN:
+                return "quick_start_list";
+            case QUICK_START_COMPLETE_CREATE_SITE:
+            case QUICK_START_COMPLETE_VIEW_SITE:
+            case QUICK_START_COMPLETE_BROWSE_THEMES:
+            case QUICK_START_COMPLETE_CUSTOMIZE_SITE:
+            case QUICK_START_COMPLETE_SHARE_SITE:
+            case QUICK_START_COMPLETE_PUBLISH_POST:
+            case QUICK_START_COMPLETE_FOLLOW_SITE:
+            case QUICK_START_COMPLETE_ALL_TASKS:
+                return "quick_start_complete";
+            case QUICK_START_NOTIFICATION_RECEIVED:
+            case QUICK_START_NOTIFICATION_OPENED:
+                return "quick_start_notification";
+            case QUICK_START_REQUEST_SEEN:
+            case QUICK_START_REQUEST_NEGATIVE_TAPPED:
+            case QUICK_START_REQUEST_POSITIVE_TAPPED:
+            case QUICK_START_REQUEST_NEUTRAL_TAPPED:
+                return "quick_start_notification";
             default:
                 return null;
         }
