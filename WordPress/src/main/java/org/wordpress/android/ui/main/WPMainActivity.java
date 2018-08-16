@@ -456,11 +456,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
         checkConnection();
 
-        if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
-            && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
-            && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
-            mDispatcher.dispatch(SiteActionBuilder.newCompleteMobileQuickStartAction(getSelectedSite()));
-        }
+        checkQuickStartNotificationStatus();
 
         // Update account to update the notification unseen status
         if (mAccountStore.hasAccessToken()) {
@@ -470,6 +466,14 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+    }
+    
+    private void checkQuickStartNotificationStatus(){
+        if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
+            && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
+            && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
+            mDispatcher.dispatch(SiteActionBuilder.newCompleteMobileQuickStartAction(getSelectedSite()));
+        }
     }
 
     private void announceTitleForAccessibility(int position) {
