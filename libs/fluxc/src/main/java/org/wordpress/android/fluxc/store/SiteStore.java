@@ -384,6 +384,16 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class MobileQuickStartError implements OnChangedError {
+        @NonNull public MobileQuickStartErrorType type;
+        @Nullable public String message;
+
+        public MobileQuickStartError(@NonNull MobileQuickStartErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // OnChanged Events
     public static class OnProfileFetched extends OnChanged<SiteError> {
         public SiteModel site;
@@ -632,7 +642,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class MobileQuickStartCompletedResponsePayload extends Payload<BaseNetworkError> {
+    public static class MobileQuickStartCompletedResponsePayload extends OnChanged<MobileQuickStartError> {
         public boolean status;
 
         public MobileQuickStartCompletedResponsePayload(boolean status) {
@@ -640,7 +650,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnMobileQuickStartCompleted extends Payload<BaseNetworkError> {
+    public static class OnMobileQuickStartCompleted extends OnChanged<MobileQuickStartError> {
         public boolean status;
 
         OnMobileQuickStartCompleted(boolean status) {
@@ -807,6 +817,10 @@ public class SiteStore extends Store {
       }
 
     public enum DomainSupportedCountriesErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum MobileQuickStartErrorType {
         GENERIC_ERROR
     }
 
@@ -1621,6 +1635,7 @@ public class SiteStore extends Store {
 
     private void handleMobileQuickStartCompleted(MobileQuickStartCompletedResponsePayload payload) {
         OnMobileQuickStartCompleted event = new OnMobileQuickStartCompleted(payload.status);
+        event.error = payload.error;
         emitChange(event);
     }
 }
