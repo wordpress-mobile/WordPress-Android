@@ -117,8 +117,7 @@ public class ReaderLikingUsersView extends LinearLayout {
         private final int mLikeAvatarSize;
         private final int mMaxAvatars;
 
-        LoadAvatarsTask(ReaderLikingUsersView view, long currentUserId, int likeAvatarSz,
-                        int maxAvatars) {
+        LoadAvatarsTask(ReaderLikingUsersView view, long currentUserId, int likeAvatarSz, int maxAvatars) {
             mViewReference = new WeakReference<>(view);
             mCurrentUserId = currentUserId;
             mLikeAvatarSize = likeAvatarSz;
@@ -132,8 +131,7 @@ public class ReaderLikingUsersView extends LinearLayout {
             }
             ReaderPost post = posts[0];
             ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(post);
-            return ReaderUserTable.getAvatarUrls(avatarIds, mMaxAvatars, mLikeAvatarSize,
-                    mCurrentUserId);
+            return ReaderUserTable.getAvatarUrls(avatarIds, mMaxAvatars, mLikeAvatarSize, mCurrentUserId);
         }
 
         @Override
