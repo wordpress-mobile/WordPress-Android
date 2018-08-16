@@ -34,9 +34,14 @@ constructor(
 
     class RegisterDevicePayload(
         val gcmToken: String,
-        val appKey: String,
+        val appKey: NotificationAppKey,
         val site: SiteModel?
     ) : Payload<BaseNetworkError>()
+
+    enum class NotificationAppKey(val value: String) {
+        WORDPRESS("org.wordpress.android"),
+        WOOCOMMERCE("com.woocommerce.android")
+    }
 
     class RegisterDeviceResponsePayload(
         val deviceId: String? = null
