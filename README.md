@@ -42,7 +42,6 @@ Once installed, you can now build, install and test the project from the command
     │       │   ├── java        # main project java code
     │       │   └── res         # main project resources
     │       ├── debug           # debug variant
-    │       ├── future          # unpackaged resources
     │       └── wasabi          # wasabi variant specific resources and manifest
 
 ## OAuth2 Authentication ##
