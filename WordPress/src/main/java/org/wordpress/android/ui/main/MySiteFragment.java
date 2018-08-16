@@ -1045,18 +1045,13 @@ public class MySiteFragment extends Fragment implements
         return hasActiveQuickStartTask() && mActiveTutorialPrompt.getTask() == task;
     }
 
-    // we might need to call this one when the fragment is not attached to WPMainActivity
-    private void completeQuickStarTask(SiteModel siteModel, QuickStartTask quickStartTask) {
-        QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, siteModel);
-        if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
-            removeQuickStartFocusPoint();
-            clearActiveQuickStartTask();
-        }
-    }
-
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
-            completeQuickStarTask(getSelectedSite(), quickStartTask);
+            QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, getSelectedSite());
+            if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
+                removeQuickStartFocusPoint();
+                clearActiveQuickStartTask();
+            }
         }
     }
 
@@ -1146,8 +1141,8 @@ public class MySiteFragment extends Fragment implements
         mQuickStartSnackBarWasShown = true;
         incrementNumberOfTimesQuickStartDialogWasShown();
 
-        // after user sees the continue dialog clear the prompted quick start task, so the prompt will not appear when
-        // he completes other task outside of quick start process
+        // clear the prompted quick start task after user sees the "continue" dialog, so the prompt will not appear when
+        // other tasks are completed outside of quick start process
         if (shouldDirectUserToContinueQuickStart) {
             setPromptedQuickStartTask(null);
         }
