@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.utils.PreferenceUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,13 +26,15 @@ constructor(
     private val notificationRestClient: NotificationRestClient
 ) : Store(dispatcher) {
     companion object {
+        const val WPCOM_PUSH_DEVICE_UUID = "NOTIFICATIONS_UUID_PREF_KEY"
         const val WPCOM_PUSH_DEVICE_SERVER_ID = "NOTIFICATIONS_SERVER_ID_PREF_KEY"
     }
+
+    private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
 
     class RegisterDevicePayload(
         val gcmToken: String,
         val appKey: String,
-        val uuid: String,
         val site: SiteModel?
     ) : Payload<BaseNetworkError>()
 
@@ -90,13 +93,15 @@ constructor(
     }
 
     private fun registerDevice(payload: RegisterDevicePayload) {
+        val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()
+
         with(payload) {
             notificationRestClient.registerDeviceForPushNotifications(gcmToken, appKey, uuid, site)
         }
     }
 
     private fun unregisterDevice() {
-        val deviceId = PreferenceUtils.getFluxCPreferences(context).getString(WPCOM_PUSH_DEVICE_SERVER_ID, "")
+        val deviceId = preferences.getString(WPCOM_PUSH_DEVICE_SERVER_ID, "")
         notificationRestClient.unregisterDeviceForPushNotifications(deviceId)
     }
 
@@ -113,8 +118,7 @@ constructor(
                 }
                 onDeviceRegistered.error = payload.error
             } else {
-                PreferenceUtils.getFluxCPreferences(context)
-                        .edit().putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceId).apply()
+                preferences.edit().putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceId).apply()
                 AppLog.i(T.NOTIFS, "Server response OK. Device ID: $deviceId")
             }
         }
@@ -125,7 +129,12 @@ constructor(
     private fun handleUnregisteredDevice(payload: UnregisterDeviceResponsePayload) {
         val onDeviceUnregistered = OnDeviceUnregistered()
 
-        PreferenceUtils.getFluxCPreferences(context).edit().remove(WPCOM_PUSH_DEVICE_SERVER_ID).apply()
+        preferences.edit().apply {
+            remove(WPCOM_PUSH_DEVICE_SERVER_ID)
+            remove(WPCOM_PUSH_DEVICE_UUID)
+            apply()
+        }
+
         if (payload.isError) {
             with(payload.error) {
                 AppLog.e(T.NOTIFS, "Unregister device action failed: $type - $message")
@@ -136,5 +145,11 @@ constructor(
         }
 
         emitChange(onDeviceUnregistered)
+    }
+
+    private fun generateAndStoreUUID(): String {
+        return UUID.randomUUID().toString().also {
+            preferences.edit().putString(WPCOM_PUSH_DEVICE_UUID, it).apply()
+        }
     }
 }
