@@ -632,7 +632,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class MobileQuickStartCompletedResponsePayload extends OnChanged<SiteError> {
+    public static class MobileQuickStartCompletedResponsePayload extends Payload<BaseNetworkError> {
         public boolean status;
 
         public MobileQuickStartCompletedResponsePayload(boolean status) {
@@ -640,10 +640,10 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnMobileQuickStartCompleted extends OnChanged<SiteError> {
+    public static class OnMobileQuickStartCompleted extends Payload<BaseNetworkError> {
         public boolean status;
 
-        public OnMobileQuickStartCompleted(boolean status) {
+        OnMobileQuickStartCompleted(boolean status) {
             this.status = status;
         }
     }

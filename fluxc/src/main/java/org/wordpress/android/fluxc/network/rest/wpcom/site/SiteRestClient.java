@@ -736,8 +736,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new WPComErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
-                                mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(
-                                        new MobileQuickStartCompletedResponsePayload(false)));
+                                MobileQuickStartCompletedResponsePayload payload =
+                                        new MobileQuickStartCompletedResponsePayload(false);
+                                payload.error = networkError;
+
+                                mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(payload));
                             }
                         });
         add(request);
