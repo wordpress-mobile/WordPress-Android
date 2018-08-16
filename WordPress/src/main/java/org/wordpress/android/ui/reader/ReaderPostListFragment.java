@@ -299,8 +299,6 @@ public class ReaderPostListFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
-        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
-                                       .get(ReaderPostListViewModel.class);
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -330,6 +328,24 @@ public class ReaderPostListFragment extends Fragment
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
         }
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // we need to pass activity, since this fragment extends Android Native fragment (we can pass `this` as soon as
+        // this fragment extends Support fragment.
+        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
+                                       .get(ReaderPostListViewModel.class);
+        mViewModel.start(mCurrentTag);
+        setupObservables();
+    }
+
+    private void setupObservables() {
+        mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), new Observer<NewsItem>() {
+            @Override public void onChanged(@Nullable NewsItem newsItem) {
+                getPostAdapter().updateNewsCardItem(newsItem);
+            }
+        });
     }
 
     @Override
@@ -670,21 +686,6 @@ public class ReaderPostListFragment extends Fragment
         return rootView;
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mViewModel.start(mCurrentTag);
-        setupObservables();
-    }
-
-    private void setupObservables() {
-        mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), new Observer<NewsItem>() {
-            @Override public void onChanged(@Nullable NewsItem newsItem) {
-                getPostAdapter().updateNewsCardItem(newsItem);
-            }
-        });
-    }
-
     /*
      * adds a menu to the recycler's toolbar containing settings & search items - only called
      * for followed tags
@@ -944,6 +945,7 @@ public class ReaderPostListFragment extends Fragment
                         }
                     }
                 }
+
                 @Override public void onTabUnselected(Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
                         mPostSearchAdapterPos = mRecyclerView.getCurrentPosition();
@@ -951,6 +953,7 @@ public class ReaderPostListFragment extends Fragment
                         mSiteSearchAdapterPos = mRecyclerView.getCurrentPosition();
                     }
                 }
+
                 @Override public void onTabReselected(Tab tab) {
                     mRecyclerView.smoothScrollToPosition(0);
                 }
@@ -1530,6 +1533,7 @@ public class ReaderPostListFragment extends Fragment
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             getActivity(), site.getSiteId(), site.getFeedId());
                 }
+
                 @Override
                 public void onLoadMore(int offset) {
                     showLoadingProgress(true);
