@@ -56,9 +56,9 @@ class JetpackRemoteInstallFragment : Fragment() {
             })
             viewModel.liveJetpackConnectionFlow.observe(this, Observer { result ->
                 if (result != null) {
-                    if (!result.hasAccessToken) {
+                    if (!result.loggedIn) {
                         val loginIntent = Intent(activity, LoginActivity::class.java)
-                        LoginMode.JETPACK.putInto(loginIntent)
+                        LoginMode.JETPACK_STATS.putInto(loginIntent)
                         loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, source)
                         startActivityForResult(loginIntent, JETPACK_LOGIN)
                     } else {
@@ -66,7 +66,7 @@ class JetpackRemoteInstallFragment : Fragment() {
                                 activity,
                                 source,
                                 result.site,
-                                result.hasAccessToken
+                                result.loggedIn
                         )
                         activity.finish()
                     }
@@ -79,7 +79,7 @@ class JetpackRemoteInstallFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == JETPACK_LOGIN && resultCode == Activity.RESULT_OK) {
             val site = activity?.intent?.getSerializableExtra(WordPress.SITE) as? SiteModel
-            viewModel.setup(site!!.id)
+            viewModel.onLogin(site!!.id)
         }
     }
 

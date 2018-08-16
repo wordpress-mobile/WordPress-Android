@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
@@ -33,44 +34,69 @@ class JetpackRemoteInstallViewModel
     val liveViewState: LiveData<ViewState> = mutableViewState
     private val mutableJetpackConnectionFlow = SingleLiveEvent<JetpackConnectionData>()
     val liveJetpackConnectionFlow: LiveData<JetpackConnectionData> = mutableJetpackConnectionFlow
+    private var job: Job? = null
+
     fun start(site: SiteModel, type: Type?) {
-        mutableViewState.value = type.toState(site)
+        //Init state only if it's empty
+        if (mutableViewState.value == null) {
+            mutableViewState.value = type.toState(site)
+        }
+    }
+
+    fun onLogin(siteId: Int) {
+        connectJetpack(siteId)
     }
 
     private fun Type?.toState(site: SiteModel): ViewState {
         if (this == null) {
-            return Start { install(site) }
+            return Start { startRemoteInstall(site) }
         }
         return when (this) {
-            START -> Start { install(site) }
+            START -> Start { startRemoteInstall(site) }
             INSTALLING -> {
-                launch { install(site) }
+                startRemoteInstall(site)
                 ViewState.Installing
             }
-            INSTALLED -> Installed { setup(site.id) }
-            ERROR -> Error { install(site) }
+            INSTALLED -> Installed { connectJetpack(site.id) }
+            ERROR -> Error { startRemoteInstall(site) }
         }
     }
 
-    private fun install(site: SiteModel) {
-        launch(UI) {
+    private fun startRemoteInstall(site: SiteModel) {
+        cancelJob()
+        job = launch(UI) {
             mutableViewState.postValue(ViewState.Installing)
             val installResult = jetpackStore.install(site)
-            if (installResult.success) {
-                mutableViewState.value = Installed { setup(site.id) }
-            } else {
-                mutableViewState.value = Error { install(site) }
+            if (isActive) {
+                if (installResult.success) {
+                    mutableViewState.value = Installed { connectJetpack(site.id) }
+                } else {
+                    mutableViewState.value = Error { startRemoteInstall(site) }
+                }
             }
         }
     }
 
-    fun setup(siteId: Int) {
+    private fun connectJetpack(siteId: Int) {
         val site = siteStore.getSiteByLocalId(siteId)
         val hasAccessToken = accountStore.hasAccessToken()
         mutableJetpackConnectionFlow.value = JetpackConnectionData(site, hasAccessToken)
     }
 
-    data class JetpackConnectionData(val site: SiteModel, val hasAccessToken: Boolean)
+    override fun onCleared() {
+        super.onCleared()
+        cancelJob()
+    }
+
+    private fun cancelJob() {
+        job?.let {
+            if (it.isActive) {
+                it.cancel()
+            }
+        }
+    }
+
+    data class JetpackConnectionData(val site: SiteModel, val loggedIn: Boolean)
 
     sealed class ViewState(
         val type: Type,

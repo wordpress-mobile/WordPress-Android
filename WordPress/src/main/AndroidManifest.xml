@@ -285,7 +285,7 @@
         </activity>
         <activity
             android:name=".ui.JetpackRemoteInstallActivity"
-            android:label="@string/activity_log_event"
+            android:label="@string/jetpack"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Media Activities -->

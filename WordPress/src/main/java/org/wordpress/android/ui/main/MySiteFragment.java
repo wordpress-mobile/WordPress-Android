@@ -397,7 +397,7 @@ public class MySiteFragment extends Fragment implements SiteSettingsListener,
 
     private void startWPComLoginForJetpackStats() {
         Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-        LoginMode.JETPACK.putInto(loginIntent);
+        LoginMode.JETPACK_STATS.putInto(loginIntent);
         startActivityForResult(loginIntent, RequestCodes.DO_LOGIN);
     }
 

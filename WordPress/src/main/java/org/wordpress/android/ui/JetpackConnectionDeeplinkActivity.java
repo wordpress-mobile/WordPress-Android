@@ -81,7 +81,7 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
             } else {
                 // An edgecase when the user is logged out in the app but logged in in webview
                 Intent loginIntent = new Intent(this, LoginActivity.class);
-                LoginMode.JETPACK.putInto(loginIntent);
+                LoginMode.JETPACK_STATS.putInto(loginIntent);
                 this.startActivityForResult(loginIntent, JETPACK_LOGIN);
             }
         } else {
