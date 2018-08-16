@@ -2136,6 +2136,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (text != null) {
             if (title != null) {
                 mEditorFragment.setTitle(title);
+                mPost.setTitle(title);
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
@@ -2145,6 +2146,11 @@ public class EditPostActivity extends AppCompatActivity implements
             } else {
                 mEditorFragment.setContent(text);
             }
+
+            //update PostModel
+            mPost.setContent(text);
+            PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
 
         // Check for shared media
