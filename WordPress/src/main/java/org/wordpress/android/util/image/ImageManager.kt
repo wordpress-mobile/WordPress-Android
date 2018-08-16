@@ -107,7 +107,6 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      */
     @JvmOverloads
     fun load(imageView: ImageView, imageType: ImageType, scaleType: ImageView.ScaleType = CENTER) {
-
         val resourceId = placeholderManager.getPlaceholderResource(imageType) ?: return
 
         GlideApp.with(imageView.context)
