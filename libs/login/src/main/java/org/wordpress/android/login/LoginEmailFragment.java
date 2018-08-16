@@ -100,7 +100,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case FULL:
                 label.setText(R.string.enter_email_wordpress_com);
                 break;
-            case JETPACK:
+            case JETPACK_STATS:
                 label.setText(R.string.login_to_to_connect_jetpack);
                 break;
             case WPCOM_REAUTHENTICATE:
@@ -163,7 +163,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onClick(View view) {
                 if (mLoginListener != null) {
-                    if (mLoginListener.getLoginMode() == LoginMode.JETPACK) {
+                    if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
                         mLoginListener.loginViaWpcomUsernameInstead();
                     } else {
                         mLoginListener.loginViaSiteAddress();
@@ -181,7 +181,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_site_address_instead);
                 break;
-            case JETPACK:
+            case JETPACK_STATS:
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_user_circle_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_username_instead);
                 break;
@@ -194,7 +194,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        if (mLoginListener.getLoginMode() == LoginMode.JETPACK) {
+        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
             secondaryButton.setText(Html.fromHtml(String.format(getResources().getString(
                     R.string.login_email_button_signup), "<u>", "</u>")));
             secondaryButton.setOnClickListener(new OnClickListener() {

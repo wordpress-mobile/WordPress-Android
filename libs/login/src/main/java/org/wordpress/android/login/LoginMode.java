@@ -5,7 +5,7 @@ import android.content.Intent;
 public enum LoginMode {
     FULL,
     SELFHOSTED_ONLY,
-    JETPACK,
+    JETPACK_STATS,
     WPCOM_LOGIN_DEEPLINK,
     WPCOM_REAUTHENTICATE,
     SHARE_INTENT;
