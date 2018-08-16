@@ -1150,7 +1150,7 @@ public class MySiteFragment extends Fragment implements
 
         // after user sees the continue dialog clear the prompted quick start task, so the prompt will not appear when
         // he completes other task outside of quick start process
-        if (shouldDirectUserToContinueQuickStart){
+        if (shouldDirectUserToContinueQuickStart) {
             setPromptedQuickStartTask(null);
         }
     }

@@ -168,7 +168,12 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        fun completeTask(quickStartStore: QuickStartStore, task: QuickStartTask, dispatcher: Dispatcher, site: SiteModel) {
+        fun completeTask(
+            quickStartStore: QuickStartStore,
+            task: QuickStartTask,
+            dispatcher: Dispatcher,
+            site: SiteModel
+        ) {
             val siteId = site.id.toLong()
 
             if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore)) {
