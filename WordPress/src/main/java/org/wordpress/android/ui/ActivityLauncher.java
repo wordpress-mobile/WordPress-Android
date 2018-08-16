@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -183,6 +184,7 @@ public class ActivityLauncher {
     public static void viewQuickStartForResult(Activity activity) {
         Intent intent = new Intent(activity, QuickStartActivity.class);
         activity.startActivityForResult(intent, RequestCodes.QUICK_START);
+        AnalyticsTracker.track(Stat.QUICK_START_LIST_ACCESSED);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
