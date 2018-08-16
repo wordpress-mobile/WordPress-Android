@@ -1142,7 +1142,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasNewsCard() {
-        return mNewsItem != null && !isEmpty();
+        // We don't want to display the card when we are displaying just a loading screen. However, on Discover a header
+        // is shown, even when we are loading data, so the card should be displayed. [moreover displaying the card only
+        // after we fetch the data results in weird animation after configuration change, since it plays insertion
+        // animation for all the data (including the card) except of the header which hasn't changed].
+        return mNewsItem != null && (!isEmpty() || isDiscover());
     }
 
     /*
