@@ -467,8 +467,8 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
     }
-    
-    private void checkQuickStartNotificationStatus(){
+
+    private void checkQuickStartNotificationStatus() {
         if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
             && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
             && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
