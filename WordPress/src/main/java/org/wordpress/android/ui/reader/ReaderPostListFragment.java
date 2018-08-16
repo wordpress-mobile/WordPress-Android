@@ -181,6 +181,12 @@ public class ReaderPostListFragment extends Fragment
 
     private ReaderPostListViewModel mViewModel;
 
+    private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
+        @Override public void onChanged(@Nullable NewsItem newsItem) {
+            getPostAdapter().updateNewsCardItem(newsItem);
+        }
+    };
+
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject AccountStore mAccountStore;
     @Inject ReaderStore mReaderStore;
@@ -337,15 +343,6 @@ public class ReaderPostListFragment extends Fragment
         mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
         mViewModel.start(mCurrentTag);
-        setupObservables();
-    }
-
-    private void setupObservables() {
-        mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), new Observer<NewsItem>() {
-            @Override public void onChanged(@Nullable NewsItem newsItem) {
-                getPostAdapter().updateNewsCardItem(newsItem);
-            }
-        });
     }
 
     @Override
@@ -1512,8 +1509,10 @@ public class ReaderPostListFragment extends Fragment
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
+            mViewModel.getNewsDataSource().removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
+                mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
