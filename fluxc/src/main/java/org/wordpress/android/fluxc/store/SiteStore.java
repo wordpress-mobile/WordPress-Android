@@ -643,18 +643,18 @@ public class SiteStore extends Store {
     }
 
     public static class MobileQuickStartCompletedResponsePayload extends OnChanged<MobileQuickStartError> {
-        public boolean status;
+        public boolean success;
 
         public MobileQuickStartCompletedResponsePayload(boolean status) {
-            this.status = status;
+            this.success = status;
         }
     }
 
     public static class OnMobileQuickStartCompleted extends OnChanged<MobileQuickStartError> {
-        public boolean status;
+        public boolean success;
 
         OnMobileQuickStartCompleted(boolean status) {
-            this.status = status;
+            this.success = status;
         }
     }
 
@@ -1634,7 +1634,7 @@ public class SiteStore extends Store {
     }
 
     private void handleMobileQuickStartCompleted(MobileQuickStartCompletedResponsePayload payload) {
-        OnMobileQuickStartCompleted event = new OnMobileQuickStartCompleted(payload.status);
+        OnMobileQuickStartCompleted event = new OnMobileQuickStartCompleted(payload.success);
         event.error = payload.error;
         emitChange(event);
     }
