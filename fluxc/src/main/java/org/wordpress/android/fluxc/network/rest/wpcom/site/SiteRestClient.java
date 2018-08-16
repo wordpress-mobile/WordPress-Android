@@ -55,6 +55,8 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.MobileQuickStartCompletedResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.MobileQuickStartError;
+import org.wordpress.android.fluxc.store.SiteStore.MobileQuickStartErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
@@ -736,9 +738,12 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new WPComErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                                MobileQuickStartError error = new MobileQuickStartError(
+                                        MobileQuickStartErrorType.GENERIC_ERROR, networkError.message);
+
                                 MobileQuickStartCompletedResponsePayload payload =
                                         new MobileQuickStartCompletedResponsePayload(false);
-                                payload.error = networkError;
+                                payload.error = error;
 
                                 mDispatcher.dispatch(SiteActionBuilder.newCompletedMobileQuickStartAction(payload));
                             }
