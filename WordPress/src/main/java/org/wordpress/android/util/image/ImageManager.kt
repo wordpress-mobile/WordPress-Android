@@ -35,9 +35,11 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     /**
      * Loads an image from the "imgUrl" into the ImageView. Adds a placeholder and an error placeholder depending
      * on the ImageType.
+     *
+     * If no URL is provided, it only loads the placeholder
      */
     @JvmOverloads
-    fun load(imageView: ImageView, imageType: ImageType, imgUrl: String, scaleType: ImageView.ScaleType = CENTER) {
+    fun load(imageView: ImageView, imageType: ImageType, imgUrl: String = "", scaleType: ImageView.ScaleType = CENTER) {
         val context = imageView.context
         GlideApp.with(context)
                 .load(imgUrl)
