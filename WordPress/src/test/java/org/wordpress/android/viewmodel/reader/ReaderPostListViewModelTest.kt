@@ -101,13 +101,13 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifyViewModelPropagatesDismissToNewsTracker(){
+    fun verifyViewModelPropagatesDismissToNewsTracker() {
         viewModel.onNewsCardDismissed(item)
         verify(newsTracker).trackNewsCardDismissed(argThat { this == READER }, any())
     }
 
     @Test
-    fun verifyViewModelPropagatesCardShownToNewsTracker(){
+    fun verifyViewModelPropagatesCardShownToNewsTracker() {
         whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(true)
         viewModel.onNewsCardShown(item)
         verify(newsTracker).trackNewsCardShown(argThat { this == READER }, any())
@@ -115,7 +115,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifyViewModelDoesNotPropagatesCardShownToNewsTracker(){
+    fun verifyViewModelDoesNotPropagatesCardShownToNewsTracker() {
         whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(false)
         viewModel.onNewsCardShown(item)
         verify(newsTracker, times(0)).trackNewsCardShown(argThat { this == READER }, any())
@@ -123,7 +123,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifyViewModelPropagatesExtendedInfoRequestedToNewsTracker(){
+    fun verifyViewModelPropagatesExtendedInfoRequestedToNewsTracker() {
         viewModel.onNewsCardExtendedInfoRequested(item)
         verify(newsTracker).trackNewsCardExtendedInfoRequested(argThat { this == READER }, any())
     }

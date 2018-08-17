@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.news
 
-import org.wordpress.android.models.news.NewsItem
 import javax.inject.Inject
 
 /**
