@@ -184,11 +184,12 @@ public class WPScreenshotTest {
     }
 
     private void navigateNotifications() {
-        // Notification button
-        ViewInteraction notificationButton = onView(
-                allOf(withId(R.id.nav_notifications), childAtPosition(
-                        childAtPosition(withId(R.id.bottom_navigation), 0), 4)));
-        waitForElementUntilDisplayed(notificationButton).perform(click());
+        // Click on the "Notifications" tab in the nav
+        clickOn(R.id.nav_notifications);
+
+        waitForAtLeastOneElementWithIdToExist(R.id.note_content_container);
+        waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
+
         Screengrab.screenshot("screenshot_5");
     }
 
