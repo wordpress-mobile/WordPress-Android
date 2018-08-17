@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -210,6 +211,12 @@ public class Authenticator {
         params.put("email", payload.emailOrUsername);
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
+
+        AuthEmailPayloadScheme scheme = payload.scheme;
+        if (scheme == null) {
+            scheme = AuthEmailPayloadScheme.WORDPRESS;
+        }
+        params.put("scheme", scheme.toString());
 
         if (payload.flow != null) {
             params.put("flow", payload.flow.toString());
