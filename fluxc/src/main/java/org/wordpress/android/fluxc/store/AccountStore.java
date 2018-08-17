@@ -75,17 +75,40 @@ public class AccountStore extends Store {
     }
 
     public static class AuthEmailPayload extends Payload<BaseNetworkError> {
+        public AuthEmailPayloadScheme scheme;
         public AuthEmailPayloadFlow flow;
         public AuthEmailPayloadSource source;
         public String emailOrUsername;
         public boolean isSignup;
 
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
-                                AuthEmailPayloadSource source) {
+                                AuthEmailPayloadSource source, AuthEmailPayloadScheme scheme) {
             this.emailOrUsername = emailOrUsername;
             this.isSignup = isSignup;
             this.flow = flow;
             this.source = source;
+            this.scheme = scheme;
+        }
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
+                                AuthEmailPayloadSource source) {
+            this(emailOrUsername, isSignup, flow, source, null);
+        }
+    }
+
+    public enum AuthEmailPayloadScheme {
+        WORDPRESS("wordpress"),
+        WOOCOMMERCE("woocommerce");
+
+        private final String mString;
+
+        AuthEmailPayloadScheme(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
         }
     }
 
