@@ -11,7 +11,7 @@ import javax.inject.Singleton
  * Business logic related to fetching/showing the News Card (a card used for announcing new features/updates).
  */
 @Singleton
-class NewsManager @Inject constructor(val newsService: NewsService, val appPrefs: AppPrefsWrapper) {
+class NewsManager @Inject constructor(private val newsService: NewsService, private val appPrefs: AppPrefsWrapper) {
     private val dataSourceMediator: MediatorLiveData<NewsItem> = MediatorLiveData()
     private var dataSource: LiveData<NewsItem> = newsService.newsItemSource()
 
