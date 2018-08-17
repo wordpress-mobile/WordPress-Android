@@ -141,7 +141,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     public void onJetpackSuccessfullyConnected(Uri uri) {
         JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED,
                 (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Intent intent = new Intent(this, JetpackConnectionDeeplinkActivity.class);
         intent.setData(uri);
         intent.putExtra(SITE, mSite);
         startActivity(intent);

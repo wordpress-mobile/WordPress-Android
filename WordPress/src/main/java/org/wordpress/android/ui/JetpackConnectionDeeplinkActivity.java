@@ -65,11 +65,12 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
-
-        AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, action, uri);
+        if (Intent.ACTION_VIEW.equals(action)) {
+            AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, action, uri);
+        }
 
         // check if this intent is started via custom scheme link
-        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
+        if (uri != null) {
             // Non-empty reason does not mean we're not connected to Jetpack
             // - one of the errors is "already-connected"
             mReason = uri.getQueryParameter(REASON_PARAM);
