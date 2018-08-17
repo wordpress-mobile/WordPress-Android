@@ -5,8 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,7 +37,7 @@ class JetpackRemoteInstallViewModel
     private var job: Job? = null
 
     fun start(site: SiteModel, type: Type?) {
-        //Init state only if it's empty
+        // Init state only if it's empty
         if (mutableViewState.value == null) {
             mutableViewState.value = type.toState(site)
         }
@@ -64,14 +64,14 @@ class JetpackRemoteInstallViewModel
 
     private fun startRemoteInstall(site: SiteModel) {
         cancelJob()
-        job = launch(UI) {
+        job = launch(CommonPool) {
             mutableViewState.postValue(ViewState.Installing)
             val installResult = jetpackStore.install(site)
             if (isActive) {
                 if (installResult.success) {
-                    mutableViewState.value = Installed { connectJetpack(site.id) }
+                    mutableViewState.postValue(Installed { connectJetpack(site.id) })
                 } else {
-                    mutableViewState.value = Error { startRemoteInstall(site) }
+                    mutableViewState.postValue(Error { startRemoteInstall(site) })
                 }
             }
         }
@@ -80,7 +80,7 @@ class JetpackRemoteInstallViewModel
     private fun connectJetpack(siteId: Int) {
         val site = siteStore.getSiteByLocalId(siteId)
         val hasAccessToken = accountStore.hasAccessToken()
-        mutableJetpackConnectionFlow.value = JetpackConnectionData(site, hasAccessToken)
+        mutableJetpackConnectionFlow.postValue(JetpackConnectionData(site, hasAccessToken))
     }
 
     override fun onCleared() {
