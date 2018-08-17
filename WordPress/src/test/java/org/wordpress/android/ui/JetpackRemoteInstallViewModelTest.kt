@@ -64,7 +64,7 @@ class JetpackRemoteInstallViewModelTest {
         val startState = awaitViewState(0)
         assertStartState(startState)
 
-        //Trigger install
+        // Trigger install
         startState.onClick()
 
         val installingState = awaitViewState(1)
@@ -73,7 +73,7 @@ class JetpackRemoteInstallViewModelTest {
         val installedState = awaitViewState(2)
         assertInstalledState(installedState)
 
-        //Continue after Jetpack is installed
+        // Continue after Jetpack is installed
         installedState.onClick()
 
         val connectionData = awaitJetpackConnectionData()
@@ -96,7 +96,7 @@ class JetpackRemoteInstallViewModelTest {
         val startState = awaitViewState(0)
         assertStartState(startState)
 
-        //Trigger install
+        // Trigger install
         startState.onClick()
 
         val installingState = awaitViewState(1)
@@ -113,7 +113,7 @@ class JetpackRemoteInstallViewModelTest {
         val installedState = awaitViewState(4)
         assertInstalledState(installedState)
 
-        //Continue after Jetpack is installed
+        // Continue after Jetpack is installed
         installedState.onClick()
 
         val connectionData = awaitJetpackConnectionData()
