@@ -30,8 +30,6 @@ public class ReaderLikingUsersView extends LinearLayout {
     @Inject ImageManager mImageManager;
     private LoadAvatarsTask mLoadAvatarsTask;
     private final int mLikeAvatarSz;
-    private final int mMarginAvatar;
-    private final int mMarginReader;
 
     public ReaderLikingUsersView(Context context) {
         this(context, null);
@@ -45,8 +43,6 @@ public class ReaderLikingUsersView extends LinearLayout {
         setGravity(Gravity.CENTER_VERTICAL);
 
         mLikeAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        mMarginAvatar = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-        mMarginReader = context.getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
     }
 
     public void showLikingUsers(final ReaderPost post, final long currentUserId) {
@@ -73,8 +69,10 @@ public class ReaderLikingUsersView extends LinearLayout {
      * returns count of avatars that can fit the current space
      */
     private int getMaxAvatars() {
-        int likeAvatarSizeWithMargin = mLikeAvatarSz + (mMarginAvatar * 2);
-        int spaceForAvatars = getWidth() - (mMarginReader * 2);
+        final int marginAvatar = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        final int marginReader = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int likeAvatarSizeWithMargin = mLikeAvatarSz + (marginAvatar * 2);
+        int spaceForAvatars = getWidth() - (marginReader * 2);
         return spaceForAvatars / likeAvatarSizeWithMargin;
     }
 
