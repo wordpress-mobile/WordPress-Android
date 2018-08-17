@@ -4,6 +4,7 @@ package org.wordpress.android.ui.screenshots;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.CardView;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.util.image.ImageType;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
@@ -44,6 +47,7 @@ import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.*;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class WPScreenshotTest {
@@ -110,48 +114,22 @@ public class WPScreenshotTest {
     }
 
     private void navigateReader() {
-        ViewInteraction navReaderButton = onView(
-                allOf(withId(R.id.nav_reader), childAtPosition(
-                        childAtPosition(withId(R.id.bottom_navigation), 0), 1)));
-        waitForElementUntilDisplayed(navReaderButton).perform(click());
+        // Choose the "Reader" tab in the nav
+        clickOn(R.id.nav_reader);
 
-        // Select Discover
-        ViewInteraction spinner = onView(
-                allOf(withId(R.id.filter_spinner), childAtPosition(
-                        withId(R.id.toolbar_with_spinner), 0)));
-        waitForElementUntilDisplayed(spinner).perform(click());
+        // Choose "Discover" from the spinner, but first, choose another item
+        // to force a re-load – this avoids locale issues
+        selectItemAtIndexInSpinner(getDiscoverTagIndex() == 0 ? 1 : 0, R.id.filter_spinner);
+        selectItemAtIndexInSpinner(getDiscoverTagIndex(), R.id.filter_spinner);
 
-        // Tag order in the Reader spinner can vary, so we need to find the index of Discover
-        int discoverTagIndex = getDiscoverTagIndex();
+        // Wait for the blog articles to load
+        waitForAtLeastOneElementOfTypeToExist(ReaderSiteHeaderView.class);
+        waitForAtLeastOneElementOfTypeToExist(CardView.class);
+        waitForImagesOfTypeWithPlaceholder(R.id.image_featured, ImageType.PHOTO);
+        waitForImagesOfTypeWithPlaceholder(R.id.image_avatar, ImageType.AVATAR);
+        waitForImagesOfTypeWithPlaceholder(R.id.image_blavatar, ImageType.BLAVATAR);
 
-        // Toggle away from and then back to Discover to ensure it reloads
-        // Selecting without forcing reload can cause locale issues
-        int otherTagIndex = discoverTagIndex == 0 ? 1 : 0;
-        ViewInteraction spinnerItem = onView(
-                allOf(withId(R.id.text), childAtPosition(
-                        withClassName(is("android.widget.DropDownListView")), otherTagIndex)));
-        waitForElementUntilDisplayed(spinnerItem).perform(click());
-
-        waitForElementUntilDisplayed(spinner).perform(click());
-        spinnerItem = onView(
-                allOf(withId(R.id.text), childAtPosition(
-                        withClassName(is("android.widget.DropDownListView")), discoverTagIndex)));
-        waitForElementUntilDisplayed(spinnerItem).perform(click());
-
-        // Waiting for the blog articles to load
-        ViewInteraction postCard = onView(
-                allOf(withId(R.id.card_view), childAtPosition(
-                        withId(R.id.recycler_view), 1)));
-        if (waitForElementUntilDisplayed(postCard) == null) {
-            fail("Failed to load discover blog articles");
-        }
-
-        // Waiting for the blog images to load
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        waitForRecyclerViewToStopReloading();
 
         Screengrab.screenshot("screenshot_2");
     }
