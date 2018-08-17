@@ -38,7 +38,6 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.news.NewsItem;
-import org.wordpress.android.ui.news.NewsTracker;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.util.image.ImageManager;
