@@ -1489,15 +1489,20 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType(), mImageManager, new NewsCardListener() {
-                @Override public void onItemClicked(@NotNull String url) {
+                @Override public void onItemShown(@NotNull NewsItem item) {
+                    mViewModel.onNewsCardShown(item);
+                }
+
+                @Override public void onItemClicked(@NotNull NewsItem item) {
+                    mViewModel.onNewsCardExtendedInfoRequested(item);
                     Activity activity = getActivity();
                     if (activity != null) {
-                        WPWebViewActivity.openURL(activity, url);
+                        WPWebViewActivity.openURL(activity, item.getActionUrl());
                     }
                 }
 
                 @Override public void onDismissClicked(NewsItem item) {
-                    mViewModel.onDismissClicked(item);
+                    mViewModel.onNewsCardDismissed(item);
                 }
             });
             mPostAdapter.setOnFollowListener(this);

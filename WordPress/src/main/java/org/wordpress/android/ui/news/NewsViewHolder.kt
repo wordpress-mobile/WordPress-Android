@@ -14,7 +14,8 @@ class NewsViewHolder(parent: ViewGroup, private val listener: NewsCardListener) 
                 LayoutInflater.from(parent.context).inflate(R.layout.news_card, parent, false)
         ) {
     interface NewsCardListener {
-        fun onItemClicked(url: String)
+        fun onItemShown(item: NewsItem)
+        fun onItemClicked(item: NewsItem)
         fun onDismissClicked(item: NewsItem)
     }
 
@@ -25,10 +26,11 @@ class NewsViewHolder(parent: ViewGroup, private val listener: NewsCardListener) 
     private val dismissView: ImageView = itemView.findViewById(R.id.news_dismiss)
 
     fun bind(item: NewsItem) {
+        listener.onItemShown(item)
         title.text = item.title
         content.text = item.content
         action.text = item.actionText
-        container.setOnClickListener { listener.onItemClicked(item.actionUrl) }
+        container.setOnClickListener { listener.onItemClicked(item) }
         dismissView.setOnClickListener { listener.onDismissClicked(item) }
     }
 }

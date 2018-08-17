@@ -404,6 +404,9 @@ public final class AnalyticsTracker {
         SUPPORT_HELP_CENTER_VIEWED,
         SUPPORT_IDENTITY_FORM_VIEWED,
         SUPPORT_IDENTITY_SET,
+        NEWS_CARD_SHOWN,
+        NEWS_CARD_DIMISSED,
+        NEWS_CARD_EXTENDED_INFO_REQUESTED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
