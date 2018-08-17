@@ -61,7 +61,7 @@ class JetpackStore
     }
 
     private suspend fun reloadSite(site: SiteModel) = suspendCoroutine<Unit> { cont ->
-        launch {
+        launch(CommonPool) {
             delay(5000)
             if (siteContinuation != null && siteContinuation == cont) {
                 siteContinuation?.resume(Unit)
