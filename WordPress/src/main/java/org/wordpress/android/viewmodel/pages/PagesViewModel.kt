@@ -7,8 +7,6 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -19,7 +17,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -40,6 +37,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
@@ -52,7 +50,8 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
-    private val uploadUtil: PageUploadUtil
+    private val uploadUtil: PageUploadUtil,
+    private val actionPerfomer: ActionPerformer
 ) : ViewModel() {
     private val _isSearchExpanded = SingleLiveEvent<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -101,10 +100,6 @@ class PagesViewModel
     private var lastSearchQuery = ""
     private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
 
-    init {
-        dispatcher.register(this)
-    }
-
     fun start(site: SiteModel) {
         this.site = site
 
@@ -141,7 +136,7 @@ class PagesViewModel
         _listState.postValue(newState)
     }
 
-    suspend fun refreshPages() {
+    private suspend fun refreshPages() {
         _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
         _refreshPageLists.asyncCall()
     }
@@ -274,17 +269,46 @@ class PagesViewModel
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
         pages[remoteId]?.let { page ->
-            launch(CommonPool) {
-                statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
+            val oldStatus = page.status
+            val action = PageAction {
                 page.status = status
-                launch(CommonPool) { uploadUtil.uploadPage(page) }
-                pageStore.updatePageInDb(page)
-                refreshPages()
+                launch(CommonPool) {
+                    pageStore.updatePageInDb(page)
+                    refreshPages()
+
+                    uploadUtil.uploadPage(page)
+                }
+            }
+            action.undo = {
+                page.status = oldStatus
+                launch(CommonPool) {
+                    pageStore.updatePageInDb(page)
+                    refreshPages()
+                }
+            }
+            action.onSuccess = {
+                launch(CommonPool) {
+                    reloadPages()
+                    onSearch(lastSearchQuery)
+
+                    val message = prepareStatusChangeSnackbar(status, action.undo)
+                    _showSnackbarMessage.postValue(message)
+                }
+            }
+            action.onError = {
+                launch(CommonPool) {
+                    action.undo()
+
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder("Error"))
+                }
+            }
+        launch {
+                actionPerfomer.performAction(action)
             }
         }
     }
 
-    private fun prepareStatusChangeSnackbar(newStatus: PageStatus, page: PageModel? = null): SnackbarMessageHolder {
+    private fun prepareStatusChangeSnackbar(newStatus: PageStatus, undo: (() -> Unit)? = null): SnackbarMessageHolder {
         val message = when (newStatus) {
             DRAFT -> resourceProvider.getString(string.page_moved_to_draft)
             PUBLISHED -> resourceProvider.getString(string.page_moved_to_published)
@@ -292,11 +316,8 @@ class PagesViewModel
             SCHEDULED -> resourceProvider.getString(string.page_moved_to_scheduled)
         }
 
-        return if (page != null) {
-            val previousStatus = page.status
-            SnackbarMessageHolder(message, resourceProvider.getString(string.undo)) {
-                changePageStatus(page.remoteId, previousStatus)
-            }
+        return if (undo != null) {
+            SnackbarMessageHolder(message, resourceProvider.getString(string.undo), undo)
         } else {
             SnackbarMessageHolder(message)
         }
@@ -306,27 +327,4 @@ class PagesViewModel
         _searchResult.postValue(listOf(Empty(string.empty_list_default)))
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostUploaded(event: OnPostUploaded) {
-        if (event.post.isPage) {
-            if (event.isError) {
-                _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(resourceProvider.getString(string.page_upload_error)))
-                statusPageSnackbarMessage = null
-            } else {
-                launch {
-                    reloadPages()
-                    onSearch(lastSearchQuery)
-
-                    if (statusPageSnackbarMessage != null) {
-                        _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
-                        statusPageSnackbarMessage = null
-                    } else {
-                        _showSnackbarMessage.postValue(
-                                prepareStatusChangeSnackbar(PageModel(event.post, site).status))
-                    }
-                }
-            }
-        }
-    }
 }

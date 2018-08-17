@@ -1,7 +1,5 @@
 package org.wordpress.android.viewmodel.pages
 
-import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -14,7 +12,6 @@ import kotlin.coroutines.experimental.Continuation
 
 class ActionPerformer
 @Inject constructor(dispatcher: Dispatcher) {
-    private val channel = Channel<PageAction>()
     private var continuation: Continuation<Boolean>? = null
 
     init {
@@ -22,15 +19,14 @@ class ActionPerformer
     }
 
     suspend fun performAction(action: PageAction) {
-        val success = suspendCoroutineWithTimeout<Boolean>(10) { cont ->
+        val success = suspendCoroutineWithTimeout<Boolean>(30) { cont ->
             continuation = cont
-            launch {
-                action.perform()
-            }
+            action.perform()
         }
+        continuation = null
 
         if (success == true) {
-            action.onFinished()
+            action.onSuccess()
         } else {
             action.onError()
         }
@@ -50,9 +46,9 @@ class ActionPerformer
         suspendCancellableCoroutine(block = block)
     }
 
-    data class PageAction(
-        val perform: suspend () -> Unit,
-        val onFinished: () -> Unit = { },
-        val onError: () -> Unit = { }
-    )
+    data class PageAction(val perform: () -> Unit) {
+        var onSuccess: () -> Unit = { }
+        var onError: () -> Unit = { }
+        var undo: () -> Unit = { }
+    }
 }
