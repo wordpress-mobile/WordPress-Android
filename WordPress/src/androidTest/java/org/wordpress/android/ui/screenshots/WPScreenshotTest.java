@@ -101,23 +101,12 @@ public class WPScreenshotTest {
     }
 
     private void wPLogout() {
-        // Me button
-        ViewInteraction meButton = onView(
-                allOf(withId(R.id.nav_me),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3)));
-        waitForElementUntilDisplayed(meButton).perform(click());
+        // Click on the "Me" tab in the nav, then choose "Log Out"
+        clickOn(R.id.nav_me);
+        scrollToThenClickOn(R.id.row_logout);
 
-        // Log out button
-        ViewInteraction logoutButton = onView(
-                allOf(withId(R.id.row_logout),
-                        childAtPosition(childAtPosition(withId(R.id.scroll_view), 0), 11)));
-        waitForElementUntilDisplayed(logoutButton).perform(scrollTo(), click());
-
-        // Log out confirm button
-        ViewInteraction logoutConfirmButton = onView(
-                allOf(withId(android.R.id.button1), childAtPosition(
-                        childAtPosition(withClassName(is("android.widget.ScrollView")), 0), 3)));
-        waitForElementUntilDisplayed(logoutConfirmButton).perform(scrollTo(), click());
+        // Confirm that we want to log out
+        clickOn(android.R.id.button1);
     }
 
     private void navigateReader() {
