@@ -8,8 +8,9 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
-import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.ERROR_EMPTY_PAGE
 import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.ERROR_NON_EXISTING_PAGE
 import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.ERROR_NO_NETWORK
@@ -23,6 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class PageUploadUtil @Inject constructor(
     private val postStore: PostStore,
+    private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val context: Context
 ) {
@@ -40,19 +42,12 @@ class PageUploadUtil @Inject constructor(
             }
 
             PostUtils.updatePublishDateIfShouldBePublishedImmediately(post)
-            val isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT ||
-                    PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft
 
             // save the post in the DB so the UploadService will get the latest change
-            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
+            pageStore.updatePageInDb(page)
 
-            if (isFirstTimePublish) {
-                UploadService.uploadPostAndTrackAnalytics(context, post)
-            } else {
-                UploadService.uploadPost(context, post)
-            }
-
-            PostUtils.trackSavePostAnalytics(post, page.site)
+            val action = PostActionBuilder.newPushPostAction(RemotePostPayload(post, page.site))
+            dispatcher.dispatch(action)
 
             return@withContext SUCCESS
         } else {
