@@ -935,7 +935,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersDivider.setVisibility(View.VISIBLE);
         mLikingUsersLabel.setVisibility(View.VISIBLE);
         mLikingUsersView.setVisibility(View.VISIBLE);
-        mLikingUsersView.showLikingUsers(mPost);
+        mLikingUsersView.showLikingUsers(mPost, mAccountStore.getAccount().getUserId());
     }
 
     private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
