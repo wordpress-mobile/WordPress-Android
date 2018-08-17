@@ -6,7 +6,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNull
 import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -59,24 +59,24 @@ class JetpackRemoteInstallViewModelTest {
         val updatedSite = mock<SiteModel>()
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(updatedSite)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        viewModel.start(site, null)
+        viewModel.start(site, null, Unconfined)
 
-        val startState = awaitViewState(0)
+        val startState = viewStates[0]
         assertStartState(startState)
 
         // Trigger install
         startState.onClick()
 
-        val installingState = awaitViewState(1)
+        val installingState = viewStates[1]
         assertInstallingState(installingState)
 
-        val installedState = awaitViewState(2)
+        val installedState = viewStates[2]
         assertInstalledState(installedState)
 
         // Continue after Jetpack is installed
         installedState.onClick()
 
-        val connectionData = awaitJetpackConnectionData()
+        val connectionData = jetpackConnectionData!!
         assertTrue(connectionData.loggedIn)
         assertTrue(connectionData.site == updatedSite)
     }
@@ -91,32 +91,32 @@ class JetpackRemoteInstallViewModelTest {
         val updatedSite = mock<SiteModel>()
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(updatedSite)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        viewModel.start(site, null)
+        viewModel.start(site, null, Unconfined)
 
-        val startState = awaitViewState(0)
+        val startState = viewStates[0]
         assertStartState(startState)
 
         // Trigger install
         startState.onClick()
 
-        val installingState = awaitViewState(1)
+        val installingState = viewStates[1]
         assertInstallingState(installingState)
 
-        val errorState = awaitViewState(2)
+        val errorState = viewStates[2]
         assertErrorState(errorState)
 
         errorState.onClick()
 
-        val reinstallingState = awaitViewState(3)
+        val reinstallingState = viewStates[3]
         assertInstallingState(reinstallingState)
 
-        val installedState = awaitViewState(4)
+        val installedState = viewStates[4]
         assertInstalledState(installedState)
 
         // Continue after Jetpack is installed
         installedState.onClick()
 
-        val connectionData = awaitJetpackConnectionData()
+        val connectionData = jetpackConnectionData!!
         assertTrue(connectionData.loggedIn)
         assertTrue(connectionData.site == updatedSite)
     }
@@ -131,7 +131,7 @@ class JetpackRemoteInstallViewModelTest {
 
         viewModel.onLogin(siteId)
 
-        val connectionData = awaitJetpackConnectionData()
+        val connectionData = jetpackConnectionData!!
         assertTrue(connectionData.loggedIn)
         assertTrue(connectionData.site == updatedSite)
     }
@@ -174,27 +174,5 @@ class JetpackRemoteInstallViewModelTest {
         assertEquals(state.icon, R.drawable.ic_exclamation_mark_88dp)
         assertEquals(state.buttonResource, R.string.install_jetpack_retry)
         assertEquals(state.progressBarVisible, false)
-    }
-
-    private suspend fun awaitViewState(position: Int): ViewState {
-        var counter = 0
-        val max = 10
-        while (counter < max && viewStates.size <= position) {
-            delay(50)
-            counter++
-        }
-        assertTrue(viewStates.size > position)
-        return viewStates[position]
-    }
-
-    private suspend fun awaitJetpackConnectionData(): JetpackConnectionData {
-        var counter = 0
-        val max = 10
-        while (counter < max && jetpackConnectionData == null) {
-            delay(50)
-            counter++
-        }
-        assertTrue(jetpackConnectionData != null)
-        return jetpackConnectionData!!
     }
 }

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Type.INS
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Type.START
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
+import kotlin.coroutines.experimental.CoroutineContext
 
 class JetpackRemoteInstallViewModel
 @Inject constructor(
@@ -36,10 +37,10 @@ class JetpackRemoteInstallViewModel
     val liveJetpackConnectionFlow: LiveData<JetpackConnectionData> = mutableJetpackConnectionFlow
     private var job: Job? = null
 
-    fun start(site: SiteModel, type: Type?) {
+    fun start(site: SiteModel, type: Type?, coroutineContext: CoroutineContext = CommonPool) {
         // Init state only if it's empty
         if (mutableViewState.value == null) {
-            mutableViewState.value = type.toState(site)
+            mutableViewState.value = type.toState(site, coroutineContext)
         }
     }
 
@@ -47,31 +48,31 @@ class JetpackRemoteInstallViewModel
         connectJetpack(siteId)
     }
 
-    private fun Type?.toState(site: SiteModel): ViewState {
+    private fun Type?.toState(site: SiteModel, coroutineContext: CoroutineContext): ViewState {
         if (this == null) {
-            return Start { startRemoteInstall(site) }
+            return Start { startRemoteInstall(site, coroutineContext) }
         }
         return when (this) {
-            START -> Start { startRemoteInstall(site) }
+            START -> Start { startRemoteInstall(site, coroutineContext) }
             INSTALLING -> {
-                startRemoteInstall(site)
+                startRemoteInstall(site, coroutineContext)
                 ViewState.Installing
             }
             INSTALLED -> Installed { connectJetpack(site.id) }
-            ERROR -> Error { startRemoteInstall(site) }
+            ERROR -> Error { startRemoteInstall(site, coroutineContext) }
         }
     }
 
-    private fun startRemoteInstall(site: SiteModel) {
+    private fun startRemoteInstall(site: SiteModel, coroutineContext: CoroutineContext) {
         cancelJob()
-        job = launch(CommonPool) {
+        job = launch(coroutineContext) {
             mutableViewState.postValue(ViewState.Installing)
             val installResult = jetpackStore.install(site)
             if (isActive) {
                 if (installResult.success) {
                     mutableViewState.postValue(Installed { connectJetpack(site.id) })
                 } else {
-                    mutableViewState.postValue(Error { startRemoteInstall(site) })
+                    mutableViewState.postValue(Error { startRemoteInstall(site, coroutineContext) })
                 }
             }
         }
