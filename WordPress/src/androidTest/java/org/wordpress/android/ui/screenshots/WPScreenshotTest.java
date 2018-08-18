@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.screenshots;
 
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -194,50 +195,25 @@ public class WPScreenshotTest {
     }
 
     private void navigateStats() {
-        // Stats button
-        ViewInteraction statsButton = onView(
-                allOf(withId(R.id.nav_sites), childAtPosition(
-                        childAtPosition(withId(R.id.bottom_navigation), 0), 0)));
-        waitForElementUntilDisplayed(statsButton).perform(click());
+        // Click on the "Sites" tab in the nav, then choose "Stats"
+        clickOn(R.id.nav_sites);
+        scrollToThenClickOn(R.id.row_stats);
 
-        ViewInteraction linearLayout2 = onView(allOf(withId(R.id.row_stats), childAtPosition(
-                childAtPosition(withId(R.id.scroll_view), 0), 1)));
-        waitForElementUntilDisplayed(linearLayout2).perform(scrollTo(), click());
-
-        // Close the dialog
-        ViewInteraction dialogButton = onView(allOf(withId(R.id.promo_dialog_button_positive),
-                        childAtPosition(childAtPosition(
-                                withClassName(is("android.widget.RelativeLayout")), 3), 1)));
-        try {
-            // It may open or not, so catch the error if it's not up
-            waitForElementUntilDisplayed(dialogButton).perform(click());
-        } catch (Exception e) {
-            e.printStackTrace();
+        // If there's a pop-up message, dismiss it
+        if (hasElement(R.id.promo_dialog_button_positive)) {
+            clickOn(R.id.promo_dialog_button_positive);
         }
 
-        // Select Days view
-        ViewInteraction spinner = onView(
-                allOf(withId(R.id.filter_spinner), childAtPosition(
-                        withId(R.id.toolbar_filter), 0)));
-        waitForElementUntilDisplayed(spinner).perform(click());
+        // Select "Days" from the spinner
+        selectItemAtIndexInSpinner(1, R.id.filter_spinner);
 
-        ViewInteraction spinnerItem = onView(
-                allOf(withId(R.id.text), childAtPosition(
-                        withClassName(is("android.widget.DropDownListView")), 1)));
-        waitForElementUntilDisplayed(spinnerItem).perform(click());
+        // Wait for the stats to load
+        waitForElementToNotBeDisplayed(R.id.stats_empty_module_placeholder);
 
-        // Wait a bit
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         Screengrab.screenshot("screenshot_4");
 
-        // Navigate up
-        ViewInteraction navUpButton = onView(allOf(childAtPosition(allOf(withId(R.id.toolbar),
-                childAtPosition(withClassName(is("android.widget.LinearLayout")), 0)), 2)));
-        waitForElementUntilDisplayed(navUpButton).perform(click());
+        // Exit the Stats Activity
+        pressBackUntilElementIsVisible(R.id.nav_sites);
     }
 
     private static ViewInteraction waitForElementUntilDisplayed(ViewInteraction element) {
