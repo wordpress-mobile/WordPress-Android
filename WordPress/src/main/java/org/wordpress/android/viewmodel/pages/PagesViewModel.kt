@@ -7,6 +7,8 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -17,6 +19,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -44,6 +47,8 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
+import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.suspendCoroutine
 
 class PagesViewModel
 @Inject constructor(
@@ -99,12 +104,17 @@ class PagesViewModel
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
     private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
+    private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
 
     fun start(site: SiteModel) {
         this.site = site
 
         clearSearch()
         reloadPagesAsync()
+    }
+
+    init {
+        dispatcher.register(this)
     }
 
     override fun onCleared() {
@@ -143,9 +153,18 @@ class PagesViewModel
 
     fun onPageEditFinished(pageId: Long) {
         launch {
-            if (!uploadUtil.isPageUploading(pageId, site)) {
-                reloadPages()
+            suspendCoroutine<Unit> { cont ->
+                pageUpdateContinuation[pageId] = cont
             }
+            pageUpdateContinuation.remove(pageId)
+            reloadPages()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (event.post.isPage) {
+            pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
         }
     }
 
@@ -326,5 +345,4 @@ class PagesViewModel
     private fun clearSearch() {
         _searchResult.postValue(listOf(Empty(string.empty_list_default)))
     }
-
 }
