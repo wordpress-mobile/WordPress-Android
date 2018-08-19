@@ -46,6 +46,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DON
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
+import java.util.Date
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -250,7 +251,10 @@ class PagesViewModel
             SET_PARENT -> _setPageParent.postValue(pages[page.id])
             MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
-            PUBLISH_NOW -> changePageStatus(page.id, PUBLISHED)
+            PUBLISH_NOW -> {
+                pages[page.id]?.date = Date()
+                changePageStatus(page.id, PUBLISHED)
+            }
             DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
         return true
