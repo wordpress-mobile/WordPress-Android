@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.util.DateTimeUtils
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -172,11 +173,12 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         }
     }
 
-    fun PostModel.updatePageData(page: PageModel) {
+    private fun PostModel.updatePageData(page: PageModel) {
         this.id = page.pageId
         this.title = page.title
         this.status = page.status.toPostStatus().toString()
         this.parentId = page.parent?.remoteId ?: 0
         this.remotePostId = page.remoteId
+        this.dateCreated = DateTimeUtils.iso8601FromDate(page.date)
     }
 }
