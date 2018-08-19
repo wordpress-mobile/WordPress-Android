@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
@@ -56,7 +55,6 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
-    private val uploadUtil: PageUploadUtil,
     private val actionPerfomer: ActionPerformer
 ) : ViewModel() {
     private val _isSearchExpanded = SingleLiveEvent<Boolean>()
@@ -178,7 +176,7 @@ class PagesViewModel
                     statusPageSnackbarMessage = SnackbarMessageHolder(
                             resourceProvider.getString(string.page_parent_changed))
 
-                    uploadUtil.uploadPage(page)
+                    pageStore.uploadPageToServer(page)
                     reloadPages()
                 }
             }
@@ -299,7 +297,7 @@ class PagesViewModel
                     pageStore.updatePageInDb(page)
                     refreshPages()
 
-                    uploadUtil.uploadPage(page)
+                    pageStore.uploadPageToServer(page)
                 }
             }
             action.undo = {

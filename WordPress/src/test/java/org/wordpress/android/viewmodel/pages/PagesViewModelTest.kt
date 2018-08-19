@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -37,12 +36,12 @@ class PagesViewModelTest {
     @Mock lateinit var pageStore: PageStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var uploadUtil: PageUploadUtil
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var actionPerformer: ActionPerformer
     private lateinit var viewModel: PagesViewModel
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil)
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, actionPerformer)
     }
 
     @Test
