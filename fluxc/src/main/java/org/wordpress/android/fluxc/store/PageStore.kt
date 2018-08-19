@@ -17,6 +17,8 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.ERROR_NON_EXISTING_PAGE
+import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -66,6 +68,25 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
 
         val updateAction = PostActionBuilder.newUpdatePostAction(post)
         dispatcher.dispatch(updateAction)
+    }
+
+    suspend fun uploadPageToServer(page: PageModel): UploadRequestResult = withContext(CommonPool) {
+        val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
+        if (post != null) {
+            post.updatePageData(page)
+
+            val action = PostActionBuilder.newPushPostAction(RemotePostPayload(post, page.site))
+            dispatcher.dispatch(action)
+
+            return@withContext SUCCESS
+        } else {
+            return@withContext ERROR_NON_EXISTING_PAGE
+        }
+    }
+
+    enum class UploadRequestResult {
+        SUCCESS,
+        ERROR_NON_EXISTING_PAGE
     }
 
     suspend fun groupedSearch(
