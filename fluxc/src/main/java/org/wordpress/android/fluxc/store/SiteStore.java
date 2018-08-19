@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
@@ -238,6 +239,18 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DomainSupportedStatesResponsePayload extends Payload<DomainSupportedStatesError> {
+        public @Nullable List<SupportedStateResponse> supportedStates;
+
+        public DomainSupportedStatesResponsePayload(@Nullable List<SupportedStateResponse> supportedStates) {
+            this.supportedStates = supportedStates;
+        }
+
+        public DomainSupportedStatesResponsePayload(@NonNull DomainSupportedStatesError error) {
+            this.error = error;
+        }
+    }
+
     public static class DomainSupportedCountriesResponsePayload extends Payload<DomainSupportedCountriesError> {
         public List<SupportedCountryResponse> supportedCountries;
 
@@ -341,6 +354,20 @@ public class SiteStore extends Store {
         }
 
         public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class DomainSupportedStatesError implements OnChangedError {
+        @NonNull public DomainSupportedStatesErrorType type;
+        @Nullable public String message;
+
+        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type) {
             this.type = type;
         }
     }
@@ -522,6 +549,16 @@ public class SiteStore extends Store {
                 }
             }
             return UNKNOWN_STATUS;
+        }
+    }
+
+    public static class OnDomainSupportedStatesFetched extends OnChanged<DomainSupportedStatesError> {
+        public @Nullable List<SupportedStateResponse> supportedStates;
+
+        public OnDomainSupportedStatesFetched(@Nullable List<SupportedStateResponse> supportedStates,
+                                              @Nullable DomainSupportedStatesError error) {
+            this.supportedStates = supportedStates;
+            this.error = error;
         }
     }
 
@@ -735,6 +772,23 @@ public class SiteStore extends Store {
         INVALID_DOMAIN_NAME,
         GENERIC_ERROR
     }
+
+    public enum DomainSupportedStatesErrorType {
+        INVALID_COUNTRY_CODE,
+        INVALID_QUERY,
+        GENERIC_ERROR;
+
+        public static DomainSupportedStatesErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (DomainSupportedStatesErrorType v : DomainSupportedStatesErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+      }
 
     public enum DomainSupportedCountriesErrorType {
         GENERIC_ERROR
@@ -1161,6 +1215,12 @@ public class SiteStore extends Store {
             case CHECKED_DOMAIN_AVAILABILITY:
                 handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
                 break;
+            case FETCH_DOMAIN_SUPPORTED_STATES:
+                fetchSupportedStates((String) action.getPayload());
+                break;
+            case FETCHED_DOMAIN_SUPPORTED_STATES:
+                handleFetchedSupportedStates((DomainSupportedStatesResponsePayload) action.getPayload());
+                break;
             case FETCH_DOMAIN_SUPPORTED_COUNTRIES:
                 mSiteRestClient.fetchSupportedCountries();
                 break;
@@ -1477,6 +1537,20 @@ public class SiteStore extends Store {
                         payload.mappable,
                         payload.supportsPrivacy,
                         payload.error));
+    }
+
+    private void fetchSupportedStates(String countryCode) {
+        if (TextUtils.isEmpty(countryCode)) {
+            DomainSupportedStatesError error =
+                    new DomainSupportedStatesError(DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE);
+            handleFetchedSupportedStates(new DomainSupportedStatesResponsePayload(error));
+        } else {
+            mSiteRestClient.fetchSupportedStates(countryCode);
+        }
+    }
+
+    private void handleFetchedSupportedStates(DomainSupportedStatesResponsePayload payload) {
+        emitChange(new OnDomainSupportedStatesFetched(payload.supportedStates, payload.error));
     }
 
     private void handleFetchedSupportedCountries(DomainSupportedCountriesResponsePayload payload) {
