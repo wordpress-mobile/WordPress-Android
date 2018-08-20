@@ -164,10 +164,10 @@ public class WPScreenshotSupport {
     // a different thread than the UI, the UI sometimes reports completion of an operation before repainting the
     // screen to reflect the change. Delaying by one frame ensure's we're taking a screenshot of a stale UI.
     public static void waitOneFrame() {
-        try{
+        try {
             Thread.sleep(17);
-        } catch(Exception ex){
-            //do nothing
+        } catch (Exception ex) {
+            // do nothing
         }
     }
 
