@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.screenshots;
 
+import android.test.suitebuilder.annotation.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.CardView;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import org.junit.ClassRule;
-import org.wordpress.android.R;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
@@ -18,14 +18,29 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.function.Supplier;
+
+import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
+import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOn;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnCellAtIndexIn;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.getCurrentActivity;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.hasElement;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.populateTextField;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.pressBackUntilElementIsVisible;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.scrollToThenClickOn;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.selectItemAtIndexInSpinner;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementOfTypeToExist;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementWithIdToExist;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForConditionToBeTrue;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayed;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToNotBeDisplayed;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForImagesOfTypeWithPlaceholder;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForRecyclerViewToStopReloading;
+
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
-import java.util.function.Supplier;
-import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
-import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
-
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.*;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class WPScreenshotTest {
