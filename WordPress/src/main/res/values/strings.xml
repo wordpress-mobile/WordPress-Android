@@ -777,6 +777,7 @@
     <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
     <string name="install_jetpack_continue">Continue</string>
     <string name="install_jetpack_retry">Retry</string>
+    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
     <string name="activity">Activity</string>
