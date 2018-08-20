@@ -770,7 +770,7 @@
     <string name="install_jetpack">Install Jetpack</string>
     <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
     <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to few minutes to complete</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
     <string name="jetpack_installed">Jetpack installed</string>
     <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
     <string name="jetpack_installation_problem">There was a problem</string>
