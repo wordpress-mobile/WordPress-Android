@@ -20,6 +20,7 @@ import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
 
 @Singleton
@@ -27,6 +28,7 @@ class JetpackStore
 @Inject constructor(
     private val jetpackRestClient: JetpackRestClient,
     private val siteStore: SiteStore,
+    private val coroutineContext: CoroutineContext,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     private var siteContinuation: Continuation<Unit>? = null
@@ -35,7 +37,7 @@ class JetpackStore
         val actionType = action.type as? JetpackAction ?: return
         when (actionType) {
             JetpackAction.INSTALL_JETPACK -> {
-                launch { install(action.payload as SiteModel, actionType) }
+                launch(coroutineContext) { install(action.payload as SiteModel, actionType) }
             }
         }
     }
@@ -44,9 +46,12 @@ class JetpackStore
         AppLog.d(T.API, "JetpackStore onRegister")
     }
 
-    suspend fun install(site: SiteModel, action: JetpackAction = INSTALL_JETPACK) = withContext(CommonPool) {
+    suspend fun install(
+        site: SiteModel,
+        action: JetpackAction = INSTALL_JETPACK
+    ) = withContext(coroutineContext) {
         val installedPayload = jetpackRestClient.installJetpack(site)
-        reloadSite(site)
+        reloadSite(site, coroutineContext)
         val reloadedSite = siteStore.getSiteByLocalId(site.id)
         return@withContext if (!installedPayload.isError || reloadedSite.isJetpackInstalled) {
             val onJetpackInstall = OnJetpackInstalled(installedPayload.success ||
@@ -60,7 +65,9 @@ class JetpackStore
         }
     }
 
-    private suspend fun reloadSite(site: SiteModel) = suspendCoroutine<Unit> { cont ->
+    private suspend fun reloadSite(site: SiteModel, context: CoroutineContext) = suspendCoroutine<Unit> { cont ->
+        siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
+        siteContinuation = cont
         launch(CommonPool) {
             delay(5000)
             if (siteContinuation != null && siteContinuation == cont) {
@@ -68,8 +75,6 @@ class JetpackStore
                 siteContinuation = null
             }
         }
-        siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
-        siteContinuation = cont
     }
 
     class JetpackInstalledPayload(
