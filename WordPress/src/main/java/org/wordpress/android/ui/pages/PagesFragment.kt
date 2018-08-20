@@ -187,11 +187,11 @@ class PagesFragment : Fragment() {
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
-                if (holder.buttonTitle.isNullOrEmpty()) {
-                    Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG).show()
+                if (holder.buttonTitleRes == null) {
+                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
-                    val snackbar = Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG)
-                    snackbar.setAction(holder.buttonTitle) { _ -> holder.buttonAction() }
+                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { _ -> holder.buttonAction() }
                     snackbar.show()
                 }
             }

@@ -133,8 +133,7 @@ class PagesViewModel
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
             newState = ERROR
-            _showSnackbarMessage.postValue(
-                    SnackbarMessageHolder(resourceProvider.getString(string.error_refresh_pages)))
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(string.error_refresh_pages))
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
         } else if (result.rowsAffected > 0) {
             refreshPages()
@@ -180,8 +179,7 @@ class PagesViewModel
                     waitForPageUpdate(pageId)
 
                     reloadPages()
-                    _showSnackbarMessage.postValue(
-                            SnackbarMessageHolder(resourceProvider.getString(string.page_parent_changed)))
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_changed))
                 }
             }
         }
@@ -269,11 +267,9 @@ class PagesViewModel
                 pageStore.deletePage(page)
                 reloadPages()
 
-                _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(resourceProvider.getString(string.page_permanently_deleted)))
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
             } else {
-                _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(resourceProvider.getString(string.page_delete_error)))
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
             }
         }
     }
@@ -324,7 +320,7 @@ class PagesViewModel
                 launch(CommonPool) {
                     action.undo()
 
-                    _showSnackbarMessage.postValue(SnackbarMessageHolder("Error"))
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }
         launch {
@@ -335,14 +331,14 @@ class PagesViewModel
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, undo: (() -> Unit)? = null): SnackbarMessageHolder {
         val message = when (newStatus) {
-            DRAFT -> resourceProvider.getString(string.page_moved_to_draft)
-            PUBLISHED -> resourceProvider.getString(string.page_moved_to_published)
-            TRASHED -> resourceProvider.getString(string.page_moved_to_trash)
-            SCHEDULED -> resourceProvider.getString(string.page_moved_to_scheduled)
+            DRAFT -> string.page_moved_to_draft
+            PUBLISHED -> string.page_moved_to_published
+            TRASHED -> string.page_moved_to_trash
+            SCHEDULED -> string.page_moved_to_scheduled
         }
 
         return if (undo != null) {
-            SnackbarMessageHolder(message, resourceProvider.getString(string.undo), undo)
+            SnackbarMessageHolder(message, string.undo, undo)
         } else {
             SnackbarMessageHolder(message)
         }
