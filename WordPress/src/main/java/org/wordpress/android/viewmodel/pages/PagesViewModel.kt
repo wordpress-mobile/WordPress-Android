@@ -102,7 +102,6 @@ class PagesViewModel
     private lateinit var site: SiteModel
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
-    private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
     private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
 
     fun start(site: SiteModel) {
@@ -152,12 +151,16 @@ class PagesViewModel
 
     fun onPageEditFinished(pageId: Long) {
         launch {
-            suspendCoroutine<Unit> { cont ->
-                pageUpdateContinuation[pageId] = cont
-            }
-            pageUpdateContinuation.remove(pageId)
+            waitForPageUpdate(pageId)
             reloadPages()
         }
+    }
+
+    private suspend fun waitForPageUpdate(pageId: Long) {
+        suspendCoroutine<Unit> { cont ->
+            pageUpdateContinuation[pageId] = cont
+        }
+        pageUpdateContinuation.remove(pageId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -173,11 +176,12 @@ class PagesViewModel
                 if (page.parent?.remoteId != parentId) {
                     page.parent = pages[parentId]
 
-                    statusPageSnackbarMessage = SnackbarMessageHolder(
-                            resourceProvider.getString(string.page_parent_changed))
-
                     pageStore.uploadPageToServer(page)
+                    waitForPageUpdate(pageId)
+
                     reloadPages()
+                    _showSnackbarMessage.postValue(
+                            SnackbarMessageHolder(resourceProvider.getString(string.page_parent_changed)))
                 }
             }
         }
