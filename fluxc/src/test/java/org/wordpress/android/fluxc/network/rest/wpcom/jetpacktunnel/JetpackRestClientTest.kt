@@ -75,7 +75,7 @@ class JetpackRestClientTest {
     fun `returns error with type`() = runBlocking<Unit> {
         initRequest(Error(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR))))
 
-        val jetpackErrorPayload= jetpackRestClient.installJetpack(site)
+        val jetpackErrorPayload = jetpackRestClient.installJetpack(site)
 
         checkUrlAndLogin()
         assertThat(jetpackErrorPayload).isNotNull()
