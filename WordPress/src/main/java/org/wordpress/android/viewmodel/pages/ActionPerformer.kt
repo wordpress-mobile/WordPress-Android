@@ -11,15 +11,23 @@ import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.coroutines.experimental.Continuation
 
 class ActionPerformer
-@Inject constructor(dispatcher: Dispatcher) {
+@Inject constructor(private val dispatcher: Dispatcher) {
     private var continuation: Continuation<Boolean>? = null
+
+    companion object {
+        private const val ACTION_TIMEOUT = 30L
+    }
 
     init {
         dispatcher.register(this)
     }
 
+    fun onCleanup() {
+        dispatcher.unregister(this)
+    }
+
     suspend fun performAction(action: PageAction) {
-        val success = suspendCoroutineWithTimeout<Boolean>(30) { cont ->
+        val success = suspendCoroutineWithTimeout<Boolean>(ACTION_TIMEOUT) { cont ->
             continuation = cont
             action.perform()
         }
