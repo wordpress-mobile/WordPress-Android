@@ -332,6 +332,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,LAST_MODIFIED TEXT,"
                            + "_id INTEGER PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) "
                            + "ON DELETE CASCADE,UNIQUE(LIST_ID, REMOTE_ITEM_ID))");
+                db.execSQL("ALTER TABLE PostModel ADD LAST_MODIFIED TEXT");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
