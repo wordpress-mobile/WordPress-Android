@@ -306,8 +306,12 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         post.setTitle(MapUtils.getMapStr(postMap, "post_title"));
 
         Date dateCreatedGmt = MapUtils.getMapDate(postMap, "post_date_gmt");
-        String timeAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
-        post.setDateCreated(timeAsIso8601);
+        String dateCreatedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
+        post.setDateCreated(dateCreatedAsIso8601);
+
+        Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified");
+        String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
+        post.setLastModified(lastModifiedAsIso8601);
 
         post.setContent(MapUtils.getMapStr(postMap, "post_content"));
         post.setLink(MapUtils.getMapStr(postMap, "link"));
@@ -404,6 +408,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
             contentStruct.put("post_date_gmt", date);
         }
+
+        // We are not adding `lastModified` date to the params because that should be updated by the server when there
+        // is a change in the post. This is tested for on 08/21/2018 and verified that it's working as expected.
+        // I am only adding this note here to avoid a possible confusion about it in the future.
 
         String content = post.getContent();
 
