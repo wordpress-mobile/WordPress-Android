@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -51,7 +50,7 @@ class JetpackStore
         action: JetpackAction = INSTALL_JETPACK
     ) = withContext(coroutineContext) {
         val installedPayload = jetpackRestClient.installJetpack(site)
-        reloadSite(site, coroutineContext)
+        reloadSite(site)
         val reloadedSite = siteStore.getSiteByLocalId(site.id)
         return@withContext if (!installedPayload.isError || reloadedSite.isJetpackInstalled) {
             val onJetpackInstall = OnJetpackInstalled(installedPayload.success ||
@@ -65,10 +64,10 @@ class JetpackStore
         }
     }
 
-    private suspend fun reloadSite(site: SiteModel, context: CoroutineContext) = suspendCoroutine<Unit> { cont ->
+    private suspend fun reloadSite(site: SiteModel) = suspendCoroutine<Unit> { cont ->
         siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
         siteContinuation = cont
-        launch(CommonPool) {
+        launch(coroutineContext) {
             delay(5000)
             if (siteContinuation != null && siteContinuation == cont) {
                 siteContinuation?.resume(Unit)
