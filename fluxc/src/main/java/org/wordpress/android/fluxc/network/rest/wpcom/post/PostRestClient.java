@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.ListItemModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -89,7 +90,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         params.put("context", "edit");
         params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
-        params.put("fields", "ID");
+        params.put("fields", "ID,modified");
 
         if (getPages) {
             params.put("type", "page");
@@ -108,14 +109,17 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        List<Long> postIds = new ArrayList<>();
+                        List<ListItemModel> listItems = new ArrayList<>();
                         for (PostWPComRestResponse postResponse : response.posts) {
-                            postIds.add(postResponse.ID);
+                            ListItemModel listItemModel = new ListItemModel();
+                            listItemModel.setRemoteItemId(postResponse.ID);
+                            listItemModel.setLastModified(postResponse.modified);
+                            listItems.add(listItemModel);
                         }
 
-                        boolean canLoadMore = postIds.size() == PostStore.NUM_POSTS_PER_FETCH;
+                        boolean canLoadMore = listItems.size() == PostStore.NUM_POSTS_PER_FETCH;
 
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postIds,
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(listItems,
                                 site, listType, getPages, offset > 0, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
