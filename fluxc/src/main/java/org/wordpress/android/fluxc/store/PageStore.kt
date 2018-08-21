@@ -28,6 +28,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
+import org.wordpress.android.fluxc.persistence.PostSqlUtils
 
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
@@ -123,7 +124,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         return PageModel(post, site, getPageFromPost(post.parentId, site, posts))
     }
 
-    suspend fun deletePage(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
+    suspend fun deletePageFromServer(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
         deletePostContinuation = cont
 
         val post = postStore.getPostByLocalPostId(page.pageId)
@@ -134,6 +135,15 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
             val event = OnPostChanged(0)
             event.error = PostError(PostErrorType.UNKNOWN_POST)
             cont.resume(event)
+        }
+    }
+
+    suspend fun deletePageFromDb(page: PageModel): Boolean = withContext(CommonPool) {
+        val post = postStore.getPostByLocalPostId(page.pageId)
+        return@withContext if (post != null) {
+            PostSqlUtils.deletePost(post) > 0
+        } else {
+            false
         }
     }
 
