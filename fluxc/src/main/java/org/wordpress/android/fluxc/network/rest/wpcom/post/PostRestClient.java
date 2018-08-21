@@ -266,6 +266,7 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setRemoteSiteId(from.site_ID);
         post.setLink(from.URL); // Is this right?
         post.setDateCreated(from.date);
+        post.setLastModified(from.modified);
         post.setTitle(from.title);
         post.setContent(from.content);
         post.setExcerpt(from.excerpt);
@@ -325,6 +326,10 @@ public class PostRestClient extends BaseWPComRestClient {
         if (!TextUtils.isEmpty(post.getDateCreated())) {
             params.put("date", post.getDateCreated());
         }
+
+        // We are not adding `lastModified` date to the params because that should be updated by the server when there
+        // is a change in the post. This is tested for both Calypso and WPAndroid on 08/21/2018 and verified that it's
+        // working as expected. I am only adding this note here to avoid a possible confusion about it in the future.
 
         if (!post.isPage()) {
             if (!TextUtils.isEmpty(post.getPostFormat())) {
