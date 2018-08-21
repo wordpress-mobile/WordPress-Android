@@ -16,10 +16,9 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
-import org.wordpress.android.fluxc.persistence.ListItemSqlUtils;
-import org.wordpress.android.fluxc.persistence.ListSqlUtils;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.store.ListStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -36,7 +35,7 @@ import static org.junit.Assert.assertNotEquals;
 public class PostStoreUnitTest {
     private PostStore mPostStore =
             new PostStore(new Dispatcher(), Mockito.mock(PostRestClient.class), Mockito.mock(PostXMLRPCClient.class),
-                    Mockito.mock(ListSqlUtils.class), Mockito.mock(ListItemSqlUtils.class));
+                    Mockito.mock(ListStore.class));
 
     @Before
     public void setUp() {
