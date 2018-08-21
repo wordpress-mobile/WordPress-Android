@@ -107,16 +107,16 @@ public class PostStore extends Store {
     }
 
     public static class FetchPostsResponsePayload extends Payload<PostError> {
-        public List<Long> postIds;
+        public List<ListItemModel> listItems;
         public SiteModel site;
         public ListType listType;
         public boolean isPages;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public FetchPostsResponsePayload(List<Long> postIds, SiteModel site, ListType listType, boolean isPages,
-                                         boolean loadedMore, boolean canLoadMore) {
-            this.postIds = postIds;
+        public FetchPostsResponsePayload(List<ListItemModel> listItems, SiteModel site, ListType listType,
+                                         boolean isPages, boolean loadedMore, boolean canLoadMore) {
+            this.listItems = listItems;
             this.site = site;
             this.listType = listType;
             this.isPages = isPages;
@@ -525,14 +525,10 @@ public class PostStore extends Store {
             mListSqlUtils.insertOrUpdateList(payload.site.getId(), payload.listType);
             ListModel listModel = mListSqlUtils.getList(payload.site.getId(), payload.listType);
             if (listModel != null) { // Sanity check
-                List<ListItemModel> postList = new ArrayList<>(payload.postIds.size());
-                for (Long postId : payload.postIds) {
-                    ListItemModel listItem = new ListItemModel();
+                for (ListItemModel listItem : payload.listItems) {
                     listItem.setListId(listModel.getId());
-                    listItem.setRemoteItemId(postId);
-                    postList.add(listItem);
                 }
-                mListItemSqlUtils.insertItemList(postList);
+                mListItemSqlUtils.insertItemList(payload.listItems);
             }
         }
         emitChange(onPostListChanged);
