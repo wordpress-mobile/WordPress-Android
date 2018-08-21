@@ -162,7 +162,7 @@ public class WPScreenshotSupport {
 
     // Used by some methods that access the view layer directly. Because the screenshot generation code runs in
     // a different thread than the UI, the UI sometimes reports completion of an operation before repainting the
-    // screen to reflect the change. Delaying by one frame ensure's we're taking a screenshot of a stale UI.
+    // screen to reflect the change. Delaying by one frame ensures we're not taking a screenshot of a stale UI.
     public static void waitOneFrame() {
         try {
             Thread.sleep(17);
