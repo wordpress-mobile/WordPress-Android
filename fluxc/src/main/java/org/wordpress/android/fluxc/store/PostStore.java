@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.ListModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
-import org.wordpress.android.fluxc.model.PostListModel;
+import org.wordpress.android.fluxc.model.ListItemModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.ListSqlUtils;
-import org.wordpress.android.fluxc.persistence.PostListSqlUtils;
+import org.wordpress.android.fluxc.persistence.ListItemSqlUtils;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -246,7 +246,7 @@ public class PostStore extends Store {
     private final PostRestClient mPostRestClient;
     private final PostXMLRPCClient mPostXMLRPCClient;
     private final ListSqlUtils mListSqlUtils;
-    private final PostListSqlUtils mPostListSqlUtils;
+    private final ListItemSqlUtils mListItemSqlUtils;
     // Ensures that the UploadStore is initialized whenever the PostStore is,
     // to ensure actions are shadowed and repeated by the UploadStore
     @SuppressWarnings("unused")
@@ -254,12 +254,12 @@ public class PostStore extends Store {
 
     @Inject
     public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
-                     ListSqlUtils listSqlUtils, PostListSqlUtils postListSqlUtils) {
+                     ListSqlUtils listSqlUtils, ListItemSqlUtils listItemSqlUtils) {
         super(dispatcher);
         mPostRestClient = postRestClient;
         mPostXMLRPCClient = postXMLRPCClient;
         mListSqlUtils = listSqlUtils;
-        mPostListSqlUtils = postListSqlUtils;
+        mListItemSqlUtils = listItemSqlUtils;
     }
 
     @Override
@@ -508,10 +508,10 @@ public class PostStore extends Store {
         emitChange(event);
     }
 
-    public List<PostListModel> getPostList(SiteModel site, ListType listType) {
+    public List<ListItemModel> getPostList(SiteModel site, ListType listType) {
         ListModel listModel = mListSqlUtils.getList(site.getId(), listType);
         if (listModel != null) {
-            return mPostListSqlUtils.getPostList(listModel.getId());
+            return mListItemSqlUtils.getListItems(listModel.getId());
         }
         return Collections.emptyList();
     }
@@ -525,14 +525,14 @@ public class PostStore extends Store {
             mListSqlUtils.insertOrUpdateList(payload.site.getId(), payload.listType);
             ListModel listModel = mListSqlUtils.getList(payload.site.getId(), payload.listType);
             if (listModel != null) { // Sanity check
-                List<PostListModel> postList = new ArrayList<>(payload.postIds.size());
+                List<ListItemModel> postList = new ArrayList<>(payload.postIds.size());
                 for (Long postId : payload.postIds) {
-                    PostListModel postListModel = new PostListModel();
-                    postListModel.setListId(listModel.getId());
-                    postListModel.setRemotePostId(postId);
-                    postList.add(postListModel);
+                    ListItemModel listItem = new ListItemModel();
+                    listItem.setListId(listModel.getId());
+                    listItem.setRemoteItemId(postId);
+                    postList.add(listItem);
                 }
-                mPostListSqlUtils.insertPostList(postList);
+                mListItemSqlUtils.insertItemList(postList);
             }
         }
         emitChange(onPostListChanged);
