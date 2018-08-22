@@ -50,17 +50,17 @@ public class PostStore extends Store {
     public static class FetchPostsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public ListType listType;
-        public boolean loadMore;
+        public int offset;
 
         public FetchPostsPayload(SiteModel site, ListType listType) {
             this.site = site;
             this.listType = listType;
         }
 
-        public FetchPostsPayload(SiteModel site, ListType listType, boolean loadMore) {
+        public FetchPostsPayload(SiteModel site, ListType listType, int offset) {
             this.site = site;
             this.listType = listType;
-            this.loadMore = loadMore;
+            this.offset = offset;
         }
     }
 
@@ -464,16 +464,11 @@ public class PostStore extends Store {
     }
 
     private void fetchPosts(FetchPostsPayload payload, boolean pages) {
-        int offset = 0;
-        if (payload.loadMore) {
-//            offset = mListStore.getListItems(payload.site, payload.listType).size();
-        }
-
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPosts(payload.site, payload.listType, pages, DEFAULT_POST_STATUS_LIST, offset);
+            mPostRestClient.fetchPosts(payload.site, payload.listType, pages, DEFAULT_POST_STATUS_LIST, payload.offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPosts(payload.site, payload.listType, pages, offset);
+            mPostXMLRPCClient.fetchPosts(payload.site, payload.listType, pages, payload.offset);
         }
     }
 
