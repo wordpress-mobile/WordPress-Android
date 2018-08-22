@@ -39,7 +39,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.OnMobileQuickStartCompleted;
+import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
@@ -472,7 +472,7 @@ public class WPMainActivity extends AppCompatActivity implements
         if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
             && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
             && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
-            mDispatcher.dispatch(SiteActionBuilder.newCompleteMobileQuickStartAction(getSelectedSite()));
+            mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(getSelectedSite()));
         }
     }
 
@@ -816,7 +816,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMobileQuickStartCompleted(OnMobileQuickStartCompleted event) {
+    public void onQuickStartCompleted(OnQuickStartCompleted event) {
         if (getSelectedSite() != null && !event.isError()) {
             // as long as we get any response that is not an error mark quick start notification as received
             mQuickStartStore.setQuickStartNotificationReceived(event.site.getId(), true);

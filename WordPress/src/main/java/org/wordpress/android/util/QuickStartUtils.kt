@@ -183,7 +183,7 @@ class QuickStartUtils {
             quickStartStore.setDoneTask(siteId, task, true)
 
             if (isEveryQuickStartTaskDone(quickStartStore)) {
-                dispatcher.dispatch(SiteActionBuilder.newCompleteMobileQuickStartAction(site))
+                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
             }
         }
     }
