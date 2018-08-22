@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +18,7 @@ import java.util.Map;
  * Holds blog settings and provides methods to (de) serialize .com and self-hosted network calls.
  */
 
-public class SiteSettingsModel {
+public final class SiteSettingsModel {
     private static final int RELATED_POSTS_ENABLED_FLAG = 0x1;
     private static final int RELATED_POST_HEADER_FLAG = 0x2;
     private static final int RELATED_POST_IMAGE_FLAG = 0x4;
@@ -198,59 +201,130 @@ public class SiteSettingsModel {
     public boolean isPortfolioEnabled;
     public int portfolioPostsPerPage;
 
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof SiteSettingsModel)) {
+    @Override public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SiteSettingsModel otherModel = (SiteSettingsModel) other;
 
-        return localTableId == otherModel.localTableId
-               && equals(address, otherModel.address)
-               && equals(username, otherModel.username)
-               && equals(password, otherModel.password)
-               && equals(title, otherModel.title)
-               && equals(tagline, otherModel.tagline)
-               && equals(defaultPostFormat, otherModel.defaultPostFormat)
-               && equals(startOfWeek, otherModel.startOfWeek)
-               && equals(dateFormat, otherModel.dateFormat)
-               && equals(timeFormat, otherModel.timeFormat)
-               && equals(timezone, otherModel.timezone)
-               && languageId == otherModel.languageId
-               && siteIconMediaId == otherModel.siteIconMediaId
-               && privacy == otherModel.privacy
-               && location == otherModel.location
-               && defaultCategory == otherModel.defaultCategory
-               && showRelatedPosts == otherModel.showRelatedPosts
-               && showRelatedPostHeader == otherModel.showRelatedPostHeader
-               && showRelatedPostImages == otherModel.showRelatedPostImages
-               && allowComments == otherModel.allowComments
-               && sendPingbacks == otherModel.sendPingbacks
-               && receivePingbacks == otherModel.receivePingbacks
-               && closeCommentAfter == otherModel.closeCommentAfter
-               && sortCommentsBy == otherModel.sortCommentsBy
-               && threadingLevels == otherModel.threadingLevels
-               && commentsPerPage == otherModel.commentsPerPage
-               && commentApprovalRequired == otherModel.commentApprovalRequired
-               && commentsRequireIdentity == otherModel.commentsRequireIdentity
-               && commentsRequireUserAccount == otherModel.commentsRequireUserAccount
-               && commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers
-               && postsPerPage == otherModel.postsPerPage
-               && ampEnabled == otherModel.ampEnabled
-               && isPortfolioEnabled == otherModel.isPortfolioEnabled
-               && portfolioPostsPerPage == otherModel.portfolioPostsPerPage
-               && ampSupported == otherModel.ampSupported
-               && maxLinks == otherModel.maxLinks
-               && equals(defaultPostFormat, otherModel.defaultPostFormat)
-               && holdForModeration != null
-               && holdForModeration.equals(otherModel.holdForModeration)
-               && blacklist != null && blacklist.equals(otherModel.blacklist)
-               && sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel)
-               && sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle)
-               && allowReblogButton == otherModel.allowReblogButton
-               && allowLikeButton == otherModel.allowLikeButton
-               && allowCommentLikes == otherModel.allowCommentLikes
-               && twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
+        SiteSettingsModel that = (SiteSettingsModel) o;
+
+        return new EqualsBuilder()
+                .append(isInLocalTable, that.isInLocalTable)
+                .append(hasVerifiedCredentials, that.hasVerifiedCredentials)
+                .append(localTableId, that.localTableId)
+                .append(siteIconMediaId, that.siteIconMediaId)
+                .append(languageId, that.languageId)
+                .append(privacy, that.privacy)
+                .append(location, that.location)
+                .append(defaultCategory, that.defaultCategory)
+                .append(showRelatedPosts, that.showRelatedPosts)
+                .append(showRelatedPostHeader, that.showRelatedPostHeader)
+                .append(showRelatedPostImages, that.showRelatedPostImages)
+                .append(allowComments, that.allowComments)
+                .append(sendPingbacks, that.sendPingbacks)
+                .append(receivePingbacks, that.receivePingbacks)
+                .append(shouldCloseAfter, that.shouldCloseAfter)
+                .append(closeCommentAfter, that.closeCommentAfter)
+                .append(sortCommentsBy, that.sortCommentsBy)
+                .append(shouldThreadComments, that.shouldThreadComments)
+                .append(threadingLevels, that.threadingLevels)
+                .append(shouldPageComments, that.shouldPageComments)
+                .append(commentsPerPage, that.commentsPerPage)
+                .append(commentApprovalRequired, that.commentApprovalRequired)
+                .append(commentsRequireIdentity, that.commentsRequireIdentity)
+                .append(commentsRequireUserAccount, that.commentsRequireUserAccount)
+                .append(commentAutoApprovalKnownUsers, that.commentAutoApprovalKnownUsers)
+                .append(maxLinks, that.maxLinks)
+                .append(allowReblogButton, that.allowReblogButton)
+                .append(allowLikeButton, that.allowLikeButton)
+                .append(allowCommentLikes, that.allowCommentLikes)
+                .append(postsPerPage, that.postsPerPage)
+                .append(ampSupported, that.ampSupported)
+                .append(ampEnabled, that.ampEnabled)
+                .append(isPortfolioEnabled, that.isPortfolioEnabled)
+                .append(portfolioPostsPerPage, that.portfolioPostsPerPage)
+                .append(address, that.address)
+                .append(username, that.username)
+                .append(password, that.password)
+                .append(title, that.title)
+                .append(tagline, that.tagline)
+                .append(language, that.language)
+                .append(categories, that.categories)
+                .append(defaultPostFormat, that.defaultPostFormat)
+                .append(postFormats, that.postFormats)
+                .append(holdForModeration, that.holdForModeration)
+                .append(blacklist, that.blacklist)
+                .append(sharingLabel, that.sharingLabel)
+                .append(sharingButtonStyle, that.sharingButtonStyle)
+                .append(twitterUsername, that.twitterUsername)
+                .append(startOfWeek, that.startOfWeek)
+                .append(dateFormat, that.dateFormat)
+                .append(timeFormat, that.timeFormat)
+                .append(timezone, that.timezone)
+                .append(quotaDiskSpace, that.quotaDiskSpace)
+                .isEquals();
+    }
+
+    @Override public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(isInLocalTable)
+                .append(hasVerifiedCredentials)
+                .append(localTableId)
+                .append(address)
+                .append(username)
+                .append(password)
+                .append(title)
+                .append(tagline)
+                .append(language)
+                .append(siteIconMediaId)
+                .append(languageId)
+                .append(privacy)
+                .append(location)
+                .append(defaultCategory)
+                .append(categories)
+                .append(defaultPostFormat)
+                .append(postFormats)
+                .append(showRelatedPosts)
+                .append(showRelatedPostHeader)
+                .append(showRelatedPostImages)
+                .append(allowComments)
+                .append(sendPingbacks)
+                .append(receivePingbacks)
+                .append(shouldCloseAfter)
+                .append(closeCommentAfter)
+                .append(sortCommentsBy)
+                .append(shouldThreadComments)
+                .append(threadingLevels)
+                .append(shouldPageComments)
+                .append(commentsPerPage)
+                .append(commentApprovalRequired)
+                .append(commentsRequireIdentity)
+                .append(commentsRequireUserAccount)
+                .append(commentAutoApprovalKnownUsers)
+                .append(maxLinks)
+                .append(holdForModeration)
+                .append(blacklist)
+                .append(sharingLabel)
+                .append(sharingButtonStyle)
+                .append(allowReblogButton)
+                .append(allowLikeButton)
+                .append(allowCommentLikes)
+                .append(twitterUsername)
+                .append(startOfWeek)
+                .append(dateFormat)
+                .append(timeFormat)
+                .append(timezone)
+                .append(postsPerPage)
+                .append(ampSupported)
+                .append(ampEnabled)
+                .append(quotaDiskSpace)
+                .append(isPortfolioEnabled)
+                .append(portfolioPostsPerPage)
+                .toHashCode();
     }
 
     /**
@@ -572,11 +646,4 @@ public class SiteSettingsModel {
         return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
 
-    /**
-     * Helper method to check if two String are equals or not
-     */
-    private boolean equals(String first, String second) {
-        return (first == null && second == null)
-               || (first != null && first.equals(second));
-    }
 }
