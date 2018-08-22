@@ -43,31 +43,41 @@ class ListStore @Inject constructor(
     }
 
     private fun updateList(payload: UpdateListPayload) {
-        if (payload.isError) {
-            TODO()
-            return
-        }
-        if (!payload.loadedMore) {
-            deleteList(payload.localSiteId, payload.listType)
-        }
-        listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType)
-        val listModel = getList(payload.localSiteId, payload.listType)
-        if (listModel != null) { // Sanity check
-            for (listItem in payload.listItems) {
-                listItem.listId = listModel.id
+        // TODO: handle can load more by probably saving it to the DB for ListModel
+        if (!payload.isError) {
+            if (!payload.loadedMore) {
+                deleteList(payload.localSiteId, payload.listType)
             }
-            // Ensure the listId is set correctly for ListItemModels
-            listItemSqlUtils.insertItemList(payload.listItems.map {
-                it.listId = listModel.id
-                return@map it
-            })
+            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType)
+            val listModel = getList(payload.localSiteId, payload.listType)
+            if (listModel != null) { // Sanity check
+                for (listItem in payload.listItems) {
+                    listItem.listId = listModel.id
+                }
+                // Ensure the listId is set correctly for ListItemModels
+                listItemSqlUtils.insertItemList(payload.listItems.map {
+                    it.listId = listModel.id
+                    return@map it
+                })
+            }
         }
+        emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error))
     }
 
     private fun getList(localSiteId: Int, listType: ListType): ListModel? = listSqlUtils.getList(localSiteId, listType)
 
     private fun deleteList(localSiteId: Int, listType: ListType) {
         listSqlUtils.deleteList(localSiteId, listType)
+    }
+
+    class OnListChanged(
+        val localSiteId: Int,
+        val listType: ListType,
+        error: UpdateListError?
+    ) : Store.OnChanged<UpdateListError>() {
+        init {
+            this.error = error
+        }
     }
 
     class UpdateListPayload(
