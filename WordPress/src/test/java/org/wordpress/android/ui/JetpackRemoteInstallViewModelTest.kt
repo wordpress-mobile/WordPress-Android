@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.action.JetpackAction.INSTALL_JETPACK
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallError
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
@@ -39,6 +40,7 @@ class JetpackRemoteInstallViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var dispatcher: Dispatcher
+    @Mock private lateinit var jetpackStore: JetpackStore
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var site: SiteModel
@@ -52,7 +54,7 @@ class JetpackRemoteInstallViewModelTest {
     @Before
     fun setUp() {
         whenever(site.id).thenReturn(siteId)
-        viewModel = JetpackRemoteInstallViewModel(dispatcher, accountStore, siteStore)
+        viewModel = JetpackRemoteInstallViewModel(jetpackStore, dispatcher, accountStore, siteStore)
         viewModel.liveViewState.observeForever { if (it != null) viewStates.add(it) }
         viewModel.liveJetpackConnectionFlow.observeForever { if (it != null) jetpackConnectionData = it }
         actionCaptor = argumentCaptor()
