@@ -99,14 +99,17 @@ platform :android do
   #####################################################################################
   desc "Rebuild screenshot devices"
   lane :rebuild_screenshot_devices do |options|
-    sh("helpers/create-device.sh fastlane_screenshots_phone 17")
-    sh("helpers/fixup-android-emulator.sh fastlane_screenshots_phone")
 
-    sh("helpers/create-device.sh fastlane_screenshots_seven_inch 33")
-    sh("helpers/fixup-android-emulator.sh fastlane_screenshots_seven_inch")
+    devices = {
+        :fastlane_screenshots_phone         => "5.1in WVGA",
+        :fastlane_screenshots_seven_inch    => "7in WSVGA (Tablet)",
+        :fastlane_screenshots_ten_inch      => "10.1in WXGA (Tablet)",
+    }
 
-    sh("helpers/create-device.sh fastlane_screenshots_ten_inch 34")
-    sh("helpers/fixup-android-emulator.sh fastlane_screenshots_ten_inch")
+    devices.each do |emulator_name, emulator_device|
+        sh("helpers/create-device.sh #{emulator_name} '#{emulator_device}'")
+        sh("helpers/fixup-android-emulator.sh #{emulator_name}")
+    end
   end
 end
 #####################################################################################
