@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.ToastUtils;
@@ -22,6 +24,8 @@ import javax.inject.Inject;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment
         implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
+    public static final String FACEBOOK_SHARING_CHANGE_BLOG_POST =
+            "https://en.blog.wordpress.com/2018/07/23/sharing-options-from-wordpress-com-to-facebook-are-changing/";
     private SiteModel mSite;
     private String mServiceId;
 
@@ -116,6 +120,22 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
             TextView txtDescription = (TextView) mServiceCardView.findViewById(R.id.text_description);
             txtDescription.setText(description);
+
+            if (mService.getId().equals(PublicizeConstants.FACEBOOK_ID)) {
+                String noticeText = getString(R.string.connection_service_facebook_notice);
+                TextView txtNotice = (TextView) mServiceCardView.findViewById(R.id.text_description_notice);
+                txtNotice.setText(noticeText);
+                txtNotice.setVisibility(View.VISIBLE);
+
+                TextView learnMoreButton = (TextView) mServiceCardView.findViewById(R.id.learn_more_button);
+                learnMoreButton.setOnClickListener(new OnClickListener() {
+                    @Override public void onClick(View v) {
+                        WPWebViewActivity.openURL(getActivity(),
+                                FACEBOOK_SHARING_CHANGE_BLOG_POST);
+                    }
+                });
+                learnMoreButton.setVisibility(View.VISIBLE);
+            }
         }
 
         long currentUserId = mAccountStore.getAccount().getUserId();

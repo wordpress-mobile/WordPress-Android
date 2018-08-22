@@ -8,10 +8,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -20,16 +19,22 @@ import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.inject.Inject;
 
 public class PlanFragment extends Fragment {
     private static final String SITE_PLAN = "SITE_PLAN";
 
     private ViewGroup mPlanContainerView;
     private Plan mPlanDetails;
+
+    @Inject protected ImageManager mImageManager;
 
     public static PlanFragment newInstance(Plan sitePlan) {
         PlanFragment fragment = new PlanFragment();
@@ -62,6 +67,7 @@ public class PlanFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         showPlans();
     }
 
@@ -83,10 +89,10 @@ public class PlanFragment extends Fragment {
         }
 
         int iconSize = getActivity().getResources().getDimensionPixelSize(R.dimen.plan_icon_size);
-        NetworkImageView imgPlan = (NetworkImageView) getView().findViewById(R.id.image_plan_icon);
+        ImageView imgPlan = getView().findViewById(R.id.image_plan_icon);
         String iconUrl = PlansUtils.getIconUrlForPlan(mPlanDetails, iconSize);
         if (!TextUtils.isEmpty(iconUrl)) {
-            imgPlan.setImageUrl(iconUrl, WordPress.sImageLoader);
+            mImageManager.load(imgPlan, ImageType.PLAN, iconUrl);
             imgPlan.setVisibility(View.VISIBLE);
         } else {
             imgPlan.setVisibility(View.GONE);
@@ -158,17 +164,12 @@ public class PlanFragment extends Fragment {
                 StringEscapeUtils.unescapeHtml4(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
         txtTitle.setText(title);
         txtDescription.setText(description);
+        mPlanContainerView.addView(view);
 
         // TODO: right now icon is always empty, so we show noticon_publish as a placeholder
-        NetworkImageView imgIcon = (NetworkImageView) view.findViewById(R.id.image_icon);
+        ImageView imgIcon = view.findViewById(R.id.image_icon);
         String iconUrl = feature.getIconForPlan(mPlanDetails.getProductID());
-        if (!TextUtils.isEmpty(iconUrl)) {
-            imgIcon.setImageUrl(iconUrl, WordPress.sImageLoader);
-        } else {
-            imgIcon.setDefaultImageResId(R.drawable.ic_reader_blue_wordpress_18dp);
-        }
-
-        mPlanContainerView.addView(view);
+        mImageManager.load(imgIcon, ImageType.PLAN, iconUrl);
     }
 
     private void setSitePlan(@NonNull Plan sitePlan) {

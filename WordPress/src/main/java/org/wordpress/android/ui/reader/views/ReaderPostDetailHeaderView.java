@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,7 +20,9 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
+
 
 /**
  * topmost view in post detail - shows blavatar + avatar, author name, blog name, and follow button
@@ -114,6 +117,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     }
 
     private void showBlavatarAndAvatar(String blavatarUrl, String avatarUrl) {
+        ImageManager imageManager = ImageManager.getInstance();
         boolean hasBlavatar = !TextUtils.isEmpty(blavatarUrl);
         boolean hasAvatar = !TextUtils.isEmpty(avatarUrl);
 
@@ -122,8 +126,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         int frameSize = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar_frame);
 
         View avatarFrame = findViewById(R.id.frame_avatar);
-        WPNetworkImageView imgBlavatar = findViewById(R.id.image_header_blavatar);
-        WPNetworkImageView imgAvatar = findViewById(R.id.image_header_avatar);
+        ImageView imgBlavatar = findViewById(R.id.image_header_blavatar);
+        ImageView imgAvatar = findViewById(R.id.image_header_avatar);
+        imageManager.cancelRequestAndClearImageView(imgBlavatar);
+        imageManager.cancelRequestAndClearImageView(imgAvatar);
 
         /*
          * - if there's a blavatar and an avatar, show both of them overlaid using default sizing
@@ -135,24 +141,21 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
             imgBlavatar.getLayoutParams().height = blavatarSz;
             imgBlavatar.getLayoutParams().width = blavatarSz;
-            imgBlavatar.setImageUrl(
-                    PhotonUtils.getPhotonImageUrl(blavatarUrl, blavatarSz, blavatarSz),
-                    WPNetworkImageView.ImageType.BLAVATAR);
+            imageManager.load(imgBlavatar, ImageType.BLAVATAR,
+                    PhotonUtils.getPhotonImageUrl(blavatarUrl, blavatarSz, blavatarSz));
             imgBlavatar.setVisibility(View.VISIBLE);
 
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar);
             imgAvatar.getLayoutParams().height = avatarSz;
             imgAvatar.getLayoutParams().width = avatarSz;
-            imgAvatar.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(avatarUrl, avatarSz),
-                    WPNetworkImageView.ImageType.AVATAR);
+            imageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR,
+                    GravatarUtils.fixGravatarUrl(avatarUrl, avatarSz));
             imgAvatar.setVisibility(View.VISIBLE);
         } else if (hasBlavatar) {
             imgBlavatar.getLayoutParams().height = frameSize;
             imgBlavatar.getLayoutParams().width = frameSize;
-            imgBlavatar.setImageUrl(
-                    PhotonUtils.getPhotonImageUrl(blavatarUrl, frameSize, frameSize),
-                    WPNetworkImageView.ImageType.BLAVATAR);
+            imageManager.load(imgBlavatar, ImageType.BLAVATAR,
+                    PhotonUtils.getPhotonImageUrl(blavatarUrl, frameSize, frameSize));
             imgBlavatar.setVisibility(View.VISIBLE);
 
             imgAvatar.setVisibility(View.GONE);
@@ -161,9 +164,8 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
             imgAvatar.getLayoutParams().height = frameSize;
             imgAvatar.getLayoutParams().width = frameSize;
-            imgAvatar.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(avatarUrl, frameSize),
-                    WPNetworkImageView.ImageType.AVATAR);
+            imageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR,
+                    GravatarUtils.fixGravatarUrl(avatarUrl, frameSize));
             imgAvatar.setVisibility(View.VISIBLE);
         } else {
             imgBlavatar.setVisibility(View.GONE);

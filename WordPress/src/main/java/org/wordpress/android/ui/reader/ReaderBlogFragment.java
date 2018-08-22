@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,11 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderRecommendedBlog;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -61,9 +61,9 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
 
         // options menu (with search) only appears for followed blogs
         setHasOptionsMenu(getBlogType() == ReaderBlogType.FOLLOWED);
@@ -72,31 +72,34 @@ public class ReaderBlogFragment extends Fragment
     }
 
     private void checkEmptyView() {
-        if (!isAdded()) {
+        if (!isAdded() || getView() == null) {
             return;
         }
 
-        TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
-        if (emptyView == null) {
+        ActionableEmptyView actionableEmptyView = getView().findViewById(R.id.actionable_empty_view);
+
+        if (actionableEmptyView == null) {
             return;
         }
 
-        boolean isEmpty = hasBlogAdapter() && getBlogAdapter().isEmpty();
-        if (isEmpty) {
+        if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
+            actionableEmptyView.setVisibility(View.VISIBLE);
+
             switch (getBlogType()) {
                 case RECOMMENDED:
-                    emptyView.setText(R.string.reader_empty_recommended_blogs);
+                    actionableEmptyView.title.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
-                        emptyView.setText(R.string.reader_empty_followed_blogs_search_title);
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_search_title);
                     } else {
-                        emptyView.setText(R.string.reader_empty_followed_blogs_title);
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_title);
                     }
                     break;
             }
+        } else {
+            actionableEmptyView.setVisibility(View.GONE);
         }
-        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -106,7 +109,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         if (getBlogAdapter().hasSearchFilter()) {
             outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
@@ -143,7 +146,7 @@ public class ReaderBlogFragment extends Fragment
         SearchView searchView = (SearchView) searchMenu.getActionView();
         searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
-        MenuItemCompat.setOnActionExpandListener(searchMenu, new MenuItemCompat.OnActionExpandListener() {
+        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
@@ -203,7 +206,7 @@ public class ReaderBlogFragment extends Fragment
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderBlogAdapter(getBlogType(), mSearchFilter);
+            mAdapter = new ReaderBlogAdapter(getActivity(), getBlogType(), mSearchFilter);
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override

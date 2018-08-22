@@ -20,7 +20,12 @@ import java.lang.ref.WeakReference;
 /**
  * ImageGetter for Html.fromHtml()
  * adapted from existing ImageGetter code in NoteCommentFragment
+ *
+ *
+ * @deprecated Use org.wordpress.android.util.image.getters.WPCustomImageGetter instead.
+ *
  */
+@Deprecated
 public class WPImageGetter implements Html.ImageGetter {
     private final WeakReference<TextView> mWeakView;
     private final int mMaxSize;

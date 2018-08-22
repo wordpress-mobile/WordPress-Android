@@ -341,6 +341,12 @@ public class FilteredRecyclerView extends RelativeLayout {
                                       mToolbar.getPaddingBottom());
     }
 
+    public void setToolbarScrollFlags(int flags) {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
+        params.setScrollFlags(flags);
+        mToolbar.setLayoutParams(params);
+    }
+
     public void scrollRecycleViewToPosition(int position) {
         if (mRecyclerView == null) {
             return;

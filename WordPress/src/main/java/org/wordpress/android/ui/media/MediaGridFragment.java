@@ -17,8 +17,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
@@ -146,7 +147,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
-    private TextView mEmptyView;
+    private ActionableEmptyView mActionableEmptyView;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
     private SiteModel mSite;
@@ -241,8 +242,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         });
 
-        mEmptyView = (TextView) view.findViewById(R.id.empty_view);
-        mRecycler.setEmptyView(mEmptyView);
+        mActionableEmptyView = (ActionableEmptyView) view.findViewById(R.id.actionable_empty_view);
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
+                    ((MediaBrowserActivity) getActivity()).showAddMediaPopup();
+                }
+            }
+        });
+        mRecycler.setEmptyView(mActionableEmptyView);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
@@ -488,6 +496,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         handleFetchAllMediaSuccess(event);
     }
 
+    public void showActionableEmptyViewButton(boolean show) {
+        mActionableEmptyView.button.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
     /*
      * load the adapter from the local store
      */
@@ -559,7 +571,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         mEmptyViewMessageType = emptyViewMessageType;
 
-        if (!isAdded() || mEmptyView == null) {
+        if (!isAdded() || mActionableEmptyView == null) {
             return;
         }
 
@@ -570,23 +582,32 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     stringId = R.string.media_fetching;
                     break;
                 case NO_CONTENT:
-                    switch (mFilter) {
-                        case FILTER_IMAGES:
-                            stringId = R.string.media_empty_image_list;
-                            break;
-                        case FILTER_VIDEOS:
-                            stringId = R.string.media_empty_videos_list;
-                            break;
-                        case FILTER_DOCUMENTS:
-                            stringId = R.string.media_empty_documents_list;
-                            break;
-                        case FILTER_AUDIO:
-                            stringId = R.string.media_empty_audio_list;
-                            break;
-                        default:
-                            stringId = R.string.media_empty_list;
-                            break;
+                    if (!TextUtils.isEmpty(mSearchTerm)) {
+                        mActionableEmptyView.updateLayoutForSearch(true, 0);
+                        stringId = R.string.media_empty_search_list;
+                    } else {
+                        mActionableEmptyView.updateLayoutForSearch(false, 0);
+                        mActionableEmptyView.image.setVisibility(View.VISIBLE);
+
+                        switch (mFilter) {
+                            case FILTER_IMAGES:
+                                stringId = R.string.media_empty_image_list;
+                                break;
+                            case FILTER_VIDEOS:
+                                stringId = R.string.media_empty_videos_list;
+                                break;
+                            case FILTER_DOCUMENTS:
+                                stringId = R.string.media_empty_documents_list;
+                                break;
+                            case FILTER_AUDIO:
+                                stringId = R.string.media_empty_audio_list;
+                                break;
+                            default:
+                                stringId = R.string.media_empty_list;
+                                break;
+                        }
                     }
+
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;
@@ -599,16 +620,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     break;
             }
 
-            mEmptyView.setText(getText(stringId));
-            mEmptyView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.title.setText(stringId);
+            mActionableEmptyView.setVisibility(View.VISIBLE);
         } else {
-            mEmptyView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(View.GONE);
         }
     }
 
     private void hideEmptyView() {
-        if (isAdded() && mEmptyView != null) {
-            mEmptyView.setVisibility(View.GONE);
+        if (isAdded() && mActionableEmptyView != null) {
+            mActionableEmptyView.setVisibility(View.GONE);
         }
     }
 

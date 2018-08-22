@@ -42,14 +42,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <org.wordpress.android.widgets.WPNetworkImageView
+                <ImageView
                     android:id="@+id/image_post_avatar"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_medium"
                     tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
-                    android:layout_marginEnd="@dimen/margin_medium"/>
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_blog_name"

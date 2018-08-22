@@ -20,12 +20,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/cardview_default_radius">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/theme_grid_item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:contentDescription="@null"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/theme_grid_item_name"

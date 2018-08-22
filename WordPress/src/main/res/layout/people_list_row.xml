@@ -7,10 +7,11 @@
                 android:background="?android:selectableItemBackground"
                 android:minHeight="@dimen/people_list_row_height">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/person_avatar"
         style="@style/PersonAvatar"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:contentDescription="@null"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

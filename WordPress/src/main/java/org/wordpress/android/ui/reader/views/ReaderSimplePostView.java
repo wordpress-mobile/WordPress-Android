@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +23,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 /**
  * single simple post view
@@ -89,7 +92,7 @@ public class ReaderSimplePostView extends LinearLayout {
 
         // site header only appears for global related posts
         if (isGlobal) {
-            WPNetworkImageView imgAvatar = siteHeader.findViewById(R.id.image_avatar);
+            ImageView imgAvatar = siteHeader.findViewById(R.id.image_avatar);
             TextView txtSiteName = siteHeader.findViewById(R.id.text_site_name);
             TextView txtAuthorName = siteHeader.findViewById(R.id.text_author_name);
             txtSiteName.setText(mSimplePost.getSiteName());
@@ -97,8 +100,9 @@ public class ReaderSimplePostView extends LinearLayout {
             if (mSimplePost.hasAuthorAvatarUrl()) {
                 imgAvatar.setVisibility(View.VISIBLE);
                 String avatarUrl = GravatarUtils.fixGravatarUrl(mSimplePost.getAuthorAvatarUrl(), avatarSize);
-                imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+                ImageManager.getInstance().loadIntoCircle(imgAvatar, ImageType.AVATAR, avatarUrl);
             } else {
+                ImageManager.getInstance().cancelRequestAndClearImageView(imgAvatar);
                 imgAvatar.setVisibility(View.GONE);
             }
 
@@ -174,14 +178,13 @@ public class ReaderSimplePostView extends LinearLayout {
     }
 
     private void showFeaturedImage(final View postView) {
-        final WPNetworkImageView imgFeatured = postView.findViewById(R.id.image_featured);
+        final ImageView imgFeatured = postView.findViewById(R.id.image_featured);
 
         // post must have an excerpt in order to show featured image (not enough space otherwise)
         if (!mSimplePost.hasFeaturedImageUrl() || !mSimplePost.hasExcerpt()) {
             imgFeatured.setVisibility(View.GONE);
             return;
         }
-
         // featured image has height set to MATCH_PARENT so wait for parent view's layout to complete
         // before loading image so we can set the image height correctly, then tell the imageView
         // to crop the downloaded image to fit the exact width/height of the view
@@ -189,19 +192,15 @@ public class ReaderSimplePostView extends LinearLayout {
             @Override
             public void onGlobalLayout() {
                 postView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int featuredImageWidth = DisplayUtils.dpToPx(
-                        getContext(),
-                        getContext().getResources().getDimensionPixelSize(R.dimen.reader_simple_post_image_width));
-                int cropWidth = featuredImageWidth;
+                int cropWidth =
+                        getContext().getResources().getDimensionPixelSize(R.dimen.reader_simple_post_image_width);
                 int cropHeight = postView.getHeight();
                 String photonUrl = PhotonUtils.getPhotonImageUrl(
                         mSimplePost.getFeaturedImageUrl(), cropWidth, cropHeight);
-                imgFeatured.setImageUrl(
-                        photonUrl,
-                        WPNetworkImageView.ImageType.PHOTO,
-                        null,
-                        cropWidth,
-                        cropHeight);
+                ViewGroup.LayoutParams layoutParams = imgFeatured.getLayoutParams();
+                layoutParams.height = cropHeight;
+
+                ImageManager.getInstance().load(imgFeatured, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP);
             }
         });
 

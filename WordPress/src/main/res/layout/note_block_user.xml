@@ -26,7 +26,7 @@
             android:paddingBottom="@dimen/margin_medium"
             android:paddingTop="@dimen/margin_medium">
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:importantForAccessibility="no"
                 android:id="@+id/user_avatar"
                 android:layout_width="@dimen/notifications_avatar_sz"

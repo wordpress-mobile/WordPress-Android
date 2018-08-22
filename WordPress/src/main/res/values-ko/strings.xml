@@ -1,13 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 08:54:07+0000
+Translation-Revision-Date: 2018-08-07 06:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">아직 방문자 없음</string>
+    <string name="people_empty_list_filtered_email_followers">아직 이메일 팔로워 없음</string>
+    <string name="people_empty_list_filtered_followers">아직 팔로워 없음</string>
+    <string name="people_empty_list_filtered_users">아직 사용자 없음</string>
+    <string name="connection_service_facebook_notice">2018년 8월 1일 현재, 페이스북은 더 이상 페이스북 프로필에 직접 글 공유를 허용하지 않습니다. 페이스북 페이지에 대한 연결은 그대로 유지됩니다.</string>
+    <string name="reader_empty_posts_liked_description">좋아요를 누른 글이 여기에 표시됩니다.</string>
+    <string name="reader_empty_posts_liked_title">좋아요 없음</string>
+    <string name="reader_empty_followed_blogs_button_followed">팔로우로 이동</string>
+    <string name="reader_empty_followed_blogs_button_discover">사이트 검색</string>
+    <string name="reader_empty_followed_blogs_description">아직 팔로우하는 사이트가 없습니다. 지금 팔로우해 보세요!</string>
+    <string name="reader_empty_followed_blogs_title">팔로우된 사이트 없음</string>
+    <string name="notifications_empty_likes">아직 좋아요가 없음</string>
+    <string name="notifications_empty_followers">아직 팔로워 없음</string>
+    <string name="activity_log_limited_content_on_free_plan">무료 요금제 사용자이므로 활동에 제한된 이벤트가 표시됩니다.</string>
+    <string name="activity_log_empty_subtitle">사이트를 변경하면 여기서 활동 내역을 볼 수 있습니다.</string>
+    <string name="activity_log_empty_title">아직 활동이 없음</string>
+    <string name="posts_empty_list_button">게시물 작성</string>
+    <string name="pages_empty_list_button">페이지 만들기</string>
+    <string name="media_empty_upload_media">미디어 업로드</string>
+    <string name="media_empty_list">미디어가 없습니다.</string>
+    <string name="reader_gallery_images_desc">이미지 갤러리</string>
+    <string name="blavatar_desc">사이트 아이콘</string>
+    <string name="theme_image_desc">테마 이미지</string>
+    <string name="featured_image_desc">특성 이미지</string>
+    <string name="local_changes_discarding_error">로컬 변경 사항을 취소하는 중 오류가 발생했습니다. 추가 지원이 필요한 경우 지원팀에 문의하세요.</string>
+    <string name="local_changes_discarding">로컬 변경 사항을 취소하는 중</string>
+    <string name="local_changes_discarded">로컬 변경 사항이 취소됨</string>
+    <string name="menu_discard_changes">로컬 변경 사항 취소</string>
+    <string name="button_discard_changes">변경 사항 취소</string>
+    <string name="button_discard">취소</string>
+    <string name="reader_avatar_desc">프로필 사진</string>
+    <string name="reader_blavatar_desc">사이트 아이콘</string>
+    <string name="notification_channel_transient_title">임시</string>
+    <string name="support_identity_input_dialog_email_label">이메일</string>
+    <string name="support_identity_input_dialog_enter_email">이메일 주소를 입력하세요.</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">계속하려면 이메일 주소와 이름을 입력하세요.</string>
+    <string name="support_push_notification_message">\'도움 &amp; 지원\'의 새 메시지</string>
+    <string name="support_push_notification_title">워드프레스</string>
+    <string name="support_contact_email_not_set">설정되지 않음</string>
+    <string name="support_contact_email">연락처 이메일</string>
+    <string name="application_log_button">애플리케이션 로그</string>
+    <string name="my_tickets">내 티켓</string>
+    <string name="activity_log_rewind_site">사이트 되돌리기</string>
+    <string name="activity_log_currently_restoring_message_no_dates">되돌리기 진행 중</string>
+    <string name="activity_log_currently_restoring_title">현재 사이트 복원 중</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">사이트가 성공적으로 복원되었습니다.</string>
+    <string name="activity_log_button">활동 로그 작업 버튼</string>
+    <string name="plugin_auto_managed">자동 관리</string>
+    <string name="reader_save_posts_locally_dialog_message">이 글을 저장하고 원할 때마다 돌아와서 다시 읽으세요. 글은 이 기기에서만 읽을 수 있습니다. 저장된 글은 다른 기기와 동기화되지 않습니다. (아직은 그렇습니다! 현재 동기화를 위한 작업이 진행 중입니다.)</string>
+    <string name="reader_save_posts_locally_dialog_title">나중에 보기 위해 글 저장</string>
+    <string name="reader_empty_search_request_failed">검색을 수행할 수 없음</string>
+    <string name="reader_empty_search_title">일치하는 결과 없음</string>
+    <string name="reader_label_post_search_explainer">워드프레스 검색\n사이트 또는 글</string>
+    <string name="comment_read_source_post">원글 읽기</string>
+    <string name="sites">사이트</string>
+    <string name="signup_magic_link_title">매직 링크가 전송됨</string>
+    <string name="signup_email_screen_title">이메일 가입</string>
+    <string name="verification_2fa_screen_title">코드 확인</string>
+    <string name="selfhosted_site_login_title">로그인 자격 증명</string>
+    <string name="magic_link_sent_login_title">매직 링크가 전송됨</string>
+    <string name="magic_link_login_title">매직 링크 로그인</string>
+    <string name="site_address_login_title">사이트 주소 로그인</string>
+    <string name="email_address_login_title">이메일 주소 로그인</string>
+    <string name="alternatively">또는:</string>
     <string name="reader_empty_saved_posts_description">%s을(를) 탭하여 목록에 글을 저장합니다.</string>
-    <string name="reader_empty_saved_posts_title">글이 아직 저장되지 않았습니다!</string>
     <string name="reader_bookmark_snack_title">글이 저장됨</string>
     <string name="reader_bookmark_snack_btn">모두 보기</string>
     <string name="reader_btn_bookmarked">저장됨</string>
@@ -15,7 +78,6 @@ Language: ko_KR
     <string name="reader_remove_bookmark">저장된 글에서 제거</string>
     <string name="reader_add_bookmark">저장된 글에 추가</string>
     <string name="reader_save_for_later_title">저장된 글</string>
-    <string name="activity_log_empty_list">기록된 이벤트가 아직 없음</string>
     <string name="removed">제거됨</string>
     <string name="tabbar_accessibility_label_write">새 글입니다. 새 글을 작성합니다.</string>
     <string name="my_site_icon_content_description">사이트 아이콘 변경</string>
@@ -81,8 +143,6 @@ Language: ko_KR
     <string name="dialog_confirm_delete_permanently_page">이 페이지를 영구적으로 삭제하시겠습니까?</string>
     <string name="dialog_confirm_delete_permanently_post">이 글을 영구적으로 삭제하시겠습니까?</string>
     <string name="notification_site_creation_title_in_progress">사이트를 만드는 중… 수 분이 걸릴 수 있습니다.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">중요</string>
     <string name="notification_channel_general_title">일반</string>
     <string name="photo_picker_use_photo">이 사진 사용</string>
@@ -155,9 +215,7 @@ Language: ko_KR
     <string name="jetpack_connection_failed_with_reason">젯팩에 연결 실패: %s</string>
     <string name="jetpack_already_connected_toast">이미 젯팩에 연결되어 있습니다.</string>
     <string name="menu_undo_snackbar_action">실행 취소</string>
-    <string name="menu_visual_mode_done_snackbar">비주얼 모드로 전환했습니다.</string>
     <string name="menu_visual_mode">비주얼 모드</string>
-    <string name="menu_html_mode_done_snackbar">HTML 모드로 전환했습니다.</string>
     <string name="menu_html_mode">HTML 모드</string>
     <string name="menu_preview">미리보기</string>
     <string name="menu_publish_now">지금 공개</string>
@@ -831,10 +889,6 @@ Language: ko_KR
     <string name="title_email_follower">이메일 팔로워</string>
     <string name="title_follower">팔로워</string>
     <string name="people_fetching">사용자를 가져오는 중…</string>
-    <string name="people_empty_list_filtered_viewers">아직 방문자가 없습니다.</string>
-    <string name="people_empty_list_filtered_email_followers">아직 이메일 팔로워가 없습니다.</string>
-    <string name="people_empty_list_filtered_followers">아직 팔로워가 없습니다.</string>
-    <string name="people_empty_list_filtered_users">아직 사용자가 없습니다.</string>
     <string name="people_dropdown_item_viewers">방문자</string>
     <string name="people_dropdown_item_email_followers">이메일 팔로워</string>
     <string name="people_dropdown_item_followers">팔로워</string>
@@ -885,11 +939,7 @@ Language: ko_KR
     <string name="send_link">링크 전송</string>
     <string name="label_clear_search_history">검색 내역 지우기</string>
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
-    <string name="reader_empty_posts_in_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
-    <string name="reader_empty_posts_in_search_title">글을 찾을 수 없습니다.</string>
     <string name="reader_label_post_search_running">검색 중…</string>
-    <string name="reader_label_post_search_explainer">모든 공개 워드프레스닷컴 블로그 검색</string>
-    <string name="reader_hint_post_search">워드프레스닷컴 검색</string>
     <string name="reader_title_related_post_detail">관련 글</string>
     <string name="preview_screen_links_disabled">미리보기 화면에서 링크가 비활성화되어 있습니다.</string>
     <string name="draft_explainer">이 글은 아직 발행되지 않은 임시글입니다.</string>
@@ -931,7 +981,6 @@ Language: ko_KR
     <string name="delete_site_hint">사이트 삭제</string>
     <string name="export_site_hint">사이트를 XML 파일로 내보내기</string>
     <string name="primary_domain">주 도메인</string>
-    <string name="error_deleting_site_summary">사이트를 삭제하는 동안 오류가 발생했습니다. 도움이 필요하면 사용자지원에 요청하세요.</string>
     <string name="error_deleting_site">사이트 삭제 오류</string>
     <string name="site_settings_export_content_title">내용 내보내기</string>
     <string name="confirm_delete_site_prompt">확인을 위해 아래 칸에 %1$s를 입력하세요. 사이트가 영원히 사라질 것입니다.</string>
@@ -945,9 +994,6 @@ Language: ko_KR
     <string name="editor_remove_failed_uploads">실패한 업로드 제거</string>
     <string name="editor_toast_failed_uploads">일부 미디어 업로드에 실패했습니다. 이 상태의 글은 저장하거나 게시할 수\n 없습니다. 실패한 미디어를 모두 제거하시겠습니까?</string>
     <string name="site_settings_advanced_header">고급</string>
-    <string name="comments_empty_list_filtered_trashed">삭제된 댓글 없음</string>
-    <string name="comments_empty_list_filtered_pending">대기중인 댓글 없음</string>
-    <string name="comments_empty_list_filtered_approved">승인한 댓글 없음</string>
     <string name="xmlrpc_missing_method_error">연결할 수 없습니다. 필수 XML–RPC 함수가 서버에 없습니다.</string>
     <string name="alignment_center">가운데</string>
     <string name="post_format_video">비디오</string>
@@ -1004,7 +1050,6 @@ Language: ko_KR
     <string name="mnu_comment_delete_permanently">삭제</string>
     <string name="mnu_comment_untrash">복원</string>
     <string name="comment_deleted_permanently">댓글 삭제됨</string>
-    <string name="comments_empty_list_filtered_spam">스팸 댓글 없음</string>
     <string name="comment_status_all">모두</string>
     <string name="could_not_load_page">페이지를 로드할 수 없음</string>
     <string name="off">끔</string>
@@ -1155,15 +1200,7 @@ Language: ko_KR
     <string name="reader_label_gap_marker">더 많은 글 로드</string>
     <string name="notifications_no_search_results">\'%s\'에 일치하는 사이트 없음</string>
     <string name="search_sites">사이트 검색</string>
-    <string name="notifications_empty_view_reader">리더 보기</string>
-    <string name="notifications_empty_action_followers_likes">알림: 읽은 글에 댓글이 추가됐습니다.</string>
-    <string name="notifications_empty_action_comments">대화 참여: 팔로우하는 블로그의 글에 댓글이 추가됐습니다.</string>
-    <string name="notifications_empty_action_unread">대화 다시 계속하기: 새 글을 작성하세요.</string>
     <string name="notifications_empty_action_all">활발한 소통을 위해 팔로우하는 블로그의 글에 댓글을 달아보세요.</string>
-    <string name="notifications_empty_likes">표시할 새 좋아요가 아직 없습니다.</string>
-    <string name="notifications_empty_followers">보고할 새 팔로워가 아직 없습니다.</string>
-    <string name="notifications_empty_comments">새로운 댓글이 아직 없습니다.</string>
-    <string name="notifications_empty_unread">모두 확인하셨습니다!</string>
     <string name="stats_widget_error_jetpack_no_blogid">앱에서 통계를 확인하고 나중에 위젯 추가를 시도하세요.</string>
     <string name="stats_widget_error_readd_widget">위젯을 제거하고 다시 추가하세요.</string>
     <string name="stats_widget_error_no_visible_blog">공개된 블로그가 없으면 통계에 액세스할 수 없습니다.</string>
@@ -1186,7 +1223,6 @@ Language: ko_KR
     <string name="reader_short_like_count_none">좋아요</string>
     <string name="reader_label_follow_count">팔로워 %,d명</string>
     <string name="reader_short_like_count_one">좋아요 1개</string>
-    <string name="reader_menu_tags">태그 및 블로그 편집</string>
     <string name="reader_title_post_detail">리더 글</string>
     <string name="local_draft_explainer">이 글은 아직 발행되지 않은 로컬 임시글입니다.</string>
     <string name="local_changes_explainer">이 글은 아직 발행되지 않은 로컬 변경입니다.</string>
@@ -1202,7 +1238,6 @@ Language: ko_KR
     <string name="app_notifications">앱 알림</string>
     <string name="stats_insights_latest_post_trend">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 지금까지 글의 성과입니다.</string>
     <string name="stats_insights_latest_post_summary">최신 글 요약</string>
-    <string name="button_revert">되돌리기</string>
     <string name="yesterday">어제</string>
     <string name="days_ago">%d일 전</string>
     <string name="connectionbar_no_connection">연결 없음</string>
@@ -1218,8 +1253,6 @@ Language: ko_KR
     <string name="post_trashed">휴지통으로 이동된 글</string>
     <string name="post_deleted">글 삭제됨</string>
     <string name="page_trashed">휴지통으로 이동된 페이지</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">이 블로그에 접근할 권한이 없습니다.</string>
-    <string name="reader_toast_err_follow_blog_not_found">블로그를 찾을 수 없습니다.</string>
     <string name="undo">실행 취소</string>
     <string name="passcodelock_prompt_message">PIN 입력</string>
     <string name="push_auth_expired">요청이 만료되었습니다. 다시 시도하려면 WordPress.com에 로그인하십시요.</string>
@@ -1283,7 +1316,6 @@ Language: ko_KR
     <string name="error_copy_to_clipboard">텍스트를 클립보드에 복사하는 동안 오류가 발생했습니다.</string>
     <string name="stats_recent_weeks">최근 몇 주</string>
     <string name="stats_average_per_day">하루 평균</string>
-    <string name="reader_empty_posts_in_blog">이 블로그는 비었습니다.</string>
     <string name="reader_label_new_posts">새 게시물</string>
     <string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
     <string name="stats_period">기간</string>
@@ -1373,35 +1405,15 @@ Language: ko_KR
     <string name="reader_empty_posts_in_tag">이 태그가 지정된 게시물이 없음</string>
     <string name="reader_empty_comments">아직 댓글이 없음</string>
     <string name="create_new_blog_wpcom">WordPress.com 블로그 만들기</string>
-    <string name="nux_help_description">일반적인 질문에 대한 답변을 얻으려면 도움말 센터를 방문하고 새로운 질문을 하려면 포럼을 방문하세요.</string>
     <string name="browse_our_faq_button">FAQ 찾아보기</string>
-    <string name="reader_empty_posts_liked">좋아하는 게시물이 없군요.</string>
-    <string name="reader_empty_followed_blogs_title">아직 팔로우하는 블로그가 없습니다.</string>
-    <string name="reader_menu_block_blog">이 블로그 차단</string>
-    <string name="reader_toast_blog_blocked">이 블로그에서 글 올리기는  더 이상 보이지 않을 것입니다</string>
-    <string name="reader_toast_err_block_blog">이 블로그를 차단할 수 없습니다</string>
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
-    <string name="hs__invalid_email_error">유효한 이메일 주소를 입력하세요</string>
-    <string name="hs__username_blank_error">유효한 이름을 입력하세요</string>
-    <string name="hs__conversation_header">지원 채팅</string>
-    <string name="hs__new_conversation_header">지원 채팅</string>
-    <string name="hs__conversation_detail_error">나타나는 문제점을 설명해주세요</string>
     <string name="contact_us">문의하기</string>
     <string name="schedule_verb">예약</string>
     <string name="update_verb">업데이트</string>
-    <string name="reader_empty_recommended_blogs">추천 블로그가 없습니다.</string>
-    <string name="reader_toast_err_unfollow_blog">이 블로그에 대한 팔로우를 취소할 수 없습니다.</string>
-    <string name="reader_toast_err_follow_blog">이 블로그를 팔로우할 수 없습니다.</string>
-    <string name="reader_toast_err_already_follow_blog">이 블로그를 이미 팔로우하고 있습니다.</string>
-    <string name="reader_toast_err_get_blog_info">이 블로그를 표시할 수 없습니다.</string>
-    <string name="reader_label_followed_blog">팔로우한 블로그</string>
     <string name="reader_hint_add_tag_or_url">팔로우할 태그나 URL 입력</string>
     <string name="reader_page_followed_blogs">팔로우된 블로그</string>
     <string name="reader_page_followed_tags">팔로우된 태그</string>
-    <string name="reader_title_subs">태그 및 블로그</string>
     <string name="reader_title_tag_preview">리더 태그</string>
-    <string name="reader_title_blog_preview">리더 블로그</string>
-    <string name="media_empty_list">미디어가 없습니다.</string>
     <string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
     <string name="forgot_password">패스워드를 잊으셨나요?</string>
@@ -1428,7 +1440,6 @@ Language: ko_KR
     <string name="adding_cat_success">카테고리를 추가했습니다.</string>
     <string name="adding_cat_failed">카테고리 추가에 실패했습니다.</string>
     <string name="mnu_comment_unspam">스팸이 아닙니다.</string>
-    <string name="comments_empty_list">댓글이 없습니다.</string>
     <string name="theme_fetch_failed">테마 정보를 가져오는데 실패했습니다. 다시 시도하십시오.</string>
     <string name="blog_not_found">블로그에 접속하는 동안 에러가 발생하였습니다.</string>
     <string name="gallery_error">미디어 항목을 로드 할 수 없습니다.</string>
@@ -1508,7 +1519,6 @@ Language: ko_KR
     <string name="reader_toast_err_get_post">이 게시물 을 로드 할 수 없습니다</string>
     <string name="pick_video">동영상을 선택</string>
     <string name="pick_photo">이미지를 선택</string>
-    <string name="reader_empty_followed_blogs_description">걱정하지 마세요. 둘러보려면 태그 아이콘을 누르세요!</string>
     <string name="reader_likes_you_and_one">당신과 다른 1명이 \"좋아요\"를 눌렀습니다.</string>
     <string name="reader_empty_followed_tags">태그를 팔로우하지 않습니다.</string>
     <string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>

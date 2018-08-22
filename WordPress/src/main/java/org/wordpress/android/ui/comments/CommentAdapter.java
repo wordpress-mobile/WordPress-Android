@@ -27,7 +27,8 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,25 +82,26 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private SiteModel mSite;
 
     @Inject CommentStore mCommentStore;
+    @Inject ImageManager mImageManager;
 
     class CommentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTxtTitle;
         private final TextView mTxtComment;
         private final TextView mTxtStatus;
         private final TextView mTxtDate;
-        private final WPNetworkImageView mImgAvatar;
+        private final ImageView mImgAvatar;
         private final ImageView mImgCheckmark;
         private final ViewGroup mContainerView;
 
         CommentHolder(View view) {
             super(view);
-            mTxtTitle = (TextView) view.findViewById(R.id.title);
-            mTxtComment = (TextView) view.findViewById(R.id.comment);
-            mTxtStatus = (TextView) view.findViewById(R.id.status);
-            mTxtDate = (TextView) view.findViewById(R.id.text_date);
-            mImgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
-            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
-            mContainerView = (ViewGroup) view.findViewById(R.id.layout_container);
+            mTxtTitle = view.findViewById(R.id.title);
+            mTxtComment = view.findViewById(R.id.comment);
+            mTxtStatus = view.findViewById(R.id.status);
+            mTxtDate = view.findViewById(R.id.text_date);
+            mImgCheckmark = view.findViewById(R.id.image_checkmark);
+            mImgAvatar = view.findViewById(R.id.avatar);
+            mContainerView = view.findViewById(R.id.layout_container);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -241,10 +243,11 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int checkmarkVisibility;
         if (mEnableSelection && isItemSelected(position)) {
             checkmarkVisibility = View.VISIBLE;
+            mImageManager.cancelRequestAndClearImageView(holder.mImgAvatar);
             holder.mContainerView.setBackgroundColor(mSelectedColor);
         } else {
             checkmarkVisibility = View.GONE;
-            holder.mImgAvatar.setImageUrl(getAvatarForDisplay(comment, mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR, getAvatarForDisplay(comment, mAvatarSz));
             holder.mContainerView.setBackgroundColor(mUnselectedColor);
         }
 

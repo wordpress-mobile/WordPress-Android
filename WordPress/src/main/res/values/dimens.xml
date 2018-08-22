@@ -5,6 +5,7 @@
     <dimen name="category_row_height">48dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
+    <dimen name="tab_height">48dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_subtitle_height">48dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
@@ -65,6 +66,7 @@
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
+    <dimen name="margin_theme_browser_top">160dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -140,11 +142,8 @@
     <dimen name="reader_comment_max_image_size">160dp</dimen>
 
     <dimen name="empty_list_title_text_size">24sp</dimen>
-    <dimen name="empty_list_description_text_size">18sp</dimen>
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
-    <dimen name="empty_list_description_bottom_margin">8dp</dimen>
-    <dimen name="empty_list_description_side_margin">48dp</dimen>
 
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
@@ -166,6 +165,8 @@
     <dimen name="notifications_text_indent_sz">22dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
+    <dimen name="activity_progress_bar_height">5dp</dimen>
+    <dimen name="activity_progress_bar_margin_vertical">-8dp</dimen>
 
     <!-- DetailListPreference -->
     <dimen name="dlp_padding_start">20dp</dimen>
@@ -204,7 +205,6 @@
     <dimen name="my_site_list_row_padding_left">20dp</dimen>
     <dimen name="my_site_list_row_padding_left_switch">12dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
-    <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
     <dimen name="me_content_margin">@dimen/margin_large</dimen>
@@ -230,9 +230,6 @@
     <dimen name="text_sz_related_post_small">11sp</dimen>
     <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
-
-    <!--empty lists-->
-    <dimen name="empty_list_button_top_margin">32dp</dimen>
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>
@@ -324,4 +321,10 @@
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <!-- actionable empty view -->
+    <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
+    <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
+
+    <dimen name="snackbar_message_margin_bottom">18dp</dimen>
 </resources>

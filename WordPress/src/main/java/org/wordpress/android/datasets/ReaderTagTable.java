@@ -199,6 +199,22 @@ public class ReaderTagTable {
         }
     }
 
+    public static ReaderTag getTagFromEndpoint(String endpoint) {
+        if (TextUtils.isEmpty(endpoint)) {
+            return null;
+        }
+
+        String[] args = {"%" + endpoint};
+        String query = "SELECT * FROM tbl_tags WHERE endpoint LIKE ? LIMIT 1";
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(query, args);
+
+        try {
+            return cursor.moveToFirst() ? getTagFromCursor(cursor) : null;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
     public static String getEndpointForTag(ReaderTag tag) {
         if (tag == null) {
             return null;

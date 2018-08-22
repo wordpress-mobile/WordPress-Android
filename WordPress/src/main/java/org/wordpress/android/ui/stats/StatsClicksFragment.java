@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -249,12 +246,6 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
             // Site icon
             holder.networkImageView.setVisibility(View.GONE);
-            if (!TextUtils.isEmpty(icon)) {
-                holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
-                        WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE
-                                                   );
-            }
 
             if (children == 0) {
                 holder.showLinkIcon();
