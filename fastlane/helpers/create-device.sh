@@ -12,7 +12,7 @@ then
         printf "export ANDROID_HOME=${HOME}/Library/Android/sdk\n\n"
     fi
 
-    exit 0
+    exit 1
 fi
 
 if [ -z "${device_key}" ]
