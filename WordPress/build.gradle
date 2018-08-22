@@ -161,6 +161,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.20.1'
     testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:2.5.2'
+    testImplementation 'nl.jqno.equalsverifier:equalsverifier:2.5.2'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestImplementation 'org.objenesis:objenesis:2.1'
