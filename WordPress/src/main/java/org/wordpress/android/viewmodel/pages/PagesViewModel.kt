@@ -167,6 +167,7 @@ class PagesViewModel
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
+        pageUpdateContinuation[0]?.resume(Unit)
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
