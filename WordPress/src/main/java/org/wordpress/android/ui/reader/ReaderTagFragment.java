@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
@@ -35,18 +35,22 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     }
 
     private void checkEmptyView() {
-        if (!isAdded()) {
+        if (!isAdded() || getView() == null) {
             return;
         }
 
-        TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
-        if (emptyView != null) {
-            boolean isEmpty = hasTagAdapter() && getTagAdapter().isEmpty();
-            emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-            if (isEmpty) {
-                emptyView.setText(R.string.reader_empty_followed_tags);
-            }
+        ActionableEmptyView actionableEmptyView = getView().findViewById(R.id.actionable_empty_view);
+
+        if (actionableEmptyView == null) {
+            return;
         }
+
+        actionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
+        actionableEmptyView.image.setVisibility(View.VISIBLE);
+        actionableEmptyView.title.setText(R.string.reader_empty_followed_tags_title);
+        actionableEmptyView.subtitle.setText(R.string.reader_empty_followed_tags_subtitle);
+        actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+        actionableEmptyView.setVisibility(hasTagAdapter() && getTagAdapter().isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Override
