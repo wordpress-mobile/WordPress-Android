@@ -29,7 +29,7 @@ class ReaderPostListViewModel @Inject constructor(
         if (isStarted) {
             return
         }
-        initialTag?.let {
+        tag?.let {
             initialTag = tag
             onTagChanged(tag)
             newsManager.pull()
