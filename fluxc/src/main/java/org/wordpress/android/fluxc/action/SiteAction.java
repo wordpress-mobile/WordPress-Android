@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.MobileQuickStartCompletedResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
@@ -71,7 +71,7 @@ public enum SiteAction implements IAction {
     @Action
     FETCH_DOMAIN_SUPPORTED_COUNTRIES,
     @Action(payloadType = SiteModel.class)
-    COMPLETE_MOBILE_QUICK_START,
+    COMPLETE_QUICK_START,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)
@@ -108,8 +108,8 @@ public enum SiteAction implements IAction {
     FETCHED_DOMAIN_SUPPORTED_STATES,
     @Action(payloadType = DomainSupportedCountriesResponsePayload.class)
     FETCHED_DOMAIN_SUPPORTED_COUNTRIES,
-    @Action(payloadType = MobileQuickStartCompletedResponsePayload.class)
-    COMPLETED_MOBILE_QUICK_START,
+    @Action(payloadType = QuickStartCompletedResponsePayload.class)
+    COMPLETED_QUICK_START,
 
     // Local actions
     @Action(payloadType = SiteModel.class)

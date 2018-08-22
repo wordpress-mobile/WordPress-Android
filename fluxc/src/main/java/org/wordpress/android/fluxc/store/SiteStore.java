@@ -384,11 +384,11 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class MobileQuickStartError implements OnChangedError {
-        @NonNull public MobileQuickStartErrorType type;
+    public static class QuickStartError implements OnChangedError {
+        @NonNull public QuickStartErrorType type;
         @Nullable public String message;
 
-        public MobileQuickStartError(@NonNull MobileQuickStartErrorType type, @Nullable String message) {
+        public QuickStartError(@NonNull QuickStartErrorType type, @Nullable String message) {
             this.type = type;
             this.message = message;
         }
@@ -642,21 +642,21 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class MobileQuickStartCompletedResponsePayload extends OnChanged<MobileQuickStartError> {
+    public static class QuickStartCompletedResponsePayload extends OnChanged<QuickStartError> {
         public @NonNull SiteModel site;
         public boolean success;
 
-        public MobileQuickStartCompletedResponsePayload(@NonNull SiteModel site, boolean status) {
+        public QuickStartCompletedResponsePayload(@NonNull SiteModel site, boolean status) {
             this.site = site;
             this.success = status;
         }
     }
 
-    public static class OnMobileQuickStartCompleted extends OnChanged<MobileQuickStartError> {
+    public static class OnQuickStartCompleted extends OnChanged<QuickStartError> {
         public @NonNull SiteModel site;
         public boolean success;
 
-        OnMobileQuickStartCompleted(@NonNull SiteModel site, boolean status) {
+        OnQuickStartCompleted(@NonNull SiteModel site, boolean status) {
             this.site = site;
             this.success = status;
         }
@@ -824,7 +824,7 @@ public class SiteStore extends Store {
         GENERIC_ERROR
     }
 
-    public enum MobileQuickStartErrorType {
+    public enum QuickStartErrorType {
         GENERIC_ERROR
     }
 
@@ -1281,11 +1281,11 @@ public class SiteStore extends Store {
             case CHECKED_AUTOMATED_TRANSFER_STATUS:
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
                 break;
-            case COMPLETE_MOBILE_QUICK_START:
-                completeMobileQuickStart((SiteModel) action.getPayload());
+            case COMPLETE_QUICK_START:
+                completeQuickStart((SiteModel) action.getPayload());
                 break;
-            case COMPLETED_MOBILE_QUICK_START:
-                handleMobileQuickStartCompleted((MobileQuickStartCompletedResponsePayload) action.getPayload());
+            case COMPLETED_QUICK_START:
+                handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -1633,12 +1633,12 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void completeMobileQuickStart(@NonNull SiteModel site) {
-        mSiteRestClient.completeMobileQuickStart(site);
+    private void completeQuickStart(@NonNull SiteModel site) {
+        mSiteRestClient.completeQuickStart(site);
     }
 
-    private void handleMobileQuickStartCompleted(MobileQuickStartCompletedResponsePayload payload) {
-        OnMobileQuickStartCompleted event = new OnMobileQuickStartCompleted(payload.site, payload.success);
+    private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
+        OnQuickStartCompleted event = new OnQuickStartCompleted(payload.site, payload.success);
         event.error = payload.error;
         emitChange(event);
     }
