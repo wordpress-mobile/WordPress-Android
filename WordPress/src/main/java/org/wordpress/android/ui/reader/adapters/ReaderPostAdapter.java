@@ -77,7 +77,7 @@ import javax.inject.Inject;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
-    private final NewsCardListener mNewsCardListener;
+    private NewsCardListener mNewsCardListener;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -684,11 +684,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     // ********************************************************************************************
 
-    public ReaderPostAdapter(Context context, ReaderPostListType postListType, ImageManager imageManager,
-                             NewsCardListener newsCardListener) {
+    public ReaderPostAdapter(Context context, ReaderPostListType postListType, ImageManager imageManager) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
-        this.mNewsCardListener = newsCardListener;
         this.mImageManager = imageManager;
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
@@ -746,6 +744,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
+    }
+
+    public void setOnNewsCardListener(NewsCardListener newsCardListener) {
+        this.mNewsCardListener = newsCardListener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {
