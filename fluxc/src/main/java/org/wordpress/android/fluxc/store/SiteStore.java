@@ -384,6 +384,16 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class QuickStartError implements OnChangedError {
+        @NonNull public QuickStartErrorType type;
+        @Nullable public String message;
+
+        public QuickStartError(@NonNull QuickStartErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // OnChanged Events
     public static class OnProfileFetched extends OnChanged<SiteError> {
         public SiteModel site;
@@ -632,6 +642,26 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class QuickStartCompletedResponsePayload extends OnChanged<QuickStartError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        public QuickStartCompletedResponsePayload(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
+    public static class OnQuickStartCompleted extends OnChanged<QuickStartError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        OnQuickStartCompleted(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -791,6 +821,10 @@ public class SiteStore extends Store {
       }
 
     public enum DomainSupportedCountriesErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum QuickStartErrorType {
         GENERIC_ERROR
     }
 
@@ -1247,6 +1281,12 @@ public class SiteStore extends Store {
             case CHECKED_AUTOMATED_TRANSFER_STATUS:
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
                 break;
+            case COMPLETE_QUICK_START:
+                completeQuickStart((SiteModel) action.getPayload());
+                break;
+            case COMPLETED_QUICK_START:
+                handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -1590,6 +1630,16 @@ public class SiteStore extends Store {
         } else {
             event = new OnAutomatedTransferStatusChecked(payload.site, payload.error);
         }
+        emitChange(event);
+    }
+
+    private void completeQuickStart(@NonNull SiteModel site) {
+        mSiteRestClient.completeQuickStart(site);
+    }
+
+    private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
+        OnQuickStartCompleted event = new OnQuickStartCompleted(payload.site, payload.success);
+        event.error = payload.error;
         emitChange(event);
     }
 }
