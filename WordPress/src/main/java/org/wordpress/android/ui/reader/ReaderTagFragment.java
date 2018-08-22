@@ -30,7 +30,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         return view;
     }
 
