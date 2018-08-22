@@ -397,6 +397,7 @@ public final class SiteSettingsModel {
         if (other.twitterUsername != null) {
             twitterUsername = other.twitterUsername;
         }
+        quotaDiskSpace = other.quotaDiskSpace;
     }
 
     /**
