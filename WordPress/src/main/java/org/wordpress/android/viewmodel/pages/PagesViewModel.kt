@@ -40,6 +40,8 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.CHANGE
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
@@ -91,7 +93,7 @@ class PagesViewModel
     val setPageParent: LiveData<PageModel?>
         get() = _setPageParent
 
-    private var _pages: Map<Long, PageModel> = emptyMap()
+    private var _pages: MutableMap<Long, PageModel> = mutableMapOf()
     val pages: Map<Long, PageModel>
         get() = _pages
 
@@ -120,7 +122,7 @@ class PagesViewModel
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
-        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
+        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
 
         val loadState = if (_pages.isEmpty()) FETCHING else REFRESHING
         reloadPages(loadState)
@@ -144,7 +146,7 @@ class PagesViewModel
     }
 
     private suspend fun refreshPages() {
-        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
+        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
         _refreshPageLists.asyncCall()
     }
 
@@ -164,9 +166,7 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        if (event.post.isPage) {
-            pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
-        }
+        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -262,15 +262,7 @@ class PagesViewModel
 
     fun onDeleteConfirmed(remoteId: Long) {
         launch {
-            val page = pages[remoteId]
-            if (page != null) {
-                pageStore.deletePage(page)
-                reloadPages()
-
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
-            } else {
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
-            }
+            pages[remoteId]?.let { deletePage(it)}
         }
     }
 
@@ -288,10 +280,39 @@ class PagesViewModel
         }
     }
 
+    private fun deletePage(page: PageModel) {
+        val action = PageAction(CHANGE) {
+            launch(CommonPool) {
+                _pages.remove(page.remoteId)
+                _refreshPageLists.asyncCall()
+
+                pageStore.deletePageFromServer(page)
+            }
+        }
+        action.onSuccess = {
+            launch(CommonPool) {
+                reloadPages()
+                onSearch(lastSearchQuery)
+
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
+            }
+        }
+        action.onError = {
+            launch(CommonPool) {
+                refreshPages()
+
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
+            }
+        }
+        launch {
+            actionPerfomer.performAction(action)
+        }
+    }
+
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
         pages[remoteId]?.let { page ->
             val oldStatus = page.status
-            val action = PageAction {
+            val action = PageAction(UPLOAD) {
                 page.status = status
                 launch(CommonPool) {
                     pageStore.updatePageInDb(page)
