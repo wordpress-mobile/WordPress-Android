@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 16:54:06+0000
+Translation-Revision-Date: 2018-08-06 18:54:08+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="people_empty_list_filtered_email_followers">لا يوجد متابعون للبريد الإلكتروني حتى الآن</string>
+    <string name="connection_service_facebook_notice">اعتبارًا من 1 أغسطس 2018، لن يسمح فيسبوك بعد الآن بالمشاركة المباشرة للمقالات على ملفات تعريف الفيسبوك. تبقى الاتصالات بصفحات الفيسبوك كما هي.</string>
+    <string name="reader_empty_posts_liked_description">ستظهر المقالات التي نالت إعجابك هنا</string>
+    <string name="reader_empty_followed_blogs_description">لم تتابع أي مواقع حتى الآن. لمَ لا تتابع واحدًا الآن؟</string>
+    <string name="reader_empty_followed_blogs_title">لا توجد مواقع تمت متابعتها</string>
+    <string name="activity_log_empty_title">لا يوجد نشاط حتى الآن</string>
+    <string name="posts_empty_list_button">إنشاء مقالة</string>
+    <string name="pages_empty_list_button">إنشاء صفحة</string>
+    <string name="media_empty_upload_media">رفع الوسائط</string>
+    <string name="media_empty_list">ليست لديك أي وسائط</string>
+    <string name="reader_gallery_images_desc">معرض الصور</string>
+    <string name="blavatar_desc">أيقونة الموقع</string>
+    <string name="theme_image_desc">صورة القالب</string>
+    <string name="featured_image_desc">صورة مميزة</string>
+    <string name="local_changes_discarding_error">حدث خطأ أثناء تجاهل تغييراتك المحلية. يرجى الاتصال بالدعم للحصول على مزيد من المساعدة.</string>
+    <string name="local_changes_discarding">تجاهل التغييرات المحلية</string>
+    <string name="local_changes_discarded">تم تجاهل التغييرات المحلية</string>
+    <string name="menu_discard_changes">تجاهل التغييرات المحلية</string>
+    <string name="button_discard_changes">تجاهل التغييرات</string>
+    <string name="button_discard">تجاهل</string>
+    <string name="reader_avatar_desc">صورة ملف التعريف</string>
+    <string name="reader_blavatar_desc">أيقونة الموقع</string>
+    <string name="notification_channel_transient_title">عابر</string>
+    <string name="support_identity_input_dialog_email_label">البريد الإلكتروني</string>
+    <string name="support_identity_input_dialog_enter_email">يرجى إدخال عنوان بريدك الإلكتروني</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">للاستمرار، يرجى إدخال عنوان بريدك الإلكتروني واسمك</string>
+    <string name="support_push_notification_message">رسالة جديدة من \"التعليمات والدعم\"</string>
+    <string name="support_push_notification_title">وردبرس</string>
+    <string name="support_contact_email_not_set">لم يتم التعيين</string>
+    <string name="support_contact_email">البريد الإلكتروني الخاص بجهة الاتصال</string>
+    <string name="application_log_button">سجل التطبيق</string>
+    <string name="my_tickets">تذاكري</string>
+    <string name="activity_log_rewind_site">إرجاع الموقع</string>
+    <string name="activity_log_currently_restoring_message_no_dates">الإرجاع قيد التقدّم</string>
+    <string name="activity_log_currently_restoring_title">استعادة موقعك حاليًا</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">تمت استعادة موقعك بنجاح</string>
+    <string name="activity_log_button">زر الإجراء في سجل النشاط</string>
+    <string name="plugin_auto_managed">إدارة تلقائية</string>
+    <string name="reader_save_posts_locally_dialog_message">احفظ هذه المقالة، وعُد إلى قراءتها وقتما تشاء. لن تكون متاحة إلا على هذا الجهاز — لا تقوم المقالات المحفوظة بالمزامنة مع الأجهزة الأخرى. (ومع ذلك! نحن نعمل على إيجاد حل لهذا الأمر.)</string>
+    <string name="reader_save_posts_locally_dialog_title">حفظ المقالات لوقت لاحق</string>
+    <string name="reader_empty_search_request_failed">يتعذر إجراء البحث</string>
+    <string name="reader_empty_search_title">لم يتم العثور على نتائج</string>
+    <string name="reader_label_post_search_explainer">البحث في وردبرس\nعن موقع أو مقالة</string>
+    <string name="comment_read_source_post">قراءة مقالة المصدر</string>
+    <string name="sites">المواقع</string>
     <string name="reader_empty_saved_posts_description">انقر على %s لحفظ مقالة في القائمة لديك.</string>
-    <string name="reader_empty_saved_posts_title">لم يتم حفظ أي مقالات – حتى الآن!</string>
     <string name="reader_bookmark_snack_title">تم حفظ المقالة</string>
     <string name="reader_bookmark_snack_btn">عرض الكل</string>
     <string name="reader_btn_bookmarked">تم الحفظ</string>
@@ -15,7 +59,6 @@ Language: ar
     <string name="reader_remove_bookmark">حذف من المقالات المحفوظة</string>
     <string name="reader_add_bookmark">إضافة إلى المقالات المحفوظة</string>
     <string name="reader_save_for_later_title">المقالات المحفوظة</string>
-    <string name="activity_log_empty_list">لم تُسجَّل أي أحداث حتى الآن</string>
     <string name="removed">تم الحذف</string>
     <string name="tabbar_accessibility_label_write">مقالة جديدة. كتابة مقالة جديدة.</string>
     <string name="my_site_icon_content_description">تغيير رمز الموقع</string>
@@ -81,8 +124,6 @@ Language: ar
     <string name="dialog_confirm_delete_permanently_page">هل ترغب بالتأكيد في حذف هذه الصفحة بشكل دائم؟</string>
     <string name="dialog_confirm_delete_permanently_post">هل ترغب بالتأكيد في حذف هذه المقالة بشكل دائم؟</string>
     <string name="notification_site_creation_title_in_progress">جارٍ إنشاء الموقع… قد يستغرق هذا الأمر بضع دقائق.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">مهم</string>
     <string name="notification_channel_general_title">عام</string>
     <string name="photo_picker_use_photo">استخدام هذه الصورة</string>
@@ -155,9 +196,7 @@ Language: ar
     <string name="jetpack_connection_failed_with_reason">فشل الاتصال بـ Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">أنت متصل بالفعل بـ Jetpack</string>
     <string name="menu_undo_snackbar_action">تراجع</string>
-    <string name="menu_visual_mode_done_snackbar">تم التبديل إلى الوضع المرئي.</string>
     <string name="menu_visual_mode">الوضع المرئي</string>
-    <string name="menu_html_mode_done_snackbar">تم التبديل إلى وضع HTML.</string>
     <string name="menu_html_mode">وضع HTML</string>
     <string name="menu_preview">معاينة</string>
     <string name="menu_publish_now">النشر الآن</string>
@@ -805,10 +844,6 @@ Language: ar
     <string name="title_email_follower">المتابع عبر البريد الإلكتروني</string>
     <string name="title_follower">المتابع</string>
     <string name="people_fetching">جارٍ إحضار المستخدمين…</string>
-    <string name="people_empty_list_filtered_viewers">ليس لديك أي مشاهدين بعد.</string>
-    <string name="people_empty_list_filtered_email_followers">ليس لديك أي متابعين عبر البريد الإلكتروني بعد.</string>
-    <string name="people_empty_list_filtered_followers">ليس لديك أي متابعين بعد.</string>
-    <string name="people_empty_list_filtered_users">ليس لديك أي مستخدمين بعد.</string>
     <string name="people_dropdown_item_viewers">المشاهدون</string>
     <string name="people_dropdown_item_email_followers">المتابعون عبر البريد الإلكتروني</string>
     <string name="people_dropdown_item_followers">المتابعون</string>
@@ -859,11 +894,7 @@ Language: ar
     <string name="send_link">إرسال رابط</string>
     <string name="label_clear_search_history">مسح محفوظات البحث</string>
     <string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
-    <string name="reader_empty_posts_in_search_description">لم يتم العثور على مقالات عن %s للغة الخاصة بك</string>
-    <string name="reader_empty_posts_in_search_title">لم يتم العثور على مقالات</string>
     <string name="reader_label_post_search_running">البحث…</string>
-    <string name="reader_label_post_search_explainer">البحث في جميع مدونات WordPress.com العامة</string>
-    <string name="reader_hint_post_search">البحث في WordPress.com</string>
     <string name="reader_title_related_post_detail">مقالة ذات صلة</string>
     <string name="preview_screen_links_disabled">تم تعطيل الروابط في شاشة المعاينة</string>
     <string name="draft_explainer">هذه المقالة مسود والتي لم تنشر بعد.</string>
@@ -905,7 +936,6 @@ Language: ar
     <string name="delete_site_hint">حذف الموقع</string>
     <string name="export_site_hint">تصدير موقعك إلى ملف XML</string>
     <string name="primary_domain">النطاق الرئيسي</string>
-    <string name="error_deleting_site_summary">حدث خطأ أثناء حذف موقعك. يرجى الاتصال بالدعم للحصول على مزيد من المساعدة</string>
     <string name="error_deleting_site">حدث خطأ أثناء حذف الموقع</string>
     <string name="site_settings_export_content_title">تصدير المحتوى</string>
     <string name="confirm_delete_site_prompt">يرجى كتابة %1$s في الحقل أدناه للتأكيد. لن يبقى لموقعك بعد ذلك أي أثر.</string>
@@ -919,9 +949,6 @@ Language: ar
     <string name="editor_remove_failed_uploads">إزالة عمليات الرفع الفاشلة</string>
     <string name="editor_toast_failed_uploads">فشل بعض عمليات رفع الوسائط. لا يمكنك الحفظ أو النشر\n مقالتك بهذه الحالة. هل تريد إزالة كافة الوسائط الفاشلة؟</string>
     <string name="site_settings_advanced_header">متقدم</string>
-    <string name="comments_empty_list_filtered_trashed">لا توجد تعليقات بسلة المهملات</string>
-    <string name="comments_empty_list_filtered_pending">لا توجد تعليقات في قائمة الانتظار</string>
-    <string name="comments_empty_list_filtered_approved">لا توجد تعليقات تمَّت الموافقة عليها</string>
     <string name="xmlrpc_missing_method_error">تعذر الاتصال. طرق XML–RPC غير موجودة على الخادم.</string>
     <string name="alignment_center">وسط</string>
     <string name="post_format_video">الفيديو</string>
@@ -978,7 +1005,6 @@ Language: ar
     <string name="mnu_comment_delete_permanently">حذف</string>
     <string name="mnu_comment_untrash">استعادة</string>
     <string name="comment_deleted_permanently">تم حذف تعليق</string>
-    <string name="comments_empty_list_filtered_spam">لا توجد تعليقات مزعجة</string>
     <string name="comment_status_all">الكل</string>
     <string name="could_not_load_page">يتعذر تحميل الصفحة</string>
     <string name="off">إيقاف تشغيل</string>
@@ -1128,15 +1154,7 @@ Language: ar
     <string name="reader_label_gap_marker">تحميل المزيد من المقالات</string>
     <string name="notifications_no_search_results">لا توجد مواقع مطابقة \"%s\"</string>
     <string name="search_sites">بحث في المواقع</string>
-    <string name="notifications_empty_view_reader">عرض القارئ</string>
-    <string name="notifications_empty_action_followers_likes">ملاحظة: التعليق على المقالات التي قرأتها.</string>
-    <string name="notifications_empty_action_comments">الانضمام إلى محادثة: التعليق على المقالات من المدونات التي تتابعها.</string>
-    <string name="notifications_empty_action_unread">إعادة بدء المحادثة: اكتب مقالة جديدة.</string>
     <string name="notifications_empty_action_all">كن نشطًا! علّق على مقالات من المدونات التي تتابعها.</string>
-    <string name="notifications_empty_likes">لا توجد إعجابات جديدة لإظهارها…حتى الآن.</string>
-    <string name="notifications_empty_followers">ليس هناك متابعون جدد للإبلاغ عنهم…حتى الآن.</string>
-    <string name="notifications_empty_comments">ليست هناك تعليقات جديدة…حتى الآن.</string>
-    <string name="notifications_empty_unread">تمت قراءة الكل!</string>
     <string name="stats_widget_error_jetpack_no_blogid">يرجى الوصول إلى الإحصاءات في التطبيق، وجرب إضافة المربع الجانبي لاحقًا</string>
     <string name="stats_widget_error_readd_widget">يرجى إزالة المربع الجانبي وإضافته مرة أخرى</string>
     <string name="stats_widget_error_no_visible_blog">يتعذر الوصول إلى الإحصاءات بدون مدونة مرئية</string>
@@ -1159,7 +1177,6 @@ Language: ar
     <string name="reader_short_like_count_none">أعجبني</string>
     <string name="reader_label_follow_count">%,d متابعين</string>
     <string name="reader_short_like_count_one">إعجاب واحد</string>
-    <string name="reader_menu_tags">تحرير الوسوم والمدوّنات</string>
     <string name="reader_title_post_detail">مقالة القارئ</string>
     <string name="local_draft_explainer">هذه المقالة مسودة محلية لم تُنشَر بعد</string>
     <string name="local_changes_explainer">تشتمل هذه المقالة على تغييرات محلية لم تُنشَر بعد</string>
@@ -1175,7 +1192,6 @@ Language: ar
     <string name="app_notifications">تنبيهات التطبيق</string>
     <string name="stats_insights_latest_post_trend">لم يتم نشر %2$s منذ %1$s. فيما يلي بيان لمستوى أداء المقالة حتى الآن…</string>
     <string name="stats_insights_latest_post_summary">ملخص آخر مقالة</string>
-    <string name="button_revert">إلغاء</string>
     <string name="yesterday">أمس</string>
     <string name="days_ago">منذ %d أيام ماضية</string>
     <string name="connectionbar_no_connection">لا يوجد اتصال</string>
@@ -1191,8 +1207,6 @@ Language: ar
     <string name="post_trashed">تم إرسال المقالة إلى سلة المهملات</string>
     <string name="post_deleted">تم حذف المقالة</string>
     <string name="page_trashed">تم إرسال الصفحة إلى سلة المهملات</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">أنت غير معتمد للوصول إلى هذه المدونة</string>
-    <string name="reader_toast_err_follow_blog_not_found">تعذر العثور على هذه المدونة</string>
     <string name="undo">تراجع</string>
     <string name="passcodelock_prompt_message">أدخل مفتاح الـ PIN</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% من المشاهدات</string>
@@ -1251,7 +1265,6 @@ Language: ar
     <string name="error_copy_to_clipboard">حدث خطأ أثناء نسخ النص إلى الحافظة</string>
     <string name="stats_recent_weeks">الأسابيع الأخيرة</string>
     <string name="stats_average_per_day">المتوسط لكل يوم</string>
-    <string name="reader_empty_posts_in_blog">هذه المدونة فارغة</string>
     <string name="reader_label_new_posts">مقالات جديدة</string>
     <string name="logs_copied_to_clipboard">تم نسخ سجلات التطبيق إلى الحافظة</string>
     <string name="stats_period">الفترة</string>
@@ -1339,35 +1352,15 @@ Language: ar
     <string name="reader_empty_posts_in_tag">لا توجد مقالات تحمل هذا الوسم</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="create_new_blog_wpcom">إنشاء مدونة WordPress.com</string>
-    <string name="nux_help_description">تفضل بزيارة مركز المساعدة للاطلاع على إجابات الأسئلة الشائعة أو تفضل بزيارة المنتديات لطرح أسئلة جديدة</string>
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
-    <string name="reader_empty_posts_liked">لم تُعجب بأي مقالات</string>
-    <string name="reader_empty_followed_blogs_title">لم تتابع أي مواقع حتى الآن</string>
-    <string name="reader_menu_block_blog">حظر هذه المدونة</string>
-    <string name="reader_toast_blog_blocked">لن يتم عرض مقالات هذه المدونة بعد الآن</string>
-    <string name="reader_toast_err_block_blog">غير قادر على حظر المدونة</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
-    <string name="hs__invalid_email_error">أدخل عنوان بريد إلكتروني صالحًا</string>
-    <string name="hs__username_blank_error">أدخل اسمًا صالحًا</string>
-    <string name="hs__conversation_header">محادثة الدعم الفني</string>
-    <string name="hs__new_conversation_header">محادثة الدعم الفني</string>
-    <string name="hs__conversation_detail_error">أوصف المشكلة التي تراها</string>
     <string name="contact_us">اتصل بنا</string>
     <string name="schedule_verb">جدولة</string>
     <string name="update_verb">تحديث</string>
-    <string name="reader_empty_recommended_blogs">لا يوجد مدونات موصى بها</string>
-    <string name="reader_toast_err_unfollow_blog">غير قادر على عدم متابعة هذه المدونة </string>
-    <string name="reader_toast_err_follow_blog">غير قادر على متابعة هذه المدونة </string>
-    <string name="reader_toast_err_already_follow_blog">أنت متابع لهذه المدونة بالفعل</string>
-    <string name="reader_toast_err_get_blog_info">غير قادر على إظهار هذه المدونة</string>
-    <string name="reader_label_followed_blog">مدونة تمت متابعتها</string>
     <string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
     <string name="reader_page_followed_blogs">المواقع المتابَعة</string>
     <string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
-    <string name="reader_title_subs">الوسوم والمدونات</string>
     <string name="reader_title_tag_preview">وسم القارئ</string>
-    <string name="reader_title_blog_preview">مدوّنة القارئ</string>
-    <string name="media_empty_list">لا وسائط</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
     <string name="forgot_password">نسيت كلمة المرور؟</string>
@@ -1394,7 +1387,6 @@ Language: ar
     <string name="adding_cat_success">تم إضافة التصنيف بنجاح</string>
     <string name="adding_cat_failed">إضافة التصنيف فشلت</string>
     <string name="mnu_comment_unspam">ليس بريدًا مزعجًا</string>
-    <string name="comments_empty_list">لا تعليقات</string>
     <string name="theme_fetch_failed">فشل في إحضار القوالب</string>
     <string name="blog_not_found">حدث خطأ أثناء دخول هذه المدونة </string>
     <string name="gallery_error">لا يمكن استعادة عنصر الوسائط المتعددة</string>
@@ -1474,7 +1466,6 @@ Language: ar
     <string name="reader_toast_err_get_post">غير قادر على استرجاع هذه المقالة</string>
     <string name="pick_video">تحديد فيديو</string>
     <string name="pick_photo">تحديد صورة</string>
-    <string name="reader_empty_followed_blogs_description">ومع ذلك لا داعي للقلق، فما عليك سوى النقر على الأيقونة في أعلى اليمين لبدء الاستكشاف!</string>
     <string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
     <string name="reader_empty_followed_tags">لا تتابع أي وسوم</string>
     <string name="reader_toast_err_url_intent">لايمكن فتح %s</string>

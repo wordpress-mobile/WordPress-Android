@@ -25,4 +25,7 @@
     <!-- Quick Start -->
     <integer name="quick_start_snackbar_duration_ms">5000</integer>
 
+    <!-- Support -->
+    <integer name="max_length_support_name">50</integer>
+
 </resources>

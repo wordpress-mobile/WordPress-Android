@@ -12,7 +12,7 @@
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_extra_large">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/plugin_icon"
         android:layout_width="@dimen/plugin_icon_size"
         android:layout_height="@dimen/plugin_icon_size"

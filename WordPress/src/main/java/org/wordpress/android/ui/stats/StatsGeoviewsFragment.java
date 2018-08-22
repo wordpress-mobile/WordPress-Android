@@ -25,7 +25,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.List;
 
@@ -283,9 +283,8 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 holder.alternativeImage.setVisibility(View.VISIBLE);
             } else {
                 // On other Android versions, use the Gravatar image
-                holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.mHeaderAvatarSizePx),
-                        WPNetworkImageView.ImageType.BLAVATAR);
+                mImageManager.load(holder.networkImageView, ImageType.BLAVATAR,
+                        GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.mHeaderAvatarSizePx));
                 holder.networkImageView.setVisibility(View.VISIBLE);
             }
 

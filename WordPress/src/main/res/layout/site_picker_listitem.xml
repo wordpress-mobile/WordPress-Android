@@ -16,7 +16,7 @@
         android:paddingBottom="@dimen/margin_large"
         android:paddingTop="@dimen/margin_large">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/image_blavatar"
             android:layout_width="@dimen/blavatar_sz"
             android:layout_height="@dimen/blavatar_sz"
@@ -28,7 +28,8 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:padding="1dp"
-            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
+            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            android:contentDescription="@string/blavatar_desc"/>
 
         <LinearLayout
             android:layout_width="match_parent"

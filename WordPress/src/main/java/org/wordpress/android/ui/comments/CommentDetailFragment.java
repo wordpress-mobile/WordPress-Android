@@ -77,8 +77,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -140,6 +141,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Inject CommentStore mCommentStore;
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
+    @Inject ImageManager mImageManager;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -641,7 +643,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mCommentContentLayout.addView(mLayoutButtons);
         }
 
-        final WPNetworkImageView imgAvatar = getView().findViewById(R.id.image_avatar);
+        final ImageView imgAvatar = getView().findViewById(R.id.image_avatar);
         final TextView txtName = getView().findViewById(R.id.text_name);
         final TextView txtDate = getView().findViewById(R.id.text_date);
 
@@ -650,18 +652,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                                                          WordPress.getContext()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz, mImageLoader);
+        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz);
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+        String avatarUrl = "";
         if (mComment.getAuthorProfileImageUrl() != null) {
-            imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(mComment.getAuthorProfileImageUrl(), avatarSz),
-                                  WPNetworkImageView.ImageType.AVATAR);
+            avatarUrl = GravatarUtils.fixGravatarUrl(mComment.getAuthorProfileImageUrl(), avatarSz);
         } else if (mComment.getAuthorEmail() != null) {
-            String avatarUrl = GravatarUtils.gravatarFromEmail(mComment.getAuthorEmail(), avatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            imgAvatar.setImageUrl(null, WPNetworkImageView.ImageType.AVATAR);
+            avatarUrl = GravatarUtils.gravatarFromEmail(mComment.getAuthorEmail(), avatarSz);
         }
+        mImageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR, avatarUrl);
 
         updateStatusViews();
 

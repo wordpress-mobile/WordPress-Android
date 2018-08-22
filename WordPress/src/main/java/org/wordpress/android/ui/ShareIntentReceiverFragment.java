@@ -24,6 +24,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.util.image.ImageManager;
 
 import javax.inject.Inject;
 
@@ -35,6 +36,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     private static final String ARG_AFTER_LOGIN = "ARG_AFTER_LOGIN";
 
     @Inject AccountStore mAccountStore;
+    @Inject ImageManager mImageManager;
     private ShareIntentFragmentListener mShareIntentFragmentListener;
     private SitePickerAdapter mAdapter;
 
@@ -211,7 +213,7 @@ public class ShareIntentReceiverFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        holder.updateLoggedInAsHeading(getContext(), mAfterLogin, mAccountStore.getAccount());
+        holder.updateLoggedInAsHeading(getContext(), mImageManager, mAfterLogin, mAccountStore.getAccount());
         holder.showSitesHeading(
                 getString(sites.size() == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site));
     }

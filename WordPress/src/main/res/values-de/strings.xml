@@ -1,11 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-13 11:54:07+0000
+Translation-Revision-Date: 2018-08-07 14:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">Noch keine Besucher</string>
+    <string name="people_empty_list_filtered_email_followers">Noch keine E-Mail–Follower</string>
+    <string name="people_empty_list_filtered_followers">Noch keine Follower</string>
+    <string name="people_empty_list_filtered_users">Noch keine Benutzer</string>
+    <string name="connection_service_facebook_notice">Ab 1. August 2018 lässt Facebook das direkte Teilen von Beiträgen auf Facebook-Profilen nicht mehr zu. Die Verknüpfungen zu Facebook–Seiten bleiben unverändert.</string>
+    <string name="reader_empty_posts_liked_description">Beiträge, die dir gefallen, werden hier angezeigt</string>
+    <string name="reader_empty_posts_liked_title">Noch nichts mit „Gefällt mir“ markiert</string>
+    <string name="reader_empty_followed_blogs_button_followed">Zu „Du folgst“ wechseln</string>
+    <string name="reader_empty_followed_blogs_button_discover">Websites entdecken</string>
+    <string name="reader_empty_followed_blogs_description">Du folgst noch keinen Websites. Warum nicht jetzt einer Website folgen?</string>
+    <string name="reader_empty_followed_blogs_title">Keine abonnierten Websites</string>
+    <string name="notifications_empty_likes">Noch keine Likes</string>
+    <string name="notifications_empty_followers">Noch keine Follower</string>
+    <string name="activity_log_limited_content_on_free_plan">Da du einen Free–Tarif hast, siehst du nur begrenzte Ereignisse in deiner Aktivität.</string>
+    <string name="activity_log_empty_subtitle">Wenn du Änderungen an deiner Website vornimmst, kann du hier deinen Aktivitätsverlauf sehen</string>
+    <string name="activity_log_empty_title">Noch keine Aktivität</string>
+    <string name="posts_empty_list_button">Einen Beitrag erstellen</string>
+    <string name="pages_empty_list_button">Eine Seite erstellen</string>
+    <string name="media_empty_upload_media">Medien hochladen</string>
+    <string name="media_empty_list">Du hast keine Medien</string>
+    <string name="reader_gallery_images_desc">Bildetgalerie</string>
+    <string name="blavatar_desc">Website–Icon</string>
+    <string name="theme_image_desc">Theme–Bild</string>
+    <string name="featured_image_desc">Beitragsbild</string>
+    <string name="local_changes_discarding_error">Beim Verwerfen der lokalen Änderungen ist ein Fehler aufgetreten. Bitte wende dich für Unterstützung an den Support.</string>
+    <string name="local_changes_discarding">Lokale Änderungen werden verworfen</string>
+    <string name="local_changes_discarded">Lokale Änderungen verworfen</string>
+    <string name="menu_discard_changes">Lokale Änderungen verwerfen</string>
+    <string name="button_discard_changes">Änderungen verwerfen</string>
+    <string name="button_discard">Verwerfen</string>
+    <string name="reader_avatar_desc">Profilbild</string>
+    <string name="reader_blavatar_desc">Website–Icon</string>
+    <string name="notification_channel_transient_title">Transient</string>
+    <string name="support_identity_input_dialog_email_label">E–Mail</string>
+    <string name="support_identity_input_dialog_enter_email">Bitte gib deine E-Mail–Adresse ein</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Bitte gib deine E-Mail–Adresse und deinen Namen ein, um fortzufahren.</string>
+    <string name="support_push_notification_message">Neue Nachricht von „Hilfe &amp; Support“</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">Nicht festgelegt</string>
+    <string name="support_contact_email">Kontakt-E-Mail–Adresse</string>
+    <string name="application_log_button">Anwendungsprotokoll</string>
+    <string name="my_tickets">Meine Tickets</string>
+    <string name="activity_log_rewind_site">Website zurücksetzen</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Zurücksetzung in Bearbeitung</string>
+    <string name="activity_log_currently_restoring_title">Deine Website wird derzeit wiederhergestellt</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Deine Website wurde erfolgreich wiederhergestellt</string>
+    <string name="activity_log_button">Aktions–Button für Aktivitätsprotokoll</string>
+    <string name="plugin_auto_managed">Automatisch verwaltet</string>
+    <string name="reader_save_posts_locally_dialog_message">Speichere diesen Beitrag und lese ihn später. Er wird nur auf diesem Gerät zur Verfügung stehen – gespeicherte Beiträge werden (noch) nicht mit deinen anderen Geräten synchronisiert. (Aber wir arbeiten daran!).</string>
+    <string name="reader_save_posts_locally_dialog_title">Beiträge für später speichern</string>
+    <string name="reader_empty_search_request_failed">Suche konnte nicht ausgeführt werden</string>
+    <string name="reader_empty_search_title">Keine Ergebnisse gefunden</string>
+    <string name="reader_label_post_search_explainer">WordPress\nnach Website oder Beitrag durchsuchen</string>
+    <string name="comment_read_source_post">Den ursprünglichen Beitrag lesen</string>
+    <string name="sites">Websites</string>
+    <string name="signup_magic_link_title">Magischer Link gesendet</string>
+    <string name="signup_email_screen_title">E-Mail–Registrierung</string>
+    <string name="verification_2fa_screen_title">Code–Verifizierung</string>
+    <string name="selfhosted_site_login_title">Anmeldedaten</string>
+    <string name="magic_link_sent_login_title">Magischer Link gesendet</string>
+    <string name="magic_link_login_title">Magischer Link – Login</string>
+    <string name="site_address_login_title">Website–Adresse – Login</string>
+    <string name="email_address_login_title">E-Mail–Adresse – Login</string>
+    <string name="alternatively">Alternativ:</string>
     <string name="reader_empty_saved_posts_description">Tippe auf %s, um einen Beitrag in deiner Liste zu speichern.</string>
     <string name="reader_empty_saved_posts_title">Keine Beiträge gespeichert – noch!</string>
     <string name="reader_bookmark_snack_title">Beitrag gespeichert</string>
@@ -15,7 +79,6 @@ Language: de
     <string name="reader_remove_bookmark">Aus gespeicherten Beiträgen entfernen</string>
     <string name="reader_add_bookmark">Zu gespeicherten Beiträgen hinzufügen</string>
     <string name="reader_save_for_later_title">Gespeicherte Beiträge</string>
-    <string name="activity_log_empty_list">Noch keine Events verzeichnet</string>
     <string name="removed">Entfernt</string>
     <string name="tabbar_accessibility_label_write">Neuer Beitrag. Schreibe einen neuen Beitrag.</string>
     <string name="my_site_icon_content_description">Website–Symbol ändern</string>
@@ -81,8 +144,6 @@ Language: de
     <string name="dialog_confirm_delete_permanently_page">Bist du sicher, dass du diese Seite endgültig löschen möchtest?</string>
     <string name="dialog_confirm_delete_permanently_post">Bist du sicher, dass du diesen Beitrag endgültig löschen möchtest?</string>
     <string name="notification_site_creation_title_in_progress">Website wird erstellt … Dies kann ein paar Minuten dauern.</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">Wichtig</string>
     <string name="notification_channel_general_title">Allgemein</string>
     <string name="photo_picker_use_photo">Dieses Foto verwenden</string>
@@ -145,6 +206,7 @@ Language: de
     <string name="media_preview_desc">Vorschau</string>
     <string name="media_preview_audio_desc">Audio</string>
     <string name="media_grid_item_play_video_desc">Video abspielen</string>
+    <string name="media_grid_item_trash_desc">Papierkorb</string>
     <string name="media_grid_item_retry_desc">erneut versuchen</string>
     <string name="media_grid_item_image_desc">Medienvorschau, Dateiname %s</string>
     <string name="invite_user_delete_desc">%s entfernen</string>
@@ -154,9 +216,7 @@ Language: de
     <string name="jetpack_connection_failed_with_reason">Verbindung zu Jetpack fehlgeschlagen: %s</string>
     <string name="jetpack_already_connected_toast">Du bist bereits mit Jetpack verbunden</string>
     <string name="menu_undo_snackbar_action">RÜCKGÄNGIG MACHEN</string>
-    <string name="menu_visual_mode_done_snackbar">Zu Visual–Modus gewechselt.</string>
     <string name="menu_visual_mode">Visual–Modus</string>
-    <string name="menu_html_mode_done_snackbar">Zu HTML–Modus gewechselt.</string>
     <string name="menu_html_mode">HTML–Modus</string>
     <string name="menu_preview">Vorschau</string>
     <string name="menu_publish_now">Jetzt veröffentlichen</string>
@@ -206,6 +266,7 @@ Language: de
     <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen zugreifen, da dein Sharing Jetpack–Modul deaktiviert ist.</string>
     <string name="sharing_disabled">Sharing–Modul deaktiviert</string>
     <string name="version_with_name_param">Version %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Herausgeber: %s</string>
     <string name="async_promo_publish_now">Jetzt veröffentlichen</string>
     <string name="notification_sound_has_invalid_path">Der Pfad für den ausgewählten Ton ist ungültig. Bitte wähle einen anderen.</string>
@@ -248,6 +309,8 @@ Language: de
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 Beitrag mit 1 Datei nicht hochgeladen</string>
     <string name="untitled_in_parentheses">(Ohne Titel)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_epilogue_write">Ersten Beitrag verfassen</string>
     <string name="site_creation_epilogue_configure">Konfigurieren </string>
     <string name="site_creation_epilogue_congrats">Glückwunsch!\nDeine Website ist startklar.</string>
@@ -834,10 +897,6 @@ Language: de
     <string name="title_email_follower">E-Mail–Follower</string>
     <string name="title_follower">Follower</string>
     <string name="people_fetching">Benutzer werden abgerufen …</string>
-    <string name="people_empty_list_filtered_viewers">Du hast noch keine Besucher.</string>
-    <string name="people_empty_list_filtered_email_followers">Du hast noch keine E-Mail–Follower.</string>
-    <string name="people_empty_list_filtered_followers">Du hast noch keine Follower.</string>
-    <string name="people_empty_list_filtered_users">Du hast bisher keine Benutzer.</string>
     <string name="people_dropdown_item_viewers">Besucher</string>
     <string name="people_dropdown_item_email_followers">E-Mail–Follower</string>
     <string name="people_dropdown_item_followers">Follower</string>
@@ -893,11 +952,7 @@ Language: de
     <string name="send_link">Link senden</string>
     <string name="label_clear_search_history">Lösche Suchverlauf</string>
     <string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
-    <string name="reader_empty_posts_in_search_description">Keine Beiträge zu %s in deiner Sprache gefunden.</string>
-    <string name="reader_empty_posts_in_search_title">Keine Beiträge gefunden</string>
     <string name="reader_label_post_search_running">Suche…</string>
-    <string name="reader_label_post_search_explainer">Durchsuche alle öffentlichen WordPress.com–Blogs</string>
-    <string name="reader_hint_post_search">Durchsuche WordPress.com</string>
     <string name="reader_title_related_post_detail">Ähnliche Beiträge</string>
     <string name="preview_screen_links_disabled">Im Vorschaubildschirm sind Links deaktiviert.</string>
     <string name="draft_explainer">Dieser Beitrag ist ein Entwurf und wurde noch nicht veröffentlicht</string>
@@ -939,7 +994,6 @@ Language: de
     <string name="delete_site_hint">Website löschen</string>
     <string name="export_site_hint">Exportiere deine Website in eine XML–Datei</string>
     <string name="primary_domain">Primäre Domain</string>
-    <string name="error_deleting_site_summary">Beim Löschen deiner Website ist ein Fehler aufgetreten. Bitte kontaktiere den Support für weiterführende Hilfe.</string>
     <string name="error_deleting_site">Fehler beim Löschen der Website</string>
     <string name="site_settings_export_content_title">Inhalte exportieren</string>
     <string name="confirm_delete_site_prompt">Bitte gib %1$s zur Bestätigung unten in das Feld ein. Dann ist deine Website für immer entfernt.</string>
@@ -953,9 +1007,6 @@ Language: de
     <string name="editor_remove_failed_uploads">Fehlgeschlagene Uploads entfernen</string>
     <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. In diesem Zustand ist das Speichern oder Veröffentlichen deiner Beiträge nicht möglich. Willst du alle fehlgeschlagenen Medien–Uploads löschen?</string>
     <string name="site_settings_advanced_header">Erweitert</string>
-    <string name="comments_empty_list_filtered_trashed">Keine gelöschten Kommentare</string>
-    <string name="comments_empty_list_filtered_pending">Keine ausstehenden Kommentare</string>
-    <string name="comments_empty_list_filtered_approved">Keine genehmigten Kommentare</string>
     <string name="xmlrpc_missing_method_error">Konnte nicht verbinden. Die benötigte XML–RPC Methoden sind nicht auf dem Server vorhanden.</string>
     <string name="alignment_center">Zentriert</string>
     <string name="post_format_video">Video</string>
@@ -1014,7 +1065,6 @@ Language: de
     <string name="mnu_comment_delete_permanently">Löschen</string>
     <string name="mnu_comment_untrash">Wiederherstellen</string>
     <string name="comment_deleted_permanently">Kommentar gelöscht</string>
-    <string name="comments_empty_list_filtered_spam">Keine Spam–Kommentare</string>
     <string name="comment_status_all">Alle</string>
     <string name="could_not_load_page">Seite konnte nicht geladen werden.</string>
     <string name="off">Aus</string>
@@ -1167,15 +1217,7 @@ Language: de
     <string name="reader_label_gap_marker">Mehr Beiträge laden</string>
     <string name="notifications_no_search_results">Die Suche nach \'%s\' ergab keine Ergebnisse</string>
     <string name="search_sites">Websites durchsuchen</string>
-    <string name="notifications_empty_view_reader">Reader anzeigen</string>
-    <string name="notifications_empty_action_followers_likes">Mach auf dich aufmerksam: Kommentiere Beiträge, die du gelesen hast.</string>
-    <string name="notifications_empty_action_comments">Nimm an einer Diskussion teil: Kommentiere Beiträge von Blogs denen du folgst.</string>
-    <string name="notifications_empty_action_unread">Belebe eine Diskussion wieder: Schreibe einen neuen Beitrag.</string>
     <string name="notifications_empty_action_all">Werde aktiv! Kommentiere Beiträge von Blogs denen du folgst.</string>
-    <string name="notifications_empty_likes">Noch keine neuen Likes zum Anzeigen.</string>
-    <string name="notifications_empty_followers">Noch keine neuen Follower anzuzeigen.</string>
-    <string name="notifications_empty_comments">Noch keine neuen Kommentare.</string>
-    <string name="notifications_empty_unread">Keine ungelesenen Nachrichten!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Bitte greife über die App auf die Statistik zu, und versuche das Widget später hinzuzufügen.</string>
     <string name="stats_widget_error_readd_widget">Bitte entferne das Widget und füge es erneut hinzu</string>
     <string name="stats_widget_error_no_visible_blog">Ohne sichtbare Blogs kann nicht auf die Statistik zugegriffen werden</string>
@@ -1198,7 +1240,6 @@ Language: de
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d Follower</string>
     <string name="reader_short_like_count_one">1 Like</string>
-    <string name="reader_menu_tags">Schlagwörter und Blogs bearbeiten</string>
     <string name="reader_title_post_detail">Reader–Beitrag</string>
     <string name="local_draft_explainer">Dieser Beitrag ist ein lokaler Entwurf, der noch nicht veröffentlicht wurde</string>
     <string name="local_changes_explainer">Dieser Beitrag enthält lokale Änderungen, die noch nicht veröffentlicht wurden</string>
@@ -1215,7 +1256,6 @@ Language: de
     <string name="notification_settings_item_other_account_emails_summary">Wichtige E–Mails bezüglich deines Kontos werden immer versandt, aber du kannst auch zusätzliche Benachrichtigungen erhalten.</string>
     <string name="stats_insights_latest_post_trend">Die Veröffentlichung von %2$s ist %1$s her. Hier siehst du, wie es dem Beitrag bisher ergangen ist …</string>
     <string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
-    <string name="button_revert">Rückgängig</string>
     <string name="yesterday">Gestern</string>
     <string name="days_ago">vor %d Tagen</string>
     <string name="connectionbar_no_connection">Keine Verbindung</string>
@@ -1231,8 +1271,6 @@ Language: de
     <string name="post_trashed">Beitrag in den Papierkorb verschoben</string>
     <string name="post_deleted">Beitrag gelöscht</string>
     <string name="page_trashed">Seite in den Papierkorb verschoben</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Du bist nicht berechtigt auf diesen Blog zuzugreifen</string>
-    <string name="reader_toast_err_follow_blog_not_found">Dieser Blog konnte nicht gefunden werden</string>
     <string name="undo">Rückgängig</string>
     <string name="passcodelock_prompt_message">Gib deine PIN ein</string>
     <string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
@@ -1299,7 +1337,7 @@ Language: de
     <string name="error_copy_to_clipboard">Beim Kopieren von Text in die Zwischenablage ist ein Fehler aufgetreten</string>
     <string name="stats_recent_weeks">Letzte Wochen</string>
     <string name="stats_average_per_day">Durchschnitt pro Tag</string>
-    <string name="reader_empty_posts_in_blog">Dieser Blog ist leer</string>
+    <string name="reader_empty_posts_in_blog">Diese Website ist leer</string>
     <string name="reader_label_new_posts">Neue Beiträge</string>
     <string name="logs_copied_to_clipboard">Anwendungsprotokolle wurden in die Zwischenablage kopiert</string>
     <string name="stats_period">Zeitraum</string>
@@ -1390,35 +1428,15 @@ Language: de
     <string name="reader_empty_posts_in_tag">Keine Beiträge mit diesem Tag.</string>
     <string name="reader_empty_comments">Keine Kommentare bisher</string>
     <string name="create_new_blog_wpcom">Erstelle ein WordPress.com Blog</string>
-    <string name="nux_help_description">Besuche das Helpcenter um Antworten auf die häufig gestellten Fragen zu erhalten oder besuche die Foren um eine neue Frage zu stellen</string>
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
-    <string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
-    <string name="reader_empty_followed_blogs_title">Du folgst bisher noch keiner Website</string>
-    <string name="reader_menu_block_blog">Blockiere diesen Blog</string>
-    <string name="reader_toast_blog_blocked">Beiträge von diesem Blog werden nicht länger angezeigt</string>
-    <string name="reader_toast_err_block_blog">Konnte diesen Blog nicht blockieren</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
-    <string name="hs__invalid_email_error">Gib eine gültige E-Mail–Adresse ein</string>
-    <string name="hs__username_blank_error">Gib einen gültigen Namen ein</string>
-    <string name="hs__conversation_header">Support–Chat</string>
-    <string name="hs__new_conversation_header">Support–Chat</string>
-    <string name="hs__conversation_detail_error">Beschreibe das Problem, das du siehst</string>
     <string name="contact_us">Kontaktiere uns</string>
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Update</string>
-    <string name="reader_empty_recommended_blogs">Keine empfohlenen Blogs</string>
-    <string name="reader_toast_err_unfollow_blog">Blog konnte nicht entfolgt werden</string>
-    <string name="reader_toast_err_follow_blog">Blog konnte nicht gefolgt werden </string>
-    <string name="reader_toast_err_already_follow_blog">Du folgst diesem Blog bereits</string>
-    <string name="reader_toast_err_get_blog_info">Dieser Blog kann nicht angezeigt werden.</string>
-    <string name="reader_label_followed_blog">Blog wird verfolgt</string>
     <string name="reader_hint_add_tag_or_url">Gib eine URL oder einen Tag zum Folgen ein</string>
     <string name="reader_page_followed_blogs">Abonnierte Websites</string>
     <string name="reader_page_followed_tags">Abonnierte Tags</string>
-    <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_tag_preview">Reader–Schlagwort</string>
-    <string name="reader_title_blog_preview">Reader–Blog</string>
-    <string name="media_empty_list">Keine Medien</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
     <string name="forgot_password">Passwort vergessen?</string>
@@ -1446,7 +1464,6 @@ Language: de
     <string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
     <string name="adding_cat_failed">Hinzufügen der Kategorie fehlgeschlagen</string>
     <string name="mnu_comment_unspam">Kein Spam</string>
-    <string name="comments_empty_list">Keine Kommentare</string>
     <string name="theme_fetch_failed">Abrufen der Themes fehlgeschlagen</string>
     <string name="blog_not_found">Beim Aufrufen des Blogs ist ein Fehler aufgetreten</string>
     <string name="gallery_error">Das Medien–Objekt konnte nicht abgerufen werden</string>
@@ -1529,7 +1546,6 @@ Language: de
     <string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
     <string name="pick_video">Video auswählen</string>
     <string name="pick_photo">Foto auswählen</string>
-    <string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Icon rechts oben an um zu stöbern!</string>
     <string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
     <string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>
     <string name="reader_toast_err_url_intent">Konnte %s nicht öffnen</string>

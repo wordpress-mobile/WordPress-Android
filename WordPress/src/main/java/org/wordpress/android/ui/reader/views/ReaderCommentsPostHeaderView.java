@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -11,7 +12,8 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 /**
  * topmost view in reader comment adapter - show info about the post
@@ -41,10 +43,10 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
             return;
         }
 
-        TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
-        TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
-        TextView txtDateline = (TextView) findViewById(R.id.text_post_dateline);
-        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
+        TextView txtTitle = findViewById(R.id.text_post_title);
+        TextView txtBlogName = findViewById(R.id.text_blog_name);
+        TextView txtDateline = findViewById(R.id.text_post_dateline);
+        ImageView imgAvatar = findViewById(R.id.image_post_avatar);
 
         txtTitle.setText(post.getTitle());
         if (post.hasBlogName()) {
@@ -67,10 +69,10 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         String avatarUrl;
         if (post.hasBlogUrl()) {
             avatarUrl = GravatarUtils.blavatarFromUrl(post.getBlogUrl(), avatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            ImageManager.getInstance().load(imgAvatar, ImageType.BLAVATAR, avatarUrl);
         } else {
             avatarUrl = post.getPostAvatarForDisplay(avatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            ImageManager.getInstance().loadIntoCircle(imgAvatar, ImageType.AVATAR, avatarUrl);
         }
     }
 }

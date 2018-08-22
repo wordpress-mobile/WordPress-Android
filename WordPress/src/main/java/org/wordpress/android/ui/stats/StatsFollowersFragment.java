@@ -22,7 +22,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -389,9 +389,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             holder.totalsTextView.getText()));
 
             // Avatar
-            holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx),
-                    WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR,
+                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx));
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             if (followData == null) {

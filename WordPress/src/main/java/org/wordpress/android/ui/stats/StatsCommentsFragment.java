@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,9 +234,8 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
                             currentRowData.getViews()));
 
             // avatar
-            holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx),
-                    WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR,
+                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx));
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = currentRowData.getFollowData();

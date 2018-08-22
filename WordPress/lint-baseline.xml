@@ -2978,17 +2978,6 @@
 
     <issue
         id="Overdraw"
-        message="Possible overdraw: Root element paints background `@color/nux_background` with a theme that also paints a background (inferred theme is `@style/CalypsoTheme_NoActionBarShadow`)"
-        errorLine1="            android:background=&quot;@color/nux_background&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/help_activity_with_helpshift.xml"
-            line="7"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
         message="Possible overdraw: Root element paints background `?android:selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         errorLine1="    android:background=&quot;?android:selectableItemBackground&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">

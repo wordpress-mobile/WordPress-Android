@@ -187,6 +187,13 @@ public class ReaderUtils {
     }
 
     /*
+     * returns a tag object from the passed endpoint if tag is in database, otherwise null
+     */
+    public static ReaderTag getTagFromEndpoint(String endpoint) {
+        return ReaderTagTable.getTagFromEndpoint(endpoint);
+    }
+
+    /*
      * returns a tag object from the passed tag name - first checks for it in the tag db
      * (so we can also get its title & endpoint), returns a new tag if that fails
      */

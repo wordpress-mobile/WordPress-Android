@@ -3,11 +3,9 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +35,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.ImageManager;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -66,6 +64,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.HashSet;
 
@@ -388,11 +387,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         mImageManager
-                .loadIntoCircle(holder.mImgAvatar, GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall),
-                        R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp);
+                .loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
+                        GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
-        mImageManager.load(holder.mImgBlavatar, GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall),
-                R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
+        mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR,
+                GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
         holder.mTxtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));
@@ -436,11 +435,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post.hasPostAvatar()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
             mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar,
-                    imageUrl, null);
+                    ImageType.AVATAR, imageUrl);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
-            mImageManager.load(holder.mImgAvatarOrBlavatar, imageUrl, null);
+            mImageManager.load(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR, imageUrl);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
@@ -469,8 +468,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mFramePhoto.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setText(post.getTitle());
-            mImageManager.load(holder.mImgFeatured, post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
-                    null, ScaleType.CENTER_CROP);
+            mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
+                    post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_CROP);
             holder.mThumbnailStrip.setVisibility(View.GONE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgFeatured);
@@ -495,13 +494,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else if (post.getCardType() == ReaderCardType.VIDEO) {
                 ReaderVideoUtils.retrieveVideoThumbnailUrl(post.getFeaturedVideo(), new VideoThumbnailUrlListener() {
                     @Override public void showThumbnail(String thumbnailUrl) {
-                        mImageManager.load(holder.mImgFeatured, thumbnailUrl, null, ScaleType.CENTER_CROP);
+                        mImageManager.load(holder.mImgFeatured, ImageType.PHOTO, thumbnailUrl, ScaleType.CENTER_CROP);
                     }
 
                     @Override public void showPlaceholder() {
-                        mImageManager.load(holder.mImgFeatured, new ColorDrawable(
-                                        ContextCompat.getColor(holder.mImgFeatured.getContext(),
-                                                R.color.grey_lighten_30)));
+                        mImageManager.load(holder.mImgFeatured, ImageType.VIDEO);
                     }
 
                     @Override public void cacheThumbnailUrl(String thumbnailUrl) {
@@ -512,8 +509,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.mThumbnailStrip.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
             } else if (post.hasFeaturedImage()) {
-                mImageManager.load(holder.mImgFeatured, post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
-                        null, ScaleType.CENTER_CROP);
+                mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
+                        post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_CROP);
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
@@ -624,9 +621,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         switch (discoverData.getDiscoverType()) {
             case EDITOR_PICK:
-                mImageManager.loadIntoCircle(postHolder.mImgDiscoverAvatar,
-                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
-                        R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp);
+                mImageManager.loadIntoCircle(postHolder.mImgDiscoverAvatar, ImageType.AVATAR,
+                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // tapping an editor pick opens the source post, which is handled by the existing
                 // post selection handler
                 postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
@@ -641,9 +637,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case SITE_PICK:
                 // BLAVATAR
-                mImageManager.load(postHolder.mImgDiscoverAvatar,
-                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
-                        R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
+                mImageManager.load(postHolder.mImgDiscoverAvatar, ImageType.BLAVATAR,
+                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
                 postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
@@ -907,7 +902,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             bookmarkButton.setVisibility(View.GONE);
         }
-        bookmarkButton.setImageResource(post.isBookmarked
+        mImageManager.load(bookmarkButton, post.isBookmarked
                 ? R.drawable.ic_bookmark_blue_medium_18dp
                 : R.drawable.ic_bookmark_grey_min_18dp);
         if (post.isBookmarked) {

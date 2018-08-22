@@ -25,8 +25,11 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.util.image.ImageManager;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueListener> {
     public static final String TAG = "login_epilogue_fragment_tag";
@@ -46,6 +49,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private ArrayList<Integer> mOldSitesIds;
 
     private LoginEpilogueListener mLoginEpilogueListener;
+
+    @Inject ImageManager mImageManager;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -88,9 +93,9 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
 
         mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
-        mConnectMore = (Button) mBottomButtonsContainer.findViewById(R.id.secondary_button);
+        mConnectMore = mBottomButtonsContainer.findViewById(R.id.secondary_button);
 
-        mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mSitesList = rootView.findViewById(R.id.recycler_view);
         mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mSitesList.setItemAnimator(null);
@@ -220,7 +225,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         final boolean isWpcom = mAccountStore.hasAccessToken();
 
         if (isWpcom) {
-            holder.updateLoggedInAsHeading(getContext(), true, mAccountStore.getAccount());
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, true, mAccountStore.getAccount());
         } else if (sites.size() != 0) {
             SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
@@ -229,7 +234,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             String username = site.getUsername();
             String displayName = site.getDisplayName();
 
-            holder.updateLoggedInAsHeading(getContext(), true, avatarUrl, username, displayName);
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, true, avatarUrl, username, displayName);
         }
 
         if (sites.size() == 0) {

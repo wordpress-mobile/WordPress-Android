@@ -23,7 +23,14 @@ public class WPHtmlTest extends InstrumentationTestCase {
         SpannableStringBuilder text = new SpannableStringBuilder();
         Attributes attributes = new AttributesImpl();
 
-        HtmlToSpannedConverter converter = new HtmlToSpannedConverter(null, null, null, null, null, null, 0);
+        HtmlToSpannedConverter converter = new HtmlToSpannedConverter(
+                null,
+                null,
+                null,
+                null,
+                getInstrumentation().getTargetContext(),
+                null,
+                0);
 
         // startImg is private, we use reflection to change accessibility and invoke it from here
         Method method = HtmlToSpannedConverter.class.getDeclaredMethod("startImg", SpannableStringBuilder.class,

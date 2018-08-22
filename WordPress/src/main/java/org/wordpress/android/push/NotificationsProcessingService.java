@@ -45,6 +45,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 
 import java.util.HashMap;
 
@@ -285,6 +286,9 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void getDataFromIntent() {
+            if (mIntent == null) {
+                return;
+            }
             // get all needed data from intent
             mNoteId = mIntent.getStringExtra(ARG_NOTE_ID);
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
@@ -490,6 +494,7 @@ public class NotificationsProcessingService extends Service {
             }
 
             HashMap<String, String> params = new HashMap<>();
+            params.put("locale", LocaleManager.getLanguage(mContext));
             WordPress.getRestClientUtils().getNotification(params,
                                                            noteId, listener, errorListener
                                                           );

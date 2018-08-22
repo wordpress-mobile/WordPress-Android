@@ -23,6 +23,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -53,8 +54,9 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.PostListButton;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,6 +112,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Inject protected PostStore mPostStore;
     @Inject protected MediaStore mMediaStore;
     @Inject protected UploadStore mUploadStore;
+    @Inject protected ImageManager mImageManager;
 
     public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -160,7 +163,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecyclerView = recyclerView;
     }
@@ -183,7 +186,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
             View view = mLayoutInflater.inflate(R.layout.endlist_indicator, parent, false);
             view.getLayoutParams().height = mEndlistIndicatorHeight;
@@ -210,7 +213,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         // nothing to do if this is the static endlist indicator
         if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
             return;
@@ -333,24 +336,25 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         });
     }
 
-    private void showFeaturedImage(int postId, WPNetworkImageView imgFeatured) {
+    private void showFeaturedImage(int postId, ImageView imgFeatured) {
         String imageUrl = mFeaturedImageUrls.get(postId);
         if (imageUrl == null) {
             imgFeatured.setVisibility(View.GONE);
+            mImageManager.cancelRequestAndClearImageView(imgFeatured);
         } else if (imageUrl.startsWith("http")) {
             String photonUrl = ReaderUtils.getResizedImageUrl(
                     imageUrl, mPhotonWidth, mPhotonHeight, !SiteUtils.isPhotonCapable(mSite));
             imgFeatured.setVisibility(View.VISIBLE);
-            imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+            mImageManager.load(imgFeatured, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP);
         } else {
             Bitmap bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
                     imgFeatured.getContext(), imageUrl, mPhotonWidth);
             if (bmp != null) {
-                imgFeatured.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
                 imgFeatured.setVisibility(View.VISIBLE);
-                imgFeatured.setImageBitmap(bmp);
+                mImageManager.load(imgFeatured, bmp);
             } else {
                 imgFeatured.setVisibility(View.GONE);
+                mImageManager.cancelRequestAndClearImageView(imgFeatured);
             }
         }
     }
@@ -431,6 +435,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if ((PostStatus.fromPost(post) == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.isLocallyChanged()) {
             txtStatus.setVisibility(View.GONE);
             imgStatus.setVisibility(View.GONE);
+            mImageManager.cancelRequestAndClearImageView(imgStatus);
         } else {
             int statusTextResId = 0;
             int statusIconResId = 0;
@@ -460,17 +465,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
                 statusIconResId = R.drawable.ic_gridicons_page;
-                statusColorResId = R.color.alert_yellow;
+                statusColorResId = R.color.alert_yellow_dark;
             } else if (post.isLocallyChanged()) {
                 statusTextResId = R.string.local_changes;
                 statusIconResId = R.drawable.ic_gridicons_page;
-                statusColorResId = R.color.alert_yellow;
+                statusColorResId = R.color.alert_yellow_dark;
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
                         statusTextResId = R.string.post_status_draft;
                         statusIconResId = R.drawable.ic_gridicons_page;
-                        statusColorResId = R.color.alert_yellow;
+                        statusColorResId = R.color.alert_yellow_dark;
                         break;
                     case PRIVATE:
                         statusTextResId = R.string.post_status_post_private;
@@ -478,7 +483,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     case PENDING:
                         statusTextResId = R.string.post_status_pending_review;
                         statusIconResId = R.drawable.ic_gridicons_page;
-                        statusColorResId = R.color.alert_yellow;
+                        statusColorResId = R.color.alert_yellow_dark;
                         break;
                     case SCHEDULED:
                         statusTextResId = R.string.post_status_scheduled;
@@ -490,6 +495,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_red;
                         break;
+                    case UNKNOWN:
+                        // no-op
+                        break;
+                    case PUBLISHED:
+                        // no-op
+                        break;
+                    default:
+                        // no-op
+                        return;
                 }
             }
 
@@ -506,10 +520,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (drawable != null) {
                 drawable = DrawableCompat.wrap(drawable);
                 DrawableCompat.setTint(drawable, resources.getColor(statusColorResId));
-                imgStatus.setImageDrawable(drawable);
                 imgStatus.setVisibility(View.VISIBLE);
+                mImageManager.load(imgStatus, drawable);
             } else {
                 imgStatus.setVisibility(View.GONE);
+                mImageManager.cancelRequestAndClearImageView(imgStatus);
             }
         }
     }
@@ -731,7 +746,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final PostListButton mBtnTrash;
         private final PostListButton mBtnBack;
 
-        private final WPNetworkImageView mImgFeatured;
+        private final ImageView mImgFeatured;
         private final ViewGroup mLayoutButtons;
 
         private final View mDisabledOverlay;
@@ -741,27 +756,27 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         PostViewHolder(View view) {
             super(view);
 
-            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
-            mTxtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
-            mTxtDate = (TextView) view.findViewById(R.id.text_date);
-            mTxtStatus = (TextView) view.findViewById(R.id.text_status);
-            mImgStatus = (ImageView) view.findViewById(R.id.image_status);
+            mTxtTitle = view.findViewById(R.id.text_title);
+            mTxtExcerpt = view.findViewById(R.id.text_excerpt);
+            mTxtDate = view.findViewById(R.id.text_date);
+            mTxtStatus = view.findViewById(R.id.text_status);
+            mImgStatus = view.findViewById(R.id.image_status);
 
-            mBtnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
-            mBtnView = (PostListButton) view.findViewById(R.id.btn_view);
-            mBtnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
-            mBtnMore = (PostListButton) view.findViewById(R.id.btn_more);
+            mBtnEdit = view.findViewById(R.id.btn_edit);
+            mBtnView = view.findViewById(R.id.btn_view);
+            mBtnPublish = view.findViewById(R.id.btn_publish);
+            mBtnMore = view.findViewById(R.id.btn_more);
 
-            mBtnStats = (PostListButton) view.findViewById(R.id.btn_stats);
-            mBtnTrash = (PostListButton) view.findViewById(R.id.btn_trash);
-            mBtnBack = (PostListButton) view.findViewById(R.id.btn_back);
+            mBtnStats = view.findViewById(R.id.btn_stats);
+            mBtnTrash = view.findViewById(R.id.btn_trash);
+            mBtnBack = view.findViewById(R.id.btn_back);
 
-            mImgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
-            mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+            mImgFeatured = view.findViewById(R.id.image_featured);
+            mLayoutButtons = view.findViewById(R.id.layout_buttons);
 
             mDisabledOverlay = view.findViewById(R.id.disabled_overlay);
 
-            mProgressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
+            mProgressBar = view.findViewById(R.id.post_upload_progress);
         }
     }
 
@@ -778,15 +793,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         PageViewHolder(View view) {
             super(view);
-            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
-            mTxtStatus = (TextView) view.findViewById(R.id.text_status);
-            mImgStatus = (ImageView) view.findViewById(R.id.image_status);
+            mTxtTitle = view.findViewById(R.id.text_title);
+            mTxtStatus = view.findViewById(R.id.text_status);
+            mImgStatus = view.findViewById(R.id.image_status);
             mBtnMore = view.findViewById(R.id.btn_more);
             mDividerTop = view.findViewById(R.id.divider_top);
-            mDateHeader = (ViewGroup) view.findViewById(R.id.header_date);
-            mTxtDate = (TextView) mDateHeader.findViewById(R.id.text_date);
+            mDateHeader = view.findViewById(R.id.header_date);
+            mTxtDate = mDateHeader.findViewById(R.id.text_date);
             mDisabledOverlay = view.findViewById(R.id.disabled_overlay);
-            mProgressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
+            mProgressBar = view.findViewById(R.id.post_upload_progress);
         }
     }
 

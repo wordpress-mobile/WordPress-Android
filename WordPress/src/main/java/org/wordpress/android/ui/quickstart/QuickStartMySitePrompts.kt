@@ -44,7 +44,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_sharing,
             R.string.quick_start_dialog_share_site_message_short_sharing,
-            R.drawable.ic_share_24dp,
+            R.drawable.ic_share_white_24dp,
             R.string.quick_start_dialog_share_site_title,
             R.string.quick_start_dialog_share_site_message),
     PUBLISH_POST_TUTORIAL(

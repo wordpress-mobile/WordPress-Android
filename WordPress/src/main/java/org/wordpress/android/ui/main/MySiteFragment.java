@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -75,9 +76,9 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPDialogSnackbar;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.io.File;
@@ -108,7 +109,7 @@ public class MySiteFragment extends Fragment implements
     public static final int MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG = 1;
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
 
-    private WPNetworkImageView mBlavatarImageView;
+    private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
@@ -123,9 +124,8 @@ public class MySiteFragment extends Fragment implements
     private WPTextView mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
-    private LinearLayout mNoSiteView;
+    private ActionableEmptyView mActionableEmptyView;
     private ScrollView mScrollView;
-    private ImageView mNoSiteDrakeImageView;
     private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
@@ -147,6 +147,7 @@ public class MySiteFragment extends Fragment implements
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject ImageManager mImageManager;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -189,7 +190,9 @@ public class MySiteFragment extends Fragment implements
 
         SiteModel site = getSelectedSite();
         if (site != null) {
-            if (site.getHasFreePlan() && !site.isJetpackConnected()) {
+            boolean isNotAdmin = !site.getHasCapabilityManageOptions();
+            boolean isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(site) && !site.isJetpackConnected();
+            if (isNotAdmin || isSelfHostedWithoutJetpack) {
                 mActivityLogContainer.setVisibility(View.GONE);
             } else {
                 mActivityLogContainer.setVisibility(View.VISIBLE);
@@ -280,8 +283,7 @@ public class MySiteFragment extends Fragment implements
         mSharingView = rootView.findViewById(R.id.row_sharing);
         mAdminView = rootView.findViewById(R.id.row_admin);
         mScrollView = rootView.findViewById(R.id.scroll_view);
-        mNoSiteView = rootView.findViewById(R.id.no_site_view);
-        mNoSiteDrakeImageView = rootView.findViewById(R.id.my_site_no_site_view_drake);
+        mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
         mQuickStartContainer = rootView.findViewById(R.id.row_quick_start);
@@ -454,7 +456,7 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
+        mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
@@ -717,22 +719,20 @@ public class MySiteFragment extends Fragment implements
 
         if (site == null) {
             mScrollView.setVisibility(View.GONE);
-            mNoSiteView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.setVisibility(View.VISIBLE);
 
-            // if the screen height is too short, we can just hide the drake illustration
-            Activity activity = getActivity();
-            boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
-            if (drakeVisibility) {
-                mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+            // Hide actionable empty view image when screen height is under 600 pixels.
+            if (DisplayUtils.getDisplayPixelHeight(getActivity()) >= 600) {
+                mActionableEmptyView.image.setVisibility(View.VISIBLE);
             } else {
-                mNoSiteDrakeImageView.setVisibility(View.GONE);
+                mActionableEmptyView.image.setVisibility(View.GONE);
             }
 
             return;
         }
 
         mScrollView.setVisibility(View.VISIBLE);
-        mNoSiteView.setVisibility(View.GONE);
+        mActionableEmptyView.setVisibility(View.GONE);
 
         toggleAdminVisibility(site);
 
@@ -755,8 +755,7 @@ public class MySiteFragment extends Fragment implements
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView
-                .ImageType.BLAVATAR);
+        mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, SiteUtils.getSiteIconUrl(site, mBlavatarSz));
         String homeUrl = SiteUtils.getHomeURLOrHostName(site);
         String blogTitle = SiteUtils.getSiteNameOrHomeURL(site);
 
@@ -828,7 +827,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Override
-    public void setTitle(final String title) {
+    public void setTitle(@NonNull final String title) {
         mToolbarTitle = title;
         if (mToolbar != null) {
             mToolbar.setTitle(title);
@@ -878,8 +877,8 @@ public class MySiteFragment extends Fragment implements
             if (isMediaUploadInProgress()) {
                 if (event.mediaModelList.size() > 0) {
                     MediaModel media = event.mediaModelList.get(0);
-                    mBlavatarImageView.setImageUrl(PhotonUtils.getPhotonImageUrl(
-                            media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH), ImageType.BLAVATAR);
+                    mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, PhotonUtils
+                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH));
                     mSiteSettings.setSiteIconMediaId((int) media.getMediaId());
                     mSiteSettings.saveSettings();
                 } else {

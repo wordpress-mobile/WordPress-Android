@@ -3,9 +3,11 @@ package org.wordpress.android.ui.notifications.services;
 import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.Context;
 
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 
 @TargetApi(21)
 public class NotificationsUpdateJobService extends JobService
@@ -13,6 +15,11 @@ public class NotificationsUpdateJobService extends JobService
     public static final String IS_TAPPED_ON_NOTIFICATION = "is-tapped-on-notification";
 
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @TargetApi(22)
     @Override
@@ -38,7 +45,7 @@ public class NotificationsUpdateJobService extends JobService
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications update job service > created");
-        mNotificationsUpdateLogic = new NotificationsUpdateLogic(this);
+        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(this), this);
     }
 
     @Override

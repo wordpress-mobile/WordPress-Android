@@ -1,14 +1,14 @@
 buildscript {
-    ext.kotlin_version = '1.2.31'
+    ext.kotlin_version = '1.2.50'
     ext.arch_components_version = '1.1.1'
 
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.1.3'
         classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
@@ -69,5 +69,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '5e00087942f8575c54994639fa31f9ae7a5aa829'
+    fluxCVersion = 'd379bc018621e33ca1cfc912bf6eb88438d8f534'
 }
