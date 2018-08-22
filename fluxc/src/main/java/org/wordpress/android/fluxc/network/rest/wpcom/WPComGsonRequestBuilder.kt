@@ -66,8 +66,8 @@ class WPComGsonRequestBuilder
         }))
     }
 
-    sealed class Response<T>{
-        data class Success<T>(val data: T): Response<T>()
-        data class Error<T>(val error: WPComGsonNetworkError): Response<T>()
+    sealed class Response<T> {
+        data class Success<T>(val data: T) : Response<T>()
+        data class Error<T>(val error: WPComGsonNetworkError) : Response<T>()
     }
 }

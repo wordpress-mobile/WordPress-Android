@@ -39,7 +39,7 @@ constructor(
                 url,
                 params,
                 JetpackInstallResponse::class.java)
-        return when(response) {
+        return when (response) {
             is Success -> JetpackInstalledPayload(site, response.data.status)
             is WPComGsonRequestBuilder.Response.Error -> {
                 val error = when {
