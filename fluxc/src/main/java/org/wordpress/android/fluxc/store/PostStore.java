@@ -192,17 +192,6 @@ public class PostStore extends Store {
         }
     }
 
-    public static class OnPostListChanged extends OnChanged<PostError> {
-        public SiteModel site;
-        public ListType listType;
-
-        public OnPostListChanged(SiteModel site, ListType listType, @Nullable PostError postError) {
-            this.site = site;
-            this.listType = listType;
-            this.error = postError;
-        }
-    }
-
     public static class OnPostUploaded extends OnChanged<PostError> {
         public PostModel post;
 
@@ -503,13 +492,10 @@ public class PostStore extends Store {
         if (payload.isError()) {
             updateListError = new UpdateListError(UpdateListErrorType.GENERIC_ERROR, payload.error.message);
         }
-
-        OnPostListChanged onPostListChanged = new OnPostListChanged(payload.site, payload.listType, payload.error);
         UpdateListPayload updateListPayload =
                 new UpdateListPayload(payload.site.getId(), payload.listType, payload.listItems,
                         payload.loadedMore, updateListError);
         mDispatcher.dispatch(ListActionBuilder.newUpdateListAction(updateListPayload));
-        emitChange(onPostListChanged);
     }
 
     private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
