@@ -100,15 +100,24 @@ platform :android do
   desc "Rebuild screenshot devices"
   lane :rebuild_screenshot_devices do |options|
 
-    devices = {
-        :fastlane_screenshots_phone         => "5.1in WVGA",
-        :fastlane_screenshots_seven_inch    => "7in WSVGA (Tablet)",
-        :fastlane_screenshots_ten_inch      => "10.1in WXGA (Tablet)",
-    }
+    devices = [
+        Dir.pwd + "/devices/phone.xml",
+        Dir.pwd + "/devices/tablet-7.xml",
+        Dir.pwd + "/devices/tablet-10.xml",
+    ]
 
-    devices.each do |emulator_name, emulator_device|
-        sh("helpers/create-device.sh #{emulator_name} '#{emulator_device}'")
-        sh("helpers/fixup-android-emulator.sh #{emulator_name}")
+    emulators = [
+        Dir.pwd + "/emulators/fastlane_screenshots_phone.ini",
+        Dir.pwd + "/emulators/fastlane_screenshots_seven_inch.ini",
+        Dir.pwd + "/emulators/fastlane_screenshots_ten_inch.ini",
+    ]
+
+    devices.each do |device_configuration|
+        sh("helpers/register-device.sh '#{device_configuration}'")
+    end
+
+    emulators.each do |emulator_configuration|
+        sh("helpers/copy-device.sh '#{emulator_configuration}'")
     end
   end
 end
