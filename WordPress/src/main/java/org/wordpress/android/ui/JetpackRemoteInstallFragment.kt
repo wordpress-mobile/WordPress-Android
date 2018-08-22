@@ -15,9 +15,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.LoginMode
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState
 import org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN
 import org.wordpress.android.ui.accounts.LoginActivity
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class JetpackRemoteInstallFragment : Fragment() {
@@ -37,10 +37,13 @@ class JetpackRemoteInstallFragment : Fragment() {
             val intent = activity.intent
             val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
             val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
-            val retrievedState = savedInstanceState?.getSerializable(VIEW_STATE) as? ViewState.Type
+            val retrievedState = savedInstanceState?.getSerializable(VIEW_STATE) as? JetpackRemoteInstallViewState.Type
             viewModel.start(site, retrievedState)
             viewModel.liveViewState.observe(this, Observer { viewState ->
                 if (viewState != null) {
+                    if (viewState is JetpackRemoteInstallViewState.Error) {
+                        AppLog.e(AppLog.T.JETPACK_REMOTE_INSTALL, "An error occurred while installing Jetpack")
+                    }
                     jetpack_install_icon.setImageResource(viewState.icon)
                     jetpack_install_title.setText(viewState.titleResource)
                     jetpack_install_message.setText(viewState.messageResource)

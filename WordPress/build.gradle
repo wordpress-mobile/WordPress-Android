@@ -97,16 +97,12 @@ android {
     }
 }
 
-kotlin { experimental { coroutines "enable" } }
-
 dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.23.4'
 
     // Provided by maven central
     implementation 'com.google.code.gson:gson:2.6.2'

@@ -3,79 +3,78 @@ package org.wordpress.android.ui
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
-import org.wordpress.android.R
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.JetpackActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.JetpackStore
+import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Error
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Installed
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Start
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Type
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Type.ERROR
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Type.INSTALLED
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Type.INSTALLING
-import org.wordpress.android.ui.JetpackRemoteInstallViewModel.ViewState.Type.START
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Error
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installed
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Start
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Type
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Type.ERROR
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Type.INSTALLED
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Type.INSTALLING
+import org.wordpress.android.ui.JetpackRemoteInstallViewState.Type.START
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
-import kotlin.coroutines.experimental.CoroutineContext
 
 class JetpackRemoteInstallViewModel
 @Inject constructor(
     private val jetpackStore: JetpackStore,
+    private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore
 ) : ViewModel() {
-    private val mutableViewState = MutableLiveData<ViewState>()
-    val liveViewState: LiveData<ViewState> = mutableViewState
+    private val mutableViewState = MutableLiveData<JetpackRemoteInstallViewState>()
+    val liveViewState: LiveData<JetpackRemoteInstallViewState> = mutableViewState
     private val mutableJetpackConnectionFlow = SingleLiveEvent<JetpackConnectionData>()
     val liveJetpackConnectionFlow: LiveData<JetpackConnectionData> = mutableJetpackConnectionFlow
-    private var job: Job? = null
+    private var siteModel: SiteModel? = null
 
-    fun start(site: SiteModel, type: Type?, coroutineContext: CoroutineContext = CommonPool) {
+    init {
+        dispatcher.register(this)
+    }
+
+    fun start(site: SiteModel, type: Type?) {
+        siteModel = site
         // Init state only if it's empty
         if (mutableViewState.value == null) {
-            mutableViewState.value = type.toState(site, coroutineContext)
+            mutableViewState.value = type.toState(site)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(this)
     }
 
     fun onLogin(siteId: Int) {
         connectJetpack(siteId)
     }
 
-    private fun Type?.toState(site: SiteModel, coroutineContext: CoroutineContext): ViewState {
+    private fun Type?.toState(site: SiteModel): JetpackRemoteInstallViewState {
         if (this == null) {
-            return Start { startRemoteInstall(site, coroutineContext) }
+            return Start { startRemoteInstall(site) }
         }
         return when (this) {
-            START -> Start { startRemoteInstall(site, coroutineContext) }
+            START -> Start { startRemoteInstall(site) }
             INSTALLING -> {
-                startRemoteInstall(site, coroutineContext)
-                ViewState.Installing
+                startRemoteInstall(site)
+                JetpackRemoteInstallViewState.Installing
             }
             INSTALLED -> Installed { connectJetpack(site.id) }
-            ERROR -> Error { startRemoteInstall(site, coroutineContext) }
+            ERROR -> Error { startRemoteInstall(site) }
         }
     }
 
-    private fun startRemoteInstall(site: SiteModel, coroutineContext: CoroutineContext) {
-        cancelJob()
-        job = launch(coroutineContext) {
-            mutableViewState.postValue(ViewState.Installing)
-            val installResult = jetpackStore.install(site)
-            if (isActive) {
-                if (installResult.success) {
-                    mutableViewState.postValue(Installed { connectJetpack(site.id) })
-                } else {
-                    mutableViewState.postValue(Error { startRemoteInstall(site, coroutineContext) })
-                }
-            }
-        }
+    private fun startRemoteInstall(site: SiteModel) {
+        mutableViewState.postValue(JetpackRemoteInstallViewState.Installing)
+        dispatcher.dispatch(JetpackActionBuilder.newInstallJetpackAction(site))
     }
 
     private fun connectJetpack(siteId: Int) {
@@ -84,67 +83,21 @@ class JetpackRemoteInstallViewModel
         mutableJetpackConnectionFlow.postValue(JetpackConnectionData(site, hasAccessToken))
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        cancelJob()
-    }
-
-    private fun cancelJob() {
-        job?.let {
-            if (it.isActive) {
-                it.cancel()
-            }
+    // Network Callbacks
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
+    fun onEventsUpdated(event: OnJetpackInstalled) {
+        val site = siteModel ?: return
+        if (event.isError) {
+            mutableViewState.postValue(Error { startRemoteInstall(site) })
+            return
+        }
+        if (event.success) {
+            mutableViewState.postValue(Installed { connectJetpack(site.id) })
+        } else {
+            mutableViewState.postValue(Error { startRemoteInstall(site) })
         }
     }
 
     data class JetpackConnectionData(val site: SiteModel, val loggedIn: Boolean)
-
-    sealed class ViewState(
-        val type: Type,
-        @StringRes val titleResource: Int,
-        @StringRes val messageResource: Int,
-        @DrawableRes val icon: Int,
-        @StringRes val buttonResource: Int? = null,
-        open val onClick: () -> Unit = {},
-        val progressBarVisible: Boolean = false
-    ) {
-        data class Start(override val onClick: () -> Unit) : ViewState(
-                START,
-                R.string.install_jetpack,
-                R.string.install_jetpack_message,
-                icon = R.drawable.ic_jetpack_icon_green_88dp,
-                buttonResource = R.string.install_jetpack_continue,
-                onClick = onClick
-        )
-
-        object Installing : ViewState(
-                INSTALLING,
-                R.string.installing_jetpack,
-                R.string.installing_jetpack_message,
-                icon = R.drawable.ic_jetpack_icon_green_88dp,
-                progressBarVisible = true
-        )
-
-        data class Installed(override val onClick: () -> Unit) : ViewState(
-                INSTALLED,
-                R.string.jetpack_installed,
-                R.string.jetpack_installed_message,
-                icon = R.drawable.ic_jetpack_icon_green_88dp,
-                buttonResource = R.string.install_jetpack_continue,
-                onClick = onClick
-        )
-
-        data class Error(override val onClick: () -> Unit) : ViewState(
-                ERROR,
-                R.string.jetpack_installation_problem,
-                R.string.jetpack_installation_problem_message,
-                icon = R.drawable.ic_exclamation_mark_88dp,
-                buttonResource = R.string.install_jetpack_retry,
-                onClick = onClick
-        )
-
-        enum class Type {
-            START, INSTALLING, INSTALLED, ERROR
-        }
-    }
 }
