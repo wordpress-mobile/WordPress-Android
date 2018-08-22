@@ -4,10 +4,7 @@ import com.android.volley.RequestQueue
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -22,10 +19,11 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient.JetpackInstallResponse
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType
-import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstalledPayload
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackRestClientTest {
@@ -37,8 +35,6 @@ class JetpackRestClientTest {
     @Mock private lateinit var userAgent: UserAgent
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var successMethodCaptor: KArgumentCaptor<(JetpackInstallResponse) -> Unit>
-    private lateinit var errorMethodCaptor: KArgumentCaptor<(WPComGsonNetworkError) -> Unit>
 
     private lateinit var jetpackRestClient: JetpackRestClient
     private val username = "John Smith"
@@ -49,8 +45,6 @@ class JetpackRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        successMethodCaptor = argumentCaptor()
-        errorMethodCaptor = argumentCaptor()
         jetpackRestClient = JetpackRestClient(dispatcher,
                 wpComGsonRequestBuilder,
                 null,
@@ -61,20 +55,14 @@ class JetpackRestClientTest {
 
     @Test
     fun `returns success on successful jetpack install`() = runBlocking<Unit> {
-        initRequest()
+        initRequest(Success(JetpackInstallResponse(true)))
         val success = true
 
-        var jetpackInstalledPayload: JetpackInstalledPayload? = null
-        launch { jetpackInstalledPayload = jetpackRestClient.installJetpack(site) }
-        while (successMethodCaptor.allValues.isEmpty()) {
-            delay(10)
-        }
-        successMethodCaptor.lastValue.invoke(JetpackInstallResponse(success))
-        delay(50)
+        val jetpackInstalledPayload = jetpackRestClient.installJetpack(site)
 
         checkUrlAndLogin()
         assertThat(jetpackInstalledPayload).isNotNull()
-        assertThat(jetpackInstalledPayload?.success).isEqualTo(success)
+        assertThat(jetpackInstalledPayload.success).isEqualTo(success)
     }
 
     fun checkUrlAndLogin() {
@@ -85,32 +73,25 @@ class JetpackRestClientTest {
 
     @Test
     fun `returns error with type`() = runBlocking<Unit> {
-        initRequest()
+        initRequest(Error(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR))))
 
-        var jetpackErrorPayload: JetpackInstalledPayload? = null
-        launch { jetpackErrorPayload = jetpackRestClient.installJetpack(site) }
-        while (errorMethodCaptor.allValues.isEmpty()) {
-            delay(10)
-        }
-        errorMethodCaptor.lastValue.invoke(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
-        delay(50)
+        val jetpackErrorPayload = jetpackRestClient.installJetpack(site)
 
         checkUrlAndLogin()
         assertThat(jetpackErrorPayload).isNotNull()
-        assertThat(jetpackErrorPayload?.success).isEqualTo(false)
-        assertThat(jetpackErrorPayload?.error?.type).isEqualTo(JetpackInstallErrorType.GENERIC_ERROR)
+        assertThat(jetpackErrorPayload.success).isEqualTo(false)
+        assertThat(jetpackErrorPayload.error?.type).isEqualTo(JetpackInstallErrorType.GENERIC_ERROR)
     }
 
-    fun initRequest() {
+    suspend fun initRequest(response: WPComGsonRequestBuilder.Response<JetpackInstallResponse>) {
         whenever(site.username).thenReturn(username)
         whenever(site.password).thenReturn(password)
         whenever(site.url).thenReturn(siteUrl)
-        whenever(wpComGsonRequestBuilder.buildPostRequest(
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(jetpackRestClient),
                 urlCaptor.capture(),
                 paramsCaptor.capture(),
-                eq(JetpackInstallResponse::class.java),
-                successMethodCaptor.capture(),
-                errorMethodCaptor.capture()
-        )).thenReturn(mock())
+                eq(JetpackInstallResponse::class.java)
+        )).thenReturn(response)
     }
 }

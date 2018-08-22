@@ -3,7 +3,8 @@ package org.wordpress.android.fluxc.store
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -20,17 +21,22 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallError
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstalledPayload
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackStoreTest {
     @Mock private lateinit var jetpackRestClient: JetpackRestClient
     @Mock private lateinit var dispatcher: Dispatcher
+    @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var site: SiteModel
     private lateinit var jetpackStore: JetpackStore
 
     @Before
     fun setUp() {
-        jetpackStore = JetpackStore(jetpackRestClient, dispatcher)
+        jetpackStore = JetpackStore(jetpackRestClient, siteStore, Unconfined, dispatcher)
+        val siteId = 1
+        whenever(site.id).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
     }
 
     @Test
@@ -38,9 +44,12 @@ class JetpackStoreTest {
         val success = true
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(JetpackInstalledPayload(site, success))
 
-        val jetpackInstalled = jetpackStore.install(site, INSTALL_JETPACK)
+        var result: OnJetpackInstalled? = null
+        launch(Unconfined) { result = jetpackStore.install(site, INSTALL_JETPACK) }
 
-        assertThat(jetpackInstalled.success).isTrue()
+        jetpackStore.onSiteChanged(OnSiteChanged(1))
+
+        assertThat(result!!.success).isTrue()
         val expectedChangeEvent = OnJetpackInstalled(success, INSTALL_JETPACK)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
@@ -52,7 +61,7 @@ class JetpackStoreTest {
 
         jetpackStore.onAction(JetpackActionBuilder.newInstallJetpackAction(site))
 
-        delay(10)
+        jetpackStore.onSiteChanged(OnSiteChanged(1))
 
         val expectedChangeEvent = OnJetpackInstalled(success, INSTALL_JETPACK)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
@@ -64,9 +73,12 @@ class JetpackStoreTest {
         val payload = JetpackInstalledPayload(installError, site)
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(payload)
 
-        val jetpackInstalled = jetpackStore.install(site, INSTALL_JETPACK)
+        var result: OnJetpackInstalled? = null
+        launch(Unconfined) { result = jetpackStore.install(site, INSTALL_JETPACK) }
 
-        assertThat(jetpackInstalled.success).isFalse()
+        jetpackStore.onSiteChanged(OnSiteChanged(1))
+
+        assertThat(result!!.success).isFalse()
         val expectedChangeEvent = OnJetpackInstalled(installError, INSTALL_JETPACK)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
@@ -79,7 +91,7 @@ class JetpackStoreTest {
 
         jetpackStore.onAction(JetpackActionBuilder.newInstallJetpackAction(site))
 
-        delay(10)
+        jetpackStore.onSiteChanged(OnSiteChanged(1))
 
         val expectedChangeEvent = OnJetpackInstalled(installError, INSTALL_JETPACK)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
