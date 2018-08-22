@@ -51,6 +51,9 @@ replace_key_with 'skin.path' '_no_skin' $path
 
 ${ANDROID_HOME}/emulator/emulator -no-window -avd $device_key &
 
+# Just in case this isn't on the user's $PATH
+alias adb=${ANDROID_HOME}/platform-tools/adb
+
 while [ "`adb wait-for-device shell getprop sys.boot_completed | tr -d '\r' `" != "1" ] ; do sleep 1; done
 
 device_port=$(adb wait-for-device get-serialno)
