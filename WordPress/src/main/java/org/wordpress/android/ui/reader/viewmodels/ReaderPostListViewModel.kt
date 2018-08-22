@@ -14,16 +14,21 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
 
-    private lateinit var initialTag: ReaderTag
+    /**
+     * News Card shouldn't be shown when the initialTag is null. InitialTag may be null for Blog previews for instance.
+     */
+    private var initialTag: ReaderTag? = null
     private var isStarted = false
 
-    fun start(tag: ReaderTag) {
+    fun start(tag: ReaderTag?) {
         if (isStarted) {
             return
         }
-        initialTag = tag
-        onTagChanged(tag)
-        newsManager.pull()
+        tag?.let {
+            initialTag = tag
+            onTagChanged(tag)
+            newsManager.pull()
+        }
         isStarted = true
     }
 
@@ -31,13 +36,15 @@ class ReaderPostListViewModel @Inject constructor(
         return _newsItemSourceMediator
     }
 
-    fun onTagChanged(tag: ReaderTag) {
-        // show the card only when the initial tag is selected in the filter
-        if (tag == initialTag) {
-            _newsItemSourceMediator.addSource(newsItemSource) { _newsItemSourceMediator.value = it }
-        } else {
-            _newsItemSourceMediator.removeSource(newsItemSource)
-            _newsItemSourceMediator.value = null
+    fun onTagChanged(tag: ReaderTag?) {
+        initialTag?.let {
+            // show the card only when the initial tag is selected in the filter
+            if (tag == initialTag) {
+                _newsItemSourceMediator.addSource(newsItemSource) { _newsItemSourceMediator.value = it }
+            } else {
+                _newsItemSourceMediator.removeSource(newsItemSource)
+                _newsItemSourceMediator.value = null
+            }
         }
     }
 
