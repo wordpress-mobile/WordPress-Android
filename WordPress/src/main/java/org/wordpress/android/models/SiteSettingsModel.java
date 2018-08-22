@@ -646,5 +646,4 @@ public final class SiteSettingsModel {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
-
 }
