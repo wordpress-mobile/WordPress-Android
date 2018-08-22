@@ -1484,33 +1484,36 @@ public class ReaderPostListFragment extends Fragment
                 }
             };
 
+    private final NewsCardListener mNewsCardListener = new NewsCardListener() {
+        @Override public void onItemShown(@NotNull NewsItem item) {
+            mViewModel.onNewsCardShown(item);
+        }
+
+        @Override public void onItemClicked(@NotNull NewsItem item) {
+            mViewModel.onNewsCardExtendedInfoRequested(item);
+            Activity activity = getActivity();
+            if (activity != null) {
+                WPWebViewActivity.openURL(activity, item.getActionUrl());
+            }
+        }
+
+        @Override public void onDismissClicked(NewsItem item) {
+            mViewModel.onNewsCardDismissed(item);
+        }
+    };
+
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostAdapter = new ReaderPostAdapter(context, getPostListType(), mImageManager, new NewsCardListener() {
-                @Override public void onItemShown(@NotNull NewsItem item) {
-                    mViewModel.onNewsCardShown(item);
-                }
-
-                @Override public void onItemClicked(@NotNull NewsItem item) {
-                    mViewModel.onNewsCardExtendedInfoRequested(item);
-                    Activity activity = getActivity();
-                    if (activity != null) {
-                        WPWebViewActivity.openURL(activity, item.getActionUrl());
-                    }
-                }
-
-                @Override public void onDismissClicked(NewsItem item) {
-                    mViewModel.onNewsCardDismissed(item);
-                }
-            });
+            mPostAdapter = new ReaderPostAdapter(context, getPostListType(), mImageManager);
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
+            mPostAdapter.setOnNewsCardListener(mNewsCardListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
