@@ -602,6 +602,22 @@ public abstract class SiteSettingsInterface {
         mSettings.ampEnabled = enabled;
     }
 
+    public boolean isPortfolioEnabled() {
+        return mSettings.isPortfolioEnabled;
+    }
+
+    public void setPortfolioEnabled(boolean isPortfolioEnabled) {
+        mSettings.isPortfolioEnabled = isPortfolioEnabled;
+    }
+
+    public int getPortfolioPostsPerPage() {
+        return mSettings.portfolioPostsPerPage;
+    }
+
+    public void setPortfolioPostsPerPage(int portfolioPostsPerPage) {
+        mSettings.portfolioPostsPerPage = portfolioPostsPerPage;
+    }
+
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }

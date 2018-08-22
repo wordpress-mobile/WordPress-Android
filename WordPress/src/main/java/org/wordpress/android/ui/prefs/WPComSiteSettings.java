@@ -65,6 +65,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    private static final String PORTFOLIO_ENABLED_KEY = "jetpack_portfolio";
+    private static final String PORTFOLIO_POSTS_PER_PAGE_KEY = "jetpack_portfolio_posts_per_page";
     // Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
     private static final String LAZY_LOAD_IMAGES = "lazy-images";
@@ -631,6 +633,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
             mRemoteSettings.showRelatedPostHeader = settingsObject.optBoolean(RELATED_POSTS_HEADER_KEY, false);
             mRemoteSettings.showRelatedPostImages = settingsObject.optBoolean(RELATED_POSTS_IMAGES_KEY, false);
         }
+
+        mRemoteSettings.isPortfolioEnabled = settingsObject.optBoolean(PORTFOLIO_ENABLED_KEY, false);
+        mRemoteSettings.portfolioPostsPerPage = settingsObject.optInt(PORTFOLIO_POSTS_PER_PAGE_KEY, 0);
     }
 
     /**
@@ -779,7 +784,10 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
             params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
         }
-
+        if (mSettings.isPortfolioEnabled != mRemoteSettings.isPortfolioEnabled) {
+            params.put(PORTFOLIO_ENABLED_KEY, String.valueOf(mSettings.isPortfolioEnabled));
+            params.put(PORTFOLIO_POSTS_PER_PAGE_KEY, String.valueOf(mSettings.portfolioPostsPerPage));
+        }
         return params;
     }
 

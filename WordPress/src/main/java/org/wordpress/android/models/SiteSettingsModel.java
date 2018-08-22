@@ -66,6 +66,8 @@ public class SiteSettingsModel {
     private static final String POSTS_PER_PAGE_COLUMN_NAME = "postsPerPage";
     private static final String AMP_SUPPORTED_COLUMN_NAME = "ampSupported";
     private static final String AMP_ENABLED_COLUMN_NAME = "ampEnabled";
+    private static final String PORTFOLIO_ENABLED_COLUMN_NAME = "portfolioEnabled";
+    private static final String PORTFOLIO_POSTS_PER_PAGE_COLUMN_NAME = "portfolioPostsPerPage";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -97,6 +99,13 @@ public class SiteSettingsModel {
                                                    + " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_SITE_ICON = "alter table " + SETTINGS_TABLE_NAME
                                                + " add " + SITE_ICON_COLUMN_NAME + " INTEGER;";
+
+    public static final String ADD_PORTFOLIO_ENABLED = "alter table " + SETTINGS_TABLE_NAME
+                                                       + " add " + PORTFOLIO_ENABLED_COLUMN_NAME + " BOOLEAN;";
+
+    public static final String ADD_PORTFOLIO_POST_PER_PAGE = "alter table " + SETTINGS_TABLE_NAME
+                                                             + " add " + PORTFOLIO_POSTS_PER_PAGE_COLUMN_NAME
+                                                             + " INTEGER;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS "
@@ -186,6 +195,8 @@ public class SiteSettingsModel {
     public boolean ampSupported;
     public boolean ampEnabled;
     public String quotaDiskSpace;
+    public boolean isPortfolioEnabled;
+    public int portfolioPostsPerPage;
 
     @Override
     public boolean equals(Object other) {
@@ -226,6 +237,8 @@ public class SiteSettingsModel {
                && commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers
                && postsPerPage == otherModel.postsPerPage
                && ampEnabled == otherModel.ampEnabled
+               && isPortfolioEnabled == otherModel.isPortfolioEnabled
+               && portfolioPostsPerPage == otherModel.portfolioPostsPerPage
                && ampSupported == otherModel.ampSupported
                && maxLinks == otherModel.maxLinks
                && equals(defaultPostFormat, otherModel.defaultPostFormat)
@@ -290,6 +303,8 @@ public class SiteSettingsModel {
         postsPerPage = other.postsPerPage;
         ampSupported = other.ampSupported;
         ampEnabled = other.ampEnabled;
+        isPortfolioEnabled = other.isPortfolioEnabled;
+        portfolioPostsPerPage = other.portfolioPostsPerPage;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -352,6 +367,8 @@ public class SiteSettingsModel {
         postsPerPage = getIntFromCursor(cursor, POSTS_PER_PAGE_COLUMN_NAME);
         ampSupported = getBooleanFromCursor(cursor, AMP_SUPPORTED_COLUMN_NAME);
         ampEnabled = getBooleanFromCursor(cursor, AMP_ENABLED_COLUMN_NAME);
+        isPortfolioEnabled = getBooleanFromCursor(cursor, PORTFOLIO_ENABLED_COLUMN_NAME);
+        portfolioPostsPerPage = getIntFromCursor(cursor, PORTFOLIO_POSTS_PER_PAGE_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -442,6 +459,8 @@ public class SiteSettingsModel {
         values.put(POSTS_PER_PAGE_COLUMN_NAME, postsPerPage);
         values.put(AMP_SUPPORTED_COLUMN_NAME, ampSupported);
         values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
+        values.put(PORTFOLIO_ENABLED_COLUMN_NAME, isPortfolioEnabled);
+        values.put(PORTFOLIO_POSTS_PER_PAGE_COLUMN_NAME, portfolioPostsPerPage);
 
         String moderationKeys = "";
         if (holdForModeration != null) {
