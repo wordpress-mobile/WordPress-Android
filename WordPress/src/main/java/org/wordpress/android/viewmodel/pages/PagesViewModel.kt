@@ -119,6 +119,8 @@ class PagesViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
+
+        actionPerfomer.onCleanup()
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
