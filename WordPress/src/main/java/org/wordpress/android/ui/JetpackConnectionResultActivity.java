@@ -27,13 +27,13 @@ import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 /**
- * An activity to handle Jetpack deeplink
+ * An activity to handle result of Jetpack connection
  * <p>
  * wordpress://jetpack-connection?reason={error}
  * <p>
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
-public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
+public class JetpackConnectionResultActivity extends AppCompatActivity {
     private static final String ALREADY_CONNECTED = "already-connected";
     private static final String REASON_PARAM = "reason";
     private static final String SOURCE_PARAM = "source";
