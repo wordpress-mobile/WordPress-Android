@@ -20,5 +20,5 @@ if [ ! -f $device_registry ]; then
     exit 0
 fi
 
-$(dirname $0)/add-device-to-registry.py "${device_file}" "${device_registry}"
+$(dirname $0)/merge-hardware-profile-into-registry.py "${device_file}" "${device_registry}"
 echo "${device_handle} added to registry"

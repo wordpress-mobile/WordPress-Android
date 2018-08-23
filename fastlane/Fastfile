@@ -113,7 +113,7 @@ platform :android do
     ]
 
     devices.each do |device_configuration|
-        sh("helpers/register-device.sh '#{device_configuration}'")
+        sh("helpers/register-hardware-profile.sh '#{device_configuration}'")
     end
 
     emulators.each do |emulator_configuration|
