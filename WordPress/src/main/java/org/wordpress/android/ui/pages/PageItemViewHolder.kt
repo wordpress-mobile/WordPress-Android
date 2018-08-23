@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.pages
 
+import android.graphics.Rect
 import android.support.annotation.LayoutRes
 import android.support.v4.widget.CompoundButtonCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -59,6 +61,12 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
                 pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
+
+                val touchableArea = Rect()
+                pageMore.getHitRect(touchableArea)
+                touchableArea.top -= DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
+                touchableArea.bottom += DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
+                pageMore.touchDelegate = TouchDelegate(touchableArea, pageMore)
             }
         }
 

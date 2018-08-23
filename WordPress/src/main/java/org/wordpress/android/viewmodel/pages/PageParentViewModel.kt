@@ -28,6 +28,10 @@ class PageParentViewModel
     val currentParent: ParentPage
         get() = _currentParent
 
+    private val _isSaveButtonVisible = MutableLiveData<Boolean>()
+    val isSaveButtonVisible: LiveData<Boolean>
+        get() = _isSaveButtonVisible
+
     private var isStarted: Boolean = false
     private lateinit var site: SiteModel
     private var page: PageModel? = null
@@ -40,6 +44,8 @@ class PageParentViewModel
             isStarted = true
 
             loadPages(pageId)
+
+            _isSaveButtonVisible.postValue(false)
         }
     }
 
@@ -66,6 +72,8 @@ class PageParentViewModel
         _currentParent.isSelected = false
         _currentParent = page
         _currentParent.isSelected = true
+
+        _isSaveButtonVisible.postValue(true)
     }
 
     private fun getChildren(page: PageModel, pages: List<PageModel>): List<PageModel> {
