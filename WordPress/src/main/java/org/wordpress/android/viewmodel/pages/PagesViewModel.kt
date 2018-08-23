@@ -61,40 +61,32 @@ class PagesViewModel
     val searchResult: LiveData<List<PageItem>> = _searchResult
 
     private val _listState = MutableLiveData<PageListState>()
-    val listState: LiveData<PageListState>
-        get() = _listState
+    val listState: LiveData<PageListState> = _listState
 
     private val _displayDeleteDialog = SingleLiveEvent<Page>()
-    val displayDeleteDialog: LiveData<Page>
-        get() = _displayDeleteDialog
+    val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
     private val _refreshPages = SingleLiveEvent<Unit>()
-    val refreshPages: LiveData<Unit>
-        get() = _refreshPages
+    val refreshPages: LiveData<Unit> = _refreshPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
-    val createNewPage: LiveData<Unit>
-        get() = _createNewPage
+    val createNewPage: LiveData<Unit> = _createNewPage
 
     private val _editPage = SingleLiveEvent<PageModel?>()
-    val editPage: LiveData<PageModel?>
-        get() = _editPage
+    val editPage: LiveData<PageModel?> = _editPage
 
     private val _previewPage = SingleLiveEvent<PageModel?>()
-    val previewPage: LiveData<PageModel?>
-        get() = _previewPage
+    val previewPage: LiveData<PageModel?> = _previewPage
 
     private val _setPageParent = SingleLiveEvent<PageModel?>()
-    val setPageParent: LiveData<PageModel?>
-        get() = _setPageParent
+    val setPageParent: LiveData<PageModel?> = _setPageParent
 
     private var _pages: Map<Long, PageModel> = emptyMap()
     val pages: Map<Long, PageModel>
         get() = _pages
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
-    val showSnackbarMessage: LiveData<SnackbarMessageHolder>
-        get() = _showSnackbarMessage
+    val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
     private lateinit var site: SiteModel
     private var searchJob: Job? = null

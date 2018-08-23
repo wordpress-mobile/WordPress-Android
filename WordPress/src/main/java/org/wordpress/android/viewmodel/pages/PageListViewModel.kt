@@ -28,8 +28,7 @@ import javax.inject.Inject
 class PageListViewModel
 @Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<List<PageItem>>
-        get() = _pages
+    val pages: LiveData<List<PageItem>> = _pages
 
     private var isStarted: Boolean = false
     private lateinit var pageType: PageStatus

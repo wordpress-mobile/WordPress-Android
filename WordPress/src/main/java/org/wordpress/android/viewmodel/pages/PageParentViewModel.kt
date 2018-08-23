@@ -21,16 +21,14 @@ import javax.inject.Inject
 class PageParentViewModel
 @Inject constructor(private val pageStore: PageStore, private val resourceProvider: ResourceProvider) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<List<PageItem>>
-        get() = _pages
+    val pages: LiveData<List<PageItem>> = _pages
 
     private lateinit var _currentParent: ParentPage
     val currentParent: ParentPage
         get() = _currentParent
 
     private val _isSaveButtonVisible = MutableLiveData<Boolean>()
-    val isSaveButtonVisible: LiveData<Boolean>
-        get() = _isSaveButtonVisible
+    val isSaveButtonVisible: LiveData<Boolean> = _isSaveButtonVisible
 
     private var isStarted: Boolean = false
     private lateinit var site: SiteModel
