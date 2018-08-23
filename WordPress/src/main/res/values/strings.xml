@@ -759,9 +759,25 @@
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
     <string name="stats_default_number_zero" translatable="false">0</string>
-    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
+    <string name="stats_jetpack_connection_setup">Install Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our <u>terms and conditions</u></string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
+
+    <!-- Jetpack install -->
+    <string name="jetpack">Jetpack</string>
+    <string name="install_jetpack">Install Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="installing_jetpack">Installing Jetpack</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
+    <string name="jetpack_installed">Jetpack installed</string>
+    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
+    <string name="jetpack_installation_problem">There was a problem</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
+    <string name="install_jetpack_continue">Continue</string>
+    <string name="install_jetpack_retry">Retry</string>
+    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
     <string name="activity">Activity</string>

@@ -273,7 +273,7 @@
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.JetpackConnectionDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
+        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -283,6 +283,10 @@
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.JetpackRemoteInstallActivity"
+            android:label="@string/jetpack"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Media Activities -->
         <activity
@@ -503,7 +507,7 @@
             android:label="@string/plugins"
             android:theme="@style/Calypso.NoActionBar"/>
 
-        <!--Plugins-->
+        <!--Activity Log-->
         <activity
             android:name=".ui.activitylog.list.ActivityLogListActivity"
             android:label="@string/activity_log"

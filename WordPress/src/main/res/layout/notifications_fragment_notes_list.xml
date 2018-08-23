@@ -210,7 +210,7 @@
                             style="@style/JetpackConnectionText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxWidth="290dp"
+                            android:maxWidth="@dimen/jetpack_text_width"
                             android:text="@string/notifications_jetpack_connection_setup_info"
                             android:textAlignment="center"
                             app:fixWidowWords="true"/>
@@ -222,6 +222,23 @@
                             android:layout_marginBottom="@dimen/margin_extra_large"
                             android:text="@string/stats_jetpack_connection_setup"
                             android:theme="@style/JetpackConnectionButton"/>
+
+                        <TextView
+                            android:id="@+id/jetpack_terms_and_conditions"
+                            android:layout_width="@dimen/jetpack_terms_and_conditions_width"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_extra_large"
+                            android:text="@string/stats_jetpack_connection_terms_and_conditions"
+                            android:textAlignment="center"
+                            style="@style/JetpackTermsAndConditionsButton"/>
+
+                        <Button
+                            android:id="@+id/jetpack_faq"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/stats_jetpack_connection_faq"
+                            style="@style/JetpackFaqButton"/>
 
                     </LinearLayout>
 
