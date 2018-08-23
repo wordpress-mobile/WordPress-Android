@@ -38,7 +38,7 @@
                     style="@style/JetpackConnectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="290dp"
+                    android:maxWidth="@dimen/jetpack_connection_setup_width"
                     android:text="@string/stats_jetpack_connection_setup_info"
                     android:textAlignment="center" />
 
@@ -52,7 +52,7 @@
 
                 <TextView
                     android:id="@+id/jetpack_terms_and_conditions"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/jetpack_terms_and_conditions_width"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:textAlignment="center"

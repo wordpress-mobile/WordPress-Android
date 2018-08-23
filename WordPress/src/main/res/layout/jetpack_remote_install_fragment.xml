@@ -59,7 +59,7 @@
 
             <ProgressBar
                 android:id="@+id/jetpack_install_progress"
-                style="@style/JetpackProgressBar"
+                style="@style/BlueMediumProgressBar"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_width="24dp"
                 android:layout_height="24dp"

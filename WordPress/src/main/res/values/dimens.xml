@@ -317,4 +317,6 @@
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
 
     <dimen name="snackbar_message_margin_bottom">18dp</dimen>
+    <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
+    <dimen name="jetpack_connection_setup_width">290dp</dimen>
 </resources>

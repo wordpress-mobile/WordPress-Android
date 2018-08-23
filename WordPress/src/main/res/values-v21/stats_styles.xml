@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="JetpackProgressBar" parent="Widget.AppCompat.ProgressBar">
+    <style name="BlueMediumProgressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:colorAccent">@color/blue_medium</item>
         <item name="android:indeterminateTint">@color/blue_medium</item>
     </style>
