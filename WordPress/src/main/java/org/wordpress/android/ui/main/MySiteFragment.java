@@ -302,7 +302,6 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO check if Quick Start completed
                 completeQuickStarTask(QuickStartTask.VIEW_SITE);
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), true);
             }
@@ -318,7 +317,6 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO check if Quick Start completed
                 completeQuickStarTask(QuickStartTask.VIEW_SITE);
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
             }
@@ -402,7 +400,6 @@ public class MySiteFragment extends Fragment implements
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO check if Quick Start completed
                 completeQuickStarTask(QuickStartTask.CHOOSE_THEME);
                 if (isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
                     requestNextStepOfActiveQuickStartTask();
@@ -468,7 +465,7 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
-                    QuickStartUtils.markAllTasksAsShown(mQuickStartStore);
+                    mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
                     updateQuickStartContainer();
                 }
 
@@ -1047,18 +1044,13 @@ public class MySiteFragment extends Fragment implements
         return hasActiveQuickStartTask() && mActiveTutorialPrompt.getTask() == task;
     }
 
-    // we might need to call this one when the fragment is not attached to WPMainActivity
-    public void completeQuickStarTask(int siteId, QuickStartTask quickStartTask) {
-        mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
-        if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
-            removeQuickStartFocusPoint();
-            clearActiveQuickStartTask();
-        }
-    }
-
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
-            completeQuickStarTask(getSelectedSite().getId(), quickStartTask);
+            QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, getSelectedSite());
+            if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
+                removeQuickStartFocusPoint();
+                clearActiveQuickStartTask();
+            }
         }
     }
 
@@ -1147,6 +1139,12 @@ public class MySiteFragment extends Fragment implements
         mQuickStartTaskPromptSnackBar.show();
         mQuickStartSnackBarWasShown = true;
         incrementNumberOfTimesQuickStartDialogWasShown();
+
+        // clear the prompted quick start task after user sees the "continue" dialog, so the prompt will not appear when
+        // other tasks are completed outside of quick start process
+        if (shouldDirectUserToContinueQuickStart) {
+            setPromptedQuickStartTask(null);
+        }
     }
 
     private void incrementNumberOfTimesQuickStartDialogWasShown() {

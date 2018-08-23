@@ -15,6 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -156,15 +158,32 @@ class QuickStartUtils {
 
         @JvmStatic
         fun isQuickStartInProgress(quickStartStore: QuickStartStore): Boolean {
-            return quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), QuickStartTask.CREATE_SITE) &&
-                    quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) > 0 &&
-                    quickStartStore.getShownCount(AppPrefs.getSelectedSite().toLong()) < QuickStartTask.values().size
+            return !quickStartStore.getQuickStartCompleted(AppPrefs.getSelectedSite().toLong()) &&
+                    quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), QuickStartTask.CREATE_SITE)
         }
 
         @JvmStatic
-        fun markAllTasksAsShown(quickStartStore: QuickStartStore) {
-            for (quickStartTask in QuickStartTask.values()) {
-                quickStartStore.setShownTask(AppPrefs.getSelectedSite().toLong(), quickStartTask, true)
+        fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore): Boolean {
+            return quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) == QuickStartTask.values().size
+        }
+
+        @JvmStatic
+        fun completeTask(
+            quickStartStore: QuickStartStore,
+            task: QuickStartTask,
+            dispatcher: Dispatcher,
+            site: SiteModel
+        ) {
+            val siteId = site.id.toLong()
+
+            if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore)) {
+                return
+            }
+
+            quickStartStore.setDoneTask(siteId, task, true)
+
+            if (isEveryQuickStartTaskDone(quickStartStore)) {
+                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
             }
         }
     }

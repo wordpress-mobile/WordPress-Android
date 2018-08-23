@@ -36,8 +36,10 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
@@ -146,6 +148,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject QuickStartStore mQuickStartStore;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -478,6 +481,8 @@ public class WPMainActivity extends AppCompatActivity implements
 
         checkConnection();
 
+        checkQuickStartNotificationStatus();
+
         // Update account to update the notification unseen status
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -486,6 +491,14 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+    }
+
+    private void checkQuickStartNotificationStatus() {
+        if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
+            && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
+            && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
+            mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(getSelectedSite()));
+        }
     }
 
     private void announceTitleForAccessibility(int position) {
@@ -823,6 +836,15 @@ public class WPMainActivity extends AppCompatActivity implements
                     }
                 }
             }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onQuickStartCompleted(OnQuickStartCompleted event) {
+        if (getSelectedSite() != null && !event.isError()) {
+            // as long as we get any response that is not an error mark quick start notification as received
+            mQuickStartStore.setQuickStartNotificationReceived(event.site.getId(), true);
         }
     }
 

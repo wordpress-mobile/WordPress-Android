@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
@@ -49,6 +50,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     @Inject AccountStore mAccountStore;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject Dispatcher mDispatcher;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -214,8 +216,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener(new OnServiceClickListener() {
                     @Override public void onServiceClicked(PublicizeService service) {
-                        // TODO check if Quick Start completed
-                        mQuickStartStore.setDoneTask(mSite.getId(), QuickStartTask.SHARE_SITE, true);
+                        QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.SHARE_SITE, mDispatcher, mSite);
                         if (getView() != null) {
                             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
                         }
