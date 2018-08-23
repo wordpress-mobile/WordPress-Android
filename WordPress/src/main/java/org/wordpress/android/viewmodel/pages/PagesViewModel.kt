@@ -40,7 +40,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
-import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.CHANGE
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.REMOVE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -175,15 +175,7 @@ class PagesViewModel
     fun onPageParentSet(pageId: Long, parentId: Long) {
         launch {
             pages[pageId]?.let { page ->
-                if (page.parent?.remoteId != parentId) {
-                    page.parent = pages[parentId]
-
-                    pageStore.uploadPageToServer(page)
-                    waitForPageUpdate(pageId)
-
-                    reloadPages()
-                    _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_changed))
-                }
+                setParent(page, parentId)
             }
         }
     }
@@ -283,8 +275,51 @@ class PagesViewModel
         }
     }
 
+    private fun setParent(page: PageModel, parentId: Long) {
+        val oldParent = page.parent?.remoteId ?: 0
+
+        val action = PageAction(UPLOAD) {
+            launch(CommonPool) {
+                if (page.parent?.remoteId != parentId) {
+                    page.parent = pages[parentId]
+                    _refreshPageLists.asyncCall()
+
+                    pageStore.uploadPageToServer(page)
+                }
+            }
+        }
+        action.undo = {
+            launch(CommonPool) {
+                page.parent = pages[oldParent]
+                _refreshPageLists.asyncCall()
+
+                pageStore.uploadPageToServer(page)
+            }
+        }
+        action.onSuccess = {
+            launch(CommonPool) {
+                reloadPages()
+                onSearch(lastSearchQuery)
+
+                delay(100)
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo))
+            }
+        }
+        action.onError = {
+            launch(CommonPool) {
+                refreshPages()
+
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
+            }
+        }
+        launch {
+            actionPerfomer.performAction(action)
+        }
+    }
+
     private fun deletePage(page: PageModel) {
-        val action = PageAction(CHANGE) {
+        val action = PageAction(REMOVE) {
             launch(CommonPool) {
                 _pages.remove(page.remoteId)
                 _refreshPageLists.asyncCall()
@@ -294,6 +329,7 @@ class PagesViewModel
         }
         action.onSuccess = {
             launch(CommonPool) {
+                delay(100)
                 reloadPages()
                 onSearch(lastSearchQuery)
 
@@ -329,10 +365,13 @@ class PagesViewModel
                 launch(CommonPool) {
                     pageStore.updatePageInDb(page)
                     refreshPages()
+
+                    pageStore.uploadPageToServer(page)
                 }
             }
             action.onSuccess = {
                 launch(CommonPool) {
+                    delay(100)
                     reloadPages()
                     onSearch(lastSearchQuery)
 
