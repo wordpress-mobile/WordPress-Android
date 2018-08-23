@@ -3,7 +3,10 @@ package org.wordpress.android.viewmodel.reader
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.inOrder
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
@@ -15,6 +18,9 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.news.NewsManager
+import org.wordpress.android.ui.news.NewsTracker
+import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
+import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 
 @RunWith(MockitoJUnitRunner::class)
@@ -28,6 +34,8 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var item: NewsItem
     @Mock private lateinit var initialTag: ReaderTag
     @Mock private lateinit var otherTag: ReaderTag
+    @Mock private lateinit var newsTracker: NewsTracker
+    @Mock private lateinit var newsTrackerHelper: NewsTrackerHelper
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -35,7 +43,7 @@ class ReaderPostListViewModelTest {
     @Before
     fun setUp() {
         whenever(newsManager.newsItemSource()).thenReturn(liveData)
-        viewModel = ReaderPostListViewModel(newsManager)
+        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper)
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
     }
@@ -61,7 +69,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun verifyViewModelPropagatesDismissToNewsManager() {
-        viewModel.onDismissClicked(item)
+        viewModel.onNewsCardDismissed(item)
         verify(newsManager).dismiss(item)
     }
 
@@ -90,5 +98,33 @@ class ReaderPostListViewModelTest {
         inOrder.verify(observer).onChanged(item)
         inOrder.verify(observer).onChanged(null)
         inOrder.verify(observer).onChanged(item)
+    }
+
+    @Test
+    fun verifyViewModelPropagatesDismissToNewsTracker() {
+        viewModel.onNewsCardDismissed(item)
+        verify(newsTracker).trackNewsCardDismissed(argThat { this == READER }, any())
+    }
+
+    @Test
+    fun verifyViewModelPropagatesCardShownToNewsTracker() {
+        whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(true)
+        viewModel.onNewsCardShown(item)
+        verify(newsTracker).trackNewsCardShown(argThat { this == READER }, any())
+        verify(newsTrackerHelper).itemTracked(any())
+    }
+
+    @Test
+    fun verifyViewModelDoesNotPropagatesCardShownToNewsTracker() {
+        whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(false)
+        viewModel.onNewsCardShown(item)
+        verify(newsTracker, times(0)).trackNewsCardShown(argThat { this == READER }, any())
+        verify(newsTrackerHelper, times(0)).itemTracked(any())
+    }
+
+    @Test
+    fun verifyViewModelPropagatesExtendedInfoRequestedToNewsTracker() {
+        viewModel.onNewsCardExtendedInfoRequested(item)
+        verify(newsTracker).trackNewsCardExtendedInfoRequested(argThat { this == READER }, any())
     }
 }

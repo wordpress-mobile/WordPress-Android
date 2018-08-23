@@ -1485,15 +1485,20 @@ public class ReaderPostListFragment extends Fragment
             };
 
     private final NewsCardListener mNewsCardListener = new NewsCardListener() {
-        @Override public void onItemClicked(@NotNull String url) {
+        @Override public void onItemShown(@NotNull NewsItem item) {
+            mViewModel.onNewsCardShown(item);
+        }
+
+        @Override public void onItemClicked(@NotNull NewsItem item) {
+            mViewModel.onNewsCardExtendedInfoRequested(item);
             Activity activity = getActivity();
             if (activity != null) {
-                WPWebViewActivity.openURL(activity, url);
+                WPWebViewActivity.openURL(activity, item.getActionUrl());
             }
         }
 
         @Override public void onDismissClicked(NewsItem item) {
-            mViewModel.onDismissClicked(item);
+            mViewModel.onNewsCardDismissed(item);
         }
     };
 

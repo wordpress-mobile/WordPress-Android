@@ -6,10 +6,15 @@ import android.arch.lifecycle.ViewModel
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.news.NewsManager
+import org.wordpress.android.ui.news.NewsTracker
+import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
+import org.wordpress.android.ui.news.NewsTrackerHelper
 import javax.inject.Inject
 
 class ReaderPostListViewModel @Inject constructor(
-    private val newsManager: NewsManager
+    private val newsManager: NewsManager,
+    private val newsTracker: NewsTracker,
+    private val newsTrackerHelper: NewsTrackerHelper
 ) : ViewModel() {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -37,6 +42,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onTagChanged(tag: ReaderTag?) {
+        newsTrackerHelper.reset()
         initialTag?.let {
             // show the card only when the initial tag is selected in the filter
             if (tag == initialTag) {
@@ -48,8 +54,20 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    fun onDismissClicked(item: NewsItem) {
+    fun onNewsCardDismissed(item: NewsItem) {
+        newsTracker.trackNewsCardDismissed(READER, item.version)
         newsManager.dismiss(item)
+    }
+
+    fun onNewsCardShown(item: NewsItem) {
+        if (newsTrackerHelper.shouldTrackNewsCardShown(item.version)) {
+            newsTracker.trackNewsCardShown(READER, item.version)
+            newsTrackerHelper.itemTracked(item.version)
+        }
+    }
+
+    fun onNewsCardExtendedInfoRequested(item: NewsItem) {
+        newsTracker.trackNewsCardExtendedInfoRequested(READER, item.version)
     }
 
     override fun onCleared() {
