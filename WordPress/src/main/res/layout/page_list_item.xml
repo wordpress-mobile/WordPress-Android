@@ -40,7 +40,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"/>
+            app:srcCompat="@drawable/ic_ellipsis_grey_darken_10_24dp"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/page_label"
