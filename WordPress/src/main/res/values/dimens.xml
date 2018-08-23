@@ -318,5 +318,7 @@
 
     <dimen name="snackbar_message_margin_bottom">18dp</dimen>
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
-    <dimen name="jetpack_connection_setup_width">290dp</dimen>
+    <dimen name="jetpack_text_width">290dp</dimen>
+    <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
+
 </resources>

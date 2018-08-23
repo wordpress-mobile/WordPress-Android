@@ -38,7 +38,7 @@
                     style="@style/JetpackConnectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="@dimen/jetpack_connection_setup_width"
+                    android:maxWidth="@dimen/jetpack_text_width"
                     android:text="@string/stats_jetpack_connection_setup_info"
                     android:textAlignment="center" />
 

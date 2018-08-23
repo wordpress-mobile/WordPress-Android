@@ -17,10 +17,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingEnd="30dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:paddingStart="30dp">
+            android:paddingEnd="@dimen/jetpack_remote_install_container_padding"
+            android:paddingLeft="@dimen/jetpack_remote_install_container_padding"
+            android:paddingRight="@dimen/jetpack_remote_install_container_padding"
+            android:paddingStart="@dimen/jetpack_remote_install_container_padding">
 
             <ImageView
                 android:id="@+id/jetpack_install_icon"
@@ -35,7 +35,7 @@
                 style="@style/JetpackInstallTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="290dp"
+                android:maxWidth="@dimen/jetpack_text_width"
                 android:text="@string/install_jetpack"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
@@ -45,7 +45,7 @@
                 style="@style/JetpackInstallMessageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="290dp"
+                android:maxWidth="@dimen/jetpack_text_width"
                 android:text="@string/install_jetpack_message"
                 android:textAlignment="center"/>
 
