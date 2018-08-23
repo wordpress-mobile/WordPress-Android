@@ -7,9 +7,12 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import javax.inject.Inject
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import kotlinx.coroutines.experimental.withTimeoutOrNull
+import org.wordpress.android.fluxc.action.PostAction
+import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
+import org.wordpress.android.fluxc.action.PostAction.REMOVE_POST
+import org.wordpress.android.fluxc.action.PostAction.UPDATE_POST
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
-import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.CHANGE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.coroutines.experimental.Continuation
@@ -55,7 +58,7 @@ class ActionPerformer
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
-        if (continuation != null && eventType == CHANGE) {
+        if (continuation != null && eventType.action == event.causeOfChange) {
             continuation!!.resume(!event.isError)
         }
     }
@@ -72,9 +75,10 @@ class ActionPerformer
         var onError: () -> Unit = { }
         var undo: () -> Unit = { }
 
-        enum class EventType {
-            UPLOAD,
-            CHANGE
+        enum class EventType(val action: PostAction?) {
+            UPLOAD(null),
+            UPDATE(UPDATE_POST),
+            REMOVE(DELETE_POST)
         }
     }
 }
