@@ -3,6 +3,9 @@ package org.wordpress.android.ui.pages
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
@@ -22,7 +25,13 @@ class PagesAdapter(
             PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
-            PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent, onParentSelected, this)
+            PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent) {
+                onParentSelected(it)
+                launch(UI) {
+                    delay(200) // let the selection animation play out before refreshing the list
+                    notifyDataSetChanged()
+                }
+            }
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }

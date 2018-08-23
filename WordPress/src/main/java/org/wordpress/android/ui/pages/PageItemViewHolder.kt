@@ -12,9 +12,6 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
@@ -96,8 +93,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageParentViewHolder(
         parentView: ViewGroup,
-        private val onParentSelected: (ParentPage) -> Unit,
-        private val adapter: PagesAdapter
+        private val onParentSelected: (ParentPage) -> Unit
     ) : PageItemViewHolder(parentView, layout.page_parent_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val radioButton = itemView.findViewById<RadioButton>(id.radio_button)
@@ -110,23 +106,15 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     pageItem.title
                 radioButton.isChecked = pageItem.isSelected
                 itemView.setOnClickListener {
-                    selectItem(pageItem)
+                    onParentSelected(pageItem)
                 }
                 radioButton.setOnClickListener {
-                    selectItem(pageItem)
+                    onParentSelected(pageItem)
                 }
 
                 @Suppress("DEPRECATION")
                 CompoundButtonCompat.setButtonTintList(radioButton,
                         radioButton.resources.getColorStateList(R.color.dialog_compound_button_thumb))
-            }
-        }
-
-        private fun selectItem(pageItem: ParentPage) {
-            onParentSelected(pageItem)
-            launch(UI) {
-                delay(200) // let the selection animation play out before refreshing the list
-                adapter.notifyDataSetChanged()
             }
         }
     }
