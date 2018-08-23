@@ -308,12 +308,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_COMPLETE_ALL_TASKS:
                 predefinedEventProperties.put("type", "all_tasks");
                 break;
-            case QUICK_START_NOTIFICATION_RECEIVED:
-                predefinedEventProperties.put("type", "received");
-                break;
-            case QUICK_START_NOTIFICATION_OPENED:
-                predefinedEventProperties.put("type", "opened");
-                break;
             case QUICK_START_REQUEST_SEEN:
                 predefinedEventProperties.put("type", "seen");
                 break;
