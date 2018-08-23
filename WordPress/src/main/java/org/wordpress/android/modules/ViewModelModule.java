@@ -34,7 +34,7 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(JetpackRemoteInstallViewModel.class)
-    abstract ViewModel jetpackRemoteViewModel(JetpackRemoteInstallViewModel viewModel);
+    abstract ViewModel jetpackRemoteInstallViewModel(JetpackRemoteInstallViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
