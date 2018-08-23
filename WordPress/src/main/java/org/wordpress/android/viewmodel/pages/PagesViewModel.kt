@@ -231,6 +231,7 @@ class PagesViewModel
     }
 
     fun onSearchExpanded(): Boolean {
+        clearSearch()
         _isSearchExpanded.postValue(true)
         return true
     }
