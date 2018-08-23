@@ -31,6 +31,7 @@ class PageParentFragment : Fragment() {
     private val listStateKey = "list_state"
 
     private var linearLayoutManager: LinearLayoutManager? = null
+    private var saveButton: MenuItem? = null
 
     private var pageId: Long? = null
 
@@ -67,6 +68,9 @@ class PageParentFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.page_parent_menu, menu)
+
+        saveButton = menu.findItem(R.id.save_parent)
+        viewModel.isSaveButtonVisible.value?.let { saveButton?.isVisible = it}
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -116,6 +120,10 @@ class PageParentFragment : Fragment() {
     private fun setupObservers() {
         viewModel.pages.observe(this, Observer { pages ->
             pages?.let { setPages(pages) }
+        })
+
+        viewModel.isSaveButtonVisible.observe(this, Observer { isVisible ->
+            isVisible?.let { saveButton?.isVisible = isVisible }
         })
     }
 
