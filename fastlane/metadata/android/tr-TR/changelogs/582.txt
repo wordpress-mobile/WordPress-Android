@@ -1,4 +1,0 @@
-10.4:
-* Yeni: Etklink kaydı geriye sarma: sitenizi bir önceki durumuna geri getirin
-* Bir kaç küçük UI iyileştirmeleri ve düzenlemeleri
-* Çeşitli hata düzeltmeleri

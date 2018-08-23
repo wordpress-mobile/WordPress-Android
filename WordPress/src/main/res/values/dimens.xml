@@ -205,7 +205,6 @@
     <dimen name="my_site_list_row_padding_left">20dp</dimen>
     <dimen name="my_site_list_row_padding_left_switch">12dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
-    <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
     <dimen name="me_content_margin">@dimen/margin_large</dimen>
@@ -231,9 +230,6 @@
     <dimen name="text_sz_related_post_small">11sp</dimen>
     <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
-
-    <!--empty lists-->
-    <dimen name="empty_list_button_top_margin">32dp</dimen>
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>
@@ -321,4 +317,8 @@
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
 
     <dimen name="snackbar_message_margin_bottom">18dp</dimen>
+    <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
+    <dimen name="jetpack_text_width">290dp</dimen>
+    <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
+
 </resources>

@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-26 09:54:06+0000
+Translation-Revision-Date: 2018-08-06 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">Nog geen viewers</string>
+    <string name="people_empty_list_filtered_email_followers">Nog geen e–mailvolgers</string>
+    <string name="people_empty_list_filtered_followers">Nog geen volgers</string>
+    <string name="people_empty_list_filtered_users">Nog geen gebruikers</string>
+    <string name="connection_service_facebook_notice">Vanaf 1 augustus 2018 kunnen berichten niet meer direct op Facebook-profielen worden gedeeld. Koppelingen aan Facebook–pagina\'s blijven ongewijzigd.</string>
+    <string name="reader_empty_posts_liked_description">Berichten die je liket, verschijnen hier</string>
+    <string name="reader_empty_posts_liked_title">Nog niets geliket</string>
+    <string name="reader_empty_followed_blogs_button_followed">Ga naar gevolgde site</string>
+    <string name="reader_empty_followed_blogs_button_discover">Sites ontdekken</string>
+    <string name="reader_empty_followed_blogs_description">Je volgt nog geen sites. Waarom zou je er nu niet een gaan volgen?</string>
+    <string name="reader_empty_followed_blogs_title">Geen gevolgde sites</string>
+    <string name="notifications_empty_likes">Nog geen likes</string>
+    <string name="notifications_empty_followers">Nog geen volgers</string>
+    <string name="activity_log_limited_content_on_free_plan">Aangezien je een gratis abonnement gebruikt, zie je een beperkt aantal gebeurtenissen in je activiteit.</string>
+    <string name="activity_log_empty_subtitle">Wanneer je wijzigingen aan je site aanbrengt, kun je hier je activiteitengeschiedenis bekijken.</string>
+    <string name="activity_log_empty_title">Nog geen activiteit</string>
+    <string name="posts_empty_list_button">Een bericht maken</string>
+    <string name="pages_empty_list_button">Een pagina aanmaken</string>
+    <string name="media_empty_upload_media">Media uploaden</string>
+    <string name="media_empty_list">Je hebt geen media</string>
     <string name="reader_gallery_images_desc">afbeeldinggalerij</string>
     <string name="blavatar_desc">favicon</string>
     <string name="theme_image_desc">thema–afbeelding</string>
     <string name="featured_image_desc">aanbevolen afbeelding</string>
-    <string name="support_push_notification_message_hint_snackbar">Vind je ondersteuningsgesprek door op \'Help en ondersteuning\' te tikken en vervolgens op \'Mijn tickets\'</string>
     <string name="local_changes_discarding_error">Er is een fout opgetreden bij het verwijderen van je lokale wijzigingen. Neem contact op met de ondersteuning voor meer hulp.</string>
     <string name="local_changes_discarding">Lokale wijzigingen verwijderen</string>
     <string name="local_changes_discarded">Lokale wijzigingen verwijderd</string>
@@ -29,14 +48,10 @@ Language: nl
     <string name="support_contact_email">E–mail voor contact</string>
     <string name="application_log_button">Toepassingslog</string>
     <string name="my_tickets">Mijn tickets</string>
-    <string name="activity_log_rewind_dialog_message">Weet je zeker dat je je site wilt terugbrengen naar %s op %s? Hierdoor wordt alle inhoud en worden alle opties verwijderd die sindsdien zijn aangemaakt of gewijzigd.</string>
     <string name="activity_log_rewind_site">Site terugbrengen</string>
     <string name="activity_log_currently_restoring_message_no_dates">Bezig met terugzetten</string>
-    <string name="activity_log_currently_restoring_message">Terugzetten naar %s %s</string>
     <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Het herstellen van je site is geslaagd</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Het herstellen van je site is geslaagd\nTeruggezet naar %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Je site wordt hersteld\nTerugzetten naar %s %s</string>
     <string name="activity_log_button">Actieknop Activiteitenlog</string>
     <string name="plugin_auto_managed">Automatisch beheerd</string>
     <string name="reader_save_posts_locally_dialog_message">Sla dit bericht op en keer op elk gewenst moment terug om het te lezen. Het bericht is alleen op deze device beschikbaar; opgeslagen berichten worden niet gesynchroniseerd met andere apparaten. (Nog niet, tenminste! We zijn ermee bezig.)</string>
@@ -54,7 +69,6 @@ Language: nl
     <string name="reader_remove_bookmark">Verwijderen uit opgeslagen berichten</string>
     <string name="reader_add_bookmark">Toevoegen aan opgeslagen berichten</string>
     <string name="reader_save_for_later_title">Opgeslagen berichten</string>
-    <string name="activity_log_empty_list">Nog geen evenementen geregistreerd</string>
     <string name="removed">Verwijderd</string>
     <string name="tabbar_accessibility_label_write">Nieuw bericht. Een nieuw bericht opstellen.</string>
     <string name="my_site_icon_content_description">Favicon wijzigen</string>
@@ -824,10 +838,6 @@ Language: nl
     <string name="title_email_follower">E–mailvolger</string>
     <string name="title_follower">Volger</string>
     <string name="people_fetching">Gebruikers ophalen…</string>
-    <string name="people_empty_list_filtered_viewers">Je hebt nog geen volgers.</string>
-    <string name="people_empty_list_filtered_email_followers">Je hebt nog geen e–mailvolgers.</string>
-    <string name="people_empty_list_filtered_followers">Je hebt nog geen volgers.</string>
-    <string name="people_empty_list_filtered_users">Je hebt nog geen gebruikers.</string>
     <string name="people_dropdown_item_viewers">Lezers</string>
     <string name="people_dropdown_item_email_followers">E–mailvolgers</string>
     <string name="people_dropdown_item_followers">Volgers</string>
@@ -938,9 +948,6 @@ Language: nl
     <string name="editor_remove_failed_uploads">Mislukte uploads verwijderen</string>
     <string name="editor_toast_failed_uploads">Enkele media konden niet worden geüpload. Het opslaan of publiceren\n van je bericht is niet mogelijk in deze staat. Wil je alle mislukte uploads verwijderen?</string>
     <string name="site_settings_advanced_header">Geavanceerd</string>
-    <string name="comments_empty_list_filtered_trashed">Geen verwijderde reacties</string>
-    <string name="comments_empty_list_filtered_pending">Geen reacties in behandeling</string>
-    <string name="comments_empty_list_filtered_approved">Geen goedgekeurde reacties</string>
     <string name="xmlrpc_missing_method_error">Kon geen verbinding maken. Vereiste XML-RPC–methoden ontbreken op de server.</string>
     <string name="alignment_center">Midden</string>
     <string name="post_format_video">Video</string>
@@ -999,7 +1006,6 @@ Language: nl
     <string name="mnu_comment_delete_permanently">Verwijderen</string>
     <string name="mnu_comment_untrash">Herstellen</string>
     <string name="comment_deleted_permanently">Reactie verwijderd</string>
-    <string name="comments_empty_list_filtered_spam">Geen spamreacties</string>
     <string name="comment_status_all">Alle</string>
     <string name="could_not_load_page">Kan pagina niet laden</string>
     <string name="off">Uit</string>
@@ -1152,15 +1158,7 @@ Language: nl
     <string name="reader_label_gap_marker">Meer berichten laden</string>
     <string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
     <string name="search_sites">Zoek sites</string>
-    <string name="notifications_empty_view_reader">Reader weergeven</string>
-    <string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen.</string>
-    <string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt.</string>
-    <string name="notifications_empty_action_unread">Breng het gesprek weer op gang: schrijf een nieuw bericht.</string>
     <string name="notifications_empty_action_all">Ga aan de slag! Reageer op berichten uit blogs die je volgt.</string>
-    <string name="notifications_empty_likes">Er zijn nog geen nieuwe likes.</string>
-    <string name="notifications_empty_followers">Er zijn nog geen nieuwe volgers.</string>
-    <string name="notifications_empty_comments">Nog geen nieuwe reacties.</string>
-    <string name="notifications_empty_unread">Je bent helemaal bij!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Bekijk de statistieken in de app en probeer later de widget toe te voegen</string>
     <string name="stats_widget_error_readd_widget">Verwijder de widget en voeg deze opnieuw in</string>
     <string name="stats_widget_error_no_visible_blog">Je hebt geen toegang tot de statistieken zonder een zichtbare blog</string>
@@ -1371,8 +1369,6 @@ Language: nl
     <string name="reader_empty_comments">Nog geen reacties</string>
     <string name="create_new_blog_wpcom">Creëer WordPress.com blog</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
-    <string name="reader_empty_posts_liked">Je hebt nog geen enkel bericht geliked</string>
-    <string name="reader_empty_followed_blogs_title">Je volgt nog geen sites</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
     <string name="contact_us">Contact</string>
     <string name="schedule_verb">Inplannen</string>
@@ -1381,7 +1377,6 @@ Language: nl
     <string name="reader_page_followed_blogs">Gevolgde sites</string>
     <string name="reader_page_followed_tags">Gevolgde tags</string>
     <string name="reader_title_tag_preview">Reader–tag</string>
-    <string name="media_empty_list">Geen media</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL–certificaat</string>
     <string name="forgot_password">Wachtwoord vergeten?</string>
@@ -1409,7 +1404,6 @@ Language: nl
     <string name="adding_cat_success">Categorie toegevoegd</string>
     <string name="adding_cat_failed">Toevoegen van categorie mislukt</string>
     <string name="mnu_comment_unspam">Geen spam</string>
-    <string name="comments_empty_list">Geen reacties</string>
     <string name="theme_fetch_failed">Fout bij het ophalen van thema\'s</string>
     <string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
     <string name="gallery_error">Media–item kan niet worden opgehaald</string>
@@ -1492,7 +1486,6 @@ Language: nl
     <string name="reader_toast_err_get_post">Niet in staat om dit bericht op te halen</string>
     <string name="pick_video">Selecteer video</string>
     <string name="pick_photo">Selecteer foto</string>
-    <string name="reader_empty_followed_blogs_description">Geen zorgen, tap het tag icoon om te beginnen.</string>
     <string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
     <string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
     <string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>

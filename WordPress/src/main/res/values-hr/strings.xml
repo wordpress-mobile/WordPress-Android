@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-21 14:56:50+0000
+Translation-Revision-Date: 2018-08-04 15:12:45+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -157,13 +157,10 @@ Language: hr
     <string name="reader_label_gap_marker">Učitaj više objava</string>
     <string name="notifications_no_search_results">Nijedna web–stranica se ne podudara sa \'%s\'</string>
     <string name="search_sites">Pretraživanje web–stranica</string>
-    <string name="notifications_empty_view_reader">Pregledaj čitač</string>
     <string name="notifications_empty_action_followers_likes">Budite primijećeni: komentirajte pročitane objave.</string>
     <string name="notifications_empty_action_comments">Pridružite se raspravi: komentirajte objave blogova koje pratite.</string>
     <string name="notifications_empty_action_unread">Ponovno pokrenite raspravu: napišite novu objavu.</string>
     <string name="notifications_empty_action_all">Postanite aktivni! Komentirajte objave blogova koje pratite.</string>
-    <string name="notifications_empty_likes">Nema novih lajkova… još.</string>
-    <string name="notifications_empty_followers">Nemate novih pratitelja… još.</string>
     <string name="notifications_empty_comments">Nema novih komentara… još.</string>
     <string name="notifications_empty_unread">Sve ste pročitali!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Pregledajte Statistiku u aplikaciji, i kasnije pokušajte dodati novi widget</string>
@@ -355,7 +352,6 @@ Language: hr
     <string name="stats_empty_comments_desc">Ako omogućite komentare na vašoj web–stranici, pratite top komentatore i otkrijte koji sadržaj potiče najživlje rasprave, na temelju najnovijih 1.000 komentara.</string>
     <string name="ssl_certificate_details">Detalji</string>
     <string name="cab_selected">%d odabrano</string>
-    <string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
     <string name="reader_label_like">Lajk</string>
     <string name="reader_empty_comments">Još nema komentara</string>
     <string name="reader_label_view_original">Pogledaj izvorni članak</string>
@@ -380,7 +376,6 @@ Language: hr
     <string name="stats_no_blog">Nije moguće učitati statistiku za navedeni blog</string>
     <string name="more">Više</string>
     <string name="reader_empty_posts_in_tag">Nema objava s ovom oznakom</string>
-    <string name="reader_empty_followed_blogs_title">Još ne pratite ni jednu web–stranicu</string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="reader_toast_err_block_blog">Nije moguće blokirati ovu web–stranicu</string>
     <string name="reader_toast_blog_blocked">Objave sa ove web–stranice više neće biti prikazane</string>
@@ -400,7 +395,6 @@ Language: hr
     <string name="reader_empty_recommended_blogs">Nema preporučenih web–stranica</string>
     <string name="reader_label_followed_blog">Pratite web–stranicu</string>
     <string name="reader_title_blog_preview">Web–stranica u Čitaču</string>
-    <string name="media_empty_list">Nema medijskih zapisa</string>
     <string name="help">Pomoć</string>
     <string name="forgot_password">Izgubili ste lozinku?</string>
     <string name="ssl_certificate_error">Nevažeći SSL certifikat</string>
@@ -411,7 +405,6 @@ Language: hr
     <string name="gallery_error">Nije moguće dohvatiti medijski zapis.</string>
     <string name="blog_not_found">Dogodila se greška prilikom pristupa ovom blogu</string>
     <string name="theme_fetch_failed">Neuspjelo dohvaćanje tema</string>
-    <string name="comments_empty_list">Nema komentara</string>
     <string name="mnu_comment_unspam">Nije spam</string>
     <string name="adding_cat_failed">Neuspjelo dodavanje kategorije</string>
     <string name="adding_cat_success">Kategorija uspješno dodana</string>
@@ -508,7 +501,6 @@ Language: hr
     <string name="pick_video">Odaberi video</string>
     <string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>
     <string name="reader_likes_you_and_one">Vama i još jednoj osobi ovo se sviđa</string>
-    <string name="reader_empty_followed_blogs_description">Ne brinite, samo pritisnite ikonu u gore desno za početak istraživanja!</string>
     <string name="reader_btn_follow">Prati</string>
     <string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
     <string name="empty_list_default">Popis je prazan</string>

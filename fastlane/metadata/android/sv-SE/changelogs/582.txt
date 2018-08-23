@@ -1,4 +1,0 @@
-10.4:
-* Nytt: Rulla tillbaka i aktivitetsloggen: Återställ webbplatsen till ett tidigare läge.
-* Ett antal mindre förbättringar av avnändargränssnittet.
-* Diverse felrättningar

@@ -77,13 +77,9 @@ Language: cy_GB
     <string name="site_settings_list_editor_action_mode_title">Dewis %1$d</string>
     <string name="error_fetch_users_list">Methu adfer defnyddiwr y wefan</string>
     <string name="plans_manage">Rheoli eich cynllun yn\nWordPress.com/plans</string>
-    <string name="people_empty_list_filtered_viewers">Nid oes gennych unrhyw ddarllenwyr eto.</string>
     <string name="people_fetching">Estyn defnyddwyr…</string>
     <string name="title_follower">Dilynwr</string>
     <string name="title_email_follower">Dilynwr e–bost</string>
-    <string name="people_empty_list_filtered_email_followers">Nid oes gennych unrhyw dilynwyr e–bost eto.</string>
-    <string name="people_empty_list_filtered_followers">Nid oes gennych unrhyw ddilynwyr eto.</string>
-    <string name="people_empty_list_filtered_users">Nid oes gennych unrhyw ddefnyddwyr eto.</string>
     <string name="people_dropdown_item_email_followers">Dilynwyr E–bost</string>
     <string name="people_dropdown_item_viewers">Darllenwyr</string>
     <string name="people_dropdown_item_followers">Dilynwyr</string>
@@ -188,10 +184,7 @@ Language: cy_GB
     <string name="start_over">Cychwyn Eto</string>
     <string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
     <string name="editor_toast_failed_uploads">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd cadw na chyhoeddi\n       eich cofnod yn y cyflwr hwn. Hoffech chi dynnu pob cyfrwng sydd wedi methu?</string>
-    <string name="comments_empty_list_filtered_trashed">Dim sylwadau yn y Sbwriel</string>
     <string name="site_settings_advanced_header">Uwch</string>
-    <string name="comments_empty_list_filtered_pending">Dim sylwadau o Dan Ystyriaeth</string>
-    <string name="comments_empty_list_filtered_approved">Dim sylwadau Cymeradwy</string>
     <string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML–RPC angenrheidiol ar goll o\'r gweinydd.</string>
     <string name="post_format_status">Statws</string>
     <string name="post_format_video">Fideo</string>
@@ -248,7 +241,6 @@ Language: cy_GB
     <string name="mnu_comment_delete_permanently">Dileu</string>
     <string name="comment_deleted_permanently">Wedi dileu\'r sylw</string>
     <string name="mnu_comment_untrash">Adfer</string>
-    <string name="comments_empty_list_filtered_spam">Dim sylwadau Sbam</string>
     <string name="could_not_load_page">Methu llwytho\'r dudalen</string>
     <string name="comment_status_all">Y Cyfan</string>
     <string name="interface_language">Iaith y Rhyngwyneb</string>
@@ -399,15 +391,7 @@ Language: cy_GB
     <string name="reader_label_gap_marker">Llwytho rhagor o gofnodion</string>
     <string name="notifications_no_search_results">Dim gwefannau\'n cydweddu â \'%s\'</string>
     <string name="search_sites">Chwilio gwefannau</string>
-    <string name="notifications_empty_view_reader">Gweld y Darllennydd</string>
-    <string name="notifications_empty_action_followers_likes">Denu sylw: rhowch sylw ar gofnod rydych wedi ei ddarllen.</string>
-    <string name="notifications_empty_action_comments">Ymunwch â sgwrs: rhowch sylw ar flogiau rydych yn eu dilyn.</string>
-    <string name="notifications_empty_action_unread">Ail–gynnwch sgwrs: ysgrifennwch gofnod newydd.</string>
     <string name="notifications_empty_action_all">Byddwch egniol! Rhowch sylwadau ar flogiau rydych yn eu dilyn.</string>
-    <string name="notifications_empty_likes">Dim hoffi newydd i\'w dangos…eto.</string>
-    <string name="notifications_empty_followers">Dim dilynwyr newydd…eto.</string>
-    <string name="notifications_empty_comments">Dim sylwadau newydd…eto.</string>
-    <string name="notifications_empty_unread">Wedi dal i fyny!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Ewch i\'r Ystadegau yn yr ap a cheisio ychwanegu\'r teclyn yn hwyrach</string>
     <string name="stats_widget_error_readd_widget">Tynnwch y teclyn a\'i ychwanegu eto</string>
     <string name="stats_widget_error_no_visible_blog">Nid oes modd mynd i\'r Ystadegau heb flog gweladwy</string>
@@ -612,8 +596,6 @@ Language: cy_GB
     <string name="reader_empty_comments">Dim sylwadau eto</string>
     <string name="create_new_blog_wpcom">Creu blog WordPress.com</string>
     <string name="browse_our_faq_button">Porwch ein Cwestiynnau Cyffredin</string>
-    <string name="reader_empty_posts_liked">Nid ydych wedi hoffi unrhyw gofnod</string>
-    <string name="reader_empty_followed_blogs_title">Nid ydych yn dilyn unrhyw wefan hyd yn hyn</string>
     <string name="reader_label_liked_by">Hoffwyd gan</string>
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
     <string name="contact_us">Cysylltu â ni</string>
@@ -623,7 +605,6 @@ Language: cy_GB
     <string name="reader_title_tag_preview">Tag Darllenydd</string>
     <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
     <string name="reader_hint_add_tag_or_url">Rhowch URL neu dag i\'w ddilyn</string>
-    <string name="media_empty_list">Dim cyfrwng</string>
     <string name="ssl_certificate_ask_trust">Os ydych fel arfer yn cysylltu â\'r wefan hon heb broblemau, gall y gwall hwn olygu bod rhywun yn ceisio dynwared y wefan a dylech chi beidio parhau. Hoffech chi ymddiried yn y dystysgrif beth bynnag?</string>
     <string name="ssl_certificate_error">Tystysgrif SSL annilys</string>
     <string name="forgot_password">Wedi colli eich cyfrinair?</string>
@@ -648,7 +629,6 @@ Language: cy_GB
     <string name="cat_name_required">Mae angen maes enw categori</string>
     <string name="adding_cat_success">Ychwanegwyd categori yn llwyddiannus</string>
     <string name="adding_cat_failed">Methodd ychwanegu categori</string>
-    <string name="comments_empty_list">Dim sylwadau</string>
     <string name="mnu_comment_unspam">Nid sbam</string>
     <string name="theme_fetch_failed">Methu estyn themâu</string>
     <string name="blog_not_found">Digwyddodd gwall wrth geisio cael mynediad at y blog</string>
@@ -728,7 +708,6 @@ Language: cy_GB
     <string name="reader_toast_err_get_post">Does dim modd adfer y cofnod hwn</string>
     <string name="pick_photo">Dewis ffoto</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
-    <string name="reader_empty_followed_blogs_description">Ond peidiwch â phoeni, tapiwch yr eicon tag ar y brig de i ddechrau darganfod!</string>
     <string name="reader_empty_followed_tags">Nid ydych yn dlyn unrhyw dagiau</string>
     <string name="reader_toast_err_url_intent">Methu agor %s</string>
     <string name="reader_toast_err_view_image">Methu â gweld delwedd</string>

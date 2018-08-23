@@ -1,4 +1,0 @@
-10.4
-* Nuevo: rebobinado de registro de actividad: devuelve tu sitio a un estado interior
-* un montón de pequeñas mejoras de interfaz y refinamientos
-* Varias correcciones de errores

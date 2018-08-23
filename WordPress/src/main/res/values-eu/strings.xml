@@ -39,11 +39,7 @@ Language: eu_ES
     <string name="plans_manage">Kudeatu zure plana\nWordPress.com/plans orrialdean</string>
     <string name="title_follower">Jarraitzailea</string>
     <string name="title_email_follower">E–posta jarraitzailea</string>
-    <string name="people_empty_list_filtered_viewers">Oraindik ez daukazu ikuslerik.</string>
     <string name="people_fetching">Erabiltzaileak eskuratzen…</string>
-    <string name="people_empty_list_filtered_email_followers">Ez daukazu e–posta jarraitzailerik oraindik.</string>
-    <string name="people_empty_list_filtered_followers">Ez daukazu jarraitzailerik oraindik.</string>
-    <string name="people_empty_list_filtered_users">Ez daukazu erabiltzailerik oraindik.</string>
     <string name="people_dropdown_item_email_followers">E–posta jarraitzaileak</string>
     <string name="people_dropdown_item_viewers">Ikusleak</string>
     <string name="people_dropdown_item_followers">Jarraitzialeak</string>
@@ -125,10 +121,7 @@ Language: eu_ES
     <string name="let_us_help">Utz gaitzazu laguntzen</string>
     <string name="me_btn_app_settings">App–aren ezarpenak</string>
     <string name="editor_remove_failed_uploads">Ezabatu huts egin duten kargak</string>
-    <string name="comments_empty_list_filtered_trashed">Ez dago iruzkinik zakarrontzian</string>
     <string name="site_settings_advanced_header">Aurreratua</string>
-    <string name="comments_empty_list_filtered_pending">Ez dago iruzkinik itxaroten</string>
-    <string name="comments_empty_list_filtered_approved">Ez dago iruzkinik onartuta</string>
     <string name="post_format_status">Egoera</string>
     <string name="post_format_video">Bideoa</string>
     <string name="alignment_center">Erdira</string>
@@ -164,7 +157,6 @@ Language: eu_ES
     <string name="mnu_comment_delete_permanently">Ezabatu</string>
     <string name="comment_deleted_permanently">Iruzkina ezabatu da</string>
     <string name="mnu_comment_untrash">Berreskuratu</string>
-    <string name="comments_empty_list_filtered_spam">Ez dago zabor iruzkinik</string>
     <string name="could_not_load_page">Ezin izan da orrialde kargatu</string>
     <string name="comment_status_all">Guztiak</string>
     <string name="interface_language">Interfazearen hizkuntza</string>
@@ -241,8 +233,6 @@ Language: eu_ES
     <string name="post_updated">Bidalketa eguneratuta</string>
     <string name="page_updated">Orrialdea eguneratu da</string>
     <string name="theme_no_search_result_found">Barkatu, ez da itxurarik aurkitu.</string>
-    <string name="notifications_empty_followers">Ez dago jarraitzaile berririk… oraindik.</string>
-    <string name="notifications_empty_comments">Ez dago iruzkin berririk… oraindik.</string>
     <string name="stats_widget_error_no_account">Mesedez hasi saioa WordPress–en</string>
     <string name="stats_widget_error_generic">Ezin izan dira estatistikak kargatu</string>
     <string name="stats_widget_loading_data">Datuak kargatzen…</string>
@@ -366,12 +356,10 @@ Language: eu_ES
     <string name="more">Gehiago</string>
     <string name="reader_label_comments_closed">Iruzkinak itxita daude</string>
     <string name="reader_empty_posts_in_tag">Ez dago bidalketarik etiketa honekin</string>
-    <string name="reader_empty_posts_liked">Ez duzu gustuko bidalketarik</string>
     <string name="create_new_blog_wpcom">Sortu WordPress.com bloga</string>
     <string name="reader_empty_comments">Oraindik ez dago iruzkinik</string>
     <string name="reader_label_view_original">Ikusi artikulu originala</string>
     <string name="reader_label_like">Gustukoa</string>
-    <string name="reader_empty_followed_blogs_title">Oraindik ez duzu webgunetik jarraitzen</string>
     <string name="posts_empty_list">Bidalketarik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
     <string name="pages_empty_list">Orrialderik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
     <string name="browse_our_faq_button">Arakatu Galdera eta Erantzunak</string>
@@ -382,13 +370,11 @@ Language: eu_ES
     <string name="update_verb">Eguneratu</string>
     <string name="schedule_verb">Programatu</string>
     <string name="reader_page_followed_blogs">Jarraitutako guneak</string>
-    <string name="media_empty_list">Ez dago mediarik</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
     <string name="forgot_password">Pasahitza galdu duzu?</string>
     <string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>
     <string name="passcode_wrong_passcode">PIN okerra</string>
-    <string name="comments_empty_list">Ez dago iruzkinik.</string>
     <string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
     <string name="stats_bar_graph_empty">Ez dago estatistikarik eskuragarri.</string>
     <string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>
