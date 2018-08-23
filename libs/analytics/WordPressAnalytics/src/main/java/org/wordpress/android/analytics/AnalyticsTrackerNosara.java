@@ -1245,14 +1245,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_COMPLETE_FOLLOW_SITE:
             case QUICK_START_COMPLETE_ALL_TASKS:
                 return "quick_start_complete";
-            case QUICK_START_NOTIFICATION_RECEIVED:
-            case QUICK_START_NOTIFICATION_OPENED:
-                return "quick_start_notification";
             case QUICK_START_REQUEST_SEEN:
             case QUICK_START_REQUEST_NEGATIVE_TAPPED:
             case QUICK_START_REQUEST_POSITIVE_TAPPED:
             case QUICK_START_REQUEST_NEUTRAL_TAPPED:
-                return "quick_start_notification";
+                return "quick_start_request";
             default:
                 return null;
         }
