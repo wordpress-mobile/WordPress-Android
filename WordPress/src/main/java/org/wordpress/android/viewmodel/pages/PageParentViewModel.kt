@@ -52,18 +52,22 @@ class PageParentViewModel
     private fun loadPages(pageId: Long) = launch(CommonPool) {
         page = pageStore.getPageByRemoteId(pageId, site)
 
-        val parents = mutableListOf(
+        val parents = mutableListOf<PageItem>(
                 ParentPage(0, resourceProvider.getString(R.string.top_level),
                         page?.parent == null,
-                        TOP_LEVEL_PARENT),
-                Divider(resourceProvider.getString(R.string.pages))
+                        TOP_LEVEL_PARENT)
         )
 
-        val parentChoices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
-        parents.addAll(parentChoices
-                .filter { !getChildren(page!!, parentChoices).contains(it) }
-                .map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT) }
-        )
+        val choices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
+        val parentChoices = choices.filter { isNotChild(it, choices) }
+        if (parentChoices.isNotEmpty()) {
+            parents.add(Divider(resourceProvider.getString(R.string.pages)))
+            parents.addAll(
+                    parentChoices.map {
+                        ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
+                    }
+            )
+        }
 
         _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage
                 ?: parents.first() as ParentPage
@@ -77,6 +81,10 @@ class PageParentViewModel
         _currentParent.isSelected = true
 
         _isSaveButtonVisible.postValue(true)
+    }
+
+    private fun isNotChild(choice: PageModel, choices: List<PageModel>): Boolean {
+        return !getChildren(page!!, choices).contains(choice)
     }
 
     private fun getChildren(page: PageModel, pages: List<PageModel>): List<PageModel> {
