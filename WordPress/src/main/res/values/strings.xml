@@ -12,7 +12,8 @@
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
+    <string name="sign_out_wpcom_confirm_with_changes">You have changes to posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Log out of WordPress?</string>
 
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
@@ -102,7 +103,6 @@
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
-    <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
@@ -198,11 +198,13 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="media_empty_list">No media</string>
+    <string name="media_empty_list">You don\'t have any media</string>
+    <string name="media_empty_search_list">No media matching your search</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
     <string name="media_empty_videos_list">You don\'t have any videos</string>
     <string name="media_empty_documents_list">You don\'t have any documents</string>
     <string name="media_empty_audio_list">You don\'t have any audio</string>
+    <string name="media_empty_upload_media">Upload media</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
     <string name="confirm_remove_media_image">Remove this image from the post?</string>
@@ -225,6 +227,7 @@
     <!-- page view -->
     <string name="title">Title</string>
     <string name="pages_empty_list">No pages yet. Why not create one?</string>
+    <string name="pages_empty_list_button">Create a page</string>
     <string name="page_settings">Page settings</string>
 
     <!-- posts tab -->
@@ -234,6 +237,7 @@
     <string name="post_uploading">Uploading post</string>
     <string name="post_queued">Queued post</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
+    <string name="posts_empty_list_button">Create a post</string>
     <string name="empty_list_default">This list is empty</string>
 
     <!-- buttons on post cards -->
@@ -247,7 +251,8 @@
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_back">Back</string>
-    <string name="button_revert">Revert</string>
+    <string name="button_discard">Discard</string>
+    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
 
     <!-- post uploads -->
@@ -319,11 +324,11 @@
     <string name="comment_status_trash">Trashed</string>
     <string name="comment_status_all">All</string>
     <string name="edit_comment">Edit comment</string>
-    <string name="comments_empty_list">No comments</string>
-    <string name="comments_empty_list_filtered_approved">No Approved comments</string>
-    <string name="comments_empty_list_filtered_pending">No Pending comments</string>
-    <string name="comments_empty_list_filtered_spam">No Spam comments</string>
-    <string name="comments_empty_list_filtered_trashed">No Trashed comments</string>
+    <string name="comments_empty_list">No comments yet</string>
+    <string name="comments_empty_list_filtered_approved">No approved comments</string>
+    <string name="comments_empty_list_filtered_pending">No pending comments</string>
+    <string name="comments_empty_list_filtered_spam">No spam comments</string>
+    <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
@@ -498,6 +503,10 @@
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
+    <string name="site_settings_tags_empty_button">Create a tag</string>
+    <string name="site_settings_tags_empty_subtitle">Add your frequently used tags here so they can be quickly selected when tagging your posts</string>
+    <string name="site_settings_tags_empty_title">You don\'t have any tags</string>
+    <string name="site_settings_tags_empty_title_search">No tags matching your search</string>
     <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_week_start_title">Week starts on</string>
@@ -562,7 +571,7 @@
     <string name="tag_description_hint">Description</string>
     <string name="add_new_tag">Add New Tag</string>
     <string name="error_tag_exists">A tag with this name already exists</string>
-    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\' tag?</string>
     <string name="dlg_deleting_tag">Deleting</string>
     <string name="dlg_saving_tag">Saving</string>
 
@@ -760,8 +769,19 @@
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="rewind">Rewind</string>
+    <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
-    <string name="activity_log_empty_list">No events recorded yet</string>
+    <string name="activity_log_empty_title">No activity yet</string>
+    <string name="activity_log_empty_subtitle">When you make changes to your site you\'ll be able to see your activity history here</string>
+    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
+    <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
+    <string name="activity_log_currently_restoring_message">Rewinding to %1$s %2$s</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
+    <string name="activity_log_rewind_site">Rewind Site</string>
+    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
+    <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -942,16 +962,16 @@
     <string name="more_notifications">and %d more.</string>
     <string name="notifications_empty_list">No notifications</string>
     <string name="notifications_empty_all">No notifications&#8230;yet.</string>
-    <string name="notifications_empty_unread">You\'re all caught up!</string>
-    <string name="notifications_empty_comments">No new comments&#8230;yet.</string>
-    <string name="notifications_empty_followers">No new followers to report&#8230;yet.</string>
-    <string name="notifications_empty_likes">No new likes to show&#8230;yet.</string>
+    <string name="notifications_empty_unread">You\'re all up to date!</string>
+    <string name="notifications_empty_comments">No comments yet</string>
+    <string name="notifications_empty_followers">No followers yet</string>
+    <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
-    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
-    <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
-    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
+    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
+    <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow</string>
+    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
-    <string name="notifications_empty_view_reader">View Reader</string>
+    <string name="notifications_empty_view_reader">Go to Reader</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
@@ -1133,10 +1153,11 @@
     <string name="menu_publish_now">Publish Now</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode.</string>
+    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode.</string>
+    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_undo_snackbar_action">UNDO</string>
+    <string name="menu_discard_changes">Discard Local Changes</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -1233,6 +1254,9 @@
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
+    <string name="local_changes_discarded">Local changes discarded</string>
+    <string name="local_changes_discarding">Discarding local changes</string>
+    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
 
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
@@ -1413,8 +1437,7 @@
     <string name="reader_label_follow_count">%,d followers</string>
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
-    <string name="reader_label_post_search_explainer">Search WordPress\nfor a site or post</string>
-    <string name="reader_label_post_search_running">Searching…</string>
+    <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit</string>
@@ -1480,12 +1503,15 @@
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
+    <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
-    <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+    <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
+    <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
+    <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
+    <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
@@ -1532,9 +1558,14 @@
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
-    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
+    <string name="my_tickets">My Tickets</string>
+    <string name="application_log_button">Application log</string>
+    <string name="support_contact_email">Contact email</string>
+    <string name="support_contact_email_not_set">Not set</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1551,6 +1582,7 @@
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
+    <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
@@ -1574,12 +1606,10 @@
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
 
-    <!-- Helpshift overridden strings -->
-    <string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>
-    <string name="hs__new_conversation_header">Support chat</string>
-    <string name="hs__conversation_header">Support chat</string>
-    <string name="hs__username_blank_error">Enter a valid name</string>
-    <string name="hs__invalid_email_error">Enter a valid email address</string>
+    <!--Support strings-->
+    <string name="support_identity_input_dialog_enter_email_and_name">To continue please enter your email address and name</string>
+    <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
+    <string name="support_identity_input_dialog_email_label">Email</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
@@ -1614,6 +1644,7 @@
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connection_service_label">Publicize to %s</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
+    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>
@@ -1683,6 +1714,7 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
+    <string name="themes_empty_list">No themes matching your search</string>
 
     <!--People Management-->
     <string name="people">People</string>
@@ -1720,10 +1752,10 @@
     <string name="people_dropdown_item_followers">Followers</string>
     <string name="people_dropdown_item_email_followers">Email Followers</string>
     <string name="people_dropdown_item_viewers">Viewers</string>
-    <string name="people_empty_list_filtered_users">You don\'t have any users yet.</string>
-    <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
-    <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
-    <string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
+    <string name="people_empty_list_filtered_users">No users yet</string>
+    <string name="people_empty_list_filtered_followers">No followers yet</string>
+    <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
+    <string name="people_empty_list_filtered_viewers">No viewers yet</string>
     <string name="people_fetching">Fetching users…</string>
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>
@@ -1834,7 +1866,7 @@
     <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
     <string name="site_settings_export_content_title">Export content</string>
     <string name="error_deleting_site">Error deleting site</string>
-    <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>
+    <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance.</string>
     <string name="primary_domain">Primary Domain</string>
     <string name="export_site_hint">Export your site to an XML file</string>
     <string name="delete_site_warning_title">Delete site?</string>
@@ -1931,7 +1963,6 @@
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
-    <string name="stock_media_picker_empty_results">No matches</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -2101,6 +2132,9 @@
     <string name="change_photo">Change photo</string>
 
     <!-- Content description for accessibility  -->
+    <string name="featured_image_desc">featured image</string>
+    <string name="theme_image_desc">theme image</string>
+    <string name="blavatar_desc">site icon</string>
     <string name="comment_checkmark_desc">check mark</string>
     <string name="profile_picture">%s\'s profile picture</string>
     <string name="invite_user_delete_desc">remove %s</string>
@@ -2119,7 +2153,6 @@
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
-    <string name="post_cardview_featured_desc">featured image</string>
     <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
@@ -2134,7 +2167,6 @@
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
     <string name="stats_bar_date_value_desc">%s, %d views</string>
     <string name="stats_bar_week_desc">Week of %s</string>
-    <string name="fab_add_tag_desc">create tag</string>
     <string name="fab_create_desc">create</string>
     <string name="stats_legend">stats graph legend</string>
     <string name="stats_tab_tap_content_description">showing %s</string>
@@ -2156,6 +2188,7 @@
     <string name="stats_followers_many_desc">%d followers</string>
     <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
+    <string name="reader_gallery_images_desc">image gallery</string>
 
 
     <!-- Site Creation -->

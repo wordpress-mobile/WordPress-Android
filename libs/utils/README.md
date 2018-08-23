@@ -7,7 +7,7 @@ Collection of utility methods for Android and WordPress.
 * In your build.gradle:
 ```groovy
 dependencies {
-    compile 'org.wordpress:utils:1.19.0' // use version 1.19.0
+    compile 'org.wordpress:utils:1.22.0' // use version 1.22.0
 }
 ```
 

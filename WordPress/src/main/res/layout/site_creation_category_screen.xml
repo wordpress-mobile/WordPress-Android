@@ -77,7 +77,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        app:srcCompat="@drawable/img_site_creation_type_blog_80dp"/>
+                        app:srcCompat="@drawable/img_type_blog_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -135,7 +135,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        app:srcCompat="@drawable/img_site_creation_type_website_80dp"/>
+                        app:srcCompat="@drawable/img_type_website_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -193,7 +193,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        app:srcCompat="@drawable/img_site_creation_type_portfolio_80dp"/>
+                        app:srcCompat="@drawable/img_type_portfolio_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"

@@ -40,22 +40,22 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
     /*
      * passed JSON is the response from /meta/external-services?type=publicize
          "services": {
-                "facebook": {
-                    "ID": "facebook",
-                    "label": "Facebook",
-                    "type": "publicize",
-                    "description": "Publish your posts to your Facebook timeline or page.",
-                    "genericon": {
-                        "class": "facebook-alt",
-                        "unicode": "\\f203"
-                    },
-                    "icon": "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-fb-2x.png",
-                    "connect_URL": "https://public-api.wordpress.com/connect/?action=request
-                    &kr_nonce=b2c86a0cdb&nonce=94557d1529&for=connect&service=facebook&kr_blog_nonce=5e399375f1
-                    &magic=keyring&blog=52451191",
-                    "multiple_external_user_ID_support": true,
-                    "jetpack_support": true,
-                    "jetpack_module_required": "publicize"
+                "facebook":{
+                 "ID":"facebook",
+                 "label":"Facebook",
+                 "type":"publicize",
+                 "description":"Publish your posts to your Facebook timeline or page.",
+                 "genericon":{
+                    "class":"facebook-alt",
+                    "unicode":"\\f203"
+                 },
+                 "icon":"http:\/\/i.wordpress.com\/wp-content\/admin-plugins\/publicize\/assets\/publicize-fb-2x.png",
+                 "connect_URL":"https:\/\/public-api.wordpress.com\/connect\/?action=request&kr_nonce=a1e2ad2b80
+                 &nonce=c4b69a25c1&for=connect&service=facebook&kr_blog_nonce=0ae2027be9&magic=keyring&blog=90298630",
+                 "multiple_external_user_ID_support":true,
+                 "external_users_only":true,
+                 "jetpack_support":true,
+                 "jetpack_module_required":"publicize"
                 },
             ...
      */
@@ -84,6 +84,7 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
 
             service.setIsJetpackSupported(jsonService.optBoolean("jetpack_support"));
             service.setIsMultiExternalUserIdSupported(jsonService.optBoolean("multiple_external_user_ID_support"));
+            service.setIsExternalUsersOnly(jsonService.optBoolean("external_users_only"));
 
             JSONObject jsonGenericon = jsonService.optJSONObject("genericon");
             if (jsonGenericon != null) {

@@ -27,7 +27,7 @@
             android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_small">
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/notifications_avatar_sz"
                 android:layout_height="@dimen/notifications_avatar_sz"

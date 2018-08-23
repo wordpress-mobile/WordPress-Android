@@ -1,5 +1,9 @@
-Android için WordPress içerik oluşturma ve tüketmeyi kolaylaştırarak yayın gücünü avucunuza taşıyor. Sitenizde yeni yazılar yazın, düzenleyin ve yayınlayın, istatistikleri takip edin, okuyucudaki harika yazılardan ilham alın. Dahası mı? Açık kaynak.
+WordPress blogunuzu veya web sitenizi doğrudan Android cihazınızdan yönetin veya oluşturun: yazılar ve sayfalar oluşturun ve düzenleyin, beğendiğiniz fotoğraflarınızı ve videolarınızı yükleyin, istatistikleri görüntüleyin ve yorumlara cevap verin.
 
-Android için WordPress uygulaması hem WordPress.com hesaplarını hem de WordPress 3.7 ve üzeri çalıştıran WordPress.org sitelerini destekliyor.
+Android için WordPress ile yayımcılığın gücünü avucunuzda tutarsınız. Kanepede otururken hemen o anda bir haiku yazın. Öğle tatilinde fotoğraf çekin ve yayımlayın. En son yorumlarınıza yanıt verin veya bugünün okuyucularının hangi yeni ülkelerden geldiğini görmek için istatistiklerinizi kontrol edin.
 
-Forumları ziyaret ederek uygulama ile ilgili yardım alabilirsiniz: http://android.forums.wordpress.org
+Android için WordPress bir açık kaynak projesidir, bu da sizin gelişiminize katkıda bulunabileceğiniz anlamına gelir. https://apps.wordpress.com/contribute/ adresinden daha fazla bilgi edinin.
+
+Android için WordPress, WordPress.com ve kendi kendine barındırılan WordPress 4.0 veya daha yüksek bir sürümünü çalıştıran WordPress.org sitelerini destekler.
+
+Uygulamayla ilgili yardım mı gerekli? https://android.forums.wordpress.org/forum/troubleshooting adresinde forumları ziyaret edin veya @WPAndroid adresinden bize tweet atın.

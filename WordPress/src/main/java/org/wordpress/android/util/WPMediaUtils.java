@@ -18,8 +18,6 @@ import android.support.v4.content.FileProvider;
 import android.view.ContextThemeWrapper;
 import android.view.ViewConfiguration;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -28,7 +26,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -206,7 +203,6 @@ public class WPMediaUtils {
             case GENERIC_ERROR:
                 return context.getString(R.string.error_generic_error);
         }
-
         return null;
     }
 
@@ -379,32 +375,6 @@ public class WPMediaUtils {
     }
 
     /**
-     * Loads the given network image URL into the {@link NetworkImageView}.
-     */
-    public static void loadNetworkImage(String imageUrl, WPNetworkImageView imageView) {
-        if (imageUrl != null) {
-            Uri uri = Uri.parse(imageUrl);
-            String filepath = uri.getLastPathSegment();
-
-            // re-use the default background drawable as error image for now.
-            // See: https://github.com/wordpress-mobile/WordPress-Android/pull/6295#issuecomment-315129759
-            imageView.setErrorImageResId(R.drawable.media_item_background);
-
-            // default image while downloading
-            imageView.setDefaultImageResId(R.drawable.media_item_background);
-
-            if (MediaUtils.isValidImage(filepath)) {
-                imageView.setTag(imageUrl);
-                imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-            } else {
-                imageView.setImageResource(R.drawable.media_item_background);
-            }
-        } else {
-            imageView.setImageResource(0);
-        }
-    }
-
-    /**
      * Returns a poster (thumbnail) URL given a VideoPress video URL
      *
      * @param videoUrl the remote URL to the VideoPress video
@@ -441,12 +411,9 @@ public class WPMediaUtils {
      * returns true if the current user has permission to upload new media to the passed site
      */
     public static boolean currentUserCanUploadMedia(@NonNull SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            return site.getHasCapabilityUploadFiles();
-        } else {
-            // self-hosted sites don't have capabilities so always return true
-            return true;
-        }
+        boolean isSelfHosted = !site.isUsingWpComRestApi();
+        // self-hosted sites don't have capabilities so always return true
+        return isSelfHosted || site.getHasCapabilityUploadFiles();
     }
 
     public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {

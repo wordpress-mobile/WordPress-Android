@@ -18,12 +18,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +42,7 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -62,11 +67,12 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     private static final String KEY_SAVED_QUERY = "SAVED_QUERY";
     private static final String KEY_PROGRESS_RES_ID = "PROGRESS_RESOURCE_ID";
+    private static final String KEY_IS_SEARCHING = "IS_SEARCHING";
 
     private SiteModel mSite;
-    private RecyclerView mRecycler;
+    private EmptyViewRecyclerView mRecycler;
     private View mFabView;
-    private View mEmptyView;
+    private ActionableEmptyView mActionableEmptyView;
 
     private TagListAdapter mAdapter;
     private String mSavedQuery;
@@ -75,6 +81,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
+
+    private boolean mIsSearching;
 
     public static void showTagList(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, SiteSettingsTagListActivity.class);
@@ -99,6 +107,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mSavedQuery = savedInstanceState.getString(KEY_SAVED_QUERY);
+            mIsSearching = savedInstanceState.getBoolean(KEY_IS_SEARCHING);
         }
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -109,8 +118,18 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         mFabView = findViewById(R.id.fab_button);
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showDetailFragment(null);
+            }
+        });
+        mFabView.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.site_settings_tags_empty_button, Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
@@ -119,11 +138,17 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             mFabView.setVisibility(View.INVISIBLE);
         }
 
+        mActionableEmptyView = findViewById(R.id.actionable_empty_view);
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                showDetailFragment(null);
+            }
+        });
+
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
-
-        mEmptyView = findViewById(R.id.empty_view);
+        mRecycler.setEmptyView(mActionableEmptyView);
 
         loadTags();
 
@@ -144,7 +169,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        showFabIfHidden();
+        showFabWithConditions();
     }
 
     @Override
@@ -163,9 +188,12 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(KEY_IS_SEARCHING, mIsSearching);
+
         if (mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_SAVED_QUERY, mSearchView.getQuery().toString());
         }
+
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             outState.putInt(KEY_PROGRESS_RES_ID, mLastProgressResId);
         }
@@ -176,13 +204,14 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.tag_list, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchMenuItem.setOnActionExpandListener(this);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
 
         // open search bar if we were searching for something before
-        if (!TextUtils.isEmpty(mSavedQuery)) {
+        if (mIsSearching) {
             mSearchMenuItem.expandActionView();
-            onQueryTextSubmit(mSavedQuery);
+            mSearchView.clearFocus();
             mSearchView.setQuery(mSavedQuery, true);
         }
 
@@ -194,23 +223,9 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (item.getItemId() == R.id.menu_search) {
-            mSearchMenuItem = item;
-            mSearchMenuItem.setOnActionExpandListener(this);
-
-            mSearchView = (SearchView) item.getActionView();
-            mSearchView.setOnQueryTextListener(this);
-
-            if (!TextUtils.isEmpty(mSavedQuery)) {
-                onQueryTextSubmit(mSavedQuery);
-                mSearchView.setQuery(mSavedQuery, true);
-            }
-
-            mSearchMenuItem.expandActionView();
-
-            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -235,15 +250,31 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (!isFinishing() && mFabView.getVisibility() != View.VISIBLE) {
-                    AniUtils.showFab(mFabView, true);
+                    AniUtils.scaleIn(mFabView, AniUtils.Duration.MEDIUM);
                 }
             }
         }, delayMs);
     }
 
+    private void showFabWithConditions() {
+        // scale in the fab after a brief delay if it's not already showing
+        if (mFabView.getVisibility() != View.VISIBLE) {
+            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mIsSearching && !isDetailFragmentShowing()
+                        && mActionableEmptyView.getVisibility() != View.VISIBLE) {
+                        showFabIfHidden();
+                    }
+                }
+            }, delayMs);
+        }
+    }
+
     private void hideFabIfShowing() {
         if (!isFinishing() && mFabView.getVisibility() == View.VISIBLE) {
-            AniUtils.showFab(mFabView, false);
+            AniUtils.scaleOut(mFabView, AniUtils.Duration.SHORT);
         }
     }
 
@@ -312,38 +343,53 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         if (fragment != null) {
             getFragmentManager().popBackStack();
             ActivityUtils.hideKeyboard(this);
-            showFabIfHidden();
+            showFabWithConditions();
             setTitle(R.string.site_settings_tags_title);
             invalidateOptionsMenu();
+        }
+    }
+
+    private void showActionableEmptyViewForSearch(boolean isSearch) {
+        mActionableEmptyView.updateLayoutForSearch(isSearch, 0);
+
+        if (isSearch) {
+            mActionableEmptyView.button.setVisibility(View.GONE);
+            mActionableEmptyView.image.setVisibility(View.GONE);
+            mActionableEmptyView.subtitle.setVisibility(View.GONE);
+            mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title_search);
+        } else {
+            mActionableEmptyView.button.setVisibility(View.VISIBLE);
+            mActionableEmptyView.image.setVisibility(View.VISIBLE);
+            mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+            mActionableEmptyView.title.setText(R.string.site_settings_tags_empty_title);
         }
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         mAdapter.filter(query);
-        mSearchView.clearFocus();
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
         mAdapter.filter(query);
-        return true;
-    }
-
-    private void showEmptyView(boolean show) {
-        mEmptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        return false;
     }
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
+        mIsSearching = true;
+        showActionableEmptyViewForSearch(true);
         hideFabIfShowing();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        showFabIfHidden();
+        mIsSearching = false;
+        showActionableEmptyViewForSearch(false);
+        showFabWithConditions();
         return true;
     }
 
@@ -374,16 +420,17 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                 new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
         dialogBuilder.setMessage(message);
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.delete_yes),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                                showProgressDialog(R.string.dlg_deleting_tag);
-                                                Action action = TaxonomyActionBuilder.newDeleteTermAction(
-                                                        new TaxonomyStore.RemoteTermPayload(term, mSite));
-                                                mDispatcher.dispatch(action);
-                                            }
-                                        });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.delete_no), null);
+        dialogBuilder.setPositiveButton(
+                getResources().getText(R.string.delete_yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        showProgressDialog(R.string.dlg_deleting_tag);
+                        Action action = TaxonomyActionBuilder.newDeleteTermAction(
+                                new TaxonomyStore.RemoteTermPayload(term, mSite));
+                        mDispatcher.dispatch(action);
+                    }
+                });
+        dialogBuilder.setNegativeButton(R.string.cancel, null);
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
     }
@@ -418,15 +465,16 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
             mFilteredTags.addAll(allTags);
         }
 
+        @NonNull
         @Override
-        public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public TagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                                       .inflate(R.layout.site_settings_tag_list_row, parent, false);
             return new TagListAdapter.TagViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final TagListAdapter.TagViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final TagListAdapter.TagViewHolder holder, int position) {
             TermModel term = mFilteredTags.get(position);
             holder.mTxtTag.setText(StringEscapeUtils.unescapeHtml4(term.getName()));
             if (term.getPostCount() > 0) {
@@ -455,7 +503,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
                 }
             }
             notifyDataSetChanged();
-            showEmptyView(mFilteredTags.isEmpty());
+
+            showActionableEmptyViewForSearch(mIsSearching && mFilteredTags.isEmpty());
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {

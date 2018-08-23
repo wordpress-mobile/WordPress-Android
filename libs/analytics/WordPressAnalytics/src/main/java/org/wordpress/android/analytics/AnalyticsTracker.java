@@ -16,6 +16,7 @@ public final class AnalyticsTracker {
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
     public static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
     public static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
+    public static final String ACTIVITY_LOG_ACTIVITY_ID_KEY = "activity_id";
 
     public enum Stat {
         APPLICATION_OPENED,
@@ -110,6 +111,7 @@ public final class AnalyticsTracker {
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
         EDITOR_DISCARDED_CHANGES,
+        EDITOR_DISCARDED_CHANGES_UNDO,
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_HYBRID_ENABLED, // Visual editor only
         EDITOR_HYBRID_TOGGLED_OFF, // Visual editor only
@@ -211,8 +213,9 @@ public final class AnalyticsTracker {
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
         OPENED_PLUGIN_DIRECTORY,
-        OPENED_ACTIVITY_LOG_LIST,
-        OPENED_ACTIVITY_LOG_DETAIL,
+        ACTIVITY_LOG_LIST_OPENED,
+        ACTIVITY_LOG_DETAIL_OPENED,
+        ACTIVITY_LOG_REWIND_STARTED,
         OPENED_PLUGIN_LIST,
         OPENED_PLUGIN_DETAIL,
         CREATE_ACCOUNT_INITIATED,
@@ -234,12 +237,6 @@ public final class AnalyticsTracker {
         CONNECT_JETPACK_FAILED,
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
-        SUPPORT_OPENED_HELPSHIFT_SCREEN,
-        SUPPORT_USER_ACCEPTED_THE_SOLUTION,
-        SUPPORT_USER_REJECTED_THE_SOLUTION,
-        SUPPORT_USER_SENT_SCREENSHOT,
-        SUPPORT_USER_REVIEWED_THE_APP,
-        SUPPORT_USER_REPLIED_TO_HELPSHIFT,
         LOGIN_ACCESSED,
         LOGIN_MAGIC_LINK_EXITED,
         LOGIN_MAGIC_LINK_FAILED,
@@ -404,6 +401,9 @@ public final class AnalyticsTracker {
         AUTOMATED_TRANSFER_FLOW_COMPLETE,
         PUBLICIZE_SERVICE_CONNECTED,
         PUBLICIZE_SERVICE_DISCONNECTED,
+        SUPPORT_HELP_CENTER_VIEWED,
+        SUPPORT_IDENTITY_FORM_VIEWED,
+        SUPPORT_IDENTITY_SET,
         QUICK_START_DIALOG_SEEN,
         QUICK_START_DIALOG_NEGATIVE_TAPPED,
         QUICK_START_DIALOG_POSITIVE_TAPPED,

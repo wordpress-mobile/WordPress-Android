@@ -6,17 +6,16 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 
 import org.wordpress.android.R;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.wordpress.android.util.ValidationUtils;
 
 public class EditTextPreferenceWithValidation extends SummaryEditTextPreference {
     private ValidationType mValidationType = ValidationType.NONE;
+    // Ignore the default value, such as "Not Set", while showing the dialog
+    private String mStringToIgnoreForPrefilling = "";
 
     public EditTextPreferenceWithValidation(Context context) {
         super(context);
@@ -43,9 +42,11 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                     String error = null;
                     CharSequence text = getEditText().getText();
                     if (mValidationType == ValidationType.EMAIL) {
-                        error = validateEmail(text);
+                        error = ValidationUtils.validateEmail(text) ? null
+                                : getContext().getString(R.string.invalid_email_message);
                     } else if (!TextUtils.isEmpty(text) && mValidationType == ValidationType.URL) {
-                        error = validateUrl(text);
+                        error = ValidationUtils.validateUrl(text) ? null
+                                : getContext().getString(R.string.invalid_url_message);
                     }
 
                     if (error != null) {
@@ -59,7 +60,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         }
 
         CharSequence summary = getSummary();
-        if (TextUtils.isEmpty(summary)) {
+        if (summary == null || summary.equals(mStringToIgnoreForPrefilling)) {
             getEditText().setText("");
         } else {
             getEditText().setText(summary);
@@ -70,26 +71,12 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         getEditText().setError(null);
     }
 
-    private String validateEmail(CharSequence text) {
-        final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
-        Matcher matcher = emailRegExPattern.matcher(text);
-        if (!matcher.matches()) {
-            return getContext().getString(R.string.invalid_email_message);
-        }
-        return null;
-    }
-
-    private String validateUrl(CharSequence text) {
-        final Pattern urlRegExPattern = Patterns.WEB_URL;
-        Matcher matcher = urlRegExPattern.matcher(text);
-        if (!matcher.matches()) {
-            return getContext().getString(R.string.invalid_url_message);
-        }
-        return null;
-    }
-
     public void setValidationType(ValidationType validationType) {
         mValidationType = validationType;
+    }
+
+    public void setStringToIgnoreForPrefilling(String stringToIgnoreForPrefilling) {
+        mStringToIgnoreForPrefilling = stringToIgnoreForPrefilling;
     }
 
     public enum ValidationType {

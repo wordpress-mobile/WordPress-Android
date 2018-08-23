@@ -195,7 +195,7 @@ class QuickStartUtils {
 
             if (isEveryQuickStartTaskDone(quickStartStore)) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_COMPLETE_ALL_TASKS)
-                dispatcher.dispatch(SiteActionBuilder.newCompleteMobileQuickStartAction(site))
+                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
             }
         }
 

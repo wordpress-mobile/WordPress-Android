@@ -1,0 +1,5 @@
+10.6:
+* Für kostenlose WordPress.com-Websites ist jetzt das Aktivitätsprotokoll verfügbar.
+* Verbesserungen zur Unterstützung einiger Gebietsschemata.
+* Allgemeine Verbesserungen bei der Gif-Unterstützung.
+* Eine Reihe anderer Fehlerkorrekturen.

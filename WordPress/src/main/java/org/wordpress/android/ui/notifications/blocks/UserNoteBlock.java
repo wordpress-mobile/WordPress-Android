@@ -6,13 +6,15 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 
 /**
  * A block that displays information about a User (such as a user that liked a post)
@@ -31,8 +33,10 @@ public class UserNoteBlock extends NoteBlock {
             Context context,
             JSONObject noteObject,
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-            OnGravatarClickedListener onGravatarClickedListener) {
-        super(noteObject, onNoteBlockTextClickListener);
+            OnGravatarClickedListener onGravatarClickedListener,
+            ImageManager imageManager) {
+        super(noteObject, imageManager, onNoteBlockTextClickListener);
+
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));
         }
@@ -85,9 +89,9 @@ public class UserNoteBlock extends NoteBlock {
             noteBlockHolder.mTaglineTextView.setVisibility(View.GONE);
         }
 
+        String imageUrl = "";
         if (hasImageMediaItem()) {
-            String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
-            noteBlockHolder.mAvatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
+            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             if (!TextUtils.isEmpty(getUserUrl())) {
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
@@ -101,11 +105,11 @@ public class UserNoteBlock extends NoteBlock {
             }
         } else {
             noteBlockHolder.mRootView.setEnabled(false);
-            noteBlockHolder.mAvatarImageView.showDefaultGravatarImageAndNullifyUrl();
             noteBlockHolder.mRootView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
+        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
 
         return view;
     }
@@ -127,14 +131,14 @@ public class UserNoteBlock extends NoteBlock {
         private final TextView mNameTextView;
         private final TextView mUrlTextView;
         private final TextView mTaglineTextView;
-        private final WPNetworkImageView mAvatarImageView;
+        private final ImageView mAvatarImageView;
 
         UserActionNoteBlockHolder(View view) {
             mRootView = view.findViewById(R.id.user_block_root_view);
-            mNameTextView = (TextView) view.findViewById(R.id.user_name);
-            mUrlTextView = (TextView) view.findViewById(R.id.user_blog_url);
-            mTaglineTextView = (TextView) view.findViewById(R.id.user_blog_tagline);
-            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.user_avatar);
+            mNameTextView = view.findViewById(R.id.user_name);
+            mUrlTextView = view.findViewById(R.id.user_blog_url);
+            mTaglineTextView = view.findViewById(R.id.user_blog_tagline);
+            mAvatarImageView = view.findViewById(R.id.user_avatar);
         }
     }
 

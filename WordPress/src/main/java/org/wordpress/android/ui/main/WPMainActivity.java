@@ -39,7 +39,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.OnMobileQuickStartCompleted;
+import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
@@ -128,6 +128,8 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
+    public static final String ARG_ME = "show_me";
+    public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
@@ -210,7 +212,12 @@ public class WPMainActivity extends AppCompatActivity implements
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedPage = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_PAGE));
-                if (openedFromPush) {
+                boolean openZendeskTicketsFromPush = (getIntent() != null && getIntent()
+                        .getBooleanExtra(ARG_SHOW_ZENDESK_NOTIFICATIONS, false));
+
+                if (openZendeskTicketsFromPush) {
+                    launchZendeskMyTickets();
+                } else if (openedFromPush) {
                     // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
@@ -304,10 +311,28 @@ public class WPMainActivity extends AppCompatActivity implements
                 case ARG_READER:
                     mBottomNav.setCurrentPosition(PAGE_READER);
                     break;
+                case ARG_ME:
+                    mBottomNav.setCurrentPosition(PAGE_ME);
+                    break;
             }
         } else {
             AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
         }
+    }
+
+    private void launchZendeskMyTickets() {
+        if (isFinishing()) {
+            return;
+        }
+
+        // leave the Main activity showing the ME page, so when the user comes back from Help&Support the app is in
+        // the right section.
+        mBottomNav.setCurrentPosition(PAGE_ME);
+
+        // init selected site, this is the same as in onResume
+        initSelectedSite();
+
+        ActivityLauncher.viewZendeskTickets(this, getSelectedSite());
     }
 
     /*
@@ -472,7 +497,7 @@ public class WPMainActivity extends AppCompatActivity implements
         if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
             && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
             && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
-            mDispatcher.dispatch(SiteActionBuilder.newCompleteMobileQuickStartAction(getSelectedSite()));
+            mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(getSelectedSite()));
         }
     }
 
@@ -817,7 +842,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMobileQuickStartCompleted(OnMobileQuickStartCompleted event) {
+    public void onQuickStartCompleted(OnQuickStartCompleted event) {
         if (getSelectedSite() != null && !event.isError()) {
             // as long as we get any response that is not an error mark quick start notification as received
             mQuickStartStore.setQuickStartNotificationReceived(event.site.getId(), true);

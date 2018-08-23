@@ -29,12 +29,12 @@
                 android:importantForAccessibility="noHideDescendants"
                 android:foreground="?android:attr/selectableItemBackground">
 
-                <org.wordpress.android.widgets.WPNetworkImageView
+                <ImageView
                     android:id="@+id/theme_grid_item_image"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_preview_image_height"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitCenter" />
+                    android:contentDescription="@string/theme_image_desc"/>
 
             </FrameLayout>
 

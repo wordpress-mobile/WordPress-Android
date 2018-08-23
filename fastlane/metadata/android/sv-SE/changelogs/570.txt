@@ -1,3 +1,0 @@
-10.2:
-* Ny funktion: Fastnat för något? Läs det när du känner för det genom att spara det till senare! Till och med när du inte är online!
-* Diverse felrättningar.

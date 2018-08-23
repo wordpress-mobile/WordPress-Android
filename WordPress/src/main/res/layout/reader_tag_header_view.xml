@@ -6,11 +6,11 @@
     android:layout_height="@dimen/reader_tag_header_image_height"
     android:layout_marginBottom="@dimen/margin_extra_small">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
+    <ImageView
         android:id="@+id/image_tag_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_tag_header_image_height"
-        android:scaleType="centerCrop" />
+        android:contentDescription="@null"/>
 
     <View
         android:id="@+id/view_overlay"

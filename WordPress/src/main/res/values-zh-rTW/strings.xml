@@ -1,13 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-06-12 08:54:07+0000
+Translation-Revision-Date: 2018-08-07 03:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="people_empty_list_filtered_viewers">尚未有瀏覽者</string>
+    <string name="people_empty_list_filtered_email_followers">尚未有電子郵件關注者</string>
+    <string name="people_empty_list_filtered_followers">尚未有關注者</string>
+    <string name="people_empty_list_filtered_users">尚未有使用者</string>
+    <string name="connection_service_facebook_notice">Facebook 自 2018 年 8 月 1 日起將禁止直接將文章分享至 Facebook 個人檔案。與 Facebook 粉絲專頁的連結將不受影響。</string>
+    <string name="reader_empty_posts_liked_description">這裡會顯示你按讚的文章</string>
+    <string name="reader_empty_posts_liked_title">尚未有按讚的文章</string>
+    <string name="reader_empty_followed_blogs_button_followed">前往關注</string>
+    <string name="reader_empty_followed_blogs_button_discover">發掘網站</string>
+    <string name="reader_empty_followed_blogs_description">你尚未關注任何網站。要開始關注網站嗎？</string>
+    <string name="reader_empty_followed_blogs_title">尚未有關注的網站</string>
+    <string name="notifications_empty_likes">尚未有人按讚</string>
+    <string name="notifications_empty_followers">尚未有關注者</string>
+    <string name="activity_log_limited_content_on_free_plan">由於你使用免費版方案，你將無法查看所有活動。</string>
+    <string name="activity_log_empty_subtitle">當你變更自己的網站內容時，即可在此查看你的活動記錄</string>
+    <string name="activity_log_empty_title">尚未有活動</string>
+    <string name="posts_empty_list_button">建立文章</string>
+    <string name="pages_empty_list_button">建立頁面</string>
+    <string name="media_empty_upload_media">上傳媒體</string>
+    <string name="media_empty_list">你沒有任何媒體</string>
+    <string name="reader_gallery_images_desc">圖片庫</string>
+    <string name="blavatar_desc">網站圖示</string>
+    <string name="theme_image_desc">主題圖片</string>
+    <string name="featured_image_desc">特色圖片</string>
+    <string name="local_changes_discarding_error">捨棄本機變更時發生錯誤。請聯絡支援團隊，尋求進一步協助。</string>
+    <string name="local_changes_discarding">正在捨棄本機變更</string>
+    <string name="local_changes_discarded">已捨棄本機變更</string>
+    <string name="menu_discard_changes">捨棄本機變更</string>
+    <string name="button_discard_changes">捨棄變更</string>
+    <string name="button_discard">捨棄</string>
+    <string name="reader_avatar_desc">個人檔案圖像</string>
+    <string name="reader_blavatar_desc">網站圖示</string>
+    <string name="notification_channel_transient_title">暫時性</string>
+    <string name="support_identity_input_dialog_email_label">電子郵件</string>
+    <string name="support_identity_input_dialog_enter_email">請輸入你的電子郵件地址</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">若要繼續，請輸入你的電子郵件地址和姓名</string>
+    <string name="support_push_notification_message">來自「說明與客戶服務」的新郵件</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_contact_email_not_set">未設定</string>
+    <string name="support_contact_email">聯絡電子郵件</string>
+    <string name="application_log_button">應用程式記錄檔</string>
+    <string name="my_tickets">我的票證</string>
+    <string name="activity_log_rewind_site">還原網站</string>
+    <string name="activity_log_currently_restoring_message_no_dates">正在還原</string>
+    <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
+    <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功還原你的網站</string>
+    <string name="activity_log_button">活動記錄動作按鈕</string>
+    <string name="plugin_auto_managed">自動管理</string>
+    <string name="reader_save_posts_locally_dialog_message">儲存這篇文章，即可隨時返回閱讀。儲存的文章不會同步至其他裝置，因此你只能在這部裝置上存取文章。(不過，我們正努力提供此功能！)</string>
+    <string name="reader_save_posts_locally_dialog_title">儲存文章以供稍後使用</string>
+    <string name="reader_empty_search_request_failed">無法執行搜尋</string>
+    <string name="reader_empty_search_title">找不到結果</string>
+    <string name="reader_label_post_search_explainer">搜尋 WordPress\n網站或文章</string>
+    <string name="comment_read_source_post">參閱原始文章</string>
+    <string name="sites">網站</string>
+    <string name="signup_magic_link_title">神奇連結已傳送</string>
+    <string name="signup_email_screen_title">電子郵件註冊</string>
+    <string name="verification_2fa_screen_title">代碼驗證</string>
+    <string name="selfhosted_site_login_title">登入憑證</string>
+    <string name="magic_link_sent_login_title">神奇連結已傳送</string>
+    <string name="magic_link_login_title">神奇連結登入</string>
+    <string name="site_address_login_title">網站位址登入</string>
+    <string name="email_address_login_title">電子郵件地址登入</string>
+    <string name="alternatively">替代作法：</string>
     <string name="reader_empty_saved_posts_description">點選「%s」即可將文章儲存至你的清單。</string>
-    <string name="reader_empty_saved_posts_title">尚未儲存任何文章 u2014！</string>
     <string name="reader_bookmark_snack_title">文章已儲存</string>
     <string name="reader_bookmark_snack_btn">檢視全部</string>
     <string name="reader_btn_bookmarked">已儲存</string>
@@ -15,7 +78,6 @@ Language: zh_TW
     <string name="reader_remove_bookmark">從已儲存文章中移除</string>
     <string name="reader_add_bookmark">加入已儲存文章</string>
     <string name="reader_save_for_later_title">已儲存文章</string>
-    <string name="activity_log_empty_list">未記錄任何事件</string>
     <string name="removed">已移除</string>
     <string name="tabbar_accessibility_label_write">新文章。撰寫新文章。</string>
     <string name="my_site_icon_content_description">變更網站圖示</string>
@@ -81,8 +143,6 @@ Language: zh_TW
     <string name="dialog_confirm_delete_permanently_page">確定要永久刪除此頁面？</string>
     <string name="dialog_confirm_delete_permanently_post">確定要永久刪除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在建立網站… 可能需要一點時間。</string>
-    <string name="notification_channel_important_id">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_normal_id">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_title">重要</string>
     <string name="notification_channel_general_title">一般</string>
     <string name="photo_picker_use_photo">使用此相片</string>
@@ -155,9 +215,7 @@ Language: zh_TW
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_undo_snackbar_action">復原</string>
-    <string name="menu_visual_mode_done_snackbar">已切換至「視覺化模式」。</string>
     <string name="menu_visual_mode">視覺化模式</string>
-    <string name="menu_html_mode_done_snackbar">切換至「HTML 模式」。</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">預覽</string>
     <string name="menu_publish_now">立即發表</string>
@@ -826,13 +884,9 @@ Language: zh_TW
     <string name="site_settings_list_editor_action_mode_title">已選取 %1$d</string>
     <string name="error_fetch_users_list">無法擷取網站使用者</string>
     <string name="plans_manage">管理你的方案，於\nWordPress.com/plans</string>
-    <string name="people_empty_list_filtered_viewers">你沒有任何的觀看者。</string>
     <string name="title_follower">關注者</string>
     <string name="title_email_follower">電子郵件關注者</string>
     <string name="people_fetching">正在擷取使用者…</string>
-    <string name="people_empty_list_filtered_email_followers">你還沒有任何電子郵件關注者。</string>
-    <string name="people_empty_list_filtered_followers">你還沒有任何關注者。</string>
-    <string name="people_empty_list_filtered_users">你還沒有任何使用者。</string>
     <string name="people_dropdown_item_email_followers">電子郵件關注者</string>
     <string name="people_dropdown_item_viewers">讀者</string>
     <string name="people_dropdown_item_followers">關注者</string>
@@ -883,11 +937,7 @@ Language: zh_TW
     <string name="invite_people">邀請他人</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
-    <string name="reader_empty_posts_in_search_description">無法以你的語言找到與「%s」相關的文章</string>
     <string name="reader_label_post_search_running">搜尋中…</string>
-    <string name="reader_empty_posts_in_search_title">找不到文章</string>
-    <string name="reader_label_post_search_explainer">搜尋所有公開的 WordPress.com 網誌</string>
-    <string name="reader_hint_post_search">搜尋 WordPress.com</string>
     <string name="reader_title_related_post_detail">相關文章</string>
     <string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
     <string name="draft_explainer">這篇文章只是草稿，尚未發表</string>
@@ -929,7 +979,6 @@ Language: zh_TW
     <string name="delete_site_hint">刪除網站</string>
     <string name="export_site_hint">將網站匯出為 XML 檔案</string>
     <string name="primary_domain">主要網域</string>
-    <string name="error_deleting_site_summary">刪除網站時發生錯誤。請聯絡支援團隊，尋求進一步協助</string>
     <string name="error_deleting_site">刪除網站時發生錯誤</string>
     <string name="confirm_delete_site_prompt">請在下方欄位中輸入 %1$s 以確認。系統將永久刪除你的網站。</string>
     <string name="site_settings_export_content_title">匯出內容</string>
@@ -942,10 +991,7 @@ Language: zh_TW
     <string name="start_over">重新開始</string>
     <string name="editor_remove_failed_uploads">移除失敗的上傳項目</string>
     <string name="editor_toast_failed_uploads">部分媒體上傳失敗。在此狀態中，你無法儲存或發表\n自己的文章。是否要移除所有失敗的媒體？</string>
-    <string name="comments_empty_list_filtered_trashed">沒有已移至垃圾桶的留言</string>
     <string name="site_settings_advanced_header">進階</string>
-    <string name="comments_empty_list_filtered_pending">沒有待審核的留言</string>
-    <string name="comments_empty_list_filtered_approved">沒有已核准的留言</string>
     <string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML–RPC 方式。</string>
     <string name="post_format_status">狀態</string>
     <string name="post_format_video">影片</string>
@@ -1002,7 +1048,6 @@ Language: zh_TW
     <string name="mnu_comment_delete_permanently">刪除</string>
     <string name="comment_deleted_permanently">留言已刪除</string>
     <string name="mnu_comment_untrash">還原</string>
-    <string name="comments_empty_list_filtered_spam">無垃圾留言</string>
     <string name="could_not_load_page">無法載入頁面</string>
     <string name="comment_status_all">全部</string>
     <string name="interface_language">介面語言</string>
@@ -1153,15 +1198,7 @@ Language: zh_TW
     <string name="reader_label_gap_marker">載入更多文章</string>
     <string name="notifications_no_search_results">沒有網站符合「%s」</string>
     <string name="search_sites">搜尋網站</string>
-    <string name="notifications_empty_view_reader">檢視讀取器</string>
-    <string name="notifications_empty_action_followers_likes">取得通知：在已閱讀的文章上留言。</string>
-    <string name="notifications_empty_action_comments">加入討論：在關注的網誌文章上留言。</string>
-    <string name="notifications_empty_action_unread">再度展開討論：撰寫新文章。</string>
     <string name="notifications_empty_action_all">動起來吧！立即在你關注的網誌文章上留言。</string>
-    <string name="notifications_empty_likes">尚未有新的讚。</string>
-    <string name="notifications_empty_followers">尚未有新的關注者。</string>
-    <string name="notifications_empty_comments">尚未有新的留言。</string>
-    <string name="notifications_empty_unread">你已追上最新進度！</string>
     <string name="stats_widget_error_jetpack_no_blogid">請先存取應用程式中的統計資料，稍後再試著新增小工具</string>
     <string name="stats_widget_error_readd_widget">請移除小工具，然後再新增一次</string>
     <string name="stats_widget_error_no_visible_blog">在未開放網誌的情況下無法存取統計資料</string>
@@ -1184,7 +1221,6 @@ Language: zh_TW
     <string name="reader_short_like_count_one">1 個讚</string>
     <string name="reader_label_follow_count">%,d 個關注者</string>
     <string name="reader_short_like_count_none">讚</string>
-    <string name="reader_menu_tags">編輯標籤和網誌</string>
     <string name="reader_title_post_detail">讀者文章</string>
     <string name="local_draft_explainer">這篇文章是儲存在本機上的草稿，尚未發表</string>
     <string name="local_changes_explainer">這篇文章的本機存檔經過變更，變更內容尚未發表</string>
@@ -1200,7 +1236,6 @@ Language: zh_TW
     <string name="email">電子郵件</string>
     <string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
     <string name="stats_insights_latest_post_summary">最新文章摘要</string>
-    <string name="button_revert">還原</string>
     <string name="days_ago">%d 天前</string>
     <string name="yesterday">昨天</string>
     <string name="connectionbar_no_connection">沒有連線</string>
@@ -1216,8 +1251,6 @@ Language: zh_TW
     <string name="button_view">檢視</string>
     <string name="button_edit">編輯</string>
     <string name="button_publish">發表</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網誌的權限</string>
-    <string name="reader_toast_err_follow_blog_not_found">無法找到這個部落格</string>
     <string name="undo">復原</string>
     <string name="passcodelock_prompt_message">輸入 PIN 碼</string>
     <string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
@@ -1282,7 +1315,6 @@ Language: zh_TW
     <string name="stats_recent_weeks">最近幾星期</string>
     <string name="error_copy_to_clipboard">將文字複製到剪貼簿時發生錯誤</string>
     <string name="reader_label_new_posts">新文章</string>
-    <string name="reader_empty_posts_in_blog">這個部落格沒有內容</string>
     <string name="stats_period">期間</string>
     <string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
     <string name="stats_total">總計</string>
@@ -1348,9 +1380,7 @@ Language: zh_TW
     <string name="themes_fetching">正在擷取佈景主題…</string>
     <string name="ssl_certificate_details">詳細資料</string>
     <string name="cab_selected">已選取：%d</string>
-    <string name="reader_empty_posts_liked">你未對任何文章按讚</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
-    <string name="nux_help_description">造訪說明中心以取得常見問題的解答，或前往論壇提出新問題</string>
     <string name="create_new_blog_wpcom">建立 WordPress.com 網誌</string>
     <string name="reader_empty_comments">尚未有留言</string>
     <string name="reader_empty_posts_in_tag">沒有任何含有此標籤的文章</string>
@@ -1375,32 +1405,14 @@ Language: zh_TW
     <string name="comment_reply_to_user">回覆 %s</string>
     <string name="pages_empty_list">尚無任何頁面。建立頁面？</string>
     <string name="signing_out">正在登出…</string>
-    <string name="reader_empty_followed_blogs_title">你尚未關注任何網站</string>
     <string name="reader_toast_err_generic">無法執行此動作</string>
-    <string name="reader_toast_err_block_blog">無法封鎖此網誌</string>
-    <string name="reader_toast_blog_blocked">將不再顯示此網誌的文章</string>
-    <string name="reader_menu_block_blog">封鎖此網誌</string>
     <string name="contact_us">聯絡我們</string>
-    <string name="hs__conversation_detail_error">描述你遇到的問題</string>
-    <string name="hs__new_conversation_header">支援交談</string>
-    <string name="hs__conversation_header">支援交談</string>
-    <string name="hs__username_blank_error">輸入有效的名稱</string>
-    <string name="hs__invalid_email_error">輸入有效的電子郵件地址</string>
     <string name="update_verb">更新</string>
     <string name="schedule_verb">排程</string>
-    <string name="reader_title_subs">標籤和網誌</string>
     <string name="reader_page_followed_tags">關注的標籤</string>
-    <string name="reader_label_followed_blog">網誌已關注</string>
-    <string name="reader_toast_err_get_blog_info">無法顯示此網誌</string>
-    <string name="reader_toast_err_already_follow_blog">你已經在關注此網誌</string>
-    <string name="reader_toast_err_follow_blog">無法關注此網誌</string>
-    <string name="reader_toast_err_unfollow_blog">無法取消關注此網誌</string>
-    <string name="reader_empty_recommended_blogs">沒有推薦的網誌</string>
-    <string name="reader_title_blog_preview">讀者網誌</string>
     <string name="reader_title_tag_preview">讀者標籤</string>
     <string name="reader_page_followed_blogs">關注的網站</string>
     <string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或標籤</string>
-    <string name="media_empty_list">沒有媒體</string>
     <string name="help">說明</string>
     <string name="forgot_password">忘記密碼？</string>
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
@@ -1409,7 +1421,6 @@ Language: zh_TW
     <string name="gallery_error">無法擷取媒體項目</string>
     <string name="blog_not_found">存取此網誌時發生錯誤</string>
     <string name="theme_fetch_failed">無法擷取佈景主題</string>
-    <string name="comments_empty_list">無回應</string>
     <string name="mnu_comment_unspam">非垃圾</string>
     <string name="adding_cat_failed">新增類別失敗</string>
     <string name="adding_cat_success">類別已成功新增</string>
@@ -1508,7 +1519,6 @@ Language: zh_TW
     <string name="pick_photo">選取照片</string>
     <string name="pick_video">選取影片</string>
     <string name="reader_toast_err_get_post">無法擷取此文章</string>
-    <string name="reader_empty_followed_blogs_description">不過別擔心，只要點選右上方的圖示即可開始探索！</string>
     <string name="empty_list_default">清單是空的</string>
     <string name="reader_untitled_post">（未命名）</string>
     <string name="reader_btn_unfollow">追蹤</string>

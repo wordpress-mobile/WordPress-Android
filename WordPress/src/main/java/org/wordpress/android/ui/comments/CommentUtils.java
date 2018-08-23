@@ -2,8 +2,6 @@ package org.wordpress.android.ui.comments;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -11,19 +9,15 @@ import android.text.style.LeadingMarginSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-
-import org.wordpress.android.R;
 import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.helpers.WPImageGetter;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images
      */
-    public static void displayHtmlComment(TextView textView, String content, int maxImageSize,
-                                          ImageLoader imageLoader) {
+    public static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
         if (textView == null) {
             return;
         }
@@ -50,11 +44,7 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            Drawable loading = ContextCompat.getDrawable(textView.getContext(),
-                                                         R.drawable.legacy_dashicon_format_image_big_grey);
-            Drawable failed = ContextCompat.getDrawable(textView.getContext(),
-                                                        R.drawable.ic_notice_grey_500_48dp);
-            html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, imageLoader, loading, failed));
+            html = HtmlUtils.fromHtml(content, new WPCustomImageGetter(textView, maxImageSize));
         } else {
             html = HtmlUtils.fromHtml(content);
         }

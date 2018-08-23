@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.text.TextUtils;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
+import org.wordpress.android.util.image.ImageType;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -38,13 +34,11 @@ public class ReaderPhotoView extends RelativeLayout {
     private String mLoResImageUrl;
     private String mHiResImageUrl;
 
-    private ImageContainer mLoResContainer;
-    private ImageContainer mHiResContainer;
-
     private final ImageView mImageView;
     private final ProgressBar mProgress;
     private final TextView mTxtError;
     private boolean mIsInitialLayout = true;
+    private final ImageManager mImageManager;
 
     public ReaderPhotoView(Context context) {
         this(context, null);
@@ -56,20 +50,22 @@ public class ReaderPhotoView extends RelativeLayout {
         inflate(context, R.layout.reader_photo_view, this);
 
         // ImageView which contains the downloaded image
-        mImageView = (ImageView) findViewById(R.id.image_photo);
+        mImageView = findViewById(R.id.image_photo);
 
         // error text that appears when download fails
-        mTxtError = (TextView) findViewById(R.id.text_error);
+        mTxtError = findViewById(R.id.text_error);
 
         // progress bar which appears while downloading
-        mProgress = (ProgressBar) findViewById(R.id.progress_loading);
+        mProgress = findViewById(R.id.progress_loading);
+
+        mImageManager = ImageManager.getInstance();
     }
 
     /**
-     * @param imageUrl the url of the image to load
+     * @param imageUrl   the url of the image to load
      * @param hiResWidth maximum width of the full-size image
-     * @param isPrivate whether this is an image from a private blog
-     * @param listener listener for taps on this view
+     * @param isPrivate  whether this is an image from a private blog
+     * @param listener   listener for taps on this view
      */
     public void setImageUrl(String imageUrl,
                             int hiResWidth,
@@ -80,13 +76,7 @@ public class ReaderPhotoView extends RelativeLayout {
         mHiResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, hiResWidth, 0, isPrivate, PhotonUtils.Quality.MEDIUM);
 
         mPhotoViewListener = listener;
-        loadLoResImage();
-    }
-
-    private boolean isRequestingUrl(ImageContainer container, String url) {
-        return (container != null
-                && container.getRequestUrl() != null
-                && container.getRequestUrl().equals(url));
+        loadImage();
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -105,90 +95,39 @@ public class ReaderPhotoView extends RelativeLayout {
         return true;
     }
 
-    private void loadLoResImage() {
-        if (!hasLayout() || TextUtils.isEmpty(mLoResImageUrl)) {
+    private void loadImage() {
+        if (!hasLayout()) {
             return;
         }
-
-        // skip if this same image url is already being loaded
-        if (isRequestingUrl(mLoResContainer, mLoResImageUrl)) {
-            AppLog.d(AppLog.T.READER, "reader photo > already requesting lo-res");
-            return;
-        }
-
-        Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
-        int maxSize = Math.min(pt.x, pt.y);
 
         showProgress();
 
-        mLoResContainer = WordPress.sImageLoader.get(mLoResImageUrl,
-                                                     new ImageLoader.ImageListener() {
-                                                         @Override
-                                                         public void onErrorResponse(VolleyError error) {
-                                                             AppLog.e(AppLog.T.READER, error);
-                                                             hideProgress();
-                                                             showError();
-                                                         }
+        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, mLoResImageUrl,
+                new RequestListener<Drawable>() {
+                    @Override
+                    public void onLoadFailed(@Nullable Exception e) {
+                        if (e != null) {
+                            AppLog.e(AppLog.T.READER, e);
+                        }
+                        boolean lowResNotLoadedYet = isLoading();
+                        if (lowResNotLoadedYet) {
+                            hideProgress();
+                            showError();
+                        }
+                    }
 
-                                                         @Override
-                                                         public void onResponse(final ImageContainer response,
-                                                                                boolean isImmediate) {
-                                                             post(new Runnable() {
-                                                                 @Override
-                                                                 public void run() {
-                                                                     handleResponse(response.getBitmap(), true);
-                                                                 }
-                                                             });
-                                                         }
-                                                     }, maxSize, maxSize);
+                    @Override
+                    public void onResourceReady(Drawable resource) {
+                        handleResponse();
+                    }
+                });
     }
 
-    private void loadHiResImage() {
-        if (!hasLayout() || TextUtils.isEmpty(mHiResImageUrl)) {
-            return;
-        }
-
-        if (isRequestingUrl(mHiResContainer, mHiResImageUrl)) {
-            AppLog.d(AppLog.T.READER, "reader photo > already requesting hi-res");
-            return;
-        }
-
-        Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
-        int maxSize = Math.max(pt.x, pt.y);
-
-        mHiResContainer = WordPress.sImageLoader.get(mHiResImageUrl,
-                                                     new ImageLoader.ImageListener() {
-                                                         @Override
-                                                         public void onErrorResponse(VolleyError error) {
-                                                             AppLog.e(AppLog.T.READER, error);
-                                                         }
-
-                                                         @Override
-                                                         public void onResponse(final ImageContainer response,
-                                                                                boolean isImmediate) {
-                                                             post(new Runnable() {
-                                                                 @Override
-                                                                 public void run() {
-                                                                     handleResponse(response.getBitmap(), false);
-                                                                 }
-                                                             });
-                                                         }
-                                                     }, maxSize, maxSize);
-    }
-
-    private void handleResponse(Bitmap bitmap, boolean isLoRes) {
-        if (bitmap != null) {
-            hideProgress();
-
-            // show the bitmap and attach the pinch/zoom handler
-            mImageView.setImageBitmap(bitmap);
-            setAttacher();
-
-            // load hi-res image if this was the lo-res one
-            if (isLoRes && !mLoResImageUrl.equals(mHiResImageUrl)) {
-                loadHiResImage();
-            }
-        }
+    private void handleResponse() {
+        hideProgress();
+        hideError();
+        // attach the pinch/zoom handler
+        setAttacher();
     }
 
     private void setAttacher() {
@@ -218,6 +157,13 @@ public class ReaderPhotoView extends RelativeLayout {
         }
     }
 
+    private void hideError() {
+        hideProgress();
+        if (mTxtError != null) {
+            mTxtError.setVisibility(View.GONE);
+        }
+    }
+
     private void showProgress() {
         if (mProgress != null) {
             mProgress.setVisibility(View.VISIBLE);
@@ -230,6 +176,10 @@ public class ReaderPhotoView extends RelativeLayout {
         }
     }
 
+    private boolean isLoading() {
+        return mProgress != null && mProgress.getVisibility() == VISIBLE;
+    }
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -237,29 +187,13 @@ public class ReaderPhotoView extends RelativeLayout {
             if (mIsInitialLayout) {
                 mIsInitialLayout = false;
                 AppLog.d(AppLog.T.READER, "reader photo > initial layout");
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadLoResImage();
-                    }
-                });
+                loadImage();
             }
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        if (mLoResContainer != null || mHiResContainer != null) {
-            mImageView.setImageDrawable(null);
-        }
-        if (mLoResContainer != null) {
-            mLoResContainer.cancelRequest();
-            mLoResContainer = null;
-        }
-        if (mHiResContainer != null) {
-            mHiResContainer.cancelRequest();
-            mHiResContainer = null;
-        }
         mIsInitialLayout = true;
         super.onDetachedFromWindow();
     }
