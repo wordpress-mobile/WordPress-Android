@@ -13,7 +13,11 @@ import javax.inject.Singleton
 @Singleton
 class NewsManager @Inject constructor(private val newsService: NewsService, private val appPrefs: AppPrefsWrapper) {
     private val dataSourceMediator: MediatorLiveData<NewsItem> = MediatorLiveData()
-    private var dataSource: LiveData<NewsItem> = newsService.newsItemSource()
+    private val dataSource: LiveData<NewsItem> = newsService.newsItemSource()
+    /**
+     * Boolean observable indicating whether the UI should display a notification badge.
+     */
+    private val notificationBadgeVisibility: MediatorLiveData<Boolean> = MediatorLiveData()
 
     init {
         dataSourceMediator.addSource(dataSource) {
@@ -21,10 +25,17 @@ class NewsManager @Inject constructor(private val newsService: NewsService, priv
                 dataSourceMediator.value = it
             }
         }
+        notificationBadgeVisibility.addSource(dataSourceMediator) {
+            notificationBadgeVisibility.value = shouldShowNotificationBadge(it)
+        }
     }
 
     fun newsItemSource(): LiveData<NewsItem> {
         return dataSourceMediator
+    }
+
+    fun notificationBadgeVisibility() : LiveData<Boolean> {
+        return notificationBadgeVisibility
     }
 
     fun pull(skipCache: Boolean = false) {
@@ -34,6 +45,11 @@ class NewsManager @Inject constructor(private val newsService: NewsService, priv
     fun dismiss(item: NewsItem) {
         appPrefs.newsCardDismissedVersion = item.version
         dataSourceMediator.value = null // results in hiding the UI
+    }
+
+    fun cardShown(item: NewsItem) {
+        appPrefs.newsCardShownVersion = item.version
+        notificationBadgeVisibility.value = false
     }
 
     /**
@@ -50,5 +66,14 @@ class NewsManager @Inject constructor(private val newsService: NewsService, priv
         return it == null || !announcementDismissed(it)
     }
 
+    /**
+     * Show a notification badge for announcements which hasn't been shown or dismissed yet.
+     */
+    private fun shouldShowNotificationBadge(item: NewsItem?): Boolean {
+        return item != null && !announcementShown(item)
+    }
+
     private fun announcementDismissed(it: NewsItem) = appPrefs.newsCardDismissedVersion >= it.version
+
+    private fun announcementShown(it: NewsItem) = appPrefs.newsCardShownVersion >= it.version
 }

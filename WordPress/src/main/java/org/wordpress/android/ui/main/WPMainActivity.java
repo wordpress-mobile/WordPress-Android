@@ -40,7 +40,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
-import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
@@ -311,10 +310,10 @@ public class WPMainActivity extends AppCompatActivity
     }
 
     private void registeNewsItemObserver() {
-        mNewsManager.newsItemSource().observe(this, new Observer<NewsItem>() {
+        mNewsManager.notificationBadgeVisibility().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable NewsItem item) {
-                mBottomNav.showReaderBadge(item != null);
+            public void onChanged(@Nullable Boolean showBadge) {
+                mBottomNav.showReaderBadge(showBadge != null ? showBadge : false);
             }
         });
         mNewsManager.pull(false);

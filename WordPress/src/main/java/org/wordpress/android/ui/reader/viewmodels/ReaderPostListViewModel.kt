@@ -43,7 +43,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onTagChanged(tag: ReaderTag?) {
         newsTrackerHelper.reset()
-        initialTag?.let {
+        initialTag?.let { initialTag ->
             // show the card only when the initial tag is selected in the filter
             if (tag == initialTag) {
                 _newsItemSourceMediator.addSource(newsItemSource) { _newsItemSourceMediator.value = it }
@@ -64,6 +64,7 @@ class ReaderPostListViewModel @Inject constructor(
             newsTracker.trackNewsCardShown(READER, item.version)
             newsTrackerHelper.itemTracked(item.version)
         }
+        newsManager.cardShown(item)
     }
 
     fun onNewsCardExtendedInfoRequested(item: NewsItem) {
