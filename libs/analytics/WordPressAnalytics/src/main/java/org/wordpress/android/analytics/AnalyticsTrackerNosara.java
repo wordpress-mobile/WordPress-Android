@@ -1143,6 +1143,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
                 return "support_identity_set";
+            case NEWS_CARD_SHOWN:
+                return "news_card_shown";
+            case NEWS_CARD_DIMISSED:
+                return "news_card_dismissed";
+            case NEWS_CARD_EXTENDED_INFO_REQUESTED:
+                return "news_card_extended_info_requested";
             default:
                 return null;
         }
