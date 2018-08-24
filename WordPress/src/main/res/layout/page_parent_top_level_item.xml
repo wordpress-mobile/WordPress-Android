@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/page_item"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_height="@dimen/one_line_list_item_height"
     android:background="@color/white">
 
     <android.support.constraint.ConstraintLayout
@@ -18,21 +18,22 @@
             style="@style/PageListTopLevelItemTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/page_item_horizontal_padding"
-            android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:layout_marginLeft="@dimen/toolbar_content_offset"
+            android:layout_marginStart="@dimen/toolbar_content_offset"
             android:layout_marginEnd="@dimen/page_item_horizontal_padding"
             android:layout_marginRight="@dimen/page_item_horizontal_padding"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/radio_button"
+            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="First page"/>
 
         <RadioButton
             android:id="@+id/radio_button"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="@dimen/page_item_horizontal_padding"
-            android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/page_parent_radio_button_offset"
+            android:layout_marginStart="@dimen/page_parent_radio_button_offset"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

@@ -30,13 +30,13 @@
         <View
             android:id="@+id/large_strecher"
             android:layout_width="1dp"
-            android:layout_height="72dp"
+            android:layout_height="@dimen/two_line_list_item_height"
             android:visibility="visible" />
 
         <View
             android:id="@+id/small_strecher"
             android:layout_width="1dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/one_line_list_item_height"
             android:visibility="gone" />
 
         <android.support.constraint.ConstraintLayout
