@@ -321,4 +321,5 @@
     <!-- pages -->
     <dimen name="page_item_horizontal_padding">16dp</dimen>
     <dimen name="page_item_vertical_padding">14dp</dimen>
+    <dimen name="page_list_divider_height">40dp</dimen>
 </resources>
