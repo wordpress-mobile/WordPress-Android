@@ -346,6 +346,13 @@ public class ReaderPostListFragment extends Fragment
                 getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
                 mLastTappedSiteSearchResult = null;
             }
+
+            ReaderTag tag = AppPrefs.getReaderTag();
+
+            if (ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH).equals(tag)) {
+                setCurrentTag(tag);
+                updateCurrentTag();
+            }
         }
     }
 
