@@ -70,7 +70,7 @@ class PageParentFragment : Fragment() {
         inflater.inflate(R.menu.page_parent_menu, menu)
 
         saveButton = menu.findItem(R.id.save_parent)
-        viewModel.isSaveButtonVisible.value?.let { saveButton?.isVisible = it}
+        viewModel.isSaveButtonVisible.value?.let { saveButton?.isVisible = it }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

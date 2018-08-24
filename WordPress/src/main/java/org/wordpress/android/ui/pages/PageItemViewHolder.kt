@@ -1,20 +1,15 @@
 package org.wordpress.android.ui.pages
 
-import android.graphics.Rect
 import android.support.annotation.LayoutRes
 import android.support.v4.widget.CompoundButtonCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
@@ -37,6 +32,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
         private val pageLabel = itemView.findViewById<TextView>(id.page_label)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
+        private val largeStretcher = itemView.findViewById<View>(id.large_strecher)
+        private val smallStretcher = itemView.findViewById<View>(id.small_strecher)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).apply {
@@ -52,21 +49,19 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 if (pageItem.labelRes == null) {
                     pageLabel.visibility = View.GONE
+                    smallStretcher.visibility = View.VISIBLE
+                    largeStretcher.visibility = View.GONE
                 } else {
                     pageLabel.text = parent.context.getString(pageItem.labelRes!!)
                     pageLabel.visibility = View.VISIBLE
+                    smallStretcher.visibility = View.GONE
+                    largeStretcher.visibility = View.VISIBLE
                 }
 
                 itemView.setOnClickListener { onItemTapped(pageItem) }
 
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
                 pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
-
-                val touchableArea = Rect()
-                pageMore.getHitRect(touchableArea)
-                touchableArea.top -= DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
-                touchableArea.bottom += DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
-                pageMore.touchDelegate = TouchDelegate(touchableArea, pageMore)
             }
         }
 
@@ -97,8 +92,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     class PageParentViewHolder(
         parentView: ViewGroup,
         private val onParentSelected: (ParentPage) -> Unit,
-        private val adapter: PagesAdapter
-    ) : PageItemViewHolder(parentView, layout.page_parent_list_item) {
+        @LayoutRes layout: Int
+    ) : PageItemViewHolder(parentView, layout) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val radioButton = itemView.findViewById<RadioButton>(id.radio_button)
 
@@ -110,10 +105,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     pageItem.title
                 radioButton.isChecked = pageItem.isSelected
                 itemView.setOnClickListener {
-                    selectItem(pageItem)
+                    onParentSelected(pageItem)
                 }
                 radioButton.setOnClickListener {
-                    selectItem(pageItem)
+                    onParentSelected(pageItem)
                 }
 
                 @Suppress("DEPRECATION")
@@ -121,24 +116,19 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                         radioButton.resources.getColorStateList(R.color.dialog_compound_button_thumb))
             }
         }
-
-        private fun selectItem(pageItem: ParentPage) {
-            onParentSelected(pageItem)
-            launch(UI) {
-                delay(200) // let the selection animation play out before refreshing the list
-                adapter.notifyDataSetChanged()
-            }
-        }
     }
 
     class EmptyViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_empty_item) {
         private val emptyView = itemView.findViewById<TextView>(id.empty_view)
 
+        @Suppress("DEPRECATION")
         override fun onBind(pageItem: PageItem) {
-            (pageItem as Empty).apply {
-                pageItem.textResource?.let {
-                    emptyView.text = emptyView.resources.getText(it)
-                }
+            if (pageItem is Empty) {
+                emptyView.text = emptyView.resources.getText(pageItem.textResource)
+                emptyView.setCompoundDrawablesWithIntrinsicBounds(null,
+                        pageItem.imageRes?.let { parent.resources.getDrawable(pageItem.imageRes) },
+                        null,
+                        null)
             }
         }
     }

@@ -15,22 +15,22 @@ import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.ParentPage
+import org.wordpress.android.ui.pages.PageItem.Type.PARENT
+import org.wordpress.android.ui.pages.PageItem.Type.TOP_LEVEL_PARENT
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class PageParentViewModel
 @Inject constructor(private val pageStore: PageStore, private val resourceProvider: ResourceProvider) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<List<PageItem>>
-        get() = _pages
+    val pages: LiveData<List<PageItem>> = _pages
 
     private lateinit var _currentParent: ParentPage
     val currentParent: ParentPage
         get() = _currentParent
 
     private val _isSaveButtonVisible = MutableLiveData<Boolean>()
-    val isSaveButtonVisible: LiveData<Boolean>
-        get() = _isSaveButtonVisible
+    val isSaveButtonVisible: LiveData<Boolean> = _isSaveButtonVisible
 
     private var isStarted: Boolean = false
     private lateinit var site: SiteModel
@@ -53,18 +53,22 @@ class PageParentViewModel
         page = pageStore.getPageByRemoteId(pageId, site)
 
         val parents = mutableListOf<PageItem>(
-                ParentPage(0, resourceProvider.getString(R.string.top_level), page?.parent == null)
+                ParentPage(0, resourceProvider.getString(R.string.top_level),
+                        page?.parent == null,
+                        TOP_LEVEL_PARENT)
         )
 
         val choices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
         val parentChoices = choices.filter { isNotChild(it, choices) }
         if (parentChoices.isNotEmpty()) {
             parents.add(Divider(resourceProvider.getString(R.string.pages)))
-            parents.addAll(
-                    parentChoices.map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId) }
-            )
+            parents.addAll(parentChoices.map {
+                ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
+            })
         }
-        _currentParent = parents.first { it is ParentPage && it.isSelected } as ParentPage
+
+        _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage
+                ?: parents.first() as ParentPage
 
         _pages.postValue(parents)
     }

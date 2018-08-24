@@ -9,6 +9,7 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -66,40 +67,32 @@ class PagesViewModel
     val searchResult: LiveData<List<PageItem>> = _searchResult
 
     private val _listState = MutableLiveData<PageListState>()
-    val listState: LiveData<PageListState>
-        get() = _listState
+    val listState: LiveData<PageListState> = _listState
 
     private val _displayDeleteDialog = SingleLiveEvent<Page>()
-    val displayDeleteDialog: LiveData<Page>
-        get() = _displayDeleteDialog
+    val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
     private val _refreshPageLists = SingleLiveEvent<Unit>()
-    val refreshPageLists: LiveData<Unit>
-        get() = _refreshPageLists
+    val refreshPageLists: LiveData<Unit> = _refreshPageLists
 
     private val _createNewPage = SingleLiveEvent<Unit>()
-    val createNewPage: LiveData<Unit>
-        get() = _createNewPage
+    val createNewPage: LiveData<Unit> = _createNewPage
 
     private val _editPage = SingleLiveEvent<PageModel?>()
-    val editPage: LiveData<PageModel?>
-        get() = _editPage
+    val editPage: LiveData<PageModel?> = _editPage
 
     private val _previewPage = SingleLiveEvent<PageModel?>()
-    val previewPage: LiveData<PageModel?>
-        get() = _previewPage
+    val previewPage: LiveData<PageModel?> = _previewPage
 
     private val _setPageParent = SingleLiveEvent<PageModel?>()
-    val setPageParent: LiveData<PageModel?>
-        get() = _setPageParent
+    val setPageParent: LiveData<PageModel?> = _setPageParent
 
     private var _pages: MutableMap<Long, PageModel> = mutableMapOf()
     val pages: Map<Long, PageModel>
         get() = _pages
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
-    val showSnackbarMessage: LiveData<SnackbarMessageHolder>
-        get() = _showSnackbarMessage
+    val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
     private lateinit var site: SiteModel
     private var searchJob: Job? = null
@@ -191,7 +184,10 @@ class PagesViewModel
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
-                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                        _searchResult.postValue(listOf(
+                                Empty(string.pages_empty_search_result,
+                                R.drawable.img_illustration_empty_results_216dp))
+                        )
                     }
                 }
             }
@@ -409,6 +405,6 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
-        _searchResult.postValue(listOf(Empty(string.empty_list_default)))
+        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion)))
     }
 }
