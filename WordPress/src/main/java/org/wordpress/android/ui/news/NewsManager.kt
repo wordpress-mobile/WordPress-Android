@@ -34,7 +34,7 @@ class NewsManager @Inject constructor(private val newsService: NewsService, priv
         return dataSourceMediator
     }
 
-    fun notificationBadgeVisibility() : LiveData<Boolean> {
+    fun notificationBadgeVisibility(): LiveData<Boolean> {
         return notificationBadgeVisibility
     }
 

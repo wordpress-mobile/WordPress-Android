@@ -20,19 +20,13 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 @RunWith(MockitoJUnitRunner::class)
 class NewsManagerTest {
     @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
+    @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock
-    private lateinit var newsService: NewsService
-    @Mock
-    private lateinit var observeNewsItems: Observer<NewsItem>
-    @Mock
-    private lateinit var observeBadgeVisibility: Observer<Boolean>
-    @Mock
-    private lateinit var item: NewsItem
-    @Mock
-    private lateinit var appPrefs: AppPrefsWrapper
+    @Mock private lateinit var newsService: NewsService
+    @Mock private lateinit var observeNewsItems: Observer<NewsItem>
+    @Mock private lateinit var observeBadgeVisibility: Observer<Boolean>
+    @Mock private lateinit var item: NewsItem
+    @Mock private lateinit var appPrefs: AppPrefsWrapper
 
     private lateinit var newsManager: NewsManager
     private val liveData = MutableLiveData<NewsItem>()
