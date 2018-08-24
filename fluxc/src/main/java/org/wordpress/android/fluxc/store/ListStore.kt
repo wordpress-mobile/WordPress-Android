@@ -6,12 +6,15 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.ListItemModel
 import org.wordpress.android.fluxc.model.ListModel
 import org.wordpress.android.fluxc.model.ListModel.ListType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,6 +30,7 @@ class ListStore @Inject constructor(
         val actionType = action.type as? ListAction ?: return
 
         when (actionType) {
+            ListAction.FETCH_LIST -> fetchList(action.payload as FetchListPayload)
             ListAction.UPDATE_LIST -> updateList(action.payload as UpdateListPayload)
         }
     }
@@ -36,10 +40,21 @@ class ListStore @Inject constructor(
     }
 
     fun getListItems(site: SiteModel, listType: ListType): List<ListItemModel> {
-        val listModel = listSqlUtils.getList(site.id, listType)
+        val listModel = getList(site.id, listType)
         return if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
+    }
+
+    private fun fetchList(payload: FetchListPayload) {
+        when(payload.listType) {
+            ListModel.ListType.POSTS_ALL -> {
+                val offset = if (payload.loadMore) getListItems(payload.site, payload.listType).size else 0
+                val fetchPostsPayload = FetchPostsPayload(payload.site, payload.listType, offset)
+                mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(fetchPostsPayload))
+            }
+            ListModel.ListType.POSTS_SCHEDULED -> TODO()
+        }
     }
 
     private fun updateList(payload: UpdateListPayload) {
@@ -79,6 +94,12 @@ class ListStore @Inject constructor(
             this.error = error
         }
     }
+
+    class FetchListPayload(
+        val site: SiteModel,
+        val listType: ListType,
+        val loadMore: Boolean = false
+    ) : Payload<BaseNetworkError>()
 
     class UpdateListPayload(
         val localSiteId: Int,
