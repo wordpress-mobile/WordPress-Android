@@ -454,6 +454,7 @@ public class SitePickerActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                mActionableEmptyView.setVisibility(View.GONE);
                 disableSearchMode();
                 return true;
             }
