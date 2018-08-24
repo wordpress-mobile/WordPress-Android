@@ -65,7 +65,8 @@ class PageParentViewModel
                 .map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT) }
         )
 
-        _currentParent = parents.first { it is ParentPage && it.isSelected } as ParentPage
+        _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage
+                ?: parents.first() as ParentPage
 
         _pages.postValue(parents)
     }
