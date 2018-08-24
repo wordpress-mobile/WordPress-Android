@@ -34,6 +34,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
         private val pageLabel = itemView.findViewById<TextView>(id.page_label)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
+        private val largeStretcher = itemView.findViewById<View>(id.large_strecher)
+        private val smallStretcher = itemView.findViewById<View>(id.small_strecher)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).apply {
@@ -49,21 +51,19 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 if (pageItem.labelRes == null) {
                     pageLabel.visibility = View.GONE
+                    smallStretcher.visibility = View.VISIBLE
+                    largeStretcher.visibility = View.GONE
                 } else {
                     pageLabel.text = parent.context.getString(pageItem.labelRes!!)
                     pageLabel.visibility = View.VISIBLE
+                    smallStretcher.visibility = View.GONE
+                    largeStretcher.visibility = View.VISIBLE
                 }
 
                 itemView.setOnClickListener { onItemTapped(pageItem) }
 
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
                 pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
-
-                val touchableArea = Rect()
-                pageMore.getHitRect(touchableArea)
-                touchableArea.top -= DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
-                touchableArea.bottom += DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
-                pageMore.touchDelegate = TouchDelegate(touchableArea, pageMore)
             }
         }
 
