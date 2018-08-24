@@ -760,7 +760,7 @@ public class WPMainActivity extends AppCompatActivity implements
                               );
 
         promoDialog.show(getSupportFragmentManager(), tag);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_DIALOG_SEEN);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_SEEN);
     }
 
     private void appLanguageChanged() {

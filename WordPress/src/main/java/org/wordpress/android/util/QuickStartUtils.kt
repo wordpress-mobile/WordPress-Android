@@ -199,6 +199,19 @@ class QuickStartUtils {
             }
         }
 
+        @JvmStatic
+        fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
+            return when (task) {
+                CREATE_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+                VIEW_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
+                CHOOSE_THEME -> AnalyticsTracker.Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
+                CUSTOMIZE_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
+                SHARE_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
+                PUBLISH_POST -> AnalyticsTracker.Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
+                FOLLOW_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+            }
+        }
+
         private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> AnalyticsTracker.Stat.QUICK_START_COMPLETE_CREATE_SITE
@@ -208,19 +221,6 @@ class QuickStartUtils {
                 SHARE_SITE -> AnalyticsTracker.Stat.QUICK_START_COMPLETE_SHARE_SITE
                 PUBLISH_POST -> AnalyticsTracker.Stat.QUICK_START_COMPLETE_PUBLISH_POST
                 FOLLOW_SITE -> AnalyticsTracker.Stat.QUICK_START_COMPLETE_FOLLOW_SITE
-            }
-        }
-
-        @JvmStatic
-        fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
-            return when (task) {
-                CREATE_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
-                VIEW_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
-                CHOOSE_THEME -> AnalyticsTracker.Stat.QUICK_START_COMPLETE_BROWSE_THEMES
-                CUSTOMIZE_SITE -> AnalyticsTracker.Stat.QUICK_START_COMPLETE_CUSTOMIZE_SITE
-                SHARE_SITE -> AnalyticsTracker.Stat.QUICK_START_COMPLETE_SHARE_SITE
-                PUBLISH_POST -> AnalyticsTracker.Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
-                FOLLOW_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
             }
         }
     }

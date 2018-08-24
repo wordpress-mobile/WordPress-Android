@@ -1145,7 +1145,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartTaskPromptSnackBar.show();
         mQuickStartSnackBarWasShown = true;
         incrementNumberOfTimesQuickStartDialogWasShown();
-
+        AnalyticsTracker.track(Stat.QUICK_START_DIALOG_SEEN);
         // clear the prompted quick start task after user sees the "continue" dialog, so the prompt will not appear when
         // other tasks are completed outside of quick start process
         if (shouldDirectUserToContinueQuickStart) {
