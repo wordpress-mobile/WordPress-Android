@@ -23,7 +23,8 @@ class NewsManagerTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var newsService: NewsService
-    @Mock private lateinit var observer: Observer<NewsItem>
+    @Mock private lateinit var observeNewsItems: Observer<NewsItem>
+    @Mock private lateinit var observeBadgeVisibility: Observer<Boolean>
     @Mock private lateinit var item: NewsItem
     @Mock private lateinit var appPrefs: AppPrefsWrapper
 
@@ -35,8 +36,11 @@ class NewsManagerTest {
         whenever(newsService.newsItemSource()).thenReturn(liveData)
         newsManager = NewsManager(newsService, appPrefs)
 
-        val observable = newsManager.newsItemSource()
-        observable.observeForever(observer)
+        val itemsObservable = newsManager.newsItemSource()
+        itemsObservable.observeForever(observeNewsItems)
+
+        val notificationBadgeObservable = newsManager.notificationBadgeVisibility()
+        notificationBadgeObservable.observeForever(observeBadgeVisibility)
     }
 
     @Test
@@ -48,10 +52,10 @@ class NewsManagerTest {
         liveData.postValue(null)
         liveData.postValue(item)
 
-        val inOrder = inOrder(observer)
-        inOrder.verify(observer).onChanged(item)
-        inOrder.verify(observer).onChanged(null)
-        inOrder.verify(observer).onChanged(item)
+        val inOrder = inOrder(observeNewsItems)
+        inOrder.verify(observeNewsItems).onChanged(item)
+        inOrder.verify(observeNewsItems).onChanged(null)
+        inOrder.verify(observeNewsItems).onChanged(item)
     }
 
     @Test
@@ -60,7 +64,7 @@ class NewsManagerTest {
         whenever(item.version).thenReturn(1)
 
         liveData.postValue(item)
-        verify(observer, never()).onChanged(any())
+        verify(observeNewsItems, never()).onChanged(any())
     }
 
     @Test
@@ -76,7 +80,7 @@ class NewsManagerTest {
     @Test
     fun emitNullWhenDismissInvoked() {
         newsManager.dismiss(item)
-        verify(observer).onChanged(null)
+        verify(observeNewsItems).onChanged(null)
     }
 
     @Test
@@ -89,5 +93,48 @@ class NewsManagerTest {
     fun propagateStopToNewsServiceWhenStopInvoked() {
         newsManager.stop()
         verify(newsService).stop()
+    }
+
+    @Test
+    fun showNotificationBadgeWhenCardAvailable() {
+        whenever(appPrefs.newsCardDismissedVersion).thenReturn(-1)
+        whenever(appPrefs.newsCardShownVersion).thenReturn(-1)
+        whenever(item.version).thenReturn(1)
+        liveData.postValue(item)
+
+        verify(observeBadgeVisibility).onChanged(true)
+    }
+
+    @Test
+    fun doNotShowNotificationBadgeWhenCardNotAvailable() {
+        liveData.postValue(null)
+
+        verify(observeBadgeVisibility).onChanged(false)
+    }
+
+    @Test
+    fun doNotShowNotificationBadgeWhenCardAlreadyShown() {
+        whenever(appPrefs.newsCardDismissedVersion).thenReturn(-1)
+        whenever(appPrefs.newsCardShownVersion).thenReturn(1)
+        whenever(item.version).thenReturn(1)
+        liveData.postValue(item)
+
+        verify(observeBadgeVisibility).onChanged(false)
+    }
+
+    @Test
+    fun verifyVersionOfShownItemIsStored() {
+        whenever(item.version).thenReturn(123)
+
+        liveData.postValue(item)
+        newsManager.cardShown(item)
+
+        verify(appPrefs).newsCardShownVersion = 123
+    }
+
+    @Test
+    fun hideBadgeWhenCardShown() {
+        newsManager.cardShown(item)
+        verify(observeBadgeVisibility).onChanged(false)
     }
 }

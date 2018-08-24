@@ -103,7 +103,9 @@ public class AppPrefs {
         SUPPORT_NAME,
 
         // Store a version of the last dismissed News Card
-        NEWS_CARD_DISMISSED_VERSION
+        NEWS_CARD_DISMISSED_VERSION,
+        // Store a version of the last shown News Card
+        NEWS_CARD_SHOWN_VERSION
     }
 
     /**
@@ -735,5 +737,13 @@ public class AppPrefs {
 
     public static int getNewsCardDismissedVersion() {
         return getInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, -1);
+    }
+
+    public static void setNewsCardShownVersion(int version) {
+        setInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, version);
+    }
+
+    public static int getNewsCardShownVersion() {
+        return getInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, -1);
     }
 }
