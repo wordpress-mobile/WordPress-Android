@@ -15,6 +15,8 @@ import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.ParentPage
+import org.wordpress.android.ui.pages.PageItem.Type.PARENT
+import org.wordpress.android.ui.pages.PageItem.Type.TOP_LEVEL_PARENT
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -51,14 +53,16 @@ class PageParentViewModel
         page = pageStore.getPageByRemoteId(pageId, site)
 
         val parents = mutableListOf(
-                ParentPage(0, resourceProvider.getString(R.string.top_level), page?.parent == null),
+                ParentPage(0, resourceProvider.getString(R.string.top_level),
+                        page?.parent == null,
+                        TOP_LEVEL_PARENT),
                 Divider(resourceProvider.getString(R.string.pages))
         )
 
         val parentChoices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
         parents.addAll(parentChoices
                 .filter { !getChildren(page!!, parentChoices).contains(it) }
-                .map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId) }
+                .map { ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT) }
         )
 
         _currentParent = parents.first { it is ParentPage && it.isSelected } as ParentPage

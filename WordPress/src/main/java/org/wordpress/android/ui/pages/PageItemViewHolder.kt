@@ -93,8 +93,9 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageParentViewHolder(
         parentView: ViewGroup,
-        private val onParentSelected: (ParentPage) -> Unit
-    ) : PageItemViewHolder(parentView, layout.page_parent_list_item) {
+        private val onParentSelected: (ParentPage) -> Unit,
+        @LayoutRes layout: Int
+    ) : PageItemViewHolder(parentView, layout) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val radioButton = itemView.findViewById<RadioButton>(id.radio_button)
 
