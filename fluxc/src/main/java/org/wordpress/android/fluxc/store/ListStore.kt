@@ -46,10 +46,17 @@ class ListStore @Inject constructor(
         } else emptyList()
     }
 
+    private fun getListSize(site: SiteModel, listType: ListType): Int {
+        val listModel = getList(site.id, listType)
+        return if (listModel != null) {
+            listItemSqlUtils.getListSize(listModel.id)
+        } else 0
+    }
+
     private fun fetchList(payload: FetchListPayload) {
         when(payload.listType) {
             ListModel.ListType.POSTS_ALL -> {
-                val offset = if (payload.loadMore) getListItems(payload.site, payload.listType).size else 0
+                val offset = if (payload.loadMore) getListSize(payload.site, payload.listType) else 0
                 val fetchPostsPayload = FetchPostsPayload(payload.site, payload.listType, offset)
                 mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(fetchPostsPayload))
             }
