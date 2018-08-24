@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.pages
 
+import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
+import android.support.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
@@ -53,7 +55,10 @@ sealed class PageItem(open val type: Type) {
 
     data class Divider(val title: String) : PageItem(DIVIDER)
 
-    data class Empty(val textResource: Int? = null) : PageItem(EMPTY)
+    data class Empty(
+        @StringRes val textResource: Int = R.string.empty_list_default,
+        @DrawableRes val imageRes: Int? = R.drawable.img_illustration_pages_104dp
+    ) : PageItem(EMPTY)
 
     enum class Type(val viewType: Int) {
         PAGE(1), DIVIDER(2), EMPTY(3), PARENT(4), TOP_LEVEL_PARENT(5)

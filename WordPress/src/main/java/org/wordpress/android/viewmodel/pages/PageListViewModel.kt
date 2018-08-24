@@ -79,7 +79,7 @@ class PageListViewModel
             if (isStarting) {
                 _pages.postValue(listOf(Empty(string.pages_fetching)))
             } else {
-                _pages.postValue(listOf(Empty(string.empty_list_default)))
+                _pages.postValue(listOf(Empty(string.pages_empty_list_suggestion)))
             }
         } else {
             _pages.postValue(newPages)

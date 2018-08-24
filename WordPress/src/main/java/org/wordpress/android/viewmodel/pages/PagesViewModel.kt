@@ -9,6 +9,7 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -169,7 +170,10 @@ class PagesViewModel
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
-                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                        _searchResult.postValue(listOf(
+                                Empty(string.pages_empty_search_result,
+                                R.drawable.img_illustration_empty_results_216dp))
+                        )
                     }
                 }
             }
@@ -290,7 +294,7 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
-        _searchResult.postValue(listOf(Empty(string.empty_list_default)))
+        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion)))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

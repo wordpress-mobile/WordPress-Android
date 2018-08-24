@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.pages
 
 import android.graphics.Rect
+import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.support.v4.widget.CompoundButtonCompat
 import android.support.v7.widget.RecyclerView
@@ -123,11 +124,14 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     class EmptyViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_empty_item) {
         private val emptyView = itemView.findViewById<TextView>(id.empty_view)
 
+        @Suppress("DEPRECATION")
         override fun onBind(pageItem: PageItem) {
-            (pageItem as Empty).apply {
-                pageItem.textResource?.let {
-                    emptyView.text = emptyView.resources.getText(it)
-                }
+            if (pageItem is Empty) {
+                emptyView.text = emptyView.resources.getText(pageItem.textResource)
+                emptyView.setCompoundDrawablesWithIntrinsicBounds(null,
+                        pageItem.imageRes?.let {parent.resources.getDrawable(pageItem.imageRes) },
+                        null,
+                        null)
             }
         }
     }
