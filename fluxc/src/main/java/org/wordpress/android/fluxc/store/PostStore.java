@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.WellSql;
