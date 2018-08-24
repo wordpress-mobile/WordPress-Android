@@ -103,7 +103,6 @@
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
-    <string name="delete_no">Don\'t Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
@@ -505,6 +504,10 @@
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
+    <string name="site_settings_tags_empty_button">Create a tag</string>
+    <string name="site_settings_tags_empty_subtitle">Add your frequently used tags here so they can be quickly selected when tagging your posts</string>
+    <string name="site_settings_tags_empty_title">You don\'t have any tags</string>
+    <string name="site_settings_tags_empty_title_search">No tags matching your search</string>
     <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_week_start_title">Week starts on</string>
@@ -569,7 +572,7 @@
     <string name="tag_description_hint">Description</string>
     <string name="add_new_tag">Add New Tag</string>
     <string name="error_tag_exists">A tag with this name already exists</string>
-    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\' tag?</string>
     <string name="dlg_deleting_tag">Deleting</string>
     <string name="dlg_saving_tag">Saving</string>
 
@@ -757,9 +760,25 @@
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
     <string name="stats_default_number_zero" translatable="false">0</string>
-    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
+    <string name="stats_jetpack_connection_setup">Install Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our <u>terms and conditions</u></string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
+
+    <!-- Jetpack install -->
+    <string name="jetpack">Jetpack</string>
+    <string name="install_jetpack">Install Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="installing_jetpack">Installing Jetpack</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
+    <string name="jetpack_installed">Jetpack installed</string>
+    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
+    <string name="jetpack_installation_problem">There was a problem</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
+    <string name="install_jetpack_continue">Continue</string>
+    <string name="install_jetpack_retry">Retry</string>
+    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
     <string name="activity">Activity</string>
@@ -1580,6 +1599,7 @@
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
+    <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
@@ -2164,7 +2184,6 @@
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
     <string name="stats_bar_date_value_desc">%s, %d views</string>
     <string name="stats_bar_week_desc">Week of %s</string>
-    <string name="fab_add_tag_desc">create tag</string>
     <string name="fab_create_desc">create</string>
     <string name="stats_legend">stats graph legend</string>
     <string name="stats_tab_tap_content_description">showing %s</string>

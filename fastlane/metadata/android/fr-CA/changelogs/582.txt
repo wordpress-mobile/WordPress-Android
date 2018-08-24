@@ -1,4 +1,0 @@
-10.4 :
-* Nouveau : Rembobinage du journal d'activités : restaurez votre site dans un état antérieur.
-* Nombreuses petites améliorations de l'interface utilisateur.
-* Diverses résolutions de bugs

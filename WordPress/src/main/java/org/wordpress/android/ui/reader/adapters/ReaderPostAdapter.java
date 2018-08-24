@@ -3,11 +3,9 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -516,9 +514,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
 
                     @Override public void showPlaceholder() {
-                        mImageManager.load(holder.mImgFeatured, new ColorDrawable(
-                                        ContextCompat.getColor(holder.mImgFeatured.getContext(),
-                                                R.color.grey_lighten_30)));
+                        mImageManager.load(holder.mImgFeatured, ImageType.VIDEO);
                     }
 
                     @Override public void cacheThumbnailUrl(String thumbnailUrl) {

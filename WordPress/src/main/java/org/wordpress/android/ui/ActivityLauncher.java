@@ -133,6 +133,13 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    public static void startJetpackInstall(Context context, JetpackConnectionSource source, SiteModel site) {
+        Intent intent = new Intent(context, JetpackRemoteInstallActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(JetpackRemoteInstallFragment.TRACKING_SOURCE_KEY, source);
+        context.startActivity(intent);
+    }
+
     public static void continueJetpackConnect(Context context, JetpackConnectionSource source, SiteModel site) {
         switch (source) {
             case NOTIFICATIONS:
