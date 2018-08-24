@@ -58,7 +58,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="start"
                 android:background="@color/color_primary"
-                app:tabContentStart="52dp"
+                app:tabContentStart="72dp"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"
                 app:tabMode="scrollable"
