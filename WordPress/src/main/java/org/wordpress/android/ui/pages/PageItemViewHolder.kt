@@ -32,8 +32,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
         private val pageLabel = itemView.findViewById<TextView>(id.page_label)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
-        private val largeStretcher = itemView.findViewById<View>(id.large_strecher)
-        private val smallStretcher = itemView.findViewById<View>(id.small_strecher)
+        private val largeStretcher = itemView.findViewById<View>(id.large_stretcher)
+        private val smallStretcher = itemView.findViewById<View>(id.small_stretcher)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).apply {
