@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.pages
 
-import android.graphics.Rect
-import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.support.v4.widget.CompoundButtonCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -129,7 +126,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             if (pageItem is Empty) {
                 emptyView.text = emptyView.resources.getText(pageItem.textResource)
                 emptyView.setCompoundDrawablesWithIntrinsicBounds(null,
-                        pageItem.imageRes?.let {parent.resources.getDrawable(pageItem.imageRes) },
+                        pageItem.imageRes?.let { parent.resources.getDrawable(pageItem.imageRes) },
                         null,
                         null)
             }
