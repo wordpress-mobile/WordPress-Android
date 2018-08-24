@@ -9,7 +9,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNull
 import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,15 +17,9 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.JetpackAction
-import org.wordpress.android.fluxc.action.JetpackAction.INSTALL_JETPACK
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.JetpackStore
-import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallError
-import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackConnectionData
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Error
@@ -170,7 +163,7 @@ class JetpackRemoteInstallViewModelTest {
         assertEquals(state.type, JetpackRemoteInstallViewState.Type.ERROR)
         assertEquals(state.titleResource, R.string.jetpack_installation_problem)
         assertEquals(state.messageResource, R.string.jetpack_installation_problem_message)
-        assertEquals(state.icon, R.drawable.ic_exclamation_mark_88dp)
+        assertEquals(state.icon, R.drawable.img_illustration_info_outline_88dp)
         assertEquals(state.buttonResource, R.string.install_jetpack_retry)
         assertEquals(state.progressBarVisible, false)
     }

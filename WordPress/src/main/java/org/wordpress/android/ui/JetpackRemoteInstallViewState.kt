@@ -48,7 +48,7 @@ sealed class JetpackRemoteInstallViewState(
             ERROR,
             string.jetpack_installation_problem,
             string.jetpack_installation_problem_message,
-            icon = drawable.ic_exclamation_mark_88dp,
+            icon = drawable.img_illustration_info_outline_88dp,
             buttonResource = string.install_jetpack_retry,
             onClick = onClick
     )
