@@ -33,6 +33,16 @@ class ListItemSqlUtils @Inject constructor() {
                     .asModel
 
     /**
+     * This function returns the number of [ListItemModel] records for the given [listId].
+     */
+    fun getListSize(listId: Int): Int =
+            WellSql.select(ListItemModel::class.java)
+                    .where()
+                    .equals(ListItemModelTable.LIST_ID, listId)
+                    .endWhere()
+                    .asCursor.count
+
+    /**
      * This function deletes [ListItemModel] records for the [listIds].
      */
     fun deleteItem(listIds: List<Int>, remoteItemId: Long) {
