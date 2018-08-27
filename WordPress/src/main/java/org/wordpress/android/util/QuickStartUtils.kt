@@ -15,11 +15,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
@@ -176,14 +185,42 @@ class QuickStartUtils {
         ) {
             val siteId = site.id.toLong()
 
-            if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore)) {
+            if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
+                    quickStartStore.hasDoneTask(siteId, task)) {
                 return
             }
 
             quickStartStore.setDoneTask(siteId, task, true)
+            AnalyticsTracker.track(getTaskCompletedTracker(task))
 
             if (isEveryQuickStartTaskDone(quickStartStore)) {
+                AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
+            }
+        }
+
+        @JvmStatic
+        fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
+            return when (task) {
+                CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+                VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
+                CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
+                CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
+                SHARE_SITE -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
+                PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
+                FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+            }
+        }
+
+        private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
+            return when (task) {
+                CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
+                VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
+                CHOOSE_THEME -> Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
+                CUSTOMIZE_SITE -> Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
+                SHARE_SITE -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
+                PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
+                FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
             }
         }
     }

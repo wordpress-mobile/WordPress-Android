@@ -467,6 +467,7 @@ public class MySiteFragment extends Fragment implements
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
                     mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
                     updateQuickStartContainer();
+                    AnalyticsTracker.track(Stat.QUICK_START_LIST_COMPLETED_VIEWED);
                 }
 
                 ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -905,6 +906,7 @@ public class MySiteFragment extends Fragment implements
                 break;
             case TAG_QUICK_START_DIALOG:
                 startQuickStart();
+                AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -932,6 +934,7 @@ public class MySiteFragment extends Fragment implements
                 mSiteSettings.saveSettings();
                 break;
             case TAG_QUICK_START_DIALOG:
+                AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -944,6 +947,7 @@ public class MySiteFragment extends Fragment implements
         switch (instanceTag) {
             case TAG_QUICK_START_DIALOG:
                 AppPrefs.setQuickStartDisabled(true);
+                AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -1121,6 +1125,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartTaskPromptSnackBar.setPositiveButton(
                 getString(R.string.quick_start_button_positive), new OnClickListener() {
                     @Override public void onClick(View v) {
+                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
                         if (shouldDirectUserToContinueQuickStart) {
                             ActivityLauncher.viewQuickStartForResult(getActivity());
                         } else {
@@ -1133,13 +1138,14 @@ public class MySiteFragment extends Fragment implements
         mQuickStartTaskPromptSnackBar
                 .setNegativeButton(getString(R.string.quick_start_button_negative), new OnClickListener() {
                     @Override public void onClick(View v) {
+                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
                     }
                 });
 
         mQuickStartTaskPromptSnackBar.show();
         mQuickStartSnackBarWasShown = true;
         incrementNumberOfTimesQuickStartDialogWasShown();
-
+        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
         // clear the prompted quick start task after user sees the "continue" dialog, so the prompt will not appear when
         // other tasks are completed outside of quick start process
         if (shouldDirectUserToContinueQuickStart) {

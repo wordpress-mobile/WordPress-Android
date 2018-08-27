@@ -21,6 +21,8 @@ import kotlinx.android.synthetic.main.quick_start_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.style
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
@@ -30,6 +32,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel
 import javax.inject.Inject
 
@@ -126,6 +129,7 @@ class QuickStartFragment : Fragment() {
     }
 
     private fun startQuickStartTask(task: QuickStartTask) {
+        AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task))
         val intent = Intent()
         intent.putExtra(QuickStartActivity.ARG_QUICK_START_TASK, task)
         activity?.setResult(RESULT_OK, intent)
@@ -139,6 +143,7 @@ class QuickStartFragment : Fragment() {
                 .setPositiveButton(getString(R.string.quick_start_button_skip_positive)) { _, _ ->
                     (view as ScrollView).smoothScrollTo(0, 0)
                     viewModel.skipAllTasks()
+                    AnalyticsTracker.track(Stat.QUICK_START_LIST_SKIP_ALL_TAPPED)
                 }
                 .setNegativeButton(getString(R.string.quick_start_button_skip_negative)) { _, _ ->
                 }
