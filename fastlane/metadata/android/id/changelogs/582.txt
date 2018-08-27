@@ -1,4 +1,0 @@
-10.4:
-* Baru: Putar Balik Log Aktivitas: mengembalikan situs Anda ke keadaan sebelumnya.
-* Beberapa peningkatan dan penyempurnaan kecil pada UI.
-* Sejumlah perbaikan bug

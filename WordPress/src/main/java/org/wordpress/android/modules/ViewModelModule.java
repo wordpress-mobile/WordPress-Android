@@ -6,10 +6,12 @@ import android.arch.lifecycle.ViewModelProvider;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
+import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -41,6 +43,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PageListViewModel.class)
     abstract ViewModel pageListViewModel(PageListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(JetpackRemoteInstallViewModel.class)
+    abstract ViewModel jetpackRemoteInstallViewModel(JetpackRemoteInstallViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(QuickStartViewModel.class)
+    abstract ViewModel quickStartViewModel(QuickStartViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

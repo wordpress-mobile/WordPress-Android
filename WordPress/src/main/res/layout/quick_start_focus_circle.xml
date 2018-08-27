@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="@dimen/quick_start_focus_point_size"
+                android:layout_height="@dimen/quick_start_focus_point_size"
+                android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/quick_start_focus_outer_circle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:src="@drawable/quick_start_focus_outer_circle"/>
+
+    <ImageView
+        android:id="@+id/quick_start_focus_inner_circle"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_centerInParent="true"
+        android:contentDescription="@null"
+        android:src="@drawable/quick_start_focus_inner_circle"/>
+
+</RelativeLayout>
