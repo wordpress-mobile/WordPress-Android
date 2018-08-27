@@ -31,7 +31,9 @@ class ListData(
     val isLoadingMore: Boolean
 ) {
     fun refresh() {
-        dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType)))
+        if (!isFetchingFirstPage) {
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType)))
+        }
     }
 
     fun loadMore() {
@@ -69,10 +71,10 @@ class ListStore @Inject constructor(
         return ListData(mDispatcher,
                 site,
                 listType,
-                listModel?.state?.canLoadMore() ?: true,
+                listModel?.getState()?.canLoadMore() ?: true,
                 listItems,
-                listModel?.state?.isFetchingFirstPage() ?: false,
-                listModel?.state?.isLoadingMore() ?: false)
+                listModel?.getState()?.isFetchingFirstPage() ?: false,
+                listModel?.getState()?.isLoadingMore() ?: false)
     }
 
     private fun getListSize(site: SiteModel, listType: ListType): Int {
@@ -83,6 +85,19 @@ class ListStore @Inject constructor(
     }
 
     private fun fetchList(payload: FetchListPayload) {
+        val listModel = getListModel(payload.site.id, payload.listType)
+        val state = listModel?.getState()
+        if (payload.loadMore && state?.canLoadMore() != true) {
+            // We can't load more right now, ignore
+            return
+        } else if (!payload.loadMore && state?.isFetchingFirstPage() == true) {
+            // If we are already fetching the first page, ignore
+            return
+        }
+        val newState = if (payload.loadMore) ListModel.State.LOADING_MORE else ListModel.State.FETCHING_FIRST_PAGE
+        listSqlUtils.insertOrUpdateList(payload.site.id, payload.listType, newState)
+        emitChange(OnListChanged(payload.site.id, payload.listType, null, false))
+
         when(payload.listType) {
             ListModel.ListType.POSTS_ALL -> {
                 val offset = if (payload.loadMore) getListSize(payload.site, payload.listType) else 0
@@ -98,7 +113,8 @@ class ListStore @Inject constructor(
             if (!payload.loadedMore) {
                 deleteList(payload.localSiteId, payload.listType)
             }
-            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType)
+            val state = if (payload.canLoadMore) ListModel.State.CAN_LOAD_MORE else ListModel.State.FETCHED
+            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, state)
             val listModel = getListModel(payload.localSiteId, payload.listType)
             if (listModel != null) { // Sanity check
                 // Ensure the listId is set correctly for ListItemModels
@@ -107,8 +123,10 @@ class ListStore @Inject constructor(
                     return@map it
                 })
             }
+        } else {
+            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, ListModel.State.ERROR)
         }
-        emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error))
+        emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error, !payload.isError))
     }
 
     private fun getListModel(localSiteId: Int, listType: ListType): ListModel? =
@@ -121,7 +139,8 @@ class ListStore @Inject constructor(
     class OnListChanged(
         val localSiteId: Int,
         val listType: ListType,
-        error: UpdateListError?
+        error: UpdateListError?,
+        val dataChanged: Boolean = false // should be false if the state is the only change
     ) : Store.OnChanged<UpdateListError>() {
         init {
             this.error = error

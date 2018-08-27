@@ -327,7 +327,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 39:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE ListModel (DATE_CREATED TEXT,LAST_MODIFIED TEXT,LOCAL_SITE_ID INTEGER,"
-                           + "TYPE TEXT,CAN_LOAD_MORE INTEGER,_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "TYPE TEXT,STATE INTEGER,_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                            + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE,"
                            + "UNIQUE(LOCAL_SITE_ID, TYPE))");
                 db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,LAST_MODIFIED TEXT,"
