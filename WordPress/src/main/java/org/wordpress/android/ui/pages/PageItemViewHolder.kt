@@ -13,6 +13,8 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
+import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.pages.PageItem.ActionableEmpty
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -129,6 +131,23 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                         pageItem.imageRes?.let { parent.resources.getDrawable(pageItem.imageRes) },
                         null,
                         null)
+            }
+        }
+    }
+
+    class ActionableEmptyViewHolder(
+        parentView: ViewGroup,
+        private val onActionButtonClicked: () -> Unit
+    ) : PageItemViewHolder(parentView, layout.page_actionable_empty_item) {
+        private val emptyView = itemView.findViewById<ActionableEmptyView>(id.actionable_empty_view)
+
+        @Suppress("DEPRECATION")
+        override fun onBind(pageItem: PageItem) {
+            if (pageItem is ActionableEmpty) {
+                emptyView.title.text = emptyView.resources.getString(pageItem.textResource)
+                emptyView.button.setOnClickListener {
+                    onActionButtonClicked()
+                }
             }
         }
     }

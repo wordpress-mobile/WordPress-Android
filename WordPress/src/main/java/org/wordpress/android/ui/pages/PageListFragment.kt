@@ -118,7 +118,8 @@ class PageListFragment : Fragment() {
         if (recyclerView.adapter == null) {
             adapter = PagesAdapter(
                     { action, page -> viewModel.onMenuAction(action, page) },
-                    { page -> viewModel.onItemTapped(page) }
+                    { page -> viewModel.onItemTapped(page) },
+                    onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() }
             )
             recyclerView.adapter = adapter
         } else {

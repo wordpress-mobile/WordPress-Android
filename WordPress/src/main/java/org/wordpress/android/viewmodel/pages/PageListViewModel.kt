@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.ActionableEmpty
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -59,6 +60,10 @@ class PageListViewModel
         pagesViewModel.onItemTapped(pageItem)
     }
 
+    fun onEmptyListNewPageButtonTapped() {
+        pagesViewModel.onNewPageButtonTapped()
+    }
+
     private val refreshPagesObserver = Observer<Unit> {
         loadPagesAsync()
     }
@@ -79,7 +84,12 @@ class PageListViewModel
             if (isStarting) {
                 _pages.postValue(listOf(Empty(string.pages_fetching)))
             } else {
-                _pages.postValue(listOf(Empty(string.pages_empty_list_suggestion)))
+                when (pageType) {
+                    PUBLISHED -> _pages.postValue(listOf(ActionableEmpty(string.pages_empty_published)))
+                    SCHEDULED -> _pages.postValue(listOf(ActionableEmpty(string.pages_empty_scheduled)))
+                    DRAFT -> _pages.postValue(listOf(ActionableEmpty(string.pages_empty_drafts)))
+                    TRASHED -> _pages.postValue(listOf(ActionableEmpty(string.pages_empty_trashed)))
+                }
             }
         } else {
             _pages.postValue(newPages)

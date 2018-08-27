@@ -9,7 +9,6 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -47,6 +46,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 class PagesViewModel
 @Inject constructor(
@@ -67,6 +67,9 @@ class PagesViewModel
     private val _displayDeleteDialog = SingleLiveEvent<Page>()
     val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
+    private val _isNewPageButtonVisible = SingleLiveEvent<Boolean>()
+    val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
+
     private val _refreshPages = SingleLiveEvent<Unit>()
     val refreshPages: LiveData<Unit> = _refreshPages
 
@@ -82,7 +85,10 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
-    private var _pages: Map<Long, PageModel> = emptyMap()
+    private var _pages: Map<Long, PageModel>
+        by Delegates.observable(emptyMap()) { _, _, _ ->
+            checkIfNewPageButtonShouldBeVisible()
+        }
     val pages: Map<Long, PageModel>
         get() = _pages
 
@@ -93,6 +99,7 @@ class PagesViewModel
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
     private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
+    private var currentPageType: PageStatus? = null
 
     init {
         dispatcher.register(this)
@@ -156,6 +163,18 @@ class PagesViewModel
                     refreshPages()
                 }
             }
+        }
+    }
+
+    fun onPageTypeChanged(type: PageStatus) {
+        currentPageType = type
+        checkIfNewPageButtonShouldBeVisible()
+    }
+
+    private fun checkIfNewPageButtonShouldBeVisible() {
+        currentPageType?.let { type ->
+            val isNotEmpty = _pages.values.any { it.status == type }
+            _isNewPageButtonVisible.postValue(isNotEmpty)
         }
     }
 
@@ -309,8 +328,7 @@ class PagesViewModel
                         _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
                         statusPageSnackbarMessage = null
                     } else {
-                        _showSnackbarMessage.postValue(
-                                prepareStatusChangeSnackbar(PageModel(event.post, site).status))
+                        _showSnackbarMessage.postValue(prepareStatusChangeSnackbar(PageModel(event.post, site).status))
                     }
                 }
             }
