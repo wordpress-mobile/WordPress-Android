@@ -177,7 +177,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             getString(R.string.stats_pagination_label),
                             FormatUtils.formatDecimal(followersModel.getPage()),
                             FormatUtils.formatDecimal(followersModel.getPages())
-                                                          );
+                    );
                     mBottomPaginationText.setText(paginationLabel);
                     mTopPaginationText.setText(paginationLabel);
                     setNavigationButtonsEnabled(true);
@@ -196,7 +196,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                         followersModel.getPage() - 1,
                                         new StatsServiceLogic.StatsEndpointsEnum[]{
                                                 sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
-                                            );
+                                );
                             }
                         };
                         mBottomPaginationGoBackButton.setOnClickListener(clickListener);
@@ -217,7 +217,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                         followersModel.getPage() + 1,
                                         new StatsServiceLogic.StatsEndpointsEnum[]{
                                                 sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
-                                            );
+                                );
                             }
                         };
                         mBottomPaginationGoForwardButton.setOnClickListener(clickListener);
@@ -236,7 +236,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             FormatUtils.formatDecimal(
                                     mTopPagerSelectedButtonIndex == 0 ? followersModel.getTotalWPCom()
                                             : followersModel.getTotalEmail())
-                                                 );
+                            );
                     mTotalsLabel.setText(pagedLabel);
                 } else {
                     // No paging required. Hide the controls.

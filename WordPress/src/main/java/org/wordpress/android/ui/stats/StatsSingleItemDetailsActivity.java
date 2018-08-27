@@ -133,7 +133,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                         refreshStats();
                     }
                 }
-                                                         );
+        );
 
         TextView mStatsForLabel = (TextView) findViewById(R.id.stats_summary_title);
         mGraphContainer = (LinearLayout) findViewById(R.id.stats_bar_chart_fragment_container);

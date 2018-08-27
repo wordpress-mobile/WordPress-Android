@@ -201,9 +201,11 @@ public class StatsTable {
         SQLiteDatabase db = StatsDatabaseHelper.getWritableDb(ctx);
         try {
             db.beginTransaction();
-            int rowDeleted = db.delete(TABLE_NAME, "blogID=? AND type=?",
-                                       new String[]{Long.toString(blogId), Integer.toString(sectionToUpdate.ordinal())}
-                                      );
+            int rowDeleted = db.delete(
+                    TABLE_NAME,
+                    "blogID=? AND type=?",
+                    new String[]{Long.toString(blogId), Integer.toString(sectionToUpdate.ordinal())}
+            );
             db.setTransactionSuccessful();
             AppLog.d(AppLog.T.STATS,
                      "Stats deleted for localBlogID " + blogId + " and type " + sectionToUpdate.getRestEndpointPath());

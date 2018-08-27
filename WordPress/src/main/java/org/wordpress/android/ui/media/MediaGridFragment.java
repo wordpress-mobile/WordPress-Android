@@ -268,7 +268,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         fetchMediaList(false);
                     }
                 }
-                                                         );
+        );
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);

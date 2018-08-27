@@ -132,7 +132,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                         refreshCategories();
                     }
                 }
-                                                         );
+        );
 
         populateCategoryList();
 

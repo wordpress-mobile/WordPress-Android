@@ -727,24 +727,24 @@ public class ReaderPostListFragment extends Fragment
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                                               @Override
-                                               public boolean onQueryTextSubmit(String query) {
-                                                   submitSearchQuery(query);
-                                                   return true;
-                                               }
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    submitSearchQuery(query);
+                    return true;
+                }
 
-                                               @Override
-                                               public boolean onQueryTextChange(String newText) {
-                                                   if (TextUtils.isEmpty(newText)) {
-                                                       showSearchMessage();
-                                                       hideSearchTabs();
-                                                   } else {
-                                                       populateSearchSuggestionAdapter(newText);
-                                                   }
-                                                   return true;
-                                               }
-                                           }
-                                          );
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (TextUtils.isEmpty(newText)) {
+                        showSearchMessage();
+                        hideSearchTabs();
+                    } else {
+                        populateSearchSuggestionAdapter(newText);
+                    }
+                    return true;
+                    }
+                }
+        );
     }
 
     /*

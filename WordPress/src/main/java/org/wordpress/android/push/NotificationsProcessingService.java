@@ -225,7 +225,7 @@ public class NotificationsProcessingService extends Service {
                         NativeNotificationsUtils.dismissNotification(
                                 PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                                 mContext
-                                                                    );
+                        );
                     }
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_IGNORED);
                     return;

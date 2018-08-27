@@ -394,19 +394,19 @@ public class StatsUtils {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
                         blogID
-                                                            );
+                );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
                         ctx,
                         blogID,
                         itemID
-                                                           );
+                );
             }
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     blogID
-                                                        );
+            );
         } else {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
