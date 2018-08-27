@@ -697,18 +697,6 @@
         </service>
 
         <activity
-            android:name=".ui.HelpshiftDeepLinkReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="helpshift"
-                    android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.quickstart.QuickStartActivity"
             android:label="@string/quick_start_sites"
             android:parentActivityName=".ui.main.WPMainActivity"
