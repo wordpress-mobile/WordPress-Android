@@ -38,7 +38,6 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.EnumSet;
@@ -157,12 +156,6 @@ public class AppSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mVideoEncorderBitratePref,
                                      String.valueOf(AppPrefs.getVideoOptimizeQuality()),
                                      getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
-        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
-            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_optimize_video);
-            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_width);
-            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media,
-                                         R.string.pref_key_site_video_encoder_bitrate);
-        }
 
         updateEditorSettings();
     }

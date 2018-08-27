@@ -24,7 +24,6 @@ import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
 import com.crashlytics.android.Crashlytics;
@@ -272,8 +271,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         createNotificationChannelsOnSdk26();
 
-        disableRtlLayoutDirectionOnSdk17();
-
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
         // with memory usage and the use of Configuration). More informations: http://bit.ly/2H1KTQo
         // Note: if removed, this will cause crashes on Android < 21
@@ -302,12 +299,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mAppComponent = DaggerAppComponent.builder()
                                           .application(this)
                                           .build();
-    }
-
-    private void disableRtlLayoutDirectionOnSdk17() {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getResources().getConfiguration().setLayoutDirection(null);
-        }
     }
 
     private void sanitizeMediaUploadStateForSite() {
@@ -613,11 +604,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
-                } else {
-                    mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
-                }
+                mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
             } catch (AndroidRuntimeException | NullPointerException e) {
                 // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
                 // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594

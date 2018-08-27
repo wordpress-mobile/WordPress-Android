@@ -1,14 +1,12 @@
 package org.wordpress.android.ui.prefs;
 
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.text.InputType;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -151,11 +149,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     }
 
     private void setTextAlignement(EditText editText) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-        } else {
-            editText.setGravity(Gravity.START);
-        }
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
     }
 
     private void refreshAccountDetails() {
