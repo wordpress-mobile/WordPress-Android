@@ -13,11 +13,18 @@
         android:layout_marginTop="@dimen/toolbar_height"
         android:layout_width="match_parent">
 
+        <!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
+        <RelativeLayout
+            android:id="@+id/my_site_scroll_view_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <LinearLayout
             android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card_view"
@@ -138,6 +145,56 @@
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>
+
+            <!--Quick Start-->
+            <LinearLayout
+                android:id="@+id/row_quick_start"
+                style="@style/MySiteListRowLayout"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/my_site_quick_start_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_list_checkmark_grey_24dp"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_quick_start_text"
+                    style="@style/MySiteListRowTextView"
+                    android:text="@string/quick_start_sites"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_quick_start_progress"
+                        style="@style/MySiteListRowSecondaryTextView"
+                        android:layout_width="wrap_content"
+                        android:gravity="end"
+                        android:paddingLeft="@dimen/margin_medium"
+                        android:paddingStart="@dimen/margin_medium"
+                        android:textAlignment="viewEnd"
+                        tools:ignore="RtlSymmetry"
+                        tools:text="7/7"/>
+
+                    <View
+                        android:id="@+id/my_site_quick_start_dot"
+                        android:layout_width="@dimen/quick_start_dot_size"
+                        android:layout_height="@dimen/quick_start_dot_size"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/my_site_quick_start_progress"
+                        android:layout_toStartOf="@+id/my_site_quick_start_progress"
+                        android:background="@drawable/bg_oval_accent"
+                        android:gravity="end"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
             <!--Stats-->
             <LinearLayout
@@ -452,6 +509,8 @@
                 android:layout_height="@dimen/margin_extra_large"/>
 
         </LinearLayout>
+
+        </RelativeLayout>
 
     </ScrollView>
 

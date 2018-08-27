@@ -49,7 +49,6 @@ import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -100,6 +99,8 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
@@ -145,6 +146,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -300,6 +302,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject UploadStore mUploadStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject QuickStartStore mQuickStartStore;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ImageManager mImageManager;
 
@@ -431,6 +434,8 @@ public class EditPostActivity extends AppCompatActivity implements
             finish();
             return;
         }
+
+        QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.PUBLISH_POST, mDispatcher, mSite);
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
@@ -1448,6 +1453,26 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onNegativeClicked(@NonNull String instanceTag) {
+        switch (instanceTag) {
+            case ASYNC_PROMO_DIALOG_TAG:
+            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+            case TAG_PUBLISH_CONFIRMATION_DIALOG:
+            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
+                // the dialog is automatically dismissed
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        }
+    }
+
+
+    @Override
+    public void onNeutralClicked(@NonNull String instanceTag) {
+    }
+
+    @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
@@ -1471,22 +1496,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onNegativeClicked(@NonNull String instanceTag) {
-        switch (instanceTag) {
-            case ASYNC_PROMO_DIALOG_TAG:
-            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
-            case TAG_PUBLISH_CONFIRMATION_DIALOG:
-            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
-                // the dialog is automatically dismissed
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
-                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
-        }
-    }
-
-    @Override
-    public void onLinkClicked(@NotNull String instanceTag) {
+    public void onLinkClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
                 startActivity(ReleaseNotesActivity.createIntent(EditPostActivity.this, WHAT_IS_NEW_IN_MOBILE_URL,
