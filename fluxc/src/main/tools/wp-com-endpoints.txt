@@ -84,6 +84,8 @@
 
 /sites/$siteUrl#String
 
+/sites/$site/mobile-quick-start
+
 /users/new/
 /users/social/new
 
