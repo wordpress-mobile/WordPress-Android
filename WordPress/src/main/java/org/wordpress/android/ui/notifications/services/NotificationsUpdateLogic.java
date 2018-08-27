@@ -78,14 +78,10 @@ public class NotificationsUpdateLogic {
                         setNoteRead(mNoteId, notes);
                     }
                     NotificationsTable.saveNotes(notes, true);
-                    EventBus.getDefault().post(
-                            new NotificationEvents.NotificationsRefreshCompleted(notes)
-                                              );
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshCompleted(notes));
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response", e);
-                    EventBus.getDefault().post(
-                            new NotificationEvents.NotificationsRefreshError()
-                                              );
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshError());
                 }
             }
             completed();
@@ -94,9 +90,7 @@ public class NotificationsUpdateLogic {
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             logVolleyErrorDetails(volleyError);
-            EventBus.getDefault().post(
-                    new NotificationEvents.NotificationsRefreshError(volleyError)
-                                      );
+            EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshError(volleyError));
             completed();
         }
     }

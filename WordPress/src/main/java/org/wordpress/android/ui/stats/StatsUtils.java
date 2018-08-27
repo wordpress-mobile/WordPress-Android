@@ -454,9 +454,7 @@ public class StatsUtils {
             Date date = from.parse(dataSubscribed);
 
             // See http://momentjs.com/docs/#/displaying/fromnow/
-            long currentDifference = Math.abs(
-                    StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
-                                             );
+            long currentDifference = Math.abs(StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS));
 
             if (currentDifference <= 45) {
                 return ctx.getString(R.string.stats_followers_seconds_ago);

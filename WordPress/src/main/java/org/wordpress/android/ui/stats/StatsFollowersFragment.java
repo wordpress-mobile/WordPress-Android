@@ -360,10 +360,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    ReaderActivityLauncher.showReaderBlogPreview(
-                                            mContext,
-                                            blogID
-                                                                                );
+                                    ReaderActivityLauncher.showReaderBlogPreview(mContext, blogID);
                                 }
                             });
                 } else {
@@ -377,12 +374,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             }
 
             // since date
-            holder.totalsTextView.setText(
-                    StatsUtils.getSinceLabel(
-                            mContext,
-                            currentRowData.getDateSubscribed()
-                                            )
-                                         );
+            holder.totalsTextView.setText(StatsUtils.getSinceLabel(mContext, currentRowData.getDateSubscribed()));
             holder.totalsTextView.setContentDescription(
                     holder.totalsTextView.getContext().getString(
                             R.string.stats_follower_since_desc,
