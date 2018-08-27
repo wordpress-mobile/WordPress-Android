@@ -26,11 +26,24 @@ class ListData(
     private val site: SiteModel,
     private val listType: ListType,
     state: ListModel.State?,
-    val items: List<ListItemModel>
+    private val items: List<ListItemModel>
 ) {
     private val canLoadMore: Boolean = state?.canLoadMore() ?: false
     val isFetchingFirstPage: Boolean = state?.isFetchingFirstPage() ?: false
     val isLoadingMore: Boolean = state?.isLoadingMore() ?: false
+    val size: Int = items.size
+
+    fun getRemoteItemId(position: Int): Long {
+        if (position == size - 1) {
+            loadMore()
+        }
+        return items[position].remoteItemId
+    }
+
+    fun indexOfItem(remoteItemId: Long): Int? {
+        val index = items.indexOfFirst { it.remoteItemId == remoteItemId }
+        return if (index != -1) index else null
+    }
 
     fun refresh() {
         if (!isFetchingFirstPage) {
@@ -38,7 +51,7 @@ class ListData(
         }
     }
 
-    fun loadMore() {
+    private fun loadMore() {
         if (canLoadMore) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType, true)))
         }
