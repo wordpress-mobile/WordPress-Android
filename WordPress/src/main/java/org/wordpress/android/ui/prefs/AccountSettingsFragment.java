@@ -73,8 +73,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
 
-        setTextAlignement(mEmailPreference.getEditText());
-        setTextAlignement(mWebAddressPreference.getEditText());
+        setTextAlignment(mEmailPreference.getEditText());
+        setTextAlignment(mWebAddressPreference.getEditText());
 
         // load site list asynchronously
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -148,7 +148,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         return super.onOptionsItemSelected(item);
     }
 
-    private void setTextAlignement(EditText editText) {
+    private void setTextAlignment(EditText editText) {
         editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
     }
 
