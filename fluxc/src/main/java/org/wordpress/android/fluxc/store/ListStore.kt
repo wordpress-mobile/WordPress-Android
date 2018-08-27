@@ -43,6 +43,17 @@ class ListData(
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType, true)))
         }
     }
+
+    fun hasDataChanged(otherListData: ListData): Boolean {
+        if (site.id != otherListData.site.id
+                || listType != otherListData.listType
+                || items.size != otherListData.items.size)
+            return true
+        return !items.zip(otherListData.items).fold(true) { result, pair ->
+            result && pair.first.remoteItemId == pair.second.remoteItemId
+                    && pair.first.lastModified == pair.second.lastModified
+        }
+    }
 }
 
 @Singleton
@@ -92,7 +103,7 @@ class ListStore @Inject constructor(
         }
         val newState = if (payload.loadMore) ListModel.State.LOADING_MORE else ListModel.State.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.site.id, payload.listType, newState)
-        emitChange(OnListChanged(payload.site.id, payload.listType, null, false))
+        emitChange(OnListChanged(payload.site.id, payload.listType, null))
 
         when(payload.listType) {
             ListModel.ListType.POSTS_ALL -> {
@@ -107,7 +118,7 @@ class ListStore @Inject constructor(
     private fun updateList(payload: UpdateListPayload) {
         if (!payload.isError) {
             if (!payload.loadedMore) {
-                deleteList(payload.localSiteId, payload.listType)
+                deleteListItems(payload.localSiteId, payload.listType)
             }
             val state = if (payload.canLoadMore) ListModel.State.CAN_LOAD_MORE else ListModel.State.FETCHED
             listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, state)
@@ -122,21 +133,22 @@ class ListStore @Inject constructor(
         } else {
             listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, ListModel.State.ERROR)
         }
-        emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error, !payload.isError))
+        emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error))
     }
 
     private fun getListModel(localSiteId: Int, listType: ListType): ListModel? =
             listSqlUtils.getList(localSiteId, listType)
 
-    private fun deleteList(localSiteId: Int, listType: ListType) {
-        listSqlUtils.deleteList(localSiteId, listType)
+    private fun deleteListItems(localSiteId: Int, listType: ListType) {
+        getListModel(localSiteId, listType)?.let {
+            listItemSqlUtils.deleteItems(it.id)
+        }
     }
 
     class OnListChanged(
         val localSiteId: Int,
         val listType: ListType,
-        error: UpdateListError?,
-        val dataChanged: Boolean = false // should be false if the state is the only change
+        error: UpdateListError?
     ) : Store.OnChanged<UpdateListError>() {
         init {
             this.error = error
