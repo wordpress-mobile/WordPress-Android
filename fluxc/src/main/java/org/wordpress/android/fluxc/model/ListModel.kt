@@ -18,12 +18,12 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
         POSTS_SCHEDULED("post_scheduled"); // only added for test purposes (for now)
     }
 
-    enum class State {
-        CAN_LOAD_MORE,
-        FETCHED,
-        FETCHING_FIRST_PAGE,
-        LOADING_MORE,
-        ERROR;
+    enum class State(val value: Int) {
+        CAN_LOAD_MORE(0),
+        FETCHED(1),
+        FETCHING_FIRST_PAGE(2),
+        LOADING_MORE(3),
+        ERROR(4);
 
         fun canLoadMore(): Boolean {
             return this == CAN_LOAD_MORE
@@ -42,11 +42,16 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     @Column var lastModified: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column var localSiteId: Int = 0
     @Column var type: String? = null
-    @Column var state: State = CAN_LOAD_MORE
+    @Column var state: Int = CAN_LOAD_MORE.value // default value
 
     override fun getId(): Int = id
 
     override fun setId(id: Int) {
         this.id = id
+    }
+
+    fun getState(): ListModel.State {
+        // we want this to crash if the value is invalid
+        return State.values().firstOrNull { it.value == this.state }!!
     }
 }
