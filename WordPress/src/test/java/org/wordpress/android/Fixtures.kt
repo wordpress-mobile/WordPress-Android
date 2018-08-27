@@ -23,7 +23,7 @@ object Fixtures {
         siteSettingsModel.defaultCategory = 1
         siteSettingsModel.categories = arrayOf(CategoryModel())
         siteSettingsModel.defaultPostFormat = "defaultPostFormat"
-        siteSettingsModel.postFormats = mapOf("key" to "value")
+        siteSettingsModel.postFormats = mapOf("key" to "value").toMutableMap()
         siteSettingsModel.showRelatedPosts = true
         siteSettingsModel.showRelatedPostHeader = true
         siteSettingsModel.showRelatedPostImages = true

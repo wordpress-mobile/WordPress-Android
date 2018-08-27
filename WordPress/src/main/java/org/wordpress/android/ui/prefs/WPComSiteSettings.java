@@ -166,17 +166,17 @@ class WPComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
                         credentialsVerified(true);
 
-                        mRemoteSettings.localTableId = mSite.getId();
+                        mRemoteSettings.setLocalTableId(mSite.getId());
                         deserializeWpComRestResponse(mSite, response);
                         if (!mRemoteSettings.equals(mSettings)) {
                             // postFormats setting is not returned by this api call so copy it over
-                            final Map<String, String> currentPostFormats = mSettings.postFormats;
+                            final Map<String, String> currentPostFormats = mSettings.getPostFormats();
 
                             // Local settings
-                            boolean location = mSettings.location;
+                            boolean location = mSettings.getLocation();
                             mSettings.copyFrom(mRemoteSettings);
-                            mSettings.postFormats = currentPostFormats;
-                            mSettings.location = location;
+                            mSettings.setPostFormats(currentPostFormats);
+                            mSettings.setLocation(location);
 
                             SiteSettingsTable.saveSettings(mSettings);
                         }
@@ -208,8 +208,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
                         if (models == null) return;
 
                         SiteSettingsTable.saveCategories(models);
-                        mRemoteSettings.categories = models;
-                        mSettings.categories = models;
+                        mRemoteSettings.setCategories(models);
+                        mSettings.setCategories(models);
                         onFetchResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
@@ -555,64 +555,64 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
 
-        mRemoteSettings.username = site.getUsername();
-        mRemoteSettings.password = site.getPassword();
-        mRemoteSettings.address = response.optString(URL_KEY, "");
-        mRemoteSettings.title = response.optString(GET_TITLE_KEY, "");
-        mRemoteSettings.tagline = response.optString(GET_DESC_KEY, "");
-        mRemoteSettings.languageId = settingsObject.optInt(LANGUAGE_ID_KEY, -1);
-        mRemoteSettings.siteIconMediaId = settingsObject.optInt(SITE_ICON_KEY, 0);
-        mRemoteSettings.privacy = settingsObject.optInt(PRIVACY_KEY, -2);
-        mRemoteSettings.defaultCategory = settingsObject.optInt(DEF_CATEGORY_KEY, 1);
-        mRemoteSettings.defaultPostFormat = settingsObject.optString(DEF_POST_FORMAT_KEY, STANDARD_POST_FORMAT_KEY);
-        mRemoteSettings.language = languageIdToLanguageCode(Integer.toString(mRemoteSettings.languageId));
-        mRemoteSettings.allowComments = settingsObject.optBoolean(ALLOW_COMMENTS_KEY, true);
-        mRemoteSettings.sendPingbacks = settingsObject.optBoolean(SEND_PINGBACKS_KEY, false);
-        mRemoteSettings.receivePingbacks = settingsObject.optBoolean(RECEIVE_PINGBACKS_KEY, true);
-        mRemoteSettings.shouldCloseAfter = settingsObject.optBoolean(CLOSE_OLD_COMMENTS_KEY, false);
-        mRemoteSettings.closeCommentAfter = settingsObject.optInt(CLOSE_OLD_COMMENTS_DAYS_KEY, 0);
-        mRemoteSettings.shouldThreadComments = settingsObject.optBoolean(THREAD_COMMENTS_KEY, false);
-        mRemoteSettings.threadingLevels = settingsObject.optInt(THREAD_COMMENTS_DEPTH_KEY, 0);
-        mRemoteSettings.shouldPageComments = settingsObject.optBoolean(PAGE_COMMENTS_KEY, false);
-        mRemoteSettings.commentsPerPage = settingsObject.optInt(PAGE_COMMENT_COUNT_KEY, 0);
-        mRemoteSettings.commentApprovalRequired = settingsObject.optBoolean(COMMENT_MODERATION_KEY, false);
-        mRemoteSettings.commentsRequireIdentity = settingsObject.optBoolean(REQUIRE_IDENTITY_KEY, false);
-        mRemoteSettings.commentsRequireUserAccount = settingsObject.optBoolean(REQUIRE_USER_ACCOUNT_KEY, true);
-        mRemoteSettings.commentAutoApprovalKnownUsers = settingsObject.optBoolean(WHITELIST_KNOWN_USERS_KEY, false);
-        mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
-        mRemoteSettings.holdForModeration = new ArrayList<>();
-        mRemoteSettings.blacklist = new ArrayList<>();
-        mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
-        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY,
-                                                                      DEFAULT_SHARING_BUTTON_STYLE);
-        mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
-        mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
-        mRemoteSettings.startOfWeek = settingsObject.optString(START_OF_WEEK_KEY, "");
-        mRemoteSettings.dateFormat = settingsObject.optString(DATE_FORMAT_KEY, "");
-        mRemoteSettings.timeFormat = settingsObject.optString(TIME_FORMAT_KEY, "");
-        mRemoteSettings.timezone = settingsObject.optString(TIMEZONE_KEY, "");
-        mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
-        mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
-        mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
+        mRemoteSettings.setUsername(site.getUsername());
+        mRemoteSettings.setPassword(site.getPassword());
+        mRemoteSettings.setAddress(response.optString(URL_KEY, ""));
+        mRemoteSettings.setTitle(response.optString(GET_TITLE_KEY, ""));
+        mRemoteSettings.setTagline(response.optString(GET_DESC_KEY, ""));
+        mRemoteSettings.setLanguageId(settingsObject.optInt(LANGUAGE_ID_KEY, -1));
+        mRemoteSettings.setSiteIconMediaId(settingsObject.optInt(SITE_ICON_KEY, 0));
+        mRemoteSettings.setPrivacy(settingsObject.optInt(PRIVACY_KEY, -2));
+        mRemoteSettings.setDefaultCategory(settingsObject.optInt(DEF_CATEGORY_KEY, 1));
+        mRemoteSettings.setDefaultPostFormat(settingsObject.optString(DEF_POST_FORMAT_KEY, STANDARD_POST_FORMAT_KEY));
+        mRemoteSettings.setLanguage(languageIdToLanguageCode(Integer.toString(mRemoteSettings.getLanguageId())));
+        mRemoteSettings.setAllowComments(settingsObject.optBoolean(ALLOW_COMMENTS_KEY, true));
+        mRemoteSettings.setSendPingbacks(settingsObject.optBoolean(SEND_PINGBACKS_KEY, false));
+        mRemoteSettings.setReceivePingbacks(settingsObject.optBoolean(RECEIVE_PINGBACKS_KEY, true));
+        mRemoteSettings.setShouldCloseAfter(settingsObject.optBoolean(CLOSE_OLD_COMMENTS_KEY, false));
+        mRemoteSettings.setCloseCommentAfter(settingsObject.optInt(CLOSE_OLD_COMMENTS_DAYS_KEY, 0));
+        mRemoteSettings.setShouldThreadComments(settingsObject.optBoolean(THREAD_COMMENTS_KEY, false));
+        mRemoteSettings.setThreadingLevels(settingsObject.optInt(THREAD_COMMENTS_DEPTH_KEY, 0));
+        mRemoteSettings.setShouldPageComments(settingsObject.optBoolean(PAGE_COMMENTS_KEY, false));
+        mRemoteSettings.setCommentsPerPage(settingsObject.optInt(PAGE_COMMENT_COUNT_KEY, 0));
+        mRemoteSettings.setCommentApprovalRequired(settingsObject.optBoolean(COMMENT_MODERATION_KEY, false));
+        mRemoteSettings.setCommentsRequireIdentity(settingsObject.optBoolean(REQUIRE_IDENTITY_KEY, false));
+        mRemoteSettings.setCommentsRequireUserAccount(settingsObject.optBoolean(REQUIRE_USER_ACCOUNT_KEY, true));
+        mRemoteSettings.setCommentAutoApprovalKnownUsers(settingsObject.optBoolean(WHITELIST_KNOWN_USERS_KEY, false));
+        mRemoteSettings.setMaxLinks(settingsObject.optInt(MAX_LINKS_KEY, 0));
+        mRemoteSettings.setHoldForModeration(new ArrayList<String>());
+        mRemoteSettings.setBlacklist(new ArrayList<String>());
+        mRemoteSettings.setSharingLabel(settingsObject.optString(SHARING_LABEL_KEY, ""));
+        mRemoteSettings.setSharingButtonStyle(settingsObject.optString(SHARING_BUTTON_STYLE_KEY,
+                DEFAULT_SHARING_BUTTON_STYLE));
+        mRemoteSettings.setAllowCommentLikes(settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false));
+        mRemoteSettings.setTwitterUsername(settingsObject.optString(TWITTER_USERNAME_KEY, ""));
+        mRemoteSettings.setStartOfWeek(settingsObject.optString(START_OF_WEEK_KEY, ""));
+        mRemoteSettings.setDateFormat(settingsObject.optString(DATE_FORMAT_KEY, ""));
+        mRemoteSettings.setTimeFormat(settingsObject.optString(TIME_FORMAT_KEY, ""));
+        mRemoteSettings.setTimezone(settingsObject.optString(TIMEZONE_KEY, ""));
+        mRemoteSettings.setPostsPerPage(settingsObject.optInt(POSTS_PER_PAGE_KEY, 0));
+        mRemoteSettings.setAmpSupported(settingsObject.optBoolean(AMP_SUPPORTED_KEY, false));
+        mRemoteSettings.setAmpEnabled(settingsObject.optBoolean(AMP_ENABLED_KEY, false));
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
-        mRemoteSettings.allowReblogButton = !reblogsDisabled;
-        mRemoteSettings.allowLikeButton = !likesDisabled;
+        mRemoteSettings.setAllowReblogButton(!reblogsDisabled);
+        mRemoteSettings.setAllowLikeButton(!likesDisabled);
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
         if (modKeys.length() > 0) {
-            Collections.addAll(mRemoteSettings.holdForModeration, modKeys.split("\n"));
+            Collections.addAll(mRemoteSettings.getHoldForModeration(), modKeys.split("\n"));
         }
         String blacklistKeys = settingsObject.optString(BLACKLIST_KEYS_KEY, "");
         if (blacklistKeys.length() > 0) {
-            Collections.addAll(mRemoteSettings.blacklist, blacklistKeys.split("\n"));
+            Collections.addAll(mRemoteSettings.getBlacklist(), blacklistKeys.split("\n"));
         }
 
         if (settingsObject.optString(COMMENT_SORT_ORDER_KEY, "").equals("asc")) {
-            mRemoteSettings.sortCommentsBy = ASCENDING_SORT;
+            mRemoteSettings.setSortCommentsBy(ASCENDING_SORT);
         } else {
-            mRemoteSettings.sortCommentsBy = DESCENDING_SORT;
+            mRemoteSettings.setSortCommentsBy(DESCENDING_SORT);
         }
 
         JSONObject jetpackProtectWhitelist = settingsObject.optJSONObject(JP_PROTECT_WHITELIST_KEY);
@@ -629,13 +629,13 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
 
         if (settingsObject.optBoolean(RELATED_POSTS_ALLOWED_KEY, false)) {
-            mRemoteSettings.showRelatedPosts = settingsObject.optBoolean(RELATED_POSTS_ENABLED_KEY, false);
-            mRemoteSettings.showRelatedPostHeader = settingsObject.optBoolean(RELATED_POSTS_HEADER_KEY, false);
-            mRemoteSettings.showRelatedPostImages = settingsObject.optBoolean(RELATED_POSTS_IMAGES_KEY, false);
+            mRemoteSettings.setShowRelatedPosts(settingsObject.optBoolean(RELATED_POSTS_ENABLED_KEY, false));
+            mRemoteSettings.setShowRelatedPostHeader(settingsObject.optBoolean(RELATED_POSTS_HEADER_KEY, false));
+            mRemoteSettings.setShowRelatedPostImages(settingsObject.optBoolean(RELATED_POSTS_IMAGES_KEY, false));
         }
 
-        mRemoteSettings.isPortfolioEnabled = settingsObject.optBoolean(PORTFOLIO_ENABLED_KEY, false);
-        mRemoteSettings.portfolioPostsPerPage = settingsObject.optInt(PORTFOLIO_POSTS_PER_PAGE_KEY, 0);
+        mRemoteSettings.setPortfolioEnabled(settingsObject.optBoolean(PORTFOLIO_ENABLED_KEY, false));
+        mRemoteSettings.setPortfolioPostsPerPage(settingsObject.optInt(PORTFOLIO_POSTS_PER_PAGE_KEY, 0));
     }
 
     /**
@@ -644,85 +644,85 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private JSONObject serializeWpComParamsToJSONObject() throws JSONException {
         JSONObject params = new JSONObject();
 
-        if (mSettings.title != null && !mSettings.title.equals(mRemoteSettings.title)) {
-            params.put(SET_TITLE_KEY, mSettings.title);
+        if (mSettings.getTitle() != null && !mSettings.getTitle().equals(mRemoteSettings.getTitle())) {
+            params.put(SET_TITLE_KEY, mSettings.getTitle());
         }
-        if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
-            params.put(SET_DESC_KEY, mSettings.tagline);
+        if (mSettings.getTagline() != null && !mSettings.getTagline().equals(mRemoteSettings.getTagline())) {
+            params.put(SET_DESC_KEY, mSettings.getTagline());
         }
-        if (mSettings.languageId != mRemoteSettings.languageId) {
-            params.put(LANGUAGE_ID_KEY, String.valueOf((mSettings.languageId)));
+        if (mSettings.getLanguageId() != mRemoteSettings.getLanguageId()) {
+            params.put(LANGUAGE_ID_KEY, String.valueOf((mSettings.getLanguageId())));
         }
-        if (mSettings.siteIconMediaId != mRemoteSettings.siteIconMediaId) {
-            params.put(SITE_ICON_KEY, String.valueOf((mSettings.siteIconMediaId)));
+        if (mSettings.getSiteIconMediaId() != mRemoteSettings.getSiteIconMediaId()) {
+            params.put(SITE_ICON_KEY, String.valueOf((mSettings.getSiteIconMediaId())));
         }
-        if (mSettings.privacy != mRemoteSettings.privacy) {
-            params.put(PRIVACY_KEY, String.valueOf((mSettings.privacy)));
+        if (mSettings.getPrivacy() != mRemoteSettings.getPrivacy()) {
+            params.put(PRIVACY_KEY, String.valueOf((mSettings.getPrivacy())));
         }
-        if (mSettings.defaultCategory != mRemoteSettings.defaultCategory) {
-            params.put(DEF_CATEGORY_KEY, String.valueOf(mSettings.defaultCategory));
+        if (mSettings.getDefaultCategory() != mRemoteSettings.getDefaultCategory()) {
+            params.put(DEF_CATEGORY_KEY, String.valueOf(mSettings.getDefaultCategory()));
         }
-        if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat
-                .equals(mRemoteSettings.defaultPostFormat)) {
-            params.put(DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
+        if (mSettings.getDefaultPostFormat() != null && !mSettings.getDefaultPostFormat()
+                                                                  .equals(mRemoteSettings.getDefaultPostFormat())) {
+            params.put(DEF_POST_FORMAT_KEY, mSettings.getDefaultPostFormat());
         }
-        if (mSettings.showRelatedPosts != mRemoteSettings.showRelatedPosts
-                || mSettings.showRelatedPostHeader != mRemoteSettings.showRelatedPostHeader
-                || mSettings.showRelatedPostImages != mRemoteSettings.showRelatedPostImages) {
-            params.put(RELATED_POSTS_ENABLED_KEY, String.valueOf(mSettings.showRelatedPosts));
-            params.put(RELATED_POSTS_HEADER_KEY, String.valueOf(mSettings.showRelatedPostHeader));
-            params.put(RELATED_POSTS_IMAGES_KEY, String.valueOf(mSettings.showRelatedPostImages));
+        if (mSettings.getShowRelatedPosts() != mRemoteSettings.getShowRelatedPosts()
+            || mSettings.getShowRelatedPostHeader() != mRemoteSettings.getShowRelatedPostHeader()
+            || mSettings.getShowRelatedPostImages() != mRemoteSettings.getShowRelatedPostImages()) {
+            params.put(RELATED_POSTS_ENABLED_KEY, String.valueOf(mSettings.getShowRelatedPosts()));
+            params.put(RELATED_POSTS_HEADER_KEY, String.valueOf(mSettings.getShowRelatedPostHeader()));
+            params.put(RELATED_POSTS_IMAGES_KEY, String.valueOf(mSettings.getShowRelatedPostImages()));
         }
-        if (mSettings.allowComments != mRemoteSettings.allowComments) {
-            params.put(ALLOW_COMMENTS_KEY, String.valueOf(mSettings.allowComments));
+        if (mSettings.getAllowComments() != mRemoteSettings.getAllowComments()) {
+            params.put(ALLOW_COMMENTS_KEY, String.valueOf(mSettings.getAllowComments()));
         }
-        if (mSettings.sendPingbacks != mRemoteSettings.sendPingbacks) {
-            params.put(SEND_PINGBACKS_KEY, String.valueOf(mSettings.sendPingbacks));
+        if (mSettings.getSendPingbacks() != mRemoteSettings.getSendPingbacks()) {
+            params.put(SEND_PINGBACKS_KEY, String.valueOf(mSettings.getSendPingbacks()));
         }
-        if (mSettings.receivePingbacks != mRemoteSettings.receivePingbacks) {
-            params.put(RECEIVE_PINGBACKS_KEY, String.valueOf(mSettings.receivePingbacks));
+        if (mSettings.getReceivePingbacks() != mRemoteSettings.getReceivePingbacks()) {
+            params.put(RECEIVE_PINGBACKS_KEY, String.valueOf(mSettings.getReceivePingbacks()));
         }
-        if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
-            params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
+        if (mSettings.getCommentApprovalRequired() != mRemoteSettings.getCommentApprovalRequired()) {
+            params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.getCommentApprovalRequired()));
         }
-        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter
-                || mSettings.shouldCloseAfter != mRemoteSettings.shouldCloseAfter) {
-            params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(mSettings.shouldCloseAfter));
-            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
+        if (mSettings.getCloseCommentAfter() != mRemoteSettings.getCloseCommentAfter()
+            || mSettings.getShouldCloseAfter() != mRemoteSettings.getShouldCloseAfter()) {
+            params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(mSettings.getShouldCloseAfter()));
+            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.getCloseCommentAfter()));
         }
-        if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
-            if (mSettings.sortCommentsBy == ASCENDING_SORT) {
+        if (mSettings.getSortCommentsBy() != mRemoteSettings.getSortCommentsBy()) {
+            if (mSettings.getSortCommentsBy() == ASCENDING_SORT) {
                 params.put(COMMENT_SORT_ORDER_KEY, "asc");
-            } else if (mSettings.sortCommentsBy == DESCENDING_SORT) {
+            } else if (mSettings.getSortCommentsBy() == DESCENDING_SORT) {
                 params.put(COMMENT_SORT_ORDER_KEY, "desc");
             }
         }
-        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels
-                || mSettings.shouldThreadComments != mRemoteSettings.shouldThreadComments) {
-            params.put(THREAD_COMMENTS_KEY, String.valueOf(mSettings.shouldThreadComments));
-            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
+        if (mSettings.getThreadingLevels() != mRemoteSettings.getThreadingLevels()
+            || mSettings.getShouldThreadComments() != mRemoteSettings.getShouldThreadComments()) {
+            params.put(THREAD_COMMENTS_KEY, String.valueOf(mSettings.getShouldThreadComments()));
+            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.getThreadingLevels()));
         }
-        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage
-                || mSettings.shouldPageComments != mRemoteSettings.shouldPageComments) {
-            params.put(PAGE_COMMENTS_KEY, String.valueOf(mSettings.shouldPageComments));
-            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
+        if (mSettings.getCommentsPerPage() != mRemoteSettings.getCommentsPerPage()
+            || mSettings.getShouldPageComments() != mRemoteSettings.getShouldPageComments()) {
+            params.put(PAGE_COMMENTS_KEY, String.valueOf(mSettings.getShouldPageComments()));
+            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.getCommentsPerPage()));
         }
-        if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
-            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
+        if (mSettings.getCommentsRequireIdentity() != mRemoteSettings.getCommentsRequireIdentity()) {
+            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.getCommentsRequireIdentity()));
         }
-        if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
-            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
+        if (mSettings.getCommentsRequireUserAccount() != mRemoteSettings.getCommentsRequireUserAccount()) {
+            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.getCommentsRequireUserAccount()));
         }
-        if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
-            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
+        if (mSettings.getCommentAutoApprovalKnownUsers() != mRemoteSettings.getCommentAutoApprovalKnownUsers()) {
+            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.getCommentAutoApprovalKnownUsers()));
         }
-        if (mSettings.maxLinks != mRemoteSettings.maxLinks) {
-            params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
+        if (mSettings.getMaxLinks() != mRemoteSettings.getMaxLinks()) {
+            params.put(MAX_LINKS_KEY, String.valueOf(mSettings.getMaxLinks()));
         }
-        if (mSettings.holdForModeration != null && !mSettings.holdForModeration
-                .equals(mRemoteSettings.holdForModeration)) {
+        if (mSettings.getHoldForModeration() != null && !mSettings.getHoldForModeration()
+                                                                  .equals(mRemoteSettings.getHoldForModeration())) {
             StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.holdForModeration) {
+            for (String key : mSettings.getHoldForModeration()) {
                 builder.append(key);
                 builder.append("\n");
             }
@@ -732,9 +732,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
                 params.put(MODERATION_KEYS_KEY, "");
             }
         }
-        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
+        if (mSettings.getBlacklist() != null && !mSettings.getBlacklist().equals(mRemoteSettings.getBlacklist())) {
             StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.blacklist) {
+            for (String key : mSettings.getBlacklist()) {
                 builder.append(key);
                 builder.append("\n");
             }
@@ -744,49 +744,52 @@ class WPComSiteSettings extends SiteSettingsInterface {
                 params.put(BLACKLIST_KEYS_KEY, "");
             }
         }
-        if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
-            params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
+        if (mSettings.getSharingLabel() != null && !mSettings.getSharingLabel()
+                                                             .equals(mRemoteSettings.getSharingLabel())) {
+            params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.getSharingLabel()));
         }
-        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle
-                .equals(mRemoteSettings.sharingButtonStyle)) {
-            params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
+        if (mSettings.getSharingButtonStyle() != null && !mSettings.getSharingButtonStyle()
+                                                                   .equals(mRemoteSettings.getSharingButtonStyle())) {
+            params.put(SHARING_BUTTON_STYLE_KEY, mSettings.getSharingButtonStyle());
         }
-        if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
-            params.put(SHARING_REBLOGS_DISABLED_KEY, String.valueOf(!mSettings.allowReblogButton));
+        if (mSettings.getAllowReblogButton() != mRemoteSettings.getAllowReblogButton()) {
+            params.put(SHARING_REBLOGS_DISABLED_KEY, String.valueOf(!mSettings.getAllowReblogButton()));
         }
-        if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
-            params.put(SHARING_LIKES_DISABLED_KEY, String.valueOf(!mSettings.allowLikeButton));
+        if (mSettings.getAllowLikeButton() != mRemoteSettings.getAllowLikeButton()) {
+            params.put(SHARING_LIKES_DISABLED_KEY, String.valueOf(!mSettings.getAllowLikeButton()));
         }
-        if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
-            params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.allowCommentLikes));
+        if (mSettings.getAllowCommentLikes() != mRemoteSettings.getAllowCommentLikes()) {
+            params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.getAllowCommentLikes()));
         }
-        if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
-            params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
+        if (mSettings.getTwitterUsername() != null && !mSettings.getTwitterUsername()
+                                                                .equals(mRemoteSettings.getTwitterUsername())) {
+            params.put(TWITTER_USERNAME_KEY, mSettings.getTwitterUsername());
         }
-        if (mSettings.startOfWeek != null && !mSettings.startOfWeek.equals(mRemoteSettings.startOfWeek)) {
-            params.put(START_OF_WEEK_KEY, mSettings.startOfWeek);
+        if (mSettings.getStartOfWeek() != null && !mSettings.getStartOfWeek()
+                                                            .equals(mRemoteSettings.getStartOfWeek())) {
+            params.put(START_OF_WEEK_KEY, mSettings.getStartOfWeek());
         }
-        if (mSettings.dateFormat != null && !mSettings.dateFormat.equals(mRemoteSettings.dateFormat)) {
-            params.put(DATE_FORMAT_KEY, mSettings.dateFormat);
+        if (mSettings.getDateFormat() != null && !mSettings.getDateFormat().equals(mRemoteSettings.getDateFormat())) {
+            params.put(DATE_FORMAT_KEY, mSettings.getDateFormat());
         }
-        if (mSettings.timeFormat != null && !mSettings.timeFormat.equals(mRemoteSettings.timeFormat)) {
-            params.put(TIME_FORMAT_KEY, mSettings.timeFormat);
+        if (mSettings.getTimeFormat() != null && !mSettings.getTimeFormat().equals(mRemoteSettings.getTimeFormat())) {
+            params.put(TIME_FORMAT_KEY, mSettings.getTimeFormat());
         }
-        if (!StringUtils.equals(mSettings.timezone, mRemoteSettings.timezone)) {
-            params.put(TIMEZONE_KEY, mSettings.timezone);
+        if (!StringUtils.equals(mSettings.getTimezone(), mRemoteSettings.getTimezone())) {
+            params.put(TIMEZONE_KEY, mSettings.getTimezone());
         }
-        if (mSettings.postsPerPage != mRemoteSettings.postsPerPage) {
-            params.put(POSTS_PER_PAGE_KEY, String.valueOf(mSettings.postsPerPage));
+        if (mSettings.getPostsPerPage() != mRemoteSettings.getPostsPerPage()) {
+            params.put(POSTS_PER_PAGE_KEY, String.valueOf(mSettings.getPostsPerPage()));
         }
-        if (mSettings.ampSupported != mRemoteSettings.ampSupported) {
-            params.put(AMP_SUPPORTED_KEY, String.valueOf(mSettings.ampSupported));
+        if (mSettings.getAmpSupported() != mRemoteSettings.getAmpSupported()) {
+            params.put(AMP_SUPPORTED_KEY, String.valueOf(mSettings.getAmpSupported()));
         }
-        if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
-            params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
+        if (mSettings.getAmpEnabled() != mRemoteSettings.getAmpEnabled()) {
+            params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.getAmpEnabled()));
         }
-        if (mSettings.isPortfolioEnabled != mRemoteSettings.isPortfolioEnabled) {
-            params.put(PORTFOLIO_ENABLED_KEY, String.valueOf(mSettings.isPortfolioEnabled));
-            params.put(PORTFOLIO_POSTS_PER_PAGE_KEY, String.valueOf(mSettings.portfolioPostsPerPage));
+        if (mSettings.isPortfolioEnabled() != mRemoteSettings.isPortfolioEnabled()) {
+            params.put(PORTFOLIO_ENABLED_KEY, String.valueOf(mSettings.isPortfolioEnabled()));
+            params.put(PORTFOLIO_POSTS_PER_PAGE_KEY, String.valueOf(mSettings.getPortfolioPostsPerPage()));
         }
         return params;
     }
