@@ -248,10 +248,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
                 predefinedEventProperties.put("source", "post_details_saved_post_notice");
                 break;
-            case QUICK_START_DIALOG_NEGATIVE_TAPPED:
+            case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
-            case QUICK_START_DIALOG_POSITIVE_TAPPED:
+            case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 predefinedEventProperties.put("type", "positive");
                 break;
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
@@ -1200,11 +1200,11 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
                 return "support_identity_set";
-            case QUICK_START_DIALOG_VIEWED:
-                return "quick_start_dialog_viewed";
-            case QUICK_START_DIALOG_NEGATIVE_TAPPED:
-            case QUICK_START_DIALOG_POSITIVE_TAPPED:
-                return "quick_start_dialog_button_tapped";
+            case QUICK_START_TASK_DIALOG_VIEWED:
+                return "quick_start_task_dialog_viewed";
+            case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
+            case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
+                return "quick_start_task_dialog_button_tapped";
             case QUICK_START_LIST_VIEWED:
                 return "quick_start_list_viewed";
             case QUICK_START_LIST_COMPLETED_VIEWED:

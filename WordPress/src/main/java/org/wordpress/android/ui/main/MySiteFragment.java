@@ -1125,7 +1125,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartTaskPromptSnackBar.setPositiveButton(
                 getString(R.string.quick_start_button_positive), new OnClickListener() {
                     @Override public void onClick(View v) {
-                        AnalyticsTracker.track(Stat.QUICK_START_DIALOG_POSITIVE_TAPPED);
+                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
                         if (shouldDirectUserToContinueQuickStart) {
                             ActivityLauncher.viewQuickStartForResult(getActivity());
                         } else {
@@ -1138,14 +1138,14 @@ public class MySiteFragment extends Fragment implements
         mQuickStartTaskPromptSnackBar
                 .setNegativeButton(getString(R.string.quick_start_button_negative), new OnClickListener() {
                     @Override public void onClick(View v) {
-                        AnalyticsTracker.track(Stat.QUICK_START_DIALOG_NEGATIVE_TAPPED);
+                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
                     }
                 });
 
         mQuickStartTaskPromptSnackBar.show();
         mQuickStartSnackBarWasShown = true;
         incrementNumberOfTimesQuickStartDialogWasShown();
-        AnalyticsTracker.track(Stat.QUICK_START_DIALOG_VIEWED);
+        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
         // clear the prompted quick start task after user sees the "continue" dialog, so the prompt will not appear when
         // other tasks are completed outside of quick start process
         if (shouldDirectUserToContinueQuickStart) {
