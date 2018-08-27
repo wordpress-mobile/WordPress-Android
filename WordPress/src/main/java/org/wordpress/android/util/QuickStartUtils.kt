@@ -194,7 +194,7 @@ class QuickStartUtils {
             AnalyticsTracker.track(getTaskCompletedTracker(task))
 
             if (isEveryQuickStartTaskDone(quickStartStore)) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_ALL_TASKS_COMPLETED)
+                AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
             }
         }
@@ -202,25 +202,25 @@ class QuickStartUtils {
         @JvmStatic
         fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
             return when (task) {
-                CREATE_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
-                VIEW_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
-                CHOOSE_THEME -> AnalyticsTracker.Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
-                CUSTOMIZE_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
-                SHARE_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
-                PUBLISH_POST -> AnalyticsTracker.Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
-                FOLLOW_SITE -> AnalyticsTracker.Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+                CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+                VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
+                CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
+                CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
+                SHARE_SITE -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
+                PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
+                FOLLOW_SITE ->Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
             }
         }
 
         private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
             return when (task) {
-                CREATE_SITE -> AnalyticsTracker.Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
-                VIEW_SITE -> AnalyticsTracker.Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
-                CHOOSE_THEME -> AnalyticsTracker.Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
-                CUSTOMIZE_SITE -> AnalyticsTracker.Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
-                SHARE_SITE -> AnalyticsTracker.Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
-                PUBLISH_POST -> AnalyticsTracker.Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
-                FOLLOW_SITE -> AnalyticsTracker.Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+                CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
+                VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
+                CHOOSE_THEME -> Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
+                CUSTOMIZE_SITE -> Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
+                SHARE_SITE -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
+                PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
+                FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
             }
         }
     }

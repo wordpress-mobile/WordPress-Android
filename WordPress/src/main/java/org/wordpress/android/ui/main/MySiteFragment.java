@@ -467,7 +467,7 @@ public class MySiteFragment extends Fragment implements
                 if (mQuickStartDot.getVisibility() == View.VISIBLE) {
                     mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
                     updateQuickStartContainer();
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_LIST_COMPLETED_VIEWED);
+                    AnalyticsTracker.track(Stat.QUICK_START_LIST_COMPLETED_VIEWED);
                 }
 
                 ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -906,7 +906,7 @@ public class MySiteFragment extends Fragment implements
                 break;
             case TAG_QUICK_START_DIALOG:
                 startQuickStart();
-                AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED);
+                AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -934,7 +934,7 @@ public class MySiteFragment extends Fragment implements
                 mSiteSettings.saveSettings();
                 break;
             case TAG_QUICK_START_DIALOG:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED);
+                AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -947,7 +947,7 @@ public class MySiteFragment extends Fragment implements
         switch (instanceTag) {
             case TAG_QUICK_START_DIALOG:
                 AppPrefs.setQuickStartDisabled(true);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED);
+                AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");

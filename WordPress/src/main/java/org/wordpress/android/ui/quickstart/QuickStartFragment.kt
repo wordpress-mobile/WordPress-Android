@@ -22,7 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.style
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_LIST_SKIP_ALL_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
@@ -143,7 +143,7 @@ class QuickStartFragment : Fragment() {
                 .setPositiveButton(getString(R.string.quick_start_button_skip_positive)) { _, _ ->
                     (view as ScrollView).smoothScrollTo(0, 0)
                     viewModel.skipAllTasks()
-                    AnalyticsTracker.track(QUICK_START_LIST_SKIP_ALL_TAPPED)
+                    AnalyticsTracker.track(Stat.QUICK_START_LIST_SKIP_ALL_TAPPED)
                 }
                 .setNegativeButton(getString(R.string.quick_start_button_skip_negative)) { _, _ ->
                 }

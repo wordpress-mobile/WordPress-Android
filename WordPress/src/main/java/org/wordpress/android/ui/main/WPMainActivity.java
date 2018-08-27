@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -760,7 +761,7 @@ public class WPMainActivity extends AppCompatActivity implements
                               );
 
         promoDialog.show(getSupportFragmentManager(), tag);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED);
+        AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
     }
 
     private void appLanguageChanged() {
