@@ -53,4 +53,15 @@ class ListItemSqlUtils @Inject constructor() {
                 .endWhere()
                 .execute()
     }
+
+    /**
+     * This function deletes all [ListItemModel]s for a specific [listId].
+     */
+    fun deleteItems(listId: Int) {
+        WellSql.delete(ListItemModel::class.java)
+                .where()
+                .equals(ListItemModelTable.LIST_ID, listId)
+                .endWhere()
+                .execute()
+    }
 }
