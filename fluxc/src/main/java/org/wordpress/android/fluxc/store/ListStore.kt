@@ -25,11 +25,13 @@ class ListData(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,
     private val listType: ListType,
-    private val canLoadMore: Boolean,
-    val items: List<ListItemModel>,
-    val isFetchingFirstPage: Boolean,
-    val isLoadingMore: Boolean
+    state: ListModel.State?,
+    val items: List<ListItemModel>
 ) {
+    private val canLoadMore: Boolean = state?.canLoadMore() ?: false
+    val isFetchingFirstPage: Boolean = state?.isFetchingFirstPage() ?: false
+    val isLoadingMore: Boolean = state?.isLoadingMore() ?: false
+
     fun refresh() {
         if (!isFetchingFirstPage) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType)))
@@ -68,13 +70,7 @@ class ListStore @Inject constructor(
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
-        return ListData(mDispatcher,
-                site,
-                listType,
-                listModel?.getState()?.canLoadMore() ?: true,
-                listItems,
-                listModel?.getState()?.isFetchingFirstPage() ?: false,
-                listModel?.getState()?.isLoadingMore() ?: false)
+        return ListData(mDispatcher, site, listType, listModel?.getState(), listItems)
     }
 
     private fun getListSize(site: SiteModel, listType: ListType): Int {
