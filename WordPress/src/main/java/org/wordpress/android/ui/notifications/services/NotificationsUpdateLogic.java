@@ -65,10 +65,7 @@ public class NotificationsUpdateLogic {
                 // Not sure this could ever happen, but make sure we're catching all response types
                 AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
                 EventBus.getDefault().post(
-                        new NotificationEvents.NotificationsRefreshCompleted(
-                                new ArrayList<Note>(0)
-                        )
-                                          );
+                        new NotificationEvents.NotificationsRefreshCompleted(new ArrayList<Note>(0)));
             } else {
                 try {
                     notes = NotificationsActions.parseNotes(response);
