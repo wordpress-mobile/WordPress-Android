@@ -524,7 +524,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Analytics resets
             AnalyticsTracker.endSession(false);
             AnalyticsTracker.clearAllData();
-
         }
 
         if (!event.isError() && mAccountStore.hasAccessToken()) {
