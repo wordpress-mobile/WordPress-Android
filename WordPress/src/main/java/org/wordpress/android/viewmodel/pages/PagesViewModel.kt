@@ -170,10 +170,7 @@ class PagesViewModel
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
-                        _searchResult.postValue(listOf(
-                                Empty(string.pages_empty_search_result,
-                                R.drawable.img_illustration_empty_results_216dp))
-                        )
+                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
                     }
                 }
             }
