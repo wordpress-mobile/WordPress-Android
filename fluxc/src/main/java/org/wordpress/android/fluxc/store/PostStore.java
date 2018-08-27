@@ -493,7 +493,7 @@ public class PostStore extends Store {
         }
         UpdateListPayload updateListPayload =
                 new UpdateListPayload(payload.site.getId(), payload.listType, payload.listItems,
-                        payload.loadedMore, updateListError);
+                        payload.loadedMore, payload.canLoadMore, updateListError);
         mDispatcher.dispatch(ListActionBuilder.newUpdateListAction(updateListPayload));
     }
 

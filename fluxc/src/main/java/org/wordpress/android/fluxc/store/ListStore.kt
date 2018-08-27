@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.ListItemModel
 import org.wordpress.android.fluxc.model.ListModel
@@ -14,10 +15,31 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
+import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
+
+class ListData(
+    private val dispatcher: Dispatcher,
+    private val site: SiteModel,
+    private val listType: ListType,
+    private val canLoadMore: Boolean,
+    val items: List<ListItemModel>,
+    val isFetchingFirstPage: Boolean,
+    val isLoadingMore: Boolean
+) {
+    fun refresh() {
+        dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType)))
+    }
+
+    fun loadMore() {
+        if (canLoadMore) {
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType, true)))
+        }
+    }
+}
 
 @Singleton
 class ListStore @Inject constructor(
@@ -39,15 +61,22 @@ class ListStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
-    fun getListItems(site: SiteModel, listType: ListType): List<ListItemModel> {
-        val listModel = getList(site.id, listType)
-        return if (listModel != null) {
+    fun getList(site: SiteModel, listType: ListType): ListData {
+        val listModel = getListModel(site.id, listType)
+        val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
+        return ListData(mDispatcher,
+                site,
+                listType,
+                listModel?.state?.canLoadMore() ?: true,
+                listItems,
+                listModel?.state?.isFetchingFirstPage() ?: false,
+                listModel?.state?.isLoadingMore() ?: false)
     }
 
     private fun getListSize(site: SiteModel, listType: ListType): Int {
-        val listModel = getList(site.id, listType)
+        val listModel = getListModel(site.id, listType)
         return if (listModel != null) {
             listItemSqlUtils.getListSize(listModel.id)
         } else 0
@@ -65,17 +94,13 @@ class ListStore @Inject constructor(
     }
 
     private fun updateList(payload: UpdateListPayload) {
-        // TODO: handle can load more by probably saving it to the DB for ListModel
         if (!payload.isError) {
             if (!payload.loadedMore) {
                 deleteList(payload.localSiteId, payload.listType)
             }
             listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType)
-            val listModel = getList(payload.localSiteId, payload.listType)
+            val listModel = getListModel(payload.localSiteId, payload.listType)
             if (listModel != null) { // Sanity check
-                for (listItem in payload.listItems) {
-                    listItem.listId = listModel.id
-                }
                 // Ensure the listId is set correctly for ListItemModels
                 listItemSqlUtils.insertItemList(payload.listItems.map {
                     it.listId = listModel.id
@@ -86,7 +111,8 @@ class ListStore @Inject constructor(
         emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error))
     }
 
-    private fun getList(localSiteId: Int, listType: ListType): ListModel? = listSqlUtils.getList(localSiteId, listType)
+    private fun getListModel(localSiteId: Int, listType: ListType): ListModel? =
+            listSqlUtils.getList(localSiteId, listType)
 
     private fun deleteList(localSiteId: Int, listType: ListType) {
         listSqlUtils.deleteList(localSiteId, listType)
@@ -113,6 +139,7 @@ class ListStore @Inject constructor(
         val listType: ListType,
         val listItems: List<ListItemModel>,
         val loadedMore: Boolean,
+        val canLoadMore: Boolean,
         error: UpdateListError?
     ) : Payload<UpdateListError>() {
         init {
