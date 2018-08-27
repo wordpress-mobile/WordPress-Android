@@ -32,7 +32,6 @@
     <string name="release_notes_screen_title">Release notes</string>
     <string name="license_screen_title">License</string>
     <string name="help_screen_title">Help and Support</string>
-    <string name="passcode_screen_title">WordPress Passcode</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My site</string>
     <string name="me_section_screen_title">Me</string>
@@ -1360,20 +1359,6 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
-
-    <!-- Passcode lock -->
-    <string name="passcode_manage">Manage PIN lock</string>
-    <string name="passcode_enter_old_passcode">Enter your old PIN</string>
-    <string name="passcode_re_enter_passcode">Re-enter your PIN</string>
-    <string name="passcode_change_passcode">Change PIN</string>
-    <string name="passcode_set">PIN set</string>
-    <string name="passcode_wrong_passcode">Wrong PIN</string>
-    <string name="passcode_preference_title">PIN lock</string>
-    <string name="passcode_turn_off">Turn PIN lock off</string>
-    <string name="passcode_turn_on">Turn PIN lock on</string>
-    <string name="passcodelock_prompt_message">Enter your PIN</string>
-    <!--suppress CheckTagEmptyBody -->
-    <string name="passcodelock_hint"></string>
 
     <!--
       Jetpack strings
