@@ -27,13 +27,13 @@ import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 /**
- * An activity to handle Jetpack deeplink
+ * An activity to handle result of Jetpack connection
  * <p>
  * wordpress://jetpack-connection?reason={error}
  * <p>
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
-public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
+public class JetpackConnectionResultActivity extends AppCompatActivity {
     private static final String ALREADY_CONNECTED = "already-connected";
     private static final String REASON_PARAM = "reason";
     private static final String SOURCE_PARAM = "source";
@@ -65,11 +65,12 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
-
-        AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, action, uri);
+        if (Intent.ACTION_VIEW.equals(action)) {
+            AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, action, uri);
+        }
 
         // check if this intent is started via custom scheme link
-        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
+        if (uri != null) {
             // Non-empty reason does not mean we're not connected to Jetpack
             // - one of the errors is "already-connected"
             mReason = uri.getQueryParameter(REASON_PARAM);
