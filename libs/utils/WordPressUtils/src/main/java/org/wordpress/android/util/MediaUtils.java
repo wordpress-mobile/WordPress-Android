@@ -41,16 +41,6 @@ public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
     private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
 
-
-    public static class MediaUtilsLoggingException extends Exception {
-        public MediaUtilsLoggingException(String message) {
-            super(message);
-        }
-        public MediaUtilsLoggingException(Throwable originalException) {
-            super(originalException);
-        }
-    }
-
     public static boolean isValidImage(String url) {
         if (url == null) {
             return false;
