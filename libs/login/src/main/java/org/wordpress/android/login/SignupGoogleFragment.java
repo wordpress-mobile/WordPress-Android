@@ -31,6 +31,7 @@ import static android.app.Activity.RESULT_OK;
 public class SignupGoogleFragment extends GoogleFragment {
     private ArrayList<Integer> mOldSitesIds;
     private ProgressDialog mProgressDialog;
+    private boolean mSignupRequested;
 
     private static final int REQUEST_SIGNUP = 1002;
 
@@ -56,6 +57,7 @@ public class SignupGoogleFragment extends GoogleFragment {
 
         switch (request) {
             case REQUEST_SIGNUP:
+                mSignupRequested = false;
                 if (result == RESULT_OK) {
                     GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
@@ -77,7 +79,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
                             AppLog.e(T.NUX, "Cannot get ID token from Google signup account.", exception);
-                            showErrorDialog(getString(R.string.login_error_generic));
+                            showError(getString(R.string.login_error_generic));
                         }
                     } else {
                         mAnalyticsListener.trackSignupSocialButtonFailure();
@@ -85,18 +87,18 @@ public class SignupGoogleFragment extends GoogleFragment {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
                                 AppLog.e(T.NUX, "Google Signup Failed: internal error.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
                                 AppLog.e(T.NUX, "Google Signup Failed: invalid account name.");
-                                showErrorDialog(getString(R.string.login_error_generic)
-                                                + getString(R.string.login_error_suffix));
+                                showError(getString(R.string.login_error_generic)
+                                          + getString(R.string.login_error_suffix));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
                                 AppLog.e(T.NUX, "Google Signup Failed: network error.");
-                                showErrorDialog(getString(R.string.error_generic_network));
+                                showError(getString(R.string.error_generic_network));
                                 break;
                             // Cancelled by the user.
                             case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
@@ -105,34 +107,33 @@ public class SignupGoogleFragment extends GoogleFragment {
                             // Attempt didn't succeed with the current account.
                             case GoogleSignInStatusCodes.SIGN_IN_FAILED:
                                 AppLog.e(T.NUX, "Google Signup Failed: current account failed.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect, but the user is not signed in.
                             case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
                                 AppLog.e(T.NUX, "Google Signup Failed: user is not signed in.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Timeout error.
                             case GoogleSignInStatusCodes.TIMEOUT:
                                 AppLog.e(T.NUX, "Google Signup Failed: timeout error.");
-                                showErrorDialog(getString(R.string.google_error_timeout));
+                                showError(getString(R.string.google_error_timeout));
                                 break;
                             // Unknown error.
                             default:
                                 AppLog.e(T.NUX, "Google Signup Failed: unknown error.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
-                    dismissProgressDialog();
+                    finishSignUp();
                 } else {
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
-                    showErrorDialog(getString(R.string.login_error_generic));
-                    dismissProgressDialog();
+                    showError(getString(R.string.login_error_generic));
                 }
 
                 break;
@@ -147,8 +148,11 @@ public class SignupGoogleFragment extends GoogleFragment {
 
     @Override
     protected void showAccountDialog() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, REQUEST_SIGNUP);
+        if (!mSignupRequested) {
+            mSignupRequested = true;
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, REQUEST_SIGNUP);
+        }
     }
 
     // Remove scale from photo URL path string. Current URL matches /s96-c, which returns a 96 x 96
@@ -200,10 +204,10 @@ public class SignupGoogleFragment extends GoogleFragment {
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
                     // Kill connections with FluxC and this fragment since the flow is changing to login.
                     mDispatcher.unregister(this);
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                    finishSignUp();
                     break;
                 default:
-                    showErrorDialog(getString(R.string.login_error_generic));
+                    showError(getString(R.string.login_error_generic));
                     break;
             }
             // Response does not return error when two-factor authentication is required.
@@ -213,7 +217,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                     event.nonceSms);
             // Kill connections with FluxC and this fragment since the flow is changing to login.
             mDispatcher.unregister(this);
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            finishSignUp();
         }
     }
 }

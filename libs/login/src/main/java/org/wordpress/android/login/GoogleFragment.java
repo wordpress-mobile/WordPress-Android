@@ -6,9 +6,7 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -52,6 +50,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         void onGoogleEmailSelected(String email);
         void onGoogleLoginFinished();
         void onGoogleSignupFinished(String name, String email, String photoUrl, String username);
+        void onGoogleSignupError(String msg);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
                 .build();
 
         // Build Google API client with access to sign-in API and options specified above.
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
                 .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -83,7 +82,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_RESOLVING_ERROR, mIsResolvingError);
     }
@@ -98,17 +97,20 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         } catch (ClassCastException exception) {
             throw new ClassCastException(context.toString() + " must implement GoogleListener");
         }
-
-        // Show account dialog when Google API onConnected callback returns before fragment is attached.
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mIsResolvingError && !mShouldResolveError) {
-            showAccountDialog();
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         disconnectGoogleClient();
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        // Show account dialog when Google API onConnected callback returns before fragment is attached.
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mIsResolvingError && !mShouldResolveError) {
+            showAccountDialog();
+        }
     }
 
     @Override
@@ -154,7 +156,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
                 mIsResolvingError = false;
                 AppLog.e(AppLog.T.NUX, GoogleApiAvailability.getInstance().getErrorString(
                         connectionResult.getErrorCode()));
-                showErrorDialog(getString(R.string.login_error_generic));
+                showError(getString(R.string.login_error_generic));
             }
         }
     }
@@ -187,12 +189,15 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         // Do nothing here.  This should be overridden by inheriting class.
     }
 
-    protected void showErrorDialog(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
-                .setMessage(message)
-                .setPositiveButton(R.string.login_error_button, null)
-                .create();
-        dialog.show();
+    protected void finishSignUp() {
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        }
+    }
+
+    protected void showError(String message) {
+        finishSignUp();
+        mGoogleListener.onGoogleSignupError(message);
     }
 
     @Override

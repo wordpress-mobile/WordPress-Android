@@ -25,6 +25,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class LoginGoogleFragment extends GoogleFragment {
     private static final int REQUEST_LOGIN = 1001;
+    private boolean mLoginRequested = false;
 
     public static final String TAG = "login_google_fragment_tag";
 
@@ -40,6 +41,7 @@ public class LoginGoogleFragment extends GoogleFragment {
 
         switch (request) {
             case REQUEST_LOGIN:
+                mLoginRequested = false;
                 if (result == RESULT_OK) {
                     GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
@@ -58,7 +60,7 @@ public class LoginGoogleFragment extends GoogleFragment {
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
                             AppLog.e(T.NUX, "Cannot get ID token from Google login account.", exception);
-                            showErrorDialog(getString(R.string.login_error_generic));
+                            showError(getString(R.string.login_error_generic));
                         }
                     } else {
                         mAnalyticsListener.trackSocialButtonFailure();
@@ -66,18 +68,18 @@ public class LoginGoogleFragment extends GoogleFragment {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
                                 AppLog.e(T.NUX, "Google Login Failed: internal error.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
                                 AppLog.e(T.NUX, "Google Login Failed: invalid account name.");
-                                showErrorDialog(getString(R.string.login_error_generic)
-                                        + getString(R.string.login_error_suffix));
+                                showError(getString(R.string.login_error_generic)
+                                          + getString(R.string.login_error_suffix));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
                                 AppLog.e(T.NUX, "Google Login Failed: network error.");
-                                showErrorDialog(getString(R.string.error_generic_network));
+                                showError(getString(R.string.error_generic_network));
                                 break;
                             // Cancelled by the user.
                             case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
@@ -86,32 +88,33 @@ public class LoginGoogleFragment extends GoogleFragment {
                             // Attempt didn't succeed with the current account.
                             case GoogleSignInStatusCodes.SIGN_IN_FAILED:
                                 AppLog.e(T.NUX, "Google Login Failed: current account failed.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect, but the user is not signed in.
                             case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
                                 AppLog.e(T.NUX, "Google Login Failed: user is not signed in.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Timeout error.
                             case GoogleSignInStatusCodes.TIMEOUT:
                                 AppLog.e(T.NUX, "Google Login Failed: timeout error.");
-                                showErrorDialog(getString(R.string.google_error_timeout));
+                                showError(getString(R.string.google_error_timeout));
                                 break;
                             // Unknown error.
                             default:
                                 AppLog.e(T.NUX, "Google Login Failed: unknown error.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
                     mAnalyticsListener.trackSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Login Failed: result was CANCELED.");
+                    finishSignUp();
                 } else {
                     mAnalyticsListener.trackSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Login Failed: result was not OK or CANCELED.");
-                    showErrorDialog(getString(R.string.login_error_generic));
+                    showError(getString(R.string.login_error_generic));
                 }
 
                 break;
@@ -120,8 +123,11 @@ public class LoginGoogleFragment extends GoogleFragment {
 
     @Override
     protected void showAccountDialog() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, REQUEST_LOGIN);
+        if (!mLoginRequested) {
+            mLoginRequested = true;
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, REQUEST_LOGIN);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -131,14 +137,14 @@ public class LoginGoogleFragment extends GoogleFragment {
 
         if (event.isError()) {
             AppLog.e(T.API, "LoginGoogleFragment.onAuthenticationChanged: " + event.error.type
-                    + " - " + event.error.message);
+                            + " - " + event.error.message);
             mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
             mAnalyticsListener.trackSocialFailure(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
-            showErrorDialog(getString(R.string.login_error_generic));
+            showError(getString(R.string.login_error_generic));
         } else {
             AppLog.i(T.NUX, "LoginGoogleFragment.onAuthenticationChanged: " + event.toString());
             mGoogleListener.onGoogleLoginFinished();
@@ -171,16 +177,16 @@ public class LoginGoogleFragment extends GoogleFragment {
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
                     mAnalyticsListener.trackSocialErrorUnknownUser();
-                    showErrorDialog(getString(R.string.login_error_email_not_found, mGoogleEmail));
+                    showError(getString(R.string.login_error_email_not_found, mGoogleEmail));
                     break;
                 // Unknown error.
                 case GENERIC_ERROR:
-                // Do nothing for now (included to show all error types) and just fall through to 'default'
+                    // Do nothing for now (included to show all error types) and just fall through to 'default'
                 default:
-                    showErrorDialog(getString(R.string.login_error_generic));
+                    showError(getString(R.string.login_error_generic));
                     break;
             }
-        // Response does not return error when two-factor authentication is required.
+            // Response does not return error when two-factor authentication is required.
         } else if (event.requiresTwoStepAuth) {
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
