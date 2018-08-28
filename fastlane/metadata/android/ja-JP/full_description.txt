@@ -1,9 +1,0 @@
-Android デバイスから WordPress ブログやサイトを管理または作成します。投稿とページの作成と編集、お気に入りの写真と動画のアップロード、統計の表示とコメントへの返信が可能です。
-
-WordPress for Android によって、スマートフォンから公開できます。くつろぎながら、頭に浮かんだ俳句をさっと入力できます。ランチタイムに写真を撮って投稿できます。最新のコメントに返信し、統計から初めて読者からのアクセスがあった国を確認できます。
-
-WordPress for Android はオープンソースのプロジェクトであるため、この開発には誰でも貢献できます。詳細については、https://apps.wordpress.com/contribute/ をご覧ください。
-
-WordPress for Android は、WordPress.com と、WordPress 4.0以降が稼働するインストール型 WordPress.org のサイトに対応しています。
-
-アプリに関するサポートが必要ですか ?https://android.forums.wordpress.org/forum/troubleshooting にアクセスするか、@WPAndroid にツイートを送信してください。

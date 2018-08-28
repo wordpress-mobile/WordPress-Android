@@ -14,7 +14,8 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
-import org.wordpress.android.ui.JetpackConnectionDeeplinkActivity;
+import org.wordpress.android.ui.JetpackConnectionResultActivity;
+import org.wordpress.android.ui.JetpackRemoteInstallFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -47,6 +48,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
+import org.wordpress.android.ui.quickstart.QuickStartFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -214,7 +216,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(StatsActivity object);
 
-    void inject(JetpackConnectionDeeplinkActivity object);
+    void inject(JetpackConnectionResultActivity object);
 
     void inject(StatsConnectJetpackActivity object);
 
@@ -408,6 +410,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(WordPressGlideModule object);
 
+    void inject(QuickStartFragment object);
+
     void inject(MediaGridAdapter object);
 
     void inject(PagesFragment object);
@@ -423,6 +427,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeConnectionAdapter object);
 
     void inject(PublicizeServiceAdapter object);
+
+    void inject(JetpackRemoteInstallFragment jetpackRemoteInstallFragment);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

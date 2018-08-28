@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -22,6 +23,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
@@ -37,6 +39,8 @@ import static org.wordpress.android.ui.JetpackConnectionSource.STATS;
  */
 public class StatsConnectJetpackActivity extends AppCompatActivity {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
+    private static final String FAQ_URL = "https://wordpress.org/plugins/jetpack/#faq";
+    private static final String TERMS_URL = "https://en.wordpress.com/tos/";
 
     private boolean mIsJetpackConnectStarted;
 
@@ -83,6 +87,18 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startJetpackConnectionFlow(
                         (SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE));
+            }
+        });
+        Button jetpackFaq = findViewById(R.id.jetpack_faq);
+        jetpackFaq.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, FAQ_URL);
+            }
+        });
+        View jetpackTermsAndConditions = findViewById(R.id.jetpack_terms_and_conditions);
+        jetpackTermsAndConditions.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, TERMS_URL);
             }
         });
     }

@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-124"
-        versionCode 605
+        versionName "alpha-125"
+        versionCode 607
         minSdkVersion 16
         targetSdkVersion 26
 
@@ -95,6 +95,11 @@ android {
         lintConfig file('lint.xml')
         baseline file("lint-baseline.xml")
     }
+}
+
+// allows us to use cool things like @Parcelize annotations
+androidExtensions {
+    experimental = true
 }
 
 kotlin { experimental { coroutines 'enable' } }

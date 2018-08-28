@@ -1,0 +1,5 @@
+10.6 :
+* Le journal d'activités est désormais disponible pour les sites WordPress.com gratuits.
+* Améliorations apportées à la prise en charge pour certaines régions.
+* Améliorations générales apportées à la prise en charge des gifs.
+* Nombreuses résolutions d'autres bugs.

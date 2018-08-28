@@ -254,7 +254,7 @@ class PagesViewModel
         launch {
             val page = pages[remoteId]
             if (page != null) {
-                pageStore.deletePage(page)
+                pageStore.deletePageFromServer(page)
                 refreshPages()
 
                 _showSnackbarMessage.postValue(

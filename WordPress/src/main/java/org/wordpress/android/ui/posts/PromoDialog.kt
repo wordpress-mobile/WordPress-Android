@@ -18,27 +18,32 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPTextView
 
 class PromoDialog : AppCompatDialogFragment() {
-    private val STATE_KEY_LINK_LABEL = "state_key_link_label"
-    private val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
-    private val STATE_KEY_TAG = "state_key_tag"
-    private val STATE_KEY_TITLE = "state_key_title"
-    private val STATE_KEY_MESSAGE = "state_key_message"
-    private val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
-    private val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
+    companion object {
+        private const val STATE_KEY_LINK_LABEL = "state_key_link_label"
+        private const val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
+        private const val STATE_KEY_TAG = "state_key_tag"
+        private const val STATE_KEY_TITLE = "state_key_title"
+        private const val STATE_KEY_MESSAGE = "state_key_message"
+        private const val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
+        private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
+        private const val STATE_KEY_NEUTRAL_BUTTON_LABEL = "state_key_neutral_button_label"
+    }
 
-    private lateinit var linkLabel: String
     @DrawableRes
     private var drawableResId: Int = -1
     private lateinit var fragmentTag: String
-    private lateinit var title: String
+    private lateinit var linkLabel: String
     private lateinit var message: String
-    private lateinit var positiveButtonLabel: String
     private lateinit var negativeButtonLabel: String
+    private lateinit var neutralButtonLabel: String
+    private lateinit var positiveButtonLabel: String
+    private lateinit var title: String
 
     interface PromoDialogClickInterface {
         fun onLinkClicked(instanceTag: String)
-        fun onPositiveClicked(instanceTag: String)
         fun onNegativeClicked(instanceTag: String)
+        fun onNeutralClicked(instanceTag: String)
+        fun onPositiveClicked(instanceTag: String)
     }
 
     override fun setupDialog(dialog: Dialog, style: Int) {
@@ -53,13 +58,15 @@ class PromoDialog : AppCompatDialogFragment() {
         positiveButtonLabel: String,
         @DrawableRes drawableResId: Int,
         negativeButtonLabel: String = "",
-        linkLabel: String = ""
+        linkLabel: String = "",
+        neutralButtonLabel: String = ""
     ) {
         this.fragmentTag = tag
         this.title = title
         this.message = message
         this.positiveButtonLabel = positiveButtonLabel
         this.negativeButtonLabel = negativeButtonLabel
+        this.neutralButtonLabel = neutralButtonLabel
         this.linkLabel = linkLabel
         this.drawableResId = drawableResId
     }
@@ -73,6 +80,7 @@ class PromoDialog : AppCompatDialogFragment() {
             message = savedInstanceState.getString(STATE_KEY_MESSAGE)
             positiveButtonLabel = savedInstanceState.getString(STATE_KEY_POSITIVE_BUTTON_LABEL)
             negativeButtonLabel = savedInstanceState.getString(STATE_KEY_NEGATIVE_BUTTON_LABEL)
+            neutralButtonLabel = savedInstanceState.getString(STATE_KEY_NEUTRAL_BUTTON_LABEL)
             linkLabel = savedInstanceState.getString(STATE_KEY_LINK_LABEL)
             drawableResId = savedInstanceState.getInt(STATE_KEY_DRAWABLE_RES_ID)
         }
@@ -84,6 +92,7 @@ class PromoDialog : AppCompatDialogFragment() {
         outState.putString(STATE_KEY_MESSAGE, message)
         outState.putString(STATE_KEY_POSITIVE_BUTTON_LABEL, positiveButtonLabel)
         outState.putString(STATE_KEY_NEGATIVE_BUTTON_LABEL, negativeButtonLabel)
+        outState.putString(STATE_KEY_NEUTRAL_BUTTON_LABEL, neutralButtonLabel)
         outState.putString(STATE_KEY_LINK_LABEL, linkLabel)
         outState.putInt(STATE_KEY_DRAWABLE_RES_ID, drawableResId)
 
@@ -133,13 +142,24 @@ class PromoDialog : AppCompatDialogFragment() {
         })
 
         val buttonNegative = view.findViewById<Button>(R.id.promo_dialog_button_negative)
-        if (negativeButtonLabel.isEmpty()) {
-            buttonNegative.visibility = View.GONE
-        } else {
+        if (!negativeButtonLabel.isEmpty()) {
+            buttonNegative.visibility = View.VISIBLE
             buttonNegative.text = negativeButtonLabel
             buttonNegative.setOnClickListener({
                 if (activity is PromoDialogClickInterface) {
                     (activity as PromoDialogClickInterface).onNegativeClicked(fragmentTag)
+                }
+                this.dismiss()
+            })
+        }
+
+        val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
+        if (!neutralButtonLabel.isEmpty()) {
+            buttonNeutral.visibility = View.VISIBLE
+            buttonNeutral.text = neutralButtonLabel
+            buttonNeutral.setOnClickListener({
+                if (activity is PromoDialogClickInterface) {
+                    (activity as PromoDialogClickInterface).onNeutralClicked(fragmentTag)
                 }
                 this.dismiss()
             })

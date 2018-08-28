@@ -38,6 +38,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
     }
 
+    private boolean mAttached;
     private long mBlogId;
     private long mFeedId;
     private ReaderFollowButton mFollowButton;
@@ -61,6 +62,16 @@ public class ReaderSiteHeaderView extends LinearLayout {
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         initView(context);
+    }
+
+    @Override protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mAttached = true;
+    }
+
+    @Override protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mAttached = false;
     }
 
     private void initView(Context context) {
@@ -99,7 +110,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
             ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
                 @Override
                 public void onResult(ReaderBlog serverBlogInfo) {
-                    showBlogInfo(serverBlogInfo);
+                    if (mAttached) {
+                        showBlogInfo(serverBlogInfo);
+                    }
                 }
             };
             if (mFeedId != 0) {

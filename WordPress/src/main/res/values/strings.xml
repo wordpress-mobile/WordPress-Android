@@ -771,9 +771,25 @@
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
     <string name="stats_default_number_zero" translatable="false">0</string>
-    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
+    <string name="stats_jetpack_connection_setup">Install Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our <u>terms and conditions</u></string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
+
+    <!-- Jetpack install -->
+    <string name="jetpack">Jetpack</string>
+    <string name="install_jetpack">Install Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="installing_jetpack">Installing Jetpack</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
+    <string name="jetpack_installed">Jetpack installed</string>
+    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
+    <string name="jetpack_installation_problem">There was a problem</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
+    <string name="install_jetpack_continue">Continue</string>
+    <string name="install_jetpack_retry">Retry</string>
+    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
     <string name="activity">Activity</string>
@@ -1513,7 +1529,8 @@
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
-    <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
+    <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
+    <string name="reader_empty_followed_tags_title">No followed tags</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
@@ -2242,6 +2259,65 @@
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
+
+    <string name="content_description_done">Done</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
+    <string name="quick_start_button_skip">Skip all</string>
+    <string name="quick_start_button_skip_negative">Cancel</string>
+    <string name="quick_start_button_skip_positive">Skip</string>
+    <string name="quick_start_dialog_choose_theme_message">Browse all our themes to find your perfect fit.</string>
+    <string name="quick_start_dialog_choose_theme_message_short" tools:ignore="UnusedResources">Tap %1$s Themes %2$s to discover new themes</string>
+    <string name="quick_start_dialog_choose_theme_title">Choose a theme</string>
+    <string name="quick_start_dialog_continue_setup_message">Time to finish setting up your site!  Our checklist walks you through the next steps.</string>
+    <string name="quick_start_dialog_continue_setup_title">Continue with site setup</string>
+    <string name="quick_start_dialog_customize_site_message">Change colors, fonts, and images for a perfectly personalized site.</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Tap %1$s Customize %2$s to start personalizing your site</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes" tools:ignore="UnusedResources">Tap %1$s Themes %2$s to continue</string>
+    <string name="quick_start_dialog_customize_site_title">Customize your site</string>
+    <string name="quick_start_dialog_follow_sites_message">Find sites that speak to you, and follow them to get updates when they publish.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
+    <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
+    <string name="quick_start_dialog_need_help_button_negative">No</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
+    <string name="quick_start_dialog_need_help_button_positive">Yes</string>
+    <string name="quick_start_dialog_need_help_message">Our Quick Start checklist walks you through the basics of setting up a new website.</string>
+    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
+    <string name="quick_start_dialog_publish_post_message">It\'s time!  Draft and publish your very first post.</string>
+    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
+    <string name="quick_start_dialog_publish_post_title">Publish a post</string>
+    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts &#8211; your site will automatically share new posts.</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
+    <string name="quick_start_dialog_share_site_title">Share your site</string>
+    <string name="quick_start_dialog_skip_message">The quick tour will guide you through building a basic site.  Are you sure you want to skip?</string>
+    <string name="quick_start_dialog_skip_title">Skip Quick Start</string>
+    <string name="quick_start_dialog_view_site_message">Preview your new site to see what your visitors will see.</string>
+    <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
+    <string name="quick_start_dialog_view_site_title">View your site</string>
+    <string name="quick_start_list_choose_theme_subtitle">@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_list_choose_theme_title">@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_complete_subtitle">doesn\'t it feel good to cross things off a list?</string>
+    <string name="quick_start_list_complete_title">Congrats on finishing Quick Start</string>
+    <string name="quick_start_list_create_site_subtitle">Get your site up and running</string>
+    <string name="quick_start_list_create_site_title">Create your site</string>
+    <string name="quick_start_list_customize_site_subtitle">@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_customize_site_title">@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_follow_site_subtitle">@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_follow_site_title">@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_publish_post_subtitle">@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_publish_post_title">@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_share_site_subtitle">@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_share_site_title">@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_view_site_title">@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_sites">Quick Start</string>
+    <string name="quick_start_sites_progress" translatable="false">%1$d/%2$d</string>
+    <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
+    <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
+    <string name="quick_start_focus_point_description">tap here</string>
 
     <!-- Pages -->
     <string name="pages_published" tools:ignore="UnusedResources">Published</string>

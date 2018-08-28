@@ -101,7 +101,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 label.setText(R.string.enter_email_wordpress_com);
                 break;
             case JETPACK_STATS:
-                label.setText(R.string.stats_sign_in_jetpack_different_com_account);
+                label.setText(R.string.login_to_to_connect_jetpack);
                 break;
             case WPCOM_REAUTHENTICATE:
                 label.setText(R.string.auth_required);

@@ -33,6 +33,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -139,6 +140,13 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    public static void startJetpackInstall(Context context, JetpackConnectionSource source, SiteModel site) {
+        Intent intent = new Intent(context, JetpackRemoteInstallActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(JetpackRemoteInstallFragment.TRACKING_SOURCE_KEY, source);
+        context.startActivity(intent);
+    }
+
     public static void continueJetpackConnect(Context context, JetpackConnectionSource source, SiteModel site) {
         switch (source) {
             case NOTIFICATIONS:
@@ -183,6 +191,12 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
+    }
+
+    public static void viewQuickStartForResult(Activity activity) {
+        Intent intent = new Intent(activity, QuickStartActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.QUICK_START);
+        AnalyticsTracker.track(Stat.QUICK_START_LIST_VIEWED);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
