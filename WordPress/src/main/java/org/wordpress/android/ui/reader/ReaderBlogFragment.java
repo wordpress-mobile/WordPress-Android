@@ -10,14 +10,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderRecommendedBlog;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActionableEmptyView;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 
@@ -84,6 +89,24 @@ public class ReaderBlogFragment extends Fragment
 
         if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
             actionableEmptyView.setVisibility(View.VISIBLE);
+            actionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
+            actionableEmptyView.subtitle.setText(R.string.reader_empty_followed_blogs_description);
+            actionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
+            actionableEmptyView.button.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View view) {
+                    ReaderTag tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+
+                    if (!ReaderTagTable.tagExists(tag)) {
+                        tag = ReaderTagTable.getFirstTag();
+                    }
+
+                    AppPrefs.setReaderTag(tag);
+
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                    }
+                }
+            });
 
             switch (getBlogType()) {
                 case RECOMMENDED:
@@ -91,9 +114,17 @@ public class ReaderBlogFragment extends Fragment
                     break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
+                        actionableEmptyView.updateLayoutForSearch(true, 0);
                         actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_search_title);
+                        actionableEmptyView.subtitle.setVisibility(View.GONE);
+                        actionableEmptyView.button.setVisibility(View.GONE);
+                        actionableEmptyView.image.setVisibility(View.GONE);
                     } else {
+                        actionableEmptyView.updateLayoutForSearch(false, 0);
                         actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_title);
+                        actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+                        actionableEmptyView.button.setVisibility(View.VISIBLE);
+                        actionableEmptyView.image.setVisibility(View.VISIBLE);
                     }
                     break;
             }

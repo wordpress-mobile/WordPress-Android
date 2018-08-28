@@ -167,9 +167,6 @@ dependencies {
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestImplementation 'com.squareup.okio:okio:1.13.0'
 
-    // Provided by the WordPress-Android Repository
-    implementation 'org.wordpress:passcodelock:1.5.1'
-
     // Dagger
     implementation 'com.google.dagger:dagger:2.11'
     kapt 'com.google.dagger:dagger-compiler:2.11'
