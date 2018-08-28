@@ -176,7 +176,6 @@ class PagesFragment : Fragment() {
         val searchEditFrame = actionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
-                .apply { this.rightMargin = DisplayUtils.dpToPx(activity, -12) }
     }
 
     private fun initializeViewModels(activity: FragmentActivity, site: SiteModel) {
