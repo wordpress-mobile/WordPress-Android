@@ -92,7 +92,9 @@ class PageListViewModel
                 }
             }
         } else {
-            _pages.postValue(newPages)
+            val pagesWithBottomGap = newPages.toMutableList()
+            pagesWithBottomGap.addAll(listOf(Divider(""), Divider("")))
+            _pages.postValue(pagesWithBottomGap)
         }
     }
 
