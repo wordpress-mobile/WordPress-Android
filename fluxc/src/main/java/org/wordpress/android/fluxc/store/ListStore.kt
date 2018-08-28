@@ -21,23 +21,28 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class ListData(
+interface ListItemInterface<T> {
+    fun getItem(remoteItemId: Long): T?
+}
+
+class ListData<T>(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,
     private val listType: ListType,
     state: ListModel.State?,
-    private val items: List<ListItemModel>
+    private val items: List<ListItemModel>,
+    private val itemInterface: ListItemInterface<T>
 ) {
     private val canLoadMore: Boolean = state?.canLoadMore() ?: false
     val isFetchingFirstPage: Boolean = state?.isFetchingFirstPage() ?: false
     val isLoadingMore: Boolean = state?.isLoadingMore() ?: false
     val size: Int = items.size
 
-    fun getRemoteItemId(position: Int): Long {
+    fun getRemoteItem(position: Int): T? {
         if (position == size - 1) {
             loadMore()
         }
-        return items[position].remoteItemId
+        return itemInterface.getItem(items[position].remoteItemId)
     }
 
     fun indexOfItem(remoteItemId: Long): Int? {
@@ -57,7 +62,7 @@ class ListData(
         }
     }
 
-    fun hasDataChanged(otherListData: ListData): Boolean {
+    fun hasDataChanged(otherListData: ListData<T>): Boolean {
         if (site.id != otherListData.site.id
                 || listType != otherListData.listType
                 || items.size != otherListData.items.size)
@@ -89,12 +94,12 @@ class ListStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
-    fun getList(site: SiteModel, listType: ListType): ListData {
+    fun <T> getList(site: SiteModel, listType: ListType, itemInterface: ListItemInterface<T>): ListData<T> {
         val listModel = getListModel(site.id, listType)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
-        return ListData(mDispatcher, site, listType, listModel?.getState(), listItems)
+        return ListData(mDispatcher, site, listType, listModel?.getState(), listItems, itemInterface)
     }
 
     private fun getListSize(site: SiteModel, listType: ListType): Int {
