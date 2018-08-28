@@ -268,7 +268,7 @@ public class PostsListFragment extends Fragment
                         requestPosts(false);
                     }
                 }
-                                                         );
+        );
     }
 
     private @Nullable PostsListAdapter getPostListAdapter() {

@@ -145,7 +145,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                         updatePostAndComments();
                     }
                 }
-                                                         );
+        );
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;

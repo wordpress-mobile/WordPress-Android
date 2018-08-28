@@ -246,7 +246,7 @@ public class ReaderPostDetailFragment extends Fragment
                         updatePost();
                     }
                 }
-                                                         );
+        );
 
         mScrollView = view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);

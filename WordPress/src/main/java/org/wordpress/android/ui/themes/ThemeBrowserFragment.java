@@ -316,7 +316,7 @@ public class ThemeBrowserFragment extends Fragment
                         mCallback.onSwipeToRefresh();
                     }
                 }
-                                                         );
+        );
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }
 

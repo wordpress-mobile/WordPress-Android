@@ -163,7 +163,7 @@ public class StatsActivity extends AppCompatActivity
                         refreshStatsFromCurrentDate();
                     }
                 }
-                                                         );
+        );
 
         setTitle(R.string.stats);
 

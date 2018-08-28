@@ -1335,7 +1335,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
                 mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()),
                 properties
-                                           );
+        );
     }
 
     private synchronized void updatePostObject(boolean isAutosave) throws EditorFragmentNotAddedException {
@@ -1396,7 +1396,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     this,
                     org.wordpress.android.editor.R.drawable.ic_gridicons_image,
                     aztecEditorFragment.getMaxMediaSize()
-                                                                                                    );
+            );
             mAztecImageLoader = new AztecImageLoader(getBaseContext(), mImageManager, loadingImagePlaceholder);
             aztecEditorFragment.setAztecImageLoader(mAztecImageLoader);
             aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
@@ -1405,7 +1405,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     this,
                     org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
                     aztecEditorFragment.getMaxMediaSize()
-                                                                                                    );
+            );
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
 
@@ -1420,7 +1420,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                        && !PostStatus.PRIVATE.toString().equals(getPost().getStatus());
                             }
                         }
-                                                             );
+                );
             }
             aztecEditorFragment.setExternalLogger(new AztecLog.ExternalLogger() {
                 @Override
@@ -2716,9 +2716,10 @@ public class EditPostActivity extends AppCompatActivity implements
                     scanIntent.setData(capturedImageUri);
                     sendBroadcast(scanIntent);
                 } else {
-                    this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-                                                  Uri.parse("file://" + Environment.getExternalStorageDirectory()))
-                                      );
+                    this.sendBroadcast(new Intent(
+                            Intent.ACTION_MEDIA_MOUNTED,
+                            Uri.parse("file://" + Environment.getExternalStorageDirectory()))
+                    );
                 }
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
@@ -2923,7 +2924,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
                     videoPath,
                     EditorMediaUtils.getMaximumThumbnailSizeForEditor(this)
-                                                            );
+            );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
                 thumbnailPath = outputFile.getAbsolutePath();

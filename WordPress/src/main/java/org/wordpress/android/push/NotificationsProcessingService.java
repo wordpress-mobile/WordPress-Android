@@ -225,7 +225,7 @@ public class NotificationsProcessingService extends Service {
                         NativeNotificationsUtils.dismissNotification(
                                 PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                                 mContext
-                                                                    );
+                        );
                     }
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_IGNORED);
                     return;
@@ -495,9 +495,7 @@ public class NotificationsProcessingService extends Service {
 
             HashMap<String, String> params = new HashMap<>();
             params.put("locale", LocaleManager.getLanguage(mContext));
-            WordPress.getRestClientUtils().getNotification(params,
-                                                           noteId, listener, errorListener
-                                                          );
+            WordPress.getRestClientUtils().getNotification(params, noteId, listener, errorListener);
         }
 
         // Like or unlike a comment via the REST API

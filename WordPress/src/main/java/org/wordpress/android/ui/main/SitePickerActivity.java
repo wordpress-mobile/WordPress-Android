@@ -286,7 +286,7 @@ public class SitePickerActivity extends AppCompatActivity
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
                 }
-                                                         );
+        );
     }
 
     private void setupRecycleView() {
