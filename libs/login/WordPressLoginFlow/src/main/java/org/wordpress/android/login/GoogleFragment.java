@@ -19,14 +19,22 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 
 public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
+    private static final String STATE_SHOULD_RESOLVE_ERROR = "STATE_SHOULD_RESOLVE_ERROR";
+    private static final String STATE_FINISHED = "STATE_FINISHED";
+    private static final String STATE_DISPLAY_NAME = "STATE_DISPLAY_NAME";
+    private static final String STATE_GOOGLE_EMAIL = "STATE_GOOGLE_EMAIL";
+    private static final String STATE_GOOGLE_TOKEN_ID = "STATE_GOOGLE_TOKEN_ID";
+    private static final String STATE_GOOGLE_PHOTO_URL = "STATE_GOOGLE_PHOTO_URL";
     private boolean mIsResolvingError;
     private boolean mShouldResolveError;
+    private boolean mFinished;
 
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
     private static final int REQUEST_CONNECT = 1000;
@@ -56,9 +64,16 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Restore state of error resolving.
-        mIsResolvingError = savedInstanceState != null && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+        mDispatcher.register(this);
+        if (savedInstanceState != null) {
+            mIsResolvingError = savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+            mShouldResolveError = savedInstanceState.getBoolean(STATE_SHOULD_RESOLVE_ERROR, false);
+            mFinished = savedInstanceState.getBoolean(STATE_FINISHED, false);
+            mDisplayName = savedInstanceState.getString(STATE_DISPLAY_NAME);
+            mGoogleEmail = savedInstanceState.getString(STATE_GOOGLE_EMAIL);
+            mIdToken = savedInstanceState.getString(STATE_GOOGLE_TOKEN_ID);
+            mPhotoUrl = savedInstanceState.getString(STATE_GOOGLE_PHOTO_URL);
+        }
 
         // Configure sign-in to request user's ID, basic profile, email address, and ID token.
         // ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -85,6 +100,12 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_RESOLVING_ERROR, mIsResolvingError);
+        outState.putBoolean(STATE_SHOULD_RESOLVE_ERROR, mShouldResolveError);
+        outState.putBoolean(STATE_FINISHED, mFinished);
+        outState.putString(STATE_DISPLAY_NAME, mDisplayName);
+        outState.putString(STATE_GOOGLE_EMAIL, mGoogleEmail);
+        outState.putString(STATE_GOOGLE_TOKEN_ID, mIdToken);
+        outState.putString(STATE_GOOGLE_PHOTO_URL, mPhotoUrl);
     }
 
     @Override
@@ -97,32 +118,24 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         } catch (ClassCastException exception) {
             throw new ClassCastException(context.toString() + " must implement GoogleListener");
         }
+        if (mFinished) {
+            finishSignUp();
+        }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    @Override public void onDestroy() {
         disconnectGoogleClient();
+        AppLog.d(T.MAIN, "GOOGLE SIGNUP/IN: disconnecting google client");
+        mDispatcher.unregister(this);
+        super.onDestroy();
     }
 
     @Override public void onResume() {
         super.onResume();
         // Show account dialog when Google API onConnected callback returns before fragment is attached.
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mIsResolvingError && !mShouldResolveError) {
-            showAccountDialog();
+            startSignInProcess();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDispatcher.unregister(this);
     }
 
     @Override
@@ -132,8 +145,11 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         if (mShouldResolveError) {
             mShouldResolveError = false;
 
+            //noinspection StatementWithEmptyBody
             if (isAdded()) {
-                showAccountDialog();
+                startSignInProcess();
+            } else {
+                // handled in onResume
             }
         }
     }
@@ -174,7 +190,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
             mShouldResolveError = true;
             mGoogleApiClient.connect();
         } else {
-            showAccountDialog();
+            startSignInProcess();
         }
     }
 
@@ -185,13 +201,17 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         }
     }
 
-    protected void showAccountDialog() {
+    protected void startSignInProcess() {
         // Do nothing here.  This should be overridden by inheriting class.
     }
 
     protected void finishSignUp() {
         if (getActivity() != null) {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP/IN: finishing signup");
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        } else {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP/IN: mFinished set to true");
+            mFinished = true;
         }
     }
 
@@ -213,7 +233,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
                 if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
                     mGoogleApiClient.connect();
                 } else {
-                    showAccountDialog();
+                    startSignInProcess();
                 }
 
                 mIsResolvingError = false;

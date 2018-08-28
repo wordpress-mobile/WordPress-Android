@@ -36,11 +36,25 @@ public class LoginGoogleFragment extends GoogleFragment {
     }
 
     @Override
+    protected void startSignInProcess() {
+        if (!mLoginRequested) {
+            AppLog.d(T.MAIN, "GOOGLE SIGNIN: startSignInProgress");
+            mLoginRequested = true;
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, REQUEST_LOGIN);
+        } else {
+            AppLog.d(T.MAIN, "GOOGLE SIGNIN: startSignInProgress called, but is already in progress");
+        }
+    }
+
+    @Override
     public void onActivityResult(int request, int result, Intent data) {
         super.onActivityResult(request, result, data);
 
         switch (request) {
             case REQUEST_LOGIN:
+                AppLog.d(T.MAIN, "GOOGLE SIGNIN: Google has returned a sign in result - succcess");
+                disconnectGoogleClient();
                 mLoginRequested = false;
                 if (result == RESULT_OK) {
                     GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -55,14 +69,17 @@ public class LoginGoogleFragment extends GoogleFragment {
                                 mIdToken = account.getIdToken() != null ? account.getIdToken() : "";
                             }
 
+                            AppLog.d(T.MAIN,
+                                    "GOOGLE SIGNIN: Google has returned a sign in result - dispatching SocialLoginAction");
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
-                            disconnectGoogleClient();
+                            AppLog.d(T.MAIN, "GOOGLE SIGNIN: Google has returned a sign in result - NPE");
                             AppLog.e(T.NUX, "Cannot get ID token from Google login account.", exception);
                             showError(getString(R.string.login_error_generic));
                         }
                     } else {
+                        AppLog.d(T.MAIN, "GOOGLE SIGNIN: Google has returned a sign in result - error");
                         mAnalyticsListener.trackSocialButtonFailure();
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
@@ -108,10 +125,12 @@ public class LoginGoogleFragment extends GoogleFragment {
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
+                    AppLog.d(T.MAIN, "GOOGLE SIGNIN: Google has returned a sign in result - canceled");
                     mAnalyticsListener.trackSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Login Failed: result was CANCELED.");
                     finishSignUp();
                 } else {
+                    AppLog.d(T.MAIN, "GOOGLE SIGNIN: Google has returned a sign in result - unknown");
                     mAnalyticsListener.trackSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Login Failed: result was not OK or CANCELED.");
                     showError(getString(R.string.login_error_generic));
@@ -121,21 +140,11 @@ public class LoginGoogleFragment extends GoogleFragment {
         }
     }
 
-    @Override
-    protected void showAccountDialog() {
-        if (!mLoginRequested) {
-            mLoginRequested = true;
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, REQUEST_LOGIN);
-        }
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        disconnectGoogleClient();
-
         if (event.isError()) {
+            AppLog.d(T.MAIN, "GOOGLE SIGNIN: onAuthenticationChanged - error");
             AppLog.e(T.API, "LoginGoogleFragment.onAuthenticationChanged: " + event.error.type
                             + " - " + event.error.message);
             mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
@@ -146,16 +155,16 @@ public class LoginGoogleFragment extends GoogleFragment {
 
             showError(getString(R.string.login_error_generic));
         } else {
+            AppLog.d(T.MAIN, "GOOGLE SIGNIN: onAuthenticationChanged - success");
             AppLog.i(T.NUX, "LoginGoogleFragment.onAuthenticationChanged: " + event.toString());
             mGoogleListener.onGoogleLoginFinished();
+            finishSignUp();
         }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(OnSocialChanged event) {
-        disconnectGoogleClient();
-
         // Response returns error for non-existing account and existing account not connected.
         if (event.isError()) {
             AppLog.e(T.API, "LoginGoogleFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
@@ -171,11 +180,13 @@ public class LoginGoogleFragment extends GoogleFragment {
             switch (event.error.type) {
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
+                    AppLog.d(T.MAIN, "GOOGLE SIGNIN: onSocialChanged - wordpress acount exists but not connected");
                     mAnalyticsListener.trackSocialAccountsNeedConnecting();
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
                     break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
+                    AppLog.d(T.MAIN, "GOOGLE SIGNIN: onSocialChanged - wordpress acount doesn't exist");
                     mAnalyticsListener.trackSocialErrorUnknownUser();
                     showError(getString(R.string.login_error_email_not_found, mGoogleEmail));
                     break;
@@ -183,15 +194,19 @@ public class LoginGoogleFragment extends GoogleFragment {
                 case GENERIC_ERROR:
                     // Do nothing for now (included to show all error types) and just fall through to 'default'
                 default:
+                    AppLog.d(T.MAIN, "GOOGLE SIGNIN: onSocialChanged - unknown error");
                     showError(getString(R.string.login_error_generic));
                     break;
             }
             // Response does not return error when two-factor authentication is required.
         } else if (event.requiresTwoStepAuth) {
+            AppLog.d(T.MAIN, "GOOGLE SIGNIN: onSocialChanged - needs 2fa");
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
         } else {
+            AppLog.d(T.MAIN, "GOOGLE SIGNIN: onSocialChanged - success");
             mGoogleListener.onGoogleLoginFinished();
         }
+        finishSignUp();
     }
 }
