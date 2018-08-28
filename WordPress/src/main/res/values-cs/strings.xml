@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-02 14:54:56+0000
+Translation-Revision-Date: 2018-08-15 09:08:33+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -42,7 +42,6 @@ Language: cs_CZ
     <string name="reader_save_posts_locally_dialog_title">Uložit příspěvek na později</string>
     <string name="reader_empty_search_request_failed">Vyhledávání se nezdařilo</string>
     <string name="reader_empty_search_title">Nebyly nalezeny žádné výsledky</string>
-    <string name="reader_label_post_search_explainer">Vyhledat stránku nebo příspěvek\nve WordPressu</string>
     <string name="comment_read_source_post">Přečtěte si zdrojový příspěvek</string>
     <string name="sites">Stránky</string>
     <string name="signup_magic_link_title">Magický odkaz odeslán</string>
@@ -132,7 +131,6 @@ Language: cs_CZ
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použijte tuto fotku</string>
     <string name="media_preview_title">%1$d z %2$d</string>
-    <string name="stock_media_picker_empty_results">Žádné shody</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografie poskytl %s</string>
     <string name="stock_media_picker_initial_empty_text">Najděte obrázky které jsou zdarma a přidejte je do vaší knihovny</string>
     <string name="stock_media_picker_search_hint">Prohledat knihovnu obrázků, které jsou zdarma</string>
@@ -164,7 +162,6 @@ Language: cs_CZ
     <string name="stats_tab_tap_content_description">zobrazování %s</string>
     <string name="stats_legend">legenda grafu statistik</string>
     <string name="fab_create_desc">vytvořit</string>
-    <string name="fab_add_tag_desc">vytvořit štítek</string>
     <string name="stats_bar_week_desc">Týden z %s</string>
     <string name="stats_bar_date_value_desc">%s, %d zobrazení</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -423,7 +420,7 @@ Language: cs_CZ
     <string name="site_settings_tags_hint">Spravovat štítky webu</string>
     <string name="dlg_saving_tag">Ukládání</string>
     <string name="dlg_deleting_tag">Mazání</string>
-    <string name="dlg_confirm_delete_tag">Smazat nenávratně \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Nenávratně smazat štítek \'%s\'?</string>
     <string name="error_tag_exists">Štítek s tímto jménem už existuje</string>
     <string name="add_new_tag">Přidat nový štítek</string>
     <string name="tag_description_hint">Popis</string>
@@ -442,7 +439,6 @@ Language: cs_CZ
     <string name="site_settings_week_start_title">Začátek týdne</string>
     <string name="site_settings_tags_title">Štítky</string>
     <string name="site_settings_traffic_header">Přenos</string>
-    <string name="delete_no">Nesmazat</string>
     <string name="delete_yes">Smazat</string>
     <string name="plugin_external_link_icon_content_description">Externí odkaz</string>
     <string name="plugin_icon_content_description">Ikona pluginu</string>
@@ -941,7 +937,6 @@ Language: cs_CZ
     <string name="label_clear_search_history">Smazat historii prohlížení</string>
     <string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
     <string name="reader_empty_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
-    <string name="reader_label_post_search_running">Hledání…</string>
     <string name="reader_hint_post_search">Prohledat WordPress.com</string>
     <string name="reader_title_related_post_detail">Související příspěvky </string>
     <string name="preview_screen_links_disabled">Odkazy jsou zakázány v náhledu na obrazovce</string>
@@ -1310,7 +1305,6 @@ Language: cs_CZ
     <string name="reader_label_new_posts_subtitle">Klepněte pro jejich zobrazení</string>
     <string name="my_site_header_configuration">Nastavení</string>
     <string name="stats_unknown_author">Neznámý autor</string>
-    <string name="sign_out_wpcom_confirm">Po odpojení se vám z účtu vymažou všechny @%s  WordPress.com údaje z tohoto zařízení, včetně lokálních konceptů a změn.</string>
     <string name="select_all">Vybrat vše</string>
     <string name="hide">Skrýt</string>
     <string name="show">Zobrazit</string>

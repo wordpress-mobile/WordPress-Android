@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-06 13:38:59+0000
+Translation-Revision-Date: 2018-08-15 09:11:05+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="themes_empty_list">Нет тем по вашему поиску</string>
+    <string name="reader_label_post_search_explainer">Что вы хотите найти?</string>
+    <string name="site_settings_tags_empty_title_search">Нет меток по вашему поиску</string>
+    <string name="site_settings_tags_empty_title">У вас нет меток</string>
+    <string name="site_settings_tags_empty_subtitle">Добавьте сюда часто используемые метки, чтобы быстро выбирать их для записей</string>
+    <string name="site_settings_tags_empty_button">Создать метку</string>
+    <string name="media_empty_search_list">Нет медиафайлов по вашему поиску</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Выйти из WordPress?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">У вас есть несохраненные изменения к записи, которые еще не были загружены на сайт, они будут потеряны на вашем устройстве при выходе. Всё равно выйти?</string>
     <string name="people_empty_list_filtered_viewers">Ещё нет просмотров</string>
     <string name="people_empty_list_filtered_email_followers">Ещё нет подписчиков по эл.почте</string>
     <string name="people_empty_list_filtered_followers">Ещё нет подписчиков</string>
@@ -62,7 +71,6 @@ Language: ru
     <string name="reader_save_posts_locally_dialog_title">Сохранить запись на потом</string>
     <string name="reader_empty_search_request_failed">Невозможно совершить поиск</string>
     <string name="reader_empty_search_title">Результатов не найдено</string>
-    <string name="reader_label_post_search_explainer">Искать в WordPress\nсайт или запись</string>
     <string name="comment_read_source_post">Прочесть исходную запись</string>
     <string name="sites">Сайты</string>
     <string name="signup_magic_link_title">Магическая ссылка отослана</string>
@@ -152,7 +160,6 @@ Language: ru
     <string name="notification_channel_general_title">Общее</string>
     <string name="photo_picker_use_photo">Использовать это фото</string>
     <string name="media_preview_title">%1$d из %2$d</string>
-    <string name="stock_media_picker_empty_results">Нет совпадений</string>
     <string name="stock_media_picker_initial_empty_subtext">Фотографии предоставлены %s</string>
     <string name="stock_media_picker_initial_empty_text">Ищите бесплатные фото и добавьте их в вашу медиатеку</string>
     <string name="stock_media_picker_search_hint">Поиск в свободной фототеке</string>
@@ -184,7 +191,6 @@ Language: ru
     <string name="stats_tab_tap_content_description">показано %s</string>
     <string name="stats_legend">легенда графика статистики</string>
     <string name="fab_create_desc">создать</string>
-    <string name="fab_add_tag_desc">создать метку</string>
     <string name="stats_bar_week_desc">Неделя %s</string>
     <string name="stats_bar_date_value_desc">%s, %d просмотров</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -443,7 +449,7 @@ Language: ru
     <string name="site_settings_tags_hint">Управлять метками сайта</string>
     <string name="dlg_saving_tag">Сохранение</string>
     <string name="dlg_deleting_tag">Удаление</string>
-    <string name="dlg_confirm_delete_tag">Навсегда удалить \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Навсегда удалить метку \'%s\'?</string>
     <string name="error_tag_exists">Метка с таким именем уже существует</string>
     <string name="add_new_tag">Добавить новую метку</string>
     <string name="tag_description_hint">Описание</string>
@@ -462,7 +468,6 @@ Language: ru
     <string name="site_settings_week_start_title">День начала недели</string>
     <string name="site_settings_tags_title">Метки</string>
     <string name="site_settings_traffic_header">Трафик</string>
-    <string name="delete_no">Не удалять</string>
     <string name="delete_yes">Удалить</string>
     <string name="plugin_external_link_icon_content_description">Внешняя ссылка</string>
     <string name="plugin_icon_content_description">Значок плагина</string>
@@ -961,7 +966,6 @@ Language: ru
     <string name="label_clear_search_history">Очистить историю поиска</string>
     <string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
     <string name="reader_empty_search_description">По запросу «%s» на вашем языке записей не найдено</string>
-    <string name="reader_label_post_search_running">Поиск…</string>
     <string name="reader_hint_post_search">Поиск в WordPress</string>
     <string name="reader_title_related_post_detail">Похожая запись</string>
     <string name="preview_screen_links_disabled">На экране предпросмотра ссылки отключены</string>
@@ -1330,7 +1334,6 @@ Language: ru
     <string name="reader_label_new_posts_subtitle">Нажмите, чтобы показать записи.</string>
     <string name="my_site_header_configuration">Конфигурация</string>
     <string name="stats_unknown_author">Неизвестный автор</string>
-    <string name="sign_out_wpcom_confirm">Отключение учётной записи приведет к удалению всех данных @%s WordPress.com с этого устройства, в том числе локальных черновиков и локальных изменений.</string>
     <string name="select_all">Выделить все</string>
     <string name="hide">Скрыть</string>
     <string name="show">Показать</string>
