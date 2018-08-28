@@ -19,6 +19,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -51,6 +52,8 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
@@ -76,7 +79,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
-        HasSupportFragmentInjector {
+        HasSupportFragmentInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
@@ -85,6 +88,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
+
+    private static final String GOOGLE_ERROR_DIALOG_TAG = "google_error_dialog_tag";
 
     private enum SmartLockHelperState {
         NOT_TRIGGERED,
@@ -158,14 +163,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        SignupGoogleFragment signupGoogleFragment;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        signupGoogleFragment = (SignupGoogleFragment) fragmentManager.findFragmentByTag(SignupGoogleFragment.TAG);
-
-        if (signupGoogleFragment != null) {
-            fragmentManager.beginTransaction().remove(signupGoogleFragment).commit();
-        }
-
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_SIGNUP_SHEET_DISPLAYED, mSignupSheetDisplayed);
@@ -364,6 +361,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSignupSheetGoogleClicked() {
+        dismissSignupSheet();
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
 
@@ -375,6 +373,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
             if (signupGoogleFragment != null) {
                 fragmentTransaction.remove(signupGoogleFragment);
+                // REMOVE THIS BLOCK - just for testing purposes
+                throw new RuntimeException("fail");
             }
 
             signupGoogleFragment = new SignupGoogleFragment();
@@ -759,6 +759,24 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
         setResult(Activity.RESULT_OK);
         finish();
+    }
+
+    @Override public void onGoogleSignupError(String msg) {
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        dialog.initialize(GOOGLE_ERROR_DIALOG_TAG, getString(R.string.error),
+                msg,
+                getString(org.wordpress.android.login.R.string.login_error_button),
+                null,
+                null);
+        dialog.show(this.getSupportFragmentManager(), GOOGLE_ERROR_DIALOG_TAG);
+    }
+
+    @Override public void onPositiveClicked(@NotNull String instanceTag) {
+        switch (instanceTag) {
+            case GOOGLE_ERROR_DIALOG_TAG:
+                // just dismiss the dialog
+                break;
+        }
     }
 
     private void dismissSignupSheet() {
