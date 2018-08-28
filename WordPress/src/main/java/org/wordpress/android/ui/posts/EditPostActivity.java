@@ -164,7 +164,6 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.util.AztecLog;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1295,17 +1294,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void launchPictureLibrary() {
         WPMediaUtils.launchPictureLibrary(this, true);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoLibrary() {
         WPMediaUtils.launchVideoLibrary(this, true);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoCamera() {
         WPMediaUtils.launchVideoCamera(this);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void showErrorAndFinish(int errorMessageId) {
@@ -2132,7 +2128,6 @@ public class EditPostActivity extends AppCompatActivity implements
                                       @Override
                                       public void onMediaCapturePathReady(String mediaCapturePath) {
                                           mMediaCapturePath = mediaCapturePath;
-                                          AppLockManager.getInstance().setExtendedTimeout();
                                       }
                                   });
     }
@@ -3201,8 +3196,6 @@ public class EditPostActivity extends AppCompatActivity implements
                         refreshBlogMedia();
                     }
                 });
-            } else {
-                AppLockManager.getInstance().setExtendedTimeout();
             }
         }
 
