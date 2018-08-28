@@ -101,8 +101,8 @@ public class FluxCUtils {
         File file = new File(path);
         if (!file.exists()) {
             CrashlyticsUtils.logException(
-                    new MediaUtilsLoggingException("The input URI " + uri.toString() + ", locally converted to " + path
-                                                   + " can't be read."),
+                    new MediaUtilsLoggingException("The input URI " + uri.toString() + ", converted locally to " + path
+                                                   + " doesn't exist."),
                     T.UTILS);
             return null;
         }
