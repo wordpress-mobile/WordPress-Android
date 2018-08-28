@@ -10,7 +10,6 @@ import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
-import org.wordpress.android.ui.pages.PageItem.Type.ACTIONABLE_EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
@@ -58,20 +57,16 @@ sealed class PageItem(open val type: Type) {
 
     data class Empty(
         @StringRes val textResource: Int = R.string.empty_list_default,
-        @DrawableRes val imageRes: Int? = null
+        val isSearching: Boolean = false,
+        val isButtonVisible: Boolean = true
     ) : PageItem(EMPTY)
-
-    data class ActionableEmpty(
-        @StringRes val textResource: Int = R.string.empty_list_default
-    ) : PageItem(ACTIONABLE_EMPTY)
 
     enum class Type(val viewType: Int) {
         PAGE(1),
         DIVIDER(2),
         EMPTY(3),
-        ACTIONABLE_EMPTY(4),
-        PARENT(5),
-        TOP_LEVEL_PARENT(6)
+        PARENT(4),
+        TOP_LEVEL_PARENT(5)
     }
 
     enum class Action(@IdRes val itemId: Int) {

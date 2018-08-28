@@ -9,7 +9,6 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
-import org.wordpress.android.ui.pages.PageItemViewHolder.ActionableEmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageParentViewHolder
@@ -27,8 +26,7 @@ class PagesAdapter(
         return when (viewType) {
             PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
-            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
-            PageItem.Type.ACTIONABLE_EMPTY.viewType -> ActionableEmptyViewHolder(parent, onEmptyActionButtonTapped)
+            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)
             PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent,
                     this::selectParent,
                     R.layout.page_parent_list_item)
