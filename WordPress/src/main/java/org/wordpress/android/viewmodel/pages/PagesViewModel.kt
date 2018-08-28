@@ -189,7 +189,7 @@ class PagesViewModel
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
-                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result, true)))
                     }
                 }
             }
@@ -310,7 +310,7 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
-        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion)))
+        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
