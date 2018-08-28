@@ -72,8 +72,10 @@ public class FluxCUtils {
         return mediaFile;
     }
 
-    /*
-     * returns a MediaModel from a device media URI
+    /**
+     * This method returns a FluxC MediaModel from a device media URI
+     *
+     * @return MediaModel or null in case of problems reading the URI
      */
     public static MediaModel mediaModelFromLocalUri(@NonNull Context context,
                                                     @NonNull Uri uri,
