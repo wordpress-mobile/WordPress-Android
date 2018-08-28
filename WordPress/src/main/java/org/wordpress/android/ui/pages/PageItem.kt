@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.pages
 
-import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.annotation.StringRes
 import org.wordpress.android.R
