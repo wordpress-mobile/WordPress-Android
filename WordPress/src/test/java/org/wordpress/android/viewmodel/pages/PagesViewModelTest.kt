@@ -57,7 +57,7 @@ class PagesViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(searchResultObserver.await(), listOf(Empty(string.empty_list_default)))
+        assertEquals(searchResultObserver.await(), listOf(Empty(string.pages_search_suggestion, true)))
 
         val listStates = listStateObserver.awaitValues(2)
 
@@ -88,7 +88,7 @@ class PagesViewModelTest {
     fun onEmptySearchResultEmitsEmptyItem() = runBlocking<Unit> {
         initSearch()
         val query = "query"
-        val pageItems = listOf(Empty(string.pages_empty_search_result))
+        val pageItems = listOf(Empty(string.pages_empty_search_result, true))
         whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
 
         val data = viewModel.searchResult.test()
@@ -104,7 +104,7 @@ class PagesViewModelTest {
     fun onEmptyQueryClearsSearch() = runBlocking<Unit> {
         initSearch()
         val query = ""
-        val pageItems = listOf(Empty(string.empty_list_default))
+        val pageItems = listOf(Empty(string.pages_search_suggestion, true))
 
         val data = viewModel.searchResult.test()
 
