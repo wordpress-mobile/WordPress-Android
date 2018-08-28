@@ -143,6 +143,7 @@
 
     <dimen name="empty_list_title_text_size">24sp</dimen>
     <dimen name="empty_list_title_side_margin">32dp</dimen>
+    <dimen name="empty_list_title_top_margin">56dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
 
     <dimen name="nux_title_font_size">28sp</dimen>

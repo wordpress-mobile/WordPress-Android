@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:layout_gravity="center">
+     android:layout_height="match_parent">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
         style="@style/ActionableEmptyStateTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+        android:layout_marginTop="@dimen/empty_list_title_top_margin"
         android:layout_marginEnd="@dimen/empty_list_title_side_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
