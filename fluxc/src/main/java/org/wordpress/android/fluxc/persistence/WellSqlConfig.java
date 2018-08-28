@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 39;
+        return 40;
     }
 
     @Override
@@ -326,6 +326,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                     fluxCPreferences.edit().putString("ACCOUNT_TOKEN_PREF_KEY", token).apply();
                     defaultSharedPrefs.edit().remove("ACCOUNT_TOKEN_PREF_KEY").apply();
                 }
+                oldVersion++;
+            case 39:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS QuickStartModel");
+                db.execSQL("CREATE TABLE IF NOT EXISTS QuickStartTaskModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "SITE_ID INTEGER,TASK_NAME TEXT,IS_DONE INTEGER,IS_SHOWN INTEGER)");
+                db.execSQL("CREATE TABLE IF NOT EXISTS QuickStartStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "SITE_ID INTEGER,IS_COMPLETED INTEGER,IS_NOTIFICATION_RECEIVED INTEGER)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
