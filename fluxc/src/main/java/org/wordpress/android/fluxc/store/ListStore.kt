@@ -22,6 +22,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface ListItemInterface<T> {
+    fun fetchItem(remoteItemId: Long)
     fun getItem(remoteItemId: Long): T?
 }
 
@@ -42,7 +43,13 @@ class ListData<T>(
         if (position == size - 1) {
             loadMore()
         }
-        return itemInterface.getItem(items[position].remoteItemId)
+        val listItemModel = items[position]
+        val remoteItemId = listItemModel.remoteItemId
+        val item = itemInterface.getItem(remoteItemId)
+        if (item == null) {
+            itemInterface.fetchItem(remoteItemId)
+        }
+        return item
     }
 
     fun indexOfItem(remoteItemId: Long): Int? {
