@@ -10,6 +10,8 @@ import android.webkit.MimeTypeMap;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.MediaUtils.MediaUtilsLoggingException;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -85,11 +87,23 @@ public class FluxCUtils {
         String path = MediaUtils.getRealPathFromURI(context, uri);
 
         if (TextUtils.isEmpty(path)) {
+            // For now, we're wrapping up the actual log into a Crashlytics exception to reduce possibility
+            // of information not travelling to Crashlytics (Crashlytics rolls logs up to 8
+            // entries and 64kb max, and they only travel with the next crash happening, so logging an
+            // Exception assures us to have this information sent in the next batch).
+            // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
+            CrashlyticsUtils.logException(
+                    new MediaUtilsLoggingException("The input URI " + uri.toString() + " can't be read."),
+                    T.UTILS);
             return null;
         }
 
         File file = new File(path);
         if (!file.exists()) {
+            CrashlyticsUtils.logException(
+                    new MediaUtilsLoggingException("The input URI " + uri.toString() + ", locally converted to " + path
+                                                   + " can't be read."),
+                    T.UTILS);
             return null;
         }
 
