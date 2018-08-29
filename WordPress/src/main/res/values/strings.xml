@@ -2331,7 +2331,7 @@
     <string name="pages_move_to_trash">Move to Trash</string>
     <string name="pages_delete_permanently">Delete Permanently</string>
     <string name="pages_empty_search_result">No pages matching your search</string>
-    <string name="pages_search_suggestion">What would you like to find?</string>
+    <string name="pages_search_suggestion">Search pages</string>
     <string name="pages_empty_published">You haven\'t published any pages yet</string>
     <string name="pages_empty_drafts">You don\'t have any draft pages</string>
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
