@@ -53,10 +53,10 @@ public class LoginGoogleFragment extends GoogleFragment {
 
         switch (request) {
             case REQUEST_LOGIN:
-                AppLog.d(T.MAIN, "GOOGLE SIGNIN: Google has returned a sign in result - succcess");
                 disconnectGoogleClient();
                 mLoginRequested = false;
                 if (result == RESULT_OK) {
+                    AppLog.d(T.MAIN, "GOOGLE SIGNIN: Google has returned a sign in result - succcess");
                     GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
                     if (signInResult.isSuccess()) {
