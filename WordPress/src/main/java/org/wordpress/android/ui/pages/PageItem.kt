@@ -57,7 +57,8 @@ sealed class PageItem(open val type: Type) {
     data class Empty(
         @StringRes val textResource: Int = R.string.empty_list_default,
         val isSearching: Boolean = false,
-        val isButtonVisible: Boolean = true
+        val isButtonVisible: Boolean = true,
+        val isImageVisible: Boolean = true
     ) : PageItem(EMPTY)
 
     enum class Type(val viewType: Int) {

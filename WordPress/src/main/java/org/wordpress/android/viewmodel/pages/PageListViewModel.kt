@@ -81,7 +81,7 @@ class PageListViewModel
 
         if (newPages.isEmpty()) {
             if (isStarting) {
-                _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false)))
+                _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
                 when (pageType) {
                     PUBLISHED -> _pages.postValue(listOf(Empty(string.pages_empty_published)))
