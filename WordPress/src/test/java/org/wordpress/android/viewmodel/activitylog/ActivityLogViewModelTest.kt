@@ -5,10 +5,12 @@ import android.arch.lifecycle.MutableLiveData
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -18,10 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.ActivityLogAction.FETCHED_ACTIVITIES
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
-import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -43,12 +42,11 @@ import java.util.Date
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
-    @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
     @Mock private lateinit var resourceProvider: ResourceProvider
-    private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
+    private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
@@ -95,8 +93,8 @@ class ActivityLogViewModelTest {
             )
 
     @Before
-    fun setUp() {
-        viewModel = ActivityLogViewModel(dispatcher, store, rewindStatusService, resourceProvider)
+    fun setUp() = runBlocking<Unit> {
+        viewModel = ActivityLogViewModel(store, rewindStatusService, resourceProvider, Unconfined)
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
@@ -104,19 +102,20 @@ class ActivityLogViewModelTest {
         viewModel.showRewindDialog.observeForever { rewindDialogs.add(it) }
         viewModel.showSnackbarMessage.observeForever { snackbarMessages.add(it) }
         viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
-        actionCaptor = argumentCaptor()
+        fetchActivityLogCaptor = argumentCaptor()
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
         whenever(store.getRewindStatusForSite(site)).thenReturn(rewindStatusModel)
         whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
+        whenever(store.fetchActivities(any())).thenReturn(mock())
     }
 
     @Test
-    fun onStartEmitsDataFromStoreAndStartsFetching() {
+    fun onStartEmitsDataFromStoreAndStartsFetching() = runBlocking {
         assertNull(viewModel.events.value)
-        assertNull(viewModel.eventListStatus.value)
+        assertTrue(eventListStatuses.isEmpty())
 
         viewModel.start(site)
 
@@ -124,28 +123,18 @@ class ActivityLogViewModelTest {
                 viewModel.events.value,
                 expectedActivityList()
         )
-        assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.FETCHING)
+        assertEquals(eventListStatuses[0], ActivityLogListStatus.FETCHING)
+        assertEquals(eventListStatuses[1], ActivityLogListStatus.DONE)
 
         assertFetchEvents()
         verify(rewindStatusService).start(site)
     }
 
     @Test
-    fun fetchesEventsOnPullToRefresh() {
+    fun fetchesEventsOnPullToRefresh() = runBlocking {
         viewModel.onPullToRefresh()
 
         assertFetchEvents()
-    }
-
-    @Test
-    fun doesNotFetchEventsWhenAlreadyFetching() {
-        viewModel.onPullToRefresh()
-
-        reset(dispatcher)
-
-        viewModel.onPullToRefresh()
-
-        verify(dispatcher, never()).dispatch(any())
     }
 
     @Test
@@ -162,7 +151,7 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onDataFetchedLoadsMoreDataIfCanLoadMore() {
+    fun onDataFetchedLoadsMoreDataIfCanLoadMore() = runBlocking {
         val canLoadMore = true
         viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
@@ -215,13 +204,13 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() {
+    fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() = runBlocking<Unit> {
         val canLoadMore = false
         viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
-        verify(dispatcher, never()).dispatch(any())
+        verify(store, never()).fetchActivities(any())
     }
 
     @Test
@@ -291,21 +280,18 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun loadsNextPageOnScrollToBottom() {
-        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCHED_ACTIVITIES))
+    fun loadsNextPageOnScrollToBottom() = runBlocking {
+        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
         assertFetchEvents(true)
     }
 
-    private fun assertFetchEvents(canLoadMore: Boolean = false) {
-        verify(dispatcher).dispatch(actionCaptor.capture())
+    private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
+        verify(store).fetchActivities(fetchActivityLogCaptor.capture())
 
-        val action = actionCaptor.firstValue
-        assertEquals(action.type, FETCH_ACTIVITIES)
-        assertTrue(action.payload is FetchActivityLogPayload)
-        (action.payload as? FetchActivityLogPayload)?.apply {
+        fetchActivityLogCaptor.lastValue.apply {
             assertEquals(this.loadMore, canLoadMore)
             assertEquals(this.site, site)
         }
