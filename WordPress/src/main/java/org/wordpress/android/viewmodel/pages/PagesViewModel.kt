@@ -95,7 +95,10 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var site: SiteModel
+    private lateinit var _site: SiteModel
+    val site: SiteModel
+        get() = _site
+
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
     private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
@@ -106,7 +109,7 @@ class PagesViewModel
     }
 
     fun start(site: SiteModel) {
-        this.site = site
+        _site = site
 
         clearSearch()
         reloadPagesAsync()

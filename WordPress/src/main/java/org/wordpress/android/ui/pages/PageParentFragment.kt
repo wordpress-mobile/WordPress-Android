@@ -80,22 +80,15 @@ class PageParentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val site = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
-
         pageId = activity?.intent?.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, 0)
 
         val nonNullPageId = checkNotNull(pageId)
         val nonNullActivity = checkNotNull(activity)
-        val nonNullSite = checkNotNull(site)
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullSite, nonNullPageId)
+        initializeViewModels(nonNullPageId, savedInstanceState == null)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -109,12 +102,16 @@ class PageParentFragment : Fragment() {
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
     }
 
-    private fun initializeViewModels(site: SiteModel, pageId: Long) {
+    private fun initializeViewModels(pageId: Long, isFirstStart: Boolean) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PageParentViewModel::class.java)
 
         setupObservers()
 
-        viewModel.start(site, pageId)
+        if (isFirstStart) {
+            val site = activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+            val nonNullSite = checkNotNull(site)
+            viewModel.start(nonNullSite, pageId)
+        }
     }
 
     private fun setupObservers() {

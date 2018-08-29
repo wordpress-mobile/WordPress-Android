@@ -76,19 +76,11 @@ class PagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val site = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
-
         val nonNullActivity = checkNotNull(activity)
-        val nonNullSite = checkNotNull(site)
-
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(nonNullActivity)
-        initializeViewModels(nonNullActivity, nonNullSite)
+        initializeViewModels(nonNullActivity, savedInstanceState == null)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -178,15 +170,19 @@ class PagesFragment : Fragment() {
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel) {
+    private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
-        setupObservers(activity, site)
+        setupObservers(activity)
 
-        viewModel.start(site)
+        if (isFirstStart) {
+            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+            val nonNullSite = checkNotNull(site)
+            viewModel.start(nonNullSite)
+        }
     }
 
-    private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.searchResult.observe(this, Observer { result ->
             result?.let { setSearchResult(result) }
         })
@@ -204,7 +200,7 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.createNewPage.observe(this, Observer {
-            ActivityLauncher.addNewPageForResult(this, site)
+            ActivityLauncher.addNewPageForResult(this, viewModel.site)
         })
 
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
