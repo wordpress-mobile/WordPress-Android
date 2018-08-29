@@ -1,0 +1,6 @@
+10.7:
+Everyone loves a GIF! Animated GIFs are supported throughout the app, and we sped up their load times so you never have to wait to see that cat fall off the table.
+Nobody likes blank screens with no instructions! If you navigate to any page with no content — e.g., you go to the Reader but you don’t follow any blogs — we’ll suggest next steps.
+Small UI improvements to make your experience more intuitive. You probably won’t notice them, and that’s the point.
+Bug squashing.
+

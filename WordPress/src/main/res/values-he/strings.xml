@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 06:54:06+0000
+Translation-Revision-Date: 2018-08-21 08:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="themes_empty_list">לא נמצאו ערכות עיצוב שמתאימות לחיפוש שלך</string>
+    <string name="reader_label_post_search_explainer">מה ברצונך לחפש?</string>
+    <string name="site_settings_tags_empty_title_search">לא נמצאו תגיות שמתאימות לחיפוש שלך</string>
+    <string name="site_settings_tags_empty_title">אין לך תגיות</string>
+    <string name="site_settings_tags_empty_subtitle">אפשר להוסיף את התגיות שנפוצות אצלך כאן כדי לבחור בהן במהירות בעת תיוג הפוסטים שלך</string>
+    <string name="site_settings_tags_empty_button">יצירת תגית</string>
+    <string name="media_empty_search_list">לא נמצאו פרטי מדיה שמתאימים לחיפוש שלך</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">האם להתנתק מ–WordPress?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">ביצעת שינויים בפוסטים שטרם הועלו לאתר שלך. בהתנתקות מהמערכת כעת, השינויים האלו יימחקו מהמכשיר שלך. האם ברצונך להתנתק?</string>
     <string name="people_empty_list_filtered_viewers">עדיין אין צופים</string>
     <string name="people_empty_list_filtered_email_followers">עדיין אין עוקבי אימייל</string>
     <string name="people_empty_list_filtered_followers">עדיין אין עוקבים</string>
@@ -58,7 +67,6 @@ Language: he_IL
     <string name="reader_save_posts_locally_dialog_title">שמירת פוסטים למועד מאוחר יותר</string>
     <string name="reader_empty_search_request_failed">אין אפשרות לבצע את החיפוש</string>
     <string name="reader_empty_search_title">לא נמצאו תוצאות</string>
-    <string name="reader_label_post_search_explainer">חיפוש ב–WordPress\nאתר או פוסט</string>
     <string name="sites">אתרים</string>
     <string name="comment_read_source_post">קריאת הפוסט המקורי</string>
     <string name="signup_magic_link_title">הקישור הישיר נשלח</string>
@@ -148,7 +156,6 @@ Language: he_IL
     <string name="notification_channel_general_title">כללי</string>
     <string name="photo_picker_use_photo">שימוש בתמונה זו</string>
     <string name="media_preview_title">%1$d מתוך %2$d</string>
-    <string name="stock_media_picker_empty_results">לא נמצאו התאמות</string>
     <string name="stock_media_picker_initial_empty_subtext">התמונות מובאות בחסות %s</string>
     <string name="stock_media_picker_initial_empty_text">חיפוש של תמונות להוספה לספריית המדיה שלך בחינם</string>
     <string name="stock_media_picker_search_hint">חיפוש בספריית התמונות בחינם</string>
@@ -180,7 +187,6 @@ Language: he_IL
     <string name="stats_tab_tap_content_description">מציג %s</string>
     <string name="stats_legend">מקרא של גרף הנתונים הסטטיסטיים</string>
     <string name="fab_create_desc">יצירה</string>
-    <string name="fab_add_tag_desc">יצירת תגית</string>
     <string name="stats_bar_week_desc">שבוע מתוך %s</string>
     <string name="stats_bar_date_value_desc">%s, %d צפיות</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -437,7 +443,6 @@ Language: he_IL
     <string name="site_settings_tags_hint">ניהול התגיות באתר שלך</string>
     <string name="dlg_saving_tag">שומר</string>
     <string name="dlg_deleting_tag">מוחק</string>
-    <string name="dlg_confirm_delete_tag">האם למחוק את \"%s\" לצמיתות?</string>
     <string name="error_tag_exists">כבר קיימת תגית עם שם זה</string>
     <string name="add_new_tag">הוספת תגית חדשה</string>
     <string name="tag_description_hint">תיאור</string>
@@ -456,7 +461,6 @@ Language: he_IL
     <string name="site_settings_week_start_title">היום הראשון בשבוע</string>
     <string name="site_settings_tags_title">תגיות</string>
     <string name="site_settings_traffic_header">תעבורה</string>
-    <string name="delete_no">לא למחוק</string>
     <string name="delete_yes">מחיקה</string>
     <string name="plugin_external_link_icon_content_description">קישור חיצוני</string>
     <string name="plugin_icon_content_description">סמל תוסף</string>
@@ -955,7 +959,6 @@ Language: he_IL
     <string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
     <string name="reader_empty_search_description">לא נמצאו תוצאות עבור %s בשפה שבחרת</string>
-    <string name="reader_label_post_search_running">מחפש…</string>
     <string name="reader_hint_post_search">חיפוש ב–WordPress.com</string>
     <string name="reader_title_related_post_detail">באותו נושא</string>
     <string name="preview_screen_links_disabled">קישורים מושבתים במסך התצוגה המקדימה</string>
@@ -1317,7 +1320,6 @@ Language: he_IL
     <string name="hide">הסתר</string>
     <string name="select_all">בחר הכל</string>
     <string name="show">הצג</string>
-    <string name="sign_out_wpcom_confirm">ניתוק החשבון יסיר את כל נתוני וורדפרס.קום ‏של %s ממכשיר זה, כולל טיוטות מקומיות ושינויים מקומיים.</string>
     <string name="stats_generic_error">לא ניתן לטעון סטטוס נדרש</string>
     <string name="editor_toast_invalid_path">נתיב קובץ שגוי</string>
     <string name="verification_code">קוד אימות</string>

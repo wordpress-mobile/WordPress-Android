@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
-import android.os.Handler;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,13 +12,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -27,10 +27,9 @@ import javax.inject.Inject;
  * LinearLayout which shows liking users - used by ReaderPostDetailFragment
  */
 public class ReaderLikingUsersView extends LinearLayout {
-    private final int mLikeAvatarSz;
-
-    @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
+    private LoadAvatarsTask mLoadAvatarsTask;
+    private final int mLikeAvatarSz;
 
     public ReaderLikingUsersView(Context context) {
         this(context, null);
@@ -46,39 +45,32 @@ public class ReaderLikingUsersView extends LinearLayout {
         mLikeAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
     }
 
-    public void showLikingUsers(final ReaderPost post) {
+    public void showLikingUsers(final ReaderPost post, final long currentUserId) {
         if (post == null) {
             return;
         }
 
-        final Handler handler = new Handler();
-        new Thread() {
-            @Override
-            public void run() {
-                // get avatar URLs of liking users up to the max, sized to fit
-                int maxAvatars = getMaxAvatars();
-                ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(post);
-                // TODO: Probably a bad idea to have mAccountStore.getAccount().getUserId() here,
-                // a view should not read the account state
-                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, mLikeAvatarSz,
-                                                                                mAccountStore.getAccount().getUserId());
+        if (mLoadAvatarsTask != null) {
+            mLoadAvatarsTask.cancel(false);
+        }
+        mLoadAvatarsTask = new LoadAvatarsTask(this, currentUserId, mLikeAvatarSz, getMaxAvatars());
+        mLoadAvatarsTask.execute(post);
+    }
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showLikingAvatars(avatars);
-                    }
-                });
-            }
-        }.start();
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mLoadAvatarsTask != null) {
+            mLoadAvatarsTask.cancel(false);
+        }
     }
 
     /*
      * returns count of avatars that can fit the current space
      */
     private int getMaxAvatars() {
-        int marginAvatar = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-        int marginReader = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        final int marginAvatar = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        final int marginReader = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
         int likeAvatarSizeWithMargin = mLikeAvatarSz + (marginAvatar * 2);
         int spaceForAvatars = getWidth() - (marginReader * 2);
         return spaceForAvatars / likeAvatarSizeWithMargin;
@@ -114,6 +106,40 @@ public class ReaderLikingUsersView extends LinearLayout {
             }
             mImageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR, StringUtils.notNullStr(url));
             index++;
+        }
+    }
+
+    private static class LoadAvatarsTask extends AsyncTask<ReaderPost, Void, ArrayList<String>> {
+        private final WeakReference<ReaderLikingUsersView> mViewReference;
+        private final long mCurrentUserId;
+        private final int mLikeAvatarSize;
+        private final int mMaxAvatars;
+
+        LoadAvatarsTask(ReaderLikingUsersView view, long currentUserId, int likeAvatarSz, int maxAvatars) {
+            mViewReference = new WeakReference<>(view);
+            mCurrentUserId = currentUserId;
+            mLikeAvatarSize = likeAvatarSz;
+            mMaxAvatars = maxAvatars;
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(ReaderPost... posts) {
+            if (posts.length != 1 || posts[0] == null) {
+                return null;
+            }
+            ReaderPost post = posts[0];
+            ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(post);
+            return ReaderUserTable.getAvatarUrls(avatarIds, mMaxAvatars, mLikeAvatarSize, mCurrentUserId);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> avatars) {
+            super.onPostExecute(avatars);
+            ReaderLikingUsersView view = mViewReference.get();
+            if (view != null && avatars != null && !isCancelled()) {
+                view.mLoadAvatarsTask = null;
+                view.showLikingAvatars(avatars);
+            }
         }
     }
 }

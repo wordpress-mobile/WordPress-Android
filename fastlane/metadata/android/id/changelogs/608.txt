@@ -1,0 +1,4 @@
+10.7:
+Semua orang suka GIF! Animasi GIF didukung di aplikasi, dan kami mempercepat waktu pemuatannya agar Anda tak perlu menunggu untuk melihat si kucing jatuh dari meja.
+Tak ada yang suka layar kosong tanpa petunjuk! Jika Anda membuka halaman tanpa konten, misalnya saat membuka Pembaca tetapi Anda tidak mengikuti blog apa pun, kami akan memberikan saran untuk langkah selanjutnya.
+Membasmi bug.
