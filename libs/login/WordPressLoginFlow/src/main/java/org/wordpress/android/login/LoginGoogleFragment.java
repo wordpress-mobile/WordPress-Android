@@ -70,7 +70,8 @@ public class LoginGoogleFragment extends GoogleFragment {
                             }
 
                             AppLog.d(T.MAIN,
-                                    "GOOGLE SIGNIN: Google has returned a sign in result - dispatching SocialLoginAction");
+                                    "GOOGLE SIGNIN: Google has returned a sign in result - dispatching "
+                                    + "SocialLoginAction");
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
