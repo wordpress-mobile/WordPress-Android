@@ -183,9 +183,6 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
             leftMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_small);
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            leftMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_large);
-        }
         layoutParams.setMargins(0, layoutParams.topMargin, 0, bottomMargin);
         MarginLayoutParamsCompat.setMarginStart(layoutParams, leftMargin);
         MarginLayoutParamsCompat.setMarginEnd(layoutParams, layoutParams.rightMargin);
