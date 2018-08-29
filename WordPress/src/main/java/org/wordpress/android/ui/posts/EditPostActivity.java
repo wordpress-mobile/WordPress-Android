@@ -2574,6 +2574,11 @@ public class EditPostActivity extends AppCompatActivity implements
     private void addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri),
                                                 MediaUploadState.QUEUED);
+        if (mediaModel == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
         if (isVideo) {
             mediaModel.setTitle(getResources().getString(R.string.video));
         } else {
@@ -2956,6 +2961,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // we need to update media with the local post Id
         MediaModel media = buildMediaModel(uri, mimeType, startingState);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return null;
+        }
         media.setLocalPostId(mPost.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
@@ -2966,6 +2975,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private MediaModel buildMediaModel(Uri uri, String mimeType, MediaUploadState startingState) {
         MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
+        if (media == null) {
+            return null;
+        }
         if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType())) {
             String path = MediaUtils.getRealPathFromURI(this, uri);
             media.setThumbnailUrl(getVideoThumbnail(path));

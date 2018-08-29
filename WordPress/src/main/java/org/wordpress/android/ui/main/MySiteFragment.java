@@ -661,6 +661,10 @@ public class MySiteFragment extends Fragment implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             MediaModel media = buildMediaModel(file, site);
+            if (media == null) {
+                ToastUtils.showToast(getActivity(), R.string.file_not_found, ToastUtils.Duration.SHORT);
+                return;
+            }
             UploadService.uploadMedia(getActivity(), media);
         } else {
             ToastUtils.showToast(getActivity(), R.string.error_generic, ToastUtils.Duration.SHORT);
