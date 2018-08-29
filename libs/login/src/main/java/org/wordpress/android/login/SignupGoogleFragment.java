@@ -237,6 +237,11 @@ public class SignupGoogleFragment extends GoogleFragment {
                     AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - user already exists");
                     handleUserExists();
                     break;
+                // Too many attempts on sending SMS verification code. The user has to wait before they try again
+                case SMS_CODE_THROTTLED:
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - sms code throttled");
+                    showError(getString(R.string.login_error_sms_throttled));
+                    break;
                 default:
                     AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - unknown");
                     showError(getString(R.string.login_error_generic));

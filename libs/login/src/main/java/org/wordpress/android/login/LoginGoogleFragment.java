@@ -190,6 +190,11 @@ public class LoginGoogleFragment extends GoogleFragment {
                     mAnalyticsListener.trackSocialErrorUnknownUser();
                     showError(getString(R.string.login_error_email_not_found, mGoogleEmail));
                     break;
+                // Too many attempts on sending SMS verification code. The user has to wait before they try again
+                case SMS_CODE_THROTTLED:
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - sms code throttled");
+                    showError(getString(R.string.login_error_sms_throttled));
+                    break;
                 // Unknown error.
                 case GENERIC_ERROR:
                     // Do nothing for now (included to show all error types) and just fall through to 'default'
