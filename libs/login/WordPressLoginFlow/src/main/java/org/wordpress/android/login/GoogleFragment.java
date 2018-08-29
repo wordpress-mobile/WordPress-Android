@@ -206,12 +206,13 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     }
 
     protected void finishSignUp() {
+        /* This flag might get lost when the finishSignUp is called after the fragment's
+         onSaveInstanceState was called - however it's a very rare case, since the fragment is retained across
+         config changes.  */
+        mFinished = true;
         if (getActivity() != null) {
             AppLog.d(T.MAIN, "GOOGLE SIGNUP/IN: finishing signup");
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-        } else {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP/IN: mFinished set to true");
-            mFinished = true;
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
         }
     }
 

@@ -57,6 +57,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -253,6 +254,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        AppLog.d(T.MAIN, "LoginActivity: onActivity Result - requestCode" + requestCode);
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
@@ -369,14 +371,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             SignupGoogleFragment signupGoogleFragment;
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            signupGoogleFragment = (SignupGoogleFragment) fragmentManager.findFragmentByTag(SignupGoogleFragment.TAG);
-
-            if (signupGoogleFragment != null) {
-                fragmentTransaction.remove(signupGoogleFragment);
-                // REMOVE THIS BLOCK - just for testing purposes
-                throw new RuntimeException("fail");
-            }
-
             signupGoogleFragment = new SignupGoogleFragment();
             signupGoogleFragment.setRetainInstance(true);
             fragmentTransaction.add(signupGoogleFragment, SignupGoogleFragment.TAG);
@@ -592,16 +586,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void addGoogleLoginFragment(@NonNull Fragment parent) {
+    public void addGoogleLoginFragment() {
         LoginGoogleFragment loginGoogleFragment;
-        FragmentManager fragmentManager = parent.getChildFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        loginGoogleFragment = (LoginGoogleFragment) fragmentManager.findFragmentByTag(LoginGoogleFragment.TAG);
-
-        if (loginGoogleFragment != null) {
-            fragmentTransaction.remove(loginGoogleFragment);
-        }
-
         loginGoogleFragment = new LoginGoogleFragment();
         loginGoogleFragment.setRetainInstance(true);
         fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
