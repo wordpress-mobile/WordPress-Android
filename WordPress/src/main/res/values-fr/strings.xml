@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 14:54:07+0000
+Translation-Revision-Date: 2018-08-20 19:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="themes_empty_list">Aucun thème ne correspond à votre recherche.</string>
+    <string name="reader_label_post_search_explainer">Que recherchez–vous ?</string>
+    <string name="site_settings_tags_empty_title_search">Aucune étiquette ne correspond à votre recherche.</string>
+    <string name="site_settings_tags_empty_title">Vous n\'avez pas d’étiquettes.</string>
+    <string name="site_settings_tags_empty_subtitle">Ajoutez ici les étiquettes que vous utilisez le plus souvent afin de pouvoir les sélectionner rapidement lors de l’ajout d’étiquettes à vos articles</string>
+    <string name="site_settings_tags_empty_button">Créer une étiquette</string>
+    <string name="media_empty_search_list">Aucun média ne correspond à votre recherche.</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Se déconnecter de WordPress ?</string>
     <string name="people_empty_list_filtered_viewers">Pas encore de visiteurs</string>
     <string name="people_empty_list_filtered_email_followers">Pas encore d\'abonnés par e–mail</string>
     <string name="people_empty_list_filtered_followers">Pas encore d\'abonnés</string>
@@ -58,7 +66,6 @@ Language: fr
     <string name="reader_save_posts_locally_dialog_title">Enregistrer les articles pour plus tard</string>
     <string name="reader_empty_search_request_failed">Impossible d’effectuer la recherche</string>
     <string name="reader_empty_search_title">Aucun résultat trouvé</string>
-    <string name="reader_label_post_search_explainer">Recherche WordPress\npour un site ou un article</string>
     <string name="comment_read_source_post">Lire la source de l’article</string>
     <string name="sites">Sites</string>
     <string name="signup_magic_link_title">Lien magique envoyé</string>
@@ -148,7 +155,6 @@ Language: fr
     <string name="notification_channel_general_title">Général</string>
     <string name="photo_picker_use_photo">Utiliser cette photo</string>
     <string name="media_preview_title">%1$d sur %2$d</string>
-    <string name="stock_media_picker_empty_results">Aucun résultat</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos fournies par %s</string>
     <string name="stock_media_picker_initial_empty_text">Rechercher des photos gratuites à ajouter à votre bibliothèque de médias</string>
     <string name="stock_media_picker_search_hint">Rechercher une bibliothèque gratuite de photos</string>
@@ -180,7 +186,6 @@ Language: fr
     <string name="stats_tab_tap_content_description">Affichage de %s</string>
     <string name="stats_legend">légende du graphique des statistiques</string>
     <string name="fab_create_desc">créer</string>
-    <string name="fab_add_tag_desc">créer une étiquette</string>
     <string name="stats_bar_week_desc">Semaine de %s</string>
     <string name="stats_bar_date_value_desc">%s, %d vues</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -439,7 +444,6 @@ Language: fr
     <string name="site_settings_tags_hint">Gérez les étiquettes de votre site</string>
     <string name="dlg_saving_tag">Enregistrement</string>
     <string name="dlg_deleting_tag">Suppression</string>
-    <string name="dlg_confirm_delete_tag">Supprimer définitivement \'%s\' ?</string>
     <string name="error_tag_exists">Une étiquette avec ce nom existe déjà</string>
     <string name="add_new_tag">Ajout de nouvelle étiquette</string>
     <string name="tag_description_hint">Description</string>
@@ -458,7 +462,6 @@ Language: fr
     <string name="site_settings_week_start_title">La semaine commence le</string>
     <string name="site_settings_tags_title">Étiquettes</string>
     <string name="site_settings_traffic_header">Trafic</string>
-    <string name="delete_no">Ne pas supprimer</string>
     <string name="delete_yes">Supprimer</string>
     <string name="plugin_external_link_icon_content_description">Lien externe</string>
     <string name="plugin_icon_content_description">Icône de l’extension</string>
@@ -957,7 +960,6 @@ Language: fr
     <string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
     <string name="reader_empty_search_description">Aucune article trouvé pour %s dans votre langue</string>
-    <string name="reader_label_post_search_running">Recherche en cours…</string>
     <string name="reader_hint_post_search">Recherche WordPress</string>
     <string name="reader_title_related_post_detail">Article connexe</string>
     <string name="preview_screen_links_disabled">Les liens sont désactivés sur l\'écran de prévisualisation</string>
@@ -1316,7 +1318,6 @@ Language: fr
     <string name="reader_label_new_posts_subtitle">Toucher pour les afficher</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="stats_unknown_author">Auteur inconnu</string>
-    <string name="sign_out_wpcom_confirm">Se déconnecter de votre compte supprimera toutes les données liées au compte @%s de WordPress.com sur cet appareil. Cela inclus les changements locaux et les brouillons.</string>
     <string name="select_all">Tout selectionner</string>
     <string name="hide">Cacher</string>
     <string name="show">Montrer</string>

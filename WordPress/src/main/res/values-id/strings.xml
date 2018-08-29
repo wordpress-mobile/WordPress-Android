@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 07:54:06+0000
+Translation-Revision-Date: 2018-08-21 06:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="themes_empty_list">Tidak ada tema yang cocok dengan pencarian Anda</string>
+    <string name="reader_label_post_search_explainer">Apa yang ingin Anda cari?</string>
+    <string name="site_settings_tags_empty_title_search">Tidak ada tag yang cocok dengan pencarian Anda</string>
+    <string name="site_settings_tags_empty_title">Anda tidak memiliki tag apa pun</string>
+    <string name="site_settings_tags_empty_subtitle">Tambahkan tag yang sering Anda gunakan di sini agar bisa dipilih dengan cepat saat memberi tag pada pos</string>
+    <string name="site_settings_tags_empty_button">Buat tag</string>
+    <string name="media_empty_search_list">Tidak ada media yang cocok dengan pencarian Anda</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Logout dari WordPress?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Ada perubahan pada pos yang belum diunggah ke situs Anda. Perubahan tersebut akan dihapus dari perangkat jika Anda logout sekarang. Tetap logout?</string>
     <string name="people_empty_list_filtered_viewers">Belum ada pengunjung</string>
     <string name="people_empty_list_filtered_email_followers">Belum ada pengikut email</string>
     <string name="people_empty_list_filtered_followers">Belum ada pengikut</string>
@@ -48,7 +57,6 @@ Language: id
     <string name="reader_save_posts_locally_dialog_title">Simpan Pos untuk Nanti</string>
     <string name="reader_empty_search_request_failed">Tidak dapat melakukan pencarian</string>
     <string name="reader_empty_search_title">Tema tidak ditemukan</string>
-    <string name="reader_label_post_search_explainer">Cari di WordPress\nuntuk situs atau pos</string>
     <string name="comment_read_source_post">Baca pos sumber</string>
     <string name="sites">Situs</string>
     <string name="signup_magic_link_title">Tautan ajaib terkirim</string>
@@ -137,7 +145,6 @@ Language: id
     <string name="notification_channel_general_title">Umum</string>
     <string name="photo_picker_use_photo">Gunakan foto ini</string>
     <string name="media_preview_title">%1$d dari %2$d</string>
-    <string name="stock_media_picker_empty_results">Tidak ada yang cocok</string>
     <string name="stock_media_picker_initial_empty_subtext">Foto disediakan oleh %s</string>
     <string name="stock_media_picker_initial_empty_text">Cari untuk menemukan foto gratis untuk ditambahkan ke Pustaka Media Anda</string>
     <string name="stock_media_picker_search_hint">Cari di pustaka foto gratis</string>
@@ -169,7 +176,6 @@ Language: id
     <string name="stats_tab_tap_content_description">menampilkan %s</string>
     <string name="stats_legend">riwayat grafik statistik</string>
     <string name="fab_create_desc">buat</string>
-    <string name="fab_add_tag_desc">buat tag</string>
     <string name="stats_bar_week_desc">Minggu dari %s</string>
     <string name="stats_bar_date_value_desc">%s, %d tampilan</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -406,7 +412,6 @@ Language: id
     <string name="site_settings_tags_hint">Kelola tag situs Anda</string>
     <string name="dlg_saving_tag">Menyimpan</string>
     <string name="dlg_deleting_tag">Menghapus</string>
-    <string name="dlg_confirm_delete_tag">Hapus permanen \'%s\'?</string>
     <string name="error_tag_exists">Tag dengan nama ini sudah ada.</string>
     <string name="add_new_tag">Tambah Tag Baru</string>
     <string name="tag_description_hint">Deskripsi</string>
@@ -425,7 +430,6 @@ Language: id
     <string name="site_settings_week_start_title">Awal minggu</string>
     <string name="site_settings_tags_title">Tag</string>
     <string name="site_settings_traffic_header">Lalu Lintas</string>
-    <string name="delete_no">Jangan Hapus</string>
     <string name="plugin_external_link_icon_content_description">Tautan eksternal</string>
     <string name="plugin_icon_content_description">Ikon plugin</string>
     <string name="plugin_home_page">Beranda plugin</string>
@@ -905,7 +909,6 @@ Language: id
     <string name="send_link">Kirim tautan</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
-    <string name="reader_label_post_search_running">Mencari…</string>
     <string name="reader_title_related_post_detail">Pos Terkait</string>
     <string name="preview_screen_links_disabled">Tautan dinonaktifkan pada laman pratinjau</string>
     <string name="draft_explainer">Pos ini adalah sebuah draf yang belum diterbitkan</string>
@@ -1251,7 +1254,6 @@ Language: id
     <string name="reader_label_new_posts_subtitle">Ketuk untuk menampilkannya</string>
     <string name="my_site_header_configuration">Konfigurasi</string>
     <string name="stats_unknown_author">Penulis Tak Dikenal</string>
-    <string name="sign_out_wpcom_confirm">Log out dari akun Anda akan menghapus seluruh data WordPress.com dari @%s dalam perangkat ini, termasuk draf dan perubahan lokal.</string>
     <string name="select_all">Pilih semua</string>
     <string name="hide">Sembunyikan</string>
     <string name="show">Tampilkan</string>

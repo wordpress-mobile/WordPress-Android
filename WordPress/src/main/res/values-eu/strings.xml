@@ -89,7 +89,6 @@ Language: eu_ES
     <string name="invite_people">Gonbidatu jendea</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
-    <string name="reader_label_post_search_running">Bilatzen…</string>
     <string name="send">Bidali</string>
     <string name="people">Jendea</string>
     <string name="role">Rola</string>
