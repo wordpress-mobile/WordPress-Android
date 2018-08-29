@@ -107,7 +107,8 @@ public class SignupGoogleFragment extends GoogleFragment {
 
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             AppLog.d(T.MAIN,
-                                    "GOOGLE SIGNUP: Google has returned a sign up result - dispatching SocialSignupAction");
+                                    "GOOGLE SIGNUP: Google has returned a sign up result - dispatching "
+                                    + "SocialSignupAction");
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
                             mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                         } catch (NullPointerException exception) {
@@ -229,7 +230,8 @@ public class SignupGoogleFragment extends GoogleFragment {
                     // Dispatch social login action to retrieve data required for two-factor authentication.
                     PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                     AppLog.d(T.MAIN,
-                            "GOOGLE SIGNUP: onSocialChanged - error - two step authentication - dispatching pushSocialLoginAction");
+                            "GOOGLE SIGNUP: onSocialChanged - error - two step authentication - dispatching "
+                            + "pushSocialLoginAction");
                     mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                     break;
                 // WordPress account exists with input email address, but not connected.
