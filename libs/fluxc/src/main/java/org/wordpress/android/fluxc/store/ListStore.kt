@@ -76,7 +76,6 @@ class ListData<T>(
             return true
         return !items.zip(otherListData.items).fold(true) { result, pair ->
             result && pair.first.remoteItemId == pair.second.remoteItemId
-                    && pair.first.lastModified == pair.second.lastModified
         }
     }
 }
