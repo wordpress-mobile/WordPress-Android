@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.main
 
 import android.annotation.SuppressLint
-import android.app.Fragment
-import android.app.FragmentManager
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -12,6 +10,8 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.SparseArray
