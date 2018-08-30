@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewind
-import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
@@ -38,6 +37,7 @@ class RewindStatusService
     private val mutableRewindProgress = MutableLiveData<RewindProgress>()
     private var site: SiteModel? = null
     private var activityLogModelItem: ActivityLogModel? = null
+    private var job: Job? = null
 
     val rewindingActivity: ActivityLogModel?
         get() = activityLogModelItem
@@ -87,7 +87,7 @@ class RewindStatusService
         site?.let {
             launch(coroutineContext) {
                 val rewindStatus = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(it))
-                onRewindStatusFetched(rewindStatus)
+                onRewindStatusFetched(rewindStatus.error, rewindStatus.isError)
             }
         }
     }
@@ -109,22 +109,27 @@ class RewindStatusService
         val rewind = rewindStatus?.rewind
         if (rewind != null) {
             val restoreId = rewindStatus.rewind?.restoreId
-            if (!rewindProgressChecker.isRunning && restoreId != null) {
-                site?.let { rewindProgressChecker.startNow(it, restoreId) }
+            if (job?.isActive != true && restoreId != null) {
+                site?.let {
+                    job = launch {
+                        val rewindStatusFetched = rewindProgressChecker.startNow(it, restoreId)
+                        onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
+                    }
+                }
             }
             updateRewindProgress(rewind.rewindId, rewind.progress, rewind.status, rewind.reason)
             if (rewind.status != RUNNING) {
-                rewindProgressChecker.cancel()
+                job?.cancel()
             }
         } else {
             mutableRewindProgress.postValue(null)
         }
     }
 
-    private fun onRewindStatusFetched(event: OnRewindStatusFetched) {
-        mutableRewindStatusFetchError.postValue(event.error)
-        if (event.isError) {
-            rewindProgressChecker.cancel()
+    private fun onRewindStatusFetched(rewindStatusError: RewindStatusError?, isError: Boolean) {
+        mutableRewindStatusFetchError.postValue(rewindStatusError)
+        if (isError) {
+            job?.cancel()
         }
         reloadRewindStatus()
     }
@@ -139,7 +144,10 @@ class RewindStatusService
         }
         site?.let {
             event.restoreId?.let { restoreId ->
-                rewindProgressChecker.start(it, restoreId)
+                job = launch {
+                    val rewindStatusFetched = rewindProgressChecker.start(it, restoreId)
+                    onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
+                }
             }
         }
     }

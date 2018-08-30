@@ -16,7 +16,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
-import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -43,7 +42,6 @@ import java.util.Date
 class RewindStatusServiceTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
 
-    private val actionCaptor = argumentCaptor<Action<Any>>()
     private val rewindStatusCaptor = argumentCaptor<FetchRewindStatePayload>()
     private val rewindCaptor = argumentCaptor<RewindPayload>()
 
@@ -142,10 +140,9 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun updatesRewindStatusAndRestartsCheckerWhenRewindNotAlreadyRunning() {
+    fun updatesRewindStatusAndRestartsCheckerWhenRewindNotAlreadyRunning() = runBlocking<Unit> {
         val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
-        whenever(rewindProgressChecker.isRunning).thenReturn(false)
 
         rewindStatusService.start(site)
 
@@ -171,7 +168,6 @@ class RewindStatusServiceTest {
 
         rewindStatusService.requestStatusUpdate()
 
-        verify(rewindProgressChecker).cancel()
         assertEquals(error, rewindStatusFetchError)
     }
 
@@ -192,7 +188,7 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun onRewindStateFinishedUpdateStateAndCancelWorker() = runBlocking{
+    fun onRewindStateFinishedUpdateState() = runBlocking{
         rewindStatusService.start(site)
 
         val rewindFinished = rewindInProgress.copy(status = FINISHED, progress = 100)
@@ -205,7 +201,6 @@ class RewindStatusServiceTest {
 
         assertEquals(rewindAvailable, true)
         assertEquals(rewindProgress?.status, Status.FINISHED)
-        verify(rewindProgressChecker).cancel()
     }
 
     @Test
@@ -228,7 +223,7 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun onRewindFetchStatusAndStartWorker() = runBlocking{
+    fun onRewindFetchStatusAndStartWorker() = runBlocking<Unit>{
         rewindStatusService.start(site)
 
         whenever(activityLogStore.rewind(any())).thenReturn(OnRewind("5", 10, REWIND))
