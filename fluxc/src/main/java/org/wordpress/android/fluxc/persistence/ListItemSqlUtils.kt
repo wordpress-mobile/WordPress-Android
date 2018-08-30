@@ -4,7 +4,7 @@ import com.wellsql.generated.ListItemModelTable
 import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
-import org.wordpress.android.fluxc.model.ListItemModel
+import org.wordpress.android.fluxc.model.list.ListItemModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,16 +31,6 @@ class ListItemSqlUtils @Inject constructor() {
                     .endWhere()
                     .orderBy(ListModelTable.ID, SelectQuery.ORDER_ASCENDING)
                     .asModel
-
-    /**
-     * This function returns the number of [ListItemModel] records for the given [listId].
-     */
-    fun getListSize(listId: Int): Int =
-            WellSql.select(ListItemModel::class.java)
-                    .where()
-                    .equals(ListItemModelTable.LIST_ID, listId)
-                    .endWhere()
-                    .asCursor.count
 
     /**
      * This function deletes [ListItemModel] records for the [listIds].

@@ -1,11 +1,10 @@
-package org.wordpress.android.fluxc.model
+package org.wordpress.android.fluxc.model.list
 
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.RawConstraints
 import com.yarolegovich.wellsql.core.annotation.Table
-import org.wordpress.android.fluxc.model.list.ListState
 
 @Table
 @RawConstraints(

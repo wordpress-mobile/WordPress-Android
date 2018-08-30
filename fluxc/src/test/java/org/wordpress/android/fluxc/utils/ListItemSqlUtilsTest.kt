@@ -6,9 +6,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.wordpress.android.fluxc.model.ListItemModel
-import org.wordpress.android.fluxc.model.ListModel
-import org.wordpress.android.fluxc.model.ListModel.ListType
+import org.wordpress.android.fluxc.model.list.ListItemModel
+import org.wordpress.android.fluxc.model.list.ListModel
+import org.wordpress.android.fluxc.model.list.ListModel.ListType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
