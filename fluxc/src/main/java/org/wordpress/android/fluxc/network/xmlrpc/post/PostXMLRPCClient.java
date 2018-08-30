@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
-import org.wordpress.android.fluxc.model.ListItemModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -33,6 +32,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
+import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -136,7 +136,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     public void onResponse(Object[] response) {
                         if (response != null) {
                             boolean canLoadMore = response.length == PostStore.NUM_POSTS_PER_FETCH;
-                            List<ListItemModel> listItems = listItemsFromPostsResponse(response);
+                            List<PostListItem> listItems = listItemsFromPostsResponse(response);
 
                             FetchPostsResponsePayload payload = new FetchPostsResponsePayload(listItems, site, listType,
                                     getPages, offset > 0, canLoadMore);
@@ -278,17 +278,15 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private @NotNull List<ListItemModel> listItemsFromPostsResponse(Object[] response) {
-        List<ListItemModel> listItems = new ArrayList<>();
+    private @NotNull List<PostListItem> listItemsFromPostsResponse(Object[] response) {
+        List<PostListItem> listItems = new ArrayList<>();
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
-            String postID = MapUtils.getMapStr(postMap, "post_id");
-            String postModified = MapUtils.getMapStr(postMap, "post_modified");
 
-            ListItemModel listItemModel = new ListItemModel();
-            listItemModel.setRemoteItemId(Long.parseLong(postID));
-            listItemModel.setLastModified(postModified);
-            listItems.add(listItemModel);
+            PostListItem item = new PostListItem();
+            item.remotePostId = Long.parseLong(MapUtils.getMapStr(postMap, "post_id"));
+            item.lastModified = MapUtils.getMapStr(postMap, "post_modified");
+            listItems.add(item);
         }
         return listItems;
     }
