@@ -27,7 +27,7 @@ module Fastlane
         if android_sdk_root.nil? && local.nil?
             UI.user_error! "There is no Android SDK root set. Unable to continue."
         elsif android_sdk_root.nil? && local
-        UI.user_error! "There is no Android SDK root set. Unable to continue.\nTo solve this, add:\n\nexport ANDROID_HOME=#{local}\nexport ANDROID_SDK_ROOT=$ANDROID_HOME\n\nto ~/.profile"
+            UI.user_error! "There is no Android SDK root set. Unable to continue.\nTo solve this, add:\n\nexport ANDROID_HOME=#{local}\nexport ANDROID_SDK_ROOT=$ANDROID_HOME\n\nto ~/.profile"
 
         end
 
