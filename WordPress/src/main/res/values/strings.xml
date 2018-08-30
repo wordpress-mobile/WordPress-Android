@@ -105,6 +105,7 @@
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
+    <string name="dismiss">dismiss</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -2294,4 +2295,19 @@
     <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
+
+    <!-- News Card -->
+    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
+    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
+    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
+    the out-of-date announcement might redirect the user to the new feature. -->
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_title_sample_announcement" >[New feature available]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
+    <!-- END (News Card) -->
 </resources>

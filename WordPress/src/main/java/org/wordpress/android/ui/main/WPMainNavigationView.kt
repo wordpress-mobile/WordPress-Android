@@ -303,11 +303,19 @@ class WPMainNavigationView @JvmOverloads constructor(
         return null
     }
 
-    /*
-     * show or hide the badge on the notification page
-     */
+    fun showReaderBadge(showBadge: Boolean) {
+        showBadge(PAGE_READER, showBadge)
+    }
+
     fun showNoteBadge(showBadge: Boolean) {
-        val badgeView = getItemView(PAGE_NOTIFS)?.findViewById<View>(R.id.badge)
+        showBadge(PAGE_NOTIFS, showBadge)
+    }
+
+    /*
+     * show or hide the badge on the 'pageId' icon in the bottom bar
+     */
+    private fun showBadge(pageId: Int, showBadge: Boolean) {
+        val badgeView = getItemView(pageId)?.findViewById<View>(R.id.badge)
 
         val currentVisibility = badgeView?.visibility
         val newVisibility = if (showBadge) View.VISIBLE else View.GONE

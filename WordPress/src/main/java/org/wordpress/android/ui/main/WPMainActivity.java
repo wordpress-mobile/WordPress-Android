@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -59,6 +60,7 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
+import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -149,6 +151,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
 
     /*
@@ -204,6 +207,7 @@ public class WPMainActivity extends AppCompatActivity implements
         mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
+        registeNewsItemObserver();
 
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
@@ -319,6 +323,16 @@ public class WPMainActivity extends AppCompatActivity implements
         } else {
             AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
         }
+    }
+
+    private void registeNewsItemObserver() {
+        mNewsManager.notificationBadgeVisibility().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean showBadge) {
+                mBottomNav.showReaderBadge(showBadge != null ? showBadge : false);
+            }
+        });
+        mNewsManager.pull(false);
     }
 
     private void launchZendeskMyTickets() {
