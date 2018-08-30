@@ -5,6 +5,7 @@ import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.ListModel
 import org.wordpress.android.fluxc.model.ListModel.ListType
+import org.wordpress.android.fluxc.model.ListModel.State.CAN_LOAD_MORE
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Inject
@@ -20,10 +21,11 @@ class ListSqlUtils @Inject constructor() {
      * If there is no existing record, a new [ListModel] will be created for [localSiteId] and [listType]. The current
      * [Date] will be assigned to both [ListModel.dateCreated] and [ListModel.lastModified].
      */
-    fun insertOrUpdateList(localSiteId: Int, listType: ListType) {
+    fun insertOrUpdateList(localSiteId: Int, listType: ListType, listState: ListModel.State = CAN_LOAD_MORE) {
         val now = DateTimeUtils.iso8601FromDate(Date())
         val listModel = ListModel()
         listModel.lastModified = now
+        listModel.state = listState.value
 
         val existing = getList(localSiteId, listType)
         if (existing != null) {
@@ -32,6 +34,7 @@ class ListSqlUtils @Inject constructor() {
                     .put(listModel) { item ->
                         val cv = ContentValues()
                         cv.put(ListModelTable.LAST_MODIFIED, item.lastModified)
+                        cv.put(ListModelTable.STATE, item.state)
                         cv
                     }.execute()
         } else {
