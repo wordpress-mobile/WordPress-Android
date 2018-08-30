@@ -206,6 +206,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("source", "email");
                 break;
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
+            case SIGNUP_SOCIAL_BUTTON_FAILURE:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
@@ -690,6 +691,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_approved";
             case NOTIFICATION_UNAPPROVED:
                 return "notifications_unapproved";
+            case NOTIFICATIONS_MISSING_SYNC_WARNING:
+                return "notifications_missing_sync_warning";
             case NOTIFICATION_REPLIED_TO:
             case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
                 return "notifications_replied_to";
@@ -944,6 +947,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_magic_link_succeeded";
             case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "signup_social_accounts_need_connecting";
+            case SIGNUP_SOCIAL_BUTTON_FAILURE:
+                return "signup_social_button_failure";
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
                 return "signup_epilogue_unchanged";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
