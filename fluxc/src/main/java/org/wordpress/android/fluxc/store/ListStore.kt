@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.ListItemModel
 import org.wordpress.android.fluxc.model.ListModel
 import org.wordpress.android.fluxc.model.ListModel.ListType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
@@ -28,13 +29,13 @@ class ListData<T>(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,
     private val listType: ListType,
-    state: ListModel.State?,
+    listState: ListState?,
     private val items: List<ListItemModel>,
     private val itemInterface: ListItemInterface<T>
 ) {
-    private val canLoadMore: Boolean = state?.canLoadMore() ?: false
-    val isFetchingFirstPage: Boolean = state?.isFetchingFirstPage() ?: false
-    val isLoadingMore: Boolean = state?.isLoadingMore() ?: false
+    private val canLoadMore: Boolean = listState?.canLoadMore() ?: false
+    val isFetchingFirstPage: Boolean = listState?.isFetchingFirstPage() ?: false
+    val isLoadingMore: Boolean = listState?.isLoadingMore() ?: false
     val size: Int = items.size
 
     fun getRemoteItem(position: Int): T? {
@@ -123,7 +124,7 @@ class ListStore @Inject constructor(
             // If we are already fetching the first page, ignore
             return
         }
-        val newState = if (payload.loadMore) ListModel.State.LOADING_MORE else ListModel.State.FETCHING_FIRST_PAGE
+        val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.site.id, payload.listType, newState)
         emitChange(OnListChanged(payload.site.id, payload.listType, null))
 
@@ -138,7 +139,7 @@ class ListStore @Inject constructor(
             if (!payload.loadedMore) {
                 deleteListItems(payload.localSiteId, payload.listType)
             }
-            val state = if (payload.canLoadMore) ListModel.State.CAN_LOAD_MORE else ListModel.State.FETCHED
+            val state = if (payload.canLoadMore) ListState.CAN_LOAD_MORE else ListState.FETCHED
             listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, state)
             val listModel = getListModel(payload.localSiteId, payload.listType)
             if (listModel != null) { // Sanity check
@@ -151,7 +152,7 @@ class ListStore @Inject constructor(
                 })
             }
         } else {
-            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, ListModel.State.ERROR)
+            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, ListState.ERROR)
         }
         emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error))
     }
