@@ -174,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:visibility="gone"
                 app:aevButton="@string/posts_empty_list_button"
-                app:aevImage="@drawable/jetpack_connection_notifications"
+                app:aevImage="@drawable/img_illustration_notifications_152dp"
                 app:aevSubtitle="@string/notifications_empty_action_unread"
                 app:aevTitle="@string/notifications_empty_unread"
                 tools:visibility="visible" >
@@ -204,13 +204,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_extra_large"
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/jetpack_connection_notifications"/>
+                            app:srcCompat="@drawable/img_illustration_notifications_152dp"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             style="@style/JetpackConnectionText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxWidth="290dp"
+                            android:maxWidth="@dimen/jetpack_text_width"
                             android:text="@string/notifications_jetpack_connection_setup_info"
                             android:textAlignment="center"
                             app:fixWidowWords="true"/>
@@ -222,6 +222,23 @@
                             android:layout_marginBottom="@dimen/margin_extra_large"
                             android:text="@string/stats_jetpack_connection_setup"
                             android:theme="@style/JetpackConnectionButton"/>
+
+                        <TextView
+                            android:id="@+id/jetpack_terms_and_conditions"
+                            android:layout_width="@dimen/jetpack_terms_and_conditions_width"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_extra_large"
+                            android:text="@string/stats_jetpack_connection_terms_and_conditions"
+                            android:textAlignment="center"
+                            style="@style/JetpackTermsAndConditionsButton"/>
+
+                        <Button
+                            android:id="@+id/jetpack_faq"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/stats_jetpack_connection_faq"
+                            style="@style/JetpackFaqButton"/>
 
                     </LinearLayout>
 

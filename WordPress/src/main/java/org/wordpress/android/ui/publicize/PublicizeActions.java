@@ -93,7 +93,7 @@ public class PublicizeActions {
                             .post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
                     long keyringConnectionId = parseServiceKeyringId(serviceId, currentUserId, jsonObject);
-                    connectStepTwo(siteId, keyringConnectionId, serviceId);
+                    connectStepTwo(siteId, keyringConnectionId, serviceId, "");
                 }
             }
         };
@@ -113,7 +113,8 @@ public class PublicizeActions {
      * step two in creating a publicize connection: now that we have the keyring connection id,
      * create the actual connection
      */
-    public static void connectStepTwo(final long siteId, long keyringConnectionId, final String serviceId) {
+    public static void connectStepTwo(final long siteId, long keyringConnectionId,
+                                      final String serviceId, final String externalUserId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -133,27 +134,40 @@ public class PublicizeActions {
 
         Map<String, String> params = new HashMap<>();
         params.put("keyring_connection_ID", Long.toString(keyringConnectionId));
+        if (!externalUserId.isEmpty()) {
+            params.put("external_user_ID", externalUserId);
+        }
         String path = String.format(Locale.ROOT, "/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
     private static boolean shouldShowChooserDialog(long siteId, String serviceId, JSONObject jsonObject) {
         JSONArray jsonConnectionList = jsonObject.optJSONArray("connections");
+
         if (jsonConnectionList == null || jsonConnectionList.length() <= 1) {
             return false;
         }
 
         int totalAccounts = 0;
+        int totalExternalAccounts = 0;
         try {
             for (int i = 0; i < jsonConnectionList.length(); i++) {
                 JSONObject connectionObject = jsonConnectionList.getJSONObject(i);
                 PublicizeConnection publicizeConnection = PublicizeConnection.fromJson(connectionObject);
                 if (publicizeConnection.getService().equals(serviceId) && !publicizeConnection.isInSite(siteId)) {
                     totalAccounts++;
+                    JSONArray externalJsonArray = connectionObject.getJSONArray("additional_external_users");
+                    for (int j = 0; j < externalJsonArray.length(); j++) {
+                        totalExternalAccounts++;
+                    }
                 }
             }
 
-            return totalAccounts > 0;
+            if (PublicizeTable.onlyExternalConnections(serviceId)) {
+                return totalExternalAccounts > 0;
+            } else {
+                return totalAccounts > 0 || totalExternalAccounts > 0;
+            }
         } catch (JSONException e) {
             return false;
         }

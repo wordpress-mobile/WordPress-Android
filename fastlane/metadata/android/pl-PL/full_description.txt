@@ -2,10 +2,10 @@ Zarządzaj swoim WordPressowym blogiem lub witryną prosto ze swojego urządzeni
 
 Przy pomocy WordPressa dla Androida, masz możliwość publikacji wprost ze swojej ręki. Stwórz spontaniczne haiku wprost ze swojej kanapy. Zrób zdjęcie i opublikuj je podczas przerwy na lunch. Odpowiadaj na najnowsze komentarze, lub sprawdź statystyki aby zobaczyć z jakich nowych krajów pochodzą twoi dzisiejsi czytelnicy.
 
-WordPress dla Androida to projekt Open Source, co oznacza, że ty także możesz przyczynić się w jego rozwoju. Dowiedz się więcej na
+WordPress dla Androida to projekt Open Source, co oznacza, że także ty możesz przyczynić się do jego rozwoju. Dowiedz się więcej na
 https://apps.wordpress.com/contribute/.
 
 WordPress dla Androida wspiera witryny WordPress.com oraz witryny WordPress.org z samodzielnym hostingiem działające na wersji WordPressa 4.0 lub wyższej.
 
-Potrzebujesz pomocy z aplikacją? Przejdź do forum na stronie
+Potrzebujesz pomocy z aplikacją? Przejdź na forum na stronie
 https://android.forums.wordpress.org/forum/troubleshooting lub napisz tweeta na @WPAndroid.

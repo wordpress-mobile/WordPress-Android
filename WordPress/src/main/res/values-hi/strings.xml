@@ -154,9 +154,7 @@ Language: hi_IN
     <string name="reader_label_gap_marker">अधिक लेख लोड करे </string>
     <string name="notifications_no_search_results">\'%s\' से किसी साइट का मेल नहीं हुआ </string>
     <string name="search_sites">साइट्स खोजें</string>
-    <string name="notifications_empty_view_reader">पाठक देखें</string>
     <string name="notifications_empty_action_all">सक्रिय हों! जिन ब्लॉग का अनुगमन करते है उनके लेखों पर टिप्पणी करें </string>
-    <string name="notifications_empty_comments">कोई नई टिप्पणी नहीं है… अबतक।</string>
     <string name="stats_widget_error_readd_widget">कृपया विजेट को निकाल कर दोबारा जोड़ें</string>
     <string name="stats_widget_error_no_visible_blog">आंकड़े देखने के लिए एक ब्लॉग प्रत्यक्ष होना चाहिए</string>
     <string name="stats_enable_rest_api_in_jetpack">अपने आँकड़ों को देखने के लिए, जेटपैक में JSON API को सक्षम करें। </string>
@@ -176,7 +174,6 @@ Language: hi_IN
     <string name="notifications_tab">अधिसूचना सूचि</string>
     <string name="email">ईमेल</string>
     <string name="app_notifications">एप्लिकेशन अधिसूची</string>
-    <string name="button_revert">उलट दें</string>
     <string name="days_ago">%d दिन पहले</string>
     <string name="yesterday">कल</string>
     <string name="button_back">पीछे</string>
@@ -252,7 +249,6 @@ Language: hi_IN
     <string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>
     <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
     <string name="reader_page_followed_tags">अनुसरण किये गए टैग्स </string>
-    <string name="media_empty_list">कोई मीडिया नहीं</string>
     <string name="help">सहायता</string>
     <string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
     <string name="forgot_password">आपका पासवर्ड खो गया?</string>
@@ -261,7 +257,6 @@ Language: hi_IN
     <string name="error_generic">एक त्रुटि हुई</string>
     <string name="adding_cat_success">श्रेणी सफलतापूर्वक जोड़ा गया</string>
     <string name="error_downloading_image">छवि डाउनलोड करते समय त्रुटि </string>
-    <string name="comments_empty_list">कोई टिप्पणी नहीं</string>
     <string name="stats_empty_comments">अभी तक कोई टिप्पणी नहीं</string>
     <string name="notifications_empty_list">कोई सूचनाएं नहीं</string>
     <string name="mnu_comment_unspam">स्पैम नहीं</string>

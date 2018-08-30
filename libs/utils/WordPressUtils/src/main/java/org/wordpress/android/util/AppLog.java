@@ -48,6 +48,7 @@ public class AppLog {
         SHARING,
         PLUGINS,
         ACTIVITY_LOG,
+        JETPACK_REMOTE_INSTALL,
         SUPPORT
     }
 

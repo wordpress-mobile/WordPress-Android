@@ -98,6 +98,39 @@
                 android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"/>
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_description_notice"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_large"
+                android:ellipsize="end"
+                android:textColor="@color/grey_darken_20"
+                android:textSize="@dimen/text_sz_medium"
+                android:textStyle="bold"
+                tools:text="text_description_notice"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/learn_more_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:ellipsize="end"
+                android:text="@string/learn_more"
+                android:textColor="@color/blue_wordpress"
+                android:textSize="@dimen/text_sz_medium"
+                android:textStyle="bold"
+                tools:text="learn_more_button"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_divider_height"

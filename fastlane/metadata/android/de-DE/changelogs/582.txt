@@ -1,4 +1,0 @@
-10.4:
-* Neu: Zurücksetzung des Aktivitätsprotokolls: Setze deine Website auf einen vorherigen Zustand zurück.
-* Viele kleine Verbesserungen an der Benutzeroberfläche.
-* Verschiedene Fehlerkorrekturen

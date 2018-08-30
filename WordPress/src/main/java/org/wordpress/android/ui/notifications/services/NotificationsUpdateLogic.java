@@ -65,10 +65,7 @@ public class NotificationsUpdateLogic {
                 // Not sure this could ever happen, but make sure we're catching all response types
                 AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
                 EventBus.getDefault().post(
-                        new NotificationEvents.NotificationsRefreshCompleted(
-                                new ArrayList<Note>(0)
-                        )
-                                          );
+                        new NotificationEvents.NotificationsRefreshCompleted(new ArrayList<Note>(0)));
             } else {
                 try {
                     notes = NotificationsActions.parseNotes(response);
@@ -78,14 +75,10 @@ public class NotificationsUpdateLogic {
                         setNoteRead(mNoteId, notes);
                     }
                     NotificationsTable.saveNotes(notes, true);
-                    EventBus.getDefault().post(
-                            new NotificationEvents.NotificationsRefreshCompleted(notes)
-                                              );
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshCompleted(notes));
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response", e);
-                    EventBus.getDefault().post(
-                            new NotificationEvents.NotificationsRefreshError()
-                                              );
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshError());
                 }
             }
             completed();
@@ -94,9 +87,7 @@ public class NotificationsUpdateLogic {
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             logVolleyErrorDetails(volleyError);
-            EventBus.getDefault().post(
-                    new NotificationEvents.NotificationsRefreshError(volleyError)
-                                      );
+            EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshError(volleyError));
             completed();
         }
     }

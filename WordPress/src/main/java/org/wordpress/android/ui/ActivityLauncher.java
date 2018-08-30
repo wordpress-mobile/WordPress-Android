@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -64,7 +66,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,6 +134,13 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    public static void startJetpackInstall(Context context, JetpackConnectionSource source, SiteModel site) {
+        Intent intent = new Intent(context, JetpackRemoteInstallActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(JetpackRemoteInstallFragment.TRACKING_SOURCE_KEY, source);
+        context.startActivity(intent);
+    }
+
     public static void continueJetpackConnect(Context context, JetpackConnectionSource source, SiteModel site) {
         switch (source) {
             case NOTIFICATIONS:
@@ -177,6 +185,12 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
+    }
+
+    public static void viewQuickStartForResult(Activity activity) {
+        Intent intent = new Intent(activity, QuickStartActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.QUICK_START);
+        AnalyticsTracker.track(Stat.QUICK_START_LIST_VIEWED);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
@@ -556,7 +570,6 @@ public class ActivityLauncher {
             WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
 
             context.startActivity(intent);
-            AppLockManager.getInstance().setExtendedTimeout();
         } catch (ActivityNotFoundException e) {
             ToastUtils.showToast(context, context.getString(R.string.cant_open_url), ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);
@@ -571,7 +584,6 @@ public class ActivityLauncher {
             } else {
                 Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
                 context.startActivity(chooser);
-                AppLockManager.getInstance().setExtendedTimeout();
             }
         } finally {
             // re-enable deeplinking

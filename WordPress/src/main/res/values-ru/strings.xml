@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 14:35:18+0000
+Translation-Revision-Date: 2018-08-15 09:11:05+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="themes_empty_list">Нет тем по вашему поиску</string>
+    <string name="reader_label_post_search_explainer">Что вы хотите найти?</string>
+    <string name="site_settings_tags_empty_title_search">Нет меток по вашему поиску</string>
+    <string name="site_settings_tags_empty_title">У вас нет меток</string>
+    <string name="site_settings_tags_empty_subtitle">Добавьте сюда часто используемые метки, чтобы быстро выбирать их для записей</string>
+    <string name="site_settings_tags_empty_button">Создать метку</string>
+    <string name="media_empty_search_list">Нет медиафайлов по вашему поиску</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Выйти из WordPress?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">У вас есть несохраненные изменения к записи, которые еще не были загружены на сайт, они будут потеряны на вашем устройстве при выходе. Всё равно выйти?</string>
+    <string name="people_empty_list_filtered_viewers">Ещё нет просмотров</string>
+    <string name="people_empty_list_filtered_email_followers">Ещё нет подписчиков по эл.почте</string>
+    <string name="people_empty_list_filtered_followers">Ещё нет подписчиков</string>
+    <string name="people_empty_list_filtered_users">Ещё нет пользователей</string>
+    <string name="connection_service_facebook_notice">C 01.08.2018 Facebook более не разрешает напрямую делиться записями в профили Facebook. Связи со страницами FB останутся неизмененными.</string>
+    <string name="reader_empty_posts_liked_description">Записи, которые вам понравились будут здесь</string>
+    <string name="reader_empty_posts_liked_title">Нет отметок \"нравится\"</string>
+    <string name="reader_empty_followed_blogs_button_followed">Перейти к подпискам</string>
+    <string name="reader_empty_followed_blogs_button_discover">Найти сайты</string>
+    <string name="reader_empty_followed_blogs_description">Вы пока не подписаны ни на один сайт. Почему бы не подписаться сейчас?</string>
+    <string name="reader_empty_followed_blogs_title">Нет подписок на сайты</string>
+    <string name="notifications_empty_likes">Ещё нет отметок \"нравится\"</string>
+    <string name="notifications_empty_followers">Ещё нет подписчиков</string>
+    <string name="activity_log_limited_content_on_free_plan">Для бесплатных тарифов число событий в истории ограничено.</string>
+    <string name="activity_log_empty_subtitle">При внесении изменений на сайт, вы сможете увидеть историю активности здесь</string>
+    <string name="activity_log_empty_title">Активности не отмечено</string>
+    <string name="posts_empty_list_button">Создать запись</string>
+    <string name="pages_empty_list_button">Создать страницу</string>
+    <string name="media_empty_upload_media">Загрузка медиафайлов</string>
+    <string name="media_empty_list">У вас нет мультимедиа–файлов</string>
+    <string name="reader_gallery_images_desc">галерея изображений</string>
+    <string name="blavatar_desc">значок сайта</string>
+    <string name="theme_image_desc">изображение темы</string>
+    <string name="featured_image_desc">изображение записи</string>
+    <string name="local_changes_discarding_error">Возникла ошибка при отмене локальных изменений. Пожалуйста, обратитесь в поддержку за помощью.</string>
+    <string name="local_changes_discarding">Отмена локальных изменений</string>
+    <string name="local_changes_discarded">Локальные изменения отменены</string>
+    <string name="menu_discard_changes">Отменить локальные изменения</string>
+    <string name="button_discard_changes">Отменить изменения</string>
+    <string name="button_discard">Отменить</string>
     <string name="reader_avatar_desc">изображение профиля</string>
     <string name="reader_blavatar_desc">значок сайта</string>
     <string name="notification_channel_transient_title">Транзиент</string>
@@ -18,21 +57,20 @@ Language: ru
     <string name="support_contact_email">Контактный адрес эл.почты</string>
     <string name="application_log_button">Журнал приложения</string>
     <string name="my_tickets">Мои тикеты</string>
-    <string name="activity_log_rewind_dialog_message">Вы уверены, что хотите откатить ваш сайт назад на %s %s. Вы потеряете все изменения в содержимом и настройки, сделанные после этого времени.</string>
+    <string name="activity_log_rewind_dialog_message">Вы уверены, что хотите откатить ваш сайт назад на %1$s в %2$s? Вы потеряете все изменения в содержимом и настройки, сделанные после этого времени.</string>
     <string name="activity_log_rewind_site">Откат состояния сайта</string>
     <string name="activity_log_currently_restoring_message_no_dates">Откат в процессе</string>
-    <string name="activity_log_currently_restoring_message">Откат на %s %s</string>
+    <string name="activity_log_currently_restoring_message">Откат на %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Ваш сайт в процессе восстановления</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ваш сайт был успешно восстановлен</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Ваш сайт восстановлен\nСовершен откат на %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Ваш сайт в процессе восстановления\nОткат на %s %s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Ваш сайт восстановлен\nСовершен откат на %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Ваш сайт в процессе восстановления\nОткат на %1$s %2$s</string>
     <string name="activity_log_button">Кнопка действий с журналом активности</string>
     <string name="plugin_auto_managed">Управляется автоматически</string>
     <string name="reader_save_posts_locally_dialog_message">Сохраните эту запись и вернитесь к её чтению в любое время. Это будет доступно только на этом устройстве (Мы работаем над синхронизацией с другими устройствами!).</string>
     <string name="reader_save_posts_locally_dialog_title">Сохранить запись на потом</string>
     <string name="reader_empty_search_request_failed">Невозможно совершить поиск</string>
     <string name="reader_empty_search_title">Результатов не найдено</string>
-    <string name="reader_label_post_search_explainer">Искать в WordPress\nсайт или запись</string>
     <string name="comment_read_source_post">Прочесть исходную запись</string>
     <string name="sites">Сайты</string>
     <string name="signup_magic_link_title">Магическая ссылка отослана</string>
@@ -53,7 +91,6 @@ Language: ru
     <string name="reader_remove_bookmark">Удалить из сохраненных записей</string>
     <string name="reader_add_bookmark">Добавить в сохраненные записи</string>
     <string name="reader_save_for_later_title">Сохраненные записи</string>
-    <string name="activity_log_empty_list">Никаких событий пока не зарегистрировано</string>
     <string name="removed">Удалено</string>
     <string name="tabbar_accessibility_label_write">Новая запись. Написать новую запись.</string>
     <string name="my_site_icon_content_description">Сменить значок сайта</string>
@@ -123,7 +160,6 @@ Language: ru
     <string name="notification_channel_general_title">Общее</string>
     <string name="photo_picker_use_photo">Использовать это фото</string>
     <string name="media_preview_title">%1$d из %2$d</string>
-    <string name="stock_media_picker_empty_results">Нет совпадений</string>
     <string name="stock_media_picker_initial_empty_subtext">Фотографии предоставлены %s</string>
     <string name="stock_media_picker_initial_empty_text">Ищите бесплатные фото и добавьте их в вашу медиатеку</string>
     <string name="stock_media_picker_search_hint">Поиск в свободной фототеке</string>
@@ -155,7 +191,6 @@ Language: ru
     <string name="stats_tab_tap_content_description">показано %s</string>
     <string name="stats_legend">легенда графика статистики</string>
     <string name="fab_create_desc">создать</string>
-    <string name="fab_add_tag_desc">создать метку</string>
     <string name="stats_bar_week_desc">Неделя %s</string>
     <string name="stats_bar_date_value_desc">%s, %d просмотров</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -170,7 +205,6 @@ Language: ru
     <string name="reader_list_item_suggestion_remove_desc">удалить</string>
     <string name="photo_picker_thumbnail_desc">Воспроизвести видео</string>
     <string name="reader_cardview_post_play_video_desc">воспроизвести видео</string>
-    <string name="post_cardview_featured_desc">изображение записи</string>
     <string name="plugin_detail_logo_desc">логотип плагина</string>
     <string name="plugin_detail_banner_desc">баннер плагина</string>
     <string name="photo_picker_wpmedia_desc">выбрать из медиатеки WordPress</string>
@@ -228,7 +262,7 @@ Language: ru
     <string name="publicize_buttons_screen_title">Кнопки поделиться</string>
     <string name="notifications_screen_title">Уведомления</string>
     <string name="reader_screen_title">Читалка</string>
-    <string name="me_section_screen_title">Я</string>
+    <string name="me_section_screen_title">Профиль</string>
     <string name="my_site_section_screen_title">Мой сайт</string>
     <string name="notif_settings_screen_title">Настройки уведомления</string>
     <string name="passcode_screen_title">Ключ WordPress</string>
@@ -415,7 +449,7 @@ Language: ru
     <string name="site_settings_tags_hint">Управлять метками сайта</string>
     <string name="dlg_saving_tag">Сохранение</string>
     <string name="dlg_deleting_tag">Удаление</string>
-    <string name="dlg_confirm_delete_tag">Навсегда удалить \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Навсегда удалить метку \'%s\'?</string>
     <string name="error_tag_exists">Метка с таким именем уже существует</string>
     <string name="add_new_tag">Добавить новую метку</string>
     <string name="tag_description_hint">Описание</string>
@@ -434,7 +468,6 @@ Language: ru
     <string name="site_settings_week_start_title">День начала недели</string>
     <string name="site_settings_tags_title">Метки</string>
     <string name="site_settings_traffic_header">Трафик</string>
-    <string name="delete_no">Не удалять</string>
     <string name="delete_yes">Удалить</string>
     <string name="plugin_external_link_icon_content_description">Внешняя ссылка</string>
     <string name="plugin_icon_content_description">Значок плагина</string>
@@ -877,10 +910,6 @@ Language: ru
     <string name="title_email_follower">Подписчик по электронной почте</string>
     <string name="title_follower">Читатель</string>
     <string name="people_fetching">Получение списка пользователей…</string>
-    <string name="people_empty_list_filtered_viewers">У вас пока нет обозревателей.</string>
-    <string name="people_empty_list_filtered_email_followers">У вас пока нет подписчиков по электронной почте.</string>
-    <string name="people_empty_list_filtered_followers">У вас пока нет подписчиков.</string>
-    <string name="people_empty_list_filtered_users">В вашем списке пока нет пользователей.</string>
     <string name="people_dropdown_item_viewers">Обозреватели</string>
     <string name="people_dropdown_item_email_followers">Подписчики по электронной почте</string>
     <string name="people_dropdown_item_followers">Подписчики</string>
@@ -937,7 +966,6 @@ Language: ru
     <string name="label_clear_search_history">Очистить историю поиска</string>
     <string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
     <string name="reader_empty_search_description">По запросу «%s» на вашем языке записей не найдено</string>
-    <string name="reader_label_post_search_running">Поиск…</string>
     <string name="reader_hint_post_search">Поиск в WordPress</string>
     <string name="reader_title_related_post_detail">Похожая запись</string>
     <string name="preview_screen_links_disabled">На экране предпросмотра ссылки отключены</string>
@@ -990,7 +1018,7 @@ Language: ru
     <string name="let_us_help">Обратитесь к нам за помощью</string>
     <string name="site_settings_start_over_hint">Запустите свой сайт заново</string>
     <string name="start_over">Начать сначала</string>
-    <string name="me_btn_app_settings">Настройки приложений</string>
+    <string name="me_btn_app_settings">Настройки приложения</string>
     <string name="editor_remove_failed_uploads">Удалить невыполненные загрузки</string>
     <string name="editor_toast_failed_uploads">Не удалось загрузить медиафайлы. Вы не можете сохранять или публиковать\n записи на этом сайте. Удалить все незагруженные медиафайлы?</string>
     <string name="site_settings_advanced_header">Дополнительно</string>
@@ -1148,13 +1176,13 @@ Language: ru
     <string name="site_settings_paging_title">Разбиение на страницы</string>
     <string name="site_settings_threading_title">Ветвление</string>
     <string name="site_settings_sort_by_title">Приоритет сортировки</string>
-    <string name="site_settings_account_required_title">Пользователи должны выполнять вход</string>
+    <string name="site_settings_account_required_title">Только от зарегестрированых пользователей</string>
     <string name="site_settings_identity_required_title">Необходимо указывать имя и эл. адрес</string>
     <string name="site_settings_receive_pingbacks_title">Получать уведомления</string>
     <string name="site_settings_send_pingbacks_title">Отправлять уведомления</string>
     <string name="site_settings_allow_comments_title">Разрешить комментарии</string>
-    <string name="site_settings_default_format_title">Основной формат</string>
-    <string name="site_settings_default_category_title">Основная рубрика</string>
+    <string name="site_settings_default_format_title">Формат записей по умолчанию</string>
+    <string name="site_settings_default_category_title">Рубрика по умолчанию</string>
     <string name="site_settings_address_title">Адрес</string>
     <string name="site_settings_tagline_title">Краткое описание</string>
     <string name="site_settings_title_title">Название сайта</string>
@@ -1213,8 +1241,6 @@ Language: ru
     <string name="notifications_empty_action_comments">Вступите в разговор: комментируйте записи из блогов, на которые вы подписаны.</string>
     <string name="notifications_empty_action_unread">Предоставьте тему для обсуждения: напишите новую запись.</string>
     <string name="notifications_empty_action_all">Будьте активнее! Комментируйте записи из блогов, на которые вы подписаны.</string>
-    <string name="notifications_empty_likes">Новых оценок пока нет.</string>
-    <string name="notifications_empty_followers">Новых подписчиков пока нет.</string>
     <string name="notifications_empty_comments">Новых комментариев пока нет.</string>
     <string name="notifications_empty_unread">Вы всё прочитали!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Откройте статистику в приложении и попробуйте добавить виджет позже</string>
@@ -1256,7 +1282,6 @@ Language: ru
     <string name="notification_settings_item_other_account_emails_summary">Важные письма, касающиеся вашей учётной записи, мы отправляем всегда, но можно также включить и другие полезные уведомления.</string>
     <string name="stats_insights_latest_post_trend">С момента публикации %2$s прошло %1$s. Вот данные о популярности записи…</string>
     <string name="stats_insights_latest_post_summary">Данные о последней записи</string>
-    <string name="button_revert">Отменить</string>
     <string name="yesterday">Вчера</string>
     <string name="days_ago">%d дней назад</string>
     <string name="connectionbar_no_connection">Нет соединения</string>
@@ -1309,7 +1334,6 @@ Language: ru
     <string name="reader_label_new_posts_subtitle">Нажмите, чтобы показать записи.</string>
     <string name="my_site_header_configuration">Конфигурация</string>
     <string name="stats_unknown_author">Неизвестный автор</string>
-    <string name="sign_out_wpcom_confirm">Отключение учётной записи приведет к удалению всех данных @%s WordPress.com с этого устройства, в том числе локальных черновиков и локальных изменений.</string>
     <string name="select_all">Выделить все</string>
     <string name="hide">Скрыть</string>
     <string name="show">Показать</string>
@@ -1351,7 +1375,7 @@ Language: ru
     <string name="stats_views">Просмотров</string>
     <string name="stats_timeframe_years">Годы</string>
     <string name="stats_pagination_label">Страница %1$s из %2$s</string>
-    <string name="stats_likes">Любимое</string>
+    <string name="stats_likes">\"Нравится\"</string>
     <string name="stats_view_countries">Страны</string>
     <string name="stats_view_followers">Подписчики</string>
     <string name="stats_view_publicize">Публикация</string>
@@ -1432,8 +1456,6 @@ Language: ru
     <string name="reader_empty_comments">Пока нет комментариев</string>
     <string name="create_new_blog_wpcom">Создать блог на WordPress.com</string>
     <string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
-    <string name="reader_empty_posts_liked">Вы еще не поставили отметку «Нравится» ни одной записи.</string>
-    <string name="reader_empty_followed_blogs_title">Вы еще не подписаны ни на один сайт.</string>
     <string name="reader_menu_block_blog">Заблокировать этот сайт</string>
     <string name="reader_toast_blog_blocked">Записи с этого сайта больше не будут отображаться</string>
     <string name="reader_toast_err_block_blog">Не удалось заблокировать этот сайт</string>
@@ -1453,7 +1475,6 @@ Language: ru
     <string name="reader_title_subs">Метки и сайты</string>
     <string name="reader_title_tag_preview">Метка из Чтива</string>
     <string name="reader_title_blog_preview">Сайт из Чтива</string>
-    <string name="media_empty_list">Нет медиа</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто–то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>
     <string name="forgot_password">Забыли пароль?</string>
@@ -1461,7 +1482,7 @@ Language: ru
     <string name="username_or_password_incorrect">Имя пользователя или пароль введены неверно</string>
     <string name="email_invalid">Введите правильный email адрес</string>
     <string name="invalid_email_message">Ваш адрес email не подходит</string>
-    <string name="passcode_wrong_passcode">Неправильный PIN</string>
+    <string name="passcode_wrong_passcode">Неправильный PIN–код</string>
     <string name="error_downloading_image">Ошибка при загрузке картинки</string>
     <string name="error_load_comment">Невозможно загрузить комментарии</string>
     <string name="error_edit_comment">Во время редактирования комментария произошла ошибка</string>
@@ -1481,7 +1502,6 @@ Language: ru
     <string name="adding_cat_success">Категория успешно добавлена</string>
     <string name="adding_cat_failed">Добавление категории не удалось</string>
     <string name="mnu_comment_unspam">Нет спама</string>
-    <string name="comments_empty_list">Нет комментариев</string>
     <string name="theme_fetch_failed">Ошибка выбора темы.</string>
     <string name="blog_not_found">Ошибка при попытке подключиться к блогу</string>
     <string name="gallery_error">Медиа–файл не может быть восстановлен</string>
@@ -1564,7 +1584,6 @@ Language: ru
     <string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>
     <string name="pick_video">Выберите видео</string>
     <string name="pick_photo">Выберите фото</string>
-    <string name="reader_empty_followed_blogs_description">Просто нажмите на иконку справа вверху, чтобы найти что–нибудь интересное!</string>
     <string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
     <string name="reader_empty_followed_tags">Вы не подписаны ни на одну метку.</string>
     <string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
@@ -1575,17 +1594,18 @@ Language: ru
     <string name="reader_toast_err_comment_failed">Не удалось оставить комментарий</string>
     <string name="reader_likes_only_you">Вам нравится это</string>
     <string name="reader_likes_one">Одному человеку нравится это</string>
-    <string name="reader_label_removed_tag">Удалить %s</string>
-    <string name="reader_label_added_tag">Добавить %s</string>
+    <string name="reader_label_removed_tag">Метка %s удалена</string>
+    <string name="reader_label_added_tag">Метка %s добавлена</string>
     <string name="reader_hint_comment_on_comment">Ответить на комментарий…</string>
     <string name="reader_btn_unfollow">Отписаться</string>
     <string name="reader_btn_follow">Подписаться</string>
     <string name="reader_btn_share">Поделиться</string>
     <string name="reader_untitled_post">(Без названия)</string>
+    <string name="comments_empty_list">Комментариев ещё нет</string>
     <string name="empty_list_default">Этот список пуст</string>
     <string name="passcode_turn_on">Включить блокировку PIN</string>
     <string name="passcode_turn_off">Выключить блокировку PIN</string>
-    <string name="passcode_preference_title">Блокировка PIN</string>
+    <string name="passcode_preference_title">Блокировка PIN–кодом</string>
     <string name="passcode_set">PIN установлен</string>
     <string name="passcode_change_passcode">Изменить PIN</string>
     <string name="passcode_re_enter_passcode">Введите ваш PIN заново</string>

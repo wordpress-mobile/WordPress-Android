@@ -163,7 +163,7 @@ public class StatsActivity extends AppCompatActivity
                         refreshStatsFromCurrentDate();
                     }
                 }
-                                                         );
+        );
 
         setTitle(R.string.stats);
 
@@ -641,7 +641,7 @@ public class StatsActivity extends AppCompatActivity
                     getString(R.string.stats_widget_promo_title),
                     getString(R.string.stats_widget_promo_desc),
                     getString(R.string.stats_widget_promo_ok_btn_label),
-                    R.drawable.stats_widget_promo_header);
+                    R.drawable.img_promo_stats_widget);
             newFragment.show(getSupportFragmentManager(), TAG_PROMO_DIALOG);
         }
     }

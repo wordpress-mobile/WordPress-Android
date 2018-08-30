@@ -442,10 +442,6 @@ Language: nb_NO
     <string name="title_email_follower">E–postfølger</string>
     <string name="title_follower">Følger</string>
     <string name="people_fetching">Henter tak i brukere …</string>
-    <string name="people_empty_list_filtered_viewers">Du har ikke noen lesere ennå.</string>
-    <string name="people_empty_list_filtered_email_followers">Du har ikke noen E–postfølgere ennå.</string>
-    <string name="people_empty_list_filtered_followers">Du har ikke noen følgere ennå.</string>
-    <string name="people_empty_list_filtered_users">Du har ikke noen brukere ennå.</string>
     <string name="people_dropdown_item_viewers">Lesere</string>
     <string name="people_dropdown_item_email_followers">E–postfølgere</string>
     <string name="people_dropdown_item_followers">Følgere</string>
@@ -501,7 +497,6 @@ Language: nb_NO
     <string name="send_link">Send lenke</string>
     <string name="label_clear_search_history">Slett søkehistorien</string>
     <string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
-    <string name="reader_label_post_search_running">Søker …</string>
     <string name="reader_title_related_post_detail">Relatert innlegg</string>
     <string name="preview_screen_links_disabled">Lenker er deaktivert på forhåndsvisningsskjermen</string>
     <string name="draft_explainer">Dette innlegget er et utkast som ikke har blitt publisert</string>
@@ -543,7 +538,6 @@ Language: nb_NO
     <string name="delete_site_hint">Slett siden</string>
     <string name="export_site_hint">Eksporter siden din til en XML–fil</string>
     <string name="primary_domain">Hoveddomene</string>
-    <string name="error_deleting_site_summary">Det oppstod en feil under slettingen av nettstedet ditt. Vennligst kontakt kundestøtte for å få mere assistanse</string>
     <string name="error_deleting_site">Feil under sletting av nettsted</string>
     <string name="site_settings_export_content_title">Eksporter innholdet</string>
     <string name="confirm_delete_site_prompt">Vennligst skriv inn %1$s i feltet nedenfor for å bekreft. Nettstedet ditt vil da bli borte for evig og alltid.</string>
@@ -557,9 +551,6 @@ Language: nb_NO
     <string name="editor_remove_failed_uploads">Fjern mislykkede opplastninger</string>
     <string name="editor_toast_failed_uploads">Noen medieopplastninger har mislyktes. Du kan ikke lagre eller publisere\n   innlegget ditt i denne tilstanden. Vil du fjerne alle mislykkede medier?</string>
     <string name="site_settings_advanced_header">Avansert</string>
-    <string name="comments_empty_list_filtered_trashed">Ingen forkastede kommentarer</string>
-    <string name="comments_empty_list_filtered_pending">Ingen ventende kommentarer</string>
-    <string name="comments_empty_list_filtered_approved">Ingen godkjente kommentarer</string>
     <string name="xmlrpc_missing_method_error">Klarte ikke å koble til. De påkrevde XML-RPC–metodene mangler på denne tjeneren.</string>
     <string name="alignment_center">Midten</string>
     <string name="post_format_video">Video</string>
@@ -618,7 +609,6 @@ Language: nb_NO
     <string name="mnu_comment_delete_permanently">Slett</string>
     <string name="mnu_comment_untrash">Gjenopprett</string>
     <string name="comment_deleted_permanently">Kommentaren ble slettet</string>
-    <string name="comments_empty_list_filtered_spam">Ingen spam–kommentarer</string>
     <string name="comment_status_all">Alle</string>
     <string name="could_not_load_page">Klarte ikke å laste inn siden</string>
     <string name="off">Av</string>
@@ -770,15 +760,7 @@ Language: nb_NO
     <string name="reader_label_gap_marker">Last inn flere innlegg</string>
     <string name="notifications_no_search_results">Ingen sider samsvarte med \'%s\'</string>
     <string name="search_sites">Søk i nettsteder</string>
-    <string name="notifications_empty_view_reader">Vis leseren</string>
-    <string name="notifications_empty_action_followers_likes">Bli notert om det: Kommenter på innlegg du har lest.</string>
-    <string name="notifications_empty_action_comments">Bli med i en samtale: kommenter på innlegg fra blogger som du følger.</string>
-    <string name="notifications_empty_action_unread">Fyr i gang diskusjonen igjen: skriv et nytt innlegg.</string>
     <string name="notifications_empty_action_all">Bli aktiv! Kommenter på innlegg fra blogger som du følger.</string>
-    <string name="notifications_empty_likes">Ingen nye Likes å vise … ennå.</string>
-    <string name="notifications_empty_followers">Ingen nye følgere å melde fra om … ennå.</string>
-    <string name="notifications_empty_comments">Ingen nye kommentarer … ennå.</string>
-    <string name="notifications_empty_unread">Du har lest deg opp på alt sammen!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Vennligst få tilgang til Statistikker i appen, og prøv å legge til widgeten senere</string>
     <string name="stats_widget_error_readd_widget">Vennligst fjern widgeten og prøv så å legge den til på nytt.</string>
     <string name="stats_widget_error_no_visible_blog">Kan ikke få tilgang til statistikkene uten en synlig blogg</string>
@@ -817,7 +799,6 @@ Language: nb_NO
     <string name="notification_settings_item_other_account_emails_summary">Vi vil alltid sende viktige E–poster om kontoen din, men du kan få vite om noen nyttige bonusting også.</string>
     <string name="stats_insights_latest_post_trend">Det er %1$s siden %2$s ble publisert. Her ser du hvordan innlegget har klart seg så langt …</string>
     <string name="stats_insights_latest_post_summary">Oppsummering for nyeste innlegg</string>
-    <string name="button_revert">Tilbakestill</string>
     <string name="yesterday">I går</string>
     <string name="days_ago">%d dager siden</string>
     <string name="connectionbar_no_connection">Ingen tilkobling</string>
@@ -866,7 +847,6 @@ Language: nb_NO
     <string name="reader_label_new_posts_subtitle">Trykk for å vise dem</string>
     <string name="my_site_header_configuration">Oppsett</string>
     <string name="stats_unknown_author">Ukjent forfatter</string>
-    <string name="sign_out_wpcom_confirm">Å logge ut av kontoen din vil fjerne alle WordPress.com–dataene til @%s fra denne enheten, inkludert lokale utkast og lokale endringer.</string>
     <string name="select_all">Velg alle</string>
     <string name="hide">Skjul</string>
     <string name="show">Vis</string>
@@ -988,8 +968,6 @@ Language: nb_NO
     <string name="reader_empty_comments">Ingen kommentarer enda</string>
     <string name="create_new_blog_wpcom">Lag en WordPress.com–blogg</string>
     <string name="browse_our_faq_button">Bla gjennom vår FAQ</string>
-    <string name="reader_empty_posts_liked">Du har ikke likt noen innlegg</string>
-    <string name="reader_empty_followed_blogs_title">Du følger ikke noen sider ennå</string>
     <string name="reader_toast_err_generic">Kan ikke gjøre dette</string>
     <string name="contact_us">Kontakt oss</string>
     <string name="schedule_verb">Publiser</string>
@@ -998,7 +976,6 @@ Language: nb_NO
     <string name="reader_page_followed_blogs">Fulgte sider</string>
     <string name="reader_page_followed_tags">Fulgte merker</string>
     <string name="reader_title_tag_preview">Leser–merke</string>
-    <string name="media_empty_list">Ingen media</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
     <string name="ssl_certificate_error">Ugyldig SSL–sertifikat</string>
     <string name="forgot_password">Mistet passordet ditt?</string>
@@ -1026,7 +1003,6 @@ Language: nb_NO
     <string name="adding_cat_success">Kategorien ble vellykket lagt til</string>
     <string name="adding_cat_failed">Tillegging av kategorien mislyktes</string>
     <string name="mnu_comment_unspam">Ikke useriøs</string>
-    <string name="comments_empty_list">Ingen kommentarer</string>
     <string name="theme_fetch_failed">Klarte ikke å hente tak i temaer</string>
     <string name="blog_not_found">En feil oppstod under å få tilgang til denne bloggen</string>
     <string name="gallery_error">Mediegjenstanden kunne ikke bli hentet inn</string>
@@ -1106,7 +1082,6 @@ Language: nb_NO
     <string name="reader_toast_err_get_post">Klarte ikke å hente inn dette innlegget</string>
     <string name="pick_video">Velg video</string>
     <string name="pick_photo">Velg bilde</string>
-    <string name="reader_empty_followed_blogs_description">Men ikke vær redd, bare trykk på ikonet øverst til høyre for å begynne å utforske!</string>
     <string name="reader_likes_you_and_one">Du og en annen har likt dette</string>
     <string name="reader_empty_followed_tags">Du følger ingen stikkord</string>
     <string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>

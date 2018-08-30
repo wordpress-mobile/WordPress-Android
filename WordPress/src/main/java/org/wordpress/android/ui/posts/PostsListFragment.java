@@ -176,8 +176,8 @@ public class PostsListFragment extends Fragment
         View view = inflater.inflate(R.layout.post_list_fragment, container, false);
 
         mSwipeRefreshLayout = view.findViewById(R.id.ptr_layout);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mProgressLoadMore = view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
 
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
@@ -268,7 +268,7 @@ public class PostsListFragment extends Fragment
                         requestPosts(false);
                     }
                 }
-                                                         );
+        );
     }
 
     private @Nullable PostsListAdapter getPostListAdapter() {
@@ -416,14 +416,14 @@ public class PostsListFragment extends Fragment
         }
 
         boolean hasNoContent = emptyViewMessageType == EmptyViewMessageType.NO_CONTENT;
-        mActionableEmptyView.setImageResource(mIsPage ? R.drawable.img_illustration_pages_104dp
+        mActionableEmptyView.image.setImageResource(mIsPage ? R.drawable.img_illustration_pages_104dp
                 : R.drawable.img_illustration_posts_75dp);
-        mActionableEmptyView.setImageVisibility(hasNoContent);
-        mActionableEmptyView.setTitleText(getText(stringId));
-        mActionableEmptyView.setButtonText(getString(mIsPage ? R.string.pages_empty_list_button
-                : R.string.posts_empty_list_button));
-        mActionableEmptyView.setButtonVisibility(hasNoContent);
-        mActionableEmptyView.setButtonClickListener(new OnClickListener() {
+        mActionableEmptyView.image.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.title.setText(stringId);
+        mActionableEmptyView.button.setText(mIsPage ? R.string.pages_empty_list_button
+                : R.string.posts_empty_list_button);
+        mActionableEmptyView.button.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
             }
@@ -678,7 +678,7 @@ public class PostsListFragment extends Fragment
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.undo, undoListener);
 
         // wait for the undo snackbar to disappear before actually deleting the post
-        snackbar.setCallback(new Snackbar.Callback() {
+        snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 super.onDismissed(snackbar, event);

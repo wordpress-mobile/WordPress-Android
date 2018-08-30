@@ -50,12 +50,44 @@
 
     <style name="JetpackConnectionText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_extra_medium_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
 
     <style name="JetpackConnectionButton" parent="WordPress.Button.Primary">
         <item name="android:paddingLeft">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
+    </style>
+
+    <style name="JetpackInstallTitleText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="JetpackInstallMessageText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="JetpackFaqButton">
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body2</item>
+        <item name="android:textColor">@color/blue_medium</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="JetpackTermsAndConditionsButton">
+        <item name="android:autoLink">all</item>
+        <item name="android:linksClickable">false</item>
+        <item name="android:selectAllOnFocus">false</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 </resources>

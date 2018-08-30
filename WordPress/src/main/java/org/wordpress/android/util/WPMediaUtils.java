@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -221,7 +220,6 @@ public class WPMediaUtils {
     }
 
     public static void launchVideoLibrary(Activity activity, boolean multiSelect) {
-        AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(prepareVideoLibraryIntent(activity, multiSelect),
                                         RequestCodes.VIDEO_LIBRARY);
     }
@@ -238,7 +236,6 @@ public class WPMediaUtils {
     }
 
     public static void launchVideoCamera(Activity activity) {
-        AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
     }
 
@@ -247,7 +244,6 @@ public class WPMediaUtils {
     }
 
     public static void launchPictureLibrary(Activity activity, boolean multiSelect) {
-        AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(
                 preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
@@ -273,7 +269,6 @@ public class WPMediaUtils {
     public static void launchCamera(Activity activity, String applicationId, LaunchCameraCallback callback) {
         Intent intent = prepareLaunchCamera(activity, applicationId, callback);
         if (intent != null) {
-            AppLockManager.getInstance().setExtendedTimeout();
             activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }

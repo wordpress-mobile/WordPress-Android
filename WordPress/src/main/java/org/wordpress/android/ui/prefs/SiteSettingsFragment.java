@@ -1507,7 +1507,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             }
                         }
                 )
-                                   );
+        );
         view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1537,7 +1537,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                                             list.smoothScrollToPosition(getAdapter().getItemCount() - 1);
                                         }
                                     }
-                                     );
+                            );
                             mSiteSettings.saveSettings();
                             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM,
                                                                 mSite);
@@ -1677,6 +1677,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
     }
 
     private void removeNonJetpackPreferences() {

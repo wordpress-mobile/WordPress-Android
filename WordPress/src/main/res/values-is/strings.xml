@@ -116,10 +116,6 @@ Language: is
     <string name="title_follower">Fylgjandi</string>
     <string name="people_fetching">Sæki notendur…</string>
     <string name="title_email_follower">Fylgjandi í tölvupósti</string>
-    <string name="people_empty_list_filtered_viewers">Þú hefur enga lesendur ennþá.</string>
-    <string name="people_empty_list_filtered_email_followers">Þú hefur enga fylgjendur í tölvupósti ennþá.</string>
-    <string name="people_empty_list_filtered_followers">Þú hefur enga fylgjendur ennþá.</string>
-    <string name="people_empty_list_filtered_users">Þú hefur enga notendur ennþá.</string>
     <string name="people_dropdown_item_email_followers">Fylgjendur í tölvupósti</string>
     <string name="people_dropdown_item_viewers">Lesendur</string>
     <string name="people_dropdown_item_followers">Fylgjendur</string>
@@ -170,7 +166,6 @@ Language: is
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
-    <string name="reader_label_post_search_running">Leita…</string>
     <string name="reader_title_related_post_detail">Tengdar færslur</string>
     <string name="preview_screen_links_disabled">Tenglar eru óvirkir í forsýn</string>
     <string name="draft_explainer">Þessi færsla er drög sem hafa ekki verið birt</string>
@@ -212,7 +207,6 @@ Language: is
     <string name="delete_site_hint">Eyða vef</string>
     <string name="export_site_hint">Flytja vefinn þinn út sem XML skrá</string>
     <string name="primary_domain">Aðallén</string>
-    <string name="error_deleting_site_summary">Það kom upp villa við eyðingu á vefnum þínum. Vinsamlegast hafðu samband við notendaþjónustu fyrir frekari aðstoð</string>
     <string name="error_deleting_site">Villa kom upp við að eyða vef</string>
     <string name="confirm_delete_site_prompt">Vinsamlegast ritaðu %1$s í reitinn hér að neðan til staðfestingar. Vefurinn þinn hverfur að eilífu.</string>
     <string name="site_settings_export_content_title">Flytja út efni</string>
@@ -226,9 +220,6 @@ Language: is
     <string name="editor_remove_failed_uploads">Fjarlægja misheppnuð upphöl</string>
     <string name="editor_toast_failed_uploads">Einhver skráarupphöl misheppnuðust. Þú getur ekki vistað eða birt\n        færsluna þína eins og staðan er. Viltu fjarlægja allar skrár sem mistókust?</string>
     <string name="site_settings_advanced_header">Ítarlegra</string>
-    <string name="comments_empty_list_filtered_trashed">Engar athugasemdir í ruslatunnu</string>
-    <string name="comments_empty_list_filtered_pending">Engar athugasemdir á bið</string>
-    <string name="comments_empty_list_filtered_approved">Engar samþykktar athugasemdir</string>
     <string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML–RPC virkni vantar á netþjóninn.</string>
     <string name="alignment_center">Miðja</string>
     <string name="post_format_status">Staða</string>
@@ -285,7 +276,6 @@ Language: is
     <string name="mnu_comment_delete_permanently">Eyða</string>
     <string name="mnu_comment_untrash">Endurvekja</string>
     <string name="comment_deleted_permanently">Athugasemd eytt</string>
-    <string name="comments_empty_list_filtered_spam">Enginn amapóstur í athugasemdum</string>
     <string name="comment_status_all">Allt</string>
     <string name="could_not_load_page">Gat ekki hlaðið síðu</string>
     <string name="off">Af</string>
@@ -436,15 +426,7 @@ Language: is
     <string name="reader_label_gap_marker">Sækja fleiri færslur</string>
     <string name="notifications_no_search_results">Engir vefir pössuðu við \'%s\'</string>
     <string name="search_sites">Leita að vef</string>
-    <string name="notifications_empty_view_reader">Skoða lesara</string>
-    <string name="notifications_empty_action_followers_likes">Láttu taka eftir þér: skrifaðu athugasemdir við færslur sem þú hefur lesið.</string>
-    <string name="notifications_empty_action_comments">Taktu þátt í samræðum: ritaðu athugasemd eða færslur af bloggunum sem þú fylgist með.</string>
-    <string name="notifications_empty_action_unread">Komdu samræðum aftur í gang: ritaðu nýja færslu.</string>
     <string name="notifications_empty_action_all">Vertu virk(ur)! Skrifaðu athugasemdir við færslur á bloggum sem þú fylgist með.</string>
-    <string name="notifications_empty_likes">Engum líkar við…enn.</string>
-    <string name="notifications_empty_followers">Engir nýir fylgjendur…enn.</string>
-    <string name="notifications_empty_comments">Engar nýjar athugasemdir…enn.</string>
-    <string name="notifications_empty_unread">Þú hefur unnið allt upp!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Þú getur nálgast tölfræði í forritinu með því að bæta síðuhlutnum við síðar</string>
     <string name="stats_widget_error_readd_widget">Vinsamlegast fjarlægðu síðuhlutinn og bættu honum aftur við</string>
     <string name="stats_widget_error_no_visible_blog">Tölfræði er ekki aðgengileg án þess að blogg sé opið</string>
@@ -482,7 +464,6 @@ Language: is
     <string name="notifications_tab">Tilkynningar</string>
     <string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til…</string>
     <string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
-    <string name="button_revert">Afturkalla</string>
     <string name="yesterday">Í gær</string>
     <string name="days_ago">%d dögum síðan</string>
     <string name="connectionbar_no_connection">Ekkert samband</string>
@@ -535,7 +516,6 @@ Language: is
     <string name="hide">Hylja</string>
     <string name="select_all">Velja allar</string>
     <string name="deselect_all">Afvelja allt</string>
-    <string name="sign_out_wpcom_confirm">Með því að skrá þig út úr aðgangnum þínum fjarlægir þú öll WordPress.com gögn @%s úr þessu tæki, þar með talið staðvær drög og breytingar.</string>
     <string name="stats_generic_error">Ekki var hægt að hlaða inn nauðsynlega tölfræði</string>
     <string name="language">Tungumál</string>
     <string name="auth_required">Skráðu þig aftur inn til að halda áfram.</string>
@@ -650,9 +630,7 @@ Language: is
     <string name="reader_empty_comments">Engar athugasemdir enn</string>
     <string name="reader_label_view_original">Skoða upprunalega grein</string>
     <string name="pages_empty_list">Engar síður enn. Hvers vegna ekki að búa til eina?</string>
-    <string name="reader_empty_followed_blogs_title">Þú fylgir engum vefjum enn</string>
     <string name="reader_empty_posts_in_tag">Engar færslur með þetta merki</string>
-    <string name="reader_empty_posts_liked">Þú hefur ekki líkað við neinar færslur</string>
     <string name="stats_no_blog">Ekki var hægt að hlaða tölfræði fyrir bloggið</string>
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
     <string name="contact_us">Hafðu samband við okkur</string>
@@ -662,7 +640,6 @@ Language: is
     <string name="reader_page_followed_tags">Merki sem ég fylgi</string>
     <string name="reader_hint_add_tag_or_url">Sláðu inn vefslóð eða merki til þess að fylgja</string>
     <string name="reader_title_tag_preview">Merki lesara</string>
-    <string name="media_empty_list">Engar skrár</string>
     <string name="help">Hjálp</string>
     <string name="forgot_password">Tapað lykilorð?</string>
     <string name="ssl_certificate_error">Ógilt SSL skírteini</string>
@@ -676,7 +653,6 @@ Language: is
     <string name="adding_cat_success">Flokki bætt við</string>
     <string name="blog_not_found">Villa kom upp við að tengjast við þetta blogg</string>
     <string name="adding_cat_failed">Tókst ekki að bæta við flokki</string>
-    <string name="comments_empty_list">Engar athugasemdir</string>
     <string name="invalid_url_message">Athugaðu hvort að uppgefin vefslóð (URL) bloggs sé gild</string>
     <string name="cat_name_required">Nafn flokks er krafist</string>
     <string name="email_invalid">Sláðu inn gilt netfang</string>
@@ -767,7 +743,6 @@ Language: is
     <string name="reader_toast_err_get_post">Gat ekki sótt þessa færslu</string>
     <string name="pick_photo">Velja mynd</string>
     <string name="pick_video">Velja myndband</string>
-    <string name="reader_empty_followed_blogs_description">Engar áhyggjur, ýttu bara á smámyndina fyrir efnisorð til þess að byrja að skoða!</string>
     <string name="reader_btn_share">Deila</string>
     <string name="reader_btn_follow">Fylgja</string>
     <string name="reader_btn_unfollow">Fylgja</string>

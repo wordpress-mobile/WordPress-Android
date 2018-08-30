@@ -1,4 +1,0 @@
-10.4:
-* Nieuw: Activiteitenlog voor terugzetten: zet je site terug naar een eerder moment.
-* Een paar kleine UI-verbeteringen en verfijningen.
-* Verschillende bugfixes

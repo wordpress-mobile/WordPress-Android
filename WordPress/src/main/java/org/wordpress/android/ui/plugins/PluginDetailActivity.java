@@ -503,6 +503,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .setVisibility(mPlugin.isInstalled() && isNotAutoManaged() ? View.VISIBLE : View.GONE);
         findViewById(R.id.plugin_state_active_container)
                 .setVisibility(canPluginBeDisabledOrRemoved() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.plugin_state_autoupdates_container)
+                .setVisibility(mSite.isAutomatedTransfer() ? View.GONE : View.VISIBLE);
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 

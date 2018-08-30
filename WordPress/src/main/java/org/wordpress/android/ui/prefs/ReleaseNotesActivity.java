@@ -69,7 +69,7 @@ public class ReleaseNotesActivity extends WebViewActivity {
                         ReleaseNotesActivity.this.setTitle(view.getTitle());
                     }
                 }
-                                 );
+        );
     }
 
     @Override

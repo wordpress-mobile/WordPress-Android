@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,14 +10,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderRecommendedBlog;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActionableEmptyView;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 
@@ -61,7 +66,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
@@ -76,29 +81,55 @@ public class ReaderBlogFragment extends Fragment
             return;
         }
 
-        ActionableEmptyView emptyView = getView().findViewById(R.id.actionable_empty_view);
+        ActionableEmptyView actionableEmptyView = getView().findViewById(R.id.actionable_empty_view);
 
-        if (emptyView == null) {
+        if (actionableEmptyView == null) {
             return;
         }
 
         if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
+            actionableEmptyView.setVisibility(View.VISIBLE);
+            actionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
+            actionableEmptyView.subtitle.setText(R.string.reader_empty_followed_blogs_description);
+            actionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
+            actionableEmptyView.button.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View view) {
+                    ReaderTag tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+
+                    if (!ReaderTagTable.tagExists(tag)) {
+                        tag = ReaderTagTable.getFirstTag();
+                    }
+
+                    AppPrefs.setReaderTag(tag);
+
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                    }
+                }
+            });
 
             switch (getBlogType()) {
                 case RECOMMENDED:
-                    emptyView.setTitleText(getString(R.string.reader_empty_recommended_blogs));
+                    actionableEmptyView.title.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
-                        emptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_search_title));
+                        actionableEmptyView.updateLayoutForSearch(true, 0);
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_search_title);
+                        actionableEmptyView.subtitle.setVisibility(View.GONE);
+                        actionableEmptyView.button.setVisibility(View.GONE);
+                        actionableEmptyView.image.setVisibility(View.GONE);
                     } else {
-                        emptyView.setTitleText(getString(R.string.reader_empty_followed_blogs_title));
+                        actionableEmptyView.updateLayoutForSearch(false, 0);
+                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_title);
+                        actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+                        actionableEmptyView.button.setVisibility(View.VISIBLE);
+                        actionableEmptyView.image.setVisibility(View.VISIBLE);
                     }
                     break;
             }
         } else {
-            emptyView.setVisibility(View.GONE);
+            actionableEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -109,7 +140,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         if (getBlogAdapter().hasSearchFilter()) {
             outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
@@ -146,7 +177,7 @@ public class ReaderBlogFragment extends Fragment
         SearchView searchView = (SearchView) searchMenu.getActionView();
         searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
-        MenuItemCompat.setOnActionExpandListener(searchMenu, new MenuItemCompat.OnActionExpandListener() {
+        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;

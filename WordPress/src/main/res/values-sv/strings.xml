@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 13:34:18+0000
+Translation-Revision-Date: 2018-08-17 07:35:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="themes_empty_list">Inga teman matchar din sökning</string>
+    <string name="reader_label_post_search_explainer">Vad vill du hitta?</string>
+    <string name="site_settings_tags_empty_title_search">Inga etiketter matchar din sökning</string>
+    <string name="site_settings_tags_empty_title">Du har inga etiketter</string>
+    <string name="site_settings_tags_empty_subtitle">Lägg till dina vanligaste etiketter här, så att du snabbt kan välja dem för att märka dina inlägg</string>
+    <string name="site_settings_tags_empty_button">Skapa en etikett</string>
+    <string name="media_empty_search_list">Inga media matchar din sökning</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Logga ut från WordPress?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Du har gjort ändringar i inlägg som ännu inte är uppladdade till webbplatsen. Om du loggar ut nu kommer dessa ändringar tas bort från din enhet. Logga ut ändå?</string>
+    <string name="people_empty_list_filtered_viewers">Inga besökare än</string>
+    <string name="people_empty_list_filtered_email_followers">Inga e–postföljare än</string>
+    <string name="people_empty_list_filtered_followers">Inga följare än</string>
+    <string name="people_empty_list_filtered_users">Inga användare än</string>
+    <string name="connection_service_facebook_notice">Sedan 1 augusti tillåter Facebook inte längre automatisk delning av inlägg till en profil på Facebook. Kopplingar till Facebook–sidor fungerar fortfarande.</string>
+    <string name="reader_empty_posts_liked_description">Inlägg som du gillar kommer att visas här</string>
+    <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
+    <string name="reader_empty_followed_blogs_button_followed">Gå till följda webbplatser</string>
+    <string name="reader_empty_followed_blogs_button_discover">Hitta webbplatser</string>
+    <string name="reader_empty_followed_blogs_description">Du följer inte någre webbplatser än. Du kanske vill följa någon nu?</string>
+    <string name="reader_empty_followed_blogs_title">Inga följda webbplatser</string>
+    <string name="notifications_empty_likes">Inga gillamarkeringar än</string>
+    <string name="notifications_empty_followers">Inga följare än</string>
+    <string name="activity_log_limited_content_on_free_plan">Eftersom du har ett gratispaket visar din aktivitetslogg begränsade händelser.</string>
+    <string name="activity_log_empty_subtitle">När du ändrar saker på din webbplats kommer du att kunna se din aktivitetshistoria här</string>
+    <string name="activity_log_empty_title">Ingen aktivitet än</string>
+    <string name="posts_empty_list_button">Skapa ett inlägg</string>
+    <string name="pages_empty_list_button">Skapa en sida</string>
+    <string name="media_empty_upload_media">Ladda upp mediafil</string>
+    <string name="media_empty_list">Du har inga mediafiler</string>
+    <string name="reader_gallery_images_desc">bildgalleri</string>
+    <string name="blavatar_desc">webbplats–ikon</string>
+    <string name="theme_image_desc">tema–bild</string>
+    <string name="featured_image_desc">utvald bild</string>
+    <string name="local_changes_discarding_error">Ett fel inträffade när dina lokala ändringar skulle kastas. Kontakta supporten för vidare hjälp.</string>
+    <string name="local_changes_discarding">Kastar lokala ändringar</string>
+    <string name="local_changes_discarded">De lokala ändringarna har kastats</string>
+    <string name="menu_discard_changes">Kasta lokala ändringar</string>
+    <string name="button_discard_changes">Kasta ändringar</string>
+    <string name="button_discard">Kasta</string>
     <string name="reader_avatar_desc">Profilbild</string>
     <string name="reader_blavatar_desc">webblatsikon</string>
     <string name="notification_channel_transient_title">Tillfälligt</string>
@@ -18,21 +57,20 @@ Language: sv_SE
     <string name="support_contact_email">E–postadress för kontakt</string>
     <string name="application_log_button">Logg för applikationen</string>
     <string name="my_tickets">Mina ärenden</string>
-    <string name="activity_log_rewind_dialog_message">Är du säker på att du vill återställa din webbplats till %s kl. %s? Detta kommer att avlägsna innehåll och inställningar som skapats eller ändrats sedan dess.</string>
+    <string name="activity_log_rewind_dialog_message">Är du säker på att du vill återställa din webbplats till %1$s kl. %2$s? Detta kommer att avlägsna innehåll och inställningar som skapats eller ändrats sedan dess.</string>
     <string name="activity_log_rewind_site">Återställ webbplats</string>
     <string name="activity_log_currently_restoring_message_no_dates">Återställning pågår</string>
-    <string name="activity_log_currently_restoring_message">Återställer till %s %s</string>
+    <string name="activity_log_currently_restoring_message">Återställer till %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Din webbplats återställs just nu</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Din webbplats har återställts</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Din webbplats har återställts\nBackat till %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Din webbplats håller på att återställas\nBackar till %s %s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Din webbplats har återställts\nBackat till %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Din webbplats håller på att återställas\nBackar till %1$s %2$s</string>
     <string name="activity_log_button">Åtgärdsknapp för akitivitetslogg</string>
     <string name="plugin_auto_managed">Automatiskt hanterad</string>
     <string name="reader_save_posts_locally_dialog_message">Spara detta inlägg och läs det senare, närhelst det passar dig. Det kommer endast att vara tillgängligt på denna enhet – sparade inlägg synkroniseras inte till dina andra enheter. (Än så länge, men vi jobbar på det!)</string>
     <string name="reader_save_posts_locally_dialog_title">Spara inlägg till senare</string>
     <string name="reader_empty_search_request_failed">Kan inte genomföra sökningen</string>
     <string name="reader_empty_search_title">Inga resultat hittades</string>
-    <string name="reader_label_post_search_explainer">Sök i WordPress\nefter en webbplats eller ett inlägg</string>
     <string name="comment_read_source_post">Läs käll–inlägget</string>
     <string name="sites">Webbplatser</string>
     <string name="signup_magic_link_title">Magisk länk har skickats</string>
@@ -53,7 +91,6 @@ Language: sv_SE
     <string name="reader_remove_bookmark">Ta bort från sparade inlägg</string>
     <string name="reader_add_bookmark">Lägg till i sparade inlägg</string>
     <string name="reader_save_for_later_title">Sparade inlägg</string>
-    <string name="activity_log_empty_list">Inga händelser har registrerats ännu</string>
     <string name="removed">Borttaget</string>
     <string name="tabbar_accessibility_label_write">Nytt inlägg. Skriv ett nytt inlägg.</string>
     <string name="my_site_icon_content_description">Byt webbplatsikon</string>
@@ -123,7 +160,6 @@ Language: sv_SE
     <string name="notification_channel_general_title">Allmänt</string>
     <string name="photo_picker_use_photo">Använd detta foto</string>
     <string name="media_preview_title">%1$d av %2$d</string>
-    <string name="stock_media_picker_empty_results">Inga träffar</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografrier från %s</string>
     <string name="stock_media_picker_initial_empty_text">Sök efter fria fotografier som du kan lägga till i ditt mediabibliotek</string>
     <string name="stock_media_picker_search_hint">Sök i bibliotek med fria fotografier</string>
@@ -155,7 +191,6 @@ Language: sv_SE
     <string name="stats_tab_tap_content_description">visar %s</string>
     <string name="stats_legend">beskrivning av statistikdiagram</string>
     <string name="fab_create_desc">skapa</string>
-    <string name="fab_add_tag_desc">skapa etikett</string>
     <string name="stats_bar_week_desc">Veckan med %s</string>
     <string name="stats_bar_date_value_desc">%s, %d visningar</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -170,7 +205,6 @@ Language: sv_SE
     <string name="reader_list_item_suggestion_remove_desc">ta bort</string>
     <string name="photo_picker_thumbnail_desc">Spela video</string>
     <string name="reader_cardview_post_play_video_desc">spela utvald video</string>
-    <string name="post_cardview_featured_desc">utvald bild</string>
     <string name="plugin_detail_logo_desc">tilläggets logga</string>
     <string name="plugin_detail_banner_desc">tilläggets banner–bild</string>
     <string name="photo_picker_wpmedia_desc">välj från WordPress mediakatalog</string>
@@ -192,9 +226,9 @@ Language: sv_SE
     <string name="jetpack_connection_failed_with_reason">Anslutningen till Jetpack fungerade inte: %s</string>
     <string name="jetpack_already_connected_toast">DU är redan ansluten till Jetpack</string>
     <string name="menu_undo_snackbar_action">ÅNGRA</string>
-    <string name="menu_visual_mode_done_snackbar">Växlat till visuellt läge.</string>
+    <string name="menu_visual_mode_done_snackbar">Växlat till visuellt läge</string>
     <string name="menu_visual_mode">Visuellt läge</string>
-    <string name="menu_html_mode_done_snackbar">Växlat till HTML–läge.</string>
+    <string name="menu_html_mode_done_snackbar">Växlat till HTML–läge</string>
     <string name="menu_html_mode">HTML–läge</string>
     <string name="menu_preview">Förhandsgranskning</string>
     <string name="menu_publish_now">Publicera nu</string>
@@ -415,7 +449,7 @@ Language: sv_SE
     <string name="site_settings_tags_hint">Hantera etiketterna för din webbplats</string>
     <string name="dlg_saving_tag">Sparar</string>
     <string name="dlg_deleting_tag">Raderar</string>
-    <string name="dlg_confirm_delete_tag">Radera ”%s” permanent?</string>
+    <string name="dlg_confirm_delete_tag">Radera etiketten ”%s” permanent?</string>
     <string name="error_tag_exists">Det finns redan en etikett med det namnet</string>
     <string name="add_new_tag">Lägg till ny etikett</string>
     <string name="tag_description_hint">Beskrivning</string>
@@ -434,7 +468,6 @@ Language: sv_SE
     <string name="site_settings_week_start_title">Veckan börjar på</string>
     <string name="site_settings_tags_title">Etiketter</string>
     <string name="site_settings_traffic_header">Trafik</string>
-    <string name="delete_no">Radera inte</string>
     <string name="delete_yes">Radera</string>
     <string name="plugin_external_link_icon_content_description">Extern länk</string>
     <string name="plugin_icon_content_description">Tilläggsikon</string>
@@ -877,10 +910,6 @@ Language: sv_SE
     <string name="title_email_follower">Följare via e–post</string>
     <string name="title_follower">Följare</string>
     <string name="people_fetching">Hämtar användare…</string>
-    <string name="people_empty_list_filtered_viewers">Du har inga läsare än.</string>
-    <string name="people_empty_list_filtered_email_followers">Du har inga följare via e–post än.</string>
-    <string name="people_empty_list_filtered_followers">Du har inga följare än.</string>
-    <string name="people_empty_list_filtered_users">Du har inga användare än.</string>
     <string name="people_dropdown_item_viewers">Läsare</string>
     <string name="people_dropdown_item_email_followers">Följare via e–post</string>
     <string name="people_dropdown_item_followers">Följare</string>
@@ -937,7 +966,6 @@ Language: sv_SE
     <string name="label_clear_search_history">Rensa sökhistoriken</string>
     <string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
     <string name="reader_empty_search_description">Inga inlägg hittade för %s på ditt språk</string>
-    <string name="reader_label_post_search_running">Söker…</string>
     <string name="reader_hint_post_search">Sök WordPress</string>
     <string name="reader_title_related_post_detail">Relaterade inlägg</string>
     <string name="preview_screen_links_disabled">Länkar har avaktiverats på förhandsvisningsskärmen</string>
@@ -980,7 +1008,7 @@ Language: sv_SE
     <string name="delete_site_hint">Radera webbplats</string>
     <string name="export_site_hint">Exportera din webbplats till XML–fil</string>
     <string name="primary_domain">Primärdomän</string>
-    <string name="error_deleting_site_summary">Det uppstod ett fel när din webbplats skulle tas bort. Vänligen kontakta supporten för mer hjälp.</string>
+    <string name="error_deleting_site_summary">Ett fel uppstod när din webbplats skulle tas bort. Kontakta supporten för mer hjälp.</string>
     <string name="error_deleting_site">Kunde inte ta bort webbplats</string>
     <string name="site_settings_export_content_title">Exportera innehåll</string>
     <string name="confirm_delete_site_prompt">Vänligen skriv %1$s i fältet nedan för att godkänna. Din webbplats kommer sedan vara borta för alltid.</string>
@@ -994,7 +1022,7 @@ Language: sv_SE
     <string name="editor_remove_failed_uploads">Ta bort misslyckade uppladdningar</string>
     <string name="editor_toast_failed_uploads">En del mediauppladdningar har misslyckats. Du kan inte spara eller publicera\n ditt inlägg i dess nuvarande form. Vill du ta bort all media som inte gick att ladda upp?</string>
     <string name="site_settings_advanced_header">Avancerat</string>
-    <string name="comments_empty_list_filtered_trashed">Inga bortkastade kommentarer</string>
+    <string name="comments_empty_list_filtered_trashed">Inga kastade kommentarer</string>
     <string name="comments_empty_list_filtered_pending">Inga väntande kommentarer</string>
     <string name="comments_empty_list_filtered_approved">Inga godkända kommentarer</string>
     <string name="xmlrpc_missing_method_error">Kunde inte ansluta. Obligatoriska XML-RPC–metoder saknas på servern.</string>
@@ -1208,14 +1236,12 @@ Language: sv_SE
     <string name="reader_label_gap_marker">Ladda fler inlägg</string>
     <string name="notifications_no_search_results">Inga webbplatser matchade \"%s\"</string>
     <string name="search_sites">Sök webbplatser</string>
-    <string name="notifications_empty_view_reader">Visa Läsare</string>
-    <string name="notifications_empty_action_followers_likes">Se till att synas: kommentera inlägg som du läst.</string>
-    <string name="notifications_empty_action_comments">Gå med i en diskussion: kommentera inlägg från bloggar som du följer.</string>
-    <string name="notifications_empty_action_unread">Starta upp diskussionen igen: skriv ett nytt inlägg.</string>
+    <string name="notifications_empty_view_reader">Visa läsare</string>
+    <string name="notifications_empty_action_followers_likes">Se till att synas: kommentera inlägg som du läst</string>
+    <string name="notifications_empty_action_comments">Gå med i en diskussion: kommentera inlägg från bloggar som du följer</string>
+    <string name="notifications_empty_action_unread">Få fart på diskussionen igen: skriv ett nytt inlägg.</string>
     <string name="notifications_empty_action_all">Aktivera dig! Kommentera inlägg från bloggar som du följer.</string>
-    <string name="notifications_empty_likes">Inga nya gillar att visa … ännu.</string>
-    <string name="notifications_empty_followers">Inga nya följare att visa … ännu.</string>
-    <string name="notifications_empty_comments">Inga nya kommentarer … ännu.</string>
+    <string name="notifications_empty_comments">Inga nya kommentarer … ännu</string>
     <string name="notifications_empty_unread">Du har läst allt!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Gå till statistik i appen och försök att lägga till denna widget senare</string>
     <string name="stats_widget_error_readd_widget">Ta bort denna widget och lägg till den igen</string>
@@ -1256,7 +1282,6 @@ Language: sv_SE
     <string name="notification_settings_item_other_account_emails_summary">Viktiga e–postmeddelanden om ditt konto kommer vi alltid att sända, men du vill kan du dessutom få en del hjälpsamma ytterligare saker.</string>
     <string name="stats_insights_latest_post_trend">Det har gått %1$s sedan %2$s publicerades. Så här har det gått för inlägget hittills…</string>
     <string name="stats_insights_latest_post_summary">Sammanfattning av senaste inlägg</string>
-    <string name="button_revert">Återställ</string>
     <string name="yesterday">I går</string>
     <string name="days_ago">%d dagar sedan</string>
     <string name="connectionbar_no_connection">Ingen anslutning</string>
@@ -1292,7 +1317,7 @@ Language: sv_SE
     <string name="me_btn_login_logout">Logga in/Logga ut</string>
     <string name="me_connect_to_wordpress_com">Logga in på WordPress.com</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
-    <string name="me_btn_support">Hjälp &amp; support</string>
+    <string name="me_btn_support">Hjälp och support</string>
     <string name="account_settings">Kontoinställningar</string>
     <string name="site_picker_create_wpcom">Skapa en webbplats på WordPress.com</string>
     <string name="site_picker_edit_visibility">Visa/dölj webbplatser</string>
@@ -1309,7 +1334,6 @@ Language: sv_SE
     <string name="reader_label_new_posts_subtitle">Knacka för att visa dem</string>
     <string name="my_site_header_configuration">Konfiguration</string>
     <string name="stats_unknown_author">Okänd författare</string>
-    <string name="sign_out_wpcom_confirm">Att logga ut från ditt konto kommer ta bort all @%ss WordPress.com–data från denna enhet, inklusive lokala utkast och lokala förändringar.</string>
     <string name="select_all">Välj alla</string>
     <string name="hide">Dölj</string>
     <string name="show">Visa</string>
@@ -1432,8 +1456,6 @@ Language: sv_SE
     <string name="reader_empty_comments">Inga kommentarer än</string>
     <string name="create_new_blog_wpcom">Skapa en blogg på WordPress.com</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
-    <string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
-    <string name="reader_empty_followed_blogs_title">Du följer inga webbplatser än</string>
     <string name="reader_menu_block_blog">Blockera denna webbplats</string>
     <string name="reader_toast_blog_blocked">Inlägg från denna webbplats kommer inte längre att visas</string>
     <string name="reader_toast_err_block_blog">Kunde inte blockera denna webbplats</string>
@@ -1453,7 +1475,6 @@ Language: sv_SE
     <string name="reader_title_subs">Etiketter och webbplatser</string>
     <string name="reader_title_tag_preview">Läsare–etikett</string>
     <string name="reader_title_blog_preview">Läsarwebbplats</string>
-    <string name="media_empty_list">Ingen media</string>
     <string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
     <string name="ssl_certificate_error">Ogiltigt SSL–ceritfikat</string>
     <string name="forgot_password">Glömt ditt lösenord?</string>
@@ -1481,7 +1502,6 @@ Language: sv_SE
     <string name="adding_cat_success">Kategorin tillagd</string>
     <string name="adding_cat_failed">Misslyckades lägga till kategori</string>
     <string name="mnu_comment_unspam">Inte skräppost</string>
-    <string name="comments_empty_list">Inga kommentarer</string>
     <string name="theme_fetch_failed">Misslyckades hämta teman</string>
     <string name="blog_not_found">Ett fel uppstod vid anslutning till bloggen</string>
     <string name="gallery_error">Medieobjektet kunde inte hämtas</string>
@@ -1564,7 +1584,6 @@ Language: sv_SE
     <string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>
     <string name="pick_video">Välj video</string>
     <string name="pick_photo">Välj bild</string>
-    <string name="reader_empty_followed_blogs_description">Inget att oroa sig för, peka på ikonen uppe till höger för att börja utforska!</string>
     <string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
     <string name="reader_empty_followed_tags">Du följer inga ämnen</string>
     <string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
@@ -1582,6 +1601,7 @@ Language: sv_SE
     <string name="reader_btn_follow">Följ</string>
     <string name="reader_btn_share">Dela</string>
     <string name="reader_untitled_post">(Ingen titel)</string>
+    <string name="comments_empty_list">Inga kommentarer … än</string>
     <string name="empty_list_default">Listan är tom</string>
     <string name="passcode_turn_on">Slå på PIN–kodlås</string>
     <string name="passcode_turn_off">Stäng av PIN–kodlås</string>

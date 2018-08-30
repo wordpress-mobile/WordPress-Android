@@ -110,7 +110,6 @@ class RewindStatusServiceTest {
 
         rewindStatusService.start(site)
 
-        verify(dispatcher).register(rewindStatusService)
         assertEquals(rewindAvailable, true)
     }
 
@@ -121,7 +120,6 @@ class RewindStatusServiceTest {
 
         rewindStatusService.start(site)
 
-        verify(dispatcher).register(rewindStatusService)
         assertEquals(rewindAvailable, false)
     }
 
@@ -132,7 +130,6 @@ class RewindStatusServiceTest {
 
         rewindStatusService.start(site)
 
-        verify(dispatcher).register(rewindStatusService)
         assertEquals(rewindAvailable, false)
     }
 
@@ -142,6 +139,17 @@ class RewindStatusServiceTest {
 
         verify(dispatcher).register(rewindStatusService)
         assertFetchRewindStatusAction()
+    }
+
+    @Test
+    fun updatesRewindStatusAndRestartsCheckerWhenRewindNotAlreadyRunning() {
+        val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
+        whenever(rewindProgressChecker.isRunning).thenReturn(false)
+
+        rewindStatusService.start(site)
+
+        verify(rewindProgressChecker).startNow(site, rewindInProgress.restoreId)
     }
 
     @Test

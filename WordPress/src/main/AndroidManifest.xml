@@ -147,6 +147,7 @@
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
+            android:launchMode="singleTop"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.ReleaseNotesActivity"
@@ -187,6 +188,7 @@
         <activity
             android:name=".ui.comments.CommentsActivity"
             android:theme="@style/Calypso.NoActionBar"
+            android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
             android:name=".ui.comments.EditCommentActivity"
@@ -227,6 +229,7 @@
 
         <activity
             android:name=".ui.posts.PostsListActivity"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"
             android:label="" />
         <activity
@@ -244,11 +247,13 @@
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
+                  android:launchMode="singleTop"
                   android:label="@string/plans"/>
 
         <!-- Stats Activities -->
         <activity
             android:name=".ui.stats.StatsActivity"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.stats.StatsViewAllActivity"
@@ -273,7 +278,7 @@
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.JetpackConnectionDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
+        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -283,6 +288,10 @@
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.JetpackRemoteInstallActivity"
+            android:label="@string/jetpack"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Media Activities -->
         <activity
@@ -304,6 +313,7 @@
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
             android:theme="@style/Calypso.NoActionBar"
+            android:launchMode="singleTop"
             android:label="@string/themes"/>
         <activity
             android:name=".ui.themes.ThemeWebActivity"
@@ -427,6 +437,7 @@
         <activity
             android:name=".ui.publicize.PublicizeListActivity"
             android:label="@string/sharing"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <activity
@@ -475,23 +486,11 @@
             android:name=".ui.notifications.NotificationsDetailActivity"
             android:theme="@style/CalypsoTheme" />
 
-        <!-- Passcode lock activities -->
-        <activity
-            android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
-            android:theme="@style/CalypsoTheme"
-            android:launchMode="singleInstance"
-            android:label="@string/passcode_screen_title"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
-            android:theme="@style/CalypsoTheme"
-            android:label="@string/passcode_screen_title"
-            android:windowSoftInputMode="stateHidden" />
-
         <!--People Management-->
         <activity
             android:name=".ui.people.PeopleManagementActivity"
             android:label="@string/people"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!--Plugins-->
@@ -501,9 +500,10 @@
         <activity
             android:name=".ui.plugins.PluginBrowserActivity"
             android:label="@string/plugins"
+            android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar"/>
 
-        <!--Plugins-->
+        <!--Activity log-->
         <activity
             android:name=".ui.activitylog.list.ActivityLogListActivity"
             android:label="@string/activity_log"
@@ -682,6 +682,12 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".ui.quickstart.QuickStartActivity"
+            android:label="@string/quick_start_sites"
+            android:parentActivityName=".ui.main.WPMainActivity"
+            android:theme="@style/CalypsoTheme" />
 
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />

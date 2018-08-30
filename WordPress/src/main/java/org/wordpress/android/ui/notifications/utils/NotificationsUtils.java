@@ -322,7 +322,7 @@ public class NotificationsUtils {
                         spanIndex,
                         spanIndex + 1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                                              );
+                );
 
                 // Add an AlignmentSpan to center the image
                 spannableStringBuilder.setSpan(
@@ -330,7 +330,7 @@ public class NotificationsUtils {
                         spanIndex,
                         spanIndex + 1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                                              );
+                );
 
                 indexAdjustment += imagePlaceholder.length();
             }

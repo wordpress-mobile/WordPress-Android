@@ -158,10 +158,12 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
             }
         };
 
-        mRestClientV1p2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/plans/features",
-                                    null,
-                                    listener,
-                                    mErrListener
-                                   );
+        mRestClientV1p2.makeRequest(
+                Request.Method.POST,
+                "https://public-api.wordpress.com/rest/v1.2/plans/features",
+                null,
+                listener,
+                mErrListener
+        );
     }
 }

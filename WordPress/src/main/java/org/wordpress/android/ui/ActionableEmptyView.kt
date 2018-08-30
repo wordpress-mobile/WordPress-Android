@@ -1,13 +1,13 @@
 package org.wordpress.android.ui
 
 import android.content.Context
-import android.support.annotation.DrawableRes
-import android.support.annotation.NonNull
 import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import org.wordpress.android.R
 import org.wordpress.android.widgets.WPTextView
 
@@ -21,6 +21,7 @@ import org.wordpress.android.widgets.WPTextView
 class ActionableEmptyView : LinearLayout {
     lateinit var button: AppCompatButton
     lateinit var image: ImageView
+    lateinit var layout: View
     lateinit var subtitle: WPTextView
     lateinit var title: WPTextView
 
@@ -33,7 +34,12 @@ class ActionableEmptyView : LinearLayout {
     }
 
     private fun initView(context: Context, attrs: AttributeSet) {
-        val layout = View.inflate(context, R.layout.actionable_empty_view, this)
+        clipChildren = false
+        clipToPadding = false
+        gravity = Gravity.CENTER
+        orientation = VERTICAL
+
+        layout = View.inflate(context, R.layout.actionable_empty_view, this)
 
         image = layout.findViewById(R.id.image)
         title = layout.findViewById(R.id.title)
@@ -56,7 +62,7 @@ class ActionableEmptyView : LinearLayout {
             if (!titleAttribute.isNullOrEmpty()) {
                 title.text = titleAttribute
             } else {
-                throw RuntimeException(context.toString() + ": ActionableEmptyView must have a title (wpTitle)")
+                throw RuntimeException(context.toString() + ": ActionableEmptyView must have a title (aevTitle)")
             }
 
             if (!subtitleAttribute.isNullOrEmpty()) {
@@ -73,35 +79,29 @@ class ActionableEmptyView : LinearLayout {
         }
     }
 
-    fun setButtonClickListener(@NonNull listener: OnClickListener) {
-        button.setOnClickListener(listener)
-    }
+    /**
+     * Update actionable empty view layout when used while searching.  The following characteristics are for each case:
+     *      Default - center in parent, use original top margin
+     *      Search  - center at top of parent, use original top margin, add 48dp top padding, hide image, hide button
+     *
+     * @param isSearching true when searching; false otherwise
+     * @param topMargin top margin in pixels to offset with other views (e.g. toolbar or tabs)
+     */
+    fun updateLayoutForSearch(isSearching: Boolean, topMargin: Int) {
+        val params: RelativeLayout.LayoutParams
 
-    fun setButtonText(@NonNull charSequence: CharSequence) {
-        button.text = charSequence
-    }
+        if (isSearching) {
+            params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            layout.setPadding(0, context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large), 0, 0)
 
-    fun setButtonVisibility(isVisible: Boolean) {
-        button.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
+            image.visibility = View.GONE
+            button.visibility = View.GONE
+        } else {
+            params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            layout.setPadding(0, 0, 0, 0)
+        }
 
-    fun setImageResource(@NonNull @DrawableRes resId: Int) {
-        image.setImageResource(resId)
-    }
-
-    fun setImageVisibility(isVisible: Boolean) {
-        image.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    fun setSubtitleText(@NonNull charSequence: CharSequence) {
-        subtitle.text = charSequence
-    }
-
-    fun setSubtitleVisibility(isVisible: Boolean) {
-        subtitle.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    fun setTitleText(@NonNull charSequence: CharSequence) {
-        title.text = charSequence
+        params.topMargin = topMargin
+        layout.layoutParams = params
     }
 }

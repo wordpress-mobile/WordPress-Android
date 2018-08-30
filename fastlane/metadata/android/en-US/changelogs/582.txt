@@ -1,4 +1,0 @@
-10.4:
-* New: Activity Log Rewind: bring back your site to a previous state.
-* A bunch of small UI improvements and refinements.
-* Various bug fixes

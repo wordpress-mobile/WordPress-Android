@@ -338,10 +338,8 @@ public class StatsServiceLogic {
                 JSONObject response = new JSONObject(cachedStats);
                 mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
 
-                EventBus.getDefault().post(
-                        sectionToUpdate.getEndpointUpdateEvent(blogId, timeframe, date,
-                                                               maxResultsRequested, pageRequested, mResponseObjectModel)
-                                          );
+                EventBus.getDefault().post(sectionToUpdate.getEndpointUpdateEvent(blogId, timeframe, date,
+                        maxResultsRequested, pageRequested, mResponseObjectModel));
 
                 updateWidgetsUI(blogId, sectionToUpdate, timeframe, date, pageRequested, mResponseObjectModel);
                 checkAllRequestsFinished(null);
@@ -558,11 +556,8 @@ public class StatsServiceLogic {
                         }
                     }
 
-                    EventBus.getDefault().post(
-                            mEndpointName.getEndpointUpdateEvent(mRequestBlogId, mTimeframe, mDate,
-                                                                 mMaxResultsRequested, mPageRequested,
-                                                                 mResponseObjectModel)
-                                              );
+                    EventBus.getDefault().post(mEndpointName.getEndpointUpdateEvent(mRequestBlogId, mTimeframe, mDate,
+                            mMaxResultsRequested, mPageRequested, mResponseObjectModel));
 
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested,
                                     mResponseObjectModel);

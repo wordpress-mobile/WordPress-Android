@@ -178,7 +178,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         } else if (media.isVideo()) {
             holder.mFileContainer.setVisibility(View.GONE);
-            loadVideoThumbnail(media, holder.mImageView);
+            loadVideoThumbnail(position, media, holder.mImageView);
         } else {
             // not an image or video, so show file name and file type
             String fileName = media.getFileName();
@@ -189,6 +189,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mFileTypeView.setText(fileExtension.toUpperCase(Locale.ROOT));
             int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
             holder.mFileTypeImageView.setImageResource(placeholderResId);
+            mImageManager.cancelRequestAndClearImageView(holder.mImageView);
         }
         holder.mImageView.setContentDescription(mContext.getString(R.string.media_grid_item_image_desc,
                 StringUtils.notNullStr(media.getFileName())));
@@ -252,7 +253,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public void onViewRecycled(GridViewHolder holder) {
         super.onViewRecycled(holder);
         holder.mImageView.setTag(R.id.media_grid_file_path_id, null);
-        mImageManager.cancelRequestAndClearImageView(holder.mImageView);
     }
 
     public ArrayList<Integer> getSelectedItems() {
@@ -429,7 +429,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     /*
      * loads the thumbnail for the passed video media item - works with both local and network videos
      */
-    private void loadVideoThumbnail(final @NonNull MediaModel media, @NonNull final ImageView imageView) {
+    private void loadVideoThumbnail(final int position, final @NonNull MediaModel media,
+                                    @NonNull final ImageView imageView) {
         // if we have a thumbnail url, use it and be done
         if (!TextUtils.isEmpty(media.getThumbnailUrl())) {
             mImageManager.load(imageView, ImageType.VIDEO, media.getThumbnailUrl(), ScaleType.CENTER_CROP);
@@ -469,7 +470,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                             if (imageView.getTag(R.id.media_grid_file_path_id) instanceof String
                                 && (imageView.getTag(R.id.media_grid_file_path_id)).equals(filePath)) {
                                 imageView.setTag(R.id.media_grid_file_path_id, null);
-                                mImageManager.load(imageView, thumb, ScaleType.CENTER_CROP);
+                                notifyItemChanged(position);
                             }
                         }
                     });

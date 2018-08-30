@@ -751,8 +751,8 @@ public class MediaSettingsActivity extends AppCompatActivity
             imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
         showProgress(true);
-        mImageManager.load(mImageView, ImageType.FULLSCREEN_PHOTO, imageUrl, ScaleType.CENTER,
-                new RequestListener() {
+        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, null,
+                new RequestListener<Drawable>() {
                     @Override
                     public void onResourceReady(@NotNull Drawable resource) {
                         if (!isFinishing()) {
@@ -766,7 +766,9 @@ public class MediaSettingsActivity extends AppCompatActivity
                     @Override
                     public void onLoadFailed(@Nullable Exception e) {
                         if (!isFinishing()) {
-                            AppLog.e(T.MEDIA, e);
+                            if (e != null) {
+                                AppLog.e(T.MEDIA, e);
+                            }
                             showProgress(false);
                             delayedFinishWithError();
                         }

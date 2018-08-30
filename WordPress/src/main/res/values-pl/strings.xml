@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-10 10:27:39+0000
+Translation-Revision-Date: 2018-08-16 19:47:59+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
+    <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
+    <string name="site_settings_tags_empty_title_search">Brak tagów spełniających kryteria wyszukiwania</string>
+    <string name="site_settings_tags_empty_title">Nie masz żadnych tagów</string>
+    <string name="site_settings_tags_empty_subtitle">Tutaj najczęściej wykorzystywane tagi tak aby je szybko użyć do oznaczenia wpisów</string>
+    <string name="site_settings_tags_empty_button">Stwórz tag</string>
+    <string name="media_empty_search_list">Brak mediów spełniających kryteria twojego wyszukiwania</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Wylogować się z WordPressa?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Masz zmiany we wpisach,  które nie zostały wczytanie do twojej witryny.  Wylogowanie spowoduje usunięcie zmian z twojego urządzenia. Czy na pewno wylogować? </string>
+    <string name="people_empty_list_filtered_viewers">Brak oglądających</string>
+    <string name="people_empty_list_filtered_email_followers">Brak oglądających przez email</string>
+    <string name="people_empty_list_filtered_followers">Brak obserwujących</string>
+    <string name="people_empty_list_filtered_users">Jeszcze nie ma użytkowników</string>
+    <string name="connection_service_facebook_notice">Od 1 sierpnia 2018, Facebook nie zezwala na bezpośrednie udostępnianie wpisów na profil Facebooka. Połączenia że stronami Facebooka pozostają niezmienione.</string>
+    <string name="reader_empty_posts_liked_description">Pojawią się tu wpisy które polubisz</string>
+    <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
+    <string name="reader_empty_followed_blogs_button_followed">Idź do obserwowanych</string>
+    <string name="reader_empty_followed_blogs_button_discover">Odkryj witryny </string>
+    <string name="reader_empty_followed_blogs_description">Nie obserwujesz żadnych witryn. Może zaczniesz? </string>
+    <string name="reader_empty_followed_blogs_title">Brak obserwowanych witryn</string>
+    <string name="notifications_empty_likes">Brak polubień</string>
+    <string name="notifications_empty_followers">Brak obserwujących</string>
+    <string name="activity_log_limited_content_on_free_plan">Korzystasz z planu darmowego,  więc zobaczysz tylko ograniczoną liczbę działań w ramach swojej aktywności. </string>
+    <string name="activity_log_empty_subtitle">Kiedy dokonujesz zmian na swojej witrynie, zobaczysz tutaj historię swojej aktywności. </string>
+    <string name="activity_log_empty_title">Brak aktywności jak dotąd</string>
+    <string name="posts_empty_list_button">Utwórz wpis</string>
+    <string name="pages_empty_list_button">Utwórz stronę</string>
+    <string name="media_empty_upload_media">Podeślij pliki mediów </string>
+    <string name="media_empty_list">Nie masz żadnych plików mediów</string>
+    <string name="reader_gallery_images_desc">Galeria zdjęć</string>
+    <string name="blavatar_desc">ikona witryny</string>
+    <string name="theme_image_desc">obrazek motywu</string>
+    <string name="featured_image_desc">obrazek wyróżniający</string>
+    <string name="local_changes_discarding_error">Błąd podczas odrzucania lokalnych zmian. Proszę skontaktować się ze wsparciem aby uzyskać pomoc. </string>
+    <string name="local_changes_discarding">Odrzucanie zmian lokalnych</string>
+    <string name="local_changes_discarded">Lokalne zmiany odrzucone</string>
+    <string name="menu_discard_changes">Odrzuć lokalne zmiany</string>
+    <string name="button_discard_changes">Odrzuć zmiany</string>
+    <string name="button_discard">Odrzuć</string>
     <string name="reader_avatar_desc">zdjęcie profilowe</string>
     <string name="reader_blavatar_desc">ikona witryny</string>
     <string name="notification_channel_transient_title">Krótkotrwały</string>
@@ -18,21 +57,20 @@ Language: pl
     <string name="support_contact_email">Email kontaktowy</string>
     <string name="application_log_button">Log/dziennik aplikacji</string>
     <string name="my_tickets">Moje bilety</string>
-    <string name="activity_log_rewind_dialog_message">Czy na pewno chcesz przywrócić swoją witrynę do %s na %s? Spowoduje to usunięcie całej zawartości i opcji ustawionych lub zmienionych po tym terminie.</string>
+    <string name="activity_log_rewind_dialog_message">Czy na pewno chcesz przywrócić swoją witrynę do %1$s na %2$s? Spowoduje to usunięcie całej zawartości i opcji ustawionych lub zmienionych po tym terminie.</string>
     <string name="activity_log_rewind_site">Przywróć wcześniejszy stan witryny</string>
     <string name="activity_log_currently_restoring_message_no_dates">Przywracanie witryny w toku</string>
-    <string name="activity_log_currently_restoring_message">Przywracanie stanu do %s %s</string>
+    <string name="activity_log_currently_restoring_message">Przywracanie stanu do %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Trwa przywracanie twojej witryny</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Twoja witryna została z powodzeniem przywrócona</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Twoja witryna została z powodzeniem przywrócona.\nOdtworzono stan z %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Twoja witryna jest w trakcie przywracania\nPrzywracanie do stanu z %s %s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Twoja witryna została z powodzeniem przywrócona.\nOdtworzono stan z %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Twoja witryna jest w trakcie przywracania\nPrzywracanie do stanu z %1$s %2$s</string>
     <string name="activity_log_button">Przycisk aktywności logu/dziennika aktywności</string>
     <string name="plugin_auto_managed">Zarządzane automatycznie</string>
     <string name="reader_save_posts_locally_dialog_message">Zapisz ten wpis i wróć do niego w późniejszym czasie. Będzie dostępny jedynie na tym urządzeniu – zapisane wpisy nie synchronizują się na innych urządzeniach. (Jeszcze nie! Pracujemy nad tym.)</string>
     <string name="reader_save_posts_locally_dialog_title">Zapisz wpis na później</string>
     <string name="reader_empty_search_request_failed">Nie można było wykonać wyszukiwania</string>
     <string name="reader_empty_search_title">Nie znaleziono wyników wyszukiwania</string>
-    <string name="reader_label_post_search_explainer">Przeszukaj WordPressa\nw poszukiwaniu witryny lub wpisu</string>
     <string name="comment_read_source_post">Przeczytaj wpis źródłowy</string>
     <string name="sites">Witryny</string>
     <string name="signup_magic_link_title">Wysłano Magic Linka</string>
@@ -53,7 +91,6 @@ Language: pl
     <string name="reader_remove_bookmark">Usuń z zapisanych wpisów</string>
     <string name="reader_add_bookmark">Dodaj do zapisanych wpisów</string>
     <string name="reader_save_for_later_title">Zapisane wpisy</string>
-    <string name="activity_log_empty_list">Nie zarejestrowano żadnych wydarzeń</string>
     <string name="removed">Usunięto</string>
     <string name="tabbar_accessibility_label_write">Nowy wpis. Napisz nowy wpis.</string>
     <string name="my_site_icon_content_description">Zmień ikonę witryny</string>
@@ -123,7 +160,6 @@ Language: pl
     <string name="notification_channel_general_title">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
     <string name="media_preview_title">%1$d z %2$d</string>
-    <string name="stock_media_picker_empty_results">Brak wyników</string>
     <string name="stock_media_picker_initial_empty_subtext">Zdjęcia dostarczone przez %s</string>
     <string name="stock_media_picker_initial_empty_text">Przeszukaj bazę darmowych zdjęć aby dodać je do swojej Biblioteki Mediów</string>
     <string name="stock_media_picker_search_hint">Przeszukaj darmową bibliotekę zdjęć</string>
@@ -155,7 +191,6 @@ Language: pl
     <string name="stats_tab_tap_content_description">Pokazano %s</string>
     <string name="stats_legend">legenda wykresu statystyk</string>
     <string name="fab_create_desc">utwórz</string>
-    <string name="fab_add_tag_desc">utwórz tag</string>
     <string name="stats_bar_week_desc">Tydzień %s</string>
     <string name="stats_bar_date_value_desc">%s, %d wyświetleń</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -170,7 +205,6 @@ Language: pl
     <string name="reader_list_item_suggestion_remove_desc">usuń</string>
     <string name="photo_picker_thumbnail_desc">Odtwórz film</string>
     <string name="reader_cardview_post_play_video_desc">odtwórz film wyróżniający</string>
-    <string name="post_cardview_featured_desc">obrazek wyróżniający</string>
     <string name="plugin_detail_logo_desc">logo wtyczki</string>
     <string name="plugin_detail_banner_desc">baner wtyczki</string>
     <string name="photo_picker_wpmedia_desc">wybierz z mediów WordPressa</string>
@@ -192,9 +226,9 @@ Language: pl
     <string name="jetpack_connection_failed_with_reason"> Nie udało się połączenie z Jetpackiem: %s</string>
     <string name="jetpack_already_connected_toast">Jesteś już połączony z Jetpackiem</string>
     <string name="menu_undo_snackbar_action">COFNIJ</string>
-    <string name="menu_visual_mode_done_snackbar">Przełącz na tryb wizualny</string>
+    <string name="menu_visual_mode_done_snackbar">Przełączono na tryb wizualny</string>
     <string name="menu_visual_mode">Tryb wizualny</string>
-    <string name="menu_html_mode_done_snackbar">Przełącz na tryb HTML</string>
+    <string name="menu_html_mode_done_snackbar">Przełączono na tryb HTML</string>
     <string name="menu_html_mode">Tryb HTML</string>
     <string name="menu_preview">Podgląd</string>
     <string name="menu_publish_now">Opublikuj teraz</string>
@@ -206,7 +240,7 @@ Language: pl
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s z %2$s</string>
     <string name="site_settings_quota_space_hint">Jeśli potrzebujesz więcej przestrzeni, rozważ rozszerzenie subskrypcji WordPress.</string>
-    <string name="site_settings_quota_space_title">Wykorzystana przestrzeń</string>
+    <string name="site_settings_quota_space_title">Wykorzystanie przestrzeni</string>
     <string name="site_settings_quota_header">Media</string>
     <string name="comment_unspam_talkback">Komentarz oznaczony jako nie–spam</string>
     <string name="comment_spam_talkback">Komentarz oznaczony jako spam</string>
@@ -415,7 +449,7 @@ Language: pl
     <string name="site_settings_tags_hint">Zarządzaj tagami swojej witryny</string>
     <string name="dlg_saving_tag">Zapisywanie</string>
     <string name="dlg_deleting_tag">Usuwanie</string>
-    <string name="dlg_confirm_delete_tag">Trwale usunąć \'%s\'? </string>
+    <string name="dlg_confirm_delete_tag">Trwale usunąć tag \'%s\'? </string>
     <string name="error_tag_exists">Tag o tej nazwie już istnieje</string>
     <string name="add_new_tag">Dodaj nowy tag</string>
     <string name="tag_description_hint">Opis </string>
@@ -434,7 +468,6 @@ Language: pl
     <string name="site_settings_week_start_title">Tydzień zaczyna się w</string>
     <string name="site_settings_tags_title">Tagi</string>
     <string name="site_settings_traffic_header">Ruch</string>
-    <string name="delete_no">Nie usuwaj</string>
     <string name="delete_yes">Usuń</string>
     <string name="plugin_external_link_icon_content_description">Zewnętrzny odnośnik</string>
     <string name="plugin_icon_content_description">Ikona wtyczki</string>
@@ -658,7 +691,7 @@ Language: pl
     <string name="now">Teraz</string>
     <string name="post_settings_password_dialog_hint">Tylko osoby posiadające hasło mogą czytać ten wpis</string>
     <string name="post_settings_excerpt_dialog_hint">Zajawki to opcjonalne, ręcznie przygotowane podsumowania twoich treści.</string>
-    <string name="post_settings_slug_dialog_hint">Nazwa uproszczona to przyjazny dla URL tytuł wpisu.</string>
+    <string name="post_settings_slug_dialog_hint">Nazwa uproszczona to tytuł wpisu w postaci przyjaznego adresu URL</string>
     <string name="post_settings_post_format">Format wpisu</string>
     <string name="post_settings_tags">Tagi</string>
     <string name="post_settings_slug">Uproszczona nazwa</string>
@@ -755,7 +788,7 @@ Language: pl
     <string name="smart_toast_comments_long_press">Stuknij i przytrzymaj aby zaznaczyć więcej komentarzy</string>
     <string name="photo_picker_choose_video">Wybierz film z tego urządzenia</string>
     <string name="photo_picker_choose_photo">Wybierz zdjęcie z tego urządzenia</string>
-    <string name="wp_media_title">Media WordPress</string>
+    <string name="wp_media_title">WordPressowe media</string>
     <string name="media_insert_as_gallery">Dodaj jako galerię</string>
     <string name="media_insert_individually">Dodaj pojedynczo</string>
     <string name="media_insert_title">Dodaj kilka zdjęć</string>
@@ -877,10 +910,6 @@ Language: pl
     <string name="title_email_follower">Obserwujący przez e–mail</string>
     <string name="title_follower">Obserwujący</string>
     <string name="people_fetching">Pobieranie użytkowników…</string>
-    <string name="people_empty_list_filtered_viewers">Witryna nie ma jeszcze oglądających</string>
-    <string name="people_empty_list_filtered_email_followers">Nie masz jeszcze żadnych obserwujących przez e–mail</string>
-    <string name="people_empty_list_filtered_followers">Nie masz jeszcze żadnych obserwujących.</string>
-    <string name="people_empty_list_filtered_users">Nie masz jeszcze żadnych użytkowników</string>
     <string name="people_dropdown_item_viewers">Oglądający</string>
     <string name="people_dropdown_item_email_followers">Obserwujący przez e–mail</string>
     <string name="people_dropdown_item_followers">Obserwujący</string>
@@ -937,7 +966,6 @@ Language: pl
     <string name="label_clear_search_history">Usuń historię wyszukiwania</string>
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
     <string name="reader_empty_search_description">Nie odnaleziono żadnych wyników wyszukiwania zawierających %s w twoim języku</string>
-    <string name="reader_label_post_search_running">Szukanie…</string>
     <string name="reader_hint_post_search">Przeszukaj WordPressa</string>
     <string name="reader_title_related_post_detail">Powiązany wpis</string>
     <string name="preview_screen_links_disabled">Odnośniki są wyłączone na ekranie podglądu</string>
@@ -980,7 +1008,7 @@ Language: pl
     <string name="delete_site_hint">Usuń witrynę</string>
     <string name="export_site_hint">Wyeksportuj swoją witrynę do pliku XML</string>
     <string name="primary_domain">Domena główna</string>
-    <string name="error_deleting_site_summary">Wystąpił błąd podczas usuwania twojej witryny. Proszę skontaktować się ze wsparciem technicznym</string>
+    <string name="error_deleting_site_summary">Wystąpił błąd podczas usuwania twojej witryny. Proszę skontaktować się ze wsparciem technicznym aby uzyskać pomoc.</string>
     <string name="error_deleting_site">Błąd podczas usuwania witryny</string>
     <string name="site_settings_export_content_title">Eksportuj zawartość</string>
     <string name="confirm_delete_site_prompt">Proszę wpisać %1$s w polu poniżej w celu potwierdzenia. Twoja witryna zostanie trwale usunięta.</string>
@@ -1029,7 +1057,7 @@ Language: pl
     <string name="approve_manual">Nie zatwierdzaj komentarzy automatycznie</string>
     <string name="site_settings_paging_summary_other">%d komentarzy na stronie</string>
     <string name="site_settings_paging_summary_one">1 komentarz na stronie</string>
-    <string name="site_settings_multiple_links_summary_other">Wymagane zatwierdzenie dla więcej niż %d odnośnika/ów</string>
+    <string name="site_settings_multiple_links_summary_other">Wymagane zatwierdzenie dla więcej niż %d odnośników</string>
     <string name="site_settings_multiple_links_summary_one">Wymagaj zatwierdzenia dla więcej niż 1 odnośnika</string>
     <string name="site_settings_multiple_links_summary_zero">Wymagaj zatwierdzenia dla więcej niż 0 odnośników</string>
     <string name="detail_approve_auto">Automatycznie zatwierdzaj wszystkie komentarze</string>
@@ -1075,7 +1103,7 @@ Language: pl
     <string name="remove">Usuń</string>
     <string name="site_settings_image_original_size">Oryginalny rozmiar</string>
     <string name="privacy_private">Twoja witryna jest widoczna jedynie przez ciebie i użytkowników przez ciebie zatwierdzonych</string>
-    <string name="privacy_public_not_indexed">Twoja witryna jest widoczna dla wszystkich, ale prosi wyszukiwarki o nie indeksowanie</string>
+    <string name="privacy_public_not_indexed">Twoja witryna jest widoczna dla wszystkich, ale prosi wyszukiwarki o nieindeksowanie jej</string>
     <string name="privacy_public">Twoja witryna jest widoczna dla wszystkich i może być indeksowana przez wyszukiwarki</string>
     <string name="about_me_hint">Kilka słów o sobie…</string>
     <string name="about_me">O mnie</string>
@@ -1093,8 +1121,8 @@ Language: pl
     <string name="site_settings_paging_dialog_description">Podziel wątki komentarzy na kilka stron</string>
     <string name="site_settings_paging_dialog_header">Komentarzy na strone</string>
     <string name="site_settings_close_after_dialog_title">Zamknij komentowanie</string>
-    <string name="site_settings_blacklist_description">Komentarz zostanie oznaczony jako spam jeśli zawiera przynajmniej jedno ze słów z poniższej listy wewnątrz swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa – np. słowo \"press\" będzie dopasowane do słowa  \"WordPress\". </string>
-    <string name="site_settings_hold_for_moderation_description">Komentarz zostanie umieszczony w kolejce do moderacji jeśli zawiera przynajmniej jedno ze słów z poniższej listy wewnątrz swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa – np. słowo \"press\" będzie dopasowane do słowa \"WordPress\". </string>
+    <string name="site_settings_blacklist_description">Komentarz zostanie oznaczony jako spam jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa – np. słowo \"press\" będzie dopasowane do słowa  \"WordPress\". </string>
+    <string name="site_settings_hold_for_moderation_description">Komentarz zostanie umieszczony w kolejce do moderacji jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa – np. słowo \"press\" będzie dopasowane do słowa \"WordPress\". </string>
     <string name="site_settings_list_editor_input_hint">Wprowadź słowo lub frazę</string>
     <string name="site_settings_list_editor_no_items_text">Brak elementów</string>
     <string name="site_settings_learn_more_caption">Możesz unieważnić te ustawienia dla poszczególnych wpisów.</string>
@@ -1213,9 +1241,7 @@ Language: pl
     <string name="notifications_empty_action_comments">Dołącz do konwersacji: komentuj wpisy z blogów, które obserwujesz</string>
     <string name="notifications_empty_action_unread">Ożyw dyskusję: dodaj nowy wpis.</string>
     <string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które obserwujesz. </string>
-    <string name="notifications_empty_likes">Brak nowych polubień… na razie.</string>
-    <string name="notifications_empty_followers">Brak nowych obserwujących… póki co.</string>
-    <string name="notifications_empty_comments">Brak nowych komentarzy… jeszcze.</string>
+    <string name="notifications_empty_comments">Brak komentarzy, jeszcze.</string>
     <string name="notifications_empty_unread">Jesteś na bieżąco!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Proszę wejdź w statystki w aplikacji i spróbuj dodać widget później</string>
     <string name="stats_widget_error_readd_widget">Proszę usuń widget i dodaj go ponownie</string>
@@ -1256,7 +1282,6 @@ Language: pl
     <string name="notification_settings_item_other_account_emails_summary">Wysyłamy zawsze istotne wiadomości dotyczące twojego konta, ale czasem wysyłamy również przydatne informacje.</string>
     <string name="stats_insights_latest_post_trend">Minęło %1$s od czasu kiedy wpis %2$s został opublikowany. Oto informacje o jego  popularności od tego czasu…</string>
     <string name="stats_insights_latest_post_summary">Podsumowanie ostatniego wpisu</string>
-    <string name="button_revert">Cofnij</string>
     <string name="yesterday">Wczoraj</string>
     <string name="days_ago">%d dni temu</string>
     <string name="connectionbar_no_connection">Brak połączenia</string>
@@ -1309,7 +1334,6 @@ Language: pl
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
     <string name="my_site_header_configuration">Konfiguracja</string>
     <string name="stats_unknown_author">Nieznany autor</string>
-    <string name="sign_out_wpcom_confirm">Wylogowanie z konta usunie z tego urządzenia wszystkie dane @%s pochodzące z WordPress.com, łącznie z lokalnymi szkicami i lokalnymi zmianami treści.</string>
     <string name="select_all">Wybierz wszystko</string>
     <string name="hide">Ukryj</string>
     <string name="show">Pokaż</string>
@@ -1432,8 +1456,6 @@ Language: pl
     <string name="reader_empty_comments">Nie ma jeszcze komentarzy</string>
     <string name="create_new_blog_wpcom">Stwórz blog na WordPress.com</string>
     <string name="browse_our_faq_button">Przejrzyj nasze FAQ</string>
-    <string name="reader_empty_posts_liked">Nie polubiłeś jeszcze żadnych wpisów</string>
-    <string name="reader_empty_followed_blogs_title">Nie obserwujesz jeszcze żadnych blogów</string>
     <string name="reader_menu_block_blog">Zablokuj tę witrynę</string>
     <string name="reader_toast_blog_blocked">Wpisy z tej witryny nie będą więcej pokazywane</string>
     <string name="reader_toast_err_block_blog">Nie można zablokować tej witryny</string>
@@ -1453,7 +1475,6 @@ Language: pl
     <string name="reader_title_subs">Tagi i Witryny</string>
     <string name="reader_title_tag_preview">Tag Czytnika</string>
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
-    <string name="media_empty_list">Brak mediów</string>
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
     <string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>
     <string name="forgot_password">Nie pamiętasz hasła?</string>
@@ -1481,7 +1502,6 @@ Language: pl
     <string name="adding_cat_success">Pomyślnie dodano kategorię</string>
     <string name="adding_cat_failed">Nie udało się dodać kategorii</string>
     <string name="mnu_comment_unspam">To nie jest spam</string>
-    <string name="comments_empty_list">Brak komentarzy</string>
     <string name="theme_fetch_failed">Nie udało się pobrać motywów</string>
     <string name="blog_not_found">Wystąpił błąd podczas dostępu do tego blogu</string>
     <string name="gallery_error">Nie udało się pobrać medium</string>
@@ -1564,7 +1584,6 @@ Language: pl
     <string name="reader_toast_err_get_post">Nie można pobrać tego wpisu</string>
     <string name="pick_video">Wybierz film</string>
     <string name="pick_photo">Wybierz zdjęcie</string>
-    <string name="reader_empty_followed_blogs_description">Nie martw się – stuknij ikonę w prawym górnym rogu, aby rozpocząć przeglądanie!</string>
     <string name="reader_likes_you_and_one">Ty i jedna inna osoba lubicie to</string>
     <string name="reader_empty_followed_tags">Nie obserwujesz żadnych tagów</string>
     <string name="reader_toast_err_url_intent">Nie można otworzyć %s</string>
@@ -1582,6 +1601,7 @@ Language: pl
     <string name="reader_btn_follow">Obserwuj</string>
     <string name="reader_btn_share">Udostępnij</string>
     <string name="reader_untitled_post">(Brak tytułu)</string>
+    <string name="comments_empty_list">Brak komentarzy </string>
     <string name="empty_list_default">Lista jest pusta</string>
     <string name="passcode_turn_on">Włącz blokadę PIN</string>
     <string name="passcode_turn_off">Wyłącz blokadę PIN</string>

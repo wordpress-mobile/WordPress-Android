@@ -93,6 +93,10 @@ public class MediaUtils {
                || url.endsWith(".aiff") || url.endsWith(".aif") || url.endsWith(".aac") || url.endsWith(".m4a");
     }
 
+    public static boolean isGif(String url) {
+        return "gif".equals(MimeTypeMap.getFileExtensionFromUrl(url));
+    }
+
     /**
      * E.g. Jul 2, 2013 @ 21:57
      */
@@ -400,6 +404,7 @@ public class MediaUtils {
         } else {
             path = uri.toString();
         }
+
         return path;
     }
 

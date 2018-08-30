@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-07 14:22:05+0000
+Translation-Revision-Date: 2018-08-20 10:05:08+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="themes_empty_list">Aramanızla eşleşen bir tema yok</string>
+    <string name="reader_label_post_search_explainer">Ne bulmak istersiniz?</string>
+    <string name="site_settings_tags_empty_title_search">Aramanızla eşleşen etiket yok</string>
+    <string name="site_settings_tags_empty_title">Hiç bir etiketiniz yok</string>
+    <string name="site_settings_tags_empty_subtitle">Sık kullanılan etiketlerinizi buraya ekleyin böylece yazılarınızı etiketlerken kolayca seçebilebilirler</string>
+    <string name="site_settings_tags_empty_button">Bir etiket oluştur</string>
+    <string name="media_empty_search_list">Aramanızla eşleşen bir ortam yok</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">WordPress oturumu kapatılsın mı?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Yazı üzerinden henüz sitenize yüklenmemiş değişiklikleriniz var. Şimdi oturumu kapatmak bu değişiklikleri cihazınızdan silecektir. Yine de oturum kapatılsın mı?</string>
+    <string name="people_empty_list_filtered_viewers">Henüz hiç kimse görüntülemedi</string>
+    <string name="people_empty_list_filtered_email_followers">Henüz e–posta takipçisi yok</string>
+    <string name="people_empty_list_filtered_followers">Henüz takipçi yok</string>
+    <string name="people_empty_list_filtered_users">Henüz kullanıcı yok</string>
+    <string name="connection_service_facebook_notice">1 Ağustos 2018 tarihi itibarıyla Facebook, Facebook Profillerinde doğrudan gönderi paylaşımını durdurdu. Facebook Sayfaları ile olan bağlantılarınızda herhangi bir değişiklik olmayacak.</string>
+    <string name="reader_empty_posts_liked_description">Beğendiğiniz yazılar burada yer alacak</string>
+    <string name="reader_empty_posts_liked_title">Henüz herhangi bir şey beğenilmedi</string>
+    <string name="reader_empty_followed_blogs_button_followed">Takip edilenlere git</string>
+    <string name="reader_empty_followed_blogs_button_discover">Siteleri keşfet</string>
+    <string name="reader_empty_followed_blogs_description">Henüz herhangi bir siteyi takip etmiyorsunuz. Hemen bir tanesini takip etmeye ne dersiniz?</string>
+    <string name="reader_empty_followed_blogs_title">Takip edilen site yok</string>
+    <string name="notifications_empty_likes">Henüz beğeni yok</string>
+    <string name="notifications_empty_followers">Henüz takipçi yok</string>
+    <string name="activity_log_limited_content_on_free_plan">Ücretsiz bir paket kullandığınız için etkinliklerinizde sınırlı içerik görüyorsunuz.</string>
+    <string name="activity_log_empty_subtitle">Sitenizde değişiklikler yaptığınızda etkinlik geçmişinizi burada görebilirsiniz</string>
+    <string name="activity_log_empty_title">Henüz etkinlik yok</string>
+    <string name="posts_empty_list_button">Bir yazı oluştur</string>
+    <string name="pages_empty_list_button">Bir sayfa oluştur</string>
+    <string name="media_empty_upload_media">Ortam yükle</string>
+    <string name="media_empty_list">Hiç medya içeriğiniz yok</string>
+    <string name="reader_gallery_images_desc">görsel galerisi</string>
+    <string name="blavatar_desc">site simgesi</string>
+    <string name="theme_image_desc">tema görslei</string>
+    <string name="featured_image_desc">öne çıkan görsel</string>
+    <string name="local_changes_discarding_error">Yerel değişiklikler gözardı edilirken bir hata oldu. Daha fazla yardım için lütfen destekle iletişime geçin.</string>
+    <string name="local_changes_discarding">Yerel değişiklikler gözardı ediliyor</string>
+    <string name="local_changes_discarded">Yerel değişiklikler gözardı edildi</string>
+    <string name="menu_discard_changes">Yerel değişiklikleri gözardı et</string>
+    <string name="button_discard_changes">Değişiklikleri gözardı et</string>
+    <string name="button_discard">Gözardı et</string>
     <string name="reader_avatar_desc">profil fotoğrafı</string>
     <string name="reader_blavatar_desc">site simgesi</string>
     <string name="notification_channel_transient_title">Geçici</string>
@@ -17,22 +56,21 @@ Language: tr
     <string name="support_contact_email_not_set">Ayarlanmadı</string>
     <string name="support_contact_email">İletişim e–postası</string>
     <string name="application_log_button">Uygulama kaydı</string>
-    <string name="my_tickets">Biletlerim</string>
-    <string name="activity_log_rewind_dialog_message">Sitenizi %s %s durumuna geri almak istediğinize emin misiniz? Bu, o tarihten itibaren oluşturulan veya değiştirilen tüm içeriği ve seçenekleri silecektir.</string>
+    <string name="my_tickets">Taleplerim</string>
+    <string name="activity_log_rewind_dialog_message">Sitenizi %1$s %2$s durumuna geri almak istediğinize emin misiniz? Bu, o tarihten itibaren oluşturulan veya değiştirilen tüm içeriği ve seçenekleri silecektir.</string>
     <string name="activity_log_rewind_site">Siteyi geri al</string>
     <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
-    <string name="activity_log_currently_restoring_message">%s %s durumuna geri alınıyor</string>
+    <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Siteniz başarıyla geri alındı</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Siteniz başarıyla geri alındı\n%s %s durumuna geri alındı</string>
-    <string name="activity_log_rewind_started_snackbar_message">Siteniz geri yüklendi\n%s %s durumuna geri alınıyor</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Siteniz başarıyla geri alındı\n%1$s %2$s durumuna geri alındı</string>
+    <string name="activity_log_rewind_started_snackbar_message">Siteniz geri yüklendi\n%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_button">Etkinlik kaydı eylem düğmesi</string>
     <string name="plugin_auto_managed">Otomatik yönetilen</string>
     <string name="reader_save_posts_locally_dialog_message">Bu yazıyı saklayın ve istediğiniz zaman okumak için geri dönün. Yalnızca bu cihazda kullanılabilir; kaydedilen yazılar diğer cihazlarınızla senkronize edilmez. (Henüz! Üzerinde çalışıyoruz.)</string>
     <string name="reader_save_posts_locally_dialog_title">Yazıyı sonrası için kaydet</string>
     <string name="reader_empty_search_request_failed">Arama yapılamıyor</string>
     <string name="reader_empty_search_title">Sonuç bulunamadı</string>
-    <string name="reader_label_post_search_explainer">Site veya yazı için\nWordPress\'de ara</string>
     <string name="comment_read_source_post">Yazı kaynağını oku</string>
     <string name="sites">Siteler</string>
     <string name="signup_magic_link_title">Sihirli bağlantı gönderildi</string>
@@ -53,7 +91,6 @@ Language: tr
     <string name="reader_remove_bookmark">Kaydedilen gönderilerden kaldır</string>
     <string name="reader_add_bookmark">Kaydedilen gönderilere ekle</string>
     <string name="reader_save_for_later_title">Kaydedilen gönderiler</string>
-    <string name="activity_log_empty_list">Henüz hiçbir etkinlik kaydedilmedi</string>
     <string name="removed">Kaldırıldı</string>
     <string name="tabbar_accessibility_label_write">Yeni gönderi. Yeni bir gönderi yazın.</string>
     <string name="my_site_icon_content_description">Site simgesini değiştir</string>
@@ -123,7 +160,6 @@ Language: tr
     <string name="notification_channel_general_title">Genel</string>
     <string name="photo_picker_use_photo">Bu fotoğrafı kullan</string>
     <string name="media_preview_title">%1$d of %2$d</string>
-    <string name="stock_media_picker_empty_results">Eşleşme yok</string>
     <string name="stock_media_picker_initial_empty_subtext">%s tarafından sağlanıyor</string>
     <string name="stock_media_picker_initial_empty_text">Medya Kitaplığınıza eklemek için ücretsiz fotoğraflar arayın</string>
     <string name="stock_media_picker_search_hint">Ücretsiz fotoğraf kitaplığı arayın</string>
@@ -155,7 +191,6 @@ Language: tr
     <string name="stats_tab_tap_content_description">%s gösteriliyor</string>
     <string name="stats_legend">istatistik grafik göstergesi</string>
     <string name="fab_create_desc">oluşturun</string>
-    <string name="fab_add_tag_desc">etiket oluşturun</string>
     <string name="stats_bar_week_desc">%s haftası</string>
     <string name="stats_bar_date_value_desc">%s, %d görüntüleme</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -170,7 +205,6 @@ Language: tr
     <string name="reader_list_item_suggestion_remove_desc">silin</string>
     <string name="photo_picker_thumbnail_desc">Video oynatın</string>
     <string name="reader_cardview_post_play_video_desc">öne çıkan videoyu oynatın</string>
-    <string name="post_cardview_featured_desc">öne çıkan görsel</string>
     <string name="plugin_detail_logo_desc">eklenti logosu</string>
     <string name="plugin_detail_banner_desc">eklenti başlığı</string>
     <string name="photo_picker_wpmedia_desc">WordPress ortamları arasından seçim yapın</string>
@@ -192,9 +226,9 @@ Language: tr
     <string name="jetpack_connection_failed_with_reason">Jetpack’e bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack’e zaten bağlısınız</string>
     <string name="menu_undo_snackbar_action">GERİ AL</string>
-    <string name="menu_visual_mode_done_snackbar">Görsel moda geçildi.</string>
+    <string name="menu_visual_mode_done_snackbar">Görsel moda geçildi</string>
     <string name="menu_visual_mode">Görsel Mod</string>
-    <string name="menu_html_mode_done_snackbar">HTML moduna geçildi.</string>
+    <string name="menu_html_mode_done_snackbar">HTML moduna geçildi</string>
     <string name="menu_html_mode">HTML Modu</string>
     <string name="menu_preview">Önizleme</string>
     <string name="menu_publish_now">Şimdi Yayınla</string>
@@ -415,7 +449,7 @@ Language: tr
     <string name="site_settings_tags_hint">Sitenizin etiketlerini yönetin</string>
     <string name="dlg_saving_tag">Kaydediliyor</string>
     <string name="dlg_deleting_tag">Siliniyor</string>
-    <string name="dlg_confirm_delete_tag">\'%s\' tamamen silinsin mi?</string>
+    <string name="dlg_confirm_delete_tag">\'%s\' etiketi tamamen silinsin mi?</string>
     <string name="error_tag_exists">Bu isimdeki bir etiket zaten mevcut.</string>
     <string name="add_new_tag">Yeni etiket ekle</string>
     <string name="tag_description_hint">Açıklama</string>
@@ -434,7 +468,6 @@ Language: tr
     <string name="site_settings_week_start_title">Hafta başlangıcı</string>
     <string name="site_settings_tags_title">Etiketler</string>
     <string name="site_settings_traffic_header">Trafik</string>
-    <string name="delete_no">Silme</string>
     <string name="delete_yes">Sil</string>
     <string name="plugin_external_link_icon_content_description">Harici bağlantı</string>
     <string name="plugin_icon_content_description">Eklenti simgesi</string>
@@ -877,10 +910,6 @@ Language: tr
     <string name="title_email_follower">E–posta takipçisi</string>
     <string name="title_follower">Takipçi</string>
     <string name="people_fetching">Kullanıcılar getiriliyor…</string>
-    <string name="people_empty_list_filtered_viewers">Henüz hiç izleyiciniz yok.</string>
-    <string name="people_empty_list_filtered_email_followers">Henüz hiç e–posta takipçiniz yok.</string>
-    <string name="people_empty_list_filtered_followers">Henüz hiç takipçiniz yok.</string>
-    <string name="people_empty_list_filtered_users">Henüz hiç kullanıcınız yok.</string>
     <string name="people_dropdown_item_viewers">İzleyiciler</string>
     <string name="people_dropdown_item_email_followers">E–posta takipçileri</string>
     <string name="people_dropdown_item_followers">Takipçiler</string>
@@ -937,7 +966,6 @@ Language: tr
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_search_description">Dilinizde %s için hiç sonuç bulunamadı</string>
-    <string name="reader_label_post_search_running">Aranıyor…</string>
     <string name="reader_hint_post_search">WordPress üzerinde ara</string>
     <string name="reader_title_related_post_detail">İlişkili yazı</string>
     <string name="preview_screen_links_disabled">Önizleme ekranında bağlantılar etkisiz durumdadır</string>
@@ -980,7 +1008,7 @@ Language: tr
     <string name="delete_site_hint">Siteyi sil</string>
     <string name="export_site_hint">İçeriğinizi XML dosyası ile dışarı aktarın</string>
     <string name="primary_domain">Birincil alan adı</string>
-    <string name="error_deleting_site_summary">Sitenizi silerken bir hata oluştu. Lütfen daha fazla destek için destek birimine başvurun</string>
+    <string name="error_deleting_site_summary">Sitenizi silerken bir hata oluştu. Lütfen daha fazla yardım için destek birimine başvurun.</string>
     <string name="error_deleting_site">Site silinirken hata</string>
     <string name="site_settings_export_content_title">İçeriği dışarı aktar</string>
     <string name="confirm_delete_site_prompt">Lütfen aşağıdaki alana %1$s yazarak doğrulayın. Sonrasında siteniz sonsuza dek yok olacak.</string>
@@ -1208,15 +1236,13 @@ Language: tr
     <string name="reader_label_gap_marker">Daha fazla yazı yükle</string>
     <string name="notifications_no_search_results">\'%s\' hiçbir siteyle eşleşmedi</string>
     <string name="search_sites">Sitelerde ara</string>
-    <string name="notifications_empty_view_reader">Okuyucuyu görüntüle</string>
-    <string name="notifications_empty_action_followers_likes">Ortaya çıkın: okuduğunuz yazılara yorum yapın.</string>
+    <string name="notifications_empty_view_reader">Okuyucuya git</string>
+    <string name="notifications_empty_action_followers_likes">Farkedin: okuduğunuz yazılara yorum yapın.</string>
     <string name="notifications_empty_action_comments">Konuşmalara katılın: takip ettiğiniz bloglarda yorum yapın.</string>
     <string name="notifications_empty_action_unread">Tartışmaları alevlendirin: yeni bir yazı yazın.</string>
     <string name="notifications_empty_action_all">Etkin olun! Takip ettiğiniz bloglarda yazılara yorum yapın.</string>
-    <string name="notifications_empty_likes">Gösterilecek beğeni yok…henüz.</string>
-    <string name="notifications_empty_followers">Raporlanacak takipçi yok…henüz.</string>
-    <string name="notifications_empty_comments">Yeni yorum yok…henüz.</string>
-    <string name="notifications_empty_unread">Her şey tamam!</string>
+    <string name="notifications_empty_comments">Henüz yeni yorum yok.</string>
+    <string name="notifications_empty_unread">Her şey güncel!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Lütfen önce uygulamada istatistiklere ulaşın, sonra bileşeni tekrar eklemeyi deneyin</string>
     <string name="stats_widget_error_readd_widget">Lütfen bileşeni kaldırıp tekrar ekleyin</string>
     <string name="stats_widget_error_no_visible_blog">Görünür bir blog olmadan istatistiklere erişilemez</string>
@@ -1256,7 +1282,6 @@ Language: tr
     <string name="notification_settings_item_other_account_emails_summary">Hesabınızla ilgili önemli e–postaları her zaman göndereceğiz, ayrıca bazı yardımcı içerikler de alabilirsiniz.</string>
     <string name="stats_insights_latest_post_trend">%2$s yayımlandığından beri %1$s geçti. İşte yazının bugüne kadarki performansı…</string>
     <string name="stats_insights_latest_post_summary">Son yazılar özeti</string>
-    <string name="button_revert">Geri Çevir</string>
     <string name="yesterday">Dün</string>
     <string name="days_ago">%d gün önce</string>
     <string name="connectionbar_no_connection">Bağlantı yok</string>
@@ -1309,7 +1334,6 @@ Language: tr
     <string name="reader_label_new_posts_subtitle">Göstermek için dokunun</string>
     <string name="my_site_header_configuration">Yapılandırma</string>
     <string name="stats_unknown_author">Bilinmeyen Yazar</string>
-    <string name="sign_out_wpcom_confirm">Hesabınızdan çıkış yaptığınızda yerel taslak ve değişiklikler dahil olmak üzere @%s kullanıcısına ait tüm WordPress.com verileri bu cihazdan kaldırılır.</string>
     <string name="select_all">Tümünü seç</string>
     <string name="hide">Gizle</string>
     <string name="show">Göster</string>
@@ -1432,8 +1456,6 @@ Language: tr
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>
     <string name="create_new_blog_wpcom">WordPress.com blogu oluştur</string>
     <string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
-    <string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
-    <string name="reader_empty_followed_blogs_title">Henüz herhangi bir site takip etmiyorsunuz.</string>
     <string name="reader_menu_block_blog">Bu siteyi engelleyin</string>
     <string name="reader_toast_blog_blocked">Bu siteden yazılar artık gösterilmeyecek</string>
     <string name="reader_toast_err_block_blog">Bu site engellenemiyor</string>
@@ -1453,7 +1475,6 @@ Language: tr
     <string name="reader_title_subs">Etiketler ve Siteler</string>
     <string name="reader_title_tag_preview">Okuyucu Etiketi</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
-    <string name="media_empty_list">Medya bulunamadı</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
     <string name="ssl_certificate_error">Geçersiz SSL setifikası</string>
     <string name="forgot_password">Parolanızı mı kaybettiniz?</string>
@@ -1481,7 +1502,6 @@ Language: tr
     <string name="adding_cat_success">Kategori başarı ile eklendi</string>
     <string name="adding_cat_failed">Kategori ekleme başarısız</string>
     <string name="mnu_comment_unspam">Gereksiz Değil</string>
-    <string name="comments_empty_list">Yorum yok</string>
     <string name="theme_fetch_failed">Temalar çekilemedi</string>
     <string name="blog_not_found">Bu blog\'a erişilirken hata ile karşılaşıldı</string>
     <string name="gallery_error">Ortam dosyası geri getirilemedi</string>
@@ -1564,7 +1584,6 @@ Language: tr
     <string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>
     <string name="pick_video">Video seçin</string>
     <string name="pick_photo">Fotoğraf seçin</string>
-    <string name="reader_empty_followed_blogs_description">Kaygılanmayın, keşfetmeye başlamak için sağ üstteki simgeye dokunmanız yeterli!</string>
     <string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
     <string name="reader_empty_followed_tags">Herhangi bir etiketi takip etmiyorsunuz</string>
     <string name="reader_toast_err_url_intent">%s açılamadı</string>
@@ -1582,6 +1601,7 @@ Language: tr
     <string name="reader_btn_follow">Takip et</string>
     <string name="reader_btn_share">Paylaş</string>
     <string name="reader_untitled_post">(Başlıksız)</string>
+    <string name="comments_empty_list">Henüz yorum yok</string>
     <string name="empty_list_default">Bu liste boş</string>
     <string name="passcode_turn_on">PIN kilidini aç</string>
     <string name="passcode_turn_off">PIN kilidini kapat</string>

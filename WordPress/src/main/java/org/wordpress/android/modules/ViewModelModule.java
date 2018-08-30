@@ -3,11 +3,13 @@ package org.wordpress.android.modules;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
+import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -29,6 +31,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ActivityLogDetailViewModel.class)
     abstract ViewModel activityLogDetailViewModel(ActivityLogDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(JetpackRemoteInstallViewModel.class)
+    abstract ViewModel jetpackRemoteInstallViewModel(JetpackRemoteInstallViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(QuickStartViewModel.class)
+    abstract ViewModel quickStartViewModel(QuickStartViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

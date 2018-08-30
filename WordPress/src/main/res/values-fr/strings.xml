@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-07-05 14:18:41+0000
+Translation-Revision-Date: 2018-08-20 19:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="themes_empty_list">Aucun thème ne correspond à votre recherche.</string>
+    <string name="reader_label_post_search_explainer">Que recherchez–vous ?</string>
+    <string name="site_settings_tags_empty_title_search">Aucune étiquette ne correspond à votre recherche.</string>
+    <string name="site_settings_tags_empty_title">Vous n\'avez pas d’étiquettes.</string>
+    <string name="site_settings_tags_empty_subtitle">Ajoutez ici les étiquettes que vous utilisez le plus souvent afin de pouvoir les sélectionner rapidement lors de l’ajout d’étiquettes à vos articles</string>
+    <string name="site_settings_tags_empty_button">Créer une étiquette</string>
+    <string name="media_empty_search_list">Aucun média ne correspond à votre recherche.</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Se déconnecter de WordPress ?</string>
+    <string name="people_empty_list_filtered_viewers">Pas encore de visiteurs</string>
+    <string name="people_empty_list_filtered_email_followers">Pas encore d\'abonnés par e–mail</string>
+    <string name="people_empty_list_filtered_followers">Pas encore d\'abonnés</string>
+    <string name="people_empty_list_filtered_users">Pas encore d\'utilisateurs</string>
+    <string name="connection_service_facebook_notice">Depuis le 1er Août 2018 Facebook n’autorise plus le partage direct des articles sur les profils Facebook. Les connexions aux pages Facebook demeurent inchangées. </string>
+    <string name="reader_empty_posts_liked_description">Les articles que vous aimez apparaîtront ici</string>
+    <string name="reader_empty_posts_liked_title">Aucune mention J\'aime</string>
+    <string name="reader_empty_followed_blogs_button_followed">Accéder à la page des abonnés</string>
+    <string name="reader_empty_followed_blogs_button_discover">Découvrir des sites</string>
+    <string name="reader_empty_followed_blogs_description">Vous ne suivez actuellement aucun site. Pourquoi ne pas en suivre un maintenant ?</string>
+    <string name="reader_empty_followed_blogs_title">Aucun site suivi</string>
+    <string name="notifications_empty_likes">Pas encore de mentions J\'aime</string>
+    <string name="notifications_empty_followers">Pas encore d\'abonnés</string>
+    <string name="activity_log_limited_content_on_free_plan">Comme vous disposez d\'un plan gratuit, vous ne verrez qu\'un nombre limité d\'événements dans vos activités.</string>
+    <string name="activity_log_empty_subtitle">Lorsque vous effectuez des modifications sur votre site, vous pouvez consulter votre historique d\'activités ici</string>
+    <string name="activity_log_empty_title">Aucune activité pour le moment</string>
+    <string name="posts_empty_list_button">Créer un article</string>
+    <string name="pages_empty_list_button">Créer une page</string>
+    <string name="media_empty_upload_media">Téléverser un média</string>
+    <string name="media_empty_list">Vous n’avez aucun média</string>
+    <string name="reader_gallery_images_desc">galerie d’images</string>
+    <string name="blavatar_desc">icône du site</string>
+    <string name="theme_image_desc">image du thème</string>
+    <string name="featured_image_desc">image mise en avant</string>
+    <string name="local_changes_discarding_error">Il y a eu une erreur durant le rejet des modifications locales. Veuillez contacter le support pour de l\'assistance.</string>
+    <string name="local_changes_discarding">Rejet des modifications locales</string>
+    <string name="local_changes_discarded">Modifications locales rejetées</string>
+    <string name="menu_discard_changes">Rejeter les modifications locales</string>
+    <string name="button_discard_changes">Rejeter les modifications</string>
+    <string name="button_discard">Rejeter</string>
     <string name="reader_avatar_desc">photo de profil</string>
     <string name="reader_blavatar_desc">icône du site</string>
     <string name="notification_channel_transient_title">Transient</string>
@@ -18,21 +56,16 @@ Language: fr
     <string name="support_contact_email">E–mail de contact</string>
     <string name="application_log_button">Journal d’application</string>
     <string name="my_tickets">Mes tickets</string>
-    <string name="activity_log_rewind_dialog_message">Voulez vous vraiment faire retourner votre site en arrière de %s à %s ? Ceci va supprimer tout le contenu et les options créées ou changées depuis.</string>
     <string name="activity_log_rewind_site">Retour en arrière du site</string>
     <string name="activity_log_currently_restoring_message_no_dates">Retour en arrière en cours</string>
-    <string name="activity_log_currently_restoring_message">Retour en arrière de %s %s</string>
     <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Votre site a bien été restauré</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %s %s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %s %s</string>
     <string name="activity_log_button">Bouton d’action de journal d’activité</string>
     <string name="plugin_auto_managed">Auto–géré</string>
     <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article, et revenez pour le lire quand vous le souhaitez. Il ne sera disponible que sur cet appareil -– les articles enregistrés ne sont pas encore synchronisés avec les autres périphériques. (On y travaille.)</string>
     <string name="reader_save_posts_locally_dialog_title">Enregistrer les articles pour plus tard</string>
     <string name="reader_empty_search_request_failed">Impossible d’effectuer la recherche</string>
     <string name="reader_empty_search_title">Aucun résultat trouvé</string>
-    <string name="reader_label_post_search_explainer">Recherche WordPress\npour un site ou un article</string>
     <string name="comment_read_source_post">Lire la source de l’article</string>
     <string name="sites">Sites</string>
     <string name="signup_magic_link_title">Lien magique envoyé</string>
@@ -53,7 +86,6 @@ Language: fr
     <string name="reader_remove_bookmark">Supprimer des articles enregistrés</string>
     <string name="reader_add_bookmark">Ajouter aux articles enregistrés</string>
     <string name="reader_save_for_later_title">Articles enregistrés</string>
-    <string name="activity_log_empty_list">Aucun événement n’a encore été enregistré</string>
     <string name="removed">Supprimé</string>
     <string name="tabbar_accessibility_label_write">Nouvel article. Rédigez un nouvel article.</string>
     <string name="my_site_icon_content_description">Modifier l\'icône du site</string>
@@ -123,7 +155,6 @@ Language: fr
     <string name="notification_channel_general_title">Général</string>
     <string name="photo_picker_use_photo">Utiliser cette photo</string>
     <string name="media_preview_title">%1$d sur %2$d</string>
-    <string name="stock_media_picker_empty_results">Aucun résultat</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos fournies par %s</string>
     <string name="stock_media_picker_initial_empty_text">Rechercher des photos gratuites à ajouter à votre bibliothèque de médias</string>
     <string name="stock_media_picker_search_hint">Rechercher une bibliothèque gratuite de photos</string>
@@ -155,7 +186,6 @@ Language: fr
     <string name="stats_tab_tap_content_description">Affichage de %s</string>
     <string name="stats_legend">légende du graphique des statistiques</string>
     <string name="fab_create_desc">créer</string>
-    <string name="fab_add_tag_desc">créer une étiquette</string>
     <string name="stats_bar_week_desc">Semaine de %s</string>
     <string name="stats_bar_date_value_desc">%s, %d vues</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -170,7 +200,6 @@ Language: fr
     <string name="reader_list_item_suggestion_remove_desc">supprimer</string>
     <string name="photo_picker_thumbnail_desc">Lire la vidéo</string>
     <string name="reader_cardview_post_play_video_desc">lire la vidéo à la une</string>
-    <string name="post_cardview_featured_desc">image mise en avant</string>
     <string name="plugin_detail_logo_desc">logo de l\'extension</string>
     <string name="plugin_detail_banner_desc">bannière de l\'extension</string>
     <string name="photo_picker_wpmedia_desc">sélectionner à partir du média WordPress</string>
@@ -192,9 +221,9 @@ Language: fr
     <string name="jetpack_connection_failed_with_reason">Échec de la connexion à Jetpack : %s</string>
     <string name="jetpack_already_connected_toast">Vous êtes déjà abonné à Jetpack</string>
     <string name="menu_undo_snackbar_action">ANNULER</string>
-    <string name="menu_visual_mode_done_snackbar">Basculé en mode visuel.</string>
+    <string name="menu_visual_mode_done_snackbar">Basculé en mode visuel</string>
     <string name="menu_visual_mode">Mode visuel</string>
-    <string name="menu_html_mode_done_snackbar">Basculé en mode HTML.</string>
+    <string name="menu_html_mode_done_snackbar">Basculé en mode HTML</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Prévisualiser</string>
     <string name="menu_publish_now">Publier maintenant</string>
@@ -415,7 +444,6 @@ Language: fr
     <string name="site_settings_tags_hint">Gérez les étiquettes de votre site</string>
     <string name="dlg_saving_tag">Enregistrement</string>
     <string name="dlg_deleting_tag">Suppression</string>
-    <string name="dlg_confirm_delete_tag">Supprimer définitivement \'%s\' ?</string>
     <string name="error_tag_exists">Une étiquette avec ce nom existe déjà</string>
     <string name="add_new_tag">Ajout de nouvelle étiquette</string>
     <string name="tag_description_hint">Description</string>
@@ -434,7 +462,6 @@ Language: fr
     <string name="site_settings_week_start_title">La semaine commence le</string>
     <string name="site_settings_tags_title">Étiquettes</string>
     <string name="site_settings_traffic_header">Trafic</string>
-    <string name="delete_no">Ne pas supprimer</string>
     <string name="delete_yes">Supprimer</string>
     <string name="plugin_external_link_icon_content_description">Lien externe</string>
     <string name="plugin_icon_content_description">Icône de l’extension</string>
@@ -877,10 +904,6 @@ Language: fr
     <string name="title_email_follower">E–mail de l’abonné</string>
     <string name="title_follower">Abonné</string>
     <string name="people_fetching">Récupération des utilisateurs…</string>
-    <string name="people_empty_list_filtered_viewers">Vous n\'avez pas encore de lecteur.</string>
-    <string name="people_empty_list_filtered_email_followers">Vous n’avez encore aucun abonné par e–mail.</string>
-    <string name="people_empty_list_filtered_followers">Vous n’avez encore aucun abonné.</string>
-    <string name="people_empty_list_filtered_users">Vous n\'avez pas encore d\'utilisateur.</string>
     <string name="people_dropdown_item_viewers">Lecteurs</string>
     <string name="people_dropdown_item_email_followers">Abonnés par E–mail</string>
     <string name="people_dropdown_item_followers">Abonnés</string>
@@ -937,7 +960,6 @@ Language: fr
     <string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
     <string name="reader_empty_search_description">Aucune article trouvé pour %s dans votre langue</string>
-    <string name="reader_label_post_search_running">Recherche en cours…</string>
     <string name="reader_hint_post_search">Recherche WordPress</string>
     <string name="reader_title_related_post_detail">Article connexe</string>
     <string name="preview_screen_links_disabled">Les liens sont désactivés sur l\'écran de prévisualisation</string>
@@ -994,9 +1016,6 @@ Language: fr
     <string name="editor_remove_failed_uploads">Supprimer les téléversements échoués</string>
     <string name="editor_toast_failed_uploads">Certains téléversements de fichiers ont échoué. Vous ne pouvez pas\nenregistrer ou publier votre article dans cet état.\nSouhaitez–vous supprimer tous les téléversements ayant échoué ?</string>
     <string name="site_settings_advanced_header">Avancé</string>
-    <string name="comments_empty_list_filtered_trashed">Aucun commentaire dans la corbeille</string>
-    <string name="comments_empty_list_filtered_pending">Aucun commentaire en attente</string>
-    <string name="comments_empty_list_filtered_approved">Aucun commentaire approuvé</string>
     <string name="xmlrpc_missing_method_error">Impossible de se connecter. Le serveur ne dispose pas des méthodes XML–RPC requises.</string>
     <string name="alignment_center">Centré</string>
     <string name="post_format_video">Vidéo</string>
@@ -1055,7 +1074,6 @@ Language: fr
     <string name="mnu_comment_delete_permanently">Supprimer</string>
     <string name="mnu_comment_untrash">Restaurer</string>
     <string name="comment_deleted_permanently">Commentaire supprimé</string>
-    <string name="comments_empty_list_filtered_spam">Pas de commentaire indésirable</string>
     <string name="comment_status_all">Tout</string>
     <string name="could_not_load_page">Impossible de charger la page</string>
     <string name="off">Off</string>
@@ -1208,15 +1226,7 @@ Language: fr
     <string name="reader_label_gap_marker">Charger plus d\'artilces</string>
     <string name="notifications_no_search_results">Aucun site ne correspond à \'%s\'</string>
     <string name="search_sites">Rechercher les sites</string>
-    <string name="notifications_empty_view_reader">Voir le Lecteur</string>
-    <string name="notifications_empty_action_followers_likes">Soyez remarqué : commentez les articles que vous avez lus.</string>
-    <string name="notifications_empty_action_comments">Rejoignez une conversation : commentez les articles des sites que vous suivez.</string>
-    <string name="notifications_empty_action_unread">Rallumez la conversation : écrivez un nouvel article.</string>
     <string name="notifications_empty_action_all">Soyez actif! Commentez les articles des sites que vous suivez.</string>
-    <string name="notifications_empty_likes">Pas (encore) de nouveaux \"j\'aime\" à afficher.</string>
-    <string name="notifications_empty_followers">Pas (encore) de nouveaux followers.</string>
-    <string name="notifications_empty_comments">Pas (encore) de nouveaux commentaires.</string>
-    <string name="notifications_empty_unread">Vous êtes à jour!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Vous devez d\'abord aller sur l\'écran Stats dans l\'appli, réessayez d\'ajouter le Widget ensuite.</string>
     <string name="stats_widget_error_readd_widget">Veuillez retirer le widget et le rajouter ensuite.</string>
     <string name="stats_widget_error_no_visible_blog">Les Stats ne sont pas accessibles sans un Site visible</string>
@@ -1256,7 +1266,6 @@ Language: fr
     <string name="notification_settings_item_other_account_emails_summary">Nous vous enverrons des e–mails importants concernant votre compte, mais vous pouvez aussi recevoir des informations complémentaires très utiles.</string>
     <string name="stats_insights_latest_post_trend">Cela fait %1$s que %2$s a été publié. Comment l\'article a évolué jusqu\'à maintenant…</string>
     <string name="stats_insights_latest_post_summary">Résumé du dernier article</string>
-    <string name="button_revert">Annuler modifications</string>
     <string name="yesterday">Hier</string>
     <string name="days_ago">il y a %d jours</string>
     <string name="connectionbar_no_connection">Pas de connexion</string>
@@ -1309,7 +1318,6 @@ Language: fr
     <string name="reader_label_new_posts_subtitle">Toucher pour les afficher</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="stats_unknown_author">Auteur inconnu</string>
-    <string name="sign_out_wpcom_confirm">Se déconnecter de votre compte supprimera toutes les données liées au compte @%s de WordPress.com sur cet appareil. Cela inclus les changements locaux et les brouillons.</string>
     <string name="select_all">Tout selectionner</string>
     <string name="hide">Cacher</string>
     <string name="show">Montrer</string>
@@ -1432,8 +1440,6 @@ Language: fr
     <string name="reader_empty_comments">Pas encore de commentaires</string>
     <string name="create_new_blog_wpcom">Créer votre blog WordPress.com</string>
     <string name="browse_our_faq_button">Feuilleter notre FAQ</string>
-    <string name="reader_empty_posts_liked">Vous n\'aimez aucun article</string>
-    <string name="reader_empty_followed_blogs_title">Vous ne suivez aucun site pour le moment</string>
     <string name="reader_menu_block_blog">Bloquer ce site</string>
     <string name="reader_toast_blog_blocked">Les articles de ce site ne seront plus affichés</string>
     <string name="reader_toast_err_block_blog">Impossible de bloquer ce site</string>
@@ -1453,7 +1459,6 @@ Language: fr
     <string name="reader_title_subs">Étiquettes &amp; sites</string>
     <string name="reader_title_tag_preview">Tag du Reader</string>
     <string name="reader_title_blog_preview">Blog du Lecteur</string>
-    <string name="media_empty_list">Pas de media</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez–vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>
     <string name="forgot_password">Mot de passe perdu ?</string>
@@ -1481,7 +1486,6 @@ Language: fr
     <string name="adding_cat_success">Catégorie ajoutée avec succès</string>
     <string name="adding_cat_failed">Échec de l\'ajout de catégorie</string>
     <string name="mnu_comment_unspam">Non indésirable</string>
-    <string name="comments_empty_list">Aucun commentaire</string>
     <string name="theme_fetch_failed">Échec de chargement des thèmes</string>
     <string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
     <string name="gallery_error">Le média ne peut pas être récupéré</string>
@@ -1564,7 +1568,6 @@ Language: fr
     <string name="reader_toast_err_get_post">Impossible de récupérer cet article</string>
     <string name="pick_video">Sélectionner une vidéo</string>
     <string name="pick_photo">Sélectionner une photo</string>
-    <string name="reader_empty_followed_blogs_description">Mais ne vous inquiétez pas, appuyer sur l\'icône en haut à droite pour commencer a explorer!</string>
     <string name="reader_likes_you_and_one">Vous et un autre avez aimé ceci</string>
     <string name="reader_empty_followed_tags">Vous ne suivez aucun tag</string>
     <string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>

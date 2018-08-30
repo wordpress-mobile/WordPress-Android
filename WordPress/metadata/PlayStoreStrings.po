@@ -10,20 +10,22 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
-msgctxt "release_note_105"
+msgctxt "release_note_107"
 msgid ""
-"10.5:\n"
-"* New: Users can now easily discard local changes to a post in the editor.\n"
-"* Some small UI improvements and refinements.\n"
-"* A bunch of small bug-fixes\n"
+"10.7:\n"
+"Everyone loves a GIF! Animated GIFs are supported throughout the app, and we sped up their load times so you never have to wait to see that cat fall off the table.\n"
+"Nobody likes blank screens with no instructions! If you navigate to any page with no content — e.g., you go to the Reader but you don’t follow any blogs — we’ll suggest next steps.\n"
+"Small UI improvements to make your experience more intuitive. You probably won’t notice them, and that’s the point.\n"
+"Bug squashing.\n"
 msgstr ""
 
-msgctxt "release_note_104"
+msgctxt "release_note_106"
 msgid ""
-"10.4:\n"
-"* New: Activity Log Rewind: bring back your site to a previous state.\n"
-"* A bunch of small UI improvements and refinements.\n"
-"* Various bug-fixes\n"
+"10.6:\n"
+"* Activity Log now available for free WordPress.com sites.\n"
+"* Improvements in support for some locales.\n"
+"* General improvements in Gif support.\n"
+"* A bunch of other bug fixes.\n"
 msgstr ""
 
 msgctxt "sample_post_content"
@@ -73,30 +75,40 @@ msgstr ""
 #. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_1"
-msgid "Enjoy your favourite sites"
+msgid ""
+"Enjoy your\n"
+"favorite sites\n"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_2"
-msgid "Share your ideas with the world"
+msgid ""
+"Share your ideas\n"
+"with the world\n"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_3"
-msgid "Manage your site everywhere you go"
+msgid ""
+"Manage your site\n"
+"everywhere you go\n"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_4"
-msgid "Get notified in real-time"
+msgid ""
+"Get notified\n"
+"in real-time\n"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one. 
 msgctxt "play_store_screenshot_5"
-msgid "All the stats in your hand"
+msgid ""
+"All the stats\n"
+"in your hand\n"
 msgstr ""
 

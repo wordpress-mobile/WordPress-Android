@@ -166,6 +166,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onTryAndCustomizeSelected(String themeId) {
+        if (mThemeBrowserFragment != null) {
+            mThemeBrowserFragment.completeQuickStartCustomizeTask();
+        }
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 

@@ -88,8 +88,6 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.passcodelock.AbstractAppLock;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -230,7 +228,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        if (!PackageUtils.isDebugBuild()) {
+        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
             Fabric.with(this, new Crashlytics());
         }
 
@@ -262,17 +260,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
 
         RestClientUtils.setUserAgent(getUserAgent());
-
-        // PasscodeLock setup
-        if (!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            // Make sure that PasscodeLock isn't already in place.
-            // Notifications services can enable it before the app is started.
-            AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
-        }
-        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            AppLockManager.getInstance().getAppLock().setExemptActivities(
-                    new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
-        }
 
         mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
                 BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
@@ -443,6 +430,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mContext;
     }
 
+    /**
+     * Update locale of the static context when language is changed.
+     */
+    public static void updateContextLocale() {
+        mContext = LocaleManager.setLocale(mContext);
+    }
+
     public static RestClientUtils getRestClientUtils() {
         if (sRestClientUtils == null) {
             sRestClientUtils = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator, null);
@@ -530,12 +524,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Analytics resets
             AnalyticsTracker.endSession(false);
             AnalyticsTracker.clearAllData();
-
-            // disable passcode lock
-            AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
-            if (appLock != null) {
-                appLock.setPassword(null);
-            }
         }
 
         if (!event.isError() && mAccountStore.hasAccessToken()) {
@@ -903,10 +891,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
-            Map<String, Boolean> properties = new HashMap<>(1);
-            properties.put("pin_lock_enabled", AppLockManager.getInstance().getAppLock() != null
-                                               && AppLockManager.getInstance().getAppLock().isPasswordLocked());
-            AnalyticsTracker.track(Stat.APPLICATION_OPENED, properties);
+            AnalyticsTracker.track(Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {

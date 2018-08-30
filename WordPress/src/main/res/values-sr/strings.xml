@@ -33,7 +33,6 @@ Language: sr_RS
     <string name="notifications_tab">Језичак обавештења</string>
     <string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
     <string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
-    <string name="button_revert">Врати</string>
     <string name="yesterday">Јуче</string>
     <string name="days_ago">пре %d дана</string>
     <string name="connectionbar_no_connection">Нема везе</string>
@@ -173,7 +172,6 @@ Language: sr_RS
     <string name="cab_selected">%d изабрано</string>
     <string name="browse_our_faq_button">Прегледајте наша ЧПП</string>
     <string name="pages_empty_list">Не постоји ниједна страна. Зашто не бисте направили нову?</string>
-    <string name="reader_empty_posts_liked">Нисте означили да вам се свиђа ниједан чланак</string>
     <string name="error_refresh_unauthorized_pages">Немате дозволу да прегледате или уређујете стране</string>
     <string name="comment_reply_to_user">Одговор %s</string>
     <string name="comment_trashed">Коментар померен на отпад</string>
@@ -195,7 +193,6 @@ Language: sr_RS
     <string name="reader_empty_posts_in_tag">Нема чланака са том ознаком</string>
     <string name="reader_empty_comments">Нема коментара</string>
     <string name="create_new_blog_wpcom">Направите блог на WordPress.com</string>
-    <string name="reader_empty_followed_blogs_title">Још увек не пратите ниједно веб место</string>
     <string name="reader_toast_err_generic">Није могуће обавити ову радњу</string>
     <string name="contact_us">Контактирајте нас</string>
     <string name="update_verb">Ажурирај</string>
@@ -203,7 +200,6 @@ Language: sr_RS
     <string name="reader_page_followed_tags">Ознаке које пратите</string>
     <string name="reader_title_tag_preview">Ознака читача</string>
     <string name="reader_page_followed_blogs">Веб места која пратите</string>
-    <string name="media_empty_list">Нема медија</string>
     <string name="ssl_certificate_error">Неисправна SSL потврда</string>
     <string name="forgot_password">Изгубили сте лозинку?</string>
     <string name="help">Помоћ</string>
@@ -223,7 +219,6 @@ Language: sr_RS
     <string name="error_generic">Дошло је до грешке</string>
     <string name="error_refresh_comments">Коментари тренутно не могу бити освежени</string>
     <string name="error_refresh_pages">Стране тренутно не могу бити освежене</string>
-    <string name="comments_empty_list">Нема коментара</string>
     <string name="theme_fetch_failed">Неуспешно добављање тема</string>
     <string name="blog_not_found">Дошло је до грешке током приступања овом блогу</string>
     <string name="gallery_error">Медијска ставка не може бити повраћена</string>
@@ -305,7 +300,6 @@ Language: sr_RS
     <string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>
     <string name="pick_photo">Одаберите фотографију</string>
     <string name="pick_video">Одаберите видео снимак</string>
-    <string name="reader_empty_followed_blogs_description">Не брините, потребно је само да додирнете иконицу горе десно да бисте започели истраживање!</string>
     <string name="reader_empty_followed_tags">Не пратите ниједну ознаку</string>
     <string name="empty_list_default">Овај списак је празан</string>
     <string name="reader_toast_err_url_intent">Није могуће отворити %s</string>

@@ -77,6 +77,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == PAGE_NEW_POST) {
                 itemView.background = null
                 customView = inflater.inflate(R.layout.navbar_post_item, menuView, false)
+                customView.id = R.id.bottom_nav_new_post_button // identify view for QuickStart
             } else {
                 customView = inflater.inflate(R.layout.navbar_item, menuView, false)
                 val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
@@ -84,6 +85,9 @@ class WPMainNavigationView @JvmOverloads constructor(
                 txtLabel.text = getTitleForPosition(i)
                 customView.contentDescription = getContentDescriptionForPosition(i)
                 imgIcon.setImageResource(getDrawableResForPosition(i))
+                if (i == PAGE_READER) {
+                    customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+                }
             }
 
             itemView.addView(customView)
