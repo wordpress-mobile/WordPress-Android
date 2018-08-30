@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
@@ -138,9 +139,11 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onDataFetchedPostsDataAndChangesStatusIfCanLoadMore() {
+    fun onDataFetchedPostsDataAndChangesStatusIfCanLoadMore() = runBlocking {
         val canLoadMore = true
-        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
 
         assertEquals(
                 viewModel.events.value,
@@ -153,7 +156,11 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedLoadsMoreDataIfCanLoadMore() = runBlocking {
         val canLoadMore = true
-        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
+
+        reset(store)
 
         viewModel.onScrolledToBottom()
 
@@ -161,9 +168,11 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onDataFetchedPostsDataAndChangesStatusIfCannotLoadMore() {
+    fun onDataFetchedPostsDataAndChangesStatusIfCannotLoadMore() = runBlocking {
         val canLoadMore = false
-        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
 
         assertEquals(
                 viewModel.events.value,
@@ -174,10 +183,12 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onDataFetchedShowsFooterIfCannotLoadMoreAndIsFreeSite() {
+    fun onDataFetchedShowsFooterIfCannotLoadMoreAndIsFreeSite() = runBlocking {
         val canLoadMore = false
         whenever(site.hasFreePlan).thenReturn(true)
-        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
 
         assertEquals(
                 viewModel.events.value,
@@ -206,7 +217,11 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() = runBlocking<Unit> {
         val canLoadMore = false
-        viewModel.onEventsUpdated(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
+
+        reset(store)
 
         viewModel.onScrolledToBottom()
 
@@ -214,26 +229,33 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onDataFetchedGoesToTopWhenSomeRowsAffected() {
+    fun onDataFetchedGoesToTopWhenSomeRowsAffected() = runBlocking {
         assertTrue(moveToTopEvents.isEmpty())
 
-        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
 
         assertTrue(moveToTopEvents.isNotEmpty())
     }
 
     @Test
-    fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() {
+    fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() = runBlocking<Unit> {
         val canLoadMore = true
-        viewModel.onEventsUpdated(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
 
-        verify(store, never()).getActivityLogForSite(site, false)
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
+
+        verify(store).getActivityLogForSite(site, false)
     }
 
     @Test
-    fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() {
+    fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() = runBlocking {
         val canLoadMore = true
-        viewModel.onEventsUpdated(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
 
         assertTrue(events.last()?.get(0) is Header)
         assertTrue(events.last()?.get(3) is Header)
@@ -281,7 +303,10 @@ class ActivityLogViewModelTest {
 
     @Test
     fun loadsNextPageOnScrollToBottom() = runBlocking {
-        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+
+        viewModel.start(site)
+        reset(store)
 
         viewModel.onScrolledToBottom()
 

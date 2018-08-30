@@ -212,7 +212,7 @@ class ActivityLogViewModel @Inject constructor(
             val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
             launch(coroutineContext) {
                 val result = activityLogStore.fetchActivities(payload)
-                onEventsUpdated(result)
+                onActivityLogFetched(result)
             }
         }
     }
@@ -249,7 +249,7 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    fun onEventsUpdated(event: OnActivityLogFetched) {
+    private fun onActivityLogFetched(event: OnActivityLogFetched) {
         if (event.isError) {
             _eventListStatus.postValue(ActivityLogListStatus.ERROR)
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
