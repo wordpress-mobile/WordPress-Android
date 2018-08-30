@@ -106,7 +106,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivity_dispatchesErrorOnMissingActivityId() = runBlocking{
+    fun fetchActivity_dispatchesErrorOnMissingActivityId() = runBlocking {
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(activity_id = null)))
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)
@@ -117,7 +117,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivity_dispatchesErrorOnMissingSummary() = runBlocking{
+    fun fetchActivity_dispatchesErrorOnMissingSummary() = runBlocking {
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(summary = null)))
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)
@@ -128,7 +128,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivity_dispatchesErrorOnMissingContentText() = runBlocking{
+    fun fetchActivity_dispatchesErrorOnMissingContentText() = runBlocking {
         val emptyContent = ActivitiesResponse.Content(null)
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(content = emptyContent)))
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
@@ -140,7 +140,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivity_dispatchesErrorOnMissingPublishedDate() = runBlocking{
+    fun fetchActivity_dispatchesErrorOnMissingPublishedDate() = runBlocking {
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(published = null)))
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)
@@ -151,7 +151,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivity_dispatchesErrorOnFailure() = runBlocking{
+    fun fetchActivity_dispatchesErrorOnFailure() = runBlocking {
         initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
         val payload = activityRestClient.fetchActivity(site, number, offset)
@@ -183,7 +183,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivityRewind_dispatchesGenericErrorOnFailure() = runBlocking{
+    fun fetchActivityRewind_dispatchesGenericErrorOnFailure() = runBlocking {
         initFetchRewindStatus(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val payload = activityRestClient.fetchActivityRewind(site)
@@ -192,7 +192,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivityRewind_dispatchesErrorOnWrongState() = runBlocking{
+    fun fetchActivityRewind_dispatchesErrorOnWrongState() = runBlocking {
         initFetchRewindStatus(REWIND_STATUS_RESPONSE.copy(state = "wrong"))
 
         val payload = activityRestClient.fetchActivityRewind(site)
@@ -201,7 +201,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivityRewind_dispatchesErrorOnMissingRestoreId() = runBlocking{
+    fun fetchActivityRewind_dispatchesErrorOnMissingRestoreId() = runBlocking {
         initFetchRewindStatus(REWIND_STATUS_RESPONSE.copy(rewind = REWIND_RESPONSE.copy(rewind_id = null)))
 
         val payload = activityRestClient.fetchActivityRewind(site)
@@ -210,7 +210,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun fetchActivityRewind_dispatchesErrorOnWrongRestoreStatus() = runBlocking{
+    fun fetchActivityRewind_dispatchesErrorOnWrongRestoreStatus() = runBlocking {
         initFetchRewindStatus(REWIND_STATUS_RESPONSE.copy(rewind = REWIND_RESPONSE.copy(status = "wrong")))
 
         val payload = activityRestClient.fetchActivityRewind(site)
@@ -219,7 +219,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun postRewindOperation() = runBlocking{
+    fun postRewindOperation() = runBlocking {
         val restoreId = 10L
         val response = RewindResponse(restoreId, true, null)
         initPostRewind(response)
@@ -230,7 +230,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun postRewindOperationError() = runBlocking{
+    fun postRewindOperationError() = runBlocking {
         initPostRewind(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val payload = activityRestClient.rewind(site, "rewindId")
@@ -239,7 +239,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun postRewindApiError() = runBlocking{
+    fun postRewindApiError() = runBlocking {
         val restoreId = 10L
         initPostRewind(RewindResponse(restoreId, false, "error"))
 

@@ -40,7 +40,7 @@ class WPComGsonRequestBuilder
         url: String,
         params: Map<String, String>,
         clazz: Class<T>
-    ) = suspendCoroutine<Response<T>> {cont ->
+    ) = suspendCoroutine<Response<T>> { cont ->
         restClient.add(WPComGsonRequest.buildGetRequest(url, params, clazz, {
             cont.resume(Success(it))
         }, {
