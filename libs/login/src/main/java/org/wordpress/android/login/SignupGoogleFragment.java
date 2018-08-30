@@ -202,13 +202,12 @@ public class SignupGoogleFragment extends GoogleFragment {
                     "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
         } else if (event.createdAccount) {
             AppLog.d(T.MAIN,
-                    "GOOGLE SIGNUP: onAuthenticationChanged - createdAccount=true -> the email is already attached to"
-                    + " an wordpress account");
+                    "GOOGLE SIGNUP: onAuthenticationChanged - new wordpress account created");
             mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail);
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
             // Continue with login since existing account was selected.
         } else {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onAuthenticationChanged - new wordpress account created");
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onAuthenticationChanged - the email is already attached to an account");
             mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.loggedInViaSocialAccount(mOldSitesIds, true);
         }
