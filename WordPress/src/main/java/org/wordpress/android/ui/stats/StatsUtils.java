@@ -394,19 +394,19 @@ public class StatsUtils {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
                         blogID
-                                                            );
+                );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
                         ctx,
                         blogID,
                         itemID
-                                                           );
+                );
             }
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     blogID
-                                                        );
+            );
         } else {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
@@ -454,9 +454,7 @@ public class StatsUtils {
             Date date = from.parse(dataSubscribed);
 
             // See http://momentjs.com/docs/#/displaying/fromnow/
-            long currentDifference = Math.abs(
-                    StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
-                                             );
+            long currentDifference = Math.abs(StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS));
 
             if (currentDifference <= 45) {
                 return ctx.getString(R.string.stats_followers_seconds_ago);

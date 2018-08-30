@@ -390,7 +390,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 params.setScrollFlags(
                         AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-                                     );
+                );
             } else {
                 params.setScrollFlags(0);
             }

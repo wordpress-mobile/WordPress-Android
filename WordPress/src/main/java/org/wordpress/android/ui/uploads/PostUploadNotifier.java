@@ -335,7 +335,7 @@ class PostUploadNotifier {
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
                                                                      PendingIntent.FLAG_CANCEL_CURRENT);
-            notificationBuilder.addAction(R.drawable.ic_share_24dp, mContext.getString(R.string.share_action),
+            notificationBuilder.addAction(R.drawable.ic_share_white_24dp, mContext.getString(R.string.share_action),
                                           pendingIntent);
         }
 
@@ -847,7 +847,7 @@ class PostUploadNotifier {
                     mContext.getString(R.string.uploading_subtitle_media_only),
                     sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
                     sNotificationData.mTotalMediaItems
-                                            );
+            );
         }
         return uploadingMessage;
     }

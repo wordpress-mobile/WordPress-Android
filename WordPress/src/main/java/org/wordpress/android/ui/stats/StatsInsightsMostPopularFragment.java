@@ -107,8 +107,8 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
                 String.format(
                         getString(R.string.stats_insights_most_popular_percent_views),
                         roundToInteger(mInsightsPopularModel.getHighestDayPercent())
-                             )
-                                             );
+                )
+        );
 
         TextView mostPopularHourTextView = (TextView) ll.findViewById(R.id.stats_most_popular_hour);
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getActivity());
@@ -121,8 +121,8 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
                 String.format(
                         getString(R.string.stats_insights_most_popular_percent_views),
                         roundToInteger(mInsightsPopularModel.getHighestHourPercent())
-                             )
-                                              );
+                )
+        );
 
         mResultContainer.addView(ll);
     }

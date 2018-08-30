@@ -21,10 +21,11 @@ Notes:
 
 Once installed, you can now build, install and test the project from the command line:
 
-    $ ./gradlew assembleVanillaDebug # assemble the debug .apk
-    $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
-                                     # emulator or an Android device connected
-    $ ./gradlew cAT                  # assemble, install and run unit tests
+    $ ./gradlew assembleVanillaDebug                        # assemble the debug .apk
+    $ ./gradlew installVanillaDebug                         # install the debug .apk if you have an
+                                                            # emulator or an Android device connected
+    $ ./gradlew :WordPress:testVanillaDebugUnitTest         # assemble, install and run unit tests
+    $ ./gradlew :WordPress:connectedVanillaDebugAndroidTest # assemble, install and run Android tests
 
 
 ## Directory structure ##

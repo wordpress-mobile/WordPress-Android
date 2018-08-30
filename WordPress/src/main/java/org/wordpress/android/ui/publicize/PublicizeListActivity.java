@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -107,7 +107,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
         String tag = getString(R.string.fragment_tag_publicize_list);
         Fragment fragment = PublicizeListFragment.newInstance(mSite);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, tag)
                 .commit();
@@ -115,7 +115,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private PublicizeListFragment getListFragment() {
         String tag = getString(R.string.fragment_tag_publicize_list);
-        Fragment fragment = getFragmentManager().findFragmentByTag(tag);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment != null) {
             return (PublicizeListFragment) fragment;
         } else {
@@ -134,12 +134,12 @@ public class PublicizeListActivity extends AppCompatActivity
      * close all but the first (list) fragment
      */
     private void returnToListFragment() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             return;
         }
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private void showDetailFragment(PublicizeService service) {
@@ -149,7 +149,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
         Fragment detailFragment = PublicizeDetailFragment.newInstance(mSite, service);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -159,7 +159,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private PublicizeDetailFragment getDetailFragment() {
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        Fragment fragment = getFragmentManager().findFragmentByTag(tag);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment != null) {
             return (PublicizeDetailFragment) fragment;
         } else {
@@ -182,7 +182,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
         Fragment webViewFragment = PublicizeWebViewFragment.newInstance(mSite, service, publicizeConnection);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, webViewFragment, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -192,7 +192,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private PublicizeWebViewFragment getWebViewFragment() {
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        Fragment fragment = getFragmentManager().findFragmentByTag(tag);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment != null) {
             return (PublicizeWebViewFragment) fragment;
         } else {
@@ -202,7 +202,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private void closeWebViewFragment() {
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -217,8 +217,8 @@ public class PublicizeListActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -355,7 +355,7 @@ public class PublicizeListActivity extends AppCompatActivity
     @Override
     public void onButtonPrefsClicked() {
         Fragment fragment = PublicizeButtonPrefsFragment.newInstance(mSite);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, fragment)
                             .addToBackStack(null)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

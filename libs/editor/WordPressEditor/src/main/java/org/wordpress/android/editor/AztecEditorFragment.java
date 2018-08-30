@@ -274,7 +274,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         mFormattingToolbar.enableFormatButtons(!hasFocus);
                     }
                 }
-                                       );
+        );
 
         mContent.setOnDragListener(mOnDragListener);
         mSource.setOnDragListener(mOnDragListener);

@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "10.7"
-        versionCode 608
+        versionName "10.8-rc-1"
+        versionCode 609
         minSdkVersion 16
         targetSdkVersion 26
 
@@ -95,6 +95,11 @@ android {
         lintConfig file('lint.xml')
         baseline file("lint-baseline.xml")
     }
+}
+
+// allows us to use cool things like @Parcelize annotations
+androidExtensions {
+    experimental = true
 }
 
 dependencies {
@@ -153,8 +158,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
     testImplementation 'org.robolectric:shadows-multidex:3.6.1'
-    testImplementation 'org.mockito:mockito-core:2.8.9'
-    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
+    testImplementation 'org.mockito:mockito-core:2.20.1'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestImplementation 'org.objenesis:objenesis:2.1'

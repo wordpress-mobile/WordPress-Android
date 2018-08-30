@@ -94,7 +94,7 @@ public class StatsViewAllActivity extends AppCompatActivity {
                         refreshStats();
                     }
                 }
-                                                         );
+        );
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, -1);
