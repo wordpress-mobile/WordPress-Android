@@ -1,33 +1,12 @@
 package org.wordpress.android.ui.screenshots;
 
-
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.CardView;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-
-import junit.framework.AssertionFailedError;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import org.junit.ClassRule;
 import org.wordpress.android.R;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,16 +14,14 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.image.ImageType;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
-import static junit.framework.Assert.fail;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
+import java.util.function.Supplier;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 
@@ -52,9 +29,6 @@ import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.*
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class WPScreenshotTest {
-    private static final int ATTEMPTS = 50;
-    private static final int WAITING_TIME = 300;
-
     @ClassRule
     public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
 
@@ -136,52 +110,36 @@ public class WPScreenshotTest {
     }
 
     private void editBlogPost() {
-        // Blog button on Nav Bar
-        ViewInteraction blogNavBar = onView(
-                allOf(withId(R.id.nav_sites), childAtPosition(
-                        childAtPosition(withId(R.id.bottom_navigation), 0), 0)));
-        waitForElementUntilDisplayed(blogNavBar).perform(click());
+        // Choose the "sites" tab in the nav
+        clickOn(R.id.nav_sites);
+
+        waitForImagesOfTypeWithPlaceholder(R.id.my_site_blavatar, ImageType.BLAVATAR);
         Screengrab.screenshot("screenshot_3");
 
-        // Blog posts button
-        ViewInteraction blogPostsButton = onView(
-                allOf(withId(R.id.row_blog_posts), childAtPosition(
-                        childAtPosition(withClassName(is("android.widget.LinearLayout")), 6), 0)));
-        waitForElementUntilDisplayed(blogPostsButton).perform(scrollTo(), click());
+        // Click on the "Blog Posts" row
+        scrollToThenClickOn(R.id.row_blog_posts);
 
-        // Waiting for the blog articles to load and edit the first post
-        ViewInteraction postCard = onView(
-                allOf(withId(R.id.card_view), childAtPosition(
-                        withId(R.id.recycler_view), 0)));
-        waitForElementUntilDisplayed(postCard).perform(click());
+        // Wait for the blog posts to load, then edit the first post
+        waitForRecyclerViewToStopReloading();
+        waitForAtLeastOneElementOfTypeToExist(CardView.class);
+        clickOnCellAtIndexIn(0, R.id.recycler_view);
 
-        ViewInteraction aztecText = onView(
-                allOf(withId(R.id.aztec), childAtPosition(
-                        childAtPosition(withClassName(is("android.widget.LinearLayout")), 2), 0)));
-        waitForElementUntilDisplayed(aztecText);
+        // Wait for the editor to appear and load all images
+        waitForElementToBeDisplayed(R.id.aztec);
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return editPostActivityIsNoLongerLoadingImages();
+            }
+        });
 
-        ViewInteraction postTitle = onView(
-                allOf(withId(R.id.title), childAtPosition(
-                        withClassName(is("android.widget.RelativeLayout")), 0)));
-        postTitle.perform(scrollTo(), click());
+        // Click in the post title editor and ensure the caret is at the end of the title editor
+        scrollToThenClickOn(R.id.title);
 
-        // Wait for images in post to load
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         Screengrab.screenshot("screenshot_1");
 
-        // Exit
-        ViewInteraction navigateUpButton = onView(allOf(childAtPosition(
-                allOf(withId(R.id.action_bar), childAtPosition(withId(R.id.action_bar_container), 0)), 1)));
-        waitForElementUntilDisplayed(navigateUpButton).perform(click());
-
-        navigateUpButton = onView(allOf(childAtPosition(
-                allOf(withId(R.id.toolbar),
-                        childAtPosition(withClassName(is("android.widget.LinearLayout")), 0)), 2)));
-        waitForElementUntilDisplayed(navigateUpButton).perform(click());
+        // Exit back to the main activity
+        pressBackUntilElementIsVisible(R.id.nav_sites);
     }
 
     private void navigateNotifications() {
@@ -216,24 +174,6 @@ public class WPScreenshotTest {
         pressBackUntilElementIsVisible(R.id.nav_sites);
     }
 
-    private static ViewInteraction waitForElementUntilDisplayed(ViewInteraction element) {
-        int i = 0;
-        while (i++ < ATTEMPTS) {
-            try {
-                element.check(matches(isDisplayed()));
-                return element;
-            } catch (Exception | AssertionFailedError e) {
-                e.printStackTrace();
-                try {
-                    Thread.sleep(WAITING_TIME);
-                } catch (Exception e1) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
-
     private static int getDiscoverTagIndex() {
         ReaderTagList tagList = ReaderTagTable.getDefaultTags();
         for (int i = 0; i < tagList.size(); i++) {
@@ -243,5 +183,10 @@ public class WPScreenshotTest {
             }
         }
         return -1;
+    }
+
+    private boolean editPostActivityIsNoLongerLoadingImages() {
+        EditPostActivity editPostActivity = (EditPostActivity) getCurrentActivity();
+        return editPostActivity.getAztecImageLoader().getNumberOfImagesBeingDownloaded() == 0;
     }
 }
