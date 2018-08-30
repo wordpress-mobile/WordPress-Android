@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 11:54:07+0000
+Translation-Revision-Date: 2018-08-20 10:05:08+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="themes_empty_list">Aramanızla eşleşen bir tema yok</string>
+    <string name="reader_label_post_search_explainer">Ne bulmak istersiniz?</string>
+    <string name="site_settings_tags_empty_title_search">Aramanızla eşleşen etiket yok</string>
+    <string name="site_settings_tags_empty_title">Hiç bir etiketiniz yok</string>
+    <string name="site_settings_tags_empty_subtitle">Sık kullanılan etiketlerinizi buraya ekleyin böylece yazılarınızı etiketlerken kolayca seçebilebilirler</string>
+    <string name="site_settings_tags_empty_button">Bir etiket oluştur</string>
+    <string name="media_empty_search_list">Aramanızla eşleşen bir ortam yok</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">WordPress oturumu kapatılsın mı?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Yazı üzerinden henüz sitenize yüklenmemiş değişiklikleriniz var. Şimdi oturumu kapatmak bu değişiklikleri cihazınızdan silecektir. Yine de oturum kapatılsın mı?</string>
     <string name="people_empty_list_filtered_viewers">Henüz hiç kimse görüntülemedi</string>
     <string name="people_empty_list_filtered_email_followers">Henüz e–posta takipçisi yok</string>
     <string name="people_empty_list_filtered_followers">Henüz takipçi yok</string>
@@ -48,17 +57,20 @@ Language: tr
     <string name="support_contact_email">İletişim e–postası</string>
     <string name="application_log_button">Uygulama kaydı</string>
     <string name="my_tickets">Taleplerim</string>
+    <string name="activity_log_rewind_dialog_message">Sitenizi %1$s %2$s durumuna geri almak istediğinize emin misiniz? Bu, o tarihten itibaren oluşturulan veya değiştirilen tüm içeriği ve seçenekleri silecektir.</string>
     <string name="activity_log_rewind_site">Siteyi geri al</string>
     <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
+    <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Siteniz başarıyla geri alındı</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Siteniz başarıyla geri alındı\n%1$s %2$s durumuna geri alındı</string>
+    <string name="activity_log_rewind_started_snackbar_message">Siteniz geri yüklendi\n%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_button">Etkinlik kaydı eylem düğmesi</string>
     <string name="plugin_auto_managed">Otomatik yönetilen</string>
     <string name="reader_save_posts_locally_dialog_message">Bu yazıyı saklayın ve istediğiniz zaman okumak için geri dönün. Yalnızca bu cihazda kullanılabilir; kaydedilen yazılar diğer cihazlarınızla senkronize edilmez. (Henüz! Üzerinde çalışıyoruz.)</string>
     <string name="reader_save_posts_locally_dialog_title">Yazıyı sonrası için kaydet</string>
     <string name="reader_empty_search_request_failed">Arama yapılamıyor</string>
     <string name="reader_empty_search_title">Sonuç bulunamadı</string>
-    <string name="reader_label_post_search_explainer">Site veya yazı için\nWordPress\'de ara</string>
     <string name="comment_read_source_post">Yazı kaynağını oku</string>
     <string name="sites">Siteler</string>
     <string name="signup_magic_link_title">Sihirli bağlantı gönderildi</string>
@@ -148,7 +160,6 @@ Language: tr
     <string name="notification_channel_general_title">Genel</string>
     <string name="photo_picker_use_photo">Bu fotoğrafı kullan</string>
     <string name="media_preview_title">%1$d of %2$d</string>
-    <string name="stock_media_picker_empty_results">Eşleşme yok</string>
     <string name="stock_media_picker_initial_empty_subtext">%s tarafından sağlanıyor</string>
     <string name="stock_media_picker_initial_empty_text">Medya Kitaplığınıza eklemek için ücretsiz fotoğraflar arayın</string>
     <string name="stock_media_picker_search_hint">Ücretsiz fotoğraf kitaplığı arayın</string>
@@ -180,7 +191,6 @@ Language: tr
     <string name="stats_tab_tap_content_description">%s gösteriliyor</string>
     <string name="stats_legend">istatistik grafik göstergesi</string>
     <string name="fab_create_desc">oluşturun</string>
-    <string name="fab_add_tag_desc">etiket oluşturun</string>
     <string name="stats_bar_week_desc">%s haftası</string>
     <string name="stats_bar_date_value_desc">%s, %d görüntüleme</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -439,7 +449,7 @@ Language: tr
     <string name="site_settings_tags_hint">Sitenizin etiketlerini yönetin</string>
     <string name="dlg_saving_tag">Kaydediliyor</string>
     <string name="dlg_deleting_tag">Siliniyor</string>
-    <string name="dlg_confirm_delete_tag">\'%s\' tamamen silinsin mi?</string>
+    <string name="dlg_confirm_delete_tag">\'%s\' etiketi tamamen silinsin mi?</string>
     <string name="error_tag_exists">Bu isimdeki bir etiket zaten mevcut.</string>
     <string name="add_new_tag">Yeni etiket ekle</string>
     <string name="tag_description_hint">Açıklama</string>
@@ -458,7 +468,6 @@ Language: tr
     <string name="site_settings_week_start_title">Hafta başlangıcı</string>
     <string name="site_settings_tags_title">Etiketler</string>
     <string name="site_settings_traffic_header">Trafik</string>
-    <string name="delete_no">Silme</string>
     <string name="delete_yes">Sil</string>
     <string name="plugin_external_link_icon_content_description">Harici bağlantı</string>
     <string name="plugin_icon_content_description">Eklenti simgesi</string>
@@ -957,7 +966,6 @@ Language: tr
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_search_description">Dilinizde %s için hiç sonuç bulunamadı</string>
-    <string name="reader_label_post_search_running">Aranıyor…</string>
     <string name="reader_hint_post_search">WordPress üzerinde ara</string>
     <string name="reader_title_related_post_detail">İlişkili yazı</string>
     <string name="preview_screen_links_disabled">Önizleme ekranında bağlantılar etkisiz durumdadır</string>
@@ -1014,6 +1022,9 @@ Language: tr
     <string name="editor_remove_failed_uploads">Başarısız yüklemeleri kaldır</string>
     <string name="editor_toast_failed_uploads">Bazı ortam dosyası yüklemeleri başarısız oldu. Bu durumda yazınızı\n        kaydedemez ya da yayımlayamazsınız. Başarısız ortam dosyaları kaldırılsın mı?</string>
     <string name="site_settings_advanced_header">Gelişmiş</string>
+    <string name="comments_empty_list_filtered_trashed">Çöpte yorum yok</string>
+    <string name="comments_empty_list_filtered_pending">Bekleyen yorum yok</string>
+    <string name="comments_empty_list_filtered_approved">Onaylı yorum yok</string>
     <string name="xmlrpc_missing_method_error">Bağlanılamadı. Sunucuda gerekli XML–RPC işlevleri eksik.</string>
     <string name="alignment_center">Ortala</string>
     <string name="post_format_video">Video</string>
@@ -1072,6 +1083,7 @@ Language: tr
     <string name="mnu_comment_delete_permanently">Sil</string>
     <string name="mnu_comment_untrash">Geri yükle</string>
     <string name="comment_deleted_permanently">Yorum silindi</string>
+    <string name="comments_empty_list_filtered_spam">İstenmeyen yorum yok</string>
     <string name="comment_status_all">Tümü</string>
     <string name="could_not_load_page">Sayfa yüklenemiyor</string>
     <string name="off">Kapalı</string>
@@ -1224,7 +1236,13 @@ Language: tr
     <string name="reader_label_gap_marker">Daha fazla yazı yükle</string>
     <string name="notifications_no_search_results">\'%s\' hiçbir siteyle eşleşmedi</string>
     <string name="search_sites">Sitelerde ara</string>
+    <string name="notifications_empty_view_reader">Okuyucuya git</string>
+    <string name="notifications_empty_action_followers_likes">Farkedin: okuduğunuz yazılara yorum yapın.</string>
+    <string name="notifications_empty_action_comments">Konuşmalara katılın: takip ettiğiniz bloglarda yorum yapın.</string>
+    <string name="notifications_empty_action_unread">Tartışmaları alevlendirin: yeni bir yazı yazın.</string>
     <string name="notifications_empty_action_all">Etkin olun! Takip ettiğiniz bloglarda yazılara yorum yapın.</string>
+    <string name="notifications_empty_comments">Henüz yeni yorum yok.</string>
+    <string name="notifications_empty_unread">Her şey güncel!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Lütfen önce uygulamada istatistiklere ulaşın, sonra bileşeni tekrar eklemeyi deneyin</string>
     <string name="stats_widget_error_readd_widget">Lütfen bileşeni kaldırıp tekrar ekleyin</string>
     <string name="stats_widget_error_no_visible_blog">Görünür bir blog olmadan istatistiklere erişilemez</string>
@@ -1316,7 +1334,6 @@ Language: tr
     <string name="reader_label_new_posts_subtitle">Göstermek için dokunun</string>
     <string name="my_site_header_configuration">Yapılandırma</string>
     <string name="stats_unknown_author">Bilinmeyen Yazar</string>
-    <string name="sign_out_wpcom_confirm">Hesabınızdan çıkış yaptığınızda yerel taslak ve değişiklikler dahil olmak üzere @%s kullanıcısına ait tüm WordPress.com verileri bu cihazdan kaldırılır.</string>
     <string name="select_all">Tümünü seç</string>
     <string name="hide">Gizle</string>
     <string name="show">Göster</string>

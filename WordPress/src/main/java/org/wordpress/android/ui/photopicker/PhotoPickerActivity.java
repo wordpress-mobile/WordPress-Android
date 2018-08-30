@@ -39,7 +39,6 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -238,14 +237,12 @@ public class PhotoPickerActivity extends AppCompatActivity
                                       @Override
                                       public void onMediaCapturePathReady(String mediaCapturePath) {
                                           mMediaCapturePath = mediaCapturePath;
-                                          AppLockManager.getInstance().setExtendedTimeout();
                                       }
                                   });
     }
 
     private void launchPictureLibrary() {
         WPMediaUtils.launchPictureLibrary(this, false);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchWPMediaLibrary() {
@@ -325,9 +322,14 @@ public class PhotoPickerActivity extends AppCompatActivity
             return;
         }
 
+        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, mediaUri, null, mMediaStore, mSite.getId());
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
         showUploadProgressDialog();
 
-        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, mediaUri, null, mMediaStore, mSite.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);

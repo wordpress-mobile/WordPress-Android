@@ -42,9 +42,9 @@
                     android:layout_marginEnd="12dp"
                     android:layout_marginRight="12dp"
                     android:visibility="gone"
-                    app:srcCompat="@drawable/ic_jetpack_icon_36dp"
+                    app:srcCompat="@drawable/ic_plans_grey_36dp"
                     android:contentDescription="@string/activity_log_jetpack_icon"
-                    tools:src="@drawable/ic_jetpack_icon_36dp"/>
+                    tools:src="@drawable/ic_plans_grey_36dp"/>
 
                 <LinearLayout
                     android:layout_width="0dp"

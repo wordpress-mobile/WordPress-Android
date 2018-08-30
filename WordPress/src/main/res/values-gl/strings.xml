@@ -127,7 +127,6 @@ Language: gl_ES
     <string name="label_clear_search_history">Limpar o historial de busca</string>
     <string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
     <string name="reader_empty_search_description">Non se atoparon artigos para %s na túa lingua</string>
-    <string name="reader_label_post_search_running">Buscando…</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
     <string name="reader_title_related_post_detail">Artigos relacionados</string>
     <string name="preview_screen_links_disabled">Os enlaces están inhabilitados na vista previa</string>
@@ -500,7 +499,6 @@ Language: gl_ES
     <string name="hide">Ocultar</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="deselect_all">Desmarcar todo</string>
-    <string name="sign_out_wpcom_confirm">Ao desconectar da túa conta borraranse todos os datos de  @%s’s WordPress.com neste dispositivo, incluídos borradores e cambios locais.</string>
     <string name="stats_generic_error">Non foi posible cargar as estatísticas requiridas</string>
     <string name="language">Idioma</string>
     <string name="editor_toast_invalid_path">Ruta do ficheiro non válida</string>

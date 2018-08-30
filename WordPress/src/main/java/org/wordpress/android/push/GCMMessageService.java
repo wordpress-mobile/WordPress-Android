@@ -89,6 +89,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
     private static final String PUSH_TYPE_NOTE_DELETE = "note-delete";
+    private static final String PUSH_TYPE_TEST_NOTE = "push_test";
     private static final String PUSH_TYPE_ZENDESK = "zendesk";
 
     // All Zendesk push notifications will show the same notification, so hopefully this will be a unique ID
@@ -355,7 +356,28 @@ public class GCMMessageService extends FirebaseMessagingService {
                 return;
             }
 
+            if (noteType.equals(PUSH_TYPE_TEST_NOTE)) {
+                buildAndShowNotificationFromTestPushData(context, data);
+                return;
+            }
+
             buildAndShowNotificationFromNoteData(context, data);
+        }
+
+        private void buildAndShowNotificationFromTestPushData(Context context, Bundle data) {
+            if (data == null) {
+                AppLog.e(T.NOTIFS, "Test push notification received without a valid Bundle!");
+                return;
+            }
+
+            String title = context.getString(R.string.app_name);
+            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+
+            int pushId = PUSH_NOTIFICATION_ID + ACTIVE_NOTIFICATIONS_MAP.size();
+            ACTIVE_NOTIFICATIONS_MAP.put(pushId, data);
+            Intent resultIntent = new Intent(context, WPMainActivity.class);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            showSimpleNotification(context, title, message, resultIntent, pushId);
         }
 
         private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {

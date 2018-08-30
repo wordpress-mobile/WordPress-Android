@@ -48,11 +48,11 @@ import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
+import org.wordpress.android.ui.quickstart.QuickStartFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaEditFragment;
 import org.wordpress.android.ui.media.MediaGridAdapter;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
@@ -288,8 +288,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(MediaGridFragment object);
 
-    void inject(MediaEditFragment object);
-
     void inject(MediaPreviewActivity object);
 
     void inject(MediaPreviewFragment object);
@@ -405,6 +403,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(SuggestionAdapter object);
 
     void inject(WordPressGlideModule object);
+
+    void inject(QuickStartFragment object);
 
     void inject(MediaGridAdapter object);
 

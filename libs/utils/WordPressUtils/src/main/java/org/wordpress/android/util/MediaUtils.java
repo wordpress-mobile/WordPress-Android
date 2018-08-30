@@ -404,6 +404,7 @@ public class MediaUtils {
         } else {
             path = uri.toString();
         }
+
         return path;
     }
 

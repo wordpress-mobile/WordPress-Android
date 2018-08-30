@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 14:08:01+0000
+Translation-Revision-Date: 2018-08-16 19:47:59+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
+    <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
+    <string name="site_settings_tags_empty_title_search">Brak tagów spełniających kryteria wyszukiwania</string>
+    <string name="site_settings_tags_empty_title">Nie masz żadnych tagów</string>
+    <string name="site_settings_tags_empty_subtitle">Tutaj najczęściej wykorzystywane tagi tak aby je szybko użyć do oznaczenia wpisów</string>
+    <string name="site_settings_tags_empty_button">Stwórz tag</string>
+    <string name="media_empty_search_list">Brak mediów spełniających kryteria twojego wyszukiwania</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Wylogować się z WordPressa?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Masz zmiany we wpisach,  które nie zostały wczytanie do twojej witryny.  Wylogowanie spowoduje usunięcie zmian z twojego urządzenia. Czy na pewno wylogować? </string>
     <string name="people_empty_list_filtered_viewers">Brak oglądających</string>
     <string name="people_empty_list_filtered_email_followers">Brak oglądających przez email</string>
     <string name="people_empty_list_filtered_followers">Brak obserwujących</string>
@@ -62,7 +71,6 @@ Language: pl
     <string name="reader_save_posts_locally_dialog_title">Zapisz wpis na później</string>
     <string name="reader_empty_search_request_failed">Nie można było wykonać wyszukiwania</string>
     <string name="reader_empty_search_title">Nie znaleziono wyników wyszukiwania</string>
-    <string name="reader_label_post_search_explainer">Przeszukaj WordPressa\nw poszukiwaniu witryny lub wpisu</string>
     <string name="comment_read_source_post">Przeczytaj wpis źródłowy</string>
     <string name="sites">Witryny</string>
     <string name="signup_magic_link_title">Wysłano Magic Linka</string>
@@ -152,7 +160,6 @@ Language: pl
     <string name="notification_channel_general_title">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
     <string name="media_preview_title">%1$d z %2$d</string>
-    <string name="stock_media_picker_empty_results">Brak wyników</string>
     <string name="stock_media_picker_initial_empty_subtext">Zdjęcia dostarczone przez %s</string>
     <string name="stock_media_picker_initial_empty_text">Przeszukaj bazę darmowych zdjęć aby dodać je do swojej Biblioteki Mediów</string>
     <string name="stock_media_picker_search_hint">Przeszukaj darmową bibliotekę zdjęć</string>
@@ -184,7 +191,6 @@ Language: pl
     <string name="stats_tab_tap_content_description">Pokazano %s</string>
     <string name="stats_legend">legenda wykresu statystyk</string>
     <string name="fab_create_desc">utwórz</string>
-    <string name="fab_add_tag_desc">utwórz tag</string>
     <string name="stats_bar_week_desc">Tydzień %s</string>
     <string name="stats_bar_date_value_desc">%s, %d wyświetleń</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -443,7 +449,7 @@ Language: pl
     <string name="site_settings_tags_hint">Zarządzaj tagami swojej witryny</string>
     <string name="dlg_saving_tag">Zapisywanie</string>
     <string name="dlg_deleting_tag">Usuwanie</string>
-    <string name="dlg_confirm_delete_tag">Trwale usunąć \'%s\'? </string>
+    <string name="dlg_confirm_delete_tag">Trwale usunąć tag \'%s\'? </string>
     <string name="error_tag_exists">Tag o tej nazwie już istnieje</string>
     <string name="add_new_tag">Dodaj nowy tag</string>
     <string name="tag_description_hint">Opis </string>
@@ -462,7 +468,6 @@ Language: pl
     <string name="site_settings_week_start_title">Tydzień zaczyna się w</string>
     <string name="site_settings_tags_title">Tagi</string>
     <string name="site_settings_traffic_header">Ruch</string>
-    <string name="delete_no">Nie usuwaj</string>
     <string name="delete_yes">Usuń</string>
     <string name="plugin_external_link_icon_content_description">Zewnętrzny odnośnik</string>
     <string name="plugin_icon_content_description">Ikona wtyczki</string>
@@ -961,7 +966,6 @@ Language: pl
     <string name="label_clear_search_history">Usuń historię wyszukiwania</string>
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
     <string name="reader_empty_search_description">Nie odnaleziono żadnych wyników wyszukiwania zawierających %s w twoim języku</string>
-    <string name="reader_label_post_search_running">Szukanie…</string>
     <string name="reader_hint_post_search">Przeszukaj WordPressa</string>
     <string name="reader_title_related_post_detail">Powiązany wpis</string>
     <string name="preview_screen_links_disabled">Odnośniki są wyłączone na ekranie podglądu</string>
@@ -1330,7 +1334,6 @@ Language: pl
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
     <string name="my_site_header_configuration">Konfiguracja</string>
     <string name="stats_unknown_author">Nieznany autor</string>
-    <string name="sign_out_wpcom_confirm">Wylogowanie z konta usunie z tego urządzenia wszystkie dane @%s pochodzące z WordPress.com, łącznie z lokalnymi szkicami i lokalnymi zmianami treści.</string>
     <string name="select_all">Wybierz wszystko</string>
     <string name="hide">Ukryj</string>
     <string name="show">Pokaż</string>

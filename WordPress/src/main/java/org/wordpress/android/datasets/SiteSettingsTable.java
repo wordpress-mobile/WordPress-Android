@@ -148,8 +148,7 @@ public final class SiteSettingsTable {
             AppPrefs.setImageOptimizeQuality(
                     cursor.getInt(cursor.getColumnIndex("imageEncoderQuality")));
             AppPrefs.setVideoOptimize(
-                    cursor.getInt(cursor.getColumnIndex("optimizedVideo")) == 1
-                                     );
+                    cursor.getInt(cursor.getColumnIndex("optimizedVideo")) == 1);
             AppPrefs.setVideoOptimizeWidth(
                     cursor.getInt(cursor.getColumnIndex("maxVideoWidth")));
             AppPrefs.setVideoOptimizeQuality(

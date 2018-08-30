@@ -397,7 +397,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             ((FooterNoteBlock) noteBlock).setClickableSpan(
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
                                     mNote.getType()
-                                                                          );
+                             );
                         } else {
                             noteBlock = new NoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
                         }

@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.main
 
 import android.annotation.SuppressLint
-import android.app.Fragment
-import android.app.FragmentManager
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -12,6 +10,8 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.SparseArray
@@ -77,6 +77,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == PAGE_NEW_POST) {
                 itemView.background = null
                 customView = inflater.inflate(R.layout.navbar_post_item, menuView, false)
+                customView.id = R.id.bottom_nav_new_post_button // identify view for QuickStart
             } else {
                 customView = inflater.inflate(R.layout.navbar_item, menuView, false)
                 val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
@@ -84,6 +85,9 @@ class WPMainNavigationView @JvmOverloads constructor(
                 txtLabel.text = getTitleForPosition(i)
                 customView.contentDescription = getContentDescriptionForPosition(i)
                 imgIcon.setImageResource(getDrawableResForPosition(i))
+                if (i == PAGE_READER) {
+                    customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+                }
             }
 
             itemView.addView(customView)

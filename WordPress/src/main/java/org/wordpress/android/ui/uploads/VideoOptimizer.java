@@ -94,9 +94,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
         if (mediaComposer == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null composer");
-            AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE,
-                                   AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath)
-                                  );
+            AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, AnalyticsUtils.getMediaProperties(getContext(), true,
+                    null, mInputPath));
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }

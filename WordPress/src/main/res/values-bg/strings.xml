@@ -278,7 +278,6 @@ Language: bg
     <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
-    <string name="reader_label_post_search_running">Търсене…</string>
     <string name="reader_title_related_post_detail">Свързана публикация</string>
     <string name="preview_screen_links_disabled">Връзките на екрана за преглед са деактивирани</string>
     <string name="draft_explainer">Тази публикация е непубликувана чернова</string>
@@ -633,7 +632,6 @@ Language: bg
     <string name="select_all">Избор на всичко</string>
     <string name="deselect_all">От–маркиране на всичко</string>
     <string name="show">Показване</string>
-    <string name="sign_out_wpcom_confirm">Излизането от профила ще премахне всички данни на @%s в WordPress.com от това устройство, включително локалните чернови и локалните промени.</string>
     <string name="stats_generic_error">Желаната статистина не може да бъде заредена</string>
     <string name="verification_code">Верификационен код</string>
     <string name="editor_toast_invalid_path">Невалиден път до файла</string>

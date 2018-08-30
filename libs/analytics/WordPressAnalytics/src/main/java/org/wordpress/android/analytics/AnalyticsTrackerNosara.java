@@ -206,6 +206,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("source", "email");
                 break;
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
+            case SIGNUP_SOCIAL_BUTTON_FAILURE:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
@@ -248,6 +249,63 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
                 predefinedEventProperties.put("source", "post_details_saved_post_notice");
                 break;
+            case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
+                predefinedEventProperties.put("type", "negative");
+                break;
+            case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
+                predefinedEventProperties.put("type", "positive");
+                break;
+            case QUICK_START_LIST_CREATE_SITE_TAPPED:
+                predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_LIST_VIEW_SITE_TAPPED:
+                predefinedEventProperties.put("task_name", "view_site");
+                break;
+            case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
+                predefinedEventProperties.put("task_name", "browse_themes");
+                break;
+            case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
+                predefinedEventProperties.put("task_name", "customize_site");
+                break;
+            case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
+                predefinedEventProperties.put("task_name", "share_site");
+                break;
+            case QUICK_START_LIST_PUBLISH_POST_TAPPED:
+                predefinedEventProperties.put("task_name", "publish_post");
+                break;
+            case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
+                predefinedEventProperties.put("task_name", "follow_site");
+                break;
+            case QUICK_START_CREATE_SITE_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_VIEW_SITE_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "view_site");
+                break;
+            case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "browse_themes");
+                break;
+            case QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "customize_site");
+                break;
+            case QUICK_START_SHARE_SITE_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "share_site");
+                break;
+            case QUICK_START_PUBLISH_POST_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "publish_post");
+                break;
+            case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "follow_site");
+                break;
+            case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
+                predefinedEventProperties.put("type", "negative");
+                break;
+            case QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED:
+                predefinedEventProperties.put("type", "positive");
+                break;
+            case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
+                predefinedEventProperties.put("type", "neutral");
+                break;
         }
 
         final String user;
@@ -287,19 +345,19 @@ public class AnalyticsTrackerNosara extends Tracker {
                     try {
                         if (propertiesToJSON.has(key)) {
                             AppLog.w(AppLog.T.STATS,
-                                     "The user has defined a property named: '" + key + "' that will override"
-                                     + "the same property pre-defined at event level. This may generate unexpected "
-                                     + "behavior!!");
+                                    "The user has defined a property named: '" + key + "' that will override"
+                                    + "the same property pre-defined at event level. This may generate unexpected "
+                                    + "behavior!!");
                             AppLog.w(AppLog.T.STATS,
-                                     "User value: " + propertiesToJSON.get(key).toString()
-                                     + " - pre-defined value: "
-                                     + predefinedEventProperties.get(key).toString());
+                                    "User value: " + propertiesToJSON.get(key).toString()
+                                    + " - pre-defined value: "
+                                    + predefinedEventProperties.get(key).toString());
                         } else {
                             propertiesToJSON.put(key, predefinedEventProperties.get(key));
                         }
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.STATS,
-                                 "Error while merging user-defined properties with pre-defined properties", e);
+                                "Error while merging user-defined properties with pre-defined properties", e);
                     }
                 }
             } catch (NullPointerException e) {
@@ -633,6 +691,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_approved";
             case NOTIFICATION_UNAPPROVED:
                 return "notifications_unapproved";
+            case NOTIFICATIONS_MISSING_SYNC_WARNING:
+                return "notifications_missing_sync_warning";
             case NOTIFICATION_REPLIED_TO:
             case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
                 return "notifications_replied_to";
@@ -887,6 +947,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_magic_link_succeeded";
             case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "signup_social_accounts_need_connecting";
+            case SIGNUP_SOCIAL_BUTTON_FAILURE:
+                return "signup_social_button_failure";
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
                 return "signup_epilogue_unchanged";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
@@ -1097,7 +1159,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_updated";
             case STOCK_MEDIA_ACCESSED:
                 return "stock_media_accessed";
-            case STOCK_MEDIA_SEARCHED :
+            case STOCK_MEDIA_SEARCHED:
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
@@ -1149,6 +1211,41 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "news_card_dismissed";
             case NEWS_CARD_EXTENDED_INFO_REQUESTED:
                 return "news_card_extended_info_requested";
+            case QUICK_START_TASK_DIALOG_VIEWED:
+                return "quick_start_task_dialog_viewed";
+            case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
+            case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
+                return "quick_start_task_dialog_button_tapped";
+            case QUICK_START_LIST_VIEWED:
+                return "quick_start_list_viewed";
+            case QUICK_START_LIST_COMPLETED_VIEWED:
+                return "quick_start_list_completed_viewed";
+            case QUICK_START_LIST_CREATE_SITE_TAPPED:
+            case QUICK_START_LIST_VIEW_SITE_TAPPED:
+            case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
+            case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
+            case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
+            case QUICK_START_LIST_PUBLISH_POST_TAPPED:
+            case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
+                return "quick_start_list_item_tapped";
+            case QUICK_START_LIST_SKIP_ALL_TAPPED:
+                return "quick_start_list_all_tasks_skipped";
+            case QUICK_START_CREATE_SITE_TASK_COMPLETED:
+            case QUICK_START_VIEW_SITE_TASK_COMPLETED:
+            case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
+            case QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED:
+            case QUICK_START_SHARE_SITE_TASK_COMPLETED:
+            case QUICK_START_PUBLISH_POST_TASK_COMPLETED:
+            case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
+                return "quick_start_task_completed";
+            case QUICK_START_ALL_TASKS_COMPLETED:
+                return "quick_start_all_tasks_completed";
+            case QUICK_START_REQUEST_VIEWED:
+                return "quick_start_request_dialog_viewed";
+            case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
+            case QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED:
+            case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
+                return "quick_start_request_dialog_button_tapped";
             default:
                 return null;
         }

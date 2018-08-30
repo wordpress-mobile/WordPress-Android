@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -19,6 +18,7 @@ import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
@@ -56,10 +56,13 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
@@ -80,6 +83,7 @@ import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -105,6 +109,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -178,6 +183,7 @@ public class ReaderPostListFragment extends Fragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     private AlertDialog mBookmarksSavedLocallyDialog;
+    private QuickStartEvent mQuickStartEvent;
 
     private ReaderPostListViewModel mViewModel;
 
@@ -192,6 +198,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject QuickStartStore mQuickStartStore;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -279,6 +286,14 @@ public class ReaderPostListFragment extends Fragment
         return fragment;
     }
 
+    public @Nullable SiteModel getSelectedSite() {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        }
+        return null;
+    }
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
@@ -333,6 +348,7 @@ public class ReaderPostListFragment extends Fragment
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
+            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -374,6 +390,13 @@ public class ReaderPostListFragment extends Fragment
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && mLastTappedSiteSearchResult != null) {
                 getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
                 mLastTappedSiteSearchResult = null;
+            }
+
+            ReaderTag tag = AppPrefs.getReaderTag();
+
+            if (ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH).equals(tag)) {
+                setCurrentTag(tag);
+                updateCurrentTag();
             }
         }
     }
@@ -429,7 +452,7 @@ public class ReaderPostListFragment extends Fragment
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().registerSticky(this);
 
         reloadTags();
 
@@ -506,6 +529,27 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(final QuickStartEvent event) {
+        if (!isAdded() || getView() == null) {
+            return;
+        }
+
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
+
+        if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
+            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                    R.string.quick_start_dialog_follow_sites_message_short_search,
+                    R.drawable.ic_search_grey_24dp);
+
+            if (getActivity() != null && getActivity() instanceof WPMainActivity) {
+                ((WPMainActivity) getActivity()).showQuickStartSnackBar(title);
+            }
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(T.READER, "reader post list > saving instance state");
@@ -531,6 +575,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
 
         if (isSearchTabsShowing()) {
             int tabPosition = getSearchTabsPosition();
@@ -733,6 +778,11 @@ public class ReaderPostListFragment extends Fragment
                     mBottomNavController.onRequestHideBottomNavigation();
                 }
 
+                if (getSelectedSite() != null) {
+                    QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.FOLLOW_SITE, mDispatcher,
+                            getSelectedSite());
+                }
+
                 return true;
             }
 
@@ -756,24 +806,24 @@ public class ReaderPostListFragment extends Fragment
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                                               @Override
-                                               public boolean onQueryTextSubmit(String query) {
-                                                   submitSearchQuery(query);
-                                                   return true;
-                                               }
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    submitSearchQuery(query);
+                    return true;
+                }
 
-                                               @Override
-                                               public boolean onQueryTextChange(String newText) {
-                                                   if (TextUtils.isEmpty(newText)) {
-                                                       showSearchMessage();
-                                                       hideSearchTabs();
-                                                   } else {
-                                                       populateSearchSuggestionAdapter(newText);
-                                                   }
-                                                   return true;
-                                               }
-                                           }
-                                          );
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (TextUtils.isEmpty(newText)) {
+                        showSearchMessage();
+                        hideSearchTabs();
+                    } else {
+                        populateSearchSuggestionAdapter(newText);
+                    }
+                    return true;
+                    }
+                }
+        );
     }
 
     /*
@@ -2249,4 +2299,3 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 }
-
