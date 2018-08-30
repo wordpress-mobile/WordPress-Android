@@ -3,8 +3,8 @@ package org.wordpress.android.fluxc.persistence
 import android.content.ContentValues
 import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.WellSql
-import org.wordpress.android.fluxc.model.ListModel
-import org.wordpress.android.fluxc.model.ListModel.ListType
+import org.wordpress.android.fluxc.model.list.ListModel
+import org.wordpress.android.fluxc.model.list.ListModel.ListType
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
