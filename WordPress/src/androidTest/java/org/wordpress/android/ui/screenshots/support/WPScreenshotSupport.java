@@ -79,10 +79,10 @@ public class WPScreenshotSupport {
                 .perform(replaceText(text))
                 .perform(closeSoftKeyboard());
     }
-    
+
     public static void moveCaretToEndAndDisplayIn(int elementID) {
         onView(withId(elementID))
-                .perform( new FlashCaretViewAction());
+                .perform(new FlashCaretViewAction());
 
         // To sync between the test target and the app target
         waitOneFrame();

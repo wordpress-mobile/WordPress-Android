@@ -4,6 +4,7 @@ import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.view.View;
 import android.widget.EditText;
+
 import org.hamcrest.Matcher;
 
 import static android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
@@ -11,10 +12,8 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.allOf;
 
 public class FlashCaretViewAction implements ViewAction {
-
     @Override
     public void perform(UiController uiController, View view) {
-
         if (!(view instanceof EditText)) {
             return;
         }
