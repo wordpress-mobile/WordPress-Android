@@ -18,8 +18,8 @@ public class AuthenticationDialogUtils {
                           AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, site);
     }
 
-    public static void showAuthErrorView(AppCompatActivity activity, SiteStore siteStore, int titleResId, int messageResId,
-                                         SiteModel site) {
+    public static void showAuthErrorView(AppCompatActivity activity, SiteStore siteStore, int titleResId,
+                                         int messageResId, SiteModel site) {
         final String alertTag = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
