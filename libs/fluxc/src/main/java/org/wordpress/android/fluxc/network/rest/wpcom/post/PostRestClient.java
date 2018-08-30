@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.model.ListItemModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -29,6 +28,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.SearchPostsResponsePayload;
 import org.wordpress.android.util.StringUtils;
@@ -109,12 +109,12 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        List<ListItemModel> listItems = new ArrayList<>();
+                        List<PostListItem> listItems = new ArrayList<>();
                         for (PostWPComRestResponse postResponse : response.posts) {
-                            ListItemModel listItemModel = new ListItemModel();
-                            listItemModel.setRemoteItemId(postResponse.ID);
-                            listItemModel.setLastModified(postResponse.modified);
-                            listItems.add(listItemModel);
+                            PostListItem item = new PostListItem();
+                            item.remotePostId = postResponse.ID;
+                            item.lastModified = postResponse.modified;
+                            listItems.add(item);
                         }
 
                         boolean canLoadMore = listItems.size() == PostStore.NUM_POSTS_PER_FETCH;
