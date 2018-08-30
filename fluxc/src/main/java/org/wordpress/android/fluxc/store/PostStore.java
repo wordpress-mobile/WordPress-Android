@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
-import org.wordpress.android.fluxc.model.ListItemModel;
 import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -28,6 +27,7 @@ import org.wordpress.android.fluxc.store.ListStore.UpdateListPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -105,15 +105,20 @@ public class PostStore extends Store {
         }
     }
 
+    public static class PostListItem {
+        public long remotePostId;
+        public String lastModified;
+    }
+
     public static class FetchPostsResponsePayload extends Payload<PostError> {
-        public List<ListItemModel> listItems;
+        public List<PostListItem> listItems;
         public SiteModel site;
         public ListType listType;
         public boolean isPages;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public FetchPostsResponsePayload(List<ListItemModel> listItems, SiteModel site, ListType listType,
+        public FetchPostsResponsePayload(List<PostListItem> listItems, SiteModel site, ListType listType,
                                          boolean isPages, boolean loadedMore, boolean canLoadMore) {
             this.listItems = listItems;
             this.site = site;
@@ -491,8 +496,13 @@ public class PostStore extends Store {
         if (payload.isError()) {
             updateListError = new UpdateListError(UpdateListErrorType.GENERIC_ERROR, payload.error.message);
         }
+        List<Long> remoteItemIds = new ArrayList<>();
+        for (PostListItem postListItem : payload.listItems) {
+            // TODO: Check the lastModified dates and update the individual posts
+            remoteItemIds.add(postListItem.remotePostId);
+        }
         UpdateListPayload updateListPayload =
-                new UpdateListPayload(payload.site.getId(), payload.listType, payload.listItems,
+                new UpdateListPayload(payload.site.getId(), payload.listType, remoteItemIds,
                         payload.loadedMore, payload.canLoadMore, updateListError);
         mDispatcher.dispatch(ListActionBuilder.newUpdateListAction(updateListPayload));
     }

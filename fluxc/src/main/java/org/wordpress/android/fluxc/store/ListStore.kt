@@ -149,9 +149,11 @@ class ListStore @Inject constructor(
             val listModel = getListModel(payload.localSiteId, payload.listType)
             if (listModel != null) { // Sanity check
                 // Ensure the listId is set correctly for ListItemModels
-                listItemSqlUtils.insertItemList(payload.listItems.map {
-                    it.listId = listModel.id
-                    return@map it
+                listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
+                    val listItemModel = ListItemModel()
+                    listItemModel.listId  = listModel.id
+                    listItemModel.remoteItemId = remoteItemId
+                    return@map listItemModel
                 })
             }
         } else {
@@ -188,7 +190,7 @@ class ListStore @Inject constructor(
     class UpdateListPayload(
         val localSiteId: Int,
         val listType: ListType,
-        val listItems: List<ListItemModel>,
+        val remoteItemIds: List<Long>,
         val loadedMore: Boolean,
         val canLoadMore: Boolean,
         error: UpdateListError?
