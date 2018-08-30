@@ -34,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class ActivityLogRestClient
 constructor(
-    private val dispatcher: Dispatcher,
+    dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
     requestQueue: RequestQueue,
@@ -47,7 +47,7 @@ constructor(
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, ActivitiesResponse::class.java)
-        return when(response) {
+        return when (response) {
             is Success -> {
                 val activities = response.data.current?.orderedItems ?: listOf()
                 val totalItems = response.data.totalItems ?: 0
@@ -69,7 +69,7 @@ constructor(
     suspend fun fetchActivityRewind(site: SiteModel): FetchedRewindStatePayload {
         val url = WPCOMV2.sites.site(site.siteId).rewind.url
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), RewindStatusResponse::class.java)
-        return when(response) {
+        return when (response) {
             is Success -> {
                 buildRewindStatusPayload(response.data, site)
             }
@@ -89,7 +89,7 @@ constructor(
     suspend fun rewind(site: SiteModel, rewindId: String): RewindResultPayload {
         val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
         val response = wpComGsonRequestBuilder.syncPostRequest(this, url, mapOf(), RewindResponse::class.java)
-        return when(response) {
+        return when (response) {
             is Success -> {
                 if (response.data.ok != true && (response.data.error != null && response.data.error.isNotEmpty())) {
                     RewindResultPayload(RewindError(API_ERROR, response.data.error), rewindId, site)
