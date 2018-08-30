@@ -330,9 +330,9 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "TYPE TEXT,STATE INTEGER,_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                            + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE,"
                            + "UNIQUE(LOCAL_SITE_ID, TYPE))");
-                db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,LAST_MODIFIED TEXT,"
-                           + "_id INTEGER PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) "
-                           + "ON DELETE CASCADE,UNIQUE(LIST_ID, REMOTE_ITEM_ID))");
+                db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,_id INTEGER PRIMARY KEY "
+                           + "AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE,"
+                           + "UNIQUE(LIST_ID, REMOTE_ITEM_ID))");
                 db.execSQL("ALTER TABLE PostModel ADD LAST_MODIFIED TEXT");
                 oldVersion++;
         }
