@@ -6,9 +6,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.wordpress.android.fluxc.model.list.ListModel
-import org.wordpress.android.fluxc.model.list.ListModel.ListType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListModel
+import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
@@ -37,7 +37,7 @@ class ListSqlUtilsTest {
     @Test
     fun testInsertOrUpdateList() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val listType = ListType.POSTS_ALL
+        val listType = ListType.POST
 
         /**
          * 1. Insert a new list for `testSite` and `listType`
@@ -74,7 +74,7 @@ class ListSqlUtilsTest {
     @Test
     fun testDeleteList() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val listType = ListType.POSTS_ALL
+        val listType = ListType.POST
 
         /**
          * 1. Insert a test list
@@ -93,8 +93,8 @@ class ListSqlUtilsTest {
 
     @Test
     fun testLocalSiteIdForeignKeyCascadeDelete() {
-        val listType1 = ListType.POSTS_ALL
-        val listType2 = ListType.POSTS_SCHEDULED
+        val listType1 = ListType.POST
+        val listType2 = ListType.WOO_ORDER
         /**
          * 1. Generate and insert a self-hosted test site
          * 2. Verify that the site is inserted

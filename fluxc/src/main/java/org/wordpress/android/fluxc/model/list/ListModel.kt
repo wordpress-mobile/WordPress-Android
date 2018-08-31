@@ -12,16 +12,13 @@ import com.yarolegovich.wellsql.core.annotation.Table
         "UNIQUE(LOCAL_SITE_ID, TYPE)"
 )
 class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
-    enum class ListType(val value: String) {
-        POSTS_ALL("posts_all"),
-        POSTS_SCHEDULED("post_scheduled"); // only added for test purposes (for now)
-    }
-
     @Column var dateCreated: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column var lastModified: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column var localSiteId: Int = 0
-    @Column var type: String? = null
-    @Column var state: Int = ListState.CAN_LOAD_MORE.value // default value
+    @Column var type: Int? = null
+    @Column var filterDbValue: Int? = null
+    @Column var orderDbValue: Int? = null
+    @Column var stateDbValue: Int = ListState.CAN_LOAD_MORE.value
 
     override fun getId(): Int = id
 
@@ -29,8 +26,9 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
         this.id = id
     }
 
-    fun getState(): ListState {
-        // we want this to crash if the value is invalid
-        return ListState.values().firstOrNull { it.value == this.state }!!
-    }
+    val listDescriptor: ListDescriptor
+        get() = ListDescriptor(type, filterDbValue, orderDbValue)
+
+    val state: ListState
+        get() = ListState.values().firstOrNull { it.value == this.stateDbValue }!!
 }

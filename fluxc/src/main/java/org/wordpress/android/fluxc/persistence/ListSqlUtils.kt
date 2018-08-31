@@ -4,8 +4,8 @@ import android.content.ContentValues
 import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.list.ListModel
-import org.wordpress.android.fluxc.model.list.ListModel.ListType
 import org.wordpress.android.fluxc.model.list.ListState
+import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class ListSqlUtils @Inject constructor() {
         val now = DateTimeUtils.iso8601FromDate(Date())
         val listModel = ListModel()
         listModel.lastModified = now
-        listModel.state = listState.value
+        listModel.stateDbValue = listState.value
 
         val existing = getList(localSiteId, listType)
         if (existing != null) {
@@ -34,7 +34,7 @@ class ListSqlUtils @Inject constructor() {
                     .put(listModel) { item ->
                         val cv = ContentValues()
                         cv.put(ListModelTable.LAST_MODIFIED, item.lastModified)
-                        cv.put(ListModelTable.STATE, item.state)
+                        cv.put(ListModelTable.STATE_DB_VALUE, item.stateDbValue)
                         cv
                     }.execute()
         } else {

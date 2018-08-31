@@ -11,8 +11,8 @@ import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.ListModel
-import org.wordpress.android.fluxc.model.list.ListModel.ListType
 import org.wordpress.android.fluxc.model.list.ListState
+import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
@@ -45,12 +45,12 @@ class ListStore @Inject constructor(
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
-        return ListManager(mDispatcher, site, listType, listModel?.getState(), listItems, dataSource)
+        return ListManager(mDispatcher, site, listType, listModel?.state, listItems, dataSource)
     }
 
     private fun fetchList(payload: FetchListPayload) {
         val listModel = getListModel(payload.site.id, payload.listType)
-        val state = listModel?.getState()
+        val state = listModel?.state
         if (payload.loadMore && state?.canLoadMore() != true) {
             // We can't load more right now, ignore
             return
@@ -63,8 +63,8 @@ class ListStore @Inject constructor(
         emitChange(OnListChanged(payload.site.id, payload.listType, null))
 
         when(payload.listType) {
-            ListModel.ListType.POSTS_ALL -> TODO()
-            ListModel.ListType.POSTS_SCHEDULED -> TODO()
+            ListType.POST -> TODO()
+            ListType.WOO_ORDER -> TODO()
         }
     }
 

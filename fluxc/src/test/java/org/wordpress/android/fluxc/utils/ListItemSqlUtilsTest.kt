@@ -6,10 +6,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListModel
-import org.wordpress.android.fluxc.model.list.ListModel.ListType
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
@@ -38,7 +38,7 @@ class ListItemSqlUtilsTest {
     fun testInsertOrUpdateItemList() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val count = 20 // value doesn't matter
-        val listType = ListType.POSTS_ALL
+        val listType = ListType.POST
 
         /**
          * 1. Since a [ListItemModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
@@ -56,7 +56,7 @@ class ListItemSqlUtilsTest {
     fun testListIdForeignKeyCascadeDelete() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val count = 20 // value doesn't matter
-        val listType = ListType.POSTS_ALL
+        val listType = ListType.POST
 
         /**
          * 1. Since a [ListItemModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
@@ -108,7 +108,7 @@ class ListItemSqlUtilsTest {
     fun insertDuplicateListItemModel() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val testRemoteItemId = 1245L // value doesn't matter
-        val listType = ListType.POSTS_ALL
+        val listType = ListType.POST
 
         /**
          * 1. Since a [ListItemModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
