@@ -143,19 +143,6 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun updatesRewindStatusAndRestartsCheckerWhenRewindNotAlreadyRunning() = runBlocking<Unit> {
-        rewindStatusService.start(site)
-        val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
-        whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
-        reset(rewindProgressChecker)
-
-        rewindStatusService.requestStatusUpdate()
-
-        verify(rewindProgressChecker).startNow(site, rewindInProgress.restoreId)
-    }
-
-    @Test
     fun triggersRewindAndMakesActionUnavailable() = runBlocking {
         val rewindId = "10"
 
