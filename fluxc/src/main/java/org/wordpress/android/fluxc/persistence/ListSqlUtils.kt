@@ -44,7 +44,7 @@ class ListSqlUtils @Inject constructor() {
                         cv
                     }.execute()
         } else {
-            listModel.type = listDescriptor.type.value
+            listModel.typeDbValue = listDescriptor.type.value
             listModel.filterDbValue = listDescriptor.filter?.value
             listModel.orderDbValue = listDescriptor.order?.value
             listModel.localSiteId = localSiteId
@@ -52,6 +52,7 @@ class ListSqlUtils @Inject constructor() {
             WellSql.insert(listModel).execute()
         }
     }
+
 
     /**
      * This function returns the [ListModel] record for the given [localSiteId] and [listDescriptor] if there is one.
@@ -63,7 +64,8 @@ class ListSqlUtils @Inject constructor() {
         return WellSql.select(ListModel::class.java)
                 .where()
                 .equals(ListModelTable.LOCAL_SITE_ID, localSiteId)
-                .equals(ListModelTable.TYPE, listDescriptor.type.value)
+                .equals(ListModelTable.TYPE_DB_VALUE, listDescriptor.type.value)
+                // TODO: these filters need to use the `IS NULL` or check value because this will not work as is
                 .equals(ListModelTable.FILTER_DB_VALUE, listDescriptor.filter?.value)
                 .equals(ListModelTable.ORDER_DB_VALUE, listDescriptor.order?.value)
                 .endWhere()
