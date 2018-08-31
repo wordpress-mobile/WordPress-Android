@@ -7,8 +7,10 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListModel
-import org.wordpress.android.fluxc.model.list.ListType
+import org.wordpress.android.fluxc.model.list.ListType.POST
+import org.wordpress.android.fluxc.model.list.ListType.WOO_ORDER
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
@@ -24,6 +26,11 @@ import kotlin.test.assertTrue
 class ListSqlUtilsTest {
     private lateinit var listSqlUtils: ListSqlUtils
 
+    private val testListDescriptor: ListDescriptor
+        get() = ListDescriptor(POST)
+    private val testListDescriptorAlternate: ListDescriptor
+        get() = ListDescriptor(WOO_ORDER)
+
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
@@ -37,7 +44,6 @@ class ListSqlUtilsTest {
     @Test
     fun testInsertOrUpdateList() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val listType = ListType.POST
 
         /**
          * 1. Insert a new list for `testSite` and `listType`
@@ -45,8 +51,8 @@ class ListSqlUtilsTest {
          * 3. Verify the `localSiteId` value
          * 4. Verify that `dateCreated` and `lastModified` are equal since this is the first time it's created
          */
-        listSqlUtils.insertOrUpdateList(testSite.id, listType)
-        val insertedList = listSqlUtils.getList(testSite.id, listType)
+        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
+        val insertedList = listSqlUtils.getList(testSite.id, testListDescriptor)
         assertNotNull(insertedList)
         assertEquals(testSite.id, insertedList?.localSiteId)
         assertEquals(insertedList?.dateCreated, insertedList?.lastModified)
@@ -59,8 +65,8 @@ class ListSqlUtilsTest {
          * 5. Verify the `dateCreated` and `lastModified` values are different since this is an update. (See point 1)
          */
         Thread.sleep(1000)
-        listSqlUtils.insertOrUpdateList(testSite.id, listType)
-        val updatedList = listSqlUtils.getList(testSite.id, listType)
+        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
+        val updatedList = listSqlUtils.getList(testSite.id, testListDescriptor)
         assertNotNull(updatedList)
         assertEquals(testSite.id, updatedList?.localSiteId)
         assertNotEquals(updatedList?.dateCreated, updatedList?.lastModified)
@@ -74,27 +80,24 @@ class ListSqlUtilsTest {
     @Test
     fun testDeleteList() {
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val listType = ListType.POST
 
         /**
          * 1. Insert a test list
          * 2. Verify that the list is inserted correctly
          */
-        listSqlUtils.insertOrUpdateList(testSite.id, listType)
-        assertNotNull(listSqlUtils.getList(testSite.id, listType))
+        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
+        assertNotNull(listSqlUtils.getList(testSite.id, testListDescriptor))
 
         /**
          * 1. Delete the inserted test list
          * 2. Verify that the list is deleted correctly
          */
-        listSqlUtils.deleteList(testSite.id, listType)
-        assertNull(listSqlUtils.getList(testSite.id, listType))
+        listSqlUtils.deleteList(testSite.id, testListDescriptor)
+        assertNull(listSqlUtils.getList(testSite.id, testListDescriptor))
     }
 
     @Test
     fun testLocalSiteIdForeignKeyCascadeDelete() {
-        val listType1 = ListType.POST
-        val listType2 = ListType.WOO_ORDER
         /**
          * 1. Generate and insert a self-hosted test site
          * 2. Verify that the site is inserted
@@ -103,10 +106,10 @@ class ListSqlUtilsTest {
          */
         val testSite = generateAndInsertSelfHostedNonJPTestSite()
         assertFalse(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
-        listSqlUtils.insertOrUpdateList(testSite.id, listType1)
-        listSqlUtils.insertOrUpdateList(testSite.id, listType2)
-        assertNotNull(listSqlUtils.getList(testSite.id, listType1))
-        assertNotNull(listSqlUtils.getList(testSite.id, listType2))
+        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
+        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptorAlternate)
+        assertNotNull(listSqlUtils.getList(testSite.id, testListDescriptor))
+        assertNotNull(listSqlUtils.getList(testSite.id, testListDescriptorAlternate))
 
         /**
          * 1. Delete the test site
@@ -115,8 +118,8 @@ class ListSqlUtilsTest {
          */
         SiteSqlUtils.deleteSite(testSite)
         assertTrue(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
-        assertNull(listSqlUtils.getList(testSite.id, listType1))
-        assertNull(listSqlUtils.getList(testSite.id, listType2))
+        assertNull(listSqlUtils.getList(testSite.id, testListDescriptor))
+        assertNull(listSqlUtils.getList(testSite.id, testListDescriptorAlternate))
     }
 
     /**

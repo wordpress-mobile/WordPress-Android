@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 class ListManager<T>(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,
-    private val listType: ListType,
+    private val listDescriptor: ListDescriptor,
     listState: ListState?,
     private val items: List<ListItemModel>,
     private val dataSource: ListItemDataSource<T>
@@ -38,19 +38,19 @@ class ListManager<T>(
 
     fun refresh() {
         if (!isFetchingFirstPage) {
-            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType)))
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listDescriptor)))
         }
     }
 
     private fun loadMore() {
         if (canLoadMore) {
-            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listType, true)))
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(site, listDescriptor, true)))
         }
     }
 
     fun hasDataChanged(otherListManager: ListManager<T>): Boolean {
         if (site.id != otherListManager.site.id
-                || listType != otherListManager.listType
+                || listDescriptor != otherListManager.listDescriptor
                 || items.size != otherListManager.items.size)
             return true
         return !items.zip(otherListManager.items).fold(true) { result, pair ->
