@@ -28,7 +28,7 @@ enum class ListType(val value: Int) {
     }
 }
 
-class ListDescriptor(val type: ListType, val filter: ListFilter?, val order: ListOrder?) {
+class ListDescriptor(val type: ListType, val filter: ListFilter? = null, val order: ListOrder? = null) {
     constructor(type: Int?, filter: Int?, order: Int?) :
             this(ListType.fromValue(type), ListFilter.fromValue(filter), ListOrder.fromValue(order))
 }
