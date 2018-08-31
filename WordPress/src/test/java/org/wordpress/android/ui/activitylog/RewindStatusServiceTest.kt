@@ -188,7 +188,7 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun onRewindStateFinishedUpdateState() = runBlocking{
+    fun onRewindStateFinishedUpdateState() = runBlocking {
         rewindStatusService.start(site)
 
         val rewindFinished = rewindInProgress.copy(status = FINISHED, progress = 100)
@@ -223,7 +223,7 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun onRewindFetchStatusAndStartWorker() = runBlocking<Unit>{
+    fun onRewindFetchStatusAndStartWorker() = runBlocking<Unit> {
         rewindStatusService.start(site)
 
         whenever(activityLogStore.rewind(any())).thenReturn(OnRewind("5", 10, REWIND))

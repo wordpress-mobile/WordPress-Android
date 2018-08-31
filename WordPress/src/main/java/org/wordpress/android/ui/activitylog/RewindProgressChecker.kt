@@ -28,7 +28,7 @@ class RewindProgressChecker
             delay(CHECK_DELAY_MILLIS)
         }
         var result: OnRewindStatusFetched? = null
-        while(isActive) {
+        while (isActive) {
             val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
             val rewind = rewindStatusForSite?.rewind
             if (rewind != null && rewind.status == FINISHED && rewind.restoreId == restoreId) {
