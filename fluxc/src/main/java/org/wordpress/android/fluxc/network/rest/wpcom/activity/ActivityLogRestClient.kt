@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.activity
 import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
@@ -15,6 +14,8 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
@@ -33,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class ActivityLogRestClient
 constructor(
-    private val dispatcher: Dispatcher,
+    dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
     requestQueue: RequestQueue,
@@ -41,75 +42,69 @@ constructor(
     userAgent: UserAgent
 ) :
         BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    fun fetchActivity(site: SiteModel, number: Int, offset: Int) {
+    suspend fun fetchActivity(site: SiteModel, number: Int, offset: Int): FetchedActivityLogPayload {
         val url = WPCOMV2.sites.site(site.siteId).activity.url
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
-        val request = wpComGsonRequestBuilder.buildGetRequest(
-                url, params, ActivitiesResponse::class.java,
-                { response ->
-                    val activities = response.current?.orderedItems ?: listOf()
-                    val totalItems = response.totalItems ?: 0
-                    val payload = buildActivityPayload(activities, site, totalItems, number, offset)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
-                },
-                { networkError ->
-                    val errorType = genericToError(
-                            networkError,
-                            ActivityLogErrorType.GENERIC_ERROR,
-                            ActivityLogErrorType.INVALID_RESPONSE,
-                            ActivityLogErrorType.AUTHORIZATION_REQUIRED
-                    )
-                    val error = ActivityError(errorType, networkError.message)
-                    val payload = FetchedActivityLogPayload(error, site, number = number, offset = offset)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedActivitiesAction(payload))
-                })
-        add(request)
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, ActivitiesResponse::class.java)
+        return when (response) {
+            is Success -> {
+                val activities = response.data.current?.orderedItems ?: listOf()
+                val totalItems = response.data.totalItems ?: 0
+                buildActivityPayload(activities, site, totalItems, number, offset)
+            }
+            is Error -> {
+                val errorType = genericToError(
+                        response.error,
+                        ActivityLogErrorType.GENERIC_ERROR,
+                        ActivityLogErrorType.INVALID_RESPONSE,
+                        ActivityLogErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = ActivityError(errorType, response.error.message)
+                FetchedActivityLogPayload(error, site, number = number, offset = offset)
+            }
+        }
     }
 
-    fun fetchActivityRewind(site: SiteModel) {
+    suspend fun fetchActivityRewind(site: SiteModel): FetchedRewindStatePayload {
         val url = WPCOMV2.sites.site(site.siteId).rewind.url
-        val request = wpComGsonRequestBuilder.buildGetRequest(
-                url, mapOf(), RewindStatusResponse::class.java,
-                { response ->
-                    val payload = buildRewindStatusPayload(response, site)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedRewindStateAction(payload))
-                },
-                { networkError ->
-                    val errorType = genericToError(
-                            networkError,
-                            RewindStatusErrorType.GENERIC_ERROR,
-                            RewindStatusErrorType.INVALID_RESPONSE,
-                            RewindStatusErrorType.AUTHORIZATION_REQUIRED
-                    )
-                    val error = RewindStatusError(errorType, networkError.message)
-                    val payload = FetchedRewindStatePayload(error, site)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newFetchedRewindStateAction(payload))
-                })
-        add(request)
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), RewindStatusResponse::class.java)
+        return when (response) {
+            is Success -> {
+                buildRewindStatusPayload(response.data, site)
+            }
+            is Error -> {
+                val errorType = genericToError(
+                        response.error,
+                        RewindStatusErrorType.GENERIC_ERROR,
+                        RewindStatusErrorType.INVALID_RESPONSE,
+                        RewindStatusErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = RewindStatusError(errorType, response.error.message)
+                FetchedRewindStatePayload(error, site)
+            }
+        }
     }
 
-    fun rewind(site: SiteModel, rewindId: String) {
+    suspend fun rewind(site: SiteModel, rewindId: String): RewindResultPayload {
         val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
-        val request = wpComGsonRequestBuilder.buildPostRequest(url, mapOf(), RewindResponse::class.java,
-                { response ->
-                    if (response.ok != true && (response.error != null && response.error.isNotEmpty())) {
-                        val payload = RewindResultPayload(RewindError(API_ERROR, response.error), rewindId, site)
-                        dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
-                    } else {
-                        val payload = ActivityLogStore.RewindResultPayload(rewindId, response.restore_id, site)
-                        dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
-                    }
-                },
-                { networkError ->
-                    val error = ActivityLogStore.RewindError(genericToError(networkError,
-                            RewindErrorType.GENERIC_ERROR,
-                            RewindErrorType.INVALID_RESPONSE,
-                            RewindErrorType.AUTHORIZATION_REQUIRED), networkError.message)
-                    val payload = ActivityLogStore.RewindResultPayload(error, rewindId, site)
-                    dispatcher.dispatch(ActivityLogActionBuilder.newRewindResultAction(payload))
-                })
-        add(request)
+        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, mapOf(), RewindResponse::class.java)
+        return when (response) {
+            is Success -> {
+                if (response.data.ok != true && (response.data.error != null && response.data.error.isNotEmpty())) {
+                    RewindResultPayload(RewindError(API_ERROR, response.data.error), rewindId, site)
+                } else {
+                    ActivityLogStore.RewindResultPayload(rewindId, response.data.restore_id, site)
+                }
+            }
+            is Error -> {
+                val error = ActivityLogStore.RewindError(genericToError(response.error,
+                        RewindErrorType.GENERIC_ERROR,
+                        RewindErrorType.INVALID_RESPONSE,
+                        RewindErrorType.AUTHORIZATION_REQUIRED), response.error.message)
+                ActivityLogStore.RewindResultPayload(error, rewindId, site)
+            }
+        }
     }
 
     private fun buildActivityPayload(
