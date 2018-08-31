@@ -93,7 +93,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                     GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
                     if (signInResult.isSuccess()) {
-                        AppLog.d(T.MAIN, "GOOGLE SIGNUP: Google has returned a sign up result - succcess");
+                        AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - succcess");
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
 
@@ -106,17 +106,16 @@ public class SignupGoogleFragment extends GoogleFragment {
                             }
 
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
-                            AppLog.d(T.MAIN,
-                                    "GOOGLE SIGNUP: Google has returned a sign up result - dispatching SocialSignupAction");
+                            AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - dispatching SocialSignupAction");
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
                             mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                         } catch (NullPointerException exception) {
-                            AppLog.d(T.MAIN, "GOOGLE SIGNUP: Google has returned a sign up result - NPE");
+                            AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - NPE");
                             AppLog.e(T.NUX, "Cannot get ID token from Google signup account.", exception);
                             showError(getString(R.string.login_error_generic));
                         }
                     } else {
-                        AppLog.d(T.MAIN, "GOOGLE SIGNUP: Google has returned a sign up result - error");
+                        AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - error");
                         mAnalyticsListener.trackSignupSocialButtonFailure();
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
@@ -162,12 +161,12 @@ public class SignupGoogleFragment extends GoogleFragment {
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
-                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: Google has returned a sign up result - canceled");
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - canceled");
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
                     finishFlow();
                 } else {
-                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: Google has returned a sign up result - unknown");
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - unknown");
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
                     showError(getString(R.string.login_error_generic));
