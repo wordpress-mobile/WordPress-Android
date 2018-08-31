@@ -14,17 +14,14 @@ import javax.inject.Singleton
 @Singleton
 class ListSqlUtils @Inject constructor() {
     /**
-     * This function either creates a new [ListModel] for the [localSiteId] and [listDescriptor] or updates
-     * the existing record.
+     * This function either creates a new [ListModel] for the [listDescriptor] or updates the existing record.
      *
-     * If there is an existing record, only the [ListModel.lastModified] and [ListModel.stateDbValue] will be updated
-     * with the current [Date]. If there is no existing record, a new [ListModel] will be created for [localSiteId]
-     * and [listDescriptor].
+     * If there is an existing record, only the [ListModel.lastModified] and [ListModel.stateDbValue] will be updated.
+     * If there is no existing record, a new [ListModel] will be created for [listDescriptor].
      *
      * The current [Date] will be assigned to both [ListModel.dateCreated] and [ListModel.lastModified].
      */
     fun insertOrUpdateList(
-        localSiteId: Int,
         listDescriptor: ListDescriptor,
         listState: ListState = ListState.CAN_LOAD_MORE
     ) {
@@ -33,7 +30,7 @@ class ListSqlUtils @Inject constructor() {
         listModel.lastModified = now
         listModel.stateDbValue = listState.value
 
-        val existing = getList(localSiteId, listDescriptor)
+        val existing = getList(listDescriptor)
         if (existing != null) {
             WellSql.update<ListModel>(ListModel::class.java)
                     .whereId(existing.id)
@@ -44,10 +41,7 @@ class ListSqlUtils @Inject constructor() {
                         cv
                     }.execute()
         } else {
-            listModel.typeDbValue = listDescriptor.type.value
-            listModel.filterDbValue = listDescriptor.filter?.value
-            listModel.orderDbValue = listDescriptor.order?.value
-            listModel.localSiteId = localSiteId
+            listModel.setListDescriptor(listDescriptor)
             listModel.dateCreated = now
             WellSql.insert(listModel).execute()
         }
@@ -55,17 +49,14 @@ class ListSqlUtils @Inject constructor() {
 
 
     /**
-     * This function returns the [ListModel] record for the given [localSiteId] and [listDescriptor] if there is one.
-     *
-     * Since there shouldn't be more than one record for a [localSiteId] and [listDescriptor] combination,
-     * [firstOrNull] is used.
+     * This function returns the [ListModel] record for the given [listDescriptor] if there is one.
      */
-    fun getList(localSiteId: Int, listDescriptor: ListDescriptor): ListModel? {
+    fun getList(listDescriptor: ListDescriptor): ListModel? {
+        // TODO: these filters need to use the `IS NULL` or check value: `localSiteId`, `filter`, `order`
         return WellSql.select(ListModel::class.java)
                 .where()
-                .equals(ListModelTable.LOCAL_SITE_ID, localSiteId)
+                .equals(ListModelTable.LOCAL_SITE_ID_DB_VALUE, listDescriptor.localSiteId)
                 .equals(ListModelTable.TYPE_DB_VALUE, listDescriptor.type.value)
-                // TODO: these filters need to use the `IS NULL` or check value because this will not work as is
                 .equals(ListModelTable.FILTER_DB_VALUE, listDescriptor.filter?.value)
                 .equals(ListModelTable.ORDER_DB_VALUE, listDescriptor.order?.value)
                 .endWhere()
@@ -74,12 +65,12 @@ class ListSqlUtils @Inject constructor() {
     }
 
     /**
-     * This function deletes the [ListModel] record for the given [localSiteId] and [listDescriptor] if there is one.
+     * This function deletes the [ListModel] record for the given [listDescriptor] if there is one.
      *
      * To ensure that we have the same `where` queries for both `select` and `delete` queries, [getList] is utilized.
      */
-    fun deleteList(localSiteId: Int, listDescriptor: ListDescriptor) {
-        val existing = getList(localSiteId, listDescriptor)
+    fun deleteList(listDescriptor: ListDescriptor) {
+        val existing = getList(listDescriptor)
         existing?.let {
             WellSql.delete(ListModel::class.java).whereId(it.id)
         }
