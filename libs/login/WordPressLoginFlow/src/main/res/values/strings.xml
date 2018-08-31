@@ -60,7 +60,7 @@
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
-    <string name="login_error_sms_throttled">Too many attempts on sending SMS verification code. Try again in a minute.</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
