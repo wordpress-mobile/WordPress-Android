@@ -3,6 +3,7 @@ package org.wordpress.android.ui.activitylog
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
@@ -143,12 +144,13 @@ class RewindStatusServiceTest {
 
     @Test
     fun updatesRewindStatusAndRestartsCheckerWhenRewindNotAlreadyRunning() = runBlocking<Unit> {
-        val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(activeRewindStatusModel,
-                rewindStatusInProgress)
-        whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
-
         rewindStatusService.start(site)
+        val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
+        whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
+        reset(rewindProgressChecker)
+
+        rewindStatusService.requestStatusUpdate()
 
         verify(rewindProgressChecker).startNow(site, rewindInProgress.restoreId)
     }
@@ -229,6 +231,7 @@ class RewindStatusServiceTest {
     @Test
     fun onRewindFetchStatusAndStartWorker() = runBlocking<Unit> {
         rewindStatusService.start(site)
+        reset(rewindProgressChecker)
 
         whenever(activityLogStore.rewind(any())).thenReturn(OnRewind("5", 10, REWIND))
 
