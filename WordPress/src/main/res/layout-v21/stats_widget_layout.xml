@@ -33,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
             android:text="@string/stats_widget_name" >
         </TextView>
     </LinearLayout>
@@ -71,7 +70,6 @@
                 <ImageView
                     android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
-                    android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" />
@@ -118,7 +116,6 @@
                 <ImageView
                     android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
-                    android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_user_grey_dark_12dp" />
@@ -165,7 +162,6 @@
                 <ImageView
                     android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
-                    android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_star_grey_dark_12dp" />
@@ -212,7 +208,6 @@
                 <ImageView
                     android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
-                    android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_comment_grey_dark_12dp" />
