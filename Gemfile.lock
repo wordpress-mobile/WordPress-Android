@@ -103,6 +103,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
+    java-properties (0.2.0)
     json (2.1.0)
     jwt (2.1.0)
     kramdown (1.17.0)
@@ -178,6 +179,7 @@ PLATFORMS
 DEPENDENCIES
   danger!
   fastlane!
+  java-properties!
 
 BUNDLED WITH
-   1.16.1
+   1.16.3
