@@ -34,6 +34,10 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     private static final String STATE_GOOGLE_PHOTO_URL = "STATE_GOOGLE_PHOTO_URL";
     private boolean mIsResolvingError;
     private boolean mShouldResolveError;
+    /**
+     * This flag is used to store the information the finishFlow was called when the fragment wasn't attached to an
+     * activity (for example an EventBus event was received during ongoing configuration change).
+     */
     private boolean mFinished;
 
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
@@ -119,22 +123,24 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
             throw new ClassCastException(context.toString() + " must implement GoogleListener");
         }
         if (mFinished) {
-            finishSignUp();
+            finishFlow();
         }
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         disconnectGoogleClient();
-        AppLog.d(T.MAIN, "GOOGLE SIGNUP/IN: disconnecting google client");
+        AppLog.d(T.MAIN, "GOOGLE SIGNUP/LOGIN: disconnecting google client");
         mDispatcher.unregister(this);
         super.onDestroy();
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         // Show account dialog when Google API onConnected callback returns before fragment is attached.
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mIsResolvingError && !mShouldResolveError) {
-            startSignInProcess();
+            startFlow();
         }
     }
 
@@ -145,11 +151,9 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         if (mShouldResolveError) {
             mShouldResolveError = false;
 
-            //noinspection StatementWithEmptyBody
+            // if the fragment is not attached to an activity, the process is started in the onResume
             if (isAdded()) {
-                startSignInProcess();
-            } else {
-                // handled in onResume
+                startFlow();
             }
         }
     }
@@ -190,7 +194,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
             mShouldResolveError = true;
             mGoogleApiClient.connect();
         } else {
-            startSignInProcess();
+            startFlow();
         }
     }
 
@@ -201,23 +205,23 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         }
     }
 
-    protected void startSignInProcess() {
+    protected void startFlow() {
         // Do nothing here.  This should be overridden by inheriting class.
     }
 
-    protected void finishSignUp() {
-        /* This flag might get lost when the finishSignUp is called after the fragment's
+    protected void finishFlow() {
+        /* This flag might get lost when the finishFlow is called after the fragment's
          onSaveInstanceState was called - however it's a very rare case, since the fragment is retained across
          config changes.  */
         mFinished = true;
         if (getActivity() != null) {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP/IN: finishing signup");
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP/LOGIN: finishing signup/login");
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
         }
     }
 
     protected void showError(String message) {
-        finishSignUp();
+        finishFlow();
         mGoogleListener.onGoogleSignupError(message);
     }
 
@@ -234,7 +238,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
                 if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
                     mGoogleApiClient.connect();
                 } else {
-                    startSignInProcess();
+                    startFlow();
                 }
 
                 mIsResolvingError = false;

@@ -74,8 +74,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     private static final String TWO_FACTOR_TYPE_AUTHENTICATOR = "authenticator";
     private static final String TWO_FACTOR_TYPE_BACKUP = "backup";
-    private static final String TWO_FACTOR_TYPE_SMS = "sms";
 
+    public static final String TWO_FACTOR_TYPE_SMS = "sms";
     public static final String TAG = "login_2fa_fragment_tag";
 
     private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");

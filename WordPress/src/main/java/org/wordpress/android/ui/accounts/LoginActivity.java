@@ -749,7 +749,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         finish();
     }
 
-    @Override public void onGoogleSignupError(String msg) {
+    @Override
+    public void onGoogleSignupError(String msg) {
         BasicFragmentDialog dialog = new BasicFragmentDialog();
         dialog.initialize(GOOGLE_ERROR_DIALOG_TAG, getString(R.string.error),
                 msg,
@@ -759,7 +760,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         dialog.show(this.getSupportFragmentManager(), GOOGLE_ERROR_DIALOG_TAG);
     }
 
-    @Override public void onPositiveClicked(@NotNull String instanceTag) {
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
         switch (instanceTag) {
             case GOOGLE_ERROR_DIALOG_TAG:
                 // just dismiss the dialog

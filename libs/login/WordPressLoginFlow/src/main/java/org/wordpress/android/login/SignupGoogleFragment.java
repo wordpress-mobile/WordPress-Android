@@ -70,14 +70,14 @@ public class SignupGoogleFragment extends GoogleFragment {
     }
 
     @Override
-    protected void startSignInProcess() {
+    protected void startFlow() {
         if (!mSignupRequested) {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startSignInProcess");
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow");
             mSignupRequested = true;
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, REQUEST_SIGNUP);
         } else {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startSignInProcess called, but is already in progress");
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow called, but is already in progress");
         }
     }
 
@@ -107,8 +107,7 @@ public class SignupGoogleFragment extends GoogleFragment {
 
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             AppLog.d(T.MAIN,
-                                    "GOOGLE SIGNUP: Google has returned a sign up result - dispatching "
-                                    + "SocialSignupAction");
+                                    "GOOGLE SIGNUP: Google has returned a sign up result - dispatching SocialSignupAction");
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
                             mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                         } catch (NullPointerException exception) {
@@ -166,7 +165,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                     AppLog.d(T.MAIN, "GOOGLE SIGNUP: Google has returned a sign up result - canceled");
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
-                    finishSignUp();
+                    finishFlow();
                 } else {
                     AppLog.d(T.MAIN, "GOOGLE SIGNUP: Google has returned a sign up result - unknown");
                     mAnalyticsListener.trackSignupSocialButtonFailure();
@@ -211,7 +210,7 @@ public class SignupGoogleFragment extends GoogleFragment {
             mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.loggedInViaSocialAccount(mOldSitesIds, true);
         }
-        finishSignUp();
+        finishFlow();
     }
 
     @SuppressWarnings("unused")
@@ -229,14 +228,14 @@ public class SignupGoogleFragment extends GoogleFragment {
                     // Dispatch social login action to retrieve data required for two-factor authentication.
                     PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                     AppLog.d(T.MAIN,
-                            "GOOGLE SIGNUP: onSocialChanged - error - two step authentication - dispatching "
+                            "GOOGLE SIGNUP: onSocialChanged error - two step authentication - dispatching "
                             + "pushSocialLoginAction");
                     mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                     break;
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
                     AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - user already exists");
-                    handleUserExists();
+                    loginViaSocialAccount();
                     break;
                 // Too many attempts on sending SMS verification code. The user has to wait before they try again
                 case SMS_CODE_THROTTLED:
@@ -249,23 +248,23 @@ public class SignupGoogleFragment extends GoogleFragment {
                     break;
             }
             // Response does not return error when two-factor authentication is required.
-        } else if (event.requiresTwoStepAuth || "sms".equals(event.notificationSent)) {
+        } else if (event.requiresTwoStepAuth || Login2FaFragment.TWO_FACTOR_TYPE_SMS.equals(event.notificationSent)) {
             AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - 2fa required");
             mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
-            finishSignUp();
+            finishFlow();
         } else {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - shouldn't happen - google sign in success");
-           handleUserExists();
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - google login success");
+           loginViaSocialAccount();
         }
     }
 
-    private void handleUserExists() {
+    private void loginViaSocialAccount() {
         mAnalyticsListener.trackSignupSocialAccountsNeedConnecting();
         mAnalyticsListener.trackSignupSocialToLogin();
         mLoginListener.showSignupToLoginMessage();
         mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
-        finishSignUp();
+        finishFlow();
     }
 }
