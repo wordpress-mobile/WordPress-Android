@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
@@ -40,16 +41,16 @@ class ListStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
-    fun <T> getListManager(site: SiteModel, listType: ListType, dataSource: ListItemDataSource<T>): ListManager<T> {
-        val listModel = getListModel(site.id, listType)
+    fun <T> getListManager(site: SiteModel, listDescriptor: ListDescriptor, dataSource: ListItemDataSource<T>): ListManager<T> {
+        val listModel = getListModel(site.id, listDescriptor)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
-        return ListManager(mDispatcher, site, listType, listModel?.state, listItems, dataSource)
+        return ListManager(mDispatcher, site, listDescriptor, listModel?.state, listItems, dataSource)
     }
 
     private fun fetchList(payload: FetchListPayload) {
-        val listModel = getListModel(payload.site.id, payload.listType)
+        val listModel = getListModel(payload.site.id, payload.listDescriptor)
         val state = listModel?.state
         if (payload.loadMore && state?.canLoadMore() != true) {
             // We can't load more right now, ignore
@@ -59,10 +60,10 @@ class ListStore @Inject constructor(
             return
         }
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
-        listSqlUtils.insertOrUpdateList(payload.site.id, payload.listType, newState)
-        emitChange(OnListChanged(payload.site.id, payload.listType, null))
+        listSqlUtils.insertOrUpdateList(payload.site.id, payload.listDescriptor, newState)
+        emitChange(OnListChanged(payload.site.id, payload.listDescriptor, null))
 
-        when(payload.listType) {
+        when(payload.listDescriptor.type) {
             ListType.POST -> TODO()
             ListType.WOO_ORDER -> TODO()
         }
@@ -71,11 +72,11 @@ class ListStore @Inject constructor(
     private fun updateList(payload: UpdateListPayload) {
         if (!payload.isError) {
             if (!payload.loadedMore) {
-                deleteListItems(payload.localSiteId, payload.listType)
+                deleteListItems(payload.localSiteId, payload.listDescriptor)
             }
             val state = if (payload.canLoadMore) ListState.CAN_LOAD_MORE else ListState.FETCHED
-            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, state)
-            val listModel = getListModel(payload.localSiteId, payload.listType)
+            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listDescriptor, state)
+            val listModel = getListModel(payload.localSiteId, payload.listDescriptor)
             if (listModel != null) { // Sanity check
                 // Ensure the listId is set correctly for ListItemModels
                 listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
@@ -86,23 +87,23 @@ class ListStore @Inject constructor(
                 })
             }
         } else {
-            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listType, ListState.ERROR)
+            listSqlUtils.insertOrUpdateList(payload.localSiteId, payload.listDescriptor, ListState.ERROR)
         }
-        emitChange(OnListChanged(payload.localSiteId, payload.listType, payload.error))
+        emitChange(OnListChanged(payload.localSiteId, payload.listDescriptor, payload.error))
     }
 
-    private fun getListModel(localSiteId: Int, listType: ListType): ListModel? =
-            listSqlUtils.getList(localSiteId, listType)
+    private fun getListModel(localSiteId: Int, listDescriptor: ListDescriptor): ListModel? =
+            listSqlUtils.getList(localSiteId, listDescriptor)
 
-    private fun deleteListItems(localSiteId: Int, listType: ListType) {
-        getListModel(localSiteId, listType)?.let {
+    private fun deleteListItems(localSiteId: Int, listDescriptor: ListDescriptor) {
+        getListModel(localSiteId, listDescriptor)?.let {
             listItemSqlUtils.deleteItems(it.id)
         }
     }
 
     class OnListChanged(
         val localSiteId: Int,
-        val listType: ListType,
+        val listDescriptor: ListDescriptor,
         error: UpdateListError?
     ) : Store.OnChanged<UpdateListError>() {
         init {
@@ -112,13 +113,13 @@ class ListStore @Inject constructor(
 
     class FetchListPayload(
         val site: SiteModel,
-        val listType: ListType,
+        val listDescriptor: ListDescriptor,
         val loadMore: Boolean = false
     ) : Payload<BaseNetworkError>()
 
     class UpdateListPayload(
         val localSiteId: Int,
-        val listType: ListType,
+        val listDescriptor: ListDescriptor,
         val remoteItemIds: List<Long>,
         val loadedMore: Boolean,
         val canLoadMore: Boolean,
