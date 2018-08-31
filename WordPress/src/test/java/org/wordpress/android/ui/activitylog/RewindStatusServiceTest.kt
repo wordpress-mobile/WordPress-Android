@@ -90,7 +90,7 @@ class RewindStatusServiceTest {
     )
 
     @Before
-    fun setUp() {
+    fun setUp() = runBlocking<Unit> {
         rewindStatusService = RewindStatusService(activityLogStore, rewindProgressChecker, Unconfined)
         rewindAvailable = null
         rewindStatusService.rewindAvailable.observeForever { rewindAvailable = it }
@@ -98,6 +98,8 @@ class RewindStatusServiceTest {
         rewindStatusService.rewindError.observeForever { rewindError = it }
         rewindStatusService.rewindStatusFetchError.observeForever { rewindStatusFetchError = it }
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+        whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
+        whenever(activityLogStore.rewind(any())).thenReturn(OnRewind(rewindId, null, REWIND))
 
         whenever(activityLogStore.getActivityLogItemByRewindId(rewindId)).thenReturn(activityLogModel)
         whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPCOM_REST)
@@ -142,7 +144,9 @@ class RewindStatusServiceTest {
     @Test
     fun updatesRewindStatusAndRestartsCheckerWhenRewindNotAlreadyRunning() = runBlocking<Unit> {
         val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(activeRewindStatusModel,
+                rewindStatusInProgress)
+        whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
 
         rewindStatusService.start(site)
 

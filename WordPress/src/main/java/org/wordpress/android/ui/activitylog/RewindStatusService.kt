@@ -37,7 +37,8 @@ class RewindStatusService
     private val mutableRewindProgress = MutableLiveData<RewindProgress>()
     private var site: SiteModel? = null
     private var activityLogModelItem: ActivityLogModel? = null
-    private var job: Job? = null
+    private var rewindProgressCheckerJob: Job? = null
+    private var fetchRewindJob: Job? = null
 
     val rewindingActivity: ActivityLogModel?
         get() = activityLogModelItem
@@ -85,7 +86,8 @@ class RewindStatusService
 
     fun requestStatusUpdate() {
         site?.let {
-            launch(coroutineContext) {
+            fetchRewindJob?.cancel()
+            fetchRewindJob = launch(coroutineContext) {
                 val rewindStatus = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(it))
                 onRewindStatusFetched(rewindStatus.error, rewindStatus.isError)
             }
@@ -109,9 +111,9 @@ class RewindStatusService
         val rewind = rewindStatus?.rewind
         if (rewind != null) {
             val restoreId = rewindStatus.rewind?.restoreId
-            if (job?.isActive != true && restoreId != null) {
+            if (rewindProgressCheckerJob?.isActive != true && restoreId != null) {
                 site?.let {
-                    job = launch {
+                    rewindProgressCheckerJob = launch {
                         val rewindStatusFetched = rewindProgressChecker.startNow(it, restoreId)
                         onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
                     }
@@ -119,7 +121,7 @@ class RewindStatusService
             }
             updateRewindProgress(rewind.rewindId, rewind.progress, rewind.status, rewind.reason)
             if (rewind.status != RUNNING) {
-                job?.cancel()
+                rewindProgressCheckerJob?.cancel()
             }
         } else {
             mutableRewindProgress.postValue(null)
@@ -129,7 +131,7 @@ class RewindStatusService
     private fun onRewindStatusFetched(rewindStatusError: RewindStatusError?, isError: Boolean) {
         mutableRewindStatusFetchError.postValue(rewindStatusError)
         if (isError) {
-            job?.cancel()
+            rewindProgressCheckerJob?.cancel()
         }
         reloadRewindStatus()
     }
@@ -144,7 +146,7 @@ class RewindStatusService
         }
         site?.let {
             event.restoreId?.let { restoreId ->
-                job = launch {
+                rewindProgressCheckerJob = launch {
                     val rewindStatusFetched = rewindProgressChecker.start(it, restoreId)
                     onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
                 }
