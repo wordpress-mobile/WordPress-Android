@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.model.list
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.ListModel.ListType
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 
 class ListManager<T>(
