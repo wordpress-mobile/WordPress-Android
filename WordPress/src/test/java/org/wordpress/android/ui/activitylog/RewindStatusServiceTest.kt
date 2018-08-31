@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -104,6 +105,12 @@ class RewindStatusServiceTest {
 
         whenever(activityLogStore.getActivityLogItemByRewindId(rewindId)).thenReturn(activityLogModel)
         whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPCOM_REST)
+        whenever(rewindProgressChecker.startNow(any(), any())).thenReturn(null)
+    }
+
+    @After
+    fun tearDown() {
+        rewindStatusService.stop()
     }
 
     @Test
@@ -126,9 +133,9 @@ class RewindStatusServiceTest {
     }
 
     @Test
-    fun emitsUnavailableRewindStatusOnStartWhenRewindInProgress() {
+    fun emitsUnavailableRewindStatusOnStartWhenRewindInProgress() = runBlocking {
         val inactiveRewindStatusModel = activeRewindStatusModel.copy(rewind = rewindInProgress)
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(inactiveRewindStatusModel)
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(inactiveRewindStatusModel, null)
 
         rewindStatusService.start(site)
 
@@ -140,6 +147,19 @@ class RewindStatusServiceTest {
         rewindStatusService.start(site)
 
         assertFetchRewindStatusAction()
+    }
+
+    @Test
+    fun updatesRewindStatusAndRestartsCheckerWhenRewindNotAlreadyRunning() = runBlocking<Unit> {
+        rewindStatusService.start(site)
+        val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress, null)
+        whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
+        reset(rewindProgressChecker)
+
+        rewindStatusService.requestStatusUpdate()
+
+        verify(rewindProgressChecker).startNow(site, rewindInProgress.restoreId)
     }
 
     @Test
@@ -169,7 +189,7 @@ class RewindStatusServiceTest {
         rewindStatusService.start(site)
 
         val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindInProgress)
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress, null)
 
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
 
@@ -186,7 +206,7 @@ class RewindStatusServiceTest {
 
         val rewindFinished = rewindInProgress.copy(status = FINISHED, progress = 100)
         val rewindStatusInProgress = activeRewindStatusModel.copy(rewind = rewindFinished)
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress)
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(rewindStatusInProgress, null)
 
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
 

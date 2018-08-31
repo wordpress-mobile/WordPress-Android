@@ -79,6 +79,8 @@ class RewindStatusService
     }
 
     fun stop() {
+        rewindProgressCheckerJob?.cancel()
+        fetchRewindJob?.cancel()
         if (site != null) {
             site = null
         }
@@ -113,7 +115,7 @@ class RewindStatusService
             val restoreId = rewindStatus.rewind?.restoreId
             if (rewindProgressCheckerJob?.isActive != true && restoreId != null) {
                 site?.let {
-                    rewindProgressCheckerJob = launch {
+                    rewindProgressCheckerJob = launch(coroutineContext) {
                         val rewindStatusFetched = rewindProgressChecker.startNow(it, restoreId)
                         onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
                     }
@@ -146,7 +148,7 @@ class RewindStatusService
         }
         site?.let {
             event.restoreId?.let { restoreId ->
-                rewindProgressCheckerJob = launch {
+                rewindProgressCheckerJob = launch(coroutineContext) {
                     val rewindStatusFetched = rewindProgressChecker.start(it, restoreId)
                     onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
                 }
