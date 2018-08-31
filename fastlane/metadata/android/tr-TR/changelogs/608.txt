@@ -1,0 +1,4 @@
+10.7:
+Herkes GIF sever! Hareketli GIFler uygulama üzerinden destekleniyor ve yükleme süresini de hızlandırdık ki kedinin masadan düşüşünü görmek için asla beklemenize gerek olmasın.
+Hiç kimse hiç bir yönerge olmayan boş ekranları sevmez! İçeriği olmayan herhangi bir sayfaya giderseniz, mesela hiç bir blogu takip etmiyorken Okuyucuya giderseniz, sonraki adımları tavsiye edeceğiz.
+Hata düzeltmeleri

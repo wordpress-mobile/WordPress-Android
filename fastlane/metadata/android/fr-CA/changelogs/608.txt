@@ -1,0 +1,4 @@
+10.7 :
+Tout le monde aime les GIF ! Les GIF animés sont pris en charge dans toute l’application et nous en avons accéléré le chargement pour que vous n’ayez jamais à attendre pour voir ce chat tomber de la table.
+Personne n’aime les écrans vides sans instructions ! Si vous accédez à une page sans contenu (par exemple, si vous accédez au Lecteur mais n’êtes abonné à aucun blog), nous suggérerons des étapes suivantes.
+Suppression de bugs.

@@ -1,0 +1,5 @@
+10.7:
+Iedereen houdt van gifs! Bewegende gifs worden nu in de hele app ondersteund en we hebben de laadtijden versneld, zodat je nooit hoeft te wachten tot je die kat van tafel ziet vallen.
+Niemand houdt van lege schermen zonder instructies! Als je naar een lege pagina zonder inhoudt navigeert (bijvoorbeeld als je naar de Reader gaat maar geen blogs volgt), geven we je advies over de volgende stappen.
+Bugs geplet.
+
