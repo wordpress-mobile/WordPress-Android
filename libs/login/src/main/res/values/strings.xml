@@ -58,7 +58,7 @@
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
-    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
