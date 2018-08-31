@@ -247,7 +247,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                     showError(getString(R.string.login_error_generic));
                     break;
             }
-            // Response does not return error when two-factor authentication is required.
+        // Response does not return error when two-factor authentication is required.
         } else if (event.requiresTwoStepAuth || Login2FaFragment.TWO_FACTOR_TYPE_SMS.equals(event.notificationSent)) {
             AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - 2fa required");
             mAnalyticsListener.trackSignupSocialToLogin();
