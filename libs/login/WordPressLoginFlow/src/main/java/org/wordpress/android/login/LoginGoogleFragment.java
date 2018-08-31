@@ -189,7 +189,7 @@ public class LoginGoogleFragment extends GoogleFragment {
                 case UNKNOWN_USER:
                     AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress acount doesn't exist");
                     mAnalyticsListener.trackSocialErrorUnknownUser();
-                    showError(getString(R.string.login_error_email_not_found, mGoogleEmail));
+                    showError(getString(R.string.login_error_email_not_found_v2));
                     break;
                 // Too many attempts on sending SMS verification code. The user has to wait before they try again
                 case SMS_CODE_THROTTLED:
