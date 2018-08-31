@@ -23,9 +23,14 @@ class RewindProgressChecker
         return start(site, restoreId, true)
     }
 
-    suspend fun start(site: SiteModel, restoreId: Long, now: Boolean = false) = runBlocking(coroutineContext) {
+    suspend fun start(
+        site: SiteModel,
+        restoreId: Long,
+        now: Boolean = false,
+        checkDelay: Long = CHECK_DELAY_MILLIS
+    ) = runBlocking(coroutineContext) {
         if (!now) {
-            delay(CHECK_DELAY_MILLIS)
+            delay(checkDelay)
         }
         var result: OnRewindStatusFetched? = null
         while (isActive) {
@@ -39,7 +44,7 @@ class RewindProgressChecker
             if (result.isError) {
                 break
             }
-            delay(CHECK_DELAY_MILLIS)
+            delay(checkDelay)
         }
         result
     }
