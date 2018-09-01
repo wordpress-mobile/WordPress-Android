@@ -17,10 +17,12 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostTypeUtilsKt;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -129,7 +131,7 @@ class PostUploadNotifier {
     void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         if (sNotificationData.mTotalPostItems > 0) {
             sNotificationData.mTotalPostItems--;
-            if (post.isPage()) {
+            if (isPage(post)) {
                 sNotificationData.mTotalPageItemsIncludedInPostCount--;
             }
         }
@@ -141,7 +143,7 @@ class PostUploadNotifier {
     // Post could have initial media, or not (nullable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         sNotificationData.mTotalPostItems++;
-        if (post.isPage()) {
+        if (isPage(post)) {
             sNotificationData.mTotalPageItemsIncludedInPostCount++;
         }
         if (media != null) {
@@ -295,14 +297,15 @@ class PostUploadNotifier {
         if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
             notificationTitle += mContext.getString(R.string.draft_uploaded);
         } else if (PostStatus.SCHEDULED.equals(PostStatus.fromPost(post))) {
-            notificationTitle += mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
+            notificationTitle += mContext.getString(PostTypeUtilsKt.getResourceId(
+                    post, R.string.page_scheduled, R.string.post_scheduled));
         } else {
-            if (post.isPage()) {
-                notificationTitle += mContext.getString(
-                        isFirstTimePublish ? R.string.page_published : R.string.page_updated);
+            if (isFirstTimePublish) {
+                notificationTitle += mContext.getString(PostTypeUtilsKt.getResourceId(
+                        post, R.string.page_published, R.string.post_published));
             } else {
-                notificationTitle += mContext.getString(
-                        isFirstTimePublish ? R.string.post_published : R.string.post_updated);
+                notificationTitle += mContext.getString(PostTypeUtilsKt.getResourceId(
+                        post, R.string.page_updated, R.string.post_updated));
             }
         }
 
@@ -321,7 +324,7 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_POST_TYPE, PostType.fromModelValue(post.getType()));
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
                                                                     (int) notificationId,
                                                                     notificationIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -403,7 +406,7 @@ class PostUploadNotifier {
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             writePostIntent.putExtra(WordPress.SITE, site);
-            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+            writePostIntent.putExtra(EditPostActivity.EXTRA_POST_TYPE, PostType.TypePost);
             writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
             writePostIntent.setAction(String.valueOf(notificationId));
 
@@ -454,7 +457,7 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_POST_TYPE, PostType.fromModelValue(post.getType()));
         notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
@@ -763,7 +766,7 @@ class PostUploadNotifier {
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
         if (post != null) {
             sNotificationData.mTotalPostItems = 1;
-            if (post.isPage()) {
+            if (isPage(post)) {
                 sNotificationData.mTotalPageItemsIncludedInPostCount = 1;
             }
         }
@@ -786,10 +789,10 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationSubtitleForPost(PostModel post) {
-        String uploadingMessage =
-                (post != null && post.isPage()) ? mContext.getString(R.string.uploading_subtitle_pages_only_one)
-                : mContext.getString(R.string.uploading_subtitle_posts_only_one);
-        return uploadingMessage;
+        return mContext.getString(PostTypeUtilsKt.getResourceId(
+                post,
+                R.string.uploading_subtitle_pages_only_one,
+                R.string.uploading_subtitle_posts_only_one));
     }
 
     private String buildNotificationSubtitleForPosts() {
@@ -932,5 +935,9 @@ class PostUploadNotifier {
         int currentMediaItem = sNotificationData.mCurrentMediaItem >= sNotificationData.mTotalMediaItems
                 ? sNotificationData.mTotalMediaItems - 1 : sNotificationData.mCurrentMediaItem;
         return currentMediaItem;
+    }
+
+    private boolean isPage(PostModel post) {
+        return post.getType() == PostType.TypePage.modelValue();
     }
 }

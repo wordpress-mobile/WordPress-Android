@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -222,8 +223,11 @@ public class WPMainActivity extends AppCompatActivity implements
                     // open note detail if activity called from a push
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
-                        launchWithPostId(getIntent().getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
-                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
+                        final PostType postType = (PostType) getIntent().getSerializableExtra(
+                                NotificationsPendingDraftsReceiver.POST_TYPE_EXTRA);
+                        final int postId = getIntent()
+                                .getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0);
+                        launchWithPostId(postId, postType);
                     } else {
                         launchWithNoteId();
                     }
@@ -426,7 +430,7 @@ public class WPMainActivity extends AppCompatActivity implements
      * called from an internal pending draft notification, so the user can land in the local draft and take action
      * such as finish editing and publish, or delete the post, etc.
      */
-    private void launchWithPostId(int postId, boolean isPage) {
+    private void launchWithPostId(int postId, PostType postType) {
         if (isFinishing() || getIntent() == null) {
             return;
         }
@@ -438,10 +442,16 @@ public class WPMainActivity extends AppCompatActivity implements
         // if no specific post id passed, show the list
         if (postId == 0) {
             // show list
-            if (isPage) {
-                ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
-            } else {
-                ActivityLauncher.viewCurrentBlogPosts(this, getSelectedSite());
+            switch (postType) {
+                case TypePost:
+                    ActivityLauncher.viewCurrentBlogPosts(this, getSelectedSite());
+                    break;
+                case TypePage:
+                    ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
+                    break;
+                case TypePortfolio:
+                default:
+                    throw new IllegalStateException("Unknown type: " + postType);
             }
         } else {
             PostModel post = mPostStore.getPostByLocalPostId(postId);
@@ -563,7 +573,7 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
+        ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), PostType.TypePost, false);
     }
 
     private void updateTitle() {
@@ -642,7 +652,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void jumpNewPost(Intent data) {
         if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
-            ActivityLauncher.addNewPostOrPageForResult(this, mSelectedSite, false, false);
+            ActivityLauncher.addNewPostOrPageForResult(this, mSelectedSite, PostType.TypePost, false);
         }
     }
 
