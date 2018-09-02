@@ -8,14 +8,14 @@
       <d:screen>
         <d:screen-size>large</d:screen-size>
         <d:diagonal-length>7.02</d:diagonal-length>
-        <d:pixel-density>xhdpi</d:pixel-density>
+        <d:pixel-density>hdpi</d:pixel-density>
         <d:screen-ratio>notlong</d:screen-ratio>
         <d:dimensions>
-          <d:x-dimension>1200</d:x-dimension>
-          <d:y-dimension>1920</d:y-dimension>
+          <d:x-dimension>910</d:x-dimension>
+          <d:y-dimension>1368</d:y-dimension>
         </d:dimensions>
-        <d:xdpi>322.53</d:xdpi>
-        <d:ydpi>322.53</d:ydpi>
+        <d:xdpi>234.05</d:xdpi>
+        <d:ydpi>234.05</d:ydpi>
         <d:touch>
           <d:multitouch>jazz-hands</d:multitouch>
           <d:mechanism>finger</d:mechanism>
