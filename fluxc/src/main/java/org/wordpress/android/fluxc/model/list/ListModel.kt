@@ -24,7 +24,7 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     }
 
     val listDescriptor: ListDescriptor
-        get() = ListDescriptor(localSiteIdDbValue, typeDbValue, filterDbValue, orderDbValue)
+        get() = ListDescriptor(typeDbValue, localSiteIdDbValue, filterDbValue, orderDbValue)
 
     val state: ListState
         get() = ListState.values().firstOrNull { it.value == this.stateDbValue }!!
