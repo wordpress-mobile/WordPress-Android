@@ -1,10 +1,11 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.tools.FormattableContent
 import java.util.Date
 
 val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse.ActivityResponse("activity",
-        ActivityLogRestClient.ActivitiesResponse.Content("text"),
+        FormattableContent("text"),
         "name",
         ActivityLogRestClient.ActivitiesResponse.Actor("author",
                 "John Smith",
