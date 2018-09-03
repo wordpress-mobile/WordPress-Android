@@ -13,8 +13,11 @@ import org.wordpress.android.fluxc.model.list.ListType.POST
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
+import java.util.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 class ListItemSqlUtilsTest {
@@ -89,6 +92,47 @@ class ListItemSqlUtilsTest {
         val testList = generateInsertAndAssertListItems(ListDescriptor(POST, 333))
         listItemSqlUtils.deleteItems(testList.id)
         assertEquals(0, listItemSqlUtils.getListItems(testList.id).size)
+    }
+
+    @Test
+    fun testDeleteItemsFromLists() {
+        /**
+         * 1. Create random 20 lists and 300 random items for these lists
+         * 2. Insert the lists and the items in the DB
+         * 3. Verify that they are inserted correctly
+         */
+        val rand = Random()
+        val listIds = (1..20)
+        val lists = listIds.map { insertTestList(ListDescriptor(POST, it)) }
+        val items = (1..300L).map { ListItemModel(listId = rand.nextInt(listIds.count()) + 1, remoteItemId = it) }
+        listItemSqlUtils.insertItemList(items)
+        items.groupBy { it.listId }.forEach { listId, insertedItems ->
+            assertEquals(insertedItems.size, listItemSqlUtils.getListItems(listId).size)
+        }
+
+        /**
+         * 1. Pick 100 items to delete and 10 lists to delete from
+         * 2. Delete the combination of selected lists and items
+         * 3. If a list is picked to be deleted from, verify that remaining items don't contain items that should be
+         * deleted.
+         * 4. Verify that the remaining items are unchanged for lists that are not picked to be deleted from.
+         */
+        val remoteItemIdsToDelete = items.map { it.remoteItemId }.shuffled().take(100)
+        val listIdsToDeleteFrom = lists.map { it.id }.shuffled().take(10)
+        listItemSqlUtils.deleteItemsFromLists(listIdsToDeleteFrom, remoteItemIdsToDelete)
+        items.groupBy { it.listId }.forEach { (listId, itemList) ->
+            val remainingItems = listItemSqlUtils.getListItems(listId)
+            if (listIdsToDeleteFrom.contains(listId)) {
+                assertFalse(remainingItems.any { remoteItemIdsToDelete.contains(it.remoteItemId) })
+            } else {
+                assertTrue {
+                    // `contains` approach wouldn't work here since the `id` fields might be different
+                    itemList.zip(remainingItems).fold(true) { acc, (first, second) ->
+                        acc && first.contentEquals(second)
+                    }
+                }
+            }
+        }
     }
 
     @Test

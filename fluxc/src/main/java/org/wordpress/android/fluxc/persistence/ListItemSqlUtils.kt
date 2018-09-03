@@ -54,4 +54,16 @@ class ListItemSqlUtils @Inject constructor() {
                 .endWhere()
                 .execute()
     }
+
+    /**
+     * This function deletes [ListItemModel]s for [remoteItemIds] in every lists with [listIds]
+     */
+    fun deleteItemsFromLists(listIds: List<Int>, remoteItemIds: List<Long>) {
+        WellSql.delete(ListItemModel::class.java)
+                .where()
+                .isIn(ListItemModelTable.LIST_ID, listIds)
+                .isIn(ListItemModelTable.REMOTE_ITEM_ID, remoteItemIds)
+                .endWhere()
+                .execute()
+    }
 }
