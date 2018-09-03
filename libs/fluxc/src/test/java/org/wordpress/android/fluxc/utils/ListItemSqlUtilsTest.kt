@@ -55,7 +55,7 @@ class ListItemSqlUtilsTest {
     fun testDeleteItem() {
         val testRemoteItemId = 1245L // value doesn't matter
         val listDescriptor1 = ListDescriptor(POST, 333)
-        val listDescriptor2 = ListDescriptor(POST, 222)
+        val listDescriptor2 = ListDescriptor(POST, 444)
 
         /**
          * 1. Insert a test list for 2 different list descriptors.
@@ -77,6 +77,18 @@ class ListItemSqlUtilsTest {
         testLists.forEach {
             assertEquals(0, listItemSqlUtils.getListItems(it.id).size)
         }
+    }
+
+    @Test
+    fun testDeleteItems() {
+        /**
+         * 1. Insert a test list with default number of items and assert that its inserted correctly
+         * 2. Delete all items for a list
+         * 3. Verify that list items is empty
+         */
+        val testList = generateInsertAndAssertListItems(ListDescriptor(POST, 333))
+        listItemSqlUtils.deleteItems(testList.id)
+        assertEquals(0, listItemSqlUtils.getListItems(testList.id).size)
     }
 
     @Test
