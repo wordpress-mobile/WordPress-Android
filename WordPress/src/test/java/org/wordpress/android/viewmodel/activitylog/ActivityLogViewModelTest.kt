@@ -19,7 +19,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.ActivityLogAction.FETCHED_ACTIVITIES
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
@@ -288,15 +287,6 @@ class ActivityLogViewModelTest {
         viewModel.onRewindConfirmed("rewindId")
 
         assertEquals(snackbarMessages.firstOrNull(), snackBarMessage)
-    }
-
-    @Test
-    fun loadsNextPageOnScrollToBottom() {
-        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCHED_ACTIVITIES))
-
-        viewModel.onScrolledToBottom()
-
-        assertFetchEvents(true)
     }
 
     private fun assertFetchEvents(canLoadMore: Boolean = false) {
