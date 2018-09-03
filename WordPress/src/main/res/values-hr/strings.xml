@@ -258,7 +258,6 @@ Language: hr
     <string name="hide">Sakrij</string>
     <string name="select_all">Odaberi sve</string>
     <string name="deselect_all">Odznači sve</string>
-    <string name="sign_out_wpcom_confirm">Odspajanjem računa ukloniti će se svi @%s’s WordPress.com podaci sa ovog uređaja, uključujući lokalne skice i lokalne promjene.</string>
     <string name="stats_generic_error">Traženu statistiku nije moguće učitati</string>
     <string name="language">Jezik</string>
     <string name="verification_code">Kod za provjeru</string>

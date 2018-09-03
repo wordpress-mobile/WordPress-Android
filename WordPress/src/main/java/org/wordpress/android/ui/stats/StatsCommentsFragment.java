@@ -130,8 +130,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             int totalNumberOfFollowers = mCommentFollowersModel.getTotal();
             String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
             mTotalsLabel.setText(
-                    String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
-                                );
+                    String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers)));
         }
 
         ArrayAdapter adapter = null;

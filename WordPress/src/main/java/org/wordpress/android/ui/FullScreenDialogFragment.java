@@ -235,7 +235,7 @@ public class FullScreenDialogFragment extends DialogFragment {
                         }
                     }
                 }
-                                         );
+        );
     }
 
     public void onBackPressed() {

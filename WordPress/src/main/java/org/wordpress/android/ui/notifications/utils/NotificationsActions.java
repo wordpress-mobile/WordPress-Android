@@ -45,7 +45,7 @@ public class NotificationsActions {
                         AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
                     }
                 }
-                                                                );
+        );
     }
 
     public static List<Note> parseNotes(JSONObject response) throws JSONException {

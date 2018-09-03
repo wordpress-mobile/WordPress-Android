@@ -70,7 +70,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -603,7 +602,6 @@ public class ActivityLauncher {
             WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
 
             context.startActivity(intent);
-            AppLockManager.getInstance().setExtendedTimeout();
         } catch (ActivityNotFoundException e) {
             ToastUtils.showToast(context, context.getString(R.string.cant_open_url), ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);
@@ -618,7 +616,6 @@ public class ActivityLauncher {
             } else {
                 Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
                 context.startActivity(chooser);
-                AppLockManager.getInstance().setExtendedTimeout();
             }
         } finally {
             // re-enable deeplinking

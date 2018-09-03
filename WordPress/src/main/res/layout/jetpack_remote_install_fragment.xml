@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:contentDescription="@string/content_description_people_looking_charts"
-                app:srcCompat="@drawable/ic_jetpack_icon_green_88dp"/>
+                app:srcCompat="@drawable/ic_plans_jetpack_green_88dp"/>
 
             <TextView
                 android:id="@+id/jetpack_install_title"

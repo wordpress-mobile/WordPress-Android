@@ -44,6 +44,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -80,6 +81,7 @@ public class SitePickerActivity extends AppCompatActivity
     private static final String KEY_LAST_SEARCH = "last_search";
     private static final String KEY_REFRESHING = "refreshing_sites";
 
+    private ActionableEmptyView mActionableEmptyView;
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -110,6 +112,7 @@ public class SitePickerActivity extends AppCompatActivity
         restoreSavedInstanceState(savedInstanceState);
         setupActionBar();
         setupRecycleView();
+        setupEmptyView();
 
         initSwipeToRefreshHelper(findViewById(android.R.id.content));
         if (savedInstanceState != null) {
@@ -286,7 +289,7 @@ public class SitePickerActivity extends AppCompatActivity
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
                 }
-                                                         );
+        );
     }
 
     private void setupRecycleView() {
@@ -295,6 +298,11 @@ public class SitePickerActivity extends AppCompatActivity
         mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mRecycleView.setItemAnimator(null);
         mRecycleView.setAdapter(getAdapter());
+    }
+
+    private void setupEmptyView() {
+        mActionableEmptyView = findViewById(R.id.actionable_empty_view);
+        mActionableEmptyView.updateLayoutForSearch(true, 0);
     }
 
     private void restoreSavedInstanceState(Bundle savedInstanceState) {
@@ -453,6 +461,7 @@ public class SitePickerActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                mActionableEmptyView.setVisibility(View.GONE);
                 disableSearchMode();
                 return true;
             }
@@ -545,7 +554,12 @@ public class SitePickerActivity extends AppCompatActivity
     public boolean onQueryTextChange(String s) {
         getAdapter().setLastSearch(s);
         getAdapter().searchSites(s);
+        updateEmptyViewVisibility();
         return true;
+    }
+
+    private void updateEmptyViewVisibility() {
+        mActionableEmptyView.setVisibility(getAdapter().getItemCount() > 0 ? View.GONE : View.VISIBLE);
     }
 
     public void showProgress(boolean show) {

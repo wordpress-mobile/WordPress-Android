@@ -55,13 +55,13 @@ class ReferrerSpamHelper {
                     referrerGroup.isMarkedAsSpam
                             ? mActivityRef.get().getString(R.string.stats_referrers_marking_not_spam)
                             : mActivityRef.get().getString(R.string.stats_referrers_marking_spam)
-                                          );
+            );
         } else {
             menuItem = popup.getMenu().add(
                     referrerGroup.isMarkedAsSpam
                             ? mActivityRef.get().getString(R.string.stats_referrers_unspam)
                             : mActivityRef.get().getString(R.string.stats_referrers_spam)
-                                          );
+            );
         }
 
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

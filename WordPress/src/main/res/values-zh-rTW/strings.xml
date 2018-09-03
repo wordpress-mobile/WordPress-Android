@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 03:54:07+0000
+Translation-Revision-Date: 2018-08-21 01:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="themes_empty_list">沒有符合你搜尋條件的佈景主題</string>
+    <string name="reader_label_post_search_explainer">你想找什麼呢？</string>
+    <string name="site_settings_tags_empty_title_search">沒有符合你搜尋條件的標籤</string>
+    <string name="site_settings_tags_empty_title">你沒有任何標籤</string>
+    <string name="site_settings_tags_empty_subtitle">在此處新增你常用的標籤，當標記你的文章時就能快速加以選取</string>
+    <string name="site_settings_tags_empty_button">建立標籤</string>
+    <string name="media_empty_search_list">沒有符合你搜尋條件的媒體</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">是否要登出 WordPress？</string>
+    <string name="sign_out_wpcom_confirm_with_changes">你已針對尚未上傳至網站的文章進行變更。現在登出將會從你的裝置刪除這些變更。是否仍要登出？</string>
     <string name="people_empty_list_filtered_viewers">尚未有瀏覽者</string>
     <string name="people_empty_list_filtered_email_followers">尚未有電子郵件關注者</string>
     <string name="people_empty_list_filtered_followers">尚未有關注者</string>
@@ -58,7 +67,6 @@ Language: zh_TW
     <string name="reader_save_posts_locally_dialog_title">儲存文章以供稍後使用</string>
     <string name="reader_empty_search_request_failed">無法執行搜尋</string>
     <string name="reader_empty_search_title">找不到結果</string>
-    <string name="reader_label_post_search_explainer">搜尋 WordPress\n網站或文章</string>
     <string name="comment_read_source_post">參閱原始文章</string>
     <string name="sites">網站</string>
     <string name="signup_magic_link_title">神奇連結已傳送</string>
@@ -147,7 +155,6 @@ Language: zh_TW
     <string name="notification_channel_general_title">一般</string>
     <string name="photo_picker_use_photo">使用此相片</string>
     <string name="media_preview_title">第 %1$d 個 (共 %2$d 個)</string>
-    <string name="stock_media_picker_empty_results">無符合項目</string>
     <string name="stock_media_picker_initial_empty_subtext">由 %s 提供的相片</string>
     <string name="stock_media_picker_initial_empty_text">搜尋免費相片以新增至你的媒體庫。</string>
     <string name="stock_media_picker_search_hint">搜尋免費的相片圖庫</string>
@@ -179,7 +186,6 @@ Language: zh_TW
     <string name="stats_tab_tap_content_description">顯示 %s</string>
     <string name="stats_legend">統計圖形圖例</string>
     <string name="fab_create_desc">建立</string>
-    <string name="fab_add_tag_desc">建立標籤</string>
     <string name="stats_bar_week_desc">第 %s 週</string>
     <string name="stats_bar_date_value_desc">%s，%d 次瀏覽</string>
     <string name="stats_bar_date_value_type_desc">%s、%d %s</string>
@@ -431,7 +437,6 @@ Language: zh_TW
     <string name="site_settings_tags_hint">管理你的網站標籤</string>
     <string name="dlg_saving_tag">儲存中</string>
     <string name="dlg_deleting_tag">正在刪除</string>
-    <string name="dlg_confirm_delete_tag">是否要永久刪除「%s」？</string>
     <string name="error_tag_exists">已存在使用此名稱的標籤</string>
     <string name="add_new_tag">新增標籤</string>
     <string name="tag_description_hint">說明</string>
@@ -450,7 +455,6 @@ Language: zh_TW
     <string name="site_settings_week_start_title">每週開始於</string>
     <string name="site_settings_tags_title">標籤</string>
     <string name="site_settings_traffic_header">流量</string>
-    <string name="delete_no">請勿刪除</string>
     <string name="delete_yes">刪除</string>
     <string name="plugin_external_link_icon_content_description">外部連結</string>
     <string name="plugin_icon_content_description">外掛程式圖示</string>
@@ -937,7 +941,6 @@ Language: zh_TW
     <string name="invite_people">邀請他人</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
-    <string name="reader_label_post_search_running">搜尋中…</string>
     <string name="reader_title_related_post_detail">相關文章</string>
     <string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
     <string name="draft_explainer">這篇文章只是草稿，尚未發表</string>
@@ -1285,7 +1288,6 @@ Language: zh_TW
     <string name="my_site_header_configuration">組態</string>
     <string name="stats_unknown_author">不明作者</string>
     <string name="select_all">全部選取</string>
-    <string name="sign_out_wpcom_confirm">中斷帳號連結將會移除此裝置上 @%s 的所有 WordPress.com 資料，包括本機草稿及變更項目。</string>
     <string name="show">顯示</string>
     <string name="hide">隱藏</string>
     <string name="deselect_all">取消全選</string>

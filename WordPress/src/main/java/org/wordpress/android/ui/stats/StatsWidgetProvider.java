@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.service.StatsServiceStarter;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 
@@ -85,7 +86,13 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     private static void updateTabValue(Context context, RemoteViews remoteViews, int viewId, String text) {
-        remoteViews.setTextViewText(viewId, text);
+        int value = 0;
+        try {
+            value = Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            AppLog.e(T.STATS, e);
+        }
+        remoteViews.setTextViewText(viewId, FormatUtils.formatDecimal(value));
         if (text.equals("0")) {
             remoteViews.setTextColor(viewId, context.getResources().getColor(R.color.grey));
         }

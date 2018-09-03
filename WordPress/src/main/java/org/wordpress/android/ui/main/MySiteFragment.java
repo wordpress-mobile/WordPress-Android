@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -661,6 +661,10 @@ public class MySiteFragment extends Fragment implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             MediaModel media = buildMediaModel(file, site);
+            if (media == null) {
+                ToastUtils.showToast(getActivity(), R.string.file_not_found, ToastUtils.Duration.SHORT);
+                return;
+            }
             UploadService.uploadMedia(getActivity(), media);
         } else {
             ToastUtils.showToast(getActivity(), R.string.error_generic, ToastUtils.Duration.SHORT);
