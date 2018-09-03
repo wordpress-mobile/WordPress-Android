@@ -33,6 +33,7 @@ class ListStore @Inject constructor(
         when (actionType) {
             ListAction.FETCH_LIST -> fetchList(action.payload as FetchListPayload)
             ListAction.UPDATE_LIST -> updateList(action.payload as UpdateListPayload)
+            ListAction.DELETE_LIST_ITEMS -> listItemsDeleted(action.payload as DeleteListItemsPayload)
         }
     }
 
@@ -62,7 +63,7 @@ class ListStore @Inject constructor(
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
         emitChange(OnListChanged(payload.listDescriptor, null))
 
-        when(payload.listDescriptor.type) {
+        when (payload.listDescriptor.type) {
             ListType.POST -> TODO()
             ListType.WOO_ORDER -> TODO()
         }
@@ -80,7 +81,7 @@ class ListStore @Inject constructor(
                 // Ensure the listId is set correctly for ListItemModels
                 listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
                     val listItemModel = ListItemModel()
-                    listItemModel.listId  = listModel.id
+                    listItemModel.listId = listModel.id
                     listItemModel.remoteItemId = remoteItemId
                     return@map listItemModel
                 })
@@ -89,6 +90,11 @@ class ListStore @Inject constructor(
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, ListState.ERROR)
         }
         emitChange(OnListChanged(payload.listDescriptor, payload.error))
+    }
+
+    private fun listItemsDeleted(payload: DeleteListItemsPayload) {
+        val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
+        listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
     }
 
     private fun getListModel(listDescriptor: ListDescriptor): ListModel? =
@@ -108,6 +114,11 @@ class ListStore @Inject constructor(
             this.error = error
         }
     }
+
+    class DeleteListItemsPayload(
+        val listDescriptors: List<ListDescriptor>,
+        val remoteItemIds: List<Long>
+    ) : Payload<BaseNetworkError>()
 
     class FetchListPayload(
         val listDescriptor: ListDescriptor,

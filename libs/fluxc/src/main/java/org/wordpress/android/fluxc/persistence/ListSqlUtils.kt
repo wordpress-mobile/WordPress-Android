@@ -47,22 +47,20 @@ class ListSqlUtils @Inject constructor() {
         }
     }
 
-
     /**
      * This function returns the [ListModel] record for the given [listDescriptor] if there is one.
      */
-    fun getList(listDescriptor: ListDescriptor): ListModel? {
-        // TODO: these filters need to use the `IS NULL` or check value: `localSiteId`, `filter`, `order`
-        return WellSql.select(ListModel::class.java)
-                .where()
-                .equals(ListModelTable.LOCAL_SITE_ID_DB_VALUE, listDescriptor.localSiteId)
-                .equals(ListModelTable.TYPE_DB_VALUE, listDescriptor.type.value)
-                .equals(ListModelTable.FILTER_DB_VALUE, listDescriptor.filter?.value)
-                .equals(ListModelTable.ORDER_DB_VALUE, listDescriptor.order?.value)
-                .endWhere()
-                .asModel
-                .firstOrNull()
-    }
+    fun getList(listDescriptor: ListDescriptor): ListModel? =
+            // TODO: these filters need to use the `IS NULL` or check value: `localSiteId`, `filter`, `order`
+            WellSql.select(ListModel::class.java)
+                    .where()
+                    .equals(ListModelTable.LOCAL_SITE_ID_DB_VALUE, listDescriptor.localSiteId)
+                    .equals(ListModelTable.TYPE_DB_VALUE, listDescriptor.type.value)
+//                    .equals(ListModelTable.FILTER_DB_VALUE, listDescriptor.filter?.value)
+//                    .equals(ListModelTable.ORDER_DB_VALUE, listDescriptor.order?.value)
+                    .endWhere()
+                    .asModel
+                    .firstOrNull()
 
     /**
      * This function deletes the [ListModel] record for the given [listDescriptor] if there is one.
