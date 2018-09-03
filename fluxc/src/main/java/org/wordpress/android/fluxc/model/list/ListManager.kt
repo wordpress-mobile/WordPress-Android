@@ -7,13 +7,11 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 class ListManager<T>(
     private val dispatcher: Dispatcher,
     private val listDescriptor: ListDescriptor,
-    listState: ListState?,
     private val items: List<ListItemModel>,
-    private val dataSource: ListItemDataSource<T>
+    private val dataSource: ListItemDataSource<T>,
+    val isFetchingFirstPage: Boolean,
+    val isLoadingMore: Boolean
 ) {
-    private val canLoadMore: Boolean = listState?.canLoadMore() ?: false
-    val isFetchingFirstPage: Boolean = listState?.isFetchingFirstPage() ?: false
-    val isLoadingMore: Boolean = listState?.isLoadingMore() ?: false
     val size: Int = items.size
 
     fun getRemoteItem(position: Int): T? {
@@ -35,15 +33,11 @@ class ListManager<T>(
     }
 
     fun refresh() {
-        if (!isFetchingFirstPage) {
-            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
-        }
+        dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
     }
 
     private fun loadMore() {
-        if (canLoadMore) {
-            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
-        }
+        dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
     }
 
     fun hasDataChanged(otherListManager: ListManager<T>): Boolean {
