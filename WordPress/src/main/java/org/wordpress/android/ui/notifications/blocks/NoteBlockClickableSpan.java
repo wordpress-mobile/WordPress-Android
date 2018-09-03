@@ -9,10 +9,11 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
-import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.fluxc.tools.FormattableRange;
+import org.wordpress.android.fluxc.tools.FormattableRangeType;
+
+import java.util.List;
 
 /**
  * A clickable span that includes extra ids/urls
@@ -22,9 +23,9 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private long mId;
     private long mSiteId;
     private long mPostId;
-    private NoteBlockRangeType mRangeType;
+    private FormattableRangeType mRangeType;
     private String mUrl;
-    private int[] mIndices;
+    private List<Integer> mIndices;
     private boolean mPressed;
     private boolean mShouldLink;
     private boolean mIsFooter;
@@ -34,10 +35,8 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int mLinkColor;
     private int mLightTextColor;
 
-    private final JSONObject mBlockData;
 
-    public NoteBlockClickableSpan(Context context, JSONObject blockData, boolean shouldLink, boolean isFooter) {
-        mBlockData = blockData;
+    public NoteBlockClickableSpan(Context context, FormattableRange range, boolean shouldLink, boolean isFooter) {
         mShouldLink = shouldLink;
         mIsFooter = isFooter;
 
@@ -47,24 +46,24 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         mLinkColor = context.getResources().getColor(R.color.blue_medium);
         mLightTextColor = context.getResources().getColor(R.color.grey_dark);
 
-        processRangeData();
+        processRangeData(range);
     }
 
 
-    private void processRangeData() {
-        if (mBlockData != null) {
-            mId = JSONUtils.queryJSON(mBlockData, "id", 0);
-            mSiteId = JSONUtils.queryJSON(mBlockData, "site_id", 0);
-            mPostId = JSONUtils.queryJSON(mBlockData, "post_id", 0);
-            mRangeType = NoteBlockRangeType.fromString(JSONUtils.queryJSON(mBlockData, "type", ""));
-            mUrl = JSONUtils.queryJSON(mBlockData, "url", "");
-            mIndices = NotificationsUtils.getIndicesForRange(mBlockData);
+    private void processRangeData(FormattableRange range) {
+        if (range != null) {
+//            mId = range.getId(); // TODO missing id field
+            mSiteId = range.getSiteId();
+            mPostId = range.getPostId();
+            mRangeType = range.getRangeType();
+            mUrl = range.getUrl();
+            mIndices = range.getIndices();
 
             mShouldLink = shouldLinkRangeType();
 
             // Apply grey color to some types
-            if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE
-                || getRangeType() == NoteBlockRangeType.POST) {
+            if (mIsFooter || getRangeType() == FormattableRangeType.BLOCKQUOTE
+                || getRangeType() == FormattableRangeType.POST) {
                 mTextColor = mLightTextColor;
             }
         }
@@ -73,9 +72,9 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     // Don't link certain range types, or unknown ones, unless we have a URL
     private boolean shouldLinkRangeType() {
         return mShouldLink
-               && mRangeType != NoteBlockRangeType.BLOCKQUOTE
-               && mRangeType != NoteBlockRangeType.MATCH
-               && (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
+               && mRangeType != FormattableRangeType.BLOCKQUOTE
+               && mRangeType != FormattableRangeType.MATCH
+               && (mRangeType != null || !TextUtils.isEmpty(mUrl));
     }
 
     @Override
@@ -89,7 +88,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     }
 
     private boolean isBlockquoteType() {
-        return getRangeType() == NoteBlockRangeType.BLOCKQUOTE;
+        return getRangeType() == FormattableRangeType.BLOCKQUOTE;
     }
 
     // return the desired style for this id type
@@ -107,6 +106,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             case COMMENT:
             case BLOCKQUOTE:
                 return Typeface.ITALIC;
+            case STAT:
+            case FOLLOW:
+            case NOTICON:
+            case LIKE:
             default:
                 return Typeface.NORMAL;
         }
@@ -117,11 +120,11 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         // noop
     }
 
-    public NoteBlockRangeType getRangeType() {
+    public FormattableRangeType getRangeType() {
         return mRangeType;
     }
 
-    public int[] getIndices() {
+    public List<Integer> getIndices() {
         return mIndices;
     }
 
@@ -146,6 +149,6 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     }
 
     public void setCustomType(String type) {
-        mRangeType = NoteBlockRangeType.fromString(type);
+        mRangeType = FormattableRangeType.valueOf(type);
     }
 }

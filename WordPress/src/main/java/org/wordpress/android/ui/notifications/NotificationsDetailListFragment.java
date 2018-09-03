@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +26,9 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.fluxc.tools.FormattableContentMapper;
+import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
@@ -393,11 +398,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
+                            FormattableContent formattableContent = new FormattableContentMapper(new Gson())
+                                    .mapToFormattableContent(noteObject.toString());
+
                             noteBlock = new FooterNoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
-                            ((FooterNoteBlock) noteBlock).setClickableSpan(
-                                    JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
-                                    mNote.getType()
-                             );
+                            if (formattableContent.getRanges() != null && formattableContent.getRanges().size() > 0) {
+                                FormattableRange range =
+                                        formattableContent.getRanges().get(formattableContent.getRanges().size() - 1);
+                                ((FooterNoteBlock) noteBlock).setClickableSpan(range, mNote.getType());
+                            }
                         } else {
                             noteBlock = new NoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
                         }

@@ -8,6 +8,7 @@ import android.text.style.StyleSpan
 import android.view.View
 import org.json.JSONObject
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.notifications.blocks.BlockType.BASIC
 import org.wordpress.android.util.image.ImageManager
 
@@ -22,9 +23,8 @@ class GeneratedNoteBlock(
         val spannableStringBuilder = SpannableStringBuilder(text)
 
         // Process Ranges to add links and text formatting
-        val map = mapOf("url" to pingbackUrl)
-        val rangeObject = JSONObject(map)
-        val clickableSpan = object : NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
+        val formattableRange = FormattableRange(null, null, null, null, pingbackUrl, null)
+        val clickableSpan = object : NoteBlockClickableSpan(WordPress.getContext(), formattableRange,
                 true, false) {
             override fun onClick(widget: View) {
                 clickListener.onNoteBlockTextClicked(this)

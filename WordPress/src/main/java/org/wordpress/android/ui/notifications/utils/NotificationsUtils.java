@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -35,6 +36,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.NotificationsTable;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.fluxc.tools.FormattableContentMapper;
+import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
@@ -166,41 +170,48 @@ public class NotificationsUtils {
         return getSpannableContentForRanges(subject, null, null, false);
     }
 
+    public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
+                                                         final NoteBlock.OnNoteBlockTextClickListener
+                                                                 onNoteBlockTextClickListener,
+                                                         boolean isFooter) {
+        // TODO inject FormattableContentMapper
+        return getSpannableContentForRanges(
+                new FormattableContentMapper(new Gson()).mapToFormattableContent(blockObject.toString()), textView,
+                onNoteBlockTextClickListener, isFooter);
+    }
+
     /**
      * Returns a spannable with formatted content based on WP.com note content 'range' data
      *
-     * @param blockObject the JSON data
+     * @param formattableContent the data
      * @param textView the TextView that will display the spannnable
      * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
-                                 final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                 boolean isFooter) {
-        if (blockObject == null) {
+    public static Spannable getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
+                                                         final NoteBlock.OnNoteBlockTextClickListener
+                                                                 onNoteBlockTextClickListener,
+                                                         boolean isFooter) {
+        if (formattableContent == null) {
             return new SpannableStringBuilder();
         }
 
-        String text = blockObject.optString("text", "");
+        String text = formattableContent.getText();
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
         // Add ImageSpans for note media
-        addImageSpansForBlockMedia(textView, blockObject, spannableStringBuilder);
+        // TODO media span commented out
+//        addImageSpansForBlockMedia(textView, formattableContent, spannableStringBuilder);
 
         // Process Ranges to add links and text formatting
-        JSONArray rangesArray = blockObject.optJSONArray("ranges");
+        List<FormattableRange> rangesArray = formattableContent.getRanges();
         if (rangesArray != null) {
-            for (int i = 0; i < rangesArray.length(); i++) {
-                JSONObject rangeObject = rangesArray.optJSONObject(i);
-                if (rangeObject == null) {
-                    continue;
-                }
-
-                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
-                                                                                  shouldLink, isFooter) {
+            for (FormattableRange range : rangesArray) {
+                NoteBlockClickableSpan clickableSpan =
+                        new NoteBlockClickableSpan(WordPress.getContext(), range, shouldLink, isFooter) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
@@ -209,17 +220,17 @@ public class NotificationsUtils {
                     }
                 };
 
-                int[] indices = clickableSpan.getIndices();
-                if (indices.length == 2 && indices[0] <= spannableStringBuilder.length()
-                    && indices[1] <= spannableStringBuilder.length()) {
+                List<Integer> indices = clickableSpan.getIndices();
+                if (indices != null && indices.size() == 2 && indices.get(0) <= spannableStringBuilder.length()
+                    && indices.get(1) <= spannableStringBuilder.length()) {
                     spannableStringBuilder
-                            .setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            .setSpan(clickableSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
                     // Add additional styling if the range wants it
                     if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
                         StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
                         spannableStringBuilder
-                                .setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                                .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                 }
             }
@@ -246,14 +257,14 @@ public class NotificationsUtils {
     /**
      * Adds ImageSpans to the passed SpannableStringBuilder
      */
-    private static void addImageSpansForBlockMedia(TextView textView, JSONObject subject,
+    private static void addImageSpansForBlockMedia(TextView textView, FormattableContent subject,
                                                    SpannableStringBuilder spannableStringBuilder) {
         if (textView == null || subject == null || spannableStringBuilder == null) {
             return;
         }
 
         Context context = textView.getContext();
-        JSONArray mediaArray = subject.optJSONArray("media");
+        JSONArray mediaArray = null; // TODO subject.getMedia();
         if (context == null || mediaArray == null) {
             return;
         }
