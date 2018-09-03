@@ -105,6 +105,7 @@
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
+    <string name="dismiss">dismiss</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -2272,26 +2273,41 @@
     <string name="quick_start_dialog_view_site_message">Preview your new site to see what your visitors will see.</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
-    <string name="quick_start_list_choose_theme_subtitle">@string/quick_start_dialog_choose_theme_message</string>
-    <string name="quick_start_list_choose_theme_title">@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle" translatable="false">@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_list_choose_theme_title" translatable="false">@string/quick_start_dialog_choose_theme_title</string>
     <string name="quick_start_list_complete_subtitle">doesn\'t it feel good to cross things off a list?</string>
     <string name="quick_start_list_complete_title">Congrats on finishing Quick Start</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
-    <string name="quick_start_list_customize_site_subtitle">@string/quick_start_dialog_customize_site_message</string>
-    <string name="quick_start_list_customize_site_title">@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_follow_site_subtitle">@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_follow_site_title">@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_publish_post_subtitle">@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_publish_post_title">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_share_site_subtitle">@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_share_site_title">@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_view_site_title">@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle" translatable="false">@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_customize_site_title" translatable="false">@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_follow_site_subtitle" translatable="false">@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_share_site_subtitle" translatable="false">@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_share_site_title" translatable="false">@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_view_site_title" translatable="false">@string/quick_start_dialog_view_site_title</string>
     <string name="quick_start_sites">Quick Start</string>
     <string name="quick_start_sites_progress" translatable="false">%1$d/%2$d</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
+
+    <!-- News Card -->
+    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
+    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
+    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
+    the out-of-date announcement might redirect the user to the new feature. -->
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_title_sample_announcement" >[New feature available]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
+    <!-- END (News Card) -->
 </resources>

@@ -1,0 +1,4 @@
+10.7:
+Alle lieben GIFs! Animierte GIFs werden in der gesamten App unterstützt. Wir haben die Ladezeiten verkürzt, sodass du sofort sehen kannst, wie die Katze vom Tisch fällt.
+Niemandem gefallen leere Bildschirme ohne Anweisungen. Wenn du zu einer Seite ohne Inhalt navigierst, also beispielsweise den Reader aufrufst, aber keinen Blogs folgst, schlagen wir dir die nächsten Schritte vor.
+Fehlerbehebung.

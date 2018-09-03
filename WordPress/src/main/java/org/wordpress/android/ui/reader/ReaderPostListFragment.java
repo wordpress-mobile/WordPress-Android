@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Fragment;
+import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -14,6 +17,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
@@ -37,6 +42,7 @@ import android.widget.ProgressBar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -66,13 +72,16 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -90,6 +99,7 @@ import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarte
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -175,6 +185,15 @@ public class ReaderPostListFragment extends Fragment
     private AlertDialog mBookmarksSavedLocallyDialog;
     private QuickStartEvent mQuickStartEvent;
 
+    private ReaderPostListViewModel mViewModel;
+
+    private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
+        @Override public void onChanged(@Nullable NewsItem newsItem) {
+            getPostAdapter().updateNewsCardItem(newsItem);
+        }
+    };
+
+    @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject AccountStore mAccountStore;
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
@@ -331,6 +350,15 @@ public class ReaderPostListFragment extends Fragment
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
             mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // we need to pass activity, since this fragment extends Android Native fragment (we can pass `this` as soon as
+        // this fragment extends Support fragment.
+        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
+                                       .get(ReaderPostListViewModel.class);
+        mViewModel.start(mCurrentTag);
     }
 
     @Override
@@ -1506,6 +1534,24 @@ public class ReaderPostListFragment extends Fragment
                 }
             };
 
+    private final NewsCardListener mNewsCardListener = new NewsCardListener() {
+        @Override public void onItemShown(@NotNull NewsItem item) {
+            mViewModel.onNewsCardShown(item);
+        }
+
+        @Override public void onItemClicked(@NotNull NewsItem item) {
+            mViewModel.onNewsCardExtendedInfoRequested(item);
+            Activity activity = getActivity();
+            if (activity != null) {
+                WPWebViewActivity.openURL(activity, item.getActionUrl());
+            }
+        }
+
+        @Override public void onDismissClicked(NewsItem item) {
+            mViewModel.onNewsCardDismissed(item);
+        }
+    };
+
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
@@ -1517,11 +1563,14 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
+            mPostAdapter.setOnNewsCardListener(mNewsCardListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
+            mViewModel.getNewsDataSource().removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
+                mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
@@ -1593,6 +1642,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mCurrentTag = tag;
+        mViewModel.onTagChanged(tag);
 
         switch (getPostListType()) {
             case TAG_FOLLOWED:

@@ -206,6 +206,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("source", "email");
                 break;
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
+            case SIGNUP_SOCIAL_BUTTON_FAILURE:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
@@ -690,6 +691,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_approved";
             case NOTIFICATION_UNAPPROVED:
                 return "notifications_unapproved";
+            case NOTIFICATIONS_MISSING_SYNC_WARNING:
+                return "notifications_missing_sync_warning";
             case NOTIFICATION_REPLIED_TO:
             case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
                 return "notifications_replied_to";
@@ -944,6 +947,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_magic_link_succeeded";
             case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "signup_social_accounts_need_connecting";
+            case SIGNUP_SOCIAL_BUTTON_FAILURE:
+                return "signup_social_button_failure";
             case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
                 return "signup_epilogue_unchanged";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
@@ -1200,6 +1205,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
                 return "support_identity_set";
+            case NEWS_CARD_SHOWN:
+                return "news_card_shown";
+            case NEWS_CARD_DIMISSED:
+                return "news_card_dismissed";
+            case NEWS_CARD_EXTENDED_INFO_REQUESTED:
+                return "news_card_extended_info_requested";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:

@@ -2,9 +2,9 @@ package org.wordpress.android.ui.themes;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.text.Spannable;
 import android.text.TextUtils;

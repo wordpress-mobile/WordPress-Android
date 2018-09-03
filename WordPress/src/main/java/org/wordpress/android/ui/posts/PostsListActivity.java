@@ -102,16 +102,16 @@ public class PostsListActivity extends AppCompatActivity {
             }
         }
 
-        mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
+        mPostList = (PostsListFragment) getSupportFragmentManager().findFragmentByTag(PostsListFragment.TAG);
         if (mPostList == null || siteHasChanged || targetPost != null) {
             PostsListFragment oldFragment = mPostList;
             mPostList = PostsListFragment.newInstance(mSite, mPostType, targetPost);
             if (oldFragment == null) {
-                getFragmentManager().beginTransaction()
+                getSupportFragmentManager().beginTransaction()
                                     .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
                                     .commit();
             } else {
-                getFragmentManager().beginTransaction()
+                getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
                                     .commit();
             }
