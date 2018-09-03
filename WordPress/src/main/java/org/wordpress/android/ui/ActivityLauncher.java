@@ -349,14 +349,14 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, PostType postType, boolean isPromo) {
+    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, PostType type, boolean isPromo) {
         if (site == null) {
             return;
         }
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_POST_TYPE, postType);
+        intent.putExtra(EditPostActivity.EXTRA_POST_TYPE, type);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }

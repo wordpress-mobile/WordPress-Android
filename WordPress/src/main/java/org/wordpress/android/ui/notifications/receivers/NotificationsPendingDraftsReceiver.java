@@ -128,8 +128,9 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
     private void buildSinglePendingDraftNotification(Context context, String postTitle, String formattedMessage,
                                                      int postId, PostType postType) {
-        buildNotificationWithIntent(context, getResultIntentForOnePost(context, postId, postType),
-                                    String.format(formattedMessage, getPostTitle(context, postTitle)), postId, postType);
+        final String message = String.format(formattedMessage, getPostTitle(context, postTitle));
+        final PendingIntent intentForOnePost = getResultIntentForOnePost(context, postId, postType);
+        buildNotificationWithIntent(context, intentForOnePost, message, postId, postType);
     }
 
     private void buildSinglePendingDraftNotificationGeneric(Context context, String postTitle, int postId,

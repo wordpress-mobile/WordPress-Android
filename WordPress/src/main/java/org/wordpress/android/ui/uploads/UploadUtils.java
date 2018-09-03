@@ -44,11 +44,11 @@ public class UploadUtils {
     String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
         String baseErrorString;
         if (isMediaError) {
-            baseErrorString = context.getString(PostTypeUtilsKt
-                    .getResourceId(post, R.string.error_upload_page_media_param, R.string.error_upload_post_media_param));
+            baseErrorString = context.getString(PostTypeUtilsKt.getResourceId(
+                    post, R.string.error_upload_page_media_param, R.string.error_upload_post_media_param));
         } else {
-            baseErrorString = context.getString(PostTypeUtilsKt
-                    .getResourceId(post, R.string.error_upload_page_param, R.string.error_upload_post_param));
+            baseErrorString = context.getString(PostTypeUtilsKt.getResourceId(
+                    post, R.string.error_upload_page_param, R.string.error_upload_post_param));
         }
         return String.format(baseErrorString, errorMessage);
     }

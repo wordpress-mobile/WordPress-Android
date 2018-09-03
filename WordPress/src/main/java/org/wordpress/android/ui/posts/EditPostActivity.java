@@ -1741,8 +1741,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String message = getString(
-                                    getResourceId(R.string.error_publish_empty_page, R.string.error_publish_empty_post));
+                            String message = getString(getResourceId(
+                                    R.string.error_publish_empty_page, R.string.error_publish_empty_post));
                             ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         }
                     });
