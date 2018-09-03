@@ -12,6 +12,11 @@ import com.yarolegovich.wellsql.core.annotation.Table
         "UNIQUE(LIST_ID, REMOTE_ITEM_ID)"
 )
 class ListItemModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
+    constructor(listId: Int, remoteItemId: Long): this() {
+        this.listId = listId
+        this.remoteItemId = remoteItemId
+    }
+
     @Column var listId: Int = 0
     @Column var remoteItemId: Long = 0
 

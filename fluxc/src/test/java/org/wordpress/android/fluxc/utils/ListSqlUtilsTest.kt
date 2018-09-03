@@ -6,35 +6,24 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListType.POST
-import org.wordpress.android.fluxc.model.list.ListType.WOO_ORDER
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.persistence.WellSqlConfig
-import org.wordpress.android.fluxc.site.SiteUtils
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 class ListSqlUtilsTest {
     private lateinit var listSqlUtils: ListSqlUtils
 
-    private val testListDescriptor: ListDescriptor
-        get() = ListDescriptor(POST)
-    private val testListDescriptorAlternate: ListDescriptor
-        get() = ListDescriptor(WOO_ORDER)
-
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
-        val config = WellSqlConfig(appContext)
+        val config = SingleStoreWellSqlConfigForTests(appContext, ListModel::class.java)
         WellSql.init(config)
         config.reset()
 
@@ -43,7 +32,7 @@ class ListSqlUtilsTest {
 
     @Test
     fun testInsertOrUpdateList() {
-        val testSite = generateAndInsertSelfHostedNonJPTestSite()
+        val listDescriptor = ListDescriptor(POST, 333)
 
         /**
          * 1. Insert a new list for `testSite` and `listType`
@@ -51,10 +40,10 @@ class ListSqlUtilsTest {
          * 3. Verify the `localSiteId` value
          * 4. Verify that `dateCreated` and `lastModified` are equal since this is the first time it's created
          */
-        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
-        val insertedList = listSqlUtils.getList(testSite.id, testListDescriptor)
+        listSqlUtils.insertOrUpdateList(listDescriptor)
+        val insertedList = listSqlUtils.getList(listDescriptor)
         assertNotNull(insertedList)
-        assertEquals(testSite.id, insertedList?.localSiteId)
+        assertEquals(listDescriptor, insertedList?.listDescriptor)
         assertEquals(insertedList?.dateCreated, insertedList?.lastModified)
 
         /**
@@ -65,10 +54,10 @@ class ListSqlUtilsTest {
          * 5. Verify the `dateCreated` and `lastModified` values are different since this is an update. (See point 1)
          */
         Thread.sleep(1000)
-        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
-        val updatedList = listSqlUtils.getList(testSite.id, testListDescriptor)
+        listSqlUtils.insertOrUpdateList(listDescriptor)
+        val updatedList = listSqlUtils.getList(listDescriptor)
         assertNotNull(updatedList)
-        assertEquals(testSite.id, updatedList?.localSiteId)
+        assertEquals(listDescriptor, updatedList?.listDescriptor)
         assertNotEquals(updatedList?.dateCreated, updatedList?.lastModified)
 
         /**
@@ -79,56 +68,17 @@ class ListSqlUtilsTest {
 
     @Test
     fun testDeleteList() {
-        val testSite = generateAndInsertSelfHostedNonJPTestSite()
+        val listDescriptor = ListDescriptor(POST, 444)
 
         /**
          * 1. Insert a test list
          * 2. Verify that the list is inserted correctly
+         * 3. Delete the inserted test list
+         * 4. Verify that the list is deleted correctly
          */
-        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
-        assertNotNull(listSqlUtils.getList(testSite.id, testListDescriptor))
-
-        /**
-         * 1. Delete the inserted test list
-         * 2. Verify that the list is deleted correctly
-         */
-        listSqlUtils.deleteList(testSite.id, testListDescriptor)
-        assertNull(listSqlUtils.getList(testSite.id, testListDescriptor))
-    }
-
-    @Test
-    fun testLocalSiteIdForeignKeyCascadeDelete() {
-        /**
-         * 1. Generate and insert a self-hosted test site
-         * 2. Verify that the site is inserted
-         * 3. Insert a 2 different [ListModel]s for that test site
-         * 4. Verify that lists are inserted
-         */
-        val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        assertFalse(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
-        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptor)
-        listSqlUtils.insertOrUpdateList(testSite.id, testListDescriptorAlternate)
-        assertNotNull(listSqlUtils.getList(testSite.id, testListDescriptor))
-        assertNotNull(listSqlUtils.getList(testSite.id, testListDescriptorAlternate))
-
-        /**
-         * 1. Delete the test site
-         * 2. Verify that test site is deleted
-         * 3. Verify that both lists are deleted as a result of deleting the site
-         */
-        SiteSqlUtils.deleteSite(testSite)
-        assertTrue(SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel.isEmpty())
-        assertNull(listSqlUtils.getList(testSite.id, testListDescriptor))
-        assertNull(listSqlUtils.getList(testSite.id, testListDescriptorAlternate))
-    }
-
-    /**
-     * Helper function that generates a self-hosted test site and inserts it into the DB. Since we have a FK restriction
-     * for [ListModel.localSiteId] we need to do this before we can insert [ListModel] instances.
-     */
-    private fun generateAndInsertSelfHostedNonJPTestSite(): SiteModel {
-        val site = SiteUtils.generateSelfHostedNonJPSite()
-        SiteSqlUtils.insertOrUpdateSite(site)
-        return site
+        listSqlUtils.insertOrUpdateList(listDescriptor)
+        assertNotNull(listSqlUtils.getList(listDescriptor))
+        listSqlUtils.deleteList(listDescriptor)
+        assertNull(listSqlUtils.getList(listDescriptor))
     }
 }

@@ -6,17 +6,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListType.POST
-import org.wordpress.android.fluxc.model.list.ListType.WOO_ORDER
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
-import org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -24,11 +20,6 @@ import kotlin.test.assertNotNull
 class ListItemSqlUtilsTest {
     private lateinit var listSqlUtils: ListSqlUtils
     private lateinit var listItemSqlUtils: ListItemSqlUtils
-
-    private val testListDescriptor: ListDescriptor
-        get() = ListDescriptor(POST)
-    private val testListDescriptorAlternate: ListDescriptor
-        get() = ListDescriptor(WOO_ORDER)
 
     @Before
     fun setUp() {
@@ -42,58 +33,37 @@ class ListItemSqlUtilsTest {
     }
 
     @Test
-    fun testInsertOrUpdateItemList() {
-        val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val count = 20 // value doesn't matter
-
-        /**
-         * 1. Since a [ListItemModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
-         * will be inserted in the DB.
-         * 2. A list of test [ListItemModel]s will be generated and inserted in the DB
-         * 3. Verify that the [ListItemModel] instances are inserted correctly
-         */
-        val testList = insertTestList(testSite.id, testListDescriptor)
-        val itemList = generateItemList(testList, count)
-        listItemSqlUtils.insertItemList(itemList)
-        assertEquals(count, listItemSqlUtils.getListItems(testList.id).size)
+    fun testInsertItemList() {
+        // Insert an item list for the passed in [ListDescriptor] and assert that it's inserted correctly
+        generateInsertAndAssertListItems(ListDescriptor(POST, 333))
     }
 
     @Test
     fun testListIdForeignKeyCascadeDelete() {
-        val testSite = generateAndInsertSelfHostedNonJPTestSite()
-        val count = 20 // value doesn't matter
-
-        /**
-         * 1. Since a [ListItemModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
-         * will be inserted in the DB.
-         * 2. A list of test [ListItemModel]s will be generated and inserted in the DB
-         * 3. Verify that the [ListItemModel] instances are inserted correctly
-         */
-        val testList = insertTestList(testSite.id, testListDescriptor)
-        val itemList = generateItemList(testList, count)
-        listItemSqlUtils.insertItemList(itemList)
-        assertEquals(count, listItemSqlUtils.getListItems(testList.id).size)
+        val listDescriptor = ListDescriptor(POST, 333)
+        val testList = generateInsertAndAssertListItems(listDescriptor)
 
         /**
          * 1. Delete the inserted list
          * 2. Verify that deleting the list also deletes the inserted [ListItemModel]s due to foreign key restriction
          */
-        listSqlUtils.deleteList(testSite.id, testListDescriptor)
+        listSqlUtils.deleteList(listDescriptor)
         assertEquals(0, listItemSqlUtils.getListItems(testList.id).size)
     }
 
     @Test
     fun testDeleteItem() {
-        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val testRemoteItemId = 1245L // value doesn't matter
+        val listDescriptor1 = ListDescriptor(POST, 333)
+        val listDescriptor2 = ListDescriptor(POST, 222)
 
         /**
-         * 1. Insert a test list for every list type. There should at least be 2 list types for a good test.
-         * 2. Generate a [ListItemModel] for every list type with the same id and insert it
+         * 1. Insert a test list for 2 different list descriptors.
+         * 2. Generate and insert a [ListItemModel] for both lists
          * 3. Verify that the [ListItemModel] was inserted correctly
          */
-        val testLists = listOf(testListDescriptor, testListDescriptorAlternate).map { insertTestList(testSite.id, it) }
-        val itemList = testLists.map { generateListItemModel(it.id, testRemoteItemId) }
+        val testLists = listOf(listDescriptor1, listDescriptor2).map { insertTestList(it) }
+        val itemList = testLists.map { ListItemModel(it.id, testRemoteItemId) }
         listItemSqlUtils.insertItemList(itemList)
         testLists.forEach { list ->
             assertEquals(1, listItemSqlUtils.getListItems(list.id).size)
@@ -101,7 +71,7 @@ class ListItemSqlUtilsTest {
 
         /**
          * 1. Delete [ListItemModel]s for which [ListItemModel.remoteItemId] == `testRemoteItemId`
-         * 2. Verify that [ListItemModel]s from every list is deleted
+         * 2. Verify that [ListItemModel]s from both lists are deleted
          */
         listItemSqlUtils.deleteItem(testLists.map { it.id }, testRemoteItemId)
         testLists.forEach {
@@ -111,7 +81,6 @@ class ListItemSqlUtilsTest {
 
     @Test
     fun insertDuplicateListItemModel() {
-        val testSite = generateAndInsertSelfHostedNonJPTestSite()
         val testRemoteItemId = 1245L // value doesn't matter
 
         /**
@@ -120,9 +89,9 @@ class ListItemSqlUtilsTest {
          * 2. Generate 2 [ListItemModel]s with the exact same values and insert the first one in the DB
          * 3. Verify that first [ListItemModel] is inserted correctly
          */
-        val testList = insertTestList(testSite.id, testListDescriptor)
-        val listItemModel = generateListItemModel(testList.id, testRemoteItemId)
-        val listItemModel2 = generateListItemModel(testList.id, testRemoteItemId)
+        val testList = insertTestList(ListDescriptor(POST, 333))
+        val listItemModel = ListItemModel(testList.id, testRemoteItemId)
+        val listItemModel2 = ListItemModel(testList.id, testRemoteItemId)
         listItemSqlUtils.insertItemList(listOf(listItemModel))
         val insertedItemList = listItemSqlUtils.getListItems(testList.id)
         assertEquals(1, insertedItemList.size)
@@ -138,12 +107,27 @@ class ListItemSqlUtilsTest {
         assertEquals(insertedItemList[0].id, updatedItemList[0].id)
     }
 
+    private fun generateInsertAndAssertListItems(listDescriptor: ListDescriptor, count: Int = 20): ListModel {
+        /**
+         * 1. Since a [ListItemModel] requires a [ListModel] in the DB due to the foreign key restriction, a test list
+         * will be inserted in the DB.
+         * 2. A list of test [ListItemModel]s will be generated and inserted in the DB
+         * 3. Verify that the [ListItemModel] instances are inserted correctly
+         */
+        val testList = insertTestList(listDescriptor)
+        val itemList = generateItemList(testList, count)
+        listItemSqlUtils.insertItemList(itemList)
+        assertEquals(count, listItemSqlUtils.getListItems(testList.id).size)
+        return testList
+    }
+
     /**
-     * Creates and inserts a [ListModel] for the given site. It also verifies that the list is inserted correctly.
+     * Creates and inserts a [ListModel] for the given [ListDescriptor].
+     * It also asserts that the list is inserted correctly.
      */
-    private fun insertTestList(localSiteId: Int, listDescriptor: ListDescriptor): ListModel {
-        listSqlUtils.insertOrUpdateList(localSiteId, listDescriptor)
-        val list = listSqlUtils.getList(localSiteId, listDescriptor)
+    private fun insertTestList(listDescriptor: ListDescriptor): ListModel {
+        listSqlUtils.insertOrUpdateList(listDescriptor)
+        val list = listSqlUtils.getList(listDescriptor)
         assertNotNull(list)
         return list!!
     }
@@ -152,28 +136,5 @@ class ListItemSqlUtilsTest {
      * Helper function that creates a list of [ListItemModel] to be used in tests.
      */
     private fun generateItemList(listModel: ListModel, count: Int): List<ListItemModel> =
-            (1..count).map { generateListItemModel(listModel.id, it.toLong()) }
-
-    /**
-     * Helper function that generates a [ListItemModel] instance.
-     */
-    private fun generateListItemModel(
-        listId: Int,
-        remoteItemId: Long
-    ): ListItemModel {
-        val listItemModel = ListItemModel()
-        listItemModel.listId = listId
-        listItemModel.remoteItemId = remoteItemId
-        return listItemModel
-    }
-
-    /**
-     * Helper function that generates a self-hosted test site and inserts it into the DB. Since we have a FK restriction
-     * for [ListModel.localSiteId] we need to do this before we can insert [ListModel] instances.
-     */
-    private fun generateAndInsertSelfHostedNonJPTestSite(): SiteModel {
-        val site = generateSelfHostedNonJPSite()
-        SiteSqlUtils.insertOrUpdateSite(site)
-        return site
-    }
+            (1..count).map { ListItemModel(listModel.id, it.toLong()) }
 }
