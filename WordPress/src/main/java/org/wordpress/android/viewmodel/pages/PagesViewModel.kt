@@ -102,7 +102,7 @@ class PagesViewModel
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
     private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
-    private var currentPageType: PageStatus? = null
+    private var currentPageType = PageStatus.PUBLISHED
 
     init {
         dispatcher.register(this)
@@ -175,10 +175,8 @@ class PagesViewModel
     }
 
     private fun checkIfNewPageButtonShouldBeVisible() {
-        currentPageType?.let { type ->
-            val isNotEmpty = _pages.values.any { it.status == type }
-            _isNewPageButtonVisible.postValue(isNotEmpty)
-        }
+        val isNotEmpty = _pages.values.any { it.status == currentPageType }
+        _isNewPageButtonVisible.postValue(isNotEmpty)
     }
 
     fun onSearch(searchQuery: String) {
