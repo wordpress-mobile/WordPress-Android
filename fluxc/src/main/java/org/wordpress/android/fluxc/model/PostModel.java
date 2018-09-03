@@ -36,6 +36,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private String mTitle;
     @Column private String mContent;
     @Column private String mDateCreated; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    @Column private String mLastModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mCategoryIds;
     @Column private String mCustomFields;
     @Column private String mLink;
@@ -127,6 +128,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setDateCreated(String dateCreated) {
         mDateCreated = dateCreated;
+    }
+
+    public @NonNull String getLastModified() {
+        return StringUtils.notNullStr(mLastModified);
+    }
+
+    public void setLastModified(String lastModified) {
+        mLastModified = lastModified;
     }
 
     public @NonNull String getCategoryIds() {
