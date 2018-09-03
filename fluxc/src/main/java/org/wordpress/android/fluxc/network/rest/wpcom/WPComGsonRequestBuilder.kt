@@ -29,6 +29,26 @@ class WPComGsonRequestBuilder
     }
 
     /**
+     * Creates a new GET request.
+     * @param restClient rest client that handles the request
+     * @param url the request URL
+     * @param params the parameters to append to the request URL
+     * @param clazz the class defining the expected response
+     */
+    suspend fun <T> syncGetRequest(
+        restClient: BaseWPComRestClient,
+        url: String,
+        params: Map<String, String>,
+        clazz: Class<T>
+    ) = suspendCoroutine<Response<T>> { cont ->
+        restClient.add(WPComGsonRequest.buildGetRequest(url, params, clazz, {
+            cont.resume(Success(it))
+        }, {
+            cont.resume(Error(it))
+        }))
+    }
+
+    /**
      * Creates a new JSON-formatted POST request.
      * @param url the request URL
      * @param body the content body, which will be converted to JSON using [Gson][com.google.gson.Gson]
