@@ -56,8 +56,8 @@ class ListSqlUtils @Inject constructor() {
                     .where()
                     .equals(ListModelTable.LOCAL_SITE_ID_DB_VALUE, listDescriptor.localSiteId)
                     .equals(ListModelTable.TYPE_DB_VALUE, listDescriptor.type.value)
-//                    .equals(ListModelTable.FILTER_DB_VALUE, listDescriptor.filter?.value)
-//                    .equals(ListModelTable.ORDER_DB_VALUE, listDescriptor.order?.value)
+                    .equals(ListModelTable.FILTER_DB_VALUE, listDescriptor.filter?.value)
+                    .equals(ListModelTable.ORDER_DB_VALUE, listDescriptor.order?.value)
                     .endWhere()
                     .asModel
                     .firstOrNull()
