@@ -46,16 +46,22 @@ class ListStore @Inject constructor(
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
-        return ListManager(mDispatcher, listDescriptor, listModel?.state, listItems, dataSource)
+        return ListManager(
+                mDispatcher,
+                listDescriptor,
+                listItems,
+                dataSource,
+                listModel?.isFetchingFirstPage() ?: false,
+                listModel?.isLoadingMore() ?: false
+        )
     }
 
     private fun fetchList(payload: FetchListPayload) {
         val listModel = getListModel(payload.listDescriptor)
-        val state = listModel?.state
-        if (payload.loadMore && state?.canLoadMore() != true) {
+        if (payload.loadMore && listModel?.canLoadMore() != true) {
             // We can't load more right now, ignore
             return
-        } else if (!payload.loadMore && state?.isFetchingFirstPage() == true) {
+        } else if (!payload.loadMore && listModel?.isFetchingFirstPage() == true) {
             // If we are already fetching the first page, ignore
             return
         }

@@ -4,6 +4,9 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
+import org.wordpress.android.fluxc.model.list.ListState.CAN_LOAD_MORE
+import org.wordpress.android.fluxc.model.list.ListState.FETCHING_FIRST_PAGE
+import org.wordpress.android.fluxc.model.list.ListState.LOADING_MORE
 
 @Table
 class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
@@ -35,4 +38,10 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
         filterDbValue = listDescriptor.filter?.value
         orderDbValue = listDescriptor.order?.value
     }
+
+    fun canLoadMore() = state == CAN_LOAD_MORE
+
+    fun isFetchingFirstPage() = state == FETCHING_FIRST_PAGE
+
+    fun isLoadingMore() = state == LOADING_MORE
 }
