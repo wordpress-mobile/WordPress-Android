@@ -25,6 +25,7 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.test
 import java.util.Date
@@ -113,6 +114,21 @@ class PagesViewModelTest {
         val result = data.await()
 
         assertThat(result).isEqualTo(pageItems)
+    }
+
+    @Test
+    fun onSiteWithoutPages() = runBlocking<Unit> {
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
+        val listStateObserver = viewModel.listState.test()
+        val refreshPagesObserver = viewModel.refreshPages.test()
+
+        viewModel.start(site)
+
+        val listStates = listStateObserver.awaitValues(2)
+
+        assertThat(listStates).containsExactly(FETCHING, DONE)
+        refreshPagesObserver.awaitNullableValues(2)
     }
 
     private suspend fun initSearch() {
