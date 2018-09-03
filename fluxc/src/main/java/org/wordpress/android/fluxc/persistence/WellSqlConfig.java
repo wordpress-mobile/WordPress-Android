@@ -335,6 +335,15 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("CREATE TABLE IF NOT EXISTS QuickStartStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                            + "SITE_ID INTEGER,IS_COMPLETED INTEGER,IS_NOTIFICATION_RECEIVED INTEGER)");
                 oldVersion++;
+            case 40:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS ActivityLogModel");
+                db.execSQL(
+                        "CREATE TABLE ActivityLog (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,ACTIVITY_ID TEXT NOT NULL,SUMMARY TEXT NOT NULL,FORMATTABLE_CONTENT"
+                        + " TEXT NOT NULL,NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID "
+                        + "TEXT,PUBLISHED INTEGER,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID "
+                        + "INTEGER,AVATAR_URL TEXT,ROLE TEXT)");
         }
         db.setTransactionSuccessful();
         db.endTransaction();
