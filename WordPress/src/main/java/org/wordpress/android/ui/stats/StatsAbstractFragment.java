@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;

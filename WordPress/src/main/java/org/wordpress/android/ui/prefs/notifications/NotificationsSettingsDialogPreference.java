@@ -174,7 +174,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 mSettings.updateSettingForChannelAndType(
                         mChannel, mType, settingName,
                         mUpdatedJson.optBoolean(settingName), mBlogId
-                                                        );
+                );
             }
         }
     }

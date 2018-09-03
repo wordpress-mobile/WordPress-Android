@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 08:54:06+0000
+Translation-Revision-Date: 2018-08-21 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="themes_empty_list">検索と一致するテーマがありません</string>
+    <string name="reader_label_post_search_explainer">何をお探しですか ?</string>
+    <string name="site_settings_tags_empty_title_search">検索と一致するタグがありません</string>
+    <string name="site_settings_tags_empty_title">タグがありません</string>
+    <string name="site_settings_tags_empty_subtitle">頻繁に使用するタグをここに追加しておけば、投稿にタグ付けするときにすばやく選択できます</string>
+    <string name="site_settings_tags_empty_button">タグの作成</string>
+    <string name="media_empty_search_list">検索と一致するメディアがありません</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">WordPress からログアウトしますか ?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">サイトにアップロードされていない投稿が変更されました。今ログアウトすると、変更がデバイスから削除されます。それでもログアウトしますか ?</string>
     <string name="people_empty_list_filtered_viewers">閲覧者はまだいません</string>
     <string name="people_empty_list_filtered_email_followers">メールフォロワーはまだいません</string>
     <string name="people_empty_list_filtered_followers">フォロワーはまだいません</string>
@@ -58,7 +67,6 @@ Language: ja_JP
     <string name="reader_save_posts_locally_dialog_title">投稿を保存</string>
     <string name="reader_empty_search_request_failed">検索を実行できませんでした</string>
     <string name="reader_empty_search_title">一致する結果が見つかりません</string>
-    <string name="reader_label_post_search_explainer">WordPress で\nサイトまたは投稿を検索</string>
     <string name="comment_read_source_post">元の投稿を読む</string>
     <string name="sites">サイト</string>
     <string name="signup_magic_link_title">マジックリンクが送信されました</string>
@@ -148,7 +156,6 @@ Language: ja_JP
     <string name="notification_channel_general_title">一般</string>
     <string name="photo_picker_use_photo">この写真を使用</string>
     <string name="media_preview_title">%1$d/%2$d</string>
-    <string name="stock_media_picker_empty_results">一致するものがありません</string>
     <string name="stock_media_picker_initial_empty_subtext">%s によって提供された写真</string>
     <string name="stock_media_picker_initial_empty_text">無料の写真を検索して、メディアライブラリに追加してください</string>
     <string name="stock_media_picker_search_hint">無料のフォトライブラリーを検索</string>
@@ -180,7 +187,6 @@ Language: ja_JP
     <string name="stats_tab_tap_content_description">%sを表示中</string>
     <string name="stats_legend">統計グラフの凡例</string>
     <string name="fab_create_desc">作成</string>
-    <string name="fab_add_tag_desc">タグの作成</string>
     <string name="stats_bar_week_desc">週 (%s)</string>
     <string name="stats_bar_date_value_desc">%s、表示回数%d</string>
     <string name="stats_bar_date_value_type_desc">%s、%d%s</string>
@@ -436,7 +442,6 @@ Language: ja_JP
     <string name="site_settings_tags_hint">サイトのタグを管理</string>
     <string name="dlg_saving_tag">保存中</string>
     <string name="dlg_deleting_tag">削除中</string>
-    <string name="dlg_confirm_delete_tag">「%s」を永久に削除しますか ?</string>
     <string name="error_tag_exists">この名前のタグは既に存在します</string>
     <string name="add_new_tag">新規タグを追加</string>
     <string name="tag_description_hint">説明</string>
@@ -455,7 +460,6 @@ Language: ja_JP
     <string name="site_settings_week_start_title">週の始まり</string>
     <string name="site_settings_tags_title">タグ</string>
     <string name="site_settings_traffic_header">トラフィック</string>
-    <string name="delete_no">削除しない</string>
     <string name="delete_yes">削除</string>
     <string name="plugin_external_link_icon_content_description">外部リンク</string>
     <string name="plugin_icon_content_description">プラグインアイコン</string>
@@ -954,7 +958,6 @@ Language: ja_JP
     <string name="label_clear_search_history">検索履歴の削除</string>
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
     <string name="reader_empty_search_description">お使いの言語では %s に関する投稿は見つかりませんでした。</string>
-    <string name="reader_label_post_search_running">検索中…</string>
     <string name="reader_hint_post_search">WordPress.com を検索</string>
     <string name="reader_title_related_post_detail">関連記事</string>
     <string name="preview_screen_links_disabled">プレビュー画面ではリンクが無効になっています</string>
@@ -1313,7 +1316,6 @@ Language: ja_JP
     <string name="reader_label_new_posts_subtitle">タップして表示</string>
     <string name="my_site_header_configuration">設定</string>
     <string name="stats_unknown_author">不明な投稿者</string>
-    <string name="sign_out_wpcom_confirm">アカウントからログアウトすると、ローカルの下書きおよび変更を含む @%s のすべての WordPress.com データがこの端末から削除されます。</string>
     <string name="select_all">すべて選択</string>
     <string name="hide">隠す</string>
     <string name="show">表示</string>

@@ -1,0 +1,4 @@
+10.7:
+Vem gillar inte gif-bilder! Animerade gif-bilder stöds nu överallt i appen och vi har kortat deras laddningstider så att du aldrig ska behöva vänta på att få se den där katten trilla av bordet.
+Ingen tycker om blanka skärmar utan några instruktioner! Om du går till en sida som saknar innehåll – t.ex. ”Läsaren” om du ännu inte följer några bloggar – visar vi förslag på hur man smidigast kommer vidare.
+Felrättningar.

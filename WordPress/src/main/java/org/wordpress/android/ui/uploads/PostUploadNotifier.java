@@ -847,7 +847,7 @@ class PostUploadNotifier {
                     mContext.getString(R.string.uploading_subtitle_media_only),
                     sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
                     sNotificationData.mTotalMediaItems
-                                            );
+            );
         }
         return uploadingMessage;
     }
