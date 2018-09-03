@@ -8,7 +8,10 @@ class FormattableContentMapper @Inject constructor(val gson: Gson) {
     fun mapToFormattableContent(json: String): FormattableContent = gson.fromJson(json, FormattableContent::class.java)
 }
 
-class FormattableContent(@SerializedName("text") val text: String? = null, @SerializedName("ranges") val ranges: List<FormattableRange>? = null)
+class FormattableContent(
+    @SerializedName("text") val text: String? = null,
+    @SerializedName("ranges") val ranges: List<FormattableRange>? = null
+)
 
 class FormattableRange(
     @SerializedName("siteID")
