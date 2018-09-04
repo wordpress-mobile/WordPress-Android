@@ -4,7 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import javax.inject.Inject
 
 class PageListViewModel
@@ -41,7 +44,7 @@ class PageListViewModel
 
         if (!isStarted) {
             isStarted = true
-            loadPagesAsync(true)
+            loadPagesAsync()
 
             pagesViewModel.refreshPages.observeForever(refreshPagesObserver)
         }
@@ -67,7 +70,7 @@ class PageListViewModel
         loadPagesAsync()
     }
 
-    private fun loadPagesAsync(isStarting: Boolean = false) = launch {
+    private fun loadPagesAsync() = launch {
         val newPages = pagesViewModel.pages.values
                 .filter { it.status == pageType }
                 .let {
@@ -80,7 +83,7 @@ class PageListViewModel
                 }
 
         if (newPages.isEmpty()) {
-            if (isStarting) {
+            if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
                 when (pageType) {
@@ -95,6 +98,10 @@ class PageListViewModel
             pagesWithBottomGap.addAll(listOf(Divider(""), Divider("")))
             _pages.postValue(pagesWithBottomGap)
         }
+    }
+
+    private suspend fun updatePages(newPages: List<PageItem>) = withContext(UI) {
+        _pages.value = newPages
     }
 
     private fun preparePublishedPages(pages: List<PageModel>): List<PageItem> {

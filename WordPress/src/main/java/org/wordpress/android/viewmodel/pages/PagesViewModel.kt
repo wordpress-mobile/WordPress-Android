@@ -5,8 +5,10 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
@@ -130,22 +132,24 @@ class PagesViewModel
     }
 
     private suspend fun refreshPages(state: PageListState = REFRESHING) {
-        var newState = state
-        _listState.postValue(newState)
+        updateListState(state)
 
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
-            newState = ERROR
+            updateListState(ERROR)
             _showSnackbarMessage.postValue(
                     SnackbarMessageHolder(resourceProvider.getString(string.error_refresh_pages)))
-            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
+            AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
         } else {
             _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
-            _refreshPages.asyncCall()
-            newState = DONE
-        }
 
-        _listState.postValue(newState)
+            updateListState(DONE)
+            _refreshPages.asyncCall()
+        }
+    }
+
+    private suspend fun updateListState(newState: PageListState) = withContext(UI) {
+         _listState.value = newState
     }
 
     fun onPageEditFinished(pageId: Long) {
