@@ -52,9 +52,9 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     private void processRangeData(FormattableRange range) {
         if (range != null) {
-//            mId = range.getId(); // TODO missing id field
-            mSiteId = range.getSiteId();
-            mPostId = range.getPostId();
+            mId = range.getId() == null ? 0 : range.getId();
+            mSiteId = range.getSiteId() == null ? 0 : range.getSiteId();
+            mPostId = range.getPostId() == null ? 0 : range.getPostId();
             mRangeType = range.getRangeType();
             mUrl = range.getUrl();
             mIndices = range.getIndices();
@@ -74,7 +74,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         return mShouldLink
                && mRangeType != FormattableRangeType.BLOCKQUOTE
                && mRangeType != FormattableRangeType.MATCH
-               && (mRangeType != null || !TextUtils.isEmpty(mUrl));
+               && (mRangeType != FormattableRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
     }
 
     @Override
@@ -110,6 +110,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             case FOLLOW:
             case NOTICON:
             case LIKE:
+            case UNKNOWN:
             default:
                 return Typeface.NORMAL;
         }
@@ -149,6 +150,6 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     }
 
     public void setCustomType(String type) {
-        mRangeType = FormattableRangeType.valueOf(type);
+        mRangeType = FormattableRangeType.Companion.fromString(type);
     }
 }
