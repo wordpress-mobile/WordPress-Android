@@ -100,7 +100,6 @@ class PagesViewModel
     val site: SiteModel
         get() = _site
 
-
     private var _lastSearchQuery = ""
     val lastSearchQuery: String
         get() = _lastSearchQuery
@@ -149,7 +148,7 @@ class PagesViewModel
     }
 
     private suspend fun updateListState(newState: PageListState) = withContext(UI) {
-         _listState.value = newState
+        _listState.value = newState
     }
 
     fun onPageEditFinished(pageId: Long) {

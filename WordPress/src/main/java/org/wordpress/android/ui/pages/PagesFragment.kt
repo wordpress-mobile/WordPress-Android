@@ -24,9 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.pages_fragment.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
@@ -42,7 +39,6 @@ import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.SCHEDULED
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.TRASH
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
