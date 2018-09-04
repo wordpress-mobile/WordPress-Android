@@ -11,7 +11,6 @@ To adjust details of the particular virtual device hardware profile (say the scr
 
 After making changes to either the hardware profile or emulator properties, just run `bundle exec fastlane android rebuild_screenshot_devices` to completely rebuild the devices based on your new settings. It'll only rebuild the hardware profiles and emulators definied in the repository, so if you have others already defined, they'll be left alone.
 
-
 ##### To adjust device parameters:
 
 Edit the device in Android Studio, and adjust to the specifications you'd like to use. Once you save the device, it'll make a new hardware profile with the settings you just provided. Right-click on that hardware profile, and choose "export". When merging, it can be useful to use the diff view to ensure that only the fields you meant to change are actually being changed – as a for-instance, Android Studio loves to try to overwrite your `sdcard.size`, and that change can almost always be discarded.
