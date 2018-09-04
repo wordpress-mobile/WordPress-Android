@@ -75,6 +75,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Inject ImageManager mImageManager;
     @Inject NotificationsUtilsWrapper mNotificationsUtilsWrapper;
+    @Inject FormattableContentMapper mFormattableContentMapper;
 
     public NotificationsDetailListFragment() {
     }
@@ -403,7 +404,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
-                            FormattableContent formattableContent = new FormattableContentMapper(new Gson())
+                            FormattableContent formattableContent = mFormattableContentMapper
                                     .mapToFormattableContent(noteObject.toString());
 
                             noteBlock = new FooterNoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
