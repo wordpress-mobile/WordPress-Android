@@ -68,25 +68,15 @@ data class FormattableRange(
 }
 
 enum class FormattableRangeType {
-    @SerializedName("post")
     POST,
-    @SerializedName("site")
     SITE,
-    @SerializedName("comment")
     COMMENT,
-    @SerializedName("user")
     USER,
-    @SerializedName("stat")
     STAT,
-    @SerializedName("blockquote")
     BLOCKQUOTE,
-    @SerializedName("follow")
     FOLLOW,
-    @SerializedName("noticon")
     NOTICON,
-    @SerializedName("like")
     LIKE,
-    @SerializedName("match")
     MATCH,
     UNKNOWN;
 
