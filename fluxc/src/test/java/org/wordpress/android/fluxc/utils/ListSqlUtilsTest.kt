@@ -31,54 +31,47 @@ class ListSqlUtilsTest {
     }
 
     @Test
-    fun testInsertOrUpdateList() {
+    fun testInsertAndUpdateList() {
         val listDescriptor = ListDescriptor(POST, 333)
-
         /**
-         * 1. Insert a new list for `testSite` and `listType`
-         * 2. Verify that it's inserted
-         * 3. Verify the `localSiteId` value
-         * 4. Verify that `dateCreated` and `lastModified` are equal since this is the first time it's created
+         * 1. Insert a test list
+         * 2. Verify that `dateCreated` and `lastModified` are equal since this is the first time it's created
+         * 3. Wait 1 second before the update to ensure `lastModified` value will be different
+         * 4. Insert the same list which should update instead
+         * 5. Verify the listDescriptors are the same
+         * 5. Verify the `dateCreated` and `lastModified` values are different since this is an update.
+         * 6. Verify the `dateCreated` field is unchanged
          */
-        listSqlUtils.insertOrUpdateList(listDescriptor)
-        val insertedList = listSqlUtils.getList(listDescriptor)
-        assertNotNull(insertedList)
-        assertEquals(listDescriptor, insertedList?.listDescriptor)
-        assertEquals(insertedList?.dateCreated, insertedList?.lastModified)
-
-        /**
-         * 1. Wait 1 second before the update test to ensure `lastModified` value will be different
-         * 2. Insert the same list which should update instead
-         * 3. Verify that it's inserted
-         * 4. Verify the `localSiteId` value
-         * 5. Verify the `dateCreated` and `lastModified` values are different since this is an update. (See point 1)
-         */
+        val insertedList = insertOrUpdateAndThenAssertList(listDescriptor)
+        assertEquals(insertedList.dateCreated, insertedList.lastModified)
         Thread.sleep(1000)
-        listSqlUtils.insertOrUpdateList(listDescriptor)
-        val updatedList = listSqlUtils.getList(listDescriptor)
-        assertNotNull(updatedList)
-        assertEquals(listDescriptor, updatedList?.listDescriptor)
-        assertNotEquals(updatedList?.dateCreated, updatedList?.lastModified)
-
-        /**
-         * Verify that initially created list and updated list has the same `dateCreated`
-         */
-        assertEquals(insertedList?.dateCreated, updatedList?.dateCreated)
+        val updatedList = insertOrUpdateAndThenAssertList(listDescriptor)
+        assertEquals(insertedList.listDescriptor, updatedList.listDescriptor)
+        assertNotEquals(updatedList.dateCreated, updatedList.lastModified)
+        assertEquals(insertedList.dateCreated, updatedList.dateCreated)
     }
 
     @Test
     fun testDeleteList() {
         val listDescriptor = ListDescriptor(POST, 444)
-
         /**
          * 1. Insert a test list
-         * 2. Verify that the list is inserted correctly
-         * 3. Delete the inserted test list
-         * 4. Verify that the list is deleted correctly
+         * 2. Delete it
+         * 3. Verify that it is deleted correctly
          */
-        listSqlUtils.insertOrUpdateList(listDescriptor)
-        assertNotNull(listSqlUtils.getList(listDescriptor))
+        insertOrUpdateAndThenAssertList(listDescriptor)
         listSqlUtils.deleteList(listDescriptor)
         assertNull(listSqlUtils.getList(listDescriptor))
+    }
+
+    /**
+     * Inserts or updates the list for the listDescriptor and asserts that it's inserted correctly
+     */
+    private fun insertOrUpdateAndThenAssertList(listDescriptor: ListDescriptor): ListModel {
+        listSqlUtils.insertOrUpdateList(listDescriptor)
+        val listModel = listSqlUtils.getList(listDescriptor)
+        assertNotNull(listModel)
+        assertEquals(listDescriptor, listModel?.listDescriptor)
+        return listModel!!
     }
 }
