@@ -194,10 +194,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             view.getLayoutParams().height = mEndlistIndicatorHeight;
             return new EndListViewHolder(view);
         } else {
-            final int itemLayoutId = PostTypeUtilsKt
-                    .getResourceId(mPostType, R.layout.page_item, R.layout.post_cardview);
-            View view = mLayoutInflater.inflate(itemLayoutId, parent, false);
-            return new PageViewHolder(view);
+            switch (mPostType) {
+                case TypePost:
+                    return new PostViewHolder(
+                            mLayoutInflater.inflate(R.layout.post_cardview, parent, false)
+                    );
+                case TypePage:
+                    return new PageViewHolder(
+                            mLayoutInflater.inflate(R.layout.page_item, parent, false)
+                    );
+                case TypePortfolio:
+                default:
+                    throw new IllegalStateException("Unknown type " + mPostType);
+            }
         }
     }
 
