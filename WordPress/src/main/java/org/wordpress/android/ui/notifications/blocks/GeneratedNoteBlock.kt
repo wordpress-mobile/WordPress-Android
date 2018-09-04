@@ -21,7 +21,7 @@ class GeneratedNoteBlock(
     val clickListener: OnNoteBlockTextClickListener,
     val pingbackUrl: String
 ) : NoteBlock(JSONObject(), imageManager, notificationsUtilsWrapper, clickListener) {
-    override fun getNoteText(notificationsUtilsWrapper: NotificationsUtilsWrapper): Spannable {
+    override fun getNoteText(): Spannable {
         val spannableStringBuilder = SpannableStringBuilder(text)
 
         // Process Ranges to add links and text formatting

@@ -53,8 +53,8 @@ public class FooterNoteBlock extends NoteBlock {
         final FooterNoteBlockHolder noteBlockHolder = (FooterNoteBlockHolder) view.getTag();
 
         // Note text
-        if (!TextUtils.isEmpty(getNoteText(mNotificationsUtilsWrapper))) {
-            noteBlockHolder.getTextView().setText(getNoteText(mNotificationsUtilsWrapper));
+        if (!TextUtils.isEmpty(getNoteText())) {
+            noteBlockHolder.getTextView().setText(getNoteText());
             noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
@@ -84,8 +84,8 @@ public class FooterNoteBlock extends NoteBlock {
     }
 
     @Override
-    Spannable getNoteText(NotificationsUtilsWrapper notificationsUtilsWrapper) {
-        return notificationsUtilsWrapper.getSpannableContentForRanges(getNoteData(), null,
+    Spannable getNoteText() {
+        return mNotificationsUtilsWrapper.getSpannableContentForRanges(getNoteData(), null,
                                                                getOnNoteBlockTextClickListener(), true);
     }
 

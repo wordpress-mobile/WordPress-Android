@@ -82,8 +82,8 @@ public class NoteBlock {
         return mNoteData;
     }
 
-    Spannable getNoteText(NotificationsUtilsWrapper notificationsUtilsWrapper) {
-        return notificationsUtilsWrapper.getSpannableContentForRanges(mNoteData, null,
+    Spannable getNoteText() {
+        return mNotificationsUtilsWrapper.getSpannableContentForRanges(mNoteData, null,
                                                                mOnNoteBlockTextClickListener, false);
     }
 
@@ -205,7 +205,7 @@ public class NoteBlock {
         }
 
         // Note text
-        Spannable noteText = getNoteText(mNotificationsUtilsWrapper);
+        Spannable noteText = getNoteText();
         if (!TextUtils.isEmpty(noteText)) {
             if (isPingBack()) {
                 noteBlockHolder.getTextView().setVisibility(View.GONE);

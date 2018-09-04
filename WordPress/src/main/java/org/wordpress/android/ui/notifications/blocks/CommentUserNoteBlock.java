@@ -63,7 +63,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
 
         noteBlockHolder.mNameTextView
-                .setText(Html.fromHtml("<strong>" + getNoteText(mNotificationsUtilsWrapper).toString() + "</strong>"));
+                .setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
                 WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
@@ -86,7 +86,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.mAvatarImageView.setContentDescription(
                     view.getContext()
-                        .getString(R.string.profile_picture, getNoteText(mNotificationsUtilsWrapper).toString()));
+                        .getString(R.string.profile_picture, getNoteText().toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -111,7 +111,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
 
         noteBlockHolder.mCommentTextView
-                .setText(getCommentTextOfNotification(mNotificationsUtilsWrapper, noteBlockHolder));
+                .setText(getCommentTextOfNotification(noteBlockHolder));
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -163,9 +163,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return view;
     }
 
-    private String getCommentTextOfNotification(NotificationsUtilsWrapper notificationsUtilsWrapper,
-                                                CommentUserNoteBlockHolder noteBlockHolder) {
-        String commentText = notificationsUtilsWrapper
+    private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
+        String commentText = mNotificationsUtilsWrapper
                 .getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
 

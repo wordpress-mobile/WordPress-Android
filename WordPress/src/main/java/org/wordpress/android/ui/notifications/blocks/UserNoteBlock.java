@@ -67,7 +67,7 @@ public class UserNoteBlock extends NoteBlock {
     @Override
     public View configureView(View view) {
         final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder) view.getTag();
-        noteBlockHolder.mNameTextView.setText(getNoteText(mNotificationsUtilsWrapper).toString());
+        noteBlockHolder.mNameTextView.setText(getNoteText().toString());
 
 
         String linkedText = null;
