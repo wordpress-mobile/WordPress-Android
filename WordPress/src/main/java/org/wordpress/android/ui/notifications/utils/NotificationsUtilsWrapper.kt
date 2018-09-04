@@ -42,9 +42,12 @@ class NotificationsUtilsWrapper @Inject constructor() {
      */
     fun getSpannableContentForRanges(
         formattableContent: FormattableContent?,
-        textView: TextView,
+        textView: TextView?,
         onNoteBlockTextClickListener: NoteBlock.OnNoteBlockTextClickListener?,
         isFooter: Boolean
     ): Spannable = NotificationsUtils.getSpannableContentForRanges(formattableContent,
             textView, onNoteBlockTextClickListener, isFooter)
+
+    fun mapJsonToFormattablbeContent(blockObject: JSONObject): FormattableContent
+            = NotificationsUtils.mapJsonToFormattablbeContent(formattableContentMapper, blockObject)
 }

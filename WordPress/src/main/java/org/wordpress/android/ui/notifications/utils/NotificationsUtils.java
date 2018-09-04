@@ -166,6 +166,10 @@ public class NotificationsUtils {
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
+    static FormattableContent mapJsonToFormattablbeContent(FormattableContentMapper mapper, JSONObject blockObject) {
+        return mapper.mapToFormattableContent(blockObject.toString());
+    }
+
     static Spannable getSpannableContentForRanges(
             FormattableContentMapper formattableContentMapper,
             JSONObject blockObject, TextView textView,
