@@ -7,9 +7,13 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
+import org.wordpress.android.fluxc.model.list.BasicListOrder
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListType.POST
+import org.wordpress.android.fluxc.model.list.ListType.WOO_ORDER
+import org.wordpress.android.fluxc.model.list.PostListFilter
+import org.wordpress.android.fluxc.model.list.WooOrderListFilter
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -49,6 +53,19 @@ class ListSqlUtilsTest {
         assertEquals(insertedList.listDescriptor, updatedList.listDescriptor)
         assertNotEquals(updatedList.dateCreated, updatedList.lastModified)
         assertEquals(insertedList.dateCreated, updatedList.dateCreated)
+    }
+
+    @Test
+    fun testInsertSeveralDifferentLists() {
+        insertOrUpdateAndThenAssertList(ListDescriptor(POST))
+        insertOrUpdateAndThenAssertList(ListDescriptor(WOO_ORDER))
+        insertOrUpdateAndThenAssertList(ListDescriptor(POST, 123))
+        insertOrUpdateAndThenAssertList(ListDescriptor(POST, 123, PostListFilter.ALL))
+        insertOrUpdateAndThenAssertList(ListDescriptor(WOO_ORDER, 123, WooOrderListFilter.ALL, BasicListOrder.ASC))
+        insertOrUpdateAndThenAssertList(ListDescriptor(POST, filter = PostListFilter.ALL))
+        insertOrUpdateAndThenAssertList(ListDescriptor(POST, order = BasicListOrder.DESC))
+        insertOrUpdateAndThenAssertList(
+                ListDescriptor(WOO_ORDER, filter = WooOrderListFilter.ALL, order = BasicListOrder.DESC))
     }
 
     @Test
