@@ -37,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableContentMapper;
+import org.wordpress.android.fluxc.tools.FormattableMedia;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
@@ -45,8 +46,8 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PackageUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
 import java.lang.reflect.Field;
@@ -257,7 +258,7 @@ public class NotificationsUtils {
         }
 
         Context context = textView.getContext();
-        JSONArray mediaArray = null; // TODO subject.getMedia();
+        List<FormattableMedia> mediaArray = subject.getMedia();
         if (context == null || mediaArray == null) {
             return;
         }
@@ -277,16 +278,22 @@ public class NotificationsUtils {
 
         int indexAdjustment = 0;
         String imagePlaceholder;
-        for (int i = 0; i < mediaArray.length(); i++) {
-            JSONObject mediaObject = mediaArray.optJSONObject(i);
+        for (FormattableMedia mediaObject : mediaArray) {
             if (mediaObject == null) {
                 continue;
             }
 
-            final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
-            ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, mediaObject.optString("url", ""));
-            int startIndex = JSONUtils.queryJSON(mediaObject, "indices[0]", -1);
-            int endIndex = JSONUtils.queryJSON(mediaObject, "indices[1]", -1);
+            final Drawable remoteDrawable = imageGetter.getDrawable(StringUtils.notNullStr(mediaObject.getUrl()));
+            ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, StringUtils.notNullStr(mediaObject.getUrl()));
+            int startIndex = -1;
+            int endIndex = -1;
+            List<Integer> indices =
+                    (mediaObject.getIndices() != null && mediaObject.getIndices().size() == 2) ? mediaObject
+                            .getIndices() : null;
+            if (indices != null) {
+                startIndex = indices.get(0);
+                endIndex = indices.get(1);
+            }
             if (startIndex >= 0) {
                 startIndex += indexAdjustment;
                 endIndex += indexAdjustment;
