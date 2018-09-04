@@ -207,8 +207,8 @@ data class SiteSettingsModel(
         val moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME)
         val blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME)
 
-        holdForModeration = moderationKeys.split('\n')
-        blacklist = blacklistKeys.split('\n')
+        holdForModeration = moderationKeys?.split('\n')?: emptyList()
+        blacklist = blacklistKeys?.split('\n')?: emptyList()
         sharingLabel = getStringFromCursor(cursor, SHARING_LABEL_COLUMN_NAME)
         sharingButtonStyle = getStringFromCursor(cursor, SHARING_BUTTON_STYLE_COLUMN_NAME)
         allowReblogButton = getBooleanFromCursor(cursor, ALLOW_REBLOG_BUTTON_COLUMN_NAME)
@@ -221,14 +221,14 @@ data class SiteSettingsModel(
         val cachedCategories = getStringFromCursor(cursor, CATEGORIES_COLUMN_NAME)
         val cachedFormats = getStringFromCursor(cursor, POST_FORMATS_COLUMN_NAME)
         if (models != null && !TextUtils.isEmpty(cachedCategories)) {
-            categories = cachedCategories
+            categories = cachedCategories!!
                     .split(',')
                     .map { Integer.parseInt(it) }
                     .map { models.get(it) }
                     .toTypedArray()
         }
         if (!TextUtils.isEmpty(cachedFormats)) {
-            postFormats = cachedFormats
+            postFormats = cachedFormats!!
                     .split(';')
                     .map { it.split(',').zipWithNext().first() }
                     .toMap()
@@ -314,7 +314,7 @@ data class SiteSettingsModel(
     /**
      * Helper method to get a String value from a given column in a Cursor.
      */
-    private fun getStringFromCursor(cursor: Cursor, columnName: String): String {
+    private fun getStringFromCursor(cursor: Cursor, columnName: String): String? {
         val columnIndex = cursor.getColumnIndex(columnName)
         return if (columnIndex != -1) cursor.getString(columnIndex) else ""
     }
