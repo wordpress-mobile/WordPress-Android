@@ -332,6 +332,8 @@ class PagesViewModel
                 _pages.remove(page.remoteId)
                 _refreshPageLists.asyncCall()
 
+                checkIfNewPageButtonShouldBeVisible()
+
                 pageStore.deletePageFromServer(page)
             }
         }
