@@ -55,7 +55,7 @@ class PagesViewModel
     private val resourceProvider: ResourceProvider,
     private val uploadUtil: PageUploadUtil
 ) : ViewModel() {
-    private val _isSearchExpanded = SingleLiveEvent<Boolean>()
+    private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
@@ -99,8 +99,12 @@ class PagesViewModel
     val site: SiteModel
         get() = _site
 
+
+    private var _lastSearchQuery = ""
+    val lastSearchQuery: String
+        get() = _lastSearchQuery
+
     private var searchJob: Job? = null
-    private var lastSearchQuery = ""
     private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
     private var currentPageType = PageStatus.PUBLISHED
 
@@ -200,7 +204,7 @@ class PagesViewModel
     }
 
     suspend fun search(searchQuery: String): MutableList<PageItem> {
-        lastSearchQuery = searchQuery
+        _lastSearchQuery = searchQuery
         return pageStore.groupedSearch(site, searchQuery)
                 .map { (status, results) ->
                     listOf(Divider(resourceProvider.getString(status.toResource()))) + results.map { it.toPageItem() }

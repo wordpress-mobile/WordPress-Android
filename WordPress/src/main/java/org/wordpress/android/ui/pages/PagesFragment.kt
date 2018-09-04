@@ -58,6 +58,8 @@ class PagesFragment : Fragment() {
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
 
+    private var restorePreviousSearch = false
+
     companion object {
         fun newInstance(): PagesFragment {
             return PagesFragment()
@@ -159,7 +161,12 @@ class PagesFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                viewModel.onSearch(newText)
+                if (restorePreviousSearch) {
+                    restorePreviousSearch = false
+                    searchView.setQuery(viewModel.lastSearchQuery, false)
+                } else {
+                    viewModel.onSearch(newText)
+                }
                 return true
             }
         })
@@ -168,6 +175,14 @@ class PagesFragment : Fragment() {
         val searchEditFrame = actionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
+
+        viewModel.isSearchExpanded.observe(this, Observer {
+            if (it == true) {
+                showSearchList(actionMenuItem)
+            } else {
+                hideSearchList(actionMenuItem)
+            }
+        })
     }
 
     private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
@@ -179,20 +194,14 @@ class PagesFragment : Fragment() {
             val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
             val nonNullSite = checkNotNull(site)
             viewModel.start(nonNullSite)
+        } else {
+            restorePreviousSearch = true
         }
     }
 
     private fun setupObservers(activity: FragmentActivity) {
         viewModel.searchResult.observe(this, Observer { result ->
             result?.let { setSearchResult(result) }
-        })
-
-        viewModel.isSearchExpanded.observe(this, Observer {
-            if (it == true) {
-                showSearchList(actionMenuItem)
-            } else {
-                hideSearchList(actionMenuItem)
-            }
         })
 
         viewModel.listState.observe(this, Observer {
