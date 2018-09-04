@@ -207,8 +207,8 @@ data class SiteSettingsModel(
         val moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME)
         val blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME)
 
-        holdForModeration = moderationKeys?.split('\n')?: emptyList()
-        blacklist = blacklistKeys?.split('\n')?: emptyList()
+        holdForModeration = moderationKeys?.split('\n') ?: emptyList()
+        blacklist = blacklistKeys?.split('\n') ?: emptyList()
         sharingLabel = getStringFromCursor(cursor, SHARING_LABEL_COLUMN_NAME)
         sharingButtonStyle = getStringFromCursor(cursor, SHARING_BUTTON_STYLE_COLUMN_NAME)
         allowReblogButton = getBooleanFromCursor(cursor, ALLOW_REBLOG_BUTTON_COLUMN_NAME)
