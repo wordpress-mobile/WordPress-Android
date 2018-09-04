@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
@@ -22,10 +23,10 @@ import org.wordpress.android.util.ToastUtils;
 import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
-    public static final String EXTRA_VIEW_PAGES = "viewPages";
+    public static final String EXTRA_POST_TYPE = "postType";
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
-    private boolean mIsPage = false;
+    private PostType mPostType = PostType.TypePost;
     private PostsListFragment mPostList;
     private SiteModel mSite;
 
@@ -63,17 +64,7 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
-
-        // get new intent extras and compare whether the running instance of PostsListActivity has
-        // the same values or not. If not, we need to create a new fragment and show the corresponding
-        // requested content
-        boolean pageHasChanged = false;
-        if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
-            boolean isPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
-            pageHasChanged = isPage != mIsPage;
-        }
-        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+        mPostType = (PostType) intent.getSerializableExtra(EXTRA_POST_TYPE);
 
         boolean siteHasChanged = false;
         if (intent.hasExtra(WordPress.SITE)) {
@@ -92,7 +83,8 @@ public class PostsListActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            setTitle(getString(mIsPage ? R.string.my_site_btn_site_pages : R.string.my_site_btn_blog_posts));
+            setTitle(getString(PostTypeUtilsKt.getResourceId(mPostType,
+                    R.string.my_site_btn_site_pages, R.string.my_site_btn_blog_posts)));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -102,16 +94,18 @@ public class PostsListActivity extends AppCompatActivity {
         if (targetPostId > 0) {
             targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
             if (targetPost == null) {
-                String errorMessage = getString(mIsPage ? R.string.error_page_does_not_exist
-                                                        : R.string.error_post_does_not_exist);
+                String errorMessage = getString(PostTypeUtilsKt.getResourceId(
+                        mPostType,
+                        R.string.error_page_does_not_exist,
+                        R.string.error_post_does_not_exist));
                 ToastUtils.showToast(this, errorMessage);
             }
         }
 
         mPostList = (PostsListFragment) getSupportFragmentManager().findFragmentByTag(PostsListFragment.TAG);
-        if (mPostList == null || siteHasChanged || pageHasChanged || targetPost != null) {
+        if (mPostList == null || siteHasChanged || targetPost != null) {
             PostsListFragment oldFragment = mPostList;
-            mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
+            mPostList = PostsListFragment.newInstance(mSite, mPostType, targetPost);
             if (oldFragment == null) {
                 getSupportFragmentManager().beginTransaction()
                                     .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
@@ -127,7 +121,8 @@ public class PostsListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
+        ActivityId.trackLastActivity(PostTypeUtilsKt.<ActivityId>getValueForType(mPostType,
+                ActivityId.PAGES, ActivityId.POSTS));
     }
 
     @Override

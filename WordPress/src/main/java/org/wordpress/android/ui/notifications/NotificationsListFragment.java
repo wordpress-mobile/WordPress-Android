@@ -28,6 +28,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
@@ -477,7 +478,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_unread) { // Create a new post
-            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
+            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), PostType.TypePost, false);
         } else { // Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderPageActive();

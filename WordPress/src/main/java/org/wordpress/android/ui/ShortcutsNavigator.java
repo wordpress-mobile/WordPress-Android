@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ public class ShortcutsNavigator {
                 break;
             case CREATE_NEW_POST:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NEW_POST_CLICKED);
-                ActivityLauncher.addNewPostOrPageForResult(activity, currentSite, false, false);
+                ActivityLauncher.addNewPostOrPageForResult(activity, currentSite, PostType.TypePost, false);
                 break;
             case OPEN_NOTIFICATIONS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NOTIFICATIONS_CLICKED);

@@ -37,11 +37,13 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
+import org.wordpress.android.ui.posts.PostTypeUtilsKt;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -95,7 +97,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int mPhotonHeight;
     private final int mEndlistIndicatorHeight;
 
-    private final boolean mIsPage;
+    private final PostType mPostType;
     private final boolean mIsStatsSupported;
     private final boolean mShowAllButtons;
 
@@ -114,10 +116,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Inject protected UploadStore mUploadStore;
     @Inject protected ImageManager mImageManager;
 
-    public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
+    public PostsListAdapter(Context context, @NonNull SiteModel site, PostType postType) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
-        mIsPage = isPage;
+        mPostType = postType;
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;
@@ -129,7 +131,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
-        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
+        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, PostTypeUtilsKt.getResourceId(mPostType, 82, 74));
 
         // on larger displays we can always show all buttons
         mShowAllButtons = displayWidth >= 1080;
@@ -191,12 +193,20 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             View view = mLayoutInflater.inflate(R.layout.endlist_indicator, parent, false);
             view.getLayoutParams().height = mEndlistIndicatorHeight;
             return new EndListViewHolder(view);
-        } else if (mIsPage) {
-            View view = mLayoutInflater.inflate(R.layout.page_item, parent, false);
-            return new PageViewHolder(view);
         } else {
-            View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
-            return new PostViewHolder(view);
+            switch (mPostType) {
+                case TypePost:
+                    return new PostViewHolder(
+                            mLayoutInflater.inflate(R.layout.post_cardview, parent, false)
+                    );
+                case TypePage:
+                    return new PageViewHolder(
+                            mLayoutInflater.inflate(R.layout.page_item, parent, false)
+                    );
+                case TypePortfolio:
+                default:
+                    throw new IllegalStateException("Unknown type " + mPostType);
+            }
         }
     }
 
@@ -445,8 +455,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadError reason = mUploadStore.getUploadErrorForPost(post);
             if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
-                    errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
-                                                             : R.string.error_media_recover_post);
+                    errorMessage = context.getString(PostTypeUtilsKt.getResourceId(
+                            post, R.string.error_media_recover_page, R.string.error_media_recover_post));
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
@@ -700,7 +710,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 notifyItemRemoved(position);
 
                 // when page is removed update the next one in case we need to show a header
-                if (mIsPage) {
+                if (mPostType == PostType.TypePage) {
                     notifyItemChanged(position);
                 }
             } else {
@@ -855,11 +865,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            if (mIsPage) {
-                mTmpPosts = mPostStore.getPagesForSite(mSite);
-            } else {
-                mTmpPosts = mPostStore.getPostsForSite(mSite);
-            }
+            mTmpPosts = mPostStore.getPostsForSite(mSite, mPostType);
 
             // Make sure we don't return any hidden posts
             if (mHiddenPosts.size() > 0) {

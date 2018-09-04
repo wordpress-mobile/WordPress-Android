@@ -1,9 +1,9 @@
 package org.wordpress.android.editor;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.DragEvent;
 import android.widget.LinearLayout;
@@ -30,7 +30,7 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
         linearLayout.setId(LAYOUT_ID);
         setContentView(linearLayout);
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         mEditorFragment = new EditorFragmentForTests();
@@ -88,6 +88,9 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
 
     @Override
     public void onTrackableEvent(TrackableEvent event) {
+    }
+
+    @Override public void onHtmlModeToggledInToolbar() {
     }
 
     @Override

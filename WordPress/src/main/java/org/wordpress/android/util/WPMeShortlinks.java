@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.ui.posts.PostTypeUtilsKt;
 import org.wordpress.android.util.AppLog.T;
 
 public class WPMeShortlinks {
@@ -83,12 +84,7 @@ public class WPMeShortlinks {
             type = "s";
         } else {
             id = wpme_dec2sixtwo(postId);
-
-            if (post.isPage()) {
-                type = "P";
-            } else {
-                type = "p";
-            }
+            type = PostTypeUtilsKt.getValueForType(post, "P", "p");
         }
 
         // Calculate the blog shortlink

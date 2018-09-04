@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -96,7 +97,7 @@ public class PostsListFragment extends Fragment
     private ProgressBar mProgressLoadMore;
 
     private boolean mCanLoadMorePosts = true;
-    private boolean mIsPage;
+    private PostType mPostType;
     private PostModel mTargetPost;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
@@ -110,11 +111,11 @@ public class PostsListFragment extends Fragment
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
 
-    public static PostsListFragment newInstance(SiteModel site, boolean isPage, @Nullable PostModel targetPost) {
+    public static PostsListFragment newInstance(SiteModel site, PostType postType, @Nullable PostModel targetPost) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putBoolean(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
+        bundle.putSerializable(PostsListActivity.EXTRA_POST_TYPE, postType);
         if (targetPost != null) {
             bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, targetPost.getId());
         }
@@ -149,18 +150,19 @@ public class PostsListFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mIsPage = getArguments().getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+                mPostType = (PostType) getArguments().getSerializable(PostsListActivity.EXTRA_POST_TYPE);
                 mTargetPost = mPostStore.getPostByLocalPostId(
                         getArguments().getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
             } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mIsPage = getActivity().getIntent().getBooleanExtra(PostsListActivity.EXTRA_VIEW_PAGES, false);
+                final Intent intent = getActivity().getIntent();
+                mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+                mPostType = (PostType) intent.getSerializableExtra(PostsListActivity.EXTRA_POST_TYPE);
                 mTargetPost = mPostStore.getPostByLocalPostId(
-                        getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, 0));
+                        intent.getIntExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, 0));
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+            mPostType = (PostType) savedInstanceState.getSerializable(PostsListActivity.EXTRA_POST_TYPE);
             mTargetPost = mPostStore.getPostByLocalPostId(
                     savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
         }
@@ -185,7 +187,8 @@ public class PostsListFragment extends Fragment
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
+        int spacingVertical = PostTypeUtilsKt.getResourceId(
+                mPostType, 0, context.getResources().getDimensionPixelSize(R.dimen.card_gutters));
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
@@ -273,7 +276,7 @@ public class PostsListFragment extends Fragment
 
     private @Nullable PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mPostType);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -297,7 +300,7 @@ public class PostsListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
+        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mPostType, false);
     }
 
     public void onResume() {
@@ -353,10 +356,18 @@ public class PostsListFragment extends Fragment
 
         FetchPostsPayload payload = new FetchPostsPayload(mSite, loadMore);
 
-        if (mIsPage) {
-            mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
-        } else {
-            mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
+        switch (mPostType) {
+            case TypePost:
+                mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
+                break;
+            case TypePage:
+                mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
+                break;
+            case TypePortfolio:
+                mDispatcher.dispatch(PostActionBuilder.newFetchPortfoliosAction(payload));
+                break;
+            default:
+                throw new IllegalStateException("Unknown type: " + mPostType);
         }
     }
 
@@ -396,36 +407,42 @@ public class PostsListFragment extends Fragment
         int stringId;
         switch (emptyViewMessageType) {
             case LOADING:
-                stringId = mIsPage ? R.string.pages_fetching : R.string.posts_fetching;
+                stringId = PostTypeUtilsKt.getResourceId(
+                        mPostType, R.string.pages_fetching, R.string.posts_fetching);
                 break;
             case NO_CONTENT:
-                stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
+                stringId = PostTypeUtilsKt.getResourceId(
+                        mPostType, R.string.pages_empty_list, R.string.posts_empty_list);
                 break;
             case NETWORK_ERROR:
                 stringId = R.string.no_network_message;
                 break;
             case PERMISSION_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_unauthorized_pages
-                        : R.string.error_refresh_unauthorized_posts;
+                stringId = PostTypeUtilsKt.getResourceId(mPostType,
+                        R.string.error_refresh_unauthorized_pages,
+                        R.string.error_refresh_unauthorized_posts);
                 break;
             case GENERIC_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
+                stringId = PostTypeUtilsKt.getResourceId(
+                        mPostType, R.string.error_refresh_pages, R.string.error_refresh_posts);
                 break;
             default:
                 return;
         }
 
         boolean hasNoContent = emptyViewMessageType == EmptyViewMessageType.NO_CONTENT;
-        mActionableEmptyView.image.setImageResource(mIsPage ? R.drawable.img_illustration_pages_104dp
-                : R.drawable.img_illustration_posts_75dp);
+        mActionableEmptyView.image.setImageResource(PostTypeUtilsKt.getResourceId(
+                mPostType,
+                R.drawable.img_illustration_pages_104dp,
+                R.drawable.img_illustration_posts_75dp));
         mActionableEmptyView.image.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
         mActionableEmptyView.title.setText(stringId);
-        mActionableEmptyView.button.setText(mIsPage ? R.string.pages_empty_list_button
-                : R.string.posts_empty_list_button);
+        mActionableEmptyView.button.setText(PostTypeUtilsKt.getResourceId(
+                mPostType, R.string.pages_empty_list_button, R.string.posts_empty_list_button));
         mActionableEmptyView.button.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
         mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
+                ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mPostType, false);
             }
         });
         mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
@@ -574,45 +591,51 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mPostType);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    String message = post.isPage() ? getString(R.string.dialog_confirm_delete_page)
-                            : getString(R.string.dialog_confirm_delete_post);
+                    String message = getString(PostTypeUtilsKt.getResourceId(
+                            post,
+                            R.string.dialog_confirm_delete_page,
+                            R.string.dialog_confirm_delete_post));
 
                     if (post.isLocalDraft()) {
-                        message = post.isPage() ? getString(R.string.dialog_confirm_delete_permanently_page)
-                                : getString(R.string.dialog_confirm_delete_permanently_post);
+                        message = getString(PostTypeUtilsKt.getResourceId(
+                                post,
+                                R.string.dialog_confirm_delete_permanently_page,
+                                R.string.dialog_confirm_delete_permanently_post));
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
-                    builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
-                            .setMessage(message)
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    trashPost(post);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .setCancelable(true);
+                    builder.setTitle(
+                            getString(PostTypeUtilsKt.getResourceId(post, R.string.delete_page, R.string.delete_post)))
+                           .setMessage(message)
+                           .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialogInterface, int i) {
+                                   trashPost(post);
+                               }
+                           })
+                           .setNegativeButton(R.string.cancel, null)
+                           .setCancelable(true);
                     builder.create().show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
-                    builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
-                            .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    trashPost(post);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .setCancelable(true);
+                    builder.setTitle(
+                            getText(PostTypeUtilsKt.getResourceId(post, R.string.delete_page, R.string.delete_post)))
+                           .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
+                           .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialogInterface, int i) {
+                                   trashPost(post);
+                               }
+                           })
+                           .setNegativeButton(R.string.cancel, null)
+                           .setCancelable(true);
                     builder.create().show();
                 }
                 break;
@@ -623,8 +646,10 @@ public class PostsListFragment extends Fragment
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
-               .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
-                                   : getString(R.string.dialog_confirm_publish_message_post))
+               .setMessage(getString(PostTypeUtilsKt.getResourceId(
+                       post,
+                       R.string.dialog_confirm_publish_message_page,
+                       R.string.dialog_confirm_publish_message_post)))
                .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialogInterface, int i) {
@@ -669,9 +694,9 @@ public class PostsListFragment extends Fragment
         // different undo text if this is a local draft since it will be deleted rather than trashed
         String text;
         if (post.isLocalDraft()) {
-            text = mIsPage ? getString(R.string.page_deleted) : getString(R.string.post_deleted);
+            text = getString(PostTypeUtilsKt.getResourceId(mPostType, R.string.page_deleted, R.string.post_deleted));
         } else {
-            text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
+            text = getString(PostTypeUtilsKt.getResourceId(mPostType, R.string.page_trashed, R.string.post_trashed));
         }
 
         Snackbar snackbar = Snackbar.make(mActionableEmptyView, text,
@@ -719,7 +744,7 @@ public class PostsListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
+        outState.putSerializable(PostsListActivity.EXTRA_POST_TYPE, mPostType);
         mRVScrollPositionSaver.onSaveInstanceState(outState, mRecyclerView);
     }
 
@@ -763,7 +788,9 @@ public class PostsListFragment extends Fragment
                 break;
             case DELETE_POST:
                 if (event.isError()) {
-                    String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
+                    String message = getString(
+                            PostTypeUtilsKt.getResourceId(mPostType, R.string.error_deleting_page,
+                                    R.string.error_deleting_post));
                     ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                     loadPosts(LoadMode.IF_CHANGED);
                 }
@@ -778,8 +805,8 @@ public class PostsListFragment extends Fragment
         if (isAdded() && event.post != null && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                                                      getActivity().findViewById(R.id.coordinator),
-                                                      event.isError(), event.post, null, mSite, mDispatcher);
+                    getActivity().findViewById(R.id.coordinator),
+                    event.isError(), event.post, null, mSite, mDispatcher);
         }
     }
 
@@ -841,12 +868,12 @@ public class PostsListFragment extends Fragment
         EventBus.getDefault().removeStickyEvent(event);
         if (event.post != null) {
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                                                      getActivity().findViewById(R.id.coordinator), true, event.post,
-                                                      event.errorMessage, mSite, mDispatcher);
+                    getActivity().findViewById(R.id.coordinator), true, event.post,
+                    event.errorMessage, mSite, mDispatcher);
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                                                       getActivity().findViewById(R.id.coordinator), true,
-                                                       event.mediaModelList, mSite, event.errorMessage);
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, mSite, event.errorMessage);
         }
     }
 
@@ -855,8 +882,8 @@ public class PostsListFragment extends Fragment
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                                                       getActivity().findViewById(R.id.coordinator), false,
-                                                       event.mediaModelList, mSite, event.successMessage);
+                    getActivity().findViewById(R.id.coordinator), false,
+                    event.mediaModelList, mSite, event.successMessage);
         }
     }
 

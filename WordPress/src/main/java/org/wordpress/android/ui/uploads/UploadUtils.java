@@ -16,11 +16,13 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostTypeUtilsKt;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -41,18 +43,12 @@ public class UploadUtils {
     static @NonNull
     String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
         String baseErrorString;
-        if (post.isPage()) {
-            if (isMediaError) {
-                baseErrorString = context.getString(R.string.error_upload_page_media_param);
-            } else {
-                baseErrorString = context.getString(R.string.error_upload_page_param);
-            }
+        if (isMediaError) {
+            baseErrorString = context.getString(PostTypeUtilsKt.getResourceId(
+                    post, R.string.error_upload_page_media_param, R.string.error_upload_post_media_param));
         } else {
-            if (isMediaError) {
-                baseErrorString = context.getString(R.string.error_upload_post_media_param);
-            } else {
-                baseErrorString = context.getString(R.string.error_upload_post_param);
-            }
+            baseErrorString = context.getString(PostTypeUtilsKt.getResourceId(
+                    post, R.string.error_upload_page_param, R.string.error_upload_post_param));
         }
         return String.format(baseErrorString, errorMessage);
     }
@@ -64,13 +60,13 @@ public class UploadUtils {
     String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return post.isPage() ? context.getString(R.string.error_unknown_page)
-                        : context.getString(R.string.error_unknown_post);
+                return context.getString(PostTypeUtilsKt.getResourceId(
+                        post, R.string.error_unknown_page, R.string.error_unknown_post));
             case UNKNOWN_POST_TYPE:
                 return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages)
-                        : context.getString(R.string.error_refresh_unauthorized_posts);
+                return context.getString(PostTypeUtilsKt.getResourceId(
+                        post, R.string.error_refresh_unauthorized_pages, R.string.error_refresh_unauthorized_posts));
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
@@ -245,8 +241,9 @@ public class UploadUtils {
 
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
-            String message = activity.getString(
-                    post.isPage() ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+            String message = activity.getString(PostTypeUtilsKt.getResourceId(post,
+                    R.string.error_publish_empty_page, R.string.error_publish_empty_post)
+            );
             ToastUtils.showToast(activity, message, ToastUtils.Duration.SHORT);
             return;
         }
@@ -311,8 +308,8 @@ public class UploadUtils {
                         UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online);
                     }
                 } else {
-                    int messageRes = post.isPage() ? R.string.page_published
-                            : (userCanPublish ? R.string.post_published : R.string.post_submitted);
+                    int messageRes = PostTypeUtilsKt.getResourceId(post,
+                            R.string.post_published, R.string.post_submitted);
                     UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
                                                           R.string.button_view, new View.OnClickListener() {
                                 @Override
@@ -370,7 +367,7 @@ public class UploadUtils {
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             writePostIntent.putExtra(WordPress.SITE, site);
-                            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+                            writePostIntent.putExtra(EditPostActivity.EXTRA_POST_TYPE, PostType.TypePost);
                             writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
                             activity.startActivity(writePostIntent);
                         }

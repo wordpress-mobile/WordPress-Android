@@ -49,6 +49,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
@@ -156,7 +157,7 @@ public class EditPostSettingsFragment extends Fragment {
         // Update post formats and categories, in case anything changed.
         SiteModel siteModel = getSite();
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(siteModel));
-        if (!getPost().isPage()) {
+        if (getPost().getType() == PostType.TypePost.modelValue()) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel));
         }
 
@@ -326,7 +327,7 @@ public class EditPostSettingsFragment extends Fragment {
         });
 
 
-        if (getPost() != null && getPost().isPage()) { // remove post specific views
+        if (getPost() != null && getPost().getType() == PostType.TypePage.modelValue()) { // remove post specific views
             final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
             final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
             categoriesTagsContainer.setVisibility(View.GONE);
@@ -363,7 +364,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         PostModel postModel = getPost();
-        if (postModel.isPage()) {
+        if (postModel.getType() == PostType.TypePage.modelValue()) {
             // remove post specific views
             mCategoriesContainer.setVisibility(View.GONE);
             mExcerptContainer.setVisibility(View.GONE);

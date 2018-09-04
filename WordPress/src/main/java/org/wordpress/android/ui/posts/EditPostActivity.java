@@ -86,6 +86,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -99,9 +100,9 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
@@ -200,7 +201,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
-    public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_POST_TYPE = "postType";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
@@ -278,7 +279,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private ProgressDialog mProgressDialog;
 
     private boolean mIsNewPost;
-    private boolean mIsPage;
+    private PostType mPostType;
     private boolean mHasSetPostContent;
     private boolean mIsDialogProgressShown;
     private boolean mIsDiscardingChanges;
@@ -377,7 +378,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 if (extras != null) {
-                    mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                    mPostType = (PostType) extras.getSerializable(EXTRA_POST_TYPE);
                 }
                 mIsNewPost = true;
 
@@ -391,7 +392,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 // Create a new post
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
+                mPost = mPostStore.instantiatePostModel(mSite, mPostType, null, null);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 EventBus.getDefault().postSticky(
                         new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
@@ -476,10 +477,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
-                    setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    setTitle(getResourceId(R.string.page_settings, R.string.post_settings));
                     hidePhotoPicker();
                 } else if (position == PAGE_PREVIEW) {
-                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
+                    setTitle(getResourceId(R.string.preview_page, R.string.preview_post));
                     hidePhotoPicker();
                     savePostAsync(new AfterSavePostListener() {
                         @Override
@@ -511,7 +512,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mMediaMarkedUploadingOnStartIds =
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
             Collections.sort(mMediaMarkedUploadingOnStartIds);
-            mIsPage = mPost.isPage();
+            mPostType = PostType.fromModelValue(mPost.getType());
 
             EventBus.getDefault().postSticky(
                     new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
@@ -1148,7 +1149,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
                     if (isDiscardable()) {
                         String message = getString(
-                                mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                                getResourceId(R.string.error_publish_empty_page, R.string.error_publish_empty_post));
                         ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         return false;
                     }
@@ -1229,8 +1230,10 @@ public class EditPostActivity extends AppCompatActivity implements
         publishConfirmationDialog.initialize(
                 TAG_PUBLISH_CONFIRMATION_DIALOG,
                 getString(R.string.dialog_confirm_publish_title),
-                mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
-                        : getString(R.string.dialog_confirm_publish_message_post),
+                getString(getResourceId(
+                        R.string.dialog_confirm_publish_message_page,
+                        R.string.dialog_confirm_publish_message_post)
+                         ),
                 getString(R.string.dialog_confirm_publish_yes),
                 getString(R.string.keep_editing),
                 null);
@@ -1652,7 +1655,7 @@ public class EditPostActivity extends AppCompatActivity implements
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
-        i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_POST_TYPE, mPostType);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
@@ -1738,8 +1741,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String message = getString(
-                                    mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                            String message = getString(getResourceId(
+                                    R.string.error_publish_empty_page, R.string.error_publish_empty_post));
                             ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         }
                     });
@@ -2084,8 +2087,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Set up the placeholder text
         mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
-        mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder
-                                                              : R.string.editor_post_title_placeholder));
+        mEditorFragment.setTitlePlaceholder(getString(getResourceId(
+                R.string.editor_page_title_placeholder,
+                R.string.editor_post_title_placeholder)));
 
         // Set post title and content
         if (mPost != null) {
@@ -3533,5 +3537,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public SiteModel getSite() {
         return mSite;
+    }
+
+    private int getResourceId(int pageResourceId, int postResourceId) {
+        return PostTypeUtilsKt.getResourceId(mPostType, pageResourceId, postResourceId);
     }
 }

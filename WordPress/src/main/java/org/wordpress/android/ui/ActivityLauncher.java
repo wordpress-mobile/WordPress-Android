@@ -20,6 +20,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -56,7 +57,6 @@ import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
@@ -221,6 +221,7 @@ public class ActivityLauncher {
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(PostsListActivity.EXTRA_POST_TYPE, PostType.TypePost);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
@@ -236,7 +237,7 @@ public class ActivityLauncher {
     public static void viewCurrentBlogPages(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
+        intent.putExtra(PostsListActivity.EXTRA_POST_TYPE, PostType.TypePage);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
@@ -349,14 +350,14 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
+    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, PostType type, boolean isPromo) {
         if (site == null) {
             return;
         }
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        intent.putExtra(EditPostActivity.EXTRA_POST_TYPE, type);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -489,7 +490,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN);
     }
 
-    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, PostType isPage) {
         if (post == null) {
             return;
         }
@@ -497,8 +498,7 @@ public class ActivityLauncher {
         StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),
                 String.valueOf(post.getRemotePostId()), post.getTitle(),
                 post.getLink(),
-                isPage ? StatsConstants.ITEM_TYPE_PAGE
-                        : StatsConstants.ITEM_TYPE_POST);
+                PostType.fromModelValue(post.getType()));
         viewStatsSinglePostDetails(context, statsPostModel);
     }
 

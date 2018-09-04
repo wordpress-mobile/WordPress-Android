@@ -111,8 +111,11 @@ public class PostPreviewActivity extends AppCompatActivity implements
             return;
         }
 
+        setTitle(getTitleResource());
+    }
 
-        setTitle(mPost.isPage() ? getString(R.string.preview_page) : getString(R.string.preview_post));
+    private String getTitleResource() {
+        return getString(PostTypeUtilsKt.getResourceId(mPost, R.string.preview_page, R.string.preview_post));
     }
 
     @Override

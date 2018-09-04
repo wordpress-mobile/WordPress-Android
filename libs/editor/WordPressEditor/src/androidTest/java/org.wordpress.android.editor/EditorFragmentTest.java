@@ -1,6 +1,6 @@
 package org.wordpress.android.editor;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ToggleButton;
@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import static org.wordpress.android.editor.TestingUtils.waitFor;
 
 public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEditorActivity> {
-    private Activity mActivity;
+    private FragmentActivity mActivity;
     private EditorFragmentForTests mFragment;
 
     public EditorFragmentTest() {
@@ -25,7 +25,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
     protected void setUp() throws Exception {
         super.setUp();
         mActivity = getActivity();
-        mFragment = (EditorFragmentForTests) mActivity.getFragmentManager().findFragmentByTag("editorFragment");
+        mFragment = (EditorFragmentForTests) mActivity.getSupportFragmentManager().findFragmentByTag("editorFragment");
     }
 
     public void testDomLoadedCallbackReceived() {

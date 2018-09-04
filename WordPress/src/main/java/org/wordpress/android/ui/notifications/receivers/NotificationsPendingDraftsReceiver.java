@@ -5,12 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostType;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
@@ -28,7 +30,7 @@ import javax.inject.Inject;
 
 public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     public static final String POST_ID_EXTRA = "postId";
-    public static final String IS_PAGE_EXTRA = "isPage";
+    public static final String POST_TYPE_EXTRA = "postType";
 
     public static final long ONE_DAY = 24 * 60 * 60 * 1000;
     public static final long ONE_WEEK = ONE_DAY * 7;
@@ -54,7 +56,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
             int siteLocalId = AppPrefs.getSelectedSite();
             SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
             if (site != null) {
-                List<PostModel> draftPosts = mPostStore.getPostsForSite(site);
+                List<PostModel> draftPosts = mPostStore.getPostsForSite(site, PostType.TypePost);
                 for (PostModel post : draftPosts) {
                     // reschedule next notifications for each local draft post we have, as we have
                     // just been rebooted
@@ -75,7 +77,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 long now = System.currentTimeMillis();
                 long dateLastUpdated = DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged());
                 long daysInDraft = (now - dateLastUpdated) / ONE_DAY;
-                boolean isPage = post.isPage();
+                PostType postType = PostType.fromModelValue(post.getType());
 
                 if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
                     String formattedString = context.getString(R.string.pending_draft_one_generic);
@@ -106,11 +108,11 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                         }
                     }
 
-                    buildSinglePendingDraftNotification(context, post.getTitle(), formattedString, postId, isPage);
+                    buildSinglePendingDraftNotification(context, post.getTitle(), formattedString, postId, postType);
                 } else {
                     // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know
                     // (i.e. value for lastUpdated is zero) then just show a generic message
-                    buildSinglePendingDraftNotificationGeneric(context, post.getTitle(), postId, isPage);
+                    buildSinglePendingDraftNotificationGeneric(context, post.getTitle(), postId, postType);
                 }
             }
         }
@@ -125,20 +127,21 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     }
 
     private void buildSinglePendingDraftNotification(Context context, String postTitle, String formattedMessage,
-                                                     int postId, boolean isPage) {
-        buildNotificationWithIntent(context, getResultIntentForOnePost(context, postId, isPage),
-                                    String.format(formattedMessage, getPostTitle(context, postTitle)), postId, isPage);
+                                                     int postId, PostType postType) {
+        final String message = String.format(formattedMessage, getPostTitle(context, postTitle));
+        final PendingIntent intentForOnePost = getResultIntentForOnePost(context, postId, postType);
+        buildNotificationWithIntent(context, intentForOnePost, message, postId, postType);
     }
 
     private void buildSinglePendingDraftNotificationGeneric(Context context, String postTitle, int postId,
-                                                            boolean isPage) {
-        buildNotificationWithIntent(context, getResultIntentForOnePost(context, postId, isPage),
+                                                            PostType postType) {
+        buildNotificationWithIntent(context, getResultIntentForOnePost(context, postId, postType),
                                     String.format(context.getString(R.string.pending_draft_one_generic),
                                                   getPostTitle(context, postTitle)),
-                                    postId, isPage);
+                                    postId, postType);
     }
 
-    private PendingIntent getResultIntentForOnePost(Context context, int postId, boolean isPage) {
+    private PendingIntent getResultIntentForOnePost(Context context, int postId, PostType postType) {
         Intent resultIntent = new Intent(context, WPMainActivity.class);
         resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -146,7 +149,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         resultIntent.setAction("android.intent.action.MAIN");
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         resultIntent.putExtra(POST_ID_EXTRA, postId);
-        resultIntent.putExtra(IS_PAGE_EXTRA, isPage);
+        resultIntent.putExtra(POST_TYPE_EXTRA, postType);
         PendingIntent pendingIntent = PendingIntent
                 .getActivity(context, BASE_REQUEST_CODE + PendingDraftsNotificationsUtils
                                      .makePendingDraftNotificationId(postId),
@@ -156,7 +159,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     }
 
     private void buildNotificationWithIntent(Context context, PendingIntent intent, String message, int postId,
-                                             boolean isPage) {
+                                             PostType postType) {
         NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(context,
                 context.getString(R.string.notification_channel_important_id));
         builder.setContentText(message)
@@ -165,23 +168,23 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         builder.setContentIntent(intent);
 
         if (postId != 0) {
-            addOpenDraftActionForNotification(context, builder, postId, isPage);
-            addIgnoreActionForNotification(context, builder, postId, isPage);
+            addOpenDraftActionForNotification(context, builder, postId, postType);
+            addIgnoreActionForNotification(context, builder, postId, postType);
         }
-        addDismissActionForNotification(context, builder, postId, isPage);
+        addDismissActionForNotification(context, builder, postId, postType);
 
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                                                               PendingDraftsNotificationsUtils
                                                                       .makePendingDraftNotificationId(postId), context);
     }
 
-    private void addOpenDraftActionForNotification(Context context, NotificationCompat.Builder builder, int postId,
-                                                   boolean isPage) {
+    private void addOpenDraftActionForNotification(Context context, Builder builder, int postId,
+                                                   PostType postType) {
         // adding open draft action
         Intent openDraftIntent = new Intent(context, WPMainActivity.class);
         openDraftIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
         openDraftIntent.putExtra(POST_ID_EXTRA, postId);
-        openDraftIntent.putExtra(IS_PAGE_EXTRA, isPage);
+        openDraftIntent.putExtra(POST_TYPE_EXTRA, postType);
 
         PendingIntent pendingIntent = PendingIntent
                 .getActivity(context,
@@ -194,14 +197,14 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                           pendingIntent);
     }
 
-    private void addIgnoreActionForNotification(Context context, NotificationCompat.Builder builder, int postId,
-                                                boolean isPage) {
+    private void addIgnoreActionForNotification(Context context, Builder builder, int postId,
+                                                PostType postType) {
         // Call processing service when user taps on IGNORE - we should remember this decision for this post
         Intent ignoreIntent = new Intent(context, NotificationsProcessingService.class);
         ignoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
                               NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_IGNORE);
         ignoreIntent.putExtra(POST_ID_EXTRA, postId);
-        ignoreIntent.putExtra(IS_PAGE_EXTRA, isPage);
+        ignoreIntent.putExtra(POST_TYPE_EXTRA, postType);
         PendingIntent ignorePendingIntent = PendingIntent
                 .getService(context,
                             // need to add + 2 so the request code is different, otherwise they overlap
@@ -212,14 +215,14 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                           ignorePendingIntent);
     }
 
-    private void addDismissActionForNotification(Context context, NotificationCompat.Builder builder, int postId,
-                                                 boolean isPage) {
+    private void addDismissActionForNotification(Context context, Builder builder, int postId,
+                                                 PostType postType) {
         // Call processing service when notification is dismissed
         Intent notificationDeletedIntent = new Intent(context, NotificationsProcessingService.class);
         notificationDeletedIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
                                            NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS);
         notificationDeletedIntent.putExtra(POST_ID_EXTRA, postId);
-        notificationDeletedIntent.putExtra(IS_PAGE_EXTRA, isPage);
+        notificationDeletedIntent.putExtra(POST_TYPE_EXTRA, postType);
         PendingIntent dismissPendingIntent = PendingIntent
                 .getService(context,
                             // need to add + 3 so the request code is different, otherwise they overlap
