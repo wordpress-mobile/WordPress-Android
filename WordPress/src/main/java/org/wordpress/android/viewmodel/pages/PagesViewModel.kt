@@ -46,7 +46,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 class PagesViewModel
 @Inject constructor(
@@ -67,7 +66,7 @@ class PagesViewModel
     private val _displayDeleteDialog = SingleLiveEvent<Page>()
     val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
-    private val _isNewPageButtonVisible = SingleLiveEvent<Boolean>()
+    private val _isNewPageButtonVisible = MutableLiveData<Boolean>()
     val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
 
     private val _refreshPages = SingleLiveEvent<Unit>()
@@ -85,12 +84,12 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
-    private var _pages: Map<Long, PageModel>
-        by Delegates.observable(emptyMap()) { _, _, _ ->
-            checkIfNewPageButtonShouldBeVisible()
-        }
+    private var _pages: Map<Long, PageModel> = emptyMap()
     val pages: Map<Long, PageModel>
-        get() = _pages
+        get() {
+            checkIfNewPageButtonShouldBeVisible()
+            return _pages
+        }
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
